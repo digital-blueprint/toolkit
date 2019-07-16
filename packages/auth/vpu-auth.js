@@ -1,6 +1,6 @@
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
-import JSONLD from "./jsonld";
+import JSONLD from 'vpu-common/jsonld'
 import utils from "./utils";
 
 /**
