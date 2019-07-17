@@ -2,6 +2,18 @@
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/Auth)
 
+## Attributes
+
+- `client-id` (mandatory): set the client id that you have setup on your Keycloak server
+    - example `<vpu-auth client-id="my-dev-client-id"></vpu-auth>`
+- `lang` (optional, default: `de`): set to `de` or `en` for German or English
+    - example `<vpu-auth lang="de" client-id="my-dev-client-id"></vpu-auth>`
+- `load-person` (optional, default: off): if enabled the logged in user will also be loaded as `Person`
+   in the `window.VPUPerson` variable
+    - example `<vpu-auth client-id="my-dev-client-id" load-person></vpu-auth>`
+- `force-login` (optional, default: off): if enabled a login will be forced, there never will be a login button
+    - example `<vpu-auth client-id="my-dev-client-id" force-login></vpu-auth>`
+
 ## Local development
 
 ```bash

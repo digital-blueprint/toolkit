@@ -19,6 +19,7 @@ class VPUAuth extends LitElement {
     constructor() {
         super();
         this.lang = 'de';
+        this.forceLogin = false;
         this.loadPerson = false;
         this.clientId = "";
         this.keyCloakInitCalled = false;
@@ -39,6 +40,7 @@ class VPUAuth extends LitElement {
     static get properties() {
         return {
             lang: { type: String },
+            forceLogin: { type: Boolean, attribute: 'force-login' },
             loadPerson: { type: Boolean, attribute: 'load-person' },
             clientId: { type: String, attribute: 'client-id' },
             name: { type: String, attribute: false },
@@ -52,8 +54,12 @@ class VPUAuth extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
+        const href = window.location.href;
 
-        this.loadKeyCloak();
+        // load Keycloak if we want to force the login or if we were redirected from the Keycloak login page
+        if (this.forceLogin || (href.indexOf('#state=') > 0 && href.indexOf('&session_state=') > 0)) {
+            this.loadKeyCloak();
+        }
 
         this.updateComplete.then(()=>{
         });
@@ -77,10 +83,12 @@ class VPUAuth extends LitElement {
                     clientId: that.clientId,
                 });
 
+                // See: https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
                 that._keycloak.init({onLoad: 'login-required'}).success(function (authenticated) {
                     console.log(authenticated ? 'authenticated' : 'not authenticated!');
                     console.log(that._keycloak);
 
+                    that.setStateToLogin(true);
                     that.updateKeycloakData();
                     that.dispatchInitEvent();
 
@@ -132,6 +140,10 @@ class VPUAuth extends LitElement {
         }
     }
 
+    login(e) {
+        this.loadKeyCloak();
+    }
+
     logout(e) {
         this._keycloak.logout();
     }
@@ -140,9 +152,14 @@ class VPUAuth extends LitElement {
      * Dispatches the init event
      */
     dispatchInitEvent() {
+        this.setStateToLogin(false);
         document.dispatchEvent(this.initEvent);
     }
 
+    setStateToLogin(state) {
+        this.shadowRoot.querySelector('#login-block').style.display = state ? "flex" : "none";
+        this.shadowRoot.querySelector('#logout-block').style.display = state ? "none" : "flex";
+    }
     /**
      * Dispatches the person init event
      */
@@ -167,13 +184,22 @@ class VPUAuth extends LitElement {
     render() {
         return html`
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+            <style>
+                #logout-block { display: none }
+            </style>
 
-            <div class="columns is-vcentered"">
+            <div id="logout-block" class="columns is-vcentered"">
                 <div class="column">
                     ${this.name}
                 </div>
                 <div class="column">
                     <button @click="${this.logout}" class="button">${i18n.t('logout')}</button>
+                </div>
+            </div>
+
+            <div id="login-block" class="columns is-vcentered"">
+                <div class="column">
+                    <button id="login-button" @click="${this.login}" class="button">${i18n.t('login')}</button>
                 </div>
             </div>
         `;
