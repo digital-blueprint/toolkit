@@ -5,6 +5,16 @@
 ## Local development
 
 ```bash
+# get the source
+git clone git@gitlab.tugraz.at:VPU/WebComponents/Auth.git
+cd Auth
+git submodule update --init
+
+# we are creating the symbolic links to our git sub-modules
+# (there was no proper script to do this automatically before a "node install"
+npm run setup
+
+# install dependencies
 npm install
 
 # constantly builds dist/bundle.js 

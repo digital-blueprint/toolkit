@@ -18,9 +18,10 @@
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "i18next": "^17.0.3",
     "lit-element": "^2.1.0",
-    "vpu-common": "file:./vendor/common"
+    "vpu-common": "*"
   },
   "scripts": {
+    "setup": "cd node_modules; ln -sfn ../vendor/common vpu-common",
     "clean": "rm dist/*",
     "build": "npm run build-local",
     "build-local": "rollup -c",
