@@ -1,0 +1,45 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'run', 'watch-local' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 verbose run-script [ 'prewatch-local', 'watch-local', 'postwatch-local' ]
+5 info lifecycle vpu-person-select-wc@1.0.0~prewatch-local: vpu-person-select-wc@1.0.0
+6 silly lifecycle vpu-person-select-wc@1.0.0~prewatch-local: no script for prewatch-local, continuing
+7 info lifecycle vpu-person-select-wc@1.0.0~watch-local: vpu-person-select-wc@1.0.0
+8 verbose lifecycle vpu-person-select-wc@1.0.0~watch-local: unsafe-perm in lifecycle true
+9 verbose lifecycle vpu-person-select-wc@1.0.0~watch-local: PATH: /usr/share/npm/bin/node-gyp-bin:/home/pbeke/Code/VPU/WebComponents/PersonSelect/node_modules/.bin:/usr/local/sbin:/snap/bin:/snap/bin:/snap/bin:/usr/local/bin:/snap/bin:/snap/bin:/snap/bin:/usr/sbin:/snap/bin:/snap/bin:/snap/bin:/usr/bin:/snap/bin:/snap/bin:/snap/bin:/sbin:/snap/bin:/snap/bin:/snap/bin:/bin:/snap/bin:/snap/bin:/snap/bin:/usr/games:/snap/bin:/snap/bin:/snap/bin:/usr/local/games:/snap/bin:/snap/bin:/snap/bin
+10 verbose lifecycle vpu-person-select-wc@1.0.0~watch-local: CWD: /home/pbeke/Code/VPU/WebComponents/PersonSelect
+11 silly lifecycle vpu-person-select-wc@1.0.0~watch-local: Args: [ '-c', 'rollup -c --watch' ]
+12 silly lifecycle vpu-person-select-wc@1.0.0~watch-local: Returned: code: 1  signal: null
+13 info lifecycle vpu-person-select-wc@1.0.0~watch-local: Failed to exec watch-local script
+14 verbose stack Error: vpu-person-select-wc@1.0.0 watch-local: `rollup -c --watch`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (/usr/share/npm/lib/utils/lifecycle.js:232:16)
+14 verbose stack     at emitTwo (events.js:126:13)
+14 verbose stack     at EventEmitter.emit (events.js:214:7)
+14 verbose stack     at ChildProcess.<anonymous> (/usr/share/npm/lib/utils/spawn.js:24:14)
+14 verbose stack     at emitTwo (events.js:126:13)
+14 verbose stack     at ChildProcess.emit (events.js:214:7)
+14 verbose stack     at maybeClose (internal/child_process.js:925:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
+15 verbose pkgid vpu-person-select-wc@1.0.0
+16 verbose cwd /home/pbeke/Code/VPU/WebComponents/PersonSelect
+17 error Linux 4.18.0-25-generic
+18 error argv "/usr/bin/node" "/usr/bin/npm" "run" "watch-local"
+19 error node v8.10.0
+20 error npm  v3.5.2
+21 error code ELIFECYCLE
+22 error vpu-person-select-wc@1.0.0 watch-local: `rollup -c --watch`
+22 error Exit status 1
+23 error Failed at the vpu-person-select-wc@1.0.0 watch-local script 'rollup -c --watch'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the vpu-person-select-wc package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     rollup -c --watch
+23 error You can get information on how to open an issue for this project with:
+23 error     npm bugs vpu-person-select-wc
+23 error Or if that isn't available, you can get their info via:
+23 error     npm owner ls vpu-person-select-wc
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]
