@@ -14,6 +14,10 @@
 - `force-login` (optional, default: off): if enabled a login will be forced, there never will be a login button
     - example `<vpu-auth client-id="my-dev-client-id" force-login></vpu-auth>`
 
+## Events
+
+TODO
+
 ## Local development
 
 ```bash

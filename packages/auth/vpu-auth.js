@@ -29,9 +29,10 @@ class VPUAuth extends LitElement {
         this.name = "";
         this.personId = "";
 
-        // Create the init event
+        // Create the events
         this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event" });
         this.personInitEvent = new CustomEvent("vpu-auth-person-init", { "detail": "KeyCloak person init event" });
+        this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated" });
     }
 
     /**
@@ -160,11 +161,19 @@ class VPUAuth extends LitElement {
         this.shadowRoot.querySelector('#login-block').style.display = state ? "flex" : "none";
         this.shadowRoot.querySelector('#logout-block').style.display = state ? "none" : "flex";
     }
+
     /**
      * Dispatches the person init event
      */
     dispatchPersonInitEvent() {
         document.dispatchEvent(this.personInitEvent);
+    }
+
+    /**
+     * Dispatches the keycloak data update event
+     */
+    dispatchKeycloakDataUpdateEvent() {
+        document.dispatchEvent(this.keycloakDataUpdateEvent);
     }
 
     updateKeycloakData() {
@@ -179,6 +188,7 @@ class VPUAuth extends LitElement {
         window.VPUPersonId = this.personId;
 
         console.log("Bearer " + this.token);
+        this.dispatchKeycloakDataUpdateEvent();
     }
 
     render() {
