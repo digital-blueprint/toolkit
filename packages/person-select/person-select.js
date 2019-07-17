@@ -6,7 +6,7 @@ import select2LangEn from './i18n/en/select2'
 import JSONLD from 'vpu-common/jsonld';
 import {html} from 'lit-element';
 import {i18n, dateTimeFormat, numberFormat} from './i18n.js';
-import VPULitElement from "./vpu-lit-element";
+import VPULitElement from 'vpu-common/vpu-lit-element';
 
 select2(window, $);
 
