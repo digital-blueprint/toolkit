@@ -2,7 +2,7 @@ import utils from './utils.js';
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 
-class LibraryShelving extends LitElement {
+class AuthDemo extends LitElement {
     constructor() {
         super();
         this.lang = 'de';
@@ -40,4 +40,4 @@ class LibraryShelving extends LitElement {
     }
 }
 
-customElements.define('vpu-auth-demo', LibraryShelving);
+customElements.define('vpu-auth-demo', AuthDemo);
