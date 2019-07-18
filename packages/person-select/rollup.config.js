@@ -27,7 +27,7 @@ export default {
             minimize: false,
             plugins: []
         }),
-        terser(),
+        (build !== 'local') ? terser() : false,
         copy({
             targets: [
                 'index.html',
@@ -42,6 +42,7 @@ export default {
                 'node_modules/select2/dist/css',
             ],
             outputFolder: 'dist/select2'
-        })
+        }),
+        (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
     ]
 };
