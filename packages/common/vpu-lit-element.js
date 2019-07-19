@@ -3,6 +3,10 @@ import $ from "jquery";
 
 export default class VPULitElement extends LitElement {
     $(selector) {
-        return $(this.shadowRoot === null ? this.querySelector(selector) : this.shadowRoot.querySelector(selector));
+        return $(this._(selector));
+    }
+
+    _(selector) {
+        return this.shadowRoot === null ? this.querySelector(selector) : this.shadowRoot.querySelector(selector);
     }
 }
