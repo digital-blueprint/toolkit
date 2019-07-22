@@ -43,7 +43,9 @@ class PersonSelect extends VPULitElement {
                     "text": "http://schema.org/name"
                 };
 
-                that.$('#person-select').select2({
+                const $select = that.$('#person-select');
+
+                $select.select2({
                     width: '100%',
                     language: that.lang === "de" ? select2LangDe() : select2LangEn(),
                     minimumInputLength: 2,
@@ -92,6 +94,13 @@ class PersonSelect extends VPULitElement {
                         },
                         bubbles: true
                     }));
+                });
+
+                // close the selector on blur of the web component
+                $(that).blur(() => {
+                    // the 500ms delay is a workaround to actually get an item selected when clicking on it,
+                    // because the blur gets also fired when clicking in the selector
+                    setTimeout(() => {$select.select2('close')}, 500);
                 });
             });
         })
