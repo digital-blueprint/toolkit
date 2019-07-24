@@ -34,8 +34,30 @@ class NotificationDemo extends LitElement {
                 <div class="container">
                     <vpu-notification lang="${this.lang}"></vpu-notification>
                 </div>
+                <div class="container">
+                    <div class="columns is-vcentered">
+                        <div class="column">
+                            <button id="send-button" @click="${this.send}" class="button">${i18n.t('send')}</button>
+                        </div>
+                    </div>
+                </div>
             </section>
         `;
+    }
+
+    send() {
+        const event = new CustomEvent("vpu-notification-send", {
+            bubbles: true,
+            cancelable: true,
+            detail: {
+                "summary": "Item deleted",
+                "body": "Item foo was deleted!",
+                "type": "info",
+                "timeout": 5,
+            },
+        });
+
+        document.dispatchEvent(event);
     }
 }
 

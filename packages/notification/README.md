@@ -26,6 +26,7 @@ event = new CustomEvent("vpu-notification-send", {
     detail: {
         "summary": "Item deleted",
         "body": "Item foo was deleted!",
+        "type": "info",
         "timeout": 5,
     },
 });

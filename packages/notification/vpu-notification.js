@@ -1,19 +1,11 @@
 import {i18n} from './i18n.js';
-import {html, LitElement} from 'lit-element';
+import {html} from 'lit-element';
+import VPULitElement from 'vpu-common/vpu-lit-element'
 
 /**
- * Keycloak auth web component
- * https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
- *
- * Dispatches an event `vpu-notification-init` and sets some global variables:
- *   window.VPUNotificationSubject: Keycloak username
- *   window.VPUNotificationToken: Keycloak token to send with your requests
- *   window.VPUUserFullName: Full name of the user
- *   window.VPUPersonId: Person identifier of the user
- *   window.VPUPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
- *                     which will dispatch a `vpu-notification-person-init` event when loaded)
+ * Notification web component
  */
-class VPUNotification extends LitElement {
+class VPUNotification extends VPULitElement {
     constructor() {
         super();
         this.lang = 'de';
@@ -31,6 +23,25 @@ class VPUNotification extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
+        const that = this;
+
+        const listener = document.addEventListener("vpu-notification-send", (e) => {
+            if (typeof e.detail === 'undefined') {
+                return;
+            }
+
+            const type = typeof e.detail.type !== 'undefined' ? e.detail.type : "info";
+            const body = typeof e.detail.body !== 'undefined' ? e.detail.body : "";
+            const summary = typeof e.detail.summary !== 'undefined' ? e.detail.summary : "";
+            const timeout = typeof e.detail.timeout !== 'undefined' ? e.detail.timeout : 0;
+
+            // TODO: take care about summary and timeout
+            that._("#notification").innerHTML += `
+                <div id="notification" class="notification is-${type}">
+                    ${body}
+                </div>
+            `;
+        });
 
         this.updateComplete.then(()=>{
         });
@@ -43,8 +54,7 @@ class VPUNotification extends LitElement {
             </style>
 
             <div class="columns">
-                <div class="column">
-                    TODO
+                <div class="column" id="notification">
                 </div>
             </div>
         `;
