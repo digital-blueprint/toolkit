@@ -1,4 +1,5 @@
-import {i18n} from './i18n.js';
+import {i18n} from './i18n';
+import notification from './notification';
 import {html, LitElement} from 'lit-element';
 
 class NotificationDemo extends LitElement {
@@ -46,18 +47,12 @@ class NotificationDemo extends LitElement {
     }
 
     send() {
-        const event = new CustomEvent("vpu-notification-send", {
-            bubbles: true,
-            cancelable: true,
-            detail: {
-                "summary": "Item deleted",
-                "body": "Item foo was deleted!",
-                "type": "info",
-                "timeout": 5,
-            },
+        notification.send({
+            "summary": "Item deleted",
+            "body": "Item foo was deleted!",
+            "type": "info",
+            "timeout": 5,
         });
-
-        document.dispatchEvent(event);
     }
 }
 

@@ -13,22 +13,16 @@
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<vpu-notification lang="de" client-id="my-client-id"></vpu-notification>`
 
-## Events to dispatch
+## Sending notifications 
 
-### Sending notifications 
+```javascript
+import notification from './notification';
 
-`vpu-notification-send` sends a notification to the web component
-
-```javascript 
-event = new CustomEvent("vpu-notification-send", {
-    bubbles: true,
-    cancelable: true,
-    detail: {
-        "summary": "Item deleted",
-        "body": "Item foo was deleted!",
-        "type": "info",
-        "timeout": 5,
-    },
+notification.send({
+    "summary": "Item deleted",
+    "body": "Item foo was deleted!",
+    "type": "info",
+    "timeout": 5,
 });
 ``` 
 
