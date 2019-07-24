@@ -32,14 +32,14 @@ class NotificationDemo extends LitElement {
                     <h1 class="title">Notification-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-notification lang="${this.lang}"></vpu-notification>
-                </div>
-                <div class="container">
                     <div class="columns is-vcentered">
                         <div class="column">
                             <button id="send-button" @click="${this.send}" class="button">${i18n.t('send')}</button>
                         </div>
                     </div>
+                </div>
+                <div class="container">
+                    <vpu-notification lang="${this.lang}"></vpu-notification>
                 </div>
             </section>
         `;

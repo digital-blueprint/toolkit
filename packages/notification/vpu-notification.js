@@ -38,6 +38,7 @@ class VPUNotification extends VPULitElement {
             // TODO: take care about summary and timeout
             that._("#notification").innerHTML += `
                 <div id="notification" class="notification is-${type}">
+                    <button class="delete"></button>
                     ${body}
                 </div>
             `;
