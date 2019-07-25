@@ -38,7 +38,7 @@ class VPUNotification extends VPULitElement {
             const body = typeof e.detail.body !== 'undefined' ? e.detail.body : "";
             const summary = typeof e.detail.summary !== 'undefined' ? e.detail.summary : "";
             const timeout = typeof e.detail.timeout !== 'undefined' ? e.detail.timeout : 0;
-            const summaryHTML = summary !== "" ? `<strong>${summary}</strong><br/>` : "";
+            const summaryHTML = summary !== "" ? `<h3>${summary}</h3>` : "";
 
             that.notificationBlock.innerHTML = `
                 <div id="${notificationId}" class="notification is-${type}">
@@ -74,6 +74,7 @@ class VPUNotification extends VPULitElement {
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
             <style>
                 #notification {position: fixed; top: 0; max-width: 500px; margin: 1% auto; left: 0; right: 0;}
+                .notification h3 {font-weight: bold; margin-bottom: 3px;}
             </style>
 
             <div class="columns">
