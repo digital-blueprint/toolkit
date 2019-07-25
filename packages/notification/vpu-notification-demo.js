@@ -47,10 +47,11 @@ class NotificationDemo extends LitElement {
     }
 
     send() {
+        const types = ["primary", "link", "info", "success", "danger", "warning"];
         notification.send({
             "summary": "Item deleted",
-            "body": "Item foo was deleted!",
-            "type": "info",
+            "body": `Item ${Math.random().toString(36).substring(7)} foo was deleted!`,
+            "type": types[Math.floor(Math.random() * types.length)],
             "timeout": 5,
         });
     }
