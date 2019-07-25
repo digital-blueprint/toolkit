@@ -39,7 +39,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
 
             <div class="columns">
                 <div class="column">
-                    TODO
+                    Hier kann man dann etwas aufklappen.
                 </div>
             </div>
         `;
