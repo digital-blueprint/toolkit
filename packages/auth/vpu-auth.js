@@ -30,9 +30,9 @@ class VPUAuth extends LitElement {
         this.personId = "";
 
         // Create the events
-        this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event" });
-        this.personInitEvent = new CustomEvent("vpu-auth-person-init", { "detail": "KeyCloak person init event" });
-        this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated" });
+        this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true });
+        this.personInitEvent = new CustomEvent("vpu-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true });
+        this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true });
     }
 
     /**
@@ -154,7 +154,8 @@ class VPUAuth extends LitElement {
      */
     dispatchInitEvent() {
         this.setStateToLogin(false);
-        document.dispatchEvent(this.initEvent);
+        // we need to use "window", because the event doens't seem to bubble if we use "this"
+        window.dispatchEvent(this.initEvent);
     }
 
     setStateToLogin(state) {
@@ -166,14 +167,16 @@ class VPUAuth extends LitElement {
      * Dispatches the person init event
      */
     dispatchPersonInitEvent() {
-        document.dispatchEvent(this.personInitEvent);
+        // we need to use "window", because the event doens't seem to bubble if we use "this"
+        window.dispatchEvent(this.personInitEvent);
     }
 
     /**
      * Dispatches the keycloak data update event
      */
     dispatchKeycloakDataUpdateEvent() {
-        document.dispatchEvent(this.keycloakDataUpdateEvent);
+        // we need to use "window", because the event doens't seem to bubble if we use "this"
+        window.dispatchEvent(this.keycloakDataUpdateEvent);
     }
 
     updateKeycloakData() {
