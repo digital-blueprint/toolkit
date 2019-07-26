@@ -46,7 +46,7 @@ export default class JSONLD {
         initStarted[apiUrl] = true;
 
         // window.VPUAuthToken will be set by on vpu-auth-init
-        document.addEventListener("vpu-auth-init", function(e)
+        window.addEventListener("vpu-auth-init", function(e)
         {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", apiUrl, true);
