@@ -59,16 +59,16 @@ class VPUAuth extends LitElement {
 
         // load Keycloak if we want to force the login or if we were redirected from the Keycloak login page
         if (this.forceLogin || (href.indexOf('#state=') > 0 && href.indexOf('&session_state=') > 0)) {
-            this.loadKeyCloak();
+            this.loadKeycloak();
         }
 
         this.updateComplete.then(()=>{
         });
     }
 
-    loadKeyCloak() {
+    loadKeycloak() {
         const that = this;
-        console.log("loadKeyCloak");
+        console.log("loadKeycloak");
 
         if (!this.keyCloakInitCalled) {
             // inject Keycloak javascript file
@@ -142,7 +142,7 @@ class VPUAuth extends LitElement {
     }
 
     login(e) {
-        this.loadKeyCloak();
+        this.loadKeycloak();
     }
 
     logout(e) {
@@ -201,7 +201,7 @@ class VPUAuth extends LitElement {
                 #logout-block { display: none }
             </style>
 
-            <div id="logout-block" class="columns is-vcentered"">
+            <div id="logout-block" class="columns is-vcentered">
                 <div class="column">
                     ${this.name}
                 </div>
@@ -210,7 +210,7 @@ class VPUAuth extends LitElement {
                 </div>
             </div>
 
-            <div id="login-block" class="columns is-vcentered"">
+            <div id="login-block" class="columns is-vcentered">
                 <div class="column">
                     <button id="login-button" @click="${this.login}" class="button">${i18n.t('login')}</button>
                 </div>
