@@ -26,7 +26,7 @@ class VPUNotification extends VPULitElement {
         i18n.changeLanguage(this.lang);
         const that = this;
 
-        const listener = document.addEventListener("vpu-notification-send", (e) => {
+        const listener = window.addEventListener("vpu-notification-send", (e) => {
             if (typeof e.detail === 'undefined') {
                 return;
             }

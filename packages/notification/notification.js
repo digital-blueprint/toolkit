@@ -21,6 +21,6 @@ module.exports = {
             detail: options,
         });
 
-        document.dispatchEvent(event);
+        window.dispatchEvent(event);
     },
 };
