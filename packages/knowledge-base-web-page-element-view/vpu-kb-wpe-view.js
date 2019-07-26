@@ -2,6 +2,7 @@ import {i18n} from './i18n';
 import {html} from 'lit-element';
 import JSONLD from 'vpu-common/jsonld';
 import VPULitElement from 'vpu-common/vpu-lit-element'
+import utils from "./utils";
 
 /**
  * KnowledgeBaseWebPageElementView web component
@@ -10,6 +11,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
     constructor() {
         super();
         this.lang = 'de';
+        this.value = '';
     }
 
     /**
@@ -18,6 +20,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
     static get properties() {
         return {
             lang: { type: String },
+            value: { type: String },
         };
     }
 
@@ -26,6 +29,22 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         i18n.changeLanguage(this.lang);
         const that = this;
 
+        JSONLD.initialize(utils.getAPiUrl(), function (jsonld) {
+            // TODO: there is no entity url without "collectionOperations"
+            const apiUrl = jsonld.getApiUrlForEntityName("KnowledgeBaseWebPageElement") + '/' + that.value;
+            console.log(apiUrl);
+
+            fetch(apiUrl, {
+                headers: {
+                    'Content-Type': 'application/ld+json',
+                    'Authorization': 'Bearer ' + that.token,
+                },
+            })
+                .then(response => response.json())
+                .then((person) => {
+                    console.log(person);
+                });
+        });
 
         this.updateComplete.then(()=>{
         });

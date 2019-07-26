@@ -36,7 +36,7 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
                     <vpu-auth lang="${this.lang}" client-id="${utils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
                 </div>
                 <div class="container">
-                    <vpu-knowledge-base-web-page-element-view lang="${this.lang}"></vpu-knowledge-base-web-page-element-view>
+                    <vpu-knowledge-base-web-page-element-view lang="${this.lang}" value="bedienstete/bibliothek/buch-ausleihen"></vpu-knowledge-base-web-page-element-view>
                 </div>
             </section>
         `;
