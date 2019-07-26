@@ -134,11 +134,23 @@ export default class JSONLD {
     }
 
     getApiUrlForIdentifier(identifier) {
-        return this.getEntityForIdentifier(identifier)["@entryPoint"];
+        const entity = this.getEntityForIdentifier(identifier);
+
+        if (entity === undefined || entity["@entryPoint"] === undefined) {
+            throw new Error(`Entity with identifier "${identifier}" not found!`);
+        }
+
+        return entity["@entryPoint"];
     }
 
     getApiUrlForEntityName(entityName) {
-        return this.getEntityForEntityName(entityName)["@entryPoint"];
+        const entity = this.getEntityForEntityName(entityName);
+
+        if (entity === undefined || entity["@entryPoint"] === undefined) {
+            throw new Error(`Entity "${entityName}" not found!`);
+        }
+
+        return entity["@entryPoint"];
     }
 
     getEntityNameForIdentifier(identifier) {
