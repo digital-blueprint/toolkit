@@ -53,4 +53,21 @@ module.exports = {
         list.forEach((item) => {data.push({id: item, text: item})});
         return data;
     },
+
+    /**
+     * Does generic Base64 Encoding with support for 16-bit encoded strings
+     * @see https://www.base64encoder.io/javascript/
+     *
+     * @param str
+     * @returns {string}
+     */
+    base64EncodeUnicode: (str) => {
+        // First we escape the string using encodeURIComponent to get the UTF-8 encoding of the characters,
+        // then we convert the percent encodings into raw bytes, and finally feed it to btoa() function.
+        const utf8Bytes = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        });
+
+        return btoa(utf8Bytes);
+    }
 };
