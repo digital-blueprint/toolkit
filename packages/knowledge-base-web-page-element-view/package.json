@@ -18,6 +18,7 @@
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "i18next": "^17.0.3",
     "lit-element": "^2.1.0",
+    "lit-html": "^1.1.1",
     "vpu-auth": "*",
     "vpu-common": "*"
   },
