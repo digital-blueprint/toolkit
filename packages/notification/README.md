@@ -16,9 +16,9 @@
 ## Sending notifications 
 
 ```javascript
-import notification from './notification';
+import { send } from './notification';
 
-notification.send({
+send({
     "summary": "Item deleted",
     "body": "Item foo was deleted!",
     "type": "info",
