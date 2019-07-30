@@ -1,6 +1,7 @@
 import {i18n} from './i18n';
 import notification from './notification';
 import {html, LitElement} from 'lit-element';
+import './vpu-notification';
 
 class NotificationDemo extends LitElement {
     constructor() {
