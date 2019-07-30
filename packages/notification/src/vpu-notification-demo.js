@@ -1,5 +1,5 @@
 import {i18n} from './i18n';
-import notification from './notification';
+import {send as notify} from './notification';
 import {html, LitElement} from 'lit-element';
 import './vpu-notification';
 
@@ -49,7 +49,7 @@ class NotificationDemo extends LitElement {
 
     send() {
         const types = ["primary", "link", "info", "success", "danger", "warning"];
-        notification.send({
+        notify({
             "summary": "Item deleted",
             "body": `Item ${Math.random().toString(36).substring(7)} foo was deleted!`,
             "type": types[Math.floor(Math.random() * types.length)],
