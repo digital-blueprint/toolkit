@@ -1,6 +1,7 @@
 import utils from './utils.js';
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
+import './person-select.js';
 
 class PersonSelectDemo extends LitElement {
     constructor() {
