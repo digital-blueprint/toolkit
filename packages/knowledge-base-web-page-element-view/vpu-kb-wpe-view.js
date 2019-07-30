@@ -39,7 +39,8 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
 
         // sadly there there is no entity url without "collectionOperations" in entity KnowledgeBaseWebPageElement!
         const apiUrl = utils.getAPiUrl("/web_page_elements/knowledge_base_web_page_elements/") +
-            encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(that.value)));
+            encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(that.value))) +
+            "?lang=" + encodeURIComponent(that.lang);
 
         window.addEventListener("vpu-auth-init", function(e)
         {

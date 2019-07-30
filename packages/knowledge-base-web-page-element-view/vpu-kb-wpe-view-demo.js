@@ -29,14 +29,19 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 
             <section class="section">
-                <div class="container">
+                <div class="content">
                     <h1 class="title">KnowledgeBaseWebPageElementView-Demo</h1>
                 </div>
-                <div class="container">
-                    <vpu-auth lang="${this.lang}" client-id="${utils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
+                <div class="content">
+                    <vpu-auth lang="de" client-id="${utils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
                 </div>
-                <div class="container">
-                    <vpu-knowledge-base-web-page-element-view lang="${this.lang}" value="bedienstete/bibliothek/buch-ausleihen"></vpu-knowledge-base-web-page-element-view>
+                <div class="content">
+                    <h2 class="subtitle">Deutsch</h2>
+                    <vpu-knowledge-base-web-page-element-view lang="de" value="bedienstete/bibliothek/buch-ausleihen"></vpu-knowledge-base-web-page-element-view>
+                </div>
+                <div class="content">
+                    <h2 class="subtitle">Englisch</h2>
+                    <vpu-knowledge-base-web-page-element-view lang="en" value="bedienstete/bibliothek/buch-ausleihen"></vpu-knowledge-base-web-page-element-view>
                 </div>
             </section>
         `;
