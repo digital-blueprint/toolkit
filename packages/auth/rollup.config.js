@@ -1,3 +1,4 @@
+import path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
@@ -6,18 +7,25 @@ import {terser} from "rollup-plugin-terser";
 import json from 'rollup-plugin-json';
 import replace from "rollup-plugin-replace";
 import serve from 'rollup-plugin-serve';
+import multiEntry from 'rollup-plugin-multi-entry';
 
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
 export default {
-    input: 'src/demo.js',
+    input: (build != 'test') ? 'src/demo.js' : 'test/**/*.js',
     output: {
         file: 'dist/bundle.js',
         format: 'esm'
     },
     plugins: [
-        resolve(),
+        multiEntry(),
+        resolve({
+          customResolveOptions: {
+            // ignore node_modules from vendored packages
+            moduleDirectory: path.join(process.cwd(), 'node_modules')
+          }
+        }),
         commonjs(),
         json(),
         replace({
@@ -28,7 +36,7 @@ export default {
             minimize: false,
             plugins: []
         }),
-        (build !== 'local') ? terser() : false,
+        (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [
                 'assets/index.html',
