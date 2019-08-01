@@ -15,6 +15,9 @@ npm install
 
 # constantly build dist/bundle.js and run a local web-server on port 8002 
 npm run watch-local
+
+# run tests
+npm test
 ```
 
 Jump to <http://localhost:8002> and you should get a Single Sign On login page.
