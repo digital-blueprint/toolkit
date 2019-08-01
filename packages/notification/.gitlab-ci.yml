@@ -15,6 +15,5 @@ test:
   script:
     - apt update
     - apt install -y npm
-    - npm run setup
     - npm install
     - npm run build
