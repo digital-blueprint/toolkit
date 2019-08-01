@@ -15,6 +15,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         this.lang = 'de';
         this.value = '';
         this.html = '';
+        this.apiUrl = utils.getAPiUrl();
     }
 
     /**
@@ -25,6 +26,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
             lang: { type: String },
             value: { type: String },
             html: { type: String, attribute: false },
+            apiUrl: { type: String, attribute: 'api-url' },
         };
     }
 
@@ -33,12 +35,13 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         i18n.changeLanguage(this.lang);
         const that = this;
 
-        // JSONLD.initialize(utils.getAPiUrl(), function (jsonld) {
-        //     const apiUrl = jsonld.getApiUrlForEntityName("KnowledgeBaseWebPageElement") + '/' + btoa(that.value);
+        // JSONLD.initialize(this.apiUrl, function (jsonld) {
+        //     const apiUrl = jsonld.getApiUrlForEntityName("KnowledgeBaseWebPageElement") + '/' +
+        //         encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(that.value)));
         // });
 
         // sadly there there is no entity url without "collectionOperations" in entity KnowledgeBaseWebPageElement!
-        const apiUrl = utils.getAPiUrl("/web_page_elements/knowledge_base_web_page_elements/") +
+        const apiUrl = this.apiUrl + "/web_page_elements/knowledge_base_web_page_elements/" +
             encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(that.value))) +
             "?lang=" + encodeURIComponent(that.lang);
 
