@@ -15,7 +15,6 @@ test:
   script:
     - apt update
     - apt install -y npm chromium
-    - npm run setup
     - npm install
     - npm run build
     - npm test
