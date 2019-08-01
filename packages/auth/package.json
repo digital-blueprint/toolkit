@@ -21,13 +21,13 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-terser": "^4.0.4"
+    "rollup-plugin-terser": "^4.0.4",
+    "vpu-common": "file:./vendor/common"
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "i18next": "^17.0.3",
-    "lit-element": "^2.1.0",
-    "vpu-common": "file:./vendor/common"
+    "lit-element": "^2.1.0"
   },
   "scripts": {
     "clean": "rm dist/*",
