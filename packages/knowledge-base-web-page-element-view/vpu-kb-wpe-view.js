@@ -40,30 +40,39 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         //         encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(that.value)));
         // });
 
+        window.addEventListener("vpu-auth-init", () => that.loadWebPageElement());
+    }
+
+    /**
+     * Loads the data from the web page element
+     */
+    loadWebPageElement() {
         // sadly there there is no entity url without "collectionOperations" in entity KnowledgeBaseWebPageElement!
         const apiUrl = this.apiUrl + "/web_page_elements/knowledge_base_web_page_elements/" +
-            encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(that.value))) +
-            "?lang=" + encodeURIComponent(that.lang);
+            encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(this.value))) +
+            "?lang=" + encodeURIComponent(this.lang);
 
-        window.addEventListener("vpu-auth-init", function(e)
-        {
-            fetch(apiUrl, {
-                headers: {
-                    'Content-Type': 'application/ld+json',
-                    'Authorization': 'Bearer ' + window.VPUAuthToken,
-                },
+        fetch(apiUrl, {
+            headers: {
+                'Content-Type': 'application/ld+json',
+                'Authorization': 'Bearer ' + window.VPUAuthToken,
+            },
+        })
+            .then(res => res.json())
+            .then(webPageElement => {
+                if (webPageElement !== undefined && webPageElement.text !== undefined) {
+                    this.html = webPageElement.text;
+                }
             })
-                .then(res => res.json())
-                .then(webPageElement => {
-                    if (webPageElement !== undefined && webPageElement.text !== undefined) {
-                        that.html = webPageElement.text;
-                    }
-                })
-                // catch e.g. 404 errors
-                .catch();
-        });
+            // catch e.g. 404 errors
+            .catch();
+    }
 
-        this.updateComplete.then(()=>{
+    updated(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            if (propName === "value") {
+                this.loadWebPageElement();
+            }
         });
     }
 
