@@ -10,8 +10,12 @@
 
 ## Attributes
 
+- `value`: path to the web page element
+    - example `<vpu-knowledge-base-web-page-element-view value="path/to/my/article"></vpu-knowledge-base-web-page-element-view>`
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-knowledge-base-web-page-element-view lang="de" client-id="my-client-id"></vpu-knowledge-base-web-page-element-view>`
+    - example `<vpu-knowledge-base-web-page-element-view lang="de"></vpu-knowledge-base-web-page-element-view>`
+- `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
+    - example `<vpu-knowledge-base-web-page-element-view entry-point-url="http://127.0.0.1:8000"></vpu-knowledge-base-web-page-element-view>`
 
 ## Local development
 
