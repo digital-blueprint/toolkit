@@ -47,6 +47,10 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
      * Loads the data from the web page element
      */
     loadWebPageElement() {
+        if (window.VPUAuthToken === undefined || window.VPUAuthToken === "") {
+            return;
+        }
+
         // sadly there there is no entity url without "collectionOperations" in entity KnowledgeBaseWebPageElement!
         const apiUrl = this.entryPointUrl + "/web_page_elements/knowledge_base_web_page_elements/" +
             encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(this.value))) +
