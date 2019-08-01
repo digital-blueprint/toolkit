@@ -34,11 +34,7 @@ git clone git@gitlab.tugraz.at:VPU/WebComponents/Auth.git
 cd Auth
 git submodule update --init
 
-# we are creating the symbolic links to our git sub-modules
-# (there was no proper script to do this automatically before a "node install"
-npm run setup
-
-# install dependencies
+# install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)
 npm install
 
 # constantly build dist/bundle.js and run a local web-server on port 8002 
