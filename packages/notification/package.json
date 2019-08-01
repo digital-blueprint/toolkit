@@ -22,7 +22,6 @@
     "lit-element": "^2.1.0"
   },
   "scripts": {
-    "setup": "mkdir -p node_modules && cd node_modules && ln -sfn ../vendor/common vpu-common",
     "clean": "rm dist/*",
     "build": "npm run build-local",
     "build-local": "rollup -c",
