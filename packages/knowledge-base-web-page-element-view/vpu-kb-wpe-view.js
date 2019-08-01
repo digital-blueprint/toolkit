@@ -74,8 +74,16 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
 
     updated(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "value") {
-                this.loadWebPageElement();
+            if (propName === "lang") {
+                i18n.changeLanguage(this.lang);
+            }
+
+            switch(propName) {
+                case "lang":
+                case "value":
+                case "entry-point-url":
+                    this.loadWebPageElement();
+                    break;
             }
         });
     }
