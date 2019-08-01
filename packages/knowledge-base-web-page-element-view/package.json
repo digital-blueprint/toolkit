@@ -12,18 +12,17 @@
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-replace": "^2.2.0",
-    "i18next-scanner": "^2.10.2"
+    "i18next-scanner": "^2.10.2",
+    "vpu-auth": "file:./vendor/auth",
+    "vpu-common": "file:./vendor/common"
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "i18next": "^17.0.3",
     "lit-element": "^2.1.0",
-    "lit-html": "^1.1.1",
-    "vpu-auth": "*",
-    "vpu-common": "*"
+    "lit-html": "^1.1.1"
   },
   "scripts": {
-    "setup": "mkdir -p node_modules && cd node_modules && ln -sfn ../vendor/auth vpu-auth && ln -sfn ../vendor/common vpu-common",
     "clean": "rm dist/*",
     "build": "npm run build-local",
     "build-local": "rollup -c",
