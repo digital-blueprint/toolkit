@@ -30,7 +30,6 @@ class PersonSelect extends VPULitElementJQuery {
 
         this.updateComplete.then(()=>{
             const that = this;
-            let lastResult = {};
 
             JSONLD.initialize(utils.getAPiUrl(), function (jsonld) {
                 that.jsonld = jsonld;
