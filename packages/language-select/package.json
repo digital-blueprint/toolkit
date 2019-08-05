@@ -1,5 +1,5 @@
 {
-  "name": "vpu-person-select",
+  "name": "vpu-language-select",
   "version": "1.0.0",
   "main": "src/index.js",
   "devDependencies": {
