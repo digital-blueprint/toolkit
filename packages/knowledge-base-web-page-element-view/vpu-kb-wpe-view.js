@@ -17,7 +17,6 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         this.html = '';
         this.entryPointUrl = utils.getAPiUrl();
         this.error = '';
-        this.id = String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Date.now();
         this.eyeClose = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA1ElEQVQ4ja3SMU5CURCF4c+ejpiILe5DZAGyASuJS5CKEoMGKhdAwWKgMkriKjQWFkAkBizgmckNPEgeJ7nVuee/M3eGI2mCehFAHZ/Hgtygizd84wsjPOHsEMgUqx1njvtd4R7uAmSIMipo4SeAHtLwdTCbG8gHLsOdVlJN9LwEY4nSFsh5AhhHwGtinoY/ySDlPEAjMbvByyDDvBbgOZi/eNxUkrUTp9NJw3CCNhbJS0vcBshgWzjqAn28W899Zr1U1dBObR8kT9nGXhWFTIoA/vUHQydS/iUcHx4AAAAASUVORK5CYII=';
         this.eyeOpen = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA5UlEQVQ4jc3SvS7EURAF8B+JioSsCokHUFgNiWewQqvzICRew2v4WLFUnoNS/msrazUaFOYm12RlVeIkk9ycM2fmztzLf8U02tiPaAc3EbM4Rh8fKfo4wdxP5nXcV4YhLnGO54p/wEY2b6akHhYqfR7dVHyriMt4qsQRWtiNaw+wFwWHaaQlcc161l4UblIyXKTcM7hL5FUk14tsgsvNumIhb2NG6ISxiXMrtJI3wErZwyHeK/E2DAWLuKn0F2xLOEgdRriOeK34sc9YsIpT37dd4hFHvj7bRMxElw52sIap3xj/Hp9rzGFBhiMSxAAAAABJRU5ErkJggg==';
         //this.css = 'kb.css';
@@ -123,7 +122,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
     }
 
     toggle(e) {
-        const element = this.shadowRoot.querySelector('#' + this.id);
+        const element = this.shadowRoot.querySelector('#A1');
         const img = e.target;
         const d = element.style.display;
         if(d === '' || d === 'none') {
@@ -145,7 +144,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
                 }
             </style>
             <span>${this.text}<img src='${this.eyeOpen}' @click="${this.toggle}" alt="open/close"></span>
-            <div class='kb' id="${this.id}">
+            <div class='kb' id="A1">
                 ${unsafeHTML(this.html)}
                 ${this.error}
             </div>
