@@ -43,7 +43,7 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
                 <div class="content">
                     <h2 class="subtitle">Englisch</h2>
                     <p>A first step</p>
-                    <vpu-knowledge-base-web-page-element-view lang="en"entry-point-url="${utils.getAPiUrl()}"  value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></vpu-knowledge-base-web-page-element-view>
+                    <vpu-knowledge-base-web-page-element-view lang="en" entry-point-url="${utils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></vpu-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
                 <div class="content">
