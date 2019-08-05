@@ -1,0 +1,19 @@
+import '../src/language-select';
+
+describe('vpu-language-select basics', () => {
+  let node;
+
+  beforeEach(async () => {
+    node = document.createElement('vpu-language-select');
+    document.body.appendChild(node);
+    await node.updateComplete;
+  });
+
+  afterEach(() => {
+    node.remove();
+  });
+
+  it('should render', () => {
+      expect(node).to.have.property('shadowRoot');
+  });
+});
