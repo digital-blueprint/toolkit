@@ -123,8 +123,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
     }
 
     toggle(e) {
-        const id = this.id;
-        const element = this.shadowRoot.querySelector('#' + id);
+        const element = this.shadowRoot.querySelector('#' + this.id);
         const img = e.target;
         const d = element.style.display;
         if(d === '' || d === 'none') {
@@ -138,7 +137,6 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
 
     render() {
         //<link rel="stylesheet" href="${this.css}">
-        const id = this.id;
         return html`
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
             <style>
@@ -147,7 +145,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
                 }
             </style>
             <span>${this.text}<img src='${this.eyeOpen}' @click="${this.toggle}" alt="open/close"></span>
-            <div class='kb' id="${id}">
+            <div class='kb' id="${this.id}">
                 ${unsafeHTML(this.html)}
                 ${this.error}
             </div>
