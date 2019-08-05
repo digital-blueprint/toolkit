@@ -37,19 +37,22 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Deutsch</h2>
-                    Ein Buch ausleihen...
-                    <vpu-knowledge-base-web-page-element-view entry-point-url="${utils.getAPiUrl()}" lang="de" value="bedienstete/bibliothek/buch-ausleihen" text="..."></vpu-knowledge-base-web-page-element-view>
+                    <p>Ein erster Schritt</p>
+                    <vpu-knowledge-base-web-page-element-view lang="de" entry-point-url="${utils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></vpu-knowledge-base-web-page-element-view>
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Englisch</h2>
-                    Borrow a book...
-                    <vpu-knowledge-base-web-page-element-view entry-point-url="${utils.getAPiUrl()}" lang="en" value="bedienstete/bibliothek/buch-ausleihen" text="..."></vpu-knowledge-base-web-page-element-view>
+                    <p>A first step</p>
+                    <vpu-knowledge-base-web-page-element-view lang="en"entry-point-url="${utils.getAPiUrl()}"  value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></vpu-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
                 <div class="content">
-                    FAQ...
-                    <vpu-knowledge-base-web-page-element-view lang="${this.lang}" value="abc/def/xyz"></vpu-knowledge-base-web-page-element-view>
-                    <br>
+                    <p>mit Text in der WebComponent:</p>
+                    <vpu-knowledge-base-web-page-element-view lang="${this.lang}" value="abc/def/xyz" text="FAQ"></vpu-knowledge-base-web-page-element-view>
+                </div>
+                <hr>
+                <div class="content">
+                    <p>ohne Text in der WebComponent:</p>
                     Kontaktieren Sie uns unter...
                     <vpu-knowledge-base-web-page-element-view lang="${this.lang}" value="abc/def/klm"></vpu-knowledge-base-web-page-element-view>
                 </div>
