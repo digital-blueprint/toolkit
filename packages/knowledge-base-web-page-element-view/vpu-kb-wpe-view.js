@@ -77,23 +77,20 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
                 let status_msg;
                 switch (res.status) {
                     case 403:
-                        status_msg = that.lang === 'de' ? 'ist verboten' : 'is forbidden';
+                        status_msg = i18n.t('is-forbidden');
                         break;
                     case 404:
-                        status_msg = that.lang === 'de' ? 'wurde nicht gefunden' : 'was not found';
+                        status_msg = i18n.t('was-not-found');
                         break;
                     case 500:
-                        status_msg = that.lang === 'de' ? 'macht Probleme am Server' : 'troubled server';
+                        status_msg = i18n.t('troubled-server');
                         break;
                     default:
-                        status_msg = that.lang === 'de' ? 'mit unbekanntem Problem' : 'with unknown problems';
+                        status_msg = i18n.t('unknown-problems');
                 }
-                if (that.lang === 'de') {
-                    that.error = html`<p>FEHLER: Information "<b>${that.value}</b>" ${status_msg} (${res.status}).</p>`;
-                } else {
-                    that.error = html`<p>ERROR: information "<b>${that.value}</b>" ${status_msg} (${res.status}).</p>`;
-                }
-                throw new Error('HTTP error: ' +that.value + ' ' + status_msg + ', status = ' + res.status);
+                const error_head = i18n.t('error-head');
+                that.error = html`<p>${error_head} "<b>${that.value}</b>" ${status_msg} (${res.status}).</p>`;
+                throw new Error('HTTP ' + error_head + ' ' + that.value + ' ' + status_msg + ', status = ' + res.status);
             }
             return res.json();
         })
