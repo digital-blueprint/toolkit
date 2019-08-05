@@ -15,6 +15,7 @@ class PersonSelect extends VPULitElementJQuery {
     constructor() {
         super();
         this.lang = 'de';
+        this.jsonld = null;
     }
 
     static get properties() {
@@ -29,72 +30,11 @@ class PersonSelect extends VPULitElementJQuery {
 
         this.updateComplete.then(()=>{
             const that = this;
-            const $that = $(this);
             let lastResult = {};
 
             JSONLD.initialize(utils.getAPiUrl(), function (jsonld) {
-                // find the correct api url for a person
-                const apiUrl = jsonld.getApiUrlForIdentifier("http://schema.org/Person");
-                // const apiUrl = jsonld.getApiUrlForEntityName("Event");
-
-                // the mapping we need for Select2
-                const localContext = {
-                    "id": "@id",
-                    "text": "http://schema.org/name"
-                };
-
-                const $select = that.$('#person-select');
-
-                $select.select2({
-                    width: '100%',
-                    language: that.lang === "de" ? select2LangDe() : select2LangEn(),
-                    minimumInputLength: 2,
-                    placeholder: i18n.t('person-select.placeholder'),
-                    dropdownParent: that.$('#person-select-dropdown'),
-                    ajax: {
-                        delay: 250,
-                        url: apiUrl,
-                        contentType: "application/ld+json",
-                        beforeSend: function( jqXHR ) {
-                            jqXHR.setRequestHeader('Authorization', 'Bearer ' + window.VPUAuthToken);
-                        },
-                        data: function (params) {
-                            return {
-                                search: params.term,
-                                'library-only': 1
-                            };
-                        },
-                        processResults: function (data) {
-                            console.log(data);
-                            lastResult = data;
-
-                            const results = jsonld.transformMembers(data, localContext);
-
-                            console.log("results");
-                            console.log(results);
-
-                            return {
-                                results: results
-                            };
-                        }
-                    }
-                }).on("select2:select", function(e) {
-                    // set value custom element
-                    const identifier = e.params.data.id;
-                    $that.attr("value", identifier);
-                    $that.val(identifier);
-
-                    const object = utils.findObjectInApiResults(identifier, lastResult);
-                    $that.attr("data-object", JSON.stringify(object));
-
-                    // fire a change event
-                    that.dispatchEvent(new CustomEvent('change', {
-                        detail: {
-                            value: identifier,
-                        },
-                        bubbles: true
-                    }));
-                });
+                that.jsonld = jsonld;
+                const $select = that.initSelect2();
 
                 // close the selector on blur of the web component
                 $(that).blur(() => {
@@ -104,6 +44,96 @@ class PersonSelect extends VPULitElementJQuery {
                 });
             });
         })
+    }
+
+    /**
+     * Initializes the Select2 selector
+     */
+    initSelect2() {
+        const that = this;
+        const $this = $(this);
+        let lastResult = {};
+
+        // find the correct api url for a person
+        const apiUrl = this.jsonld.getApiUrlForIdentifier("http://schema.org/Person");
+        // const apiUrl = this.jsonld.getApiUrlForEntityName("Event");
+
+        // the mapping we need for Select2
+        const localContext = {
+            "id": "@id",
+            "text": "http://schema.org/name"
+        };
+
+        const $select = this.$('#person-select');
+
+        $select.select2({
+            width: '100%',
+            language: this.lang === "de" ? select2LangDe() : select2LangEn(),
+            minimumInputLength: 2,
+            placeholder: i18n.t('person-select.placeholder'),
+            dropdownParent: this.$('#person-select-dropdown'),
+            ajax: {
+                delay: 250,
+                url: apiUrl,
+                contentType: "application/ld+json",
+                beforeSend: function (jqXHR) {
+                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + window.VPUAuthToken);
+                },
+                data: function (params) {
+                    return {
+                        search: params.term,
+                        'library-only': 1
+                    };
+                },
+                processResults: function (data) {
+                    console.log(data);
+                    lastResult = data;
+
+                    const results = that.jsonld.transformMembers(data, localContext);
+
+                    console.log("results");
+                    console.log(results);
+
+                    return {
+                        results: results
+                    };
+                }
+            }
+        }).on("select2:select", function (e) {
+            // set value custom element
+            const identifier = e.params.data.id;
+            $this.attr("value", identifier);
+            $this.val(identifier);
+
+            const object = utils.findObjectInApiResults(identifier, lastResult);
+            $this.attr("data-object", JSON.stringify(object));
+
+            // fire a change event
+            this.dispatchEvent(new CustomEvent('change', {
+                detail: {
+                    value: identifier,
+                },
+                bubbles: true
+            }));
+        });
+
+        return $select;
+    }
+
+    updated(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            if (propName === "lang") {
+                i18n.changeLanguage(this.lang);
+
+                const $select = this.$('#person-select.select2-hidden-accessible');
+
+                if ($select.length > 0) {
+                    // no other way to set an other language at runtime did work
+                    $select.select2('destroy');
+                    this.initSelect2();
+                }
+            }
+        });
     }
 
     render() {
