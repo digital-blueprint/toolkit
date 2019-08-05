@@ -27,10 +27,9 @@ class PersonSelect extends VPULitElementJQuery {
     connectedCallback() {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
+        const that = this;
 
         this.updateComplete.then(()=>{
-            const that = this;
-
             JSONLD.initialize(utils.getAPiUrl(), function (jsonld) {
                 that.jsonld = jsonld;
                 const $select = that.initSelect2();
