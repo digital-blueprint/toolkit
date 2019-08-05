@@ -108,7 +108,7 @@ class PersonSelect extends VPULitElementJQuery {
             $this.attr("data-object", JSON.stringify(object));
 
             // fire a change event
-            this.dispatchEvent(new CustomEvent('change', {
+            that.dispatchEvent(new CustomEvent('change', {
                 detail: {
                     value: identifier,
                 },
