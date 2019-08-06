@@ -2,6 +2,7 @@ import utils from './utils.js';
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import './vpu-auth';
+import commonUtils from 'vpu-common/utils';
 
 class AuthDemo extends LitElement {
     constructor() {
@@ -43,4 +44,4 @@ class AuthDemo extends LitElement {
     }
 }
 
-customElements.define('vpu-auth-demo', AuthDemo);
+commonUtils.defineCustomElement('vpu-auth-demo', AuthDemo);

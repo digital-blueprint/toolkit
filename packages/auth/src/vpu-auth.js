@@ -2,6 +2,7 @@ import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import JSONLD from 'vpu-common/jsonld'
 import utils from "./utils";
+import commonUtils from 'vpu-common/utils';
 
 /**
  * Keycloak auth web component
@@ -225,4 +226,4 @@ class VPUAuth extends LitElement {
     }
 }
 
-customElements.define('vpu-auth', VPUAuth);
+commonUtils.defineCustomElement('vpu-auth', VPUAuth);
