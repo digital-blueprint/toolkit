@@ -77,7 +77,7 @@ class LanguageSelect extends LitElement {
                     bubbles: true,
                     detail: {'lang': this.lang},
                 });
-                window.dispatchEvent(event);
+                this.dispatchEvent(event);
 
                 i18n.changeLanguage(this.lang);
             }
