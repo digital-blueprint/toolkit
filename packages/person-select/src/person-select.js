@@ -7,6 +7,7 @@ import JSONLD from 'vpu-common/jsonld';
 import {html} from 'lit-element';
 import {i18n} from './i18n.js';
 import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
+import commonUtils from 'vpu-common/utils';
 
 select2(window, $);
 
@@ -163,4 +164,4 @@ class PersonSelect extends VPULitElementJQuery {
     }
 }
 
-customElements.define('vpu-person-select', PersonSelect);
+commonUtils.defineCustomElement('vpu-person-select', PersonSelect);

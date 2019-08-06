@@ -2,6 +2,7 @@ import utils from './utils.js';
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import './person-select.js';
+import commonUtils from 'vpu-common/utils';
 
 class PersonSelectDemo extends LitElement {
     constructor() {
@@ -51,4 +52,4 @@ class PersonSelectDemo extends LitElement {
     }
 }
 
-customElements.define('vpu-person-select-demo', PersonSelectDemo);
+commonUtils.defineCustomElement('vpu-person-select-demo', PersonSelectDemo);
