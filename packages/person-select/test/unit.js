@@ -1,10 +1,10 @@
 import '../src/person-select';
 
-describe('vpu-library-person-select basics', () => {
+describe('vpu-person-select basics', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-library-person-select');
+    node = document.createElement('vpu-person-select');
     document.body.appendChild(node);
     await node.updateComplete;
   });

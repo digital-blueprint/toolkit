@@ -154,4 +154,4 @@ class PersonSelect extends VPULitElementJQuery {
     }
 }
 
-customElements.define('vpu-library-person-select', PersonSelect);
+customElements.define('vpu-person-select', PersonSelect);

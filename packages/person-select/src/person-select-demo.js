@@ -41,7 +41,7 @@ class PersonSelectDemo extends LitElement {
                         <div class="field">
                             <label class="label">Person</label>
                             <div class="control">
-                                <vpu-library-person-select lang="${this.lang}"></vpu-library-person-select>
+                                <vpu-person-select lang="${this.lang}"></vpu-person-select>
                             </div>
                         </div>
                     </form>
