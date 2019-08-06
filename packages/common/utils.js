@@ -69,5 +69,27 @@ module.exports = {
         });
 
         return btoa(utf8Bytes);
+    },
+
+    /**
+     * Like customElements.define() but tries to display an error in case the browser doesn't
+     * support everything we need.
+     *
+     * Returns false in case define failed, true otherwise.
+     *
+     * @returns {boolean}
+     */
+    defineCustomElement: (name, constructor, options) => {
+        // Checks taken from https://github.com/webcomponents/webcomponentsjs/blob/master/webcomponents-loader.js
+        if (!('attachShadow' in Element.prototype && 'getRootNode' in Element.prototype && window.customElements)) {
+            var elements = document.getElementsByTagName(name);
+            for(var i=0; i < elements.length; i++) {
+                elements[i].innerHTML = "<span style='border: 1px solid red; font-size: 0.8em; "
+                    + "opacity: 0.5; padding: 0.2em;'>☹ Your browser is not supported ☹</span>";
+            }
+           return false;
+        }
+        customElements.define(name, constructor, options);
+        return true;
     }
 };
