@@ -14,12 +14,14 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
-
-        this.updateComplete.then(()=>{
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            if (propName === "lang") {
+                i18n.changeLanguage(this.lang);
+            }
         });
+
+        super.update(changedProperties);
     }
 
     render() {
@@ -33,7 +35,7 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
                     <h1 class="title">KnowledgeBaseWebPageElementView-Demo</h1>
                 </div>
                 <div class="content">
-                    <vpu-auth lang="de" client-id="${utils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
+                    <vpu-auth lang="${this.lang}" client-id="${utils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Deutsch</h2>
