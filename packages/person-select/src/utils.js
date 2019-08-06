@@ -25,6 +25,10 @@ module.exports = {
     findObjectInApiResults: (identifier, results, identifierAttribute = "@id") => {
         const members = results["hydra:member"];
 
+        if (members === undefined) {
+            return;
+        }
+
         for (const object of members){
             if (object[identifierAttribute] === identifier) {
                 return object;

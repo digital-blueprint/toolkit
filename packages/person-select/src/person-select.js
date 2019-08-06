@@ -26,7 +26,6 @@ class PersonSelect extends VPULitElementJQuery {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
         const that = this;
 
         this.updateComplete.then(()=>{
@@ -118,7 +117,7 @@ class PersonSelect extends VPULitElementJQuery {
         return $select;
     }
 
-    updated(changedProperties) {
+    update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
                 i18n.changeLanguage(this.lang);
@@ -132,6 +131,8 @@ class PersonSelect extends VPULitElementJQuery {
                 }
             }
         });
+
+        super.update(changedProperties);
     }
 
     render() {
