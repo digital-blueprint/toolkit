@@ -15,12 +15,14 @@ class AuthDemo extends LitElement {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
-
-        this.updateComplete.then(()=>{
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            if (propName === "lang") {
+                i18n.changeLanguage(this.lang);
+            }
         });
+
+        super.update(changedProperties);
     }
 
     render() {
