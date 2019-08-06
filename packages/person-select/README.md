@@ -2,6 +2,17 @@
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/PersonSelect)
 
+## Usage
+
+```html
+<vpu-person-select></vpu-person-select>
+```
+
+## Attributes
+
+- `lang` (optional, default: `de`): set to `de` or `en` for German or English
+    - example `<vpu-person-select lang="de"></vpu-person-select>`
+
 ## Local development
 
 ```bash
