@@ -54,7 +54,6 @@ class VPUAuth extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
         const href = window.location.href;
 
         // load Keycloak if we want to force the login or if we were redirected from the Keycloak login page
@@ -189,6 +188,16 @@ class VPUAuth extends LitElement {
 
         console.log("Bearer " + this.token);
         this.dispatchKeycloakDataUpdateEvent();
+    }
+
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            if (propName === "lang") {
+                i18n.changeLanguage(this.lang);
+            }
+        });
+
+        super.update(changedProperties);
     }
 
     render() {
