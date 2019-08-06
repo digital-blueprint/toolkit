@@ -45,79 +45,84 @@ export default class JSONLD {
 
         initStarted[apiUrl] = true;
 
-        // window.VPUAuthToken will be set by on vpu-auth-init
-        window.addEventListener("vpu-auth-init", function(e)
-        {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", apiUrl, true);
-            xhr.setRequestHeader('Authorization', 'Bearer ' + window.VPUAuthToken);
+        if (window.VPUAuthToken !== undefined) {
+            JSONLD.doInitialization(apiUrl);
+        } else {
+            // window.VPUAuthToken will be set by vpu-auth-init event
+            window.addEventListener("vpu-auth-init", () => JSONLD.doInitialization(apiUrl));
+        }
+    }
 
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    const json = JSON.parse(xhr.responseText);
+    static doInitialization(apiUrl) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", apiUrl, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + window.VPUAuthToken);
 
-                    let entryPoints = {};
-                    for (let property in json) {
-                        // for some reason the properties start with a lower case character
-                        if (!property.startsWith("@")) entryPoints[property.toLowerCase()] = json[property];
-                    }
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                const json = JSON.parse(xhr.responseText);
 
-                    // read the link header of the api response
-//                    const utils = require("./utils");
-                    const links = utils.parseLinkHeader(this.getResponseHeader("link"));
+                let entryPoints = {};
+                for (let property in json) {
+                    // for some reason the properties start with a lower case character
+                    if (!property.startsWith("@")) entryPoints[property.toLowerCase()] = json[property];
+                }
 
-                    // get the hydra apiDocumentation url
-                    const apiDocUrl = links["http://www.w3.org/ns/hydra/core#apiDocumentation"];
+                // read the link header of the api response
+//                const utils = require("./utils");
+                const links = utils.parseLinkHeader(this.getResponseHeader("link"));
 
-                    if (apiDocUrl !== undefined) {
-                        // load the hydra apiDocumentation
-                        const docXhr = new XMLHttpRequest();
-                        docXhr.open("GET", apiDocUrl, true);
-                        docXhr.setRequestHeader("Content-Type", "application/json");
-                        docXhr.onreadystatechange = function () {
-                            if (docXhr.readyState === 4 && docXhr.status === 200) {
-                                const json = JSON.parse(docXhr.responseText);
-                                const supportedClasses = json["hydra:supportedClass"];
+                // get the hydra apiDocumentation url
+                const apiDocUrl = links["http://www.w3.org/ns/hydra/core#apiDocumentation"];
 
-                                let entities = {};
-                                const baseUrl = utils.parseBaseUrl(apiUrl);
+                if (apiDocUrl !== undefined) {
+                    // load the hydra apiDocumentation
+                    const docXhr = new XMLHttpRequest();
+                    docXhr.open("GET", apiDocUrl, true);
+                    docXhr.setRequestHeader("Content-Type", "application/json");
+                    docXhr.onreadystatechange = function () {
+                        if (docXhr.readyState === 4 && docXhr.status === 200) {
+                            const json = JSON.parse(docXhr.responseText);
+                            const supportedClasses = json["hydra:supportedClass"];
 
-                                // gather the entities
-                                supportedClasses.forEach(function (classData) {
-                                    // add entry point url
-                                    const entityName = classData["hydra:title"];
-                                    let entryPoint = entryPoints[entityName.toLowerCase()];
-                                    if (entryPoint !== undefined && !entryPoint.startsWith("http")) entryPoint = baseUrl + entryPoint;
-                                    classData["@entryPoint"] = entryPoint;
+                            let entities = {};
+                            const baseUrl = utils.parseBaseUrl(apiUrl);
 
-                                    entities[entityName] = classData;
-                                });
+                            // gather the entities
+                            supportedClasses.forEach(function (classData) {
+                                // add entry point url
+                                const entityName = classData["hydra:title"];
+                                let entryPoint = entryPoints[entityName.toLowerCase()];
+                                if (entryPoint !== undefined && !entryPoint.startsWith("http")) entryPoint = baseUrl + entryPoint;
+                                classData["@entryPoint"] = entryPoint;
 
-                                const instance = new JSONLD(baseUrl, entities);
-                                instances[apiUrl] = instance;
+                                entities[entityName] = classData;
+                            });
 
-                                // return the initialized JSONLD object
-                                for (const fnc of successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
-                                successFunctions[apiUrl] = [];
-                            } else {
-                                for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
-                                failureFunctions[apiUrl] = [];
-                            }
-                        };
+                            const instance = new JSONLD(baseUrl, entities);
+                            instances[apiUrl] = instance;
 
-                        docXhr.send();
-                    } else {
-                        for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
-                        failureFunctions[apiUrl] = [];
-                    }
+                            // return the initialized JSONLD object
+                            for (const fnc of successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
+                            successFunctions[apiUrl] = [];
+                        } else {
+                            for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
+                            failureFunctions[apiUrl] = [];
+                        }
+                    };
+
+                    docXhr.send();
                 } else {
                     for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
                     failureFunctions[apiUrl] = [];
                 }
-            };
+            } else {
+                for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
+                failureFunctions[apiUrl] = [];
+            }
+        };
 
-            xhr.send();
-        });
+        xhr.send();
     }
 
     static getInstance(apiUrl) {
