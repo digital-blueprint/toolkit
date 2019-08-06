@@ -21,6 +21,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         this.eyeOpen = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA5UlEQVQ4jc3SvS7EURAF8B+JioSsCokHUFgNiWewQqvzICRew2v4WLFUnoNS/msrazUaFOYm12RlVeIkk9ycM2fmztzLf8U02tiPaAc3EbM4Rh8fKfo4wdxP5nXcV4YhLnGO54p/wEY2b6akHhYqfR7dVHyriMt4qsQRWtiNaw+wFwWHaaQlcc161l4UblIyXKTcM7hL5FUk14tsgsvNumIhb2NG6ISxiXMrtJI3wErZwyHeK/E2DAWLuKn0F2xLOEgdRriOeK34sc9YsIpT37dd4hFHvj7bRMxElw52sIap3xj/Hp9rzGFBhiMSxAAAAABJRU5ErkJggg==';
         //this.css = 'kb.css';
         this.text = '';
+        this.class = '';
     }
 
     /**
@@ -41,7 +42,6 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
         const that = this;
 
         // JSONLD.initialize(this.entryPointUrl, function (jsonld) {
@@ -103,23 +103,29 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         .catch();
     }
 
-    updated(changedProperties) {
+    update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
                 i18n.changeLanguage(this.lang);
             }
+
             switch(propName) {
                 case "lang":
                 case "value":
                 case "entry-point-url":
                     this.loadWebPageElement();
                     break;
+                case "text":
+                    this.class = this.text !== '' ? 'has-text' : '';
+                    break;
             }
         });
+
+        super.update(changedProperties);
     }
 
     toggle(e) {
-        const element = this.shadowRoot.querySelector('#A1');
+        const element = this._('#A1');
         const img = e.target;
         const d = element.style.display;
         if(d === '' || d === 'none') {
@@ -136,11 +142,10 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         return html`
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
             <style>
-                .kb {
-                    display: none;
-                }
+                .kb {display: none}
+                span.has-text img {margin-left: 5px}
             </style>
-            <span>${this.text}<img src='${this.eyeOpen}' @click="${this.toggle}" alt="open/close"></span>
+            <span class="${this.class}">${this.text}<img src='${this.eyeOpen}' @click="${this.toggle}" alt="open/close"></span>
             <div class='kb' id="A1">
                 ${unsafeHTML(this.html)}
                 ${this.error}
