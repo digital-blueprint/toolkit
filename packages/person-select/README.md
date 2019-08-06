@@ -12,6 +12,8 @@
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<vpu-person-select lang="de"></vpu-person-select>`
+- `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
+    - example `<vpu-person-select entry-point-url="http://127.0.0.1:8000"></vpu-person-select>`
 
 ## Local development
 

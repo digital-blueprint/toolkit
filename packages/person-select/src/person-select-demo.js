@@ -41,7 +41,7 @@ class PersonSelectDemo extends LitElement {
                         <div class="field">
                             <label class="label">Person</label>
                             <div class="control">
-                                <vpu-person-select lang="${this.lang}"></vpu-person-select>
+                                <vpu-person-select lang="${this.lang}" entry-point-url="${utils.getAPiUrl()}"></vpu-person-select>
                             </div>
                         </div>
                     </form>

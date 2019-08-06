@@ -5,7 +5,7 @@ import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
 import JSONLD from 'vpu-common/jsonld';
 import {html} from 'lit-element';
-import {i18n, dateTimeFormat, numberFormat} from './i18n.js';
+import {i18n} from './i18n.js';
 import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
 
 select2(window, $);
@@ -15,12 +15,14 @@ class PersonSelect extends VPULitElementJQuery {
     constructor() {
         super();
         this.lang = 'de';
+        this.entryPointUrl = utils.getAPiUrl();
         this.jsonld = null;
     }
 
     static get properties() {
         return {
             lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         };
     }
 
@@ -29,7 +31,7 @@ class PersonSelect extends VPULitElementJQuery {
         const that = this;
 
         this.updateComplete.then(()=>{
-            JSONLD.initialize(utils.getAPiUrl(), function (jsonld) {
+            JSONLD.initialize(this.entryPointUrl, function (jsonld) {
                 that.jsonld = jsonld;
                 const $select = that.initSelect2();
 
@@ -62,6 +64,10 @@ class PersonSelect extends VPULitElementJQuery {
         };
 
         const $select = this.$('#person-select');
+
+        if ($select.hasClass('select2-hidden-accessible')) {
+            $select.select2('destroy');
+        }
 
         $select.select2({
             width: '100%',
@@ -126,7 +132,6 @@ class PersonSelect extends VPULitElementJQuery {
 
                 if ($select.length > 0) {
                     // no other way to set an other language at runtime did work
-                    $select.select2('destroy');
                     this.initSelect2();
                 }
             }
