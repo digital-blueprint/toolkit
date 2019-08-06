@@ -8,7 +8,7 @@ class LanguageSelect extends LitElement {
 
     constructor() {
         super();
-        this.lang = 'en';
+        this.lang = 'de';
         this.languages = ['de', 'en'];
 
         i18n.t('de');
