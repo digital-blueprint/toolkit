@@ -1,7 +1,8 @@
 import {i18n} from './i18n';
 import utils from './utils'
 import {html} from 'lit-element';
-import VPULitElement from 'vpu-common/vpu-lit-element'
+import VPULitElement from 'vpu-common/vpu-lit-element';
+import commonUtils from 'vpu-common/utils';
 
 /**
  * Notification web component
@@ -85,4 +86,4 @@ class VPUNotification extends VPULitElement {
     }
 }
 
-customElements.define('vpu-notification', VPUNotification);
+commonUtils.defineCustomElement('vpu-notification', VPUNotification);

@@ -2,6 +2,7 @@ import {i18n} from './i18n';
 import {send as notify} from './notification';
 import {html, LitElement} from 'lit-element';
 import './vpu-notification';
+import commonUtils from 'vpu-common/utils';
 
 class NotificationDemo extends LitElement {
     constructor() {
@@ -58,4 +59,4 @@ class NotificationDemo extends LitElement {
     }
 }
 
-customElements.define('vpu-notification-demo', NotificationDemo);
+commonUtils.defineCustomElement('vpu-notification-demo', NotificationDemo);
