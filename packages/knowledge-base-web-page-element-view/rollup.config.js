@@ -12,7 +12,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? 'index.js' : 'test/**/*.js',
+    input: (build != 'test') ? 'src/demo.js' : 'test/**/*.js',
     output: {
         file: 'dist/bundle.js',
         format: 'esm'
@@ -33,8 +33,8 @@ export default {
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [
-                'index.html',
-                'favicon.ico',
+                'assets/index.html',
+                'assets/favicon.ico',
                 'node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js',
                 'node_modules/@webcomponents/webcomponentsjs/bundles',
             ],

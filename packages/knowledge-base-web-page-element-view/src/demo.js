@@ -1,3 +1,5 @@
+import 'vpu-auth';
+import './vpu-kb-wpe-view.js';
 import utils from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
