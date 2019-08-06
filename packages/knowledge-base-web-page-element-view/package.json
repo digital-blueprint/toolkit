@@ -1,6 +1,7 @@
 {
   "name": "vpu-knowledge-base-web-page-element-view",
   "version": "1.0.0",
+  "main": "src/index.js",
   "devDependencies": {
     "karma": "^4.2.0",
     "karma-chai": "^0.1.0",
