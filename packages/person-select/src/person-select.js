@@ -39,7 +39,6 @@ class PersonSelect extends VPULitElementJQuery {
                 // the 500ms delay is a workaround to actually get an item selected when clicking on it,
                 // because the blur gets also fired when clicking in the selector
                 setTimeout(() => {that.$select.select2('close')}, 500);
-                console.log("blur");
             });
         });
     }
