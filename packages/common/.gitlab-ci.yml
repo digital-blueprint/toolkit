@@ -1,0 +1,19 @@
+image: debian:buster
+
+before_script:
+  - apt update
+  - apt install -y git
+  - "sed -i 's|git@gitlab.tugraz.at:VPU|../..|g' .gitmodules"
+  - git submodule sync
+  - git submodule update --init
+
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - apt update
+    - apt install -y npm chromium
+    - npm install
+    - npm test
