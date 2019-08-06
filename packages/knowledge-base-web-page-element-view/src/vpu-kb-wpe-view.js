@@ -154,4 +154,4 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
     }
 }
 
-customElements.define('vpu-knowledge-base-web-page-element-view', VPUKnowledgeBaseWebPageElementView);
+commonUtils.defineCustomElement('vpu-knowledge-base-web-page-element-view', VPUKnowledgeBaseWebPageElementView);

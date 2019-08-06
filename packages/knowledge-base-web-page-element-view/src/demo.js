@@ -3,6 +3,7 @@ import './vpu-kb-wpe-view.js';
 import utils from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
+import commonUtils from 'vpu-common/utils';
 
 class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     constructor() {
@@ -65,4 +66,4 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     }
 }
 
-customElements.define('vpu-knowledge-base-web-page-element-view-demo', KnowledgeBaseWebPageElementViewDemo);
+commonUtils.defineCustomElement('vpu-knowledge-base-web-page-element-view-demo', KnowledgeBaseWebPageElementViewDemo);
