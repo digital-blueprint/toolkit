@@ -17,6 +17,7 @@ class PersonSelect extends VPULitElementJQuery {
         this.lang = 'de';
         this.entryPointUrl = utils.getAPiUrl();
         this.jsonld = null;
+        this.$select = null;
     }
 
     static get properties() {
@@ -31,17 +32,7 @@ class PersonSelect extends VPULitElementJQuery {
         const that = this;
 
         this.updateComplete.then(()=>{
-            JSONLD.initialize(this.entryPointUrl, function (jsonld) {
-                that.jsonld = jsonld;
-                const $select = that.initSelect2();
-
-                // close the selector on blur of the web component
-                $(that).blur(() => {
-                    // the 500ms delay is a workaround to actually get an item selected when clicking on it,
-                    // because the blur gets also fired when clicking in the selector
-                    setTimeout(() => {$select.select2('close')}, 500);
-                });
-            });
+            that.$select = that.$('#person-select');
         })
     }
 
@@ -63,13 +54,11 @@ class PersonSelect extends VPULitElementJQuery {
             "text": "http://schema.org/name"
         };
 
-        const $select = this.$('#person-select');
-
-        if ($select.hasClass('select2-hidden-accessible')) {
-            $select.select2('destroy');
+        if (this.$select.hasClass('select2-hidden-accessible')) {
+            this.$select.select2('destroy');
         }
 
-        $select.select2({
+        this.$select.select2({
             width: '100%',
             language: this.lang === "de" ? select2LangDe() : select2LangEn(),
             minimumInputLength: 2,
@@ -120,20 +109,35 @@ class PersonSelect extends VPULitElementJQuery {
             }));
         });
 
-        return $select;
+        return this.$select;
     }
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+            switch (propName) {
+                case "lang":
+                    i18n.changeLanguage(this.lang);
 
-                const $select = this.$('#person-select.select2-hidden-accessible');
+                    if (this.$select !== null && this.$select.hasClass("select2-hidden-accessible")) {
+                        // no other way to set an other language at runtime did work
+                        this.initSelect2();
+                    }
+                    break;
+                case "entryPointUrl":
+                    const that = this;
 
-                if ($select.length > 0) {
-                    // no other way to set an other language at runtime did work
-                    this.initSelect2();
-                }
+                    JSONLD.initialize(this.entryPointUrl, function (jsonld) {
+                        that.jsonld = jsonld;
+                        that.$select = that.initSelect2();
+
+                        // close the selector on blur of the web component
+                        $(that).blur(() => {
+                            // the 500ms delay is a workaround to actually get an item selected when clicking on it,
+                            // because the blur gets also fired when clicking in the selector
+                            setTimeout(() => {that.$select.select2('close')}, 500);
+                        });
+                    });
+                    break;
             }
         });
 
