@@ -1,5 +1,6 @@
 import {html, css, LitElement} from 'lit-element';
 import {i18n, dateTimeFormat, numberFormat} from './i18n.js';
+import utils from 'vpu-common/utils';
 
 /**
  * Emits a vpu-language-changed event where event.detail.lang is the new selected language
@@ -99,4 +100,4 @@ class LanguageSelect extends LitElement {
     }
 }
 
-customElements.define('vpu-language-select', LanguageSelect);
+utils.defineCustomElement('vpu-language-select', LanguageSelect);
