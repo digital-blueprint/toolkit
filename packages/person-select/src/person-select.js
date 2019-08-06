@@ -33,7 +33,15 @@ class PersonSelect extends VPULitElementJQuery {
 
         this.updateComplete.then(()=>{
             that.$select = that.$('#person-select');
-        })
+
+            // close the selector on blur of the web component
+            $(that).blur(() => {
+                // the 500ms delay is a workaround to actually get an item selected when clicking on it,
+                // because the blur gets also fired when clicking in the selector
+                setTimeout(() => {that.$select.select2('close')}, 500);
+                console.log("blur");
+            });
+        });
     }
 
     /**
@@ -129,13 +137,6 @@ class PersonSelect extends VPULitElementJQuery {
                     JSONLD.initialize(this.entryPointUrl, function (jsonld) {
                         that.jsonld = jsonld;
                         that.$select = that.initSelect2();
-
-                        // close the selector on blur of the web component
-                        $(that).blur(() => {
-                            // the 500ms delay is a workaround to actually get an item selected when clicking on it,
-                            // because the blur gets also fired when clicking in the selector
-                            setTimeout(() => {that.$select.select2('close')}, 500);
-                        });
                     });
                     break;
             }
