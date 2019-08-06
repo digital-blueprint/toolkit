@@ -13,6 +13,8 @@ class LanguageSelect extends LitElement {
 
         i18n.t('de');
         i18n.t('en');
+
+        this.onExternalChange = this.onExternalChange.bind(this);
     }
 
     static get properties() {
@@ -54,7 +56,21 @@ class LanguageSelect extends LitElement {
         `;
     } 
 
-    updated(changedProperties) {
+    onExternalChange(e) {
+        this.lang = e.detail.lang
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('vpu-language-changed', this.onExternalChange);
+    }
+
+    disconnectedCallback() {
+        document.removeEventListener('vpu-language-changed', this.onExternalChange);
+        super.disconnectedCallback();
+    }
+
+    update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === 'lang') {
                 const event = new CustomEvent("vpu-language-changed", {
@@ -64,11 +80,10 @@ class LanguageSelect extends LitElement {
                 window.dispatchEvent(event);
 
                 i18n.changeLanguage(this.lang);
-                this.requestUpdate();
             }
         });
 
-        super.updated(changedProperties);
+        super.update(changedProperties);
     }
 
     onSelectChange(e) {
