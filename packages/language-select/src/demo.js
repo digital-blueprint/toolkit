@@ -6,6 +6,7 @@ class LanguageSelectDemo extends LitElement {
     constructor() {
         super();
         this.lang = 'de';
+        this.handleChange =  this.handleChange.bind(this);
     }
 
     static get properties() {
@@ -20,11 +21,11 @@ class LanguageSelectDemo extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        window.addEventListener('vpu-language-changed', this.handleChange.bind(this));
+        window.addEventListener('vpu-language-changed', this.handleChange);
     }
 
     disconnectedCallback() {
-        windows.removeEventListener('vpu-language-changed', this.handleChange.bind(this));
+        window.removeEventListener('vpu-language-changed', this.handleChange);
         super.disconnectedCallback();
     }
 
