@@ -1,5 +1,5 @@
 import {i18n} from './i18n';
-import utils from './utils'
+import {createUUID} from './utils'
 import {html} from 'lit-element';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import commonUtils from 'vpu-common/utils';
@@ -33,7 +33,7 @@ class VPUNotification extends VPULitElement {
             }
 
             that.notificationBlock = that._("#notification");
-            const notificationId = `notification-${utils.createUUID()}`;
+            const notificationId = `notification-${createUUID()}`;
 
             const type = typeof e.detail.type !== 'undefined' ? e.detail.type : "info";
             const body = typeof e.detail.body !== 'undefined' ? e.detail.body : "";
