@@ -117,6 +117,14 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
                 case "value":
                 case "entry-point-url":
                     this.html = '';
+                    const img = this._('#A2');
+                    if (img !== null) {
+                        img.src = this.eyeOpen;
+                    }
+                    const div = this._('#A1');
+                    if (div !== null) {
+                        div.style.display = 'none';
+                    }
                     break;
                 case "text":
                     this.class = this.text !== '' ? 'has-text' : '';
@@ -128,17 +136,17 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
     }
 
     toggle(e) {
-        const element = this._('#A1');
-        const img = e.target;
-        const d = element.style.display;
+        const div = this._('#A1');
+        const img = this._('#A2');
+        const d = div.style.display;
         if(d === '' || d === 'none') {
-            element.style.display = 'block';
+            div.style.display = 'block';
             img.src = this.eyeClose;
         } else {
-            element.style.display = 'none';
+            div.style.display = 'none';
             img.src = this.eyeOpen;
         }
-        if (this.html === '' && element.style.display !== 'none') {
+        if (this.html === '' && div.style.display !== 'none') {
             this.loadWebPageElement();
         }
     }
@@ -150,8 +158,9 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
             <style>
                 .kb {display: none}
                 span.has-text img {margin-left: 5px}
+                span.with-pointer { cursor: pointer; }
             </style>
-            <span class="${this.class}">${this.text}<img src='${this.eyeOpen}' @click="${this.toggle}" alt="open/close"></span>
+            <span class="with-pointer ${this.class}" @click="${this.toggle}">${this.text}<img src="${this.eyeOpen}" id="A2" alt="open/close"></span>
             <div class='kb' id="A1">
                 ${unsafeHTML(this.html)}
                 ${this.error}
