@@ -1,5 +1,5 @@
 import {i18n} from './i18n';
-import {send as notify} from './notification';
+import {send as notify} from 'vpu-common/notification';
 import {html, LitElement} from 'lit-element';
 import './vpu-notification';
 import commonUtils from 'vpu-common/utils';

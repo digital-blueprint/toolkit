@@ -1,4 +1,4 @@
 import './vpu-notification';
-import { send } from './notification';
+import { send } from 'vpu-common/notification';
 
 export { send };

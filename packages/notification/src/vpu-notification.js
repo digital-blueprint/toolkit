@@ -56,6 +56,9 @@ class VPUNotification extends VPULitElement {
                     that.removeMessageId(messageId);
                 }, timeout * 1000);
             }
+
+            // mark the event as handled
+            e.preventDefault();
         });
 
         this.updateComplete.then(()=>{
