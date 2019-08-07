@@ -25,7 +25,8 @@ function send(options) {
 
     // true means the event was not handled
     if (result) {
-        alert((options.summary !== undefined && options.summary !== "" ? options.summary + ": " : "") + options.body)
+        alert((options.summary !== undefined && options.summary !== "" ? options.summary + ": " : "") + options.body);
+        console.log("Use the web component vpu-notification to show fancy notifications.");
     }
 }
 
