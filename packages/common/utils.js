@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     /**
      * Parses a link header
      *
