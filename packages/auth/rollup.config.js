@@ -26,7 +26,9 @@ export default {
             moduleDirectory: path.join(process.cwd(), 'node_modules')
           }
         }),
-        commonjs(),
+        commonjs({
+            include: 'node_modules/**'
+        }),
         json(),
         replace({
             "process.env.BUILD": '"' + build + '"',

@@ -1,6 +1,6 @@
-const vars = require("./vars");
+import vars from './vars.js';
 
-module.exports = {
+export default {
     getAPiUrl: function(path = "", withPrefix = true) {
         return vars.apiBaseUrl + (withPrefix ? vars.apiUrlPrefix : "") + path;
     },
