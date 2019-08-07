@@ -20,7 +20,9 @@ export default {
     plugins: [
         multiEntry(),
         resolve(),
-        commonjs(),
+        commonjs({
+            include: 'node_modules/**'
+        }),
         json(),
         replace({
             "process.env.BUILD": '"' + build + '"',

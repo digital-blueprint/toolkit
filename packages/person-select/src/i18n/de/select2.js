@@ -1,7 +1,7 @@
 /**
  * Content from https://github.com/select2/select2/blob/master/src/js/select2/i18n/de.js
  */
-module.exports = function () {
+export default function () {
     // German
     return {
         errorLoading: function () {

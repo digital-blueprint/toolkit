@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import utils from './utils.js';
+import {getAPiUrl, getAssetURL, findObjectInApiResults} from './utils.js';
 import select2 from 'select2';
 import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
@@ -16,7 +16,7 @@ class PersonSelect extends VPULitElementJQuery {
     constructor() {
         super();
         this.lang = 'de';
-        this.entryPointUrl = utils.getAPiUrl();
+        this.entryPointUrl = getAPiUrl();
         this.jsonld = null;
         this.$select = null;
     }
@@ -105,7 +105,7 @@ class PersonSelect extends VPULitElementJQuery {
             $this.attr("value", identifier);
             $this.val(identifier);
 
-            const object = utils.findObjectInApiResults(identifier, lastResult);
+            const object = findObjectInApiResults(identifier, lastResult);
             $this.attr("data-object", JSON.stringify(object));
 
             // fire a change event
@@ -146,7 +146,7 @@ class PersonSelect extends VPULitElementJQuery {
     }
 
     render() {
-        const select2CSS = utils.getAssetURL('select2/css/select2.min.css');
+        const select2CSS = getAssetURL('select2/css/select2.min.css');
 
         return html`
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
