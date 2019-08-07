@@ -40,6 +40,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         };
     }
 
+    /*
     connectedCallback() {
         super.connectedCallback();
         const that = this;
@@ -49,8 +50,10 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         //         encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(that.value)));
         // });
 
+        // disabled, load first on toggle to visible
         window.addEventListener("vpu-auth-init", () => that.loadWebPageElement());
     }
+    */
 
     /**
      * Loads the data from the web page element
@@ -113,7 +116,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
                 case "lang":
                 case "value":
                 case "entry-point-url":
-                    this.loadWebPageElement();
+                    this.html = '';
                     break;
                 case "text":
                     this.class = this.text !== '' ? 'has-text' : '';
@@ -129,11 +132,14 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         const img = e.target;
         const d = element.style.display;
         if(d === '' || d === 'none') {
-            element.style.display = 'flex';
+            element.style.display = 'block';
             img.src = this.eyeClose;
         } else {
             element.style.display = 'none';
             img.src = this.eyeOpen;
+        }
+        if (this.html === '' && element.style.display !== 'none') {
+            this.loadWebPageElement();
         }
     }
 
