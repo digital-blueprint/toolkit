@@ -18,7 +18,7 @@ describe('utils', () => {
         var res = utils.defineCustomElement("test-some-element", SomeElement);
         expect(res).to.equal(true);
 
-        node = document.createElement('test-some-element');
+        var node = document.createElement('test-some-element');
         expect(node.foo).to.equal(42);
     });
 });

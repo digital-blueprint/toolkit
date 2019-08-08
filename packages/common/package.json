@@ -21,5 +21,8 @@
     "build": "npm run build-local",
     "build-test": "rollup -c --environment BUILD:test",
     "test": "npm run build-test && karma start --singleRun"
+  },
+  "dependencies": {
+    "i18next": "^17.0.9"
   }
 }
