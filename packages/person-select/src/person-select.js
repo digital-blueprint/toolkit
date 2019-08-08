@@ -11,6 +11,8 @@ import commonUtils from 'vpu-common/utils';
 
 select2(window, $);
 
+var selectId = 0;
+
 class PersonSelect extends VPULitElementJQuery {
 
     constructor() {
@@ -19,6 +21,8 @@ class PersonSelect extends VPULitElementJQuery {
         this.entryPointUrl = getAPiUrl();
         this.jsonld = null;
         this.$select = null;
+        // XXX: For some reason using the same ID twice breaks select2
+        this.selectId = 'person-select' + selectId++;
     }
 
     static get properties() {
@@ -33,7 +37,7 @@ class PersonSelect extends VPULitElementJQuery {
         const that = this;
 
         this.updateComplete.then(()=>{
-            that.$select = that.$('#person-select');
+            that.$select = $(that.shadowRoot.getElementById(that.selectId));
 
             // close the selector on blur of the web component
             $(that).blur(() => {
@@ -51,6 +55,7 @@ class PersonSelect extends VPULitElementJQuery {
         const that = this;
         const $this = $(this);
         let lastResult = {};
+
 
         // find the correct api url for a person
         const apiUrl = this.jsonld.getApiUrlForIdentifier("http://schema.org/Person");
@@ -152,13 +157,13 @@ class PersonSelect extends VPULitElementJQuery {
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
             <link rel="stylesheet" href="${select2CSS}">
             <style>
-                #person-select {
+                #${this.selectId} {
                     width: 100%;
                 }
             </style>
 
             <!-- https://select2.org-->
-            <select id="person-select" name="person" class="select"></select>
+            <select id="${this.selectId}" name="person" class="select"></select>
             <div id="person-select-dropdown"></div>
         `;
     }
