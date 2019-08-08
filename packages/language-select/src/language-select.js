@@ -1,5 +1,5 @@
 import {html, css, LitElement} from 'lit-element';
-import {i18n, dateTimeFormat, numberFormat} from './i18n.js';
+import {i18n} from './i18n.js';
 import utils from 'vpu-common/utils';
 
 /**
