@@ -29,7 +29,14 @@ class DataTableViewDemo extends LitElement {
 
     filterChange(e) {
         let datatable = this.shadowRoot.querySelector('#dt1');
-        datatable.filter = e.target.value;
+        datatable.setAttribute('filter', e.target.value);
+    }
+
+    colsChange(e) {
+        alert('colsChange: ' + e.target.value);
+        let datatable = this.shadowRoot.querySelector('#dt1');
+        if (datatable === undefined) { alter('datatable not found'); return; }
+        datatable.setAttribute('whitelisted-columns', e.target.value);
     }
 
     render() {
@@ -51,13 +58,20 @@ class DataTableViewDemo extends LitElement {
                     <vpu-auth lang="${this.lang}" client-id="${setting('keyCloakClientId')}" load-person force-login></vpu-auth>
                 </div>
                 <div class="content">
-                    <label for="filter">Filter für die Suche:</label>
-                    <input type="text" id="filter" value="" placeholder="Geben Sie mindestens 3 Zeichen ein" @change="${this.filterChange}">
+                    <p>
+                        <label for="filter">Filter für die Suche:</label>
+                        <input type="text" name="filter" id="filter" value="" placeholder="Geben Sie mindestens 3 Zeichen ein" @change="${this.filterChange}">
+                    </p>
+                    <p>
+                        <label for="columns">Spalten im Ergbnis:</label>
+                        <input type="text" name="columns" id="columns" value="*" placeholder="Geben Sie einen Stern * für alle ein" @change="${this.colsChange}">
+                    </p>
                     <div class="box">
                     <vpu-data-table-view
                         lang="${this.lang}"
                         value="Person"
                         filter=""
+                        whitelisted-columns="*"
                         blacklisted-columns="@id @type functions roles accountTypes"
                         id="dt1"
                     ></vpu-data-table-view>

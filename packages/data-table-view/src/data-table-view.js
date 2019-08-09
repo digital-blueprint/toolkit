@@ -17,6 +17,7 @@ class DataTableView extends LitElement {
         this.value = null;
         this.filter = null;
         this.apiUrl = null;
+        this.whitelist_cols = '*';
         this.blacklist_cols = '';
     }
 
@@ -27,6 +28,7 @@ class DataTableView extends LitElement {
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             filter: { type: String },
             apiUrl: { type: String, attribute: false },
+            whitelist_cols: { type: String, attribute: 'whitelisted-columns' },
             blacklist_cols: { type: String, attribute: 'blacklisted-columns' },
         };
     }
@@ -65,15 +67,18 @@ class DataTableView extends LitElement {
         })
             .then(res => res.json())
             .then(function (data) {
-                console.log(data);
                 // TODO
                 console.log(data['hydra:member']);
                 const persons = data['hydra:member'];
-                const blacklist_cols = that.blacklist_cols.split(' ');
                 let cols = [];
-                for(let i=0; i < persons.length; ++i) {
-                    let new_cols = Object.keys(persons[i]);
-                    cols = cols.concat(new_cols.filter(item => (!~cols.indexOf(item) && !~blacklist_cols.indexOf(item))));
+                if (that.whitelist_cols === '*') {
+                    const blacklist_cols = that.blacklist_cols.split(' ');
+                    for (let i = 0; i < persons.length; ++i) {
+                        let new_cols = Object.keys(persons[i]);
+                        cols = cols.concat(new_cols.filter(item => (!~cols.indexOf(item) && !~blacklist_cols.indexOf(item))));
+                    }
+                } else {
+                    cols = that.whitelist_cols.split(' ');
                 }
                 console.log('cols = ' + cols);
                 let rows = [];
@@ -107,11 +112,14 @@ class DataTableView extends LitElement {
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
+            // noinspection FallThroughInSwitchStatementJS
             switch (propName) {
                 case "lang":
                     i18n.changeLanguage(this.lang);
                     break;
                 case "filter":
+                case "whitelist_cols":
+                case "blacklist_cols":
                     this.loadWebPageElement();
                     break;
                 case "value":
