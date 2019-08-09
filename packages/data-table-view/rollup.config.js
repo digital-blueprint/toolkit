@@ -40,6 +40,14 @@ export default {
             ],
             outputFolder: 'dist'
         }),
+        copy({
+            targets: [
+                'node_modules/datatables.net-dt/css',
+                'node_modules/datatables.net-dt/images'
+            ],
+            outputFolder: 'dist/datatables'
+        }),
+
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8003}) : false
     ]
 };

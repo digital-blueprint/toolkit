@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import dt from 'datatables.net';
-import {setting, getAPiUrl} from './utils.js';
+import {setting, getAPiUrl, getAssetURL, } from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import commonUtils from 'vpu-common/utils';
@@ -51,11 +51,12 @@ class DataTableView extends LitElement {
     }
 
     render() {
+        var dt_css = getAssetURL('datatables/css/jquery.dataTables.min.css')
         return html`
+            <link rel="stylesheet" href="${dt_css}">
             <style>
             </style>
-            <table>
-                <tr><th>TODO..</th></tr>
+            <table id="dt" class="display" style="width:100%">
             </table>
         `;
     }
