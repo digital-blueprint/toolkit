@@ -27,9 +27,19 @@ class DataTableViewDemo extends LitElement {
         super.update(changedProperties);
     }
 
+    filterChange(e) {
+        let datatable = this.shadowRoot.querySelector('#dt1');
+        datatable.filter = e.target.value;
+    }
+
     render() {
         return html`
             <style>
+                .box {
+                    margin: 10px;
+                    padding: 10px;
+                    border: 1px solid orange;
+                }
             </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 
@@ -41,7 +51,17 @@ class DataTableViewDemo extends LitElement {
                     <vpu-auth lang="${this.lang}" client-id="${setting('keyCloakClientId')}" load-person force-login></vpu-auth>
                 </div>
                 <div class="content">
-                    <data-table-view lang="${this.lang}" value=""></data-table-view>
+                    <label for="filter">Filter für die Suche:</label>
+                    <input type="text" id="filter" value="" placeholder="Geben Sie mindestens 3 Zeichen ein" @change="${this.filterChange}">
+                    <div class="box">
+                    <vpu-data-table-view
+                        lang="${this.lang}"
+                        value="Person"
+                        filter=""
+                        blacklisted-columns="@id @type functions roles accountTypes"
+                        id="dt1"
+                    ></vpu-data-table-view>
+                    </div>
                 </div>
             </section>
         `;
