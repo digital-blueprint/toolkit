@@ -30,7 +30,8 @@
     "i18next": "^17.0.3",
     "lit-element": "^2.1.0",
     "lit-html": "^1.1.1",
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "datatables.net-dt": "^1.10.19"
   },
   "scripts": {
     "clean": "rm dist/*",

@@ -1,5 +1,5 @@
 import 'vpu-auth';
-import './vpu-data-table-view.js';
+import './data-table-view.js';
 import {setting, getAPiUrl} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
