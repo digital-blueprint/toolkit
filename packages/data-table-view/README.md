@@ -11,6 +11,10 @@
 # Attributes
 - `value`: api request
     - example `<vpu-data-table-view value="api/request"></vpu-data-table-view>`
+- `filter`: optional filter for the request (append to api url)
+    - example 'Abc' will be `?search=Abc`
+- `blacklisted-columns`: optional string with all column names to be excluded
+    . example '@id @type' (both are hydra columns)
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<vpu-data-table-view lang="de"></vpu-data-table-view>`
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
