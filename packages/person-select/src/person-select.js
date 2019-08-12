@@ -11,8 +11,6 @@ import commonUtils from 'vpu-common/utils';
 
 select2(window, $);
 
-let selectId = 0;
-
 class PersonSelect extends VPULitElementJQuery {
 
     constructor() {
@@ -21,8 +19,8 @@ class PersonSelect extends VPULitElementJQuery {
         this.entryPointUrl = getAPiUrl();
         this.jsonld = null;
         this.$select = null;
-        // For some reason using the same ID twice breaks select2
-        this.selectId = 'person-select' + selectId++;
+        // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
+        this.selectId = 'person-select-' + commonUtils.makeId(24);
     }
 
     static get properties() {
