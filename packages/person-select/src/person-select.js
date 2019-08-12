@@ -11,7 +11,7 @@ import commonUtils from 'vpu-common/utils';
 
 select2(window, $);
 
-var selectId = 0;
+let selectId = 0;
 
 class PersonSelect extends VPULitElementJQuery {
 
@@ -21,7 +21,7 @@ class PersonSelect extends VPULitElementJQuery {
         this.entryPointUrl = getAPiUrl();
         this.jsonld = null;
         this.$select = null;
-        // XXX: For some reason using the same ID twice breaks select2
+        // For some reason using the same ID twice breaks select2
         this.selectId = 'person-select' + selectId++;
     }
 
@@ -37,7 +37,7 @@ class PersonSelect extends VPULitElementJQuery {
         const that = this;
 
         this.updateComplete.then(()=>{
-            that.$select = $(that.shadowRoot.getElementById(that.selectId));
+            that.$select = that.$('#' + that.selectId);
 
             // close the selector on blur of the web component
             $(that).blur(() => {
