@@ -83,7 +83,7 @@ class PersonSelect extends VPULitElementJQuery {
                 },
                 data: function (params) {
                     return {
-                        search: params.term,
+                        search: params.term.trim(),
                         'library-only': 1
                     };
                 },
