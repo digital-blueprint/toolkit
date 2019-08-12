@@ -56,7 +56,6 @@ class PersonSelect extends VPULitElementJQuery {
         const $this = $(this);
         let lastResult = {};
 
-
         // find the correct api url for a person
         const apiUrl = this.jsonld.getApiUrlForIdentifier("http://schema.org/Person");
         // const apiUrl = this.jsonld.getApiUrlForEntityName("Event");
