@@ -101,10 +101,10 @@ class PersonSelect extends VPULitElementJQuery {
                     };
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    const body = jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined ?
-                        jqXHR.responseJSON["hydra:description"] : textStatus;
-
                     if (textStatus !== "abort") {
+                        const body = jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined ?
+                            jqXHR.responseJSON["hydra:description"] : textStatus;
+
                         notify({
                             "summary": i18n.t('person-select.error-summary'),
                             "body": body,
