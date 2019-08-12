@@ -99,6 +99,18 @@ class PersonSelect extends VPULitElementJQuery {
                     return {
                         results: results
                     };
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    const body = jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined ?
+                        jqXHR.responseJSON["hydra:description"] : textStatus;
+
+                    if (textStatus !== "abort") {
+                        notify({
+                            "summary": i18n.t('person-select.error-summary'),
+                            "body": body,
+                            "type": "danger",
+                        });
+                    }
                 }
             }
         }).on("select2:select", function (e) {
