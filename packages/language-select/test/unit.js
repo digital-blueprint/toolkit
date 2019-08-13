@@ -34,6 +34,16 @@ describe('vpu-language-select basics', () => {
     expect(node.next).to.equal('en');
     expect(events.length).to.equal(2);
   });
+
+  it('change next', () => {
+    node.lang = 'en';
+    expect(node.next).to.equal('de');
+    expect(node.lang).to.equal('en');
+    node.next = 'en';
+    expect(node.next).to.equal('en');
+    expect(node.lang).to.equal('de');
+    expect(events.length).to.equal(2);
+  });
 });
 
 describe('vpu-language-select demo', () => {

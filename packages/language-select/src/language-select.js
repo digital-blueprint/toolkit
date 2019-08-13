@@ -21,12 +21,20 @@ class LanguageSelect extends LitElement {
         i18n.t('en-action');
     }
 
-    _getNextLanguage() {
-        var index = this.languages.indexOf(this.lang);
+    _getNextLanguage(lang) {
+        var index = this.languages.indexOf(lang);
         var next = this.languages[index + 1];
         if (typeof next === 'undefined')
             next = this.languages[0];
         return next;
+    }
+
+    _getPreviousLanguage(lang) {
+        var index = this.languages.indexOf(lang);
+        var prev = this.languages[index - 1];
+        if (typeof prev === 'undefined')
+            prev = this.languages[this.languages.length - 1];
+        return prev;
     }
 
     static get properties() {
@@ -63,10 +71,11 @@ class LanguageSelect extends LitElement {
     }
 
     set next(value) {
+        this.lang = this._getPreviousLanguage(value);
     }
 
     get next() {
-        return this._getNextLanguage();
+        return this._getNextLanguage(this.lang);
     }
 
     static get styles() {
