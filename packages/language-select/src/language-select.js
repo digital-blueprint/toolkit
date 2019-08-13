@@ -9,53 +9,83 @@ class LanguageSelect extends LitElement {
 
     constructor() {
         super();
-        this.lang = 'de';
+        this._lang = 'de';
         this.languages = ['de', 'en'];
 
-        i18n.t('de');
-        i18n.t('en');
-
         this.onExternalChange = this.onExternalChange.bind(this);
+
+        // for the i18next scanner
+        i18n.t('de');
+        i18n.t('de-action');
+        i18n.t('en');
+        i18n.t('en-action');
+    }
+
+    _getNextLanguage() {
+        var index = this.languages.indexOf(this.lang);
+        var next = this.languages[index + 1];
+        if (typeof next === 'undefined')
+            next = this.languages[0];
+        return next;
     }
 
     static get properties() {
         return {
             lang: {type: String},
+            next: {type: String},
             languages: {type: Array},
         };
     }
 
+    set lang(value) {
+        const oldValue = this.lang;
+        const oldNext = this.next;
+        this._lang = value;
+        this.requestUpdate('lang', oldValue);
+        this.requestUpdate('next', oldNext);
+
+        if (oldValue !== value) {
+            const event = new CustomEvent("vpu-language-changed", {
+                bubbles: true,
+                detail: {'lang': value}
+            });
+            this.dispatchEvent(event);
+
+            // Unlike other cases we use the next language for the translations so that
+            // users not knowing the current language can understand it.
+            // In case of more than two this doesn't make that much sense, but for now..
+            i18n.changeLanguage(this.next);
+        }
+    }
+
+    get lang() {
+        return this._lang;
+    }
+
+    set next(value) {
+    }
+
+    get next() {
+        return this._getNextLanguage();
+    }
+
     static get styles() {
         return css`
-            select {
-                background:
-                    linear-gradient(45deg, transparent 50%, black 50%),
-                    linear-gradient(135deg, black 50%, transparent 50%),
-                    linear-gradient(to right, white, white);
-                background-position:
-                    calc(100% - 21px) calc(1em + 2px),
-                    calc(100% - 16px) calc(1em + 2px),
-                    100% 0;
-                background-size:
-                    5px 5px,
-                    5px 5px,
-                    2.5em 2.5em;
-                background-repeat: no-repeat;
+            a:hover {
+                background-color: #000;
+                color: #fff;
+            }
 
-                border: 1px solid #000;
-                line-height: 1.5em;
-                padding: 0.5em 3.5em 0.5em 0.5em;
-
-                border-radius: 0;
-                margin: 0;
-                -webkit-box-sizing: border-box;
-                -moz-box-sizing: border-box;
-                box-sizing: border-box;
-                -webkit-appearance:none;
-                -moz-appearance:none;
+            a {
+                padding: 5px;
+                display: inline-block;
+                text-decoration: none;
+                color: #000;
+                transition: background-color 0.15s, color 0.15s;
+                font-weight: 300;
             }
         `;
-    } 
+    }
 
     onExternalChange(e) {
         this.lang = e.detail.lang
@@ -71,31 +101,15 @@ class LanguageSelect extends LitElement {
         super.disconnectedCallback();
     }
 
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                const event = new CustomEvent("vpu-language-changed", {
-                    bubbles: true,
-                    detail: {'lang': this.lang},
-                });
-                this.dispatchEvent(event);
-
-                i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
-    }
-
-    onSelectChange(e) {
-        this.lang = e.target.value;
+    onClick(e) {
+        e.preventDefault();
+        this.lang = this.next;
     }
 
     render() {
+        var linkTitle = i18n.t(this.next + '-action');
         return html`
-            <select @change=${this.onSelectChange}>
-                ${this.languages.map(i => html`<option value="${i}" ?selected=${this.lang === i}>${i18n.t(i)}</option>`)}
-            </select> 
+            <a href="#" title="${linkTitle}" @click=${this.onClick}>${this.next.toUpperCase()}</a>
         `;
     }
 }

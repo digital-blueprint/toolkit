@@ -1,4 +1,6 @@
 {
   "de": "German",
-  "en": "English"
+  "en": "English",
+  "de-action": "Switch to German",
+  "en-action": "Switch to English"
 }
