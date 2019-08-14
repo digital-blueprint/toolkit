@@ -95,8 +95,8 @@ class DataTableView extends LitElement {
     }
 
     set_datatable(columns) {
-        const lang_de_url = 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/German.json';
-        const lang_en_url = 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/English.json';
+        const lang_de_url = 'datatables/i18n/German.json';
+        const lang_en_url = 'datatables/i18n/English.json';
 
         this.table = $(this.shadowRoot.querySelector('#dt')).DataTable({
             destroy: true,

@@ -47,6 +47,12 @@ export default {
             ],
             outputFolder: 'dist/datatables'
         }),
+        copy({
+            targets: [
+                'assets/datatables/i18n'
+            ],
+            outputFolder: 'dist/datatables/'
+        }),
 
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8003}) : false
     ]
