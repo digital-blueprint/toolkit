@@ -28,7 +28,6 @@ class DataTableView extends LitElement {
         this.display_columns = []; // all possible columns, in desired order for the table
         // datatable properties
         this.table = null;
-        this.responsive = null;
         this.paging = 1;
         this.searching = 1;
         //
@@ -114,6 +113,14 @@ class DataTableView extends LitElement {
             paging: this.paging > 0,
             searching: this.searching > 0,
         });
+
+        try {
+            new $.fn.dataTable.Responsive(this.table, {
+                details: true
+            });
+        } catch (e) {
+            // XXX: it throws, but it still works
+        }
     }
 
     update_datatable(columns, rows) {
@@ -123,14 +130,6 @@ class DataTableView extends LitElement {
             this.table.clear();
             columns.forEach(function (item, index) { that.table.columns([index]).visible(item.visible === true); });
             rows.forEach(row => this.table.row.add(row));
-            // missing responsive?
-            if (this.responsive === null) {
-                console.log('update_datatable(), responsive:');
-                this.responsive = new $.fn.dataTable.Responsive(this.table, {
-                    details: true
-                });
-                console.dir(this.responsive);
-            }
             // now ready to draw
             this.table.draw();
         }
