@@ -105,7 +105,6 @@ class DataTableView extends LitElement {
 
         this.table = $(this.shadowRoot.querySelector('#dt')).DataTable({
             destroy: true,
-            responsive: {details: true},
             language: {
                 url: this.lang === 'de' ? lang_de_url : lang_en_url,
             },
