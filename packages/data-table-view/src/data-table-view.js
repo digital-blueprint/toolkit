@@ -7,6 +7,7 @@ import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import JSONLD from 'vpu-common/jsonld';
 import commonUtils from 'vpu-common/utils';
+import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 
 dt(window, $);
 resp(window, $);
@@ -242,7 +243,7 @@ class DataTableView extends LitElement {
                 }
             </style>
             <div id="dt-parent">
-                <table id="dt" class="display"></table>
+                ${unsafeHTML('<div><table id="dt" class="display"></table></div>')}
                 <div id="cover"></div>
             </div>
         `;
