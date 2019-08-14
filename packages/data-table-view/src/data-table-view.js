@@ -5,12 +5,14 @@ import resp2 from 'datatables.net-responsive-dt';
 import {setting, getAPiUrl, getAssetURL, } from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
+import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import JSONLD from 'vpu-common/jsonld';
 import commonUtils from 'vpu-common/utils';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 
 dt(window, $);
 resp(window, $);
+resp2(window, $);
 
 class DataTableView extends LitElement {
     constructor() {
@@ -28,10 +30,12 @@ class DataTableView extends LitElement {
         this.display_columns = []; // all possible columns, in desired order for the table
         // datatable properties
         this.table = null;
-        this.paging = 1;
-        this.searching = 1;
+        this.responsive = null;
+        this.paging = false;
+        this.searching = false;
         //
         this.is_loading = false;
+        this.wait_until_all_loaded = false;
     }
 
     static get properties() {
@@ -47,9 +51,10 @@ class DataTableView extends LitElement {
             show_columns: { type: Array, attribute: false },
             display_columns: { type: Array, attribute: false },
             table: { type: Object, attribute: false },
-            paging: { type: String },
-            searching: { type: String },
-            is_loading: { type: Boolean },
+            paging: { type: Boolean },
+            searching: { type: Boolean },
+            is_loading: { type: Boolean, attribute: false },
+            wait_until_all_loaded: { type: Boolean, attribute: 'wait-until-all-loaded'}
         };
     }
 
@@ -82,8 +87,6 @@ class DataTableView extends LitElement {
     }
 
     setup_columns() {
-        //let cols = this.table_columns.slice();
-
         if (this.whitelist_cols === '*') {
             const blacklist_cols = this.blacklist_cols.split(' ');
             this.show_columns = this.table_columns.filter(col => blacklist_cols.indexOf(col) === -1);
@@ -92,10 +95,10 @@ class DataTableView extends LitElement {
         }
         this.display_columns = this.show_columns.slice();
         for(let i=0; i < this.table_columns.length; ++i) {
-            if (this.display_columns.indexOf(this.table_columns[i]) === -1)
+            if (this.display_columns.indexOf(this.table_columns[i]) === -1) {
                 this.display_columns.push(this.table_columns[i]);
+            }
         }
-
     }
 
     set_datatable(columns) {
@@ -110,8 +113,8 @@ class DataTableView extends LitElement {
             },
             columns: columns,
             data: [],
-            paging: this.paging > 0,
-            searching: this.searching > 0,
+            paging: this.paging,
+            searching: this.searching,
         });
 
         try {
@@ -127,29 +130,23 @@ class DataTableView extends LitElement {
         //console.log('rows = ' + rows);
         const that = this;
         if (this.table) {
-            this.table.clear();
-            columns.forEach(function (item, index) { that.table.columns([index]).visible(item.visible === true); });
+            columns.forEach(function (item, index) {
+                let i = that.display_columns.indexOf(item.title);
+                // console.log('item = {' + item.title + ', ' + item.visible + '} i = ' + i);
+                that.table.columns([i]).visible(item.visible == true);
+                // TODO that.table.columns([index]).title = item.title;
+            });
             rows.forEach(row => this.table.row.add(row));
             // now ready to draw
             this.table.draw();
         }
     }
 
-    loadWebPageElement() {
-        if (window.VPUAuthToken === undefined || window.VPUAuthToken === "") {
-            return;
-        }
-        if (this.apiUrl === null || this.jsonld === null) {
-            return;
-        }
-
-        const apiUrlWithFilter = this.apiUrl + '?search=' + this.filter;
-        console.log('apiUrlWithFilter = ' + apiUrlWithFilter);
-
+    async loader(page) {
+        const apiUrlWithFilter = this.apiUrl + '?search=' + this.filter + '&page=' + page;
         const that = this;
-        this.is_loading = true;
 
-        fetch(apiUrlWithFilter, {
+        return await fetch(apiUrlWithFilter, {
             headers: {
                 'Content-Type': 'application/ld+json',
                 'Authorization': 'Bearer ' + window.VPUAuthToken,
@@ -163,23 +160,45 @@ class DataTableView extends LitElement {
                 const items = data['hydra:member'];
                 let rows = [];
                 let columns = [];
-                for(let i=0; i < that.display_columns.length; ++i) {
+                for (let i = 0; i < that.display_columns.length; ++i) {
                     columns[i] = {
                         title: that.display_columns[i],
                         visible: that.show_columns.indexOf(that.display_columns[i]) > -1
                     };
-                    for(let j=0; j < items.length; ++j) {
-                        if (rows[j] === undefined) {
-                            rows[j] = [];
+                    if (items) {
+                        for (let j = 0; j < items.length; ++j) {
+                            if (rows[j] === undefined) {
+                                rows[j] = [];
+                            }
+                            rows[j][i] = items[j][that.display_columns[i]] || '';
                         }
-                        rows[j][i] = items[j][that.display_columns[i]] || '';
                     }
                 }
 
                 that.update_datatable(columns, rows);
-                that.is_loading = false;
-            })
-            .catch();
+
+                if (!that.wait_until_all_loaded)
+                    that.is_loading = false;
+
+                return items.length;
+            });
+    }
+    async call_loader(page) {
+        return await this.loader(page);
+    }
+
+    async loadWebPageElement() {
+        if (window.VPUAuthToken === undefined || window.VPUAuthToken === "") {
+            return;
+        }
+        if (this.apiUrl === null || this.jsonld === null) {
+            return;
+        }
+
+        this.is_loading = true;
+        let page = 1;
+        while (await this.call_loader(page++) === 50) {}
+        this.is_loading = false;
     }
 
     update(changedProperties) {
@@ -187,14 +206,17 @@ class DataTableView extends LitElement {
             // noinspection FallThroughInSwitchStatementJS
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    i18n.changeLanguage(this.lang).catch(e => { console.log(e)});
                     break;
-                case "filter":
                 case "whitelist_cols":
                 case "blacklist_cols":
+                    this.setup_columns();
+                case "filter":
                 case "paging":
                 case "searching":
-                    this.loadWebPageElement();
+                    if (this.table)
+                        this.table.clear();
+                    this.loadWebPageElement().catch(e => { console.log(e)});
                     break;
                 case "value":
                 case "entryPointUrl":
@@ -203,8 +225,10 @@ class DataTableView extends LitElement {
                         that.jsonld = jsonld;
                         that.apiUrl = that.jsonld.getApiUrlForIdentifier("http://schema.org/" + that.value);
                     });
-                    this.loadWebPageElement();
+                    this.loadWebPageElement().catch(e => { console.log(e)});
                     break;
+                default:
+                    // nothing to do for this properties
             }
         });
 

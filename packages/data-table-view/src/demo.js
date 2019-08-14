@@ -79,7 +79,8 @@ class DataTableViewDemo extends LitElement {
                             whitelisted-columns="*"
                             blacklisted-columns="phoneExtension name"
                             id="dt1"
-                            paging="1"
+                            paging
+                            searching
                         ></vpu-data-table-view>
                     </div>
                 </div>
@@ -95,8 +96,7 @@ class DataTableViewDemo extends LitElement {
                             whitelisted-columns="name telephone email"
                             blacklisted-columns=""
                             id="dt2"
-                            paging="0"
-                            searching="0"
+                            wait-until-all-loaded
                         ></vpu-data-table-view>
                     </div>
                 </div>
