@@ -27,11 +27,13 @@
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.10",
+    "datatables.net-dt": "^1.10.19",
+    "datatables.net-responsive": "^2.2.3",
+    "datatables.net-responsive-dt": "^2.2.3",
     "i18next": "^17.0.3",
-    "lit-element": "^2.1.0",
-    "lit-html": "^1.1.1",
     "jquery": "^3.4.1",
-    "datatables.net-dt": "^1.10.19"
+    "lit-element": "^2.1.0",
+    "lit-html": "^1.1.1"
   },
   "scripts": {
     "clean": "rm dist/*",

@@ -1,5 +1,7 @@
 import $ from 'jquery';
 import dt from 'datatables.net';
+import resp from 'datatables.net-responsive';
+import resp2 from 'datatables.net-responsive-dt';
 import {setting, getAPiUrl, getAssetURL, } from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
@@ -7,6 +9,7 @@ import JSONLD from 'vpu-common/jsonld';
 import commonUtils from 'vpu-common/utils';
 
 dt(window, $);
+resp(window, $);
 
 class DataTableView extends LitElement {
     constructor() {
@@ -24,6 +27,7 @@ class DataTableView extends LitElement {
         this.display_columns = []; // all possible columns, in desired order for the table
         // datatable properties
         this.table = null;
+        this.responsive = null;
         this.paging = 1;
         this.searching = 1;
         //
@@ -100,6 +104,7 @@ class DataTableView extends LitElement {
 
         this.table = $(this.shadowRoot.querySelector('#dt')).DataTable({
             destroy: true,
+            responsive: {details: true},
             language: {
                 url: this.lang === 'de' ? lang_de_url : lang_en_url,
             },
@@ -117,6 +122,15 @@ class DataTableView extends LitElement {
             this.table.clear();
             columns.forEach(function (item, index) { that.table.columns([index]).visible(item.visible === true); });
             rows.forEach(row => this.table.row.add(row));
+            // missing responsive?
+            if (this.responsive === null) {
+                console.log('update_datatable(), responsive:');
+                this.responsive = new $.fn.dataTable.Responsive(this.table, {
+                    details: true
+                });
+                console.dir(this.responsive);
+            }
+            // now ready to draw
             this.table.draw();
         }
     }
@@ -199,8 +213,10 @@ class DataTableView extends LitElement {
 
     render() {
         let dt_css = getAssetURL('datatables/css/jquery.dataTables.min.css');
+        let rs_css = getAssetURL('datatables/css/responsive.dataTables.css');
         return html`
             <link rel="stylesheet" href="${dt_css}">
+            <link rel="stylesheet" href="${rs_css}">
             <style>
                 #dt-parent {
                     display: block;

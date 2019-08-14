@@ -12,7 +12,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? 'src/demo.js' : 'test/**/*.js',
+    input: (build !== 'test') ? 'src/demo.js' : 'test/**/*.js',
     output: {
         file: 'dist/bundle.js',
         format: 'esm'
@@ -43,7 +43,8 @@ export default {
         copy({
             targets: [
                 'node_modules/datatables.net-dt/css',
-                'node_modules/datatables.net-dt/images'
+                'node_modules/datatables.net-dt/images',
+                'node_modules/datatables.net-responsive-dt/css'
             ],
             outputFolder: 'dist/datatables'
         }),
