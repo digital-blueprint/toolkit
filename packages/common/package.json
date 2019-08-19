@@ -1,6 +1,7 @@
 {
   "name": "vpu-common",
   "version": "1.0.1",
+  "module": "index.js",
   "devDependencies": {
     "karma": "^4.2.0",
     "karma-chai": "^0.1.0",
@@ -18,7 +19,7 @@
   },
   "scripts": {
     "clean": "rm dist/*",
-    "build": "npm run build-local",
+    "build": "rollup -c",
     "build-test": "rollup -c --environment BUILD:test",
     "test": "npm run build-test && karma start --singleRun"
   },

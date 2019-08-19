@@ -7,7 +7,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: 'test/**/*.js',
+    input: (build !='test') ? 'index.js' : 'test/**/*.js',
     output: {
         file: 'dist/bundle.js',
         format: 'esm'
