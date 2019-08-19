@@ -41,16 +41,14 @@ export default {
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [
-                'assets/index.html',
-                'assets/favicon.ico'
+                {src: 'assets/index.html', dest: 'dist'},
+                {src: 'assets/favicon.ico', dest: 'dist'},
             ],
-            outputFolder: 'dist'
         }),
         copy({
             targets: [
-                'node_modules/select2/dist/css',
+                {src: 'node_modules/select2/dist/css', dest: 'dist/select2'},
             ],
-            outputFolder: 'dist/select2'
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
     ]
