@@ -9,13 +9,14 @@ import replace from "rollup-plugin-replace";
 import serve from 'rollup-plugin-serve';
 import multiEntry from 'rollup-plugin-multi-entry';
 
+const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
 export default {
     input: (build != 'test') ? 'src/demo.js' : 'test/**/*.js',
     output: {
-        file: 'dist/bundle.js',
+        file: 'dist/' + pkg.name + '.js',
         format: 'esm'
     },
     plugins: [

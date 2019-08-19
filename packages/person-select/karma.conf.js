@@ -1,12 +1,13 @@
 // Trick to use the auto-downloaded puppeteer chrome binary
 process.env.CHROME_BIN = require('puppeteer').executablePath();
+const pkg = require('./package.json');
 
 module.exports = function(config) {
   config.set({
     basePath: 'dist',
     frameworks: ['mocha', 'chai'],
     files: [
-      './bundle.js',
+      {pattern: './' + pkg.name + '.js', included: true, watched: true, served: true, type: 'module'},
       {pattern: './**/*', included: false, watched: true, served: true},
     ],
     autoWatch: true,
