@@ -51,6 +51,11 @@ class DataTableViewDemo extends LitElement {
                     padding: 10px;
                     border: 1px solid green;
                 }
+                .box3 {
+                    margin: 10px;
+                    padding: 10px;
+                    border: 1px solid blue;
+                }
             </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 
@@ -85,9 +90,10 @@ class DataTableViewDemo extends LitElement {
                     </div>
                 </div>
             </section>
+            <!--
             <section class="section">
                 <div class="content">
-                <h4>DataTable: no paging, no searching</h4>
+                    <h4>DataTable: no paging, no searching</h4>
                     <div class="box2">
                         <vpu-data-table-view
                             lang="${this.lang}"
@@ -97,6 +103,24 @@ class DataTableViewDemo extends LitElement {
                             blacklisted-columns=""
                             id="dt2"
                             wait-until-all-loaded
+                        ></vpu-data-table-view>
+                    </div>
+                </div>
+            </section>
+            -->
+            <section class="section">
+                    <h4>DataTable: nonexistant Entity</h4>
+                    <div class="box3">
+                        <vpu-data-table-view
+                            lang="${this.lang}"
+                            value="nonExistantEntity"
+                            filter="*"
+                            whitelisted-columns="*"
+                            blacklisted-columns=""
+                            id="dt4"
+                            wait-until-all-loaded
+                            paging
+                            searching
                         ></vpu-data-table-view>
                     </div>
                 </div>

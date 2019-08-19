@@ -8,7 +8,6 @@ import {html, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import JSONLD from 'vpu-common/jsonld';
 import commonUtils from 'vpu-common/utils';
-import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 
 dt(window, $);
 resp(window, $);
@@ -64,21 +63,28 @@ class DataTableView extends LitElement {
 
         JSONLD.initialize(this.entryPointUrl, function (jsonld) {
             that.jsonld = jsonld;
-            that.apiUrl = that.jsonld.getApiUrlForIdentifier("http://schema.org/" + that.value);
-            that.table_columns = that.jsonld.entities[that.value]['hydra:supportedProperty'].map(obj => obj['hydra:title']);
+            try {
+                that.apiUrl = that.jsonld.getApiUrlForIdentifier("http://schema.org/" + that.value);
+                that.table_columns = that.jsonld.entities[that.value]['hydra:supportedProperty'].map(obj => obj['hydra:title']);
 
-            // display empty table
-            that.setup_columns();
-            let columns = [];
-            for (let i = 0; i < that.display_columns.length; ++i) {
-                columns[i] = {
-                    title: that.display_columns[i],
-                    visible: that.show_columns.indexOf(that.display_columns[i]) > -1
-                };
-            }
-            that.set_datatable(columns);
-            if (that.filter) {
-                that.loadWebPageElement();
+                // display empty table
+                that.setup_columns();
+                let columns = [];
+                for (let i = 0; i < that.display_columns.length; ++i) {
+                    columns[i] = {
+                        title: that.display_columns[i],
+                        visible: that.show_columns.indexOf(that.display_columns[i]) > -1
+                    };
+                }
+                that.set_datatable(columns);
+                if (that.filter) {
+                    that.loadWebPageElement();
+                }
+            } catch (e) {
+                that.table_columns = ['message from server'];
+                that.setup_columns();
+                that.set_datatable([{title: 'message from server', visible: true}]);
+                that.table.row.add(['<span style="color:red;background:lightgray;">' + e.toString() + '</span>']);
             }
         });
 
