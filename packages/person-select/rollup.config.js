@@ -7,6 +7,7 @@ import json from 'rollup-plugin-json';
 import replace from "rollup-plugin-replace";
 import serve from 'rollup-plugin-serve';
 import multiEntry from 'rollup-plugin-multi-entry';
+import url from "rollup-plugin-url"
 
 const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
@@ -29,6 +30,14 @@ export default {
         commonjs({
             include: 'node_modules/**'
         }),
+        url({
+          limit: 0,
+          include: [
+            "node_modules/select2/**/*.css",
+          ],
+          emitFiles: true,
+          fileName: 'shared/[name].[hash][extname]'
+        }),
         json(),
         replace({
             "process.env.BUILD": '"' + build + '"',
@@ -37,12 +46,6 @@ export default {
         copy({
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
-                {src: 'assets/favicon.ico', dest: 'dist'},
-            ],
-        }),
-        copy({
-            targets: [
-                {src: 'node_modules/select2/dist/css', dest: 'dist/select2'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
