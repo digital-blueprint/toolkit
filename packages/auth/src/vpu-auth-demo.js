@@ -1,4 +1,3 @@
-import utils from './utils.js';
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import './vpu-auth';
@@ -37,7 +36,7 @@ class AuthDemo extends LitElement {
                     <h1 class="title">Auth-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-auth lang="${this.lang}" client-id="${utils.setting('keyCloakClientId')}" load-person></vpu-auth>
+                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person></vpu-auth>
                 </div>
             </section>
         `;

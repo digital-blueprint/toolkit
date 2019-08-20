@@ -1,7 +1,6 @@
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import JSONLD from 'vpu-common/jsonld'
-import utils from "./utils";
 import commonUtils from 'vpu-common/utils';
 
 /**
@@ -94,7 +93,7 @@ class VPUAuth extends LitElement {
                     that.dispatchInitEvent();
 
                     if (that.loadPerson) {
-                        JSONLD.initialize(utils.getAPiUrl(), (jsonld) => {
+                        JSONLD.initialize(commonUtils.getAPiUrl(), (jsonld) => {
                             // find the correct api url for the current person
                             // we are fetching the logged-in person directly to respect the REST philosophy
                             // see: https://github.com/api-platform/api-platform/issues/337
