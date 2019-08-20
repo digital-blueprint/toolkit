@@ -2,7 +2,6 @@ import {i18n} from './i18n';
 import {html} from 'lit-element';
 // import JSONLD from 'vpu-common/jsonld';
 import VPULitElement from 'vpu-common/vpu-lit-element'
-import {getAPiUrl} from "./utils";
 import commonUtils from "vpu-common/utils";
 import "vpu-common/vpu-mini-spinner.js";
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
@@ -16,7 +15,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
         this.lang = 'de';
         this.value = '';
         this.html = '';
-        this.entryPointUrl = getAPiUrl();
+        this.entryPointUrl = commonUtils.getAPiUrl();
         this.error = '';
         this.eyeClose = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA1ElEQVQ4ja3SMU5CURCF4c+ejpiILe5DZAGyASuJS5CKEoMGKhdAwWKgMkriKjQWFkAkBizgmckNPEgeJ7nVuee/M3eGI2mCehFAHZ/Hgtygizd84wsjPOHsEMgUqx1njvtd4R7uAmSIMipo4SeAHtLwdTCbG8gHLsOdVlJN9LwEY4nSFsh5AhhHwGtinoY/ySDlPEAjMbvByyDDvBbgOZi/eNxUkrUTp9NJw3CCNhbJS0vcBshgWzjqAn28W899Zr1U1dBObR8kT9nGXhWFTIoA/vUHQydS/iUcHx4AAAAASUVORK5CYII=';
         this.eyeOpen = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA5UlEQVQ4jc3SvS7EURAF8B+JioSsCokHUFgNiWewQqvzICRew2v4WLFUnoNS/msrazUaFOYm12RlVeIkk9ycM2fmztzLf8U02tiPaAc3EbM4Rh8fKfo4wdxP5nXcV4YhLnGO54p/wEY2b6akHhYqfR7dVHyriMt4qsQRWtiNaw+wFwWHaaQlcc161l4UblIyXKTcM7hL5FUk14tsgsvNumIhb2NG6ISxiXMrtJI3wErZwyHeK/E2DAWLuKn0F2xLOEgdRriOeK34sc9YsIpT37dd4hFHvj7bRMxElw52sIap3xj/Hp9rzGFBhiMSxAAAAABJRU5ErkJggg==';
