@@ -1,3 +1,5 @@
+import env from './env.js';
+
 export default {
     /**
      * Parses a link header
@@ -27,6 +29,20 @@ export default {
         }
 
         return links;
+    },
+
+    /**
+     * Reads a setting
+     *
+     * @param key
+     * @returns {*}
+     */
+    setting: (key) => {
+        return env[key];
+    },
+
+    getAPiUrl: (path = "", withPrefix = true) => {
+        return env.apiBaseUrl + (withPrefix ? vars.apiUrlPrefix : "") + path;
     },
 
     /**
