@@ -42,7 +42,7 @@ export default {
     },
 
     getAPiUrl: (path = "", withPrefix = true) => {
-        return env.apiBaseUrl + (withPrefix ? vars.apiUrlPrefix : "") + path;
+        return env.apiBaseUrl + (withPrefix ? env.apiUrlPrefix : "") + path;
     },
 
     /**

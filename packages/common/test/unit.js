@@ -21,4 +21,12 @@ describe('utils', () => {
         var node = document.createElement('test-some-element');
         expect(node.foo).to.equal(42);
     });
+
+    it('getAPiUrl', () => {
+        assert(utils.getAPiUrl().startsWith("http"));
+    });
+
+    it('setting', () => {
+        assert(utils.setting('apiBaseUrl').startsWith("http"));
+    });
 });
