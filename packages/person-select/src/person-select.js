@@ -32,6 +32,10 @@ class PersonSelect extends VPULitElementJQuery {
         };
     }
 
+    clear() {
+        this.$select.val(null).trigger('change').trigger('select2:unselect');
+    }
+
     connectedCallback() {
         super.connectedCallback();
         const that = this;
