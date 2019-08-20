@@ -134,7 +134,7 @@ class VPUAuth extends LitElement {
             };
 
             // https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_a
-            script.src = '//auth-dev.tugraz.at/auth/js/keycloak.js';
+            script.src = '//auth-dev.tugraz.at/auth/js/keycloak.min.js';
 
             //Append it to the document header
             document.head.appendChild(script);
