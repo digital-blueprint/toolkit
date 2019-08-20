@@ -4,6 +4,7 @@ import {html} from 'lit-element';
 import VPULitElement from 'vpu-common/vpu-lit-element'
 import {getAPiUrl} from "./utils";
 import commonUtils from "vpu-common/utils";
+import "vpu-common/vpu-mini-spinner.js";
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 
 /**
@@ -93,6 +94,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
                 }
                 const error_head = i18n.t('error-head');
                 that.error = html`<p>${error_head} "<b>${that.value}</b>" ${status_msg} (${res.status}).</p>`;
+                that.html = "";
                 throw new Error('HTTP ' + error_head + ' ' + that.value + ' ' + status_msg + ', status = ' + res.status);
             }
             return res.json();
@@ -147,6 +149,7 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
             img.src = this.eyeOpen;
         }
         if (this.html === '' && div.style.display !== 'none') {
+            this.html = "<vpu-mini-spinner></vpu-mini-spinner>";
             this.loadWebPageElement();
         }
     }
