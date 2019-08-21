@@ -24,6 +24,7 @@
     "test": "npm run build-test && karma start --singleRun"
   },
   "dependencies": {
-    "i18next": "^17.0.9"
+    "i18next": "^17.0.9",
+    "lit-element": "^2.2.1"
   }
 }
