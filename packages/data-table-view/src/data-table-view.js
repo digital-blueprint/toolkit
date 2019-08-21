@@ -159,16 +159,19 @@ class DataTableView extends LitElement {
         }
     }
 
-    update_datatable(columns, rows) {
-        //console.log('rows = ' + rows);
+    update_datatable(columns, rows, is_first_page) {
         const that = this;
         if (this.table) {
-            columns.forEach(function (item, index) {
-                let i = that.display_columns.indexOf(item.title);
-                // console.log('item = {' + item.title + ', ' + item.visible + '} i = ' + i);
-                that.table.columns([i]).visible(item.visible == true);
-                // TODO that.table.columns([index]).title = item.title;
-            });
+            // set column visibility/titles on first page load only
+            if (is_first_page) {
+                columns.forEach(function (item) { //, index) {
+                    let i = that.display_columns.indexOf(item.title);
+                    that.table.columns([i]).visible(item.visible === true);
+                    // if column order has changed, update column title also
+                    let t = that.table.columns([i]).header();
+                    $(t).html(item.title);
+                });
+            }
             rows.forEach(row => this.table.row.add(row));
             // now ready to draw
             this.table.draw();
@@ -208,14 +211,15 @@ class DataTableView extends LitElement {
                     }
                 }
 
-                that.update_datatable(columns, rows);
+                that.update_datatable(columns, rows, page === 1);
 
                 if (!that.wait_until_all_loaded)
                     that.is_loading = false;
 
-                return items.length;
+                return rows.length;
             });
     }
+
     async call_loader(page) {
         return await this.loader(page);
     }
