@@ -109,7 +109,22 @@ class DataTableViewDemo extends LitElement {
             </section>
             -->
             <section class="section">
-                    <h4>DataTable: nonexistant Entity</h4>
+                <div class="content">
+                    <h4>DataTable: DummyProduct</h4>
+                    <div class="box2">
+                        <vpu-data-table-view
+                            lang="${this.lang}"
+                            value="DummyProduct"
+                            filter="*"
+                            whitelisted-columns="*"
+                            blacklisted-columns=""
+                            id="dt3"
+                            wait-until-all-loaded
+                            paging
+                            searching
+                        ></vpu-data-table-view>
+                    </div>
+                    <h4>DataTable: nonExistantEntity</h4>
                     <div class="box3">
                         <vpu-data-table-view
                             lang="${this.lang}"

@@ -2,7 +2,7 @@ import $ from 'jquery';
 import dt from 'datatables.net';
 import resp from 'datatables.net-responsive';
 import resp2 from 'datatables.net-responsive-dt';
-import {setting, getAPiUrl, getAssetURL, } from './utils.js';
+import {getAPiUrl, getAssetURL,} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
@@ -114,7 +114,6 @@ class DataTableView extends LitElement {
     set_datatable(columns) {
         const lang_de_url = 'datatables/i18n/German.json';
         const lang_en_url = 'datatables/i18n/English.json';
-
         this.table = $(this.shadowRoot.querySelector('#dt')).DataTable({
             destroy: true,
             autoWidth: false,
@@ -234,7 +233,7 @@ class DataTableView extends LitElement {
 
         this.is_loading = true;
         let page = 1;
-        while (await this.call_loader(page++) === 50) {}
+        while (await this.call_loader(page++) > 0) {}
         this.is_loading = false;
     }
 
@@ -253,7 +252,7 @@ class DataTableView extends LitElement {
                 case "searching":
                     if (this.table)
                         this.table.clear();
-                    this.loadWebPageElement().catch(e => { console.log(e)});
+                    this.loadWebPageElement().catch(e => { console.log(e); });
                     break;
                 case "value":
                 case "entryPointUrl":
@@ -292,7 +291,6 @@ class DataTableView extends LitElement {
                     top: 0;
                     width: 100%;
                     height: 100%;
-                    /* margin: 0 auto; */
                     z-index: 999;
                     background: white url("data:image/gif;base64,R0lGODlhEAAQAPQAAP///wAAAPj4+Dg4OISEhAYGBiYmJtbW1qioqBYWFnZ2dmZmZuTk5JiYmMbGxkhISFZWVgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH+GkNyZWF0ZWQgd2l0aCBhamF4bG9hZC5pbmZvACH5BAAKAAAAIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAAQAAAFUCAgjmRpnqUwFGwhKoRgqq2YFMaRGjWA8AbZiIBbjQQ8AmmFUJEQhQGJhaKOrCksgEla+KIkYvC6SJKQOISoNSYdeIk1ayA8ExTyeR3F749CACH5BAAKAAEALAAAAAAQABAAAAVoICCKR9KMaCoaxeCoqEAkRX3AwMHWxQIIjJSAZWgUEgzBwCBAEQpMwIDwY1FHgwJCtOW2UDWYIDyqNVVkUbYr6CK+o2eUMKgWrqKhj0FrEM8jQQALPFA3MAc8CQSAMA5ZBjgqDQmHIyEAIfkEAAoAAgAsAAAAABAAEAAABWAgII4j85Ao2hRIKgrEUBQJLaSHMe8zgQo6Q8sxS7RIhILhBkgumCTZsXkACBC+0cwF2GoLLoFXREDcDlkAojBICRaFLDCOQtQKjmsQSubtDFU/NXcDBHwkaw1cKQ8MiyEAIfkEAAoAAwAsAAAAABAAEAAABVIgII5kaZ6AIJQCMRTFQKiDQx4GrBfGa4uCnAEhQuRgPwCBtwK+kCNFgjh6QlFYgGO7baJ2CxIioSDpwqNggWCGDVVGphly3BkOpXDrKfNm/4AhACH5BAAKAAQALAAAAAAQABAAAAVgICCOZGmeqEAMRTEQwskYbV0Yx7kYSIzQhtgoBxCKBDQCIOcoLBimRiFhSABYU5gIgW01pLUBYkRItAYAqrlhYiwKjiWAcDMWY8QjsCf4DewiBzQ2N1AmKlgvgCiMjSQhACH5BAAKAAUALAAAAAAQABAAAAVfICCOZGmeqEgUxUAIpkA0AMKyxkEiSZEIsJqhYAg+boUFSTAkiBiNHks3sg1ILAfBiS10gyqCg0UaFBCkwy3RYKiIYMAC+RAxiQgYsJdAjw5DN2gILzEEZgVcKYuMJiEAOwAAAAAAAAAAAA==") center center no-repeat;
                     opacity: .9;
