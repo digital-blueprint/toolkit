@@ -1,4 +1,3 @@
-import {setting, getAPiUrl} from './utils.js';
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import './person-select.js';
@@ -35,20 +34,20 @@ class PersonSelectDemo extends LitElement {
                     <h1 class="title">Person-Select-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-auth lang="${this.lang}" client-id="${setting('keyCloakClientId')}" load-person force-login></vpu-auth>
+                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
                 </div>
                 <div class="container">
                     <form>
                         <div class="field">
                             <label class="label">Person 1</label>
                             <div class="control">
-                                <vpu-person-select lang="${this.lang}" entry-point-url="${getAPiUrl()}"></vpu-person-select>
+                                <vpu-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></vpu-person-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Person 2</label>
                             <div class="control">
-                                <vpu-person-select lang="${this.lang}" entry-point-url="${getAPiUrl()}"></vpu-person-select>
+                                <vpu-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></vpu-person-select>
                             </div>
                         </div>
                     </form>

@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {getAPiUrl, getAssetURL, findObjectInApiResults} from './utils.js';
+import {getAssetURL, findObjectInApiResults} from './utils.js';
 import select2 from 'select2';
 import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
@@ -18,7 +18,7 @@ class PersonSelect extends VPULitElementJQuery {
     constructor() {
         super();
         this.lang = 'de';
-        this.entryPointUrl = getAPiUrl();
+        this.entryPointUrl = commonUtils.getAPiUrl();
         this.jsonld = null;
         this.$select = null;
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)

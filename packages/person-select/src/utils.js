@@ -1,5 +1,3 @@
-import vars from './vars.js';
-
 export const getAssetURL = (path) => {
     const elm = document.getElementById('vpu-library-shelving-wc-src');
     if (!elm)
@@ -8,10 +6,6 @@ export const getAssetURL = (path) => {
     // newer browsers only
     //var url = import.meta.url;
     return new URL(path, url).href;
-}
-
-export const getAPiUrl = function(path = "", withPrefix = true) {
-    return vars.apiBaseUrl + (withPrefix ? vars.apiUrlPrefix : "") + path;
 }
 
 /**
@@ -34,11 +28,3 @@ export const findObjectInApiResults = (identifier, results, identifierAttribute 
         }
     }
 }
-
-/**
- * Reads a setting
- *
- * @param key
- * @returns {*}
- */
-export const setting = (key) => vars[key]
