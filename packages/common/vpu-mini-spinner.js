@@ -1,5 +1,5 @@
 import {html, LitElement, css} from 'lit-element';
-import commonUtils from './utils.js';
+import * as commonUtils from './utils.js';
 
 
 class MiniSpinner extends LitElement {
