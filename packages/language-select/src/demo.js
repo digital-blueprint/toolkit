@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit-element';
 import './language-select.js';
-import utils from 'vpu-common/utils';
+import * as commonUtils from 'vpu-common/utils';
 
 class LanguageSelectDemo extends LitElement {
 
@@ -35,4 +35,4 @@ class LanguageSelectDemo extends LitElement {
     }
 }
 
-utils.defineCustomElement('vpu-language-select-demo', LanguageSelectDemo);
+commonUtils.defineCustomElement('vpu-language-select-demo', LanguageSelectDemo);

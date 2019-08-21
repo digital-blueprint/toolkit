@@ -1,6 +1,6 @@
 import {html, css, LitElement} from 'lit-element';
 import {i18n} from './i18n.js';
-import utils from 'vpu-common/utils';
+import * as commonUtils from 'vpu-common/utils';
 
 /**
  * Emits a vpu-language-changed event where event.detail.lang is the new selected language
@@ -123,4 +123,4 @@ class LanguageSelect extends LitElement {
     }
 }
 
-utils.defineCustomElement('vpu-language-select', LanguageSelect);
+commonUtils.defineCustomElement('vpu-language-select', LanguageSelect);
