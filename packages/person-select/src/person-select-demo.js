@@ -1,7 +1,7 @@
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import './person-select.js';
-import commonUtils from 'vpu-common/utils';
+import * as commonUtils from 'vpu-common/utils';
 
 class PersonSelectDemo extends LitElement {
     constructor() {

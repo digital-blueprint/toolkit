@@ -7,7 +7,7 @@ import JSONLD from 'vpu-common/jsonld';
 import {html} from 'lit-element';
 import {i18n} from './i18n.js';
 import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
-import commonUtils from 'vpu-common/utils';
+import * as commonUtils from 'vpu-common/utils';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 
 
