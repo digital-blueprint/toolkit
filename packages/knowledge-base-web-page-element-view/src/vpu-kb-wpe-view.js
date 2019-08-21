@@ -2,7 +2,7 @@ import {i18n} from './i18n';
 import {html} from 'lit-element';
 // import JSONLD from 'vpu-common/jsonld';
 import VPULitElement from 'vpu-common/vpu-lit-element'
-import commonUtils from "vpu-common/utils";
+import * as commonUtils from "vpu-common/utils";
 import "vpu-common/vpu-mini-spinner.js";
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 
