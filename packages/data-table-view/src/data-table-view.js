@@ -64,7 +64,11 @@ class DataTableView extends LitElement {
         JSONLD.initialize(this.entryPointUrl, function (jsonld) {
             that.jsonld = jsonld;
             try {
-                that.apiUrl = that.jsonld.getApiUrlForIdentifier("http://schema.org/" + that.value);
+                that.apiUrl = that.jsonld.getApiUrlForEntityName(that.value);
+                if (that.jsonld.entities[that.value] === undefined) {
+                    console.dir(that.jsonld);
+                    throw "Error: Could not get information about " + that.value;
+                }
                 that.table_columns = that.jsonld.entities[that.value]['hydra:supportedProperty'].map(obj => obj['hydra:title']);
 
                 // display empty table
@@ -252,7 +256,7 @@ class DataTableView extends LitElement {
                     const that = this;
                     JSONLD.initialize(this.entryPointUrl, function (jsonld) {
                         that.jsonld = jsonld;
-                        that.apiUrl = that.jsonld.getApiUrlForIdentifier("http://schema.org/" + that.value);
+                        that.apiUrl = that.jsonld.getApiUrlForEntityName(that.value);
                     });
                     this.loadWebPageElement().catch(e => { console.log(e)});
                     break;
