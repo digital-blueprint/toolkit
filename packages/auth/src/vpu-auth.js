@@ -1,5 +1,5 @@
 import {i18n} from './i18n.js';
-import {html, LitElement} from 'lit-element';
+import {html, css, LitElement} from 'lit-element';
 import JSONLD from 'vpu-common/jsonld'
 import * as commonUtils from 'vpu-common/utils';
 
@@ -28,11 +28,14 @@ class VPUAuth extends LitElement {
         this.subject = "";
         this.name = "";
         this.personId = "";
+        this.loggedIn = false;
 
         // Create the events
         this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
         this.personInitEvent = new CustomEvent("vpu-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true, composed: true });
         this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
+
+        this.closeDropdown = this.closeDropdown.bind(this);
     }
 
     /**
@@ -42,6 +45,7 @@ class VPUAuth extends LitElement {
         return {
             lang: { type: String },
             forceLogin: { type: Boolean, attribute: 'force-login' },
+            loggedIn: { type: Boolean},
             loadPerson: { type: Boolean, attribute: 'load-person' },
             clientId: { type: String, attribute: 'client-id' },
             name: { type: String, attribute: false },
@@ -63,6 +67,13 @@ class VPUAuth extends LitElement {
 
         this.updateComplete.then(()=>{
         });
+
+        document.addEventListener('click', this.closeDropdown);
+    }
+
+    disconnectedCallback() {
+        document.removeEventListener('click', this.closeDropdown);
+        super.disconnectedCallback();
     }
 
     loadKeycloak() {
@@ -73,7 +84,7 @@ class VPUAuth extends LitElement {
             // inject Keycloak javascript file
             const script = document.createElement('script');
             script.type = 'text/javascript';
-            script.async = true;
+            //script.async = true;
             script.onload = function () {
                 that.keyCloakInitCalled = true;
 
@@ -157,8 +168,7 @@ class VPUAuth extends LitElement {
     }
 
     setStateToLogin(state) {
-        this.shadowRoot.querySelector('#login-block').style.display = state ? "flex" : "none";
-        this.shadowRoot.querySelector('#logout-block').style.display = state ? "none" : "flex";
+        this.loggedIn = !state;
     }
 
     /**
@@ -200,26 +210,73 @@ class VPUAuth extends LitElement {
         super.update(changedProperties);
     }
 
+    static get styles() {
+        return css`
+            i.arrow-down {
+                border: solid black;
+                border-width: 0 3px 3px 0;
+                display: inline-block;
+                padding: 3px;
+                margin: 0 3px 0 9px;
+                transform: rotate(45deg);
+                -webkit-transform: rotate(45deg);
+            }
+
+            a.dropdown-item {
+                width: initial !important;
+            }
+
+            .main-button {
+                min-width: 150px;
+            }
+        `;
+    }
+
+    onDropdownClick(event) {
+        event.stopPropagation();
+        event.currentTarget.classList.toggle('is-active');
+    }
+
+    closeDropdown() {
+        var dropdowns = this.shadowRoot.querySelectorAll('.dropdown');
+        dropdowns.forEach(function (el) {
+            el.classList.remove('is-active');
+        });
+    }
+
+    renderLoggedIn() {
+        return html`
+            <div class="dropdown" @click="${this.onDropdownClick}">
+              <div class="dropdown-trigger">
+                <button class="button main-button" aria-haspopup="true" aria-controls="dropdown-menu2">
+                  <span>${this.name}</span>
+                   <i class="arrow-down"></i>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" @click="${this.logout}" class="dropdown-item">
+                    ${i18n.t('logout')}
+                  </a>
+                  </a>
+                </div>
+              </div>
+            </div>
+        `;
+    }
+
+    renderLoggedOut() {
+        return html`
+            <button id="login-button" @click="${this.login}" class="button main-button">${i18n.t('login')}</button>
+        `;
+    }
+
     render() {
         return html`
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-            <style>
-                #logout-block { display: none }
-            </style>
 
-            <div id="logout-block" class="columns is-vcentered">
-                <div class="column">
-                    ${this.name}
-                </div>
-                <div class="column">
-                    <button @click="${this.logout}" class="button">${i18n.t('logout')}</button>
-                </div>
-            </div>
-
-            <div id="login-block" class="columns is-vcentered">
-                <div class="column">
-                    <button id="login-button" @click="${this.login}" class="button">${i18n.t('login')}</button>
-                </div>
+            <div>
+            ${this.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
             </div>
         `;
     }
