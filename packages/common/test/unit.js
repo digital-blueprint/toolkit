@@ -1,4 +1,4 @@
-import utils from '../utils';
+import * as utils from '../utils';
 
 describe('utils', () => {
     it('base64EncodeUnicode', () => {
