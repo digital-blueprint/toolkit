@@ -121,6 +121,29 @@ class DataTableView extends LitElement {
             data: [],
             paging: this.paging,
             searching: this.searching,
+            columnDefs: [
+                {
+                    "render": function ( data, type, row ) {
+                        let itemText = data;
+                        if (itemText) {
+                            let dat = itemText.toString();
+                            if (dat.match(/\+\d{2} \(\d+\) \d+/)) {
+                                itemText = "<a href='tel:" + dat + "'>" + dat + '</a>';
+                            } else if (dat.match(/\w+(?:\+\w+)?@(?:\w+\.)+\w+/)) {
+                                itemText = "<a href='mailto:" + dat + "'>" + dat + '</a>';
+                            } else if (dat.match(/(\d{4})-(\d{2})-(\d{2})/)) {
+                                itemText = dat.replace(/(\d{4})-(\d{2})-(\d{2})/, "$3.$2.$1");
+                                // itemText = dat.replace(/(\d{4})-(\d{2})-(\d{2})/, "<input type='date' value='$1-$2-$3' min='$1-$2-$3' max='$1-$2-$3'>");
+                            // } else if (dat.match(/CAT-\d+/)) {
+                            //     itemText = '<button>' + dat + '</button>';
+                            }
+                        }
+                        // console.log(data);
+                        return itemText;
+                    },
+                    "targets": [...columns.keys()]
+                },
+            ]
         });
 
         try {
