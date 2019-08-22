@@ -31,7 +31,7 @@ class Icon extends LitElement {
     } 
 
     render() {
-        let svg = fetch('/local/vpu-common/icons/' + this.name + '.json').then(response => {
+        let svg = fetch('local/vpu-common/icons/' + this.name + '.json').then(response => {
             return response.json().then(data => {
                 return unsafeHTML('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none; display: block; width: 100%; height: 100%;">' +'<path d="' + data + '" />' + '</svg>');
             });
