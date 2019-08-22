@@ -1,0 +1,1 @@
+import './vpu-mini-spinner.js';
