@@ -34,7 +34,7 @@ class PersonSelectDemo extends LitElement {
                     <h1 class="title">Person-Select-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
+                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person></vpu-auth>
                 </div>
                 <div class="container">
                     <form>

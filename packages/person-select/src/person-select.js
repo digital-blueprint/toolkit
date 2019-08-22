@@ -21,6 +21,7 @@ class PersonSelect extends VPULitElementJQuery {
         this.entryPointUrl = commonUtils.getAPiUrl();
         this.jsonld = null;
         this.$select = null;
+        this.active = false;
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
         this.selectId = 'person-select-' + commonUtils.makeId(24);
     }
@@ -28,6 +29,7 @@ class PersonSelect extends VPULitElementJQuery {
     static get properties() {
         return {
             lang: { type: String },
+            active: { type: Boolean, attribute: false },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
         };
     }
@@ -156,6 +158,7 @@ class PersonSelect extends VPULitElementJQuery {
 
                     JSONLD.initialize(this.entryPointUrl, function (jsonld) {
                         that.jsonld = jsonld;
+                        that.active = true;
                         that.$select = that.initSelect2();
                     });
                     break;
@@ -178,7 +181,7 @@ class PersonSelect extends VPULitElementJQuery {
             </style>
 
             <!-- https://select2.org-->
-            <select id="${this.selectId}" name="person" class="select"></select>
+            <select id="${this.selectId}" name="person" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}</select>
             <div id="person-select-dropdown"></div>
         `;
     }
