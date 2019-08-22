@@ -1,5 +1,6 @@
 import * as utils from '../utils';
 import '../vpu-mini-spinner.js';
+import '../vpu-spinner.js';
 import '../jsonld.js';
 
 describe('utils', () => {
