@@ -2,6 +2,7 @@ import {i18n} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
 import JSONLD from 'vpu-common/jsonld'
 import * as commonUtils from 'vpu-common/utils';
+import 'vpu-common/vpu-icon.js';
 
 /**
  * Keycloak auth web component
@@ -212,22 +213,17 @@ class VPUAuth extends LitElement {
 
     static get styles() {
         return css`
-            i.arrow-down {
-                border: solid black;
-                border-width: 0 3px 3px 0;
-                display: inline-block;
-                padding: 3px;
-                margin: 0 3px 0 9px;
-                transform: rotate(45deg);
-                -webkit-transform: rotate(45deg);
-            }
-
             a.dropdown-item {
                 width: initial !important;
             }
 
             .main-button {
                 min-width: 150px;
+            }
+
+            vpu-icon {
+                height: 2em;
+                width: 2em;
             }
         `;
     }
@@ -250,7 +246,7 @@ class VPUAuth extends LitElement {
               <div class="dropdown-trigger">
                 <button class="button main-button" aria-haspopup="true" aria-controls="dropdown-menu2">
                   <span>${this.name}</span>
-                   <i class="arrow-down"></i>
+                  <vpu-icon name="menu-down"></vpu-icon>
                 </button>
               </div>
               <div class="dropdown-menu" id="dropdown-menu2" role="menu">
