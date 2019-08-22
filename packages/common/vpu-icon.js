@@ -30,10 +30,13 @@ class Icon extends LitElement {
     } 
 
     render() {
-        let path = fetch('local/vpu-common/icons/' + this.name + '.json')
+        let iconPath = 'local/vpu-common2/icons/' + this.name + '.json';
+        let svgPath = fetch(iconPath)
             .then(response => {
-                if (!response.ok)
-                    throw Error(response.statusText);
+                if (!response.ok) {
+                    console.error("Failed to load icon: " + this.name);
+                    return "M0,0H24V24H0";
+                }
                 return response.json();
             });
 
@@ -46,7 +49,7 @@ class Icon extends LitElement {
 
             <svg aria-labelledby="title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="pointer-events: none; display: block; width: 100%; height: 100%;">
                 <title id="title">${this.name}</title>
-                <path d=${until(path)} />
+                <path d=${until(svgPath)} />
             </svg>
         `;
     }
