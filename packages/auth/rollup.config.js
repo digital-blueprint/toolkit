@@ -41,10 +41,9 @@ export default {
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [
-                'assets/index.html',
-                'assets/favicon.ico'
-            ],
-            outputFolder: 'dist'
+                {src: 'assets/index.html', dest:'dist'},
+                {src: 'assets/favicon.ico', dest:'dist'},
+            ]
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
     ]
