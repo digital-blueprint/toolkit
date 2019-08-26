@@ -136,7 +136,7 @@ export const makeId = (length) => {
 export const pad10 = (n) => { return n < 10 ? '0' + n : n };
 
 /**
- * Converts a date string to a local iso datetime with stripped seconds and timezone for the datetime-local input
+ * Converts a date object or string to a local iso datetime with stripped seconds and timezone for the datetime-local input
  *
  * @param date
  * @returns {string}
@@ -147,4 +147,32 @@ export const dateToStrippedIsoDT = (date) => {
     }
 
     return `${date.getFullYear()}-${pad10(date.getMonth()+1)}-${pad10(date.getDate())}T${pad10(date.getHours())}:${pad10(date.getMinutes())}`;
+};
+
+/**
+ * Converts a date object or string to a local date string the date input
+ *
+ * @param date
+ * @returns {string}
+ */
+export const dateToInputDateString = (date) => {
+    if (!(date instanceof Date)) {
+        date = new Date(date);
+    }
+
+    return `${date.getFullYear()}-${pad10(date.getMonth()+1)}-${pad10(date.getDate())}`;
+};
+
+/**
+ * Converts a date object or string to a local time string the time input
+ *
+ * @param date
+ * @returns {string}
+ */
+export const dateToInputTimeString = (date) => {
+    if (!(date instanceof Date)) {
+        date = new Date(date);
+    }
+
+    return `${pad10(date.getHours())}:${pad10(date.getMinutes())}`;
 };
