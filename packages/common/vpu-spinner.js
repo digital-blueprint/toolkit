@@ -117,5 +117,6 @@ transform:translateX(-100%) translateY(0%);  visibility:visible;
     }
 }
 
-if (!customElements.get('vpu-spinner'))
+// customElements is undefined in Edge
+if (typeof customElements != 'undefined' && !customElements.get('vpu-spinner'))
     customElements.define('vpu-spinner', Spinner);
