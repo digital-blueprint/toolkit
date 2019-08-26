@@ -1,6 +1,8 @@
+import environment from 'consts:environment';
+
 var config;
 
-switch(process.env.BUILD) {
+switch(environment) {
     case "development":
         config = {
             apiBaseUrl: 'https://mw-dev.tugraz.at',

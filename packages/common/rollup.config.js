@@ -1,10 +1,10 @@
 import path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import replace from "rollup-plugin-replace";
 import multiEntry from 'rollup-plugin-multi-entry';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
+import consts from 'rollup-plugin-consts';
 
 const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
@@ -18,6 +18,9 @@ export default {
     },
     plugins: [
         multiEntry(),
+        consts({
+            environment: build,
+        }),
         resolve({
           customResolveOptions: {
             // ignore node_modules from vendored packages
@@ -26,9 +29,6 @@ export default {
         }),
         commonjs({
             include: 'node_modules/**'
-        }),
-        replace({
-            "process.env.BUILD": '"' + build + '"',
         }),
         copy({
             targets: [
