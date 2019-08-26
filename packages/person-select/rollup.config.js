@@ -4,10 +4,10 @@ import commonjs from 'rollup-plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import {terser} from "rollup-plugin-terser";
 import json from 'rollup-plugin-json';
-import replace from "rollup-plugin-replace";
 import serve from 'rollup-plugin-serve';
 import multiEntry from 'rollup-plugin-multi-entry';
 import url from "rollup-plugin-url"
+import consts from 'rollup-plugin-consts';
 
 const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
@@ -21,6 +21,9 @@ export default {
     },
     plugins: [
         multiEntry(),
+        consts({
+            environment: build,
+        }),
         resolve({
             customResolveOptions: {
                 // ignore node_modules from vendored packages
@@ -39,13 +42,11 @@ export default {
           fileName: 'shared/[name].[hash][extname]'
         }),
         json(),
-        replace({
-            "process.env.BUILD": '"' + build + '"',
-        }),
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
+                {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
