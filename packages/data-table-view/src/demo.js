@@ -1,6 +1,6 @@
 import 'vpu-auth';
 import './data-table-view.js';
-import {setting, getAPiUrl} from './utils.js';
+import {setting, getAssetURL,} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import commonUtils from 'vpu-common/utils';
@@ -27,37 +27,21 @@ class DataTableViewDemo extends LitElement {
         super.update(changedProperties);
     }
 
-    filterChange(e) {
-        let datatable = this.shadowRoot.querySelector('#dt1');
-        datatable.setAttribute('filter', e.target.value);
-    }
-
-    colsChange(e) {
-        let datatable = this.shadowRoot.querySelector('#dt1');
-        if (datatable === undefined) { alter('datatable not found'); return; }
-        datatable.setAttribute('whitelisted-columns', e.target.value);
-    }
-
     render() {
+        // datatable.net tyles must be applied here :-/
+        let dt_css = getAssetURL('datatables/css/jquery.dataTables.min.css');
+        let rs_css = getAssetURL('datatables/css/responsive.dataTables.css');
         return html`
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+            <link rel="stylesheet" href="${dt_css}">
+            <link rel="stylesheet" href="${rs_css}">
             <style>
                 .box {
                     margin: 10px;
                     padding: 10px;
                     border: 1px solid orange;
                 }
-                .box2 {
-                    margin: 10px;
-                    padding: 10px;
-                    border: 1px solid green;
-                }
-                .box3 {
-                    margin: 10px;
-                    padding: 10px;
-                    border: 1px solid blue;
-                }
             </style>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
 
             <section class="section">
                 <div class="content">
@@ -68,75 +52,175 @@ class DataTableViewDemo extends LitElement {
                 </div>
                 <div class="content">
                     <h4>DataTable: paging and searching</h4>
-                    <p>
-                        <label for="filter">Filter für die Suche:</label>
-                        <input type="text" name="filter" id="filter" value="" placeholder="Geben Sie mindestens 3 Zeichen ein" @change="${this.filterChange}">
-                    </p>
-                    <p>
-                        <label for="columns">Spalten im Ergbnis:</label>
-                        <input type="text" name="columns" id="columns" value="*" placeholder="Geben Sie einen Stern * für alle ein" @change="${this.colsChange}">
-                    </p>
-                    <div class="box">
-                        <vpu-data-table-view
-                            lang="${this.lang}"
-                            value="Person"
-                            filter=""
-                            whitelisted-columns="*"
-                            blacklisted-columns="phoneExtension name"
-                            id="dt1"
-                            paging
-                            searching
-                        ></vpu-data-table-view>
+                     <div class="box">
+                        <vpu-data-table-view lang="${this.lang}" paging searching>
+                            <div slot="table"><!-- slot encapsulates table -->
+                                <table class="display">
+                                    <thead>
+                                        <tr>
+                                            <th>A</th>
+                                            <th>B</th>
+                                            <th>C</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>123</td>
+                                            <td>a-2-4-g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>def</td>
+                                            <td>456</td>
+                                            <td>b-3-5-h</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ghi</td>
+                                            <td>789</td>
+                                            <td>c-4-6-i</td>
+                                        </tr>
+                                        <tr>
+                                            <td>jkl</td>
+                                            <td>012</td>
+                                            <td>x-8-0-a</td>
+                                        </tr>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>123</td>
+                                            <td>a-2-4-g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>def</td>
+                                            <td>456</td>
+                                            <td>b-3-5-h</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ghi</td>
+                                            <td>789</td>
+                                            <td>c-4-6-i</td>
+                                        </tr>
+                                        <tr>
+                                            <td>jkl</td>
+                                            <td>012</td>
+                                            <td>x-8-0-a</td>
+                                        </tr>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>123</td>
+                                            <td>a-2-4-g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>def</td>
+                                            <td>456</td>
+                                            <td>b-3-5-h</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ghi</td>
+                                            <td>789</td>
+                                            <td>c-4-6-i</td>
+                                        </tr>
+                                        <tr>
+                                            <td>jkl</td>
+                                            <td>012</td>
+                                            <td>x-8-0-a</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </vpu-data-table-view>
                     </div>
-                </div>
-            </section>
-            <!--
-            <section class="section">
-                <div class="content">
                     <h4>DataTable: no paging, no searching</h4>
-                    <div class="box2">
-                        <vpu-data-table-view
-                            lang="${this.lang}"
-                            value="Person"
-                            filter="Ab"
-                            whitelisted-columns="name telephone email"
-                            blacklisted-columns=""
-                            id="dt2"
-                            wait-until-all-loaded
-                        ></vpu-data-table-view>
+                    <div class="box">
+                        <vpu-data-table-view lang="${this.lang}">
+                            <div slot="table"><!-- slot encapsulates table -->
+                                <table class="display">
+                                    <thead>
+                                        <tr>
+                                            <th>A</th>
+                                            <th>B</th>
+                                            <th>C</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>123</td>
+                                            <td>a-2-4-g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ghi</td>
+                                            <td>789</td>
+                                            <td>c-4-6-i</td>
+                                        </tr>
+                                        <tr>
+                                            <td>jkl</td>
+                                            <td>012</td>
+                                            <td>x-8-0-a</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </vpu-data-table-view>
                     </div>
                 </div>
-            </section>
-            -->
-            <section class="section">
                 <div class="content">
-                    <h4>DataTable: DummyProduct</h4>
-                    <div class="box2">
-                        <vpu-data-table-view
-                            lang="${this.lang}"
-                            value="DummyProduct"
-                            filter="*"
-                            whitelisted-columns="*"
-                            blacklisted-columns=""
-                            id="dt3"
-                            wait-until-all-loaded
-                            paging
-                            searching
-                        ></vpu-data-table-view>
-                    </div>
-                    <h4>DataTable: nonExistantEntity</h4>
-                    <div class="box3">
-                        <vpu-data-table-view
-                            lang="${this.lang}"
-                            value="nonExistantEntity"
-                            filter="*"
-                            whitelisted-columns="*"
-                            blacklisted-columns=""
-                            id="dt4"
-                            wait-until-all-loaded
-                            paging
-                            searching
-                        ></vpu-data-table-view>
+                    <h4>Common Table</h4>
+                      <div class="box">
+                        <!-- <vpu-data-table-view lang="${this.lang}" paging searching> -->
+                            <div slot="table">
+                                <table class="display">
+                                    <thead>
+                                        <tr>
+                                            <th>A</th>
+                                            <th>B</th>
+                                            <th>C</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>123</td>
+                                            <td>a-2-4-g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>def</td>
+                                            <td>456</td>
+                                            <td>b-3-5-h</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ghi</td>
+                                            <td>789</td>
+                                            <td>c-4-6-i</td>
+                                        </tr>
+                                        <tr>
+                                            <td>jkl</td>
+                                            <td>012</td>
+                                            <td>x-8-0-a</td>
+                                        </tr>
+                                        <tr>
+                                            <td>abc</td>
+                                            <td>123</td>
+                                            <td>a-2-4-g</td>
+                                        </tr>
+                                        <tr>
+                                            <td>def</td>
+                                            <td>456</td>
+                                            <td>b-3-5-h</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ghi</td>
+                                            <td>789</td>
+                                            <td>c-4-6-i</td>
+                                        </tr>
+                                        <tr>
+                                            <td>jkl</td>
+                                            <td>012</td>
+                                            <td>x-8-0-a</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <!-- </vpu-data-table-view> -->
                     </div>
                 </div>
             </section>
