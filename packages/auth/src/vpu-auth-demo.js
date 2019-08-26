@@ -36,7 +36,7 @@ class AuthDemo extends LitElement {
                     <h1 class="title">Auth-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person></vpu-auth>
+                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person remember-login></vpu-auth>
                 </div>
             </section>
         `;

@@ -30,6 +30,7 @@ class VPUAuth extends LitElement {
         this.name = "";
         this.personId = "";
         this.loggedIn = false;
+        this.rememberLogin = false
 
         // Create the events
         this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
@@ -46,6 +47,7 @@ class VPUAuth extends LitElement {
         return {
             lang: { type: String },
             forceLogin: { type: Boolean, attribute: 'force-login' },
+            rememberLogin: { type: Boolean, attribute: 'remember-login' },
             loggedIn: { type: Boolean},
             loadPerson: { type: Boolean, attribute: 'load-person' },
             clientId: { type: String, attribute: 'client-id' },
@@ -60,6 +62,10 @@ class VPUAuth extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         const href = window.location.href;
+
+        if (this.rememberLogin && sessionStorage.getItem('vpu-logged-in')) {
+            this.forceLogin = true;
+        }
 
         // load Keycloak if we want to force the login or if we were redirected from the Keycloak login page
         if (this.forceLogin || (href.indexOf('#state=') > 0 && href.indexOf('&session_state=') > 0)) {
@@ -100,7 +106,7 @@ class VPUAuth extends LitElement {
                     console.log(authenticated ? 'authenticated' : 'not authenticated!');
                     console.log(that._keycloak);
 
-                    that.setStateToLogin(true);
+                    this.loggedIn = false;
                     that.updateKeycloakData();
                     that.dispatchInitEvent();
 
@@ -157,6 +163,7 @@ class VPUAuth extends LitElement {
     }
 
     logout(e) {
+        sessionStorage.removeItem('vpu-logged-in');
         this._keycloak.logout();
     }
 
@@ -164,12 +171,8 @@ class VPUAuth extends LitElement {
      * Dispatches the init event
      */
     dispatchInitEvent() {
-        this.setStateToLogin(false);
+        this.loggedIn = true;
         this.dispatchEvent(this.initEvent);
-    }
-
-    setStateToLogin(state) {
-        this.loggedIn = !state;
     }
 
     /**
@@ -205,6 +208,12 @@ class VPUAuth extends LitElement {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
                 i18n.changeLanguage(this.lang);
+            }
+            if (propName == "loggedIn") {
+                if (this.loggedIn)
+                    sessionStorage.setItem('vpu-logged-in', true);
+                else
+                    sessionStorage.removeItem('vpu-logged-in');
             }
         });
 
