@@ -1,7 +1,6 @@
 import path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import postcss from 'rollup-plugin-postcss';
 import copy from 'rollup-plugin-copy';
 import {terser} from "rollup-plugin-terser";
 import json from 'rollup-plugin-json';
@@ -33,11 +32,6 @@ export default {
             include: 'node_modules/**'
         }),
         json(),
-        postcss({
-            inject: false,
-            minimize: false,
-            plugins: []
-        }),
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [
