@@ -5,7 +5,7 @@ import resp2 from 'datatables.net-responsive-dt';
 //import {getAssetURL,} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
-import commonUtils from 'vpu-common/utils';
+import * as commonUtils from 'vpu-common/utils';
 
 dt(window, $);
 resp(window, $);

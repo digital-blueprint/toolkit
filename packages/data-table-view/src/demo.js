@@ -3,7 +3,7 @@ import './data-table-view.js';
 import {setting, getAssetURL,} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
-import commonUtils from 'vpu-common/utils';
+import * as commonUtils from 'vpu-common/utils';
 
 class DataTableViewDemo extends LitElement {
     constructor() {
