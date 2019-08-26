@@ -5,9 +5,9 @@ import postcss from 'rollup-plugin-postcss';
 import copy from 'rollup-plugin-copy';
 import {terser} from "rollup-plugin-terser";
 import json from 'rollup-plugin-json';
-import replace from "rollup-plugin-replace";
 import serve from 'rollup-plugin-serve';
 import multiEntry from 'rollup-plugin-multi-entry';
+import consts from 'rollup-plugin-consts';
 
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
@@ -20,6 +20,9 @@ export default {
     },
     plugins: [
         multiEntry(),
+        consts({
+            environment: build,
+        }),
         resolve({
           customResolveOptions: {
             // ignore node_modules from vendored packages
@@ -30,9 +33,6 @@ export default {
             include: 'node_modules/**'
         }),
         json(),
-        replace({
-            "process.env.BUILD": '"' + build + '"',
-        }),
         postcss({
             inject: false,
             minimize: false,
