@@ -126,3 +126,25 @@ export const makeId = (length) => {
 
     return result;
 }
+
+/**
+ * Pads a number with a 0 so it has two digits
+ *
+ * @param n
+ * @returns {string}
+ */
+export const pad10 = (n) => { return n < 10 ? '0' + n : n };
+
+/**
+ * Converts a date string to a local iso datetime with stripped seconds and timezone for the datetime-local input
+ *
+ * @param date
+ * @returns {string}
+ */
+export const dateToStrippedIsoDT = (date) => {
+    if (!(date instanceof Date)) {
+        date = new Date(date);
+    }
+
+    return `${date.getFullYear()}-${pad10(date.getMonth()+1)}-${pad10(date.getDate())}T${pad10(date.getHours())}:${pad10(date.getMinutes())}`;
+};
