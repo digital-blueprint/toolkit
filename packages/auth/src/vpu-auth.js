@@ -68,7 +68,7 @@ class VPUAuth extends LitElement {
         }
 
         // load Keycloak if we want to force the login or if we were redirected from the Keycloak login page
-        if (this.forceLogin || (href.indexOf('#state=') > 0 && href.indexOf('&session_state=') > 0)) {
+        if (this.forceLogin || (href.search('[&#]state=') >= 0 && href.search('[&#]session_state=') >= 0)) {
             this.loadKeycloak();
         }
 
