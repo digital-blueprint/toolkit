@@ -132,6 +132,7 @@ class PersonSelect extends VPULitElementJQuery {
 
             const object = findObjectInApiResults(identifier, lastResult);
             $this.attr("data-object", JSON.stringify(object));
+            $this.data("object", object);
 
             // fire a change event
             that.dispatchEvent(new CustomEvent('change', {
@@ -160,6 +161,7 @@ class PersonSelect extends VPULitElementJQuery {
                 const identifier = person["@id"];
                 const option = new Option(person.name, identifier, true, true);
                 $this.attr("data-object", JSON.stringify(person));
+                $this.data("object", person);
                 that.$select.append(option).trigger('change');
 
                 // fire a change event
