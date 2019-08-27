@@ -9,6 +9,7 @@ import {i18n} from './i18n.js';
 import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
 import * as commonUtils from 'vpu-common/utils';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
+import {send as notify} from "vpu-common/notification";
 
 
 select2(window, $);
@@ -24,6 +25,7 @@ class PersonSelect extends VPULitElementJQuery {
         this.active = false;
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
         this.selectId = 'person-select-' + commonUtils.makeId(24);
+        this.value = '';
     }
 
     static get properties() {
@@ -31,6 +33,7 @@ class PersonSelect extends VPULitElementJQuery {
             lang: { type: String },
             active: { type: Boolean, attribute: false },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            value: { type: String },
         };
     }
 
@@ -138,6 +141,36 @@ class PersonSelect extends VPULitElementJQuery {
                 bubbles: true
             }));
         });
+
+        // preset a person
+        if (this.value !== '') {
+            const apiUrl = this.entryPointUrl + this.value;
+
+            fetch(apiUrl, {
+                headers: {
+                    'Content-Type': 'application/ld+json',
+                    'Authorization': 'Bearer ' + window.VPUAuthToken,
+                },
+            })
+            .then(result => {
+                if (!result.ok) throw result;
+                return result.json();
+            })
+            .then((person) => {
+                const identifier = person["@id"];
+                const option = new Option(person.name, identifier, true, true);
+                $this.attr("data-object", JSON.stringify(person));
+                that.$select.append(option).trigger('change');
+
+                // fire a change event
+                that.dispatchEvent(new CustomEvent('change', {
+                    detail: {
+                        value: identifier,
+                    },
+                    bubbles: true
+                }));
+            }).catch(() => {});
+        }
 
         return this.$select;
     }
