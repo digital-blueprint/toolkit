@@ -1,6 +1,6 @@
 import 'vpu-auth';
 import './data-table-view.js';
-import {setting, getAssetURL,} from './utils.js';
+import {setting,} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
@@ -17,6 +17,49 @@ class DataTableViewDemo extends LitElement {
         };
     }
 
+    connectedCallback() {
+        super.connectedCallback();
+        const that = this;
+
+        this.updateComplete.then(()=> {
+            /*
+                    First Table: with data
+             */
+            const vdtv1 = that.shadowRoot.querySelector('#vdtv1');
+            if (vdtv1 !== null) {
+                const vdtv1_columnDefs = [
+                    { targets: [3], visible: false },
+                    { targets: [2], orderData: [3] },
+                    { targets: [3, 4], searchable: false },
+                    { targets: [4], sortable: false }
+                ];
+                const tbl = [];
+                for (let i = 0; i<25; ++i) {
+                    tbl.push(this.vdtv_create_row());
+                }
+                vdtv1.set_columns([{title:'Bezeichnung'}, {title:'Nummer'}, {title:'Datum'}, null, null])
+                    .set_columnDefs(vdtv1_columnDefs)
+                    .set_datatable(tbl);
+            }
+
+            /*
+                    Second Table: no data definition only
+             */
+            const vdtv2 = that.shadowRoot.querySelector('#vdtv2');
+            if (vdtv2 !== null) {
+                const vdtv2_columnDefs = [
+                    { targets: [3], visible: false },
+                    { targets: [2], orderData: [3] },
+                    { targets: [3, 4], searchable: false },
+                    { targets: [4], sortable: false }
+                ];
+                vdtv2.set_columns([{title:'Bezeichnung'}, {title:'Nummer'}, {title:'Datum'}, null, null])
+                    .set_columnDefs(vdtv2_columnDefs)
+                    .set_datatable([]);
+            }
+        });
+    }
+
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
@@ -27,14 +70,33 @@ class DataTableViewDemo extends LitElement {
         super.update(changedProperties);
     }
 
+    vdtv_create_row() {
+        const str = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+        const day = Math.floor(Math.random()*(31-1) + 1);
+        const month = Math.floor(Math.random()*(12-1) + 1);
+        const year = Math.floor(Math.random()*(2019-2016) + 2016);
+        return [
+            str,
+            Math.floor(1000 * Math.random()),
+            '' + day + '.' + month + '.' + year,
+            '' + year + '-' + month + '-' + day,
+            '<button onclick="alert(\'' + str + ' clicked\');">OK</button>'
+        ];
+    }
+
+    vdtv2_add_rows() {
+        console.log('vdtv2_add_rows() clicked');
+        const vdtv2 = this.shadowRoot.querySelector('#vdtv2');
+        if (vdtv2 !== null) {
+            const row = this.vdtv_create_row();
+            vdtv2.add_row(row).draw();
+        }
+    }
+
     render() {
         // datatable.net tyles must be applied here :-/
-        let dt_css = getAssetURL('datatables/css/jquery.dataTables.min.css');
-        let rs_css = getAssetURL('datatables/css/responsive.dataTables.css');
         return html`
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-            <link rel="stylesheet" href="${dt_css}">
-            <link rel="stylesheet" href="${rs_css}">
             <style>
                 .box {
                     margin: 10px;
@@ -51,175 +113,36 @@ class DataTableViewDemo extends LitElement {
                     <vpu-auth lang="${this.lang}" client-id="${setting('keyCloakClientId')}" load-person force-login></vpu-auth>
                 </div>
                 <div class="content">
-                    <h4>DataTable: paging and searching</h4>
+                    <h4>DataTable: with data, paging and searching</h4>
                      <div class="box">
-                        <vpu-data-table-view lang="${this.lang}" paging searching>
-                            <div slot="table"><!-- slot encapsulates table -->
-                                <table class="display">
-                                    <thead>
-                                        <tr>
-                                            <th>A</th>
-                                            <th>B</th>
-                                            <th>C</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>123</td>
-                                            <td>a-2-4-g</td>
-                                        </tr>
-                                        <tr>
-                                            <td>def</td>
-                                            <td>456</td>
-                                            <td>b-3-5-h</td>
-                                        </tr>
-                                        <tr>
-                                            <td>ghi</td>
-                                            <td>789</td>
-                                            <td>c-4-6-i</td>
-                                        </tr>
-                                        <tr>
-                                            <td>jkl</td>
-                                            <td>012</td>
-                                            <td>x-8-0-a</td>
-                                        </tr>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>123</td>
-                                            <td>a-2-4-g</td>
-                                        </tr>
-                                        <tr>
-                                            <td>def</td>
-                                            <td>456</td>
-                                            <td>b-3-5-h</td>
-                                        </tr>
-                                        <tr>
-                                            <td>ghi</td>
-                                            <td>789</td>
-                                            <td>c-4-6-i</td>
-                                        </tr>
-                                        <tr>
-                                            <td>jkl</td>
-                                            <td>012</td>
-                                            <td>x-8-0-a</td>
-                                        </tr>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>123</td>
-                                            <td>a-2-4-g</td>
-                                        </tr>
-                                        <tr>
-                                            <td>def</td>
-                                            <td>456</td>
-                                            <td>b-3-5-h</td>
-                                        </tr>
-                                        <tr>
-                                            <td>ghi</td>
-                                            <td>789</td>
-                                            <td>c-4-6-i</td>
-                                        </tr>
-                                        <tr>
-                                            <td>jkl</td>
-                                            <td>012</td>
-                                            <td>x-8-0-a</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </vpu-data-table-view>
+                        <vpu-data-table-view lang="${this.lang}" paging searching id="vdtv1"></vpu-data-table-view>
                     </div>
-                    <h4>DataTable: no paging, no searching</h4>
+                    <h4>DataTable: no data, no paging, no searching</h4>
                     <div class="box">
-                        <vpu-data-table-view lang="${this.lang}">
-                            <div slot="table"><!-- slot encapsulates table -->
-                                <table class="display">
-                                    <thead>
-                                        <tr>
-                                            <th>A</th>
-                                            <th>B</th>
-                                            <th>C</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>123</td>
-                                            <td>a-2-4-g</td>
-                                        </tr>
-                                        <tr>
-                                            <td>ghi</td>
-                                            <td>789</td>
-                                            <td>c-4-6-i</td>
-                                        </tr>
-                                        <tr>
-                                            <td>jkl</td>
-                                            <td>012</td>
-                                            <td>x-8-0-a</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </vpu-data-table-view>
+                    <button @click="${this.vdtv2_add_rows}">noch etwas...</button>
+                        <vpu-data-table-view lang="${this.lang}" id="vdtv2"></vpu-data-table-view>
                     </div>
                 </div>
                 <div class="content">
                     <h4>Common Table</h4>
                       <div class="box">
                         <!-- <vpu-data-table-view lang="${this.lang}" paging searching> -->
-                            <div slot="table">
-                                <table class="display">
-                                    <thead>
-                                        <tr>
-                                            <th>A</th>
-                                            <th>B</th>
-                                            <th>C</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>123</td>
-                                            <td>a-2-4-g</td>
-                                        </tr>
-                                        <tr>
-                                            <td>def</td>
-                                            <td>456</td>
-                                            <td>b-3-5-h</td>
-                                        </tr>
-                                        <tr>
-                                            <td>ghi</td>
-                                            <td>789</td>
-                                            <td>c-4-6-i</td>
-                                        </tr>
-                                        <tr>
-                                            <td>jkl</td>
-                                            <td>012</td>
-                                            <td>x-8-0-a</td>
-                                        </tr>
-                                        <tr>
-                                            <td>abc</td>
-                                            <td>123</td>
-                                            <td>a-2-4-g</td>
-                                        </tr>
-                                        <tr>
-                                            <td>def</td>
-                                            <td>456</td>
-                                            <td>b-3-5-h</td>
-                                        </tr>
-                                        <tr>
-                                            <td>ghi</td>
-                                            <td>789</td>
-                                            <td>c-4-6-i</td>
-                                        </tr>
-                                        <tr>
-                                            <td>jkl</td>
-                                            <td>012</td>
-                                            <td>x-8-0-a</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table class="display">
+                                <thead>
+                                    <tr>
+                                        <th>A</th>
+                                        <th>B</th>
+                                        <th>C</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>abc</td>
+                                        <td>123</td>
+                                        <td>a-2-4-g</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         <!-- </vpu-data-table-view> -->
                     </div>
                 </div>

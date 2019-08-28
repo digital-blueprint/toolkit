@@ -2,10 +2,13 @@ import $ from 'jquery';
 import dt from 'datatables.net';
 import resp from 'datatables.net-responsive';
 import resp2 from 'datatables.net-responsive-dt';
-//import {getAssetURL,} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
+import de from '../assets/datatables/i18n/German';
+import en from '../assets/datatables/i18n/English';
+
 import * as commonUtils from 'vpu-common/utils';
+import {getAssetURL} from "./utils";
 
 dt(window, $);
 resp(window, $);
@@ -20,7 +23,9 @@ class DataTableView extends LitElement {
         this.responsive = null;
         this.paging = false;
         this.searching = false;
-        this.columnDef = [];
+        this.columns = [{title: 'uninitialized'}];
+        this.columnDefs = [];
+        this.data = [];
     }
 
     static get properties() {
@@ -29,29 +34,41 @@ class DataTableView extends LitElement {
             table: { type: Object, attribute: false },
             paging: { type: Boolean },
             searching: { type: Boolean },
-            columnDef: { type: Array, attribute: false },
+            columns: { type: Array, attribute: false },
+            columnDefs: { type: Array, attribute: false },
+            data: { type: Array, attribute: false },
         };
     }
 
-    set_columnDef(def) {
-        this.columnDef = def;
+    set_columns(cols) {
+        this.columns = cols;
+        return this;
+    }
+    set_columnDefs(defs) {
+        this.columnDefs = defs;
+        return this;
+    }
+    add_row(row) {
+        this.data.push(row);
+        this.table.row.add(row);
+        return this;
+    }
+    draw() {
+        this.table.draw();
+        return this;
     }
 
-    set_datatable() {
-        const lang_de_url = 'local/vpu-data-table-view/i18n/German.json';
-        const lang_en_url = 'local/vpu-data-table-view/i18n/English.json';
+    set_datatable(data) {
+        const lang_obj = this.lang === 'de' ? de : en;
 
-        if (this.table) {
-            this.table.destroy();
-        }
-        this.table = $(this.querySelector('table')).DataTable({
+        this.table = $(this.shadowRoot.querySelector('table')).DataTable({
+            destroy: true,
             autoWidth: false,
-            language: {
-                url: this.lang === 'de' ? lang_de_url : lang_en_url,
-            },
+            language: lang_obj,
             paging: this.paging,
             searching: this.searching,
-            columnDef: this.columnDef,
+            columns: this.columns,
+            columnDefs: this.columnDefs,
         });
 
         try {
@@ -61,6 +78,10 @@ class DataTableView extends LitElement {
         } catch (e) {
             // XXX: it throws, but it still works
         }
+        if (data) {
+            this.data = data;
+        }
+        this.table.rows.add(this.data).draw();
     }
 
     update(changedProperties) {
@@ -75,10 +96,14 @@ class DataTableView extends LitElement {
     }
 
     render() {
+        let dt_css = getAssetURL('local/vpu-data-table-view/css/jquery.dataTables.min.css');
+        let rs_css = getAssetURL('local/vpu-data-table-view/css/responsive.dataTables.css');
         return html`
+            <link rel="stylesheet" href="${dt_css}">
+            <link rel="stylesheet" href="${rs_css}">
             <style>
             </style>
-            <slot name="table"></slot>
+            <div><table></table></div>
         `;
     }
 }
