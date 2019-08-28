@@ -62,16 +62,16 @@ export default {
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [
-                {src: 'assets/index.html', dest: 'dist', rename: pkg.name + '.html'},
+                {src: 'assets/index.html', dest: 'dist'}, //rename: pkg.name + '.html'},
                 {src: 'assets/*.css', dest: 'dist/local/' + pkg.name},
                 {src: 'assets/*.ico', dest: 'dist/local/' + pkg.name},
                 {src: 'node_modules/vpu-common/vpu-spinner.js', dest: 'dist/local/' + pkg.name, rename: 'spinner.js'},
                 {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
+                {src: 'assets/nomodule.js', dest: 'dist/local/' + pkg.name},
 
                 {src: 'node_modules/datatables.net-dt/css', dest: 'dist/local/vpu-data-table-view'},
                 {src: 'node_modules/datatables.net-dt/images', dest: 'dist/local/vpu-data-table-view'},
                 {src: 'node_modules/datatables.net-responsive-dt/css', dest: 'dist/local/vpu-data-table-view'},
-                {src: 'assets/datatables/i18n', dest: 'dist/local/vpu-data-tables-view'}
             ],
         }),
 

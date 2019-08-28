@@ -37,7 +37,7 @@
     "lit-html": "^1.1.1"
   },
   "scripts": {
-    "clean": "rm dist/*",
+    "clean": "rm -r dist/*",
     "build": "npm run build-local",
     "build-local": "rollup -c",
     "build-dev": "rollup -c --environment BUILD:development",
