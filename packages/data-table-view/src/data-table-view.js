@@ -38,8 +38,8 @@ class DataTableView extends LitElement {
     }
 
     set_datatable() {
-        const lang_de_url = 'datatables/i18n/German.json';
-        const lang_en_url = 'datatables/i18n/English.json';
+        const lang_de_url = 'local/vpu-data-table-view/i18n/German.json';
+        const lang_en_url = 'local/vpu-data-table-view/i18n/English.json';
 
         if (this.table) {
             this.table.destroy();
