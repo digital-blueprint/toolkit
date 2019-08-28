@@ -188,6 +188,11 @@ class PersonSelect extends VPULitElementJQuery {
                         this.initSelect2();
                     }
                     break;
+                case "value":
+                    if (this.$select !== null && this.$select.hasClass("select2-hidden-accessible")) {
+                        this.initSelect2();
+                    }
+                    break;
                 case "entryPointUrl":
                     const that = this;
 
