@@ -125,22 +125,25 @@ class PersonSelect extends VPULitElementJQuery {
                 }
             }
         }).on("select2:select", function (e) {
-            // set value custom element
+            // set custom element attributes
             const identifier = e.params.data.id;
-            $this.attr("value", identifier);
-            $this.val(identifier);
-
             const object = findObjectInApiResults(identifier, lastResult);
+
             $this.attr("data-object", JSON.stringify(object));
             $this.data("object", object);
+            $this.val(identifier);
 
-            // fire a change event
-            that.dispatchEvent(new CustomEvent('change', {
-                detail: {
-                    value: identifier,
-                },
-                bubbles: true
-            }));
+            if ($this.attr("value") !== identifier) {
+                $this.attr("value", identifier);
+
+                // fire a change event
+                that.dispatchEvent(new CustomEvent('change', {
+                    detail: {
+                        value: identifier,
+                    },
+                    bubbles: true
+                }));
+            }
         });
 
         // preset a person
