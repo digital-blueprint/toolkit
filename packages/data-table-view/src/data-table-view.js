@@ -20,6 +20,7 @@ class DataTableView extends LitElement {
         this.responsive = null;
         this.paging = false;
         this.searching = false;
+        this.columnDef = [];
     }
 
     static get properties() {
@@ -28,7 +29,12 @@ class DataTableView extends LitElement {
             table: { type: Object, attribute: false },
             paging: { type: Boolean },
             searching: { type: Boolean },
+            columnDef: { type: Array, attribute: false },
         };
+    }
+
+    set_columnDef(def) {
+        this.columnDef = def;
     }
 
     set_datatable() {
@@ -45,6 +51,7 @@ class DataTableView extends LitElement {
             },
             paging: this.paging,
             searching: this.searching,
+            columnDef: this.columnDef,
         });
 
         try {
