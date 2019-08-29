@@ -61,7 +61,7 @@ class PersonSelect extends VPULitElementJQuery {
     /**
      * Initializes the Select2 selector
      */
-    initSelect2() {
+    initSelect2(ignorePreset = false) {
         const that = this;
         const $this = $(this);
         let lastResult = {};
@@ -148,7 +148,7 @@ class PersonSelect extends VPULitElementJQuery {
         });
 
         // preset a person
-        if (this.value !== '') {
+        if (!ignorePreset && this.value !== '') {
             const apiUrl = this.entryPointUrl + this.value;
 
             fetch(apiUrl, {
@@ -189,7 +189,7 @@ class PersonSelect extends VPULitElementJQuery {
 
                     if (this.$select !== null && this.$select.hasClass("select2-hidden-accessible")) {
                         // no other way to set an other language at runtime did work
-                        this.initSelect2();
+                        this.initSelect2(true);
                     }
                     break;
                 case "value":
