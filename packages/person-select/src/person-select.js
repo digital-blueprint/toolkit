@@ -26,6 +26,7 @@ class PersonSelect extends VPULitElementJQuery {
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
         this.selectId = 'person-select-' + commonUtils.makeId(24);
         this.value = '';
+        this.ignoreValueUpdate = false;
     }
 
     static get properties() {
@@ -131,9 +132,9 @@ class PersonSelect extends VPULitElementJQuery {
 
             $this.attr("data-object", JSON.stringify(object));
             $this.data("object", object);
-            $this.val(identifier);
 
             if ($this.attr("value") !== identifier) {
+                that.ignoreValueUpdate = true;
                 $this.attr("value", identifier);
 
                 // fire a change event
@@ -192,9 +193,13 @@ class PersonSelect extends VPULitElementJQuery {
                     }
                     break;
                 case "value":
-                    if (this.$select !== null && this.$select.hasClass("select2-hidden-accessible")) {
+                    console.log("oldValue: " + oldValue);
+                    console.log("this.value: " + this.value);
+                    if (!this.ignoreValueUpdate && this.$select !== null && this.$select.hasClass("select2-hidden-accessible")) {
                         this.initSelect2();
                     }
+
+                    this.ignoreValueUpdate = false;
                     break;
                 case "entryPointUrl":
                     const that = this;
