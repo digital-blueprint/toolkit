@@ -193,8 +193,6 @@ class PersonSelect extends VPULitElementJQuery {
                     }
                     break;
                 case "value":
-                    console.log("oldValue: " + oldValue);
-                    console.log("this.value: " + this.value);
                     if (!this.ignoreValueUpdate && this.$select !== null && this.$select.hasClass("select2-hidden-accessible")) {
                         this.initSelect2();
                     }
