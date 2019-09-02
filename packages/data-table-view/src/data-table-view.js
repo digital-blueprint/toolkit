@@ -91,7 +91,7 @@ class DataTableView extends LitElement {
         if (data) {
             this.data = data;
         }
-        this.table.rows.add(this.data).draw();
+        this.table.clear().rows.add(this.data).draw();
     }
 
     update(changedProperties) {
