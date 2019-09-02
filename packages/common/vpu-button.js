@@ -8,6 +8,7 @@ class Button extends LitElement {
     constructor() {
         super();
         this.value = "";
+        // see: https://bulma.io/documentation/elements/button/#colors
         this.type = "primary";
         this.spinner = false;
         this.spinnerOnClick = true;
