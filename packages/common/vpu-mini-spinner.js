@@ -21,10 +21,10 @@ class MiniSpinner extends LitElement {
           position: absolute;
           width: 100%;
           height: 100%;
-          border: 0.2em solid #000;
+          border: 0.2em solid currentColor;
           border-radius: 50%;
           animation: ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-          border-color: #000 transparent transparent transparent;
+          border-color: currentColor transparent transparent transparent;
         }
         .ring div:nth-child(1) {
           animation-delay: -0.45s;
