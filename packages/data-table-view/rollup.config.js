@@ -8,6 +8,9 @@ import replace from "rollup-plugin-replace";
 import serve from 'rollup-plugin-serve';
 import multiEntry from 'rollup-plugin-multi-entry';
 import url from "rollup-plugin-url";
+import consts from 'rollup-plugin-consts';
+import del from 'rollup-plugin-delete'
+
 
 const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
@@ -15,6 +18,24 @@ console.log("build: " + build);
 
 let manualChunks = Object.keys(pkg.dependencies).reduce(function (acc, item) { acc[item] = [item]; return acc;}, {});
 manualChunks = Object.keys(pkg.devDependencies).reduce(function (acc, item) { if (item.startsWith('vpu-')) acc[item] = [item]; return acc;}, manualChunks);
+
+function getBuildInfo() {
+    const child_process = require('child_process');
+    const url = require('url');
+
+    let remote = child_process.execSync('git config --get remote.origin.url').toString().trim();
+    let commit = child_process.execSync('git rev-parse --short HEAD').toString().trim();
+
+    let parsed = url.parse(remote);
+    let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.'))
+    let newUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commit;
+
+    return {
+        info: commit,
+        url: newUrl,
+        env: build
+    }
+}
 
 export default {
     input: (build !== 'test') ? 'src/demo.js' : 'test/**/*.js',
@@ -36,7 +57,14 @@ export default {
         chokidar: true,
     },
     plugins: [
+        del({
+            targets: 'dist/*'
+        }),
         (build == 'test') ? multiEntry() : false,
+        consts({
+            environment: build,
+            buildinfo: getBuildInfo(),
+        }),
         resolve({
             customResolveOptions: {
                 // ignore node_modules from vendored packages
