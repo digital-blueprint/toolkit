@@ -28,6 +28,7 @@ class DataTableView extends LitElement {
         this.columns = [{title: 'uninitialized'}];
         this.columnDefs = [];
         this.data = [];
+        this.cc = 1;
     }
 
     static get properties() {
@@ -39,6 +40,7 @@ class DataTableView extends LitElement {
             columns: { type: Array, attribute: false },
             columnDefs: { type: Array, attribute: false },
             data: { type: Array, attribute: false },
+            cc: {type: Number, attribute: 'columns-count'},
         };
     }
 
@@ -62,6 +64,12 @@ class DataTableView extends LitElement {
 
     set_datatable(data) {
         const lang_obj = this.lang === 'de' ? de : en;
+
+        if (this.cc > this.columns.length) {
+            for (let i = this.columns.length; i < this.cc; ++i) {
+                this.columns.push({title: ''});
+            }
+        }
 
         this.table = $(this.shadowRoot.querySelector('table')).DataTable({
             destroy: true,
