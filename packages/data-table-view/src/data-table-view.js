@@ -9,6 +9,8 @@ import en from '../assets/datatables/i18n/English';
 
 import * as commonUtils from 'vpu-common/utils';
 import {getAssetURL} from "./utils";
+import * as utils from "./utils";
+import bulmaCSSPath from "bulma/css/bulma.min.css";
 
 dt(window, $);
 resp(window, $);
@@ -96,9 +98,12 @@ class DataTableView extends LitElement {
     }
 
     render() {
+        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
         let dt_css = getAssetURL('local/vpu-data-table-view/css/jquery.dataTables.min.css');
         let rs_css = getAssetURL('local/vpu-data-table-view/css/responsive.dataTables.css');
+
         return html`
+            <link rel="stylesheet" href="${bulmaCSS}">
             <link rel="stylesheet" href="${dt_css}">
             <link rel="stylesheet" href="${rs_css}">
             <style>
