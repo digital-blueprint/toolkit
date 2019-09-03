@@ -29,6 +29,11 @@ class DataTableView extends LitElement {
         this.columnDefs = [];
         this.data = [];
         this.cc = 1;
+        this.cssStyle = '';
+    }
+
+    setCSSStyle(style) {
+        this.cssStyle = style;
     }
 
     static get properties() {
@@ -41,6 +46,7 @@ class DataTableView extends LitElement {
             columnDefs: { type: Array, attribute: false },
             data: { type: Array, attribute: false },
             cc: {type: Number, attribute: 'columns-count'},
+            cssStyle: { type: String, attribute: false },
         };
     }
 
@@ -115,6 +121,7 @@ class DataTableView extends LitElement {
             <link rel="stylesheet" href="${dt_css}">
             <link rel="stylesheet" href="${rs_css}">
             <style>
+                ${this.cssStyle}
             </style>
             <div><table></table></div>
         `;
