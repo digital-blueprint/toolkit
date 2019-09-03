@@ -42,7 +42,7 @@ class Button extends LitElement {
 
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
-            <button @click="${this.clickHandler}" class="button is-${this.type}">${this.value} <vpu-mini-spinner style="display: ${this.spinner ? "inline" : "none"}"></vpu-mini-spinner></button>
+            <button @click="${this.clickHandler}" class="button ${this.type}">${this.value} <vpu-mini-spinner style="display: ${this.spinner ? "inline" : "none"}"></vpu-mini-spinner></button>
         `;
     }
 }
