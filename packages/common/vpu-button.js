@@ -1,7 +1,6 @@
 import {html, LitElement, css} from 'lit-element';
 import * as commonUtils from './utils.js';
 import bulmaCSSPath from 'bulma/css/bulma.min.css';
-import * as utils from "../../src/utils";
 
 
 class Button extends LitElement {
@@ -12,6 +11,7 @@ class Button extends LitElement {
         this.type = "primary";
         this.spinner = false;
         this.spinnerOnClick = true;
+        this.disabled = false;
     }
 
     static get properties() {
@@ -20,6 +20,7 @@ class Button extends LitElement {
             type: { type: String },
             spinner: { type: Boolean },
             spinnerOnClick: { type: Boolean, attribute: 'spinner-on-click' },
+            disabled: { type: Boolean },
         };
     }
 
@@ -38,11 +39,13 @@ class Button extends LitElement {
     }
 
     render() {
-        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
 
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
-            <button @click="${this.clickHandler}" class="button ${this.type}">${this.value} <vpu-mini-spinner style="display: ${this.spinner ? "inline" : "none"}"></vpu-mini-spinner></button>
+            <button @click="${this.clickHandler}" class="button ${this.type}" ?disabled="${this.disabled}">
+                ${this.value} <vpu-mini-spinner style="display: ${this.spinner ? "inline" : "none"}"></vpu-mini-spinner>
+            </button>
         `;
     }
 }

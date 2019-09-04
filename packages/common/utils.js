@@ -1,5 +1,15 @@
 import env from './env.js';
 
+export const getAssetURL = (path) => {
+    const elm = document.getElementById('vpu-library-app-src');
+    if (!elm)
+        return path;
+    const url = elm.src;
+    // newer browsers only
+    //var url = import.meta.url;
+    return new URL(path, url).href;
+};
+
 /**
  * Parses a link header
  *
@@ -28,7 +38,7 @@ export const parseLinkHeader = (header) => {
     }
 
     return links;
-}
+};
 
 /**
  * Reads a setting
@@ -38,11 +48,11 @@ export const parseLinkHeader = (header) => {
  */
 export const setting = (key) => {
     return env[key];
-}
+};
 
 export const getAPiUrl = (path = "", withPrefix = true) => {
     return env.apiBaseUrl + (withPrefix ? env.apiUrlPrefix : "") + path;
-}
+};
 
 /**
  * Parses the base url from an url
@@ -55,7 +65,7 @@ export const parseBaseUrl = (url) => {
     const protocol = pathArray[0];
     const host = pathArray[2];
     return protocol + '//' + host;
-}
+};
 
 /**
  * Converts a string list to a data array for Select2
@@ -67,7 +77,7 @@ export const stringListToSelect2DataArray = (list) => {
     let data = [];
     list.forEach((item) => {data.push({id: item, text: item})});
     return data;
-}
+};
 
 /**
  * Does generic Base64 Encoding with support for 16-bit encoded strings
@@ -84,7 +94,7 @@ export const base64EncodeUnicode = (str) => {
     });
 
     return btoa(utf8Bytes);
-}
+};
 
 /**
  * Like customElements.define() but tries to display an error in case the browser doesn't
@@ -106,7 +116,7 @@ export const defineCustomElement = (name, constructor, options) => {
     }
     customElements.define(name, constructor, options);
     return true;
-}
+};
 
 /**
  * Creates a random id
@@ -117,15 +127,15 @@ export const defineCustomElement = (name, constructor, options) => {
  * @returns {string}
  */
 export const makeId = (length) => {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
+    let result           = '';
+    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
 
     return result;
-}
+};
 
 /**
  * Pads a number with a 0 so it has two digits
