@@ -31,6 +31,7 @@ class VPUAuth extends LitElement {
         this.personId = "";
         this.loggedIn = false;
         this.rememberLogin = false
+        this.person = null;
 
         // Create the events
         this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
@@ -56,6 +57,7 @@ class VPUAuth extends LitElement {
             subject: { type: String, attribute: false },
             personId: { type: String, attribute: false },
             keycloak: { type: Object, attribute: false },
+            person: { type: Object, attribute: false },
         };
     }
 
@@ -125,6 +127,7 @@ class VPUAuth extends LitElement {
                             })
                             .then(response => response.json())
                             .then((person) => {
+                                that.person = person;
                                 window.VPUPerson = person;
                                 that.dispatchPersonInitEvent();
                             });
@@ -250,6 +253,8 @@ class VPUAuth extends LitElement {
     }
 
     renderLoggedIn() {
+        const imageURL = (this.person && this.person.image) ? this.person.image : null;
+
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
               <div class="dropdown-trigger">
@@ -260,9 +265,9 @@ class VPUAuth extends LitElement {
               </div>
               <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                 <div class="dropdown-content">
+                  ${imageURL ? html`<img src="${imageURL}" width="40%" height="40%" class="dropdown-item">` : ''}
                   <a href="#" @click="${this.logout}" class="dropdown-item">
                     ${i18n.t('logout')}
-                  </a>
                   </a>
                 </div>
               </div>
