@@ -4,6 +4,8 @@ import {setting,} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
+import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as utils from "./utils";
 
 class DataTableViewDemo extends LitElement {
     constructor() {
@@ -94,9 +96,9 @@ class DataTableViewDemo extends LitElement {
     }
 
     render() {
-        // datatable.net tyles must be applied here :-/
+        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+            <link rel="stylesheet" href="${bulmaCSS}">
             <style>
                 .box {
                     margin: 10px;
