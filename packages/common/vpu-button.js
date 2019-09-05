@@ -1,17 +1,37 @@
 import {html, LitElement, css} from 'lit-element';
 import * as commonUtils from './utils.js';
 import bulmaCSSPath from 'bulma/css/bulma.min.css';
+import VPULitElement from './vpu-lit-element.js';
 
-
-class Button extends LitElement {
+/**
+ * vpu-button implements a button with Bulma styles and automatic spinner and
+ * disabling if button is clicked
+ *
+ * Use the attribute "no-spinner-on-click" to disable the spinner, then you can
+ * start it with start() and stop it with stop()
+ *
+ * Use the attribute "type" to set Bulma styles like "is-info"
+ * See https://bulma.io/documentation/elements/button/#colors for a list of all styles
+ */
+class Button extends VPULitElement {
     constructor() {
         super();
         this.value = "";
         // see: https://bulma.io/documentation/elements/button/#colors
-        this.type = "primary";
+        this.type = "is-primary";
         this.spinner = false;
-        this.spinnerOnClick = true;
+        this.noSpinnerOnClick = false;
         this.disabled = false;
+        this.button = null;
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        const that = this;
+
+        this.updateComplete.then(()=> {
+            this.button = this._("button");
+        });
     }
 
     static get properties() {
@@ -19,7 +39,7 @@ class Button extends LitElement {
             value: { type: String },
             type: { type: String },
             spinner: { type: Boolean },
-            spinnerOnClick: { type: Boolean, attribute: 'spinner-on-click' },
+            noSpinnerOnClick: { type: Boolean, attribute: 'no-spinner-on-click' },
             disabled: { type: Boolean },
         };
     }
@@ -29,13 +49,25 @@ class Button extends LitElement {
     }
 
     clickHandler() {
-        if (this.spinnerOnClick) {
-            this.spinner = true;
+        if (!this.noSpinnerOnClick) {
+            this.start();
         }
+    }
+
+    start() {
+        this.spinner = true;
+        this.disabled = true;
+        this.setAttribute("disabled", "disabled");
     }
 
     stop() {
         this.spinner = false;
+        this.disabled = false;
+        this.removeAttribute("disabled");
+    }
+
+    isDisabled() {
+        return this.button.hasAttribute("disabled");
     }
 
     render() {
