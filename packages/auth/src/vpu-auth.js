@@ -106,11 +106,18 @@ class VPUAuth extends LitElement {
                 });
 
                 // See: https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
-                that._keycloak.init({onLoad: 'login-required'}).success(function (authenticated) {
+                that._keycloak.init().success((authenticated) => {
                     console.log(authenticated ? 'authenticated' : 'not authenticated!');
                     console.log(that._keycloak);
 
-                    this.loggedIn = false;
+                    if (!authenticated) {
+                        // set locale of Keycloak login page
+                        that._keycloak.login({kcLocale: that.lang});
+
+                        return;
+                    }
+
+                    that.loggedIn = false;
                     that.updateKeycloakData();
                     that.dispatchInitEvent();
 
@@ -137,7 +144,7 @@ class VPUAuth extends LitElement {
                     }
 
                 }).error(function () {
-                    console.log('Failed to initialize');
+                    console.error('Keycloak failed to initialize!');
                 });
 
                 // auto-refresh token
