@@ -2,6 +2,8 @@ import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import './vpu-auth';
 import * as commonUtils from 'vpu-common/utils';
+import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as utils from "./utils";
 
 class AuthDemo extends LitElement {
     constructor() {
@@ -26,10 +28,9 @@ class AuthDemo extends LitElement {
     }
 
     render() {
+        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
         return html`
-            <style>
-            </style>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+            <link rel="stylesheet" href="${bulmaCSS}">
 
             <section class="section">
                 <div class="container">
