@@ -6,7 +6,7 @@ export const getAssetURL = (path) => {
     // newer browsers only
     //var url = import.meta.url;
     return new URL(path, url).href;
-}
+};
 
 /**
  * Finds an object in a JSON result by identifier
@@ -27,4 +27,4 @@ export const findObjectInApiResults = (identifier, results, identifierAttribute 
             return object;
         }
     }
-}
+};

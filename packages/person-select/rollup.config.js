@@ -34,12 +34,14 @@ export default {
             include: 'node_modules/**'
         }),
         url({
-          limit: 0,
-          include: [
-            "node_modules/select2/**/*.css",
-          ],
-          emitFiles: true,
-          fileName: 'shared/[name].[hash][extname]'
+            limit: 0,
+            include: [
+                "node_modules/bulma/**/*.css",
+                "node_modules/bulma/**/*.sass",
+                "node_modules/select2/**/*.css",
+            ],
+            emitFiles: true,
+            fileName: 'shared/[name].[hash][extname]'
         }),
         json(),
         (build !== 'local' && build !== 'test') ? terser() : false,

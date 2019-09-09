@@ -2,6 +2,8 @@ import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import './person-select.js';
 import * as commonUtils from 'vpu-common/utils';
+import bulmaCSSPath from "bulma/css/bulma.min.css";
+import {getAssetURL} from "./utils";
 
 class PersonSelectDemo extends LitElement {
     constructor() {
@@ -24,10 +26,9 @@ class PersonSelectDemo extends LitElement {
     }
 
     render() {
+        const bulmaCSS = getAssetURL(bulmaCSSPath);
         return html`
-            <style>
-            </style>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+            <link rel="stylesheet" href="${bulmaCSS}">
 
             <section class="section">
                 <div class="container">

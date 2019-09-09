@@ -8,8 +8,10 @@ import {html} from 'lit-element';
 import {i18n} from './i18n.js';
 import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
 import * as commonUtils from 'vpu-common/utils';
+import * as utils from "./utils";
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 import {send as notify} from "vpu-common/notification";
+import bulmaCSSPath from "bulma/css/bulma.min.css";
 
 
 select2(window, $);
@@ -216,9 +218,9 @@ class PersonSelect extends VPULitElementJQuery {
 
     render() {
         const select2CSS = getAssetURL(select2CSSPath);
-
+        const bulmaCSS = getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+            <link rel="stylesheet" href="${bulmaCSS}">
             <link rel="stylesheet" href="${select2CSS}">
             <style>
                 #${this.selectId} {
