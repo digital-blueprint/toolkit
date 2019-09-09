@@ -1,13 +1,14 @@
 import path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import postcss from 'rollup-plugin-postcss';
 import copy from 'rollup-plugin-copy';
 import {terser} from "rollup-plugin-terser";
 import json from 'rollup-plugin-json';
 import serve from 'rollup-plugin-serve';
 import multiEntry from 'rollup-plugin-multi-entry';
+import url from "rollup-plugin-url";
 import consts from 'rollup-plugin-consts';
+import del from 'rollup-plugin-delete';
 
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
@@ -19,6 +20,9 @@ export default {
         format: 'esm'
     },
     plugins: [
+        del({
+            targets: 'dist/*'
+        }),
         multiEntry(),
         consts({
             environment: build,
@@ -33,10 +37,14 @@ export default {
             include: 'node_modules/**'
         }),
         json(),
-        postcss({
-            inject: false,
-            minimize: false,
-            plugins: []
+        url({
+            limit: 0,
+            include: [
+                "node_modules/bulma/**/*.css",
+                "node_modules/bulma/**/*.sass",
+            ],
+            emitFiles: true,
+            fileName: 'shared/[name].[hash][extname]'
         }),
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({

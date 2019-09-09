@@ -1,8 +1,10 @@
-import 'vpu-auth';
-import './vpu-kb-wpe-view.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
+import 'vpu-auth';
+import './vpu-kb-wpe-view';
 import * as commonUtils from 'vpu-common/utils';
+import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as utils from "./utils";
 
 class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     constructor() {
@@ -27,17 +29,27 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     }
 
     render() {
+        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
         return html`
+            <link rel="stylesheet" href="${bulmaCSS}">
             <style>
+                vpu-knowledge-base-web-page-element-view.clean {
+                    --KBBorder: initial;
+                    --KBBorderRadius: initial;
+                    --KBMargin: initial;
+                    --KBPadding: initial;
+                }
+                vpu-knowledge-base-web-page-element-view.opt {
+                    --KBBorder: 2px solid blue;
+                }
             </style>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
-
+ 
             <section class="section">
                 <div class="content">
                     <h1 class="title">KnowledgeBaseWebPageElementView-Demo</h1>
                 </div>
                 <div class="content">
-                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
+                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person remember-login></vpu-auth>
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Deutsch</h2>
@@ -58,7 +70,7 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
                 <div class="content">
                     <p>ohne Text in der WebComponent:</p>
                     Kontaktieren Sie uns unter...
-                    <vpu-knowledge-base-web-page-element-view lang="${this.lang}" value="abc/def/klm"></vpu-knowledge-base-web-page-element-view>
+                    <vpu-knowledge-base-web-page-element-view class="opt" lang="${this.lang}" value="abc/def/klm"></vpu-knowledge-base-web-page-element-view>
                 </div>
             </section>
         `;

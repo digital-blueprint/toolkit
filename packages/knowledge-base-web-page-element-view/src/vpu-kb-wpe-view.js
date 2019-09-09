@@ -2,9 +2,11 @@ import {i18n} from './i18n';
 import {html} from 'lit-element';
 // import JSONLD from 'vpu-common/jsonld';
 import VPULitElement from 'vpu-common/vpu-lit-element'
-import * as commonUtils from "vpu-common/utils";
 import "vpu-common/vpu-mini-spinner.js";
+import * as commonUtils from "vpu-common/utils";
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
+import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as utils from "./utils";
 
 /**
  * KnowledgeBaseWebPageElementView web component
@@ -155,10 +157,17 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
 
     render() {
         //<link rel="stylesheet" href="${this.css}">
+        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+            <link rel="stylesheet" href="${bulmaCSS}">
             <style>
-                .kb {display: none}
+                .kb {
+                    display: none;
+                    border-radius: var(--KBBorderRadius, 0);
+                    border: var(--KBBorder, 0);
+                    margin: var(--KBMargin, 0);
+                    padding: var(--KBPadding, 0);
+                }
                 span.has-text img {margin-left: 5px}
                 span.with-pointer { cursor: pointer; }
             </style>
