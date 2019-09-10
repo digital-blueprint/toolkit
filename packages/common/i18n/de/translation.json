@@ -1,0 +1,6 @@
+{
+  "error": {
+    "summary": "Ein Fehler ist aufgetreten",
+    "connection-to-server-refused": "Verbindungs zum Server verweigert!"
+  }
+}

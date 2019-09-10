@@ -1,0 +1,6 @@
+{
+  "error": {
+    "summary": "An error occurred",
+    "connection-to-server-refused": "Connection to server refused!"
+  }
+}
