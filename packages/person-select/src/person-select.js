@@ -8,10 +8,9 @@ import {html} from 'lit-element';
 import {i18n} from './i18n.js';
 import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
 import * as commonUtils from 'vpu-common/utils';
-import * as utils from "./utils";
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import {send as notify} from "vpu-common/notification";
 import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as error from "vpu-common/error";
 
 
 select2(window, $);
@@ -114,18 +113,7 @@ class PersonSelect extends VPULitElementJQuery {
                         results: results
                     };
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if (textStatus !== "abort") {
-                        const body = jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined ?
-                            jqXHR.responseJSON["hydra:description"] : textStatus;
-
-                        notify({
-                            "summary": i18n.t('person-select.error-summary'),
-                            "body": body,
-                            "type": "danger",
-                        });
-                    }
-                }
+                error: error.xhrError
             }
         }).on("select2:select", function (e) {
             // set custom element attributes
