@@ -10,7 +10,7 @@ import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
 import * as commonUtils from 'vpu-common/utils';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
-import * as error from "vpu-common/error";
+import * as errorUtils from "vpu-common/error";
 
 
 select2(window, $);
@@ -113,7 +113,7 @@ class PersonSelect extends VPULitElementJQuery {
                         results: results
                     };
                 },
-                error: error.xhrError
+                error: errorUtils.handleXhrError
             }
         }).on("select2:select", function (e) {
             // set custom element attributes
