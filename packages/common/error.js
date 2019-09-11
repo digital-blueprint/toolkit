@@ -1,7 +1,14 @@
 import {send as notify} from './notification';
 import {i18n} from "./i18n";
 
-export const xhrError = (jqXHR, textStatus, errorThrown) => {
+/**
+ * Error handling for XHR errors
+ *
+ * @param jqXHR
+ * @param textStatus
+ * @param errorThrown
+ */
+export const handleXhrError = (jqXHR, textStatus, errorThrown) => {
     if (textStatus !== "abort") {
         // try to show hydra error text
         let body = jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined ?
@@ -18,4 +25,33 @@ export const xhrError = (jqXHR, textStatus, errorThrown) => {
             "type": "danger",
         });
     }
+};
+
+/**
+ * Error handling for fetch errors
+ *
+ * @param error
+ * @param summary
+ */
+export const handleFetchError = async (error, summary = "") => {
+    let body;
+
+    try {
+        await error.json().then((json) => {
+            body = json["hydra:description"] !== undefined ? json["hydra:description"] : error.statusText;
+        }).catch(() => {
+            body = error.statusText !== undefined ? error.statusText : error;
+        });
+    } catch (e) {
+        // we get a TypeError if the connection to the server was refused
+        if (error.name === "TypeError") {
+            body = i18n.t('error.connection-to-server-refused');
+        }
+    }
+
+    notify({
+        "summary": summary === "" ? i18n.t('error.summary') : summary,
+        "body": body,
+        "type": "danger",
+    });
 };
