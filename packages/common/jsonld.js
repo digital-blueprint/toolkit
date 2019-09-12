@@ -1,6 +1,8 @@
 "use strict";
 
+import {send as notify} from './notification';
 import * as utils from "./utils";
+import {i18n} from "./i18n";
 
 let instances = {};
 let successFunctions = {};
@@ -106,23 +108,39 @@ export default class JSONLD {
                             for (const fnc of successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
                             successFunctions[apiUrl] = [];
                         } else {
-                            for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
-                            failureFunctions[apiUrl] = [];
+                            JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.api-documentation-server', { apiUrl: apiDocUrl }));
                         }
                     };
 
                     docXhr.send();
                 } else {
-                    for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
-                    failureFunctions[apiUrl] = [];
+                    JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.error-hydra-documentation-url-not-set', { apiUrl: apiUrl }));
                 }
             } else {
-                for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
-                failureFunctions[apiUrl] = [];
+                JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.error-api-server', { apiUrl: apiUrl }));
             }
         };
 
         xhr.send();
+    }
+
+    /**
+     * Execute failure functions and send general notification
+     *
+     * @param apiUrl
+     * @param message
+     */
+    static executeFailureFunctions(apiUrl, message = "") {
+        for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
+        failureFunctions[apiUrl] = [];
+
+        if (message !== "") {
+            notify({
+                "summary": i18n.t('error.summary'),
+                "body": message,
+                "type": "danger",
+            });
+        }
     }
 
     static getInstance(apiUrl) {
