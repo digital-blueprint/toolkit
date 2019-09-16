@@ -6,6 +6,7 @@ import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
 import url from "rollup-plugin-url";
+import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
@@ -31,6 +32,7 @@ export default {
         commonjs({
             include: 'node_modules/**'
         }),
+        json(),
         url({
             limit: 0,
             include: [
