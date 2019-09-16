@@ -84,32 +84,34 @@ export default class JSONLD {
                         docXhr.open("GET", apiDocUrl, true);
                         docXhr.setRequestHeader("Content-Type", "application/json");
                         docXhr.onreadystatechange = function () {
-                            if (docXhr.readyState === 4 && docXhr.status === 200) {
-                                const json = JSON.parse(docXhr.responseText);
-                                const supportedClasses = json["hydra:supportedClass"];
+                            if (docXhr.readyState === 4) {
+                                if (docXhr.status === 200) {
+                                    const json = JSON.parse(docXhr.responseText);
+                                    const supportedClasses = json["hydra:supportedClass"];
 
-                                let entities = {};
-                                const baseUrl = utils.parseBaseUrl(apiUrl);
+                                    let entities = {};
+                                    const baseUrl = utils.parseBaseUrl(apiUrl);
 
-                                // gather the entities
-                                supportedClasses.forEach(function (classData) {
-                                    // add entry point url
-                                    const entityName = classData["hydra:title"];
-                                    let entryPoint = entryPoints[entityName.toLowerCase()];
-                                    if (entryPoint !== undefined && !entryPoint.startsWith("http")) entryPoint = baseUrl + entryPoint;
-                                    classData["@entryPoint"] = entryPoint;
+                                    // gather the entities
+                                    supportedClasses.forEach(function (classData) {
+                                        // add entry point url
+                                        const entityName = classData["hydra:title"];
+                                        let entryPoint = entryPoints[entityName.toLowerCase()];
+                                        if (entryPoint !== undefined && !entryPoint.startsWith("http")) entryPoint = baseUrl + entryPoint;
+                                        classData["@entryPoint"] = entryPoint;
 
-                                    entities[entityName] = classData;
-                                });
+                                        entities[entityName] = classData;
+                                    });
 
-                                const instance = new JSONLD(baseUrl, entities);
-                                instances[apiUrl] = instance;
+                                    const instance = new JSONLD(baseUrl, entities);
+                                    instances[apiUrl] = instance;
 
-                                // return the initialized JSONLD object
-                                for (const fnc of successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
-                                successFunctions[apiUrl] = [];
-                            } else {
-                                JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl}));
+                                    // return the initialized JSONLD object
+                                    for (const fnc of successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
+                                    successFunctions[apiUrl] = [];
+                                } else {
+                                    JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl}));
+                                }
                             }
                         };
 
