@@ -61,63 +61,65 @@ export default class JSONLD {
         xhr.setRequestHeader('Authorization', 'Bearer ' + window.VPUAuthToken);
 
         xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                const json = JSON.parse(xhr.responseText);
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    const json = JSON.parse(xhr.responseText);
 
-                let entryPoints = {};
-                for (let property in json) {
-                    // for some reason the properties start with a lower case character
-                    if (!property.startsWith("@")) entryPoints[property.toLowerCase()] = json[property];
-                }
+                    let entryPoints = {};
+                    for (let property in json) {
+                        // for some reason the properties start with a lower case character
+                        if (!property.startsWith("@")) entryPoints[property.toLowerCase()] = json[property];
+                    }
 
-                // read the link header of the api response
-//                const utils = require("./utils");
-                const links = utils.parseLinkHeader(this.getResponseHeader("link"));
+                    // read the link header of the api response
+                    //                const utils = require("./utils");
+                    const links = utils.parseLinkHeader(this.getResponseHeader("link"));
 
-                // get the hydra apiDocumentation url
-                const apiDocUrl = links["http://www.w3.org/ns/hydra/core#apiDocumentation"];
+                    // get the hydra apiDocumentation url
+                    const apiDocUrl = links["http://www.w3.org/ns/hydra/core#apiDocumentation"];
 
-                if (apiDocUrl !== undefined) {
-                    // load the hydra apiDocumentation
-                    const docXhr = new XMLHttpRequest();
-                    docXhr.open("GET", apiDocUrl, true);
-                    docXhr.setRequestHeader("Content-Type", "application/json");
-                    docXhr.onreadystatechange = function () {
-                        if (docXhr.readyState === 4 && docXhr.status === 200) {
-                            const json = JSON.parse(docXhr.responseText);
-                            const supportedClasses = json["hydra:supportedClass"];
+                    if (apiDocUrl !== undefined) {
+                        // load the hydra apiDocumentation
+                        const docXhr = new XMLHttpRequest();
+                        docXhr.open("GET", apiDocUrl, true);
+                        docXhr.setRequestHeader("Content-Type", "application/json");
+                        docXhr.onreadystatechange = function () {
+                            if (docXhr.readyState === 4 && docXhr.status === 200) {
+                                const json = JSON.parse(docXhr.responseText);
+                                const supportedClasses = json["hydra:supportedClass"];
 
-                            let entities = {};
-                            const baseUrl = utils.parseBaseUrl(apiUrl);
+                                let entities = {};
+                                const baseUrl = utils.parseBaseUrl(apiUrl);
 
-                            // gather the entities
-                            supportedClasses.forEach(function (classData) {
-                                // add entry point url
-                                const entityName = classData["hydra:title"];
-                                let entryPoint = entryPoints[entityName.toLowerCase()];
-                                if (entryPoint !== undefined && !entryPoint.startsWith("http")) entryPoint = baseUrl + entryPoint;
-                                classData["@entryPoint"] = entryPoint;
+                                // gather the entities
+                                supportedClasses.forEach(function (classData) {
+                                    // add entry point url
+                                    const entityName = classData["hydra:title"];
+                                    let entryPoint = entryPoints[entityName.toLowerCase()];
+                                    if (entryPoint !== undefined && !entryPoint.startsWith("http")) entryPoint = baseUrl + entryPoint;
+                                    classData["@entryPoint"] = entryPoint;
 
-                                entities[entityName] = classData;
-                            });
+                                    entities[entityName] = classData;
+                                });
 
-                            const instance = new JSONLD(baseUrl, entities);
-                            instances[apiUrl] = instance;
+                                const instance = new JSONLD(baseUrl, entities);
+                                instances[apiUrl] = instance;
 
-                            // return the initialized JSONLD object
-                            for (const fnc of successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
-                            successFunctions[apiUrl] = [];
-                        } else {
-                            JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.api-documentation-server', { apiUrl: apiDocUrl }));
-                        }
-                    };
+                                // return the initialized JSONLD object
+                                for (const fnc of successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
+                                successFunctions[apiUrl] = [];
+                            } else {
+                                JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl}));
+                            }
+                        };
 
-                    docXhr.send();
+                        docXhr.send();
+                    } else {
+                        JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.error-hydra-documentation-url-not-set', {apiUrl: apiUrl}));
+                    }
                 } else {
-                    JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.error-hydra-documentation-url-not-set', { apiUrl: apiUrl }));
+                    JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.error-api-server', {apiUrl: apiUrl}));
                 }
-            } else {
-                JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.error-api-server', { apiUrl: apiUrl }));
             }
         };
 
