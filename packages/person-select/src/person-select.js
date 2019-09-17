@@ -196,7 +196,7 @@ class PersonSelect extends VPULitElementJQuery {
                         that.jsonld = jsonld;
                         that.active = true;
                         that.$select = that.initSelect2();
-                    });
+                    }, {}, that.lang);
                     break;
             }
         });
