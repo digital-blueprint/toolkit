@@ -140,7 +140,7 @@ class VPUAuth extends LitElement {
                                 window.VPUPerson = person;
                                 that.dispatchPersonInitEvent();
                             });
-                        });
+                        }, {}, that.lang);
                     }
 
                 }).error(function () {
