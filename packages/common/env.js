@@ -8,6 +8,7 @@ switch(environment) {
             apiBaseUrl: 'https://mw-dev.tugraz.at',
             apiUrlPrefix: '',
             keyCloakClientId: 'auth-dev-mw-frontend',
+            sentryDSN: 'http://0405d811e8d746cca2e70f6eff764570@129.27.166.25:9000/2',
         };
 
         break;
