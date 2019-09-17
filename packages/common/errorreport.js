@@ -2,6 +2,9 @@ import * as Sentry from '@sentry/browser';
 import env from './env.js';
 import environment from 'consts:environment';
 
+let _isInitialized = false
+let _canReportEvent = false;
+
 /**
  * Initializes error reporting.
  * 
@@ -15,6 +18,9 @@ export function init(options) {
     debug: false,
   };
   let actual = Object.assign({}, defaults, options);
+
+  if (_isInitialized)
+    throw new Error("Already initialized");
 
   let sentryOptions = {debug: actual.debug, environment: environment};
 
@@ -36,9 +42,32 @@ export function init(options) {
     };
   } else {
     sentryOptions['dsn'] = env.sentryDSN;
+    _canReportEvent = true;
   }
 
   Sentry.init(sentryOptions);
+
+  _isInitialized = true;
+}
+
+/**
+ * Whether showReportDialog() will work.
+ */
+export function canReportEvent() {
+  if (!_isInitialized)
+    throw new Error("Not initialized");
+  return _canReportEvent;
+}
+
+/**
+ * Show a report dialog for user error feedback.
+ * 
+ * Call canReportEvent() first to see if this will do anything.
+ */
+export function showReportDialog() {
+  if (!canReportEvent())
+    return;
+  Sentry.showReportDialog();
 }
 
 /**
@@ -47,6 +76,8 @@ export function init(options) {
  * @param {*} exception
  */
 export function captureException(exception) {
+  if (!_isInitialized)
+    throw new Error("Not initialized");
   Sentry.captureException(exception);
 }
 
@@ -57,6 +88,8 @@ export function captureException(exception) {
  * @param {String} [level=error] The loglevel (error, warning, info, debug)
  */
 export function captureMessage(message, level) {
+  if (!_isInitialized)
+    throw new Error("Not initialized");
   if (!level)
     level = 'error';
   if (!['error', 'warning', 'info', 'debug'].includes(level))
