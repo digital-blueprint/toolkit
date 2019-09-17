@@ -24,7 +24,11 @@ export default class JSONLD {
         this.idToEntityNameMatchList = idToEntityNameMatchList;
     }
 
-    static initialize(apiUrl, successFnc, failureFnc) {
+    static initialize(apiUrl, successFnc, failureFnc, lang = 'de') {
+        if (lang !== 'de') {
+            i18n.changeLanguage(lang);
+        }
+
         // if init api call was already successfully finished execute the success function
         if (instances[apiUrl] !== undefined) {
             if (typeof successFnc == 'function') successFnc(instances[apiUrl]);
