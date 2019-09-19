@@ -38,6 +38,7 @@ class VPUAuth extends LitElement {
         // Create the events
         this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
         this.personInitEvent = new CustomEvent("vpu-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true, composed: true });
+        this.profileEvent = new CustomEvent("vpu-auth-profile", { "detail": "Profile event", bubbles: true, composed: true });
         this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
 
         this.closeDropdown = this.closeDropdown.bind(this);
@@ -195,6 +196,13 @@ class VPUAuth extends LitElement {
     }
 
     /**
+     * Dispatches the profile event
+     */
+    dispatchProfileEvent() {
+        this.dispatchEvent(this.profileEvent);
+    }
+
+    /**
      * Dispatches the keycloak data update event
      */
     dispatchKeycloakDataUpdateEvent() {
@@ -275,9 +283,8 @@ class VPUAuth extends LitElement {
               <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                 <div class="dropdown-content">
                   ${imageURL ? html`<img src="${imageURL}" width="40%" height="40%" class="dropdown-item">` : ''}
-                  <a href="#" @click="${this.logout}" class="dropdown-item">
-                    ${i18n.t('logout')}
-                  </a>
+                  <a href="#" @click="${this.dispatchProfileEvent}" class="dropdown-item">${i18n.t('profile')}</a>
+                  <a href="#" @click="${this.logout}" class="dropdown-item">${i18n.t('logout')}</a>
                 </div>
               </div>
             </div>
