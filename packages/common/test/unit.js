@@ -32,4 +32,10 @@ describe('utils', () => {
     it('setting', () => {
         assert(utils.setting('apiBaseUrl').startsWith("http"));
     });
+
+    it('getAssetURL', () => {
+        utils.initAssetBaseURL();
+        assert(utils.getAssetURL("foo/bar") == "foo/bar");
+        assert(utils.getAssetURL("foo/bar") == "foo/bar");
+    })
 });

@@ -2,7 +2,6 @@ import {html, LitElement, css} from 'lit-element';
 import * as commonUtils from './utils.js';
 import bulmaCSSPath from 'bulma/css/bulma.min.css';
 import VPULitElement from './vpu-lit-element.js';
-import * as utils from '../../src/utils';
 
 /**
  * vpu-button implements a button with Bulma styles and automatic spinner and
@@ -72,7 +71,7 @@ class Button extends VPULitElement {
     }
 
     render() {
-        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
 
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">

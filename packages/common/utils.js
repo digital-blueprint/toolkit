@@ -176,3 +176,53 @@ export const dateToInputTimeString = (date) => {
 
     return `${pad10(date.getHours())}:${pad10(date.getMinutes())}`;
 };
+
+let _assetBaseURL = null;
+
+/**
+ * Set the base url for future calls to getAssetURL()
+ *
+ * @param {string} [id] An optional id of the script tag to figure out the
+ *  base bundle URL.
+ */
+export const initAssetBaseURL = (id) => {
+    // We don't want future calls to change things
+    if (_assetBaseURL)
+        return;
+
+    if (id) {
+        // Find the id added to the script tag
+        const elm = document.getElementById(id);
+        if (elm && elm.src) {
+            _assetBaseURL = elm.src;
+        }
+    }
+
+    // In the (unlikely) event that we are bundled as a non-module
+    // we can use the old currentScript API
+    if (document.currentScript && document.currentScript.src) {
+        _assetBaseURL = document.currentScript.src;
+    }
+}
+
+/**
+ * Get an absolute path for assets given a relative path to the js bundle.
+ * Call initAssetBaseURL() before this.
+ *
+ * @param {string} path The relative path based on the js bundle path
+ */
+export const getAssetURL = (path) => {
+    // Maybe initScriptURL() can do something without the id
+    if (!_assetBaseURL) {
+        initAssetBaseURL();
+    }
+
+    // We already found the path before, just go with it
+    if (_assetBaseURL) {
+        return new URL(path, _assetBaseURL).href;
+    }
+
+    // If all fails we just fall back to relative paths and hope the
+    // html is on the same path as the bundle
+    return path;
+};
