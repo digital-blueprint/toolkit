@@ -4,7 +4,6 @@ import 'vpu-auth';
 import './vpu-kb-wpe-view';
 import * as commonUtils from 'vpu-common/utils';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
-import * as utils from "./utils";
 
 class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     constructor() {
@@ -29,7 +28,8 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     }
 
     render() {
-        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-knowledge-base-web-page-element-view-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
             <style>

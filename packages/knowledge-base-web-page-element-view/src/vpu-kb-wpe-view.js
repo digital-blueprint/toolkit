@@ -6,7 +6,6 @@ import "vpu-common/vpu-mini-spinner.js";
 import * as commonUtils from "vpu-common/utils";
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
-import * as utils from "./utils";
 
 /**
  * KnowledgeBaseWebPageElementView web component
@@ -156,8 +155,8 @@ class VPUKnowledgeBaseWebPageElementView extends VPULitElement {
     }
 
     render() {
-        //<link rel="stylesheet" href="${this.css}">
-        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-knowledge-base-web-page-element-view-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
             <style>
