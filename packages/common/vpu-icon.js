@@ -30,7 +30,7 @@ class Icon extends LitElement {
     } 
 
     render() {
-        let iconPath = 'local/vpu-common/icons/' + this.name + '.json';
+        let iconPath = commonUtils.getAssetURL('local/vpu-common/icons/' + this.name + '.json');
         let svgPath = fetch(iconPath)
             .then(response => {
                 if (!response.ok) {
