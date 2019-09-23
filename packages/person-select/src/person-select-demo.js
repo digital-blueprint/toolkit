@@ -3,7 +3,6 @@ import {html, LitElement} from 'lit-element';
 import './person-select.js';
 import * as commonUtils from 'vpu-common/utils';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
-import {getAssetURL} from "./utils";
 
 class PersonSelectDemo extends LitElement {
     constructor() {
@@ -26,7 +25,8 @@ class PersonSelectDemo extends LitElement {
     }
 
     render() {
-        const bulmaCSS = getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-person-select-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
 

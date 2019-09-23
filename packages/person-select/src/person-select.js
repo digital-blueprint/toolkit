@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {getAssetURL, findObjectInApiResults} from './utils.js';
+import {findObjectInApiResults} from './utils.js';
 import select2 from 'select2';
 import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
@@ -205,8 +205,9 @@ class PersonSelect extends VPULitElementJQuery {
     }
 
     render() {
-        const select2CSS = getAssetURL(select2CSSPath);
-        const bulmaCSS = getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-person-select-src');
+        const select2CSS = commonUtils.getAssetURL(select2CSSPath);
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
             <link rel="stylesheet" href="${select2CSS}">
