@@ -4,3 +4,6 @@
 [submodule "vendor/common"]
 	path = vendor/common
 	url = git@gitlab.tugraz.at:VPU/WebComponents/Common.git
+[submodule "vendor/person-select"]
+	path = vendor/person-select
+	url = git@gitlab.tugraz.at:VPU/WebComponents/PersonSelect.git

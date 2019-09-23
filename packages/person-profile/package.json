@@ -23,11 +23,13 @@
     "rollup-plugin-url": "^2.2.2",
     "i18next-scanner": "^2.10.2",
     "vpu-auth": "file:./vendor/auth",
-    "vpu-common": "file:./vendor/common"
+    "vpu-common": "file:./vendor/common",
+    "vpu-person-select": "file:./vendor/person-select"
   },
   "dependencies": {
     "bulma": "^0.7.5",
-    "lit-element": "^2.2.1"
+    "lit-element": "^2.2.1",
+    "jquery": "^3.4.1"
   },
   "scripts": {
     "clean": "rm dist/*",

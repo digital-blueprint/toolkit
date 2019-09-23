@@ -37,6 +37,7 @@ export default {
             include: [
                 "node_modules/bulma/**/*.css",
                 "node_modules/bulma/**/*.sass",
+                "node_modules/select2/**/*.css",
             ],
             emitFiles: true,
             fileName: 'shared/[name].[hash][extname]'
