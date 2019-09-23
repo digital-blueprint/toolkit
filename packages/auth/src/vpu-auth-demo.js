@@ -3,7 +3,6 @@ import {html, LitElement} from 'lit-element';
 import './vpu-auth';
 import * as commonUtils from 'vpu-common/utils';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
-import * as utils from "./utils";
 
 class AuthDemo extends LitElement {
     constructor() {
@@ -28,7 +27,8 @@ class AuthDemo extends LitElement {
     }
 
     render() {
-        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-auth-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
 

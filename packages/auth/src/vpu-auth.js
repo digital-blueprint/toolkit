@@ -4,7 +4,6 @@ import JSONLD from 'vpu-common/jsonld'
 import * as commonUtils from 'vpu-common/utils';
 import 'vpu-common/vpu-icon.js';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
-import * as utils from "./utils";
 
 /**
  * Keycloak auth web component
@@ -298,7 +297,8 @@ class VPUAuth extends LitElement {
     }
 
     render() {
-        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-auth-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
 
