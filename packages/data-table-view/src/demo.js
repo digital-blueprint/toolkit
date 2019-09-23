@@ -5,7 +5,6 @@ import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
-import * as utils from "./utils";
 
 class DataTableViewDemo extends LitElement {
     constructor() {
@@ -96,7 +95,8 @@ class DataTableViewDemo extends LitElement {
     }
 
     render() {
-        const bulmaCSS = utils.getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-data-table-view-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
             <style>
