@@ -75,9 +75,9 @@ class PersonProfile extends VPULitElement {
         if (this.person !== null && this.person.roles !== undefined) {
             // roles are only defined for self-disclosure
             if (this.person.roles.indexOf('ROLE_STAFF') > -1) {
-                role = 'Mitarbeiter/in';
+                role = i18n.t('person-profile.staff');
             } else if (this.person.roles.indexOf('ROLE_ALUMNI') > -1) {
-                role = 'Absolvent/in';
+                role = i18n.t('person-profile.alumni');
             }
         }
         const bulmaCSS = getAssetURL(bulmaCSSPath);
@@ -92,18 +92,18 @@ class PersonProfile extends VPULitElement {
             }
             </style>
 
-            ${this.person !== null && this.person.name !== '' ? html`<h3>PROFILE for ${this.person.name}</h3>
+            ${this.person !== null && this.person.name !== '' ? html`<h3>${i18n.t('person-profile.profile-caption')} ${this.person.name}</h3>
             <table class="profile">
             <thead></thead>
             <tbody>
-                <tr><td class="td-profile">Vorname</td><td>${this.person.givenName}</td></tr>
-                <tr><td class="td-profile">Nachname</td><td>${this.person.familyName}</td></tr>
-                <tr><td class="td-profile">Email</td><td>${this.person.email}</td></tr>
-                <tr><td class="td-profile">Telefon</td><td>${this.person.telephone}</td></tr>
-                <tr><td class="td-profile">Funktion</td><td>${role}</td></tr>
+                <tr><td class="td-profile">${i18n.t('person-profile.given-name')}</td><td>${this.person.givenName}</td></tr>
+                <tr><td class="td-profile">${i18n.t('person-profile.family-name')}</td><td>${this.person.familyName}</td></tr>
+                <tr><td class="td-profile">${i18n.t('person-profile.email')}</td><td>${this.person.email}</td></tr>
+                <tr><td class="td-profile">${i18n.t('person-profile.telephone')}</td><td>${this.person.telephone}</td></tr>
+                <tr><td class="td-profile">${i18n.t('person-profile.role')}</td><td>${role}</td></tr>
             </tbody>
             <tfoot></tfoot>
-            </table>` : html`Keine Person ausgewählt.` }
+            </table>` : i18n.t('person-profile.none-selected') }
         `;
     }
 }

@@ -1,2 +1,13 @@
 {
+  "person-profile": {
+    "profile-caption": "Profil von",
+    "given-name": "Vorname",
+    "family-name": "Nachname",
+    "email": "Email",
+    "telephone": "Telefon",
+    "role": "Rolle",
+    "none-selected": "Keine Person ausgewählt",
+    "staff": "Mitarbeiter/in",
+    "alumni": "Absolvent/in"
+  }
 }
