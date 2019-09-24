@@ -282,7 +282,7 @@ class VPUAuth extends LitElement {
               <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                 <div class="dropdown-content">
                   ${imageURL ? html`<img src="${imageURL}" width="40%" height="40%" class="dropdown-item">` : ''}
-                  <a href="#" @click="${this.dispatchProfileEvent}" class="dropdown-item">${i18n.t('profile')}</a>
+                  <a href="#" @click="${(e) => {e.preventDefault(); this.dispatchProfileEvent();}}" class="dropdown-item">${i18n.t('profile')}</a>
                   <a href="#" @click="${this.logout}" class="dropdown-item">${i18n.t('logout')}</a>
                 </div>
               </div>
