@@ -14,6 +14,7 @@ class PersonProfileDemo extends VPULitElement {
         this.lang = 'de';
         this.person = '';
         this.selectedPerson = '';
+        this.noAuth = false;
     }
 
     static get properties() {
@@ -21,6 +22,7 @@ class PersonProfileDemo extends VPULitElement {
             lang: { type: String },
             person: { type: String, attribute: false },
             selectedPerson: { type: String, attribute: false },
+            noAuth: { type: Boolean, attribute: 'no-auth' },
         };
     }
 
@@ -31,7 +33,7 @@ class PersonProfileDemo extends VPULitElement {
 
         this.updateComplete.then(()=>{
             window.addEventListener("vpu-auth-person-init", () => {
-                that.person = that._('vpu-auth').person.identifier;
+                that.person = window.VPUPersonId;
             });
 
             const personSelect = that._('vpu-person-select');
@@ -42,16 +44,22 @@ class PersonProfileDemo extends VPULitElement {
         });
     }
 
-    render() {
-        const bulmaCSS = getAssetURL(bulmaCSSPath);
-        return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
-
+    getAuthComponentHtml() {
+        return this.noAuth ? html`` : html`
             <header>
                 <div class="container">
                     <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person remember-login style="float:right"></vpu-auth>
                 </div>
             </header>
+        `;
+    }
+
+    render() {
+        const bulmaCSS = getAssetURL(bulmaCSSPath);
+        return html`
+            <link rel="stylesheet" href="${bulmaCSS}">
+
+            ${this.getAuthComponentHtml()}
 
             <section class="section">
                 <div class="container">
