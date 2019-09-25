@@ -203,7 +203,7 @@ export const initAssetBaseURL = (id) => {
     if (document.currentScript && document.currentScript.src) {
         _assetBaseURL = document.currentScript.src;
     }
-}
+};
 
 /**
  * Get an absolute path for assets given a relative path to the js bundle.
