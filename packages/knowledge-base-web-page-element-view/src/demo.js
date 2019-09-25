@@ -1,5 +1,5 @@
 import {i18n} from './i18n';
-import {html, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import 'vpu-auth';
 import './vpu-kb-wpe-view';
 import * as commonUtils from 'vpu-common/utils';
@@ -29,6 +29,14 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
         super.update(changedProperties);
     }
 
+    static get styles() {
+        // language=css
+        return css`
+            h1.title {margin-bottom: 1em;}
+            div.container {margin-bottom: 1.5em;}
+        `;
+    }
+
     getAuthComponentHtml() {
         return this.noAuth ? html`` : html`
             <div class="content">
@@ -55,27 +63,27 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
             </style>
  
             <section class="section">
-                <div class="content">
+                <div class="container">
                     <h1 class="title">KnowledgeBaseWebPageElementView-Demo</h1>
                 </div>
                 ${this.getAuthComponentHtml()}
-                <div class="content">
+                <div class="container">
                     <h2 class="subtitle">Deutsch</h2>
                     <p>Ein erster Schritt</p>
                     <vpu-knowledge-base-web-page-element-view lang="de" entry-point-url="${commonUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></vpu-knowledge-base-web-page-element-view>
                 </div>
-                <div class="content">
+                <div class="container">
                     <h2 class="subtitle">Englisch</h2>
                     <p>A first step</p>
                     <vpu-knowledge-base-web-page-element-view lang="en" entry-point-url="${commonUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></vpu-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
-                <div class="content">
+                <div class="container">
                     <p>mit Text in der WebComponent:</p>
                     <vpu-knowledge-base-web-page-element-view lang="${this.lang}" value="abc/def/xyz" text="FAQ"></vpu-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
-                <div class="content">
+                <div class="container">
                     <p>ohne Text in der WebComponent:</p>
                     Kontaktieren Sie uns unter...
                     <vpu-knowledge-base-web-page-element-view class="opt" lang="${this.lang}" value="abc/def/klm"></vpu-knowledge-base-web-page-element-view>
