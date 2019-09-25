@@ -49,19 +49,21 @@ class PersonProfile extends VPULitElement {
                     }, {}, that.lang);
                     break;
                 case 'value':
-                    const apiUrl = this.entryPointUrl + '/people/' + this.value;
+                    if (this.value !== '') {
+                        const apiUrl = this.entryPointUrl + '/people/' + this.value;
 
-                    // load person
-                    fetch(apiUrl, {
-                        headers: {
-                            'Content-Type': 'application/ld+json',
-                            'Authorization': 'Bearer ' + window.VPUAuthToken,
-                        },
-                    })
-                    .then(response => response.json())
-                    .then((person) => {
-                        this.person = person;
-                    });
+                        // load person
+                        fetch(apiUrl, {
+                            headers: {
+                                'Content-Type': 'application/ld+json',
+                                'Authorization': 'Bearer ' + window.VPUAuthToken,
+                            },
+                        })
+                            .then(response => response.json())
+                            .then((person) => {
+                                this.person = person;
+                            });
+                    }
                     break;
                 default:
             }
