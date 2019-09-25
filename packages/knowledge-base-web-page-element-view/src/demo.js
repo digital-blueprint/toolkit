@@ -9,11 +9,13 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     constructor() {
         super();
         this.lang = 'de';
+        this.noAuth = false;
     }
 
     static get properties() {
         return {
             lang: { type: String },
+            noAuth: { type: Boolean, attribute: 'no-auth' },
         };
     }
 
@@ -25,6 +27,14 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
         });
 
         super.update(changedProperties);
+    }
+
+    getAuthComponentHtml() {
+        return this.noAuth ? html`` : html`
+            <div class="content">
+                <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person remember-login></vpu-auth>
+            </div>
+        `;
     }
 
     render() {
@@ -48,9 +58,7 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
                 <div class="content">
                     <h1 class="title">KnowledgeBaseWebPageElementView-Demo</h1>
                 </div>
-                <div class="content">
-                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person remember-login></vpu-auth>
-                </div>
+                ${this.getAuthComponentHtml()}
                 <div class="content">
                     <h2 class="subtitle">Deutsch</h2>
                     <p>Ein erster Schritt</p>
