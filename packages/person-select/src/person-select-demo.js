@@ -1,5 +1,5 @@
 import {i18n} from './i18n.js';
-import {html, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import './person-select.js';
 import * as commonUtils from 'vpu-common/utils';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
@@ -24,6 +24,14 @@ class PersonSelectDemo extends LitElement {
 
         this.updateComplete.then(()=>{
         });
+    }
+
+    static get styles() {
+        // language=css
+        return css`
+            h1.title {margin-bottom: 1em;}
+            div.container {margin-bottom: 1.5em;}
+        `;
     }
 
     getAuthComponentHtml() {
