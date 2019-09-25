@@ -1,13 +1,14 @@
 {
   "person-profile": {
     "profile-caption": "Profile for",
-    "given-name": "given name",
-    "family-name": "family name",
-    "email": "email",
-    "telephone": "telephone",
-    "role": "role",
+    "given-name": "Given name",
+    "family-name": "Family name",
+    "email": "Email",
+    "telephone": "Telephone",
+    "role": "Role",
     "none-selected": "No person selected",
     "staff": "staff",
-    "alumni": "alumni"
+    "alumni": "alumni",
+    "unknown": "unknown"
   }
 }

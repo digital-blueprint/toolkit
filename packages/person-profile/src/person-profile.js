@@ -1,4 +1,4 @@
-import {getAssetURL} from './utils.js';
+
 import JSONLD from 'vpu-common/jsonld';
 import {html} from 'lit-element';
 import {i18n} from './i18n.js';
@@ -71,7 +71,7 @@ class PersonProfile extends VPULitElement {
     }
 
     render() {
-        let role = 'unbekannt';
+        let role = i18n.t('person-profile.unknown');
         if (this.person !== null && this.person.roles !== undefined) {
             // roles are only defined for self-disclosure
             if (this.person.roles.indexOf('ROLE_STAFF') > -1) {
@@ -80,7 +80,8 @@ class PersonProfile extends VPULitElement {
                 role = i18n.t('person-profile.alumni');
             }
         }
-        const bulmaCSS = getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-person-profile-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
             <style>

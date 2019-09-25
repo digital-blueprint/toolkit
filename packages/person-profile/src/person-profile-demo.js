@@ -4,7 +4,6 @@ import VPULitElement from 'vpu-common/vpu-lit-element';
 import './person-profile.js';
 import * as commonUtils from 'vpu-common/utils';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
-import {getAssetURL} from "./utils";
 import $ from 'jquery';
 import 'vpu-person-select';
 
@@ -63,7 +62,8 @@ class PersonProfileDemo extends VPULitElement {
     }
 
     render() {
-        const bulmaCSS = getAssetURL(bulmaCSSPath);
+        commonUtils.initAssetBaseURL('vpu-person-profile-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
 
