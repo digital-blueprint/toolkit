@@ -1,5 +1,5 @@
 import {i18n} from './i18n.js';
-import {html, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import './person-profile.js';
 import * as commonUtils from 'vpu-common/utils';
@@ -42,6 +42,14 @@ class PersonProfileDemo extends VPULitElement {
             };
 
         });
+    }
+
+    static get styles() {
+        // language=css
+        return css`
+            h1.title {margin-bottom: 1em;}
+            div.container {margin-bottom: 1.5em;}
+        `;
     }
 
     getAuthComponentHtml() {
