@@ -8,11 +8,13 @@ class PersonSelectDemo extends LitElement {
     constructor() {
         super();
         this.lang = 'de';
+        this.noAuth = false;
     }
 
     static get properties() {
         return {
             lang: { type: String },
+            noAuth: { type: Boolean, attribute: 'no-auth' },
         };
     }
 
@@ -22,6 +24,14 @@ class PersonSelectDemo extends LitElement {
 
         this.updateComplete.then(()=>{
         });
+    }
+
+    getAuthComponentHtml() {
+        return this.noAuth ? html`` : html`
+            <div class="container">
+                <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person></vpu-auth>
+            </div>
+        `;
     }
 
     render() {
@@ -34,9 +44,7 @@ class PersonSelectDemo extends LitElement {
                 <div class="container">
                     <h1 class="title">Person-Select-Demo</h1>
                 </div>
-                <div class="container">
-                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person></vpu-auth>
-                </div>
+                ${this.getAuthComponentHtml()}
                 <div class="container">
                     <form>
                         <div class="field">
