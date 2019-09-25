@@ -10,11 +10,13 @@ class DataTableViewDemo extends LitElement {
     constructor() {
         super();
         this.lang = 'de';
+        this.noAuth = false;
     }
 
     static get properties() {
         return {
             lang: { type: String },
+            noAuth: { type: Boolean, attribute: 'no-auth' },
         };
     }
 
@@ -94,6 +96,14 @@ class DataTableViewDemo extends LitElement {
         }
     }
 
+    getAuthComponentHtml() {
+        return this.noAuth ? html`` : html`
+            <div class="content">
+                <vpu-auth lang="${this.lang}" client-id="${setting('keyCloakClientId')}" load-person force-login></vpu-auth>
+            </div>
+        `;
+    }
+
     render() {
         commonUtils.initAssetBaseURL('vpu-data-table-view-src');
         const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
@@ -111,9 +121,7 @@ class DataTableViewDemo extends LitElement {
                 <div class="content">
                     <h1 class="title">DataTableView-Demo</h1>
                 </div>
-                <div class="content">
-                    <vpu-auth lang="${this.lang}" client-id="${setting('keyCloakClientId')}" load-person force-login></vpu-auth>
-                </div>
+                ${this.getAuthComponentHtml()}
                 <div class="content">
                     <h4>DataTable: with data, paging and searching</h4>
                      <div class="box">
