@@ -293,7 +293,10 @@ class VPUAuth extends LitElement {
     renderLoggedOut() {
         return html`
             <button id="login-button" @click="${this.login}" class="button main-button">
-                <vpu-icon name="login"></vpu-icon> ${i18n.t('login')}
+                <img src="/local/vpu-auth/icon_key_normal_tugprod.png"
+                    onmouseover="this.setAttribute('src', '/local/vpu-auth/icon_key_hover_tugprod.png');"
+                    onmouseout="this.setAttribute('src', '/local/vpu-auth/icon_key_normal_tugprod.png');"
+                    title="${i18n.t('login')}" alt="${i18n.t('login')}">
             </button>
         `;
     }
