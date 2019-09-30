@@ -7,4 +7,5 @@ export const createUUID = () => {
     });
 
     return uuid;
-}
+};
+

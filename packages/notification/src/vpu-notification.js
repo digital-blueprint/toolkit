@@ -2,7 +2,8 @@ import {i18n} from './i18n';
 import {createUUID} from './utils'
 import {html} from 'lit-element';
 import VPULitElement from 'vpu-common/vpu-lit-element';
-import commonUtils from 'vpu-common/utils';
+import * as commonUtils from 'vpu-common/utils';
+import bulmaCSSPath from 'bulma/css/bulma.min.css';
 
 /**
  * Notification web component
@@ -74,8 +75,10 @@ class VPUNotification extends VPULitElement {
     }
 
     render() {
+        commonUtils.initAssetBaseURL('vpu-notification-src');
+        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+            <link rel="stylesheet" href="${bulmaCSS}">
             <style>
                 #notification {position: fixed; top: 0; max-width: 500px; margin: 0.75em auto; left: 0; right: 0; z-index: 1000; padding: 0;}
                 .notification h3 {font-weight: bold; margin-bottom: 3px;}
