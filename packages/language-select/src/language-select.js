@@ -83,6 +83,7 @@ class LanguageSelect extends LitElement {
             a:hover {
                 background-color: #000;
                 color: #fff;
+                transition: none;
             }
 
             a {
