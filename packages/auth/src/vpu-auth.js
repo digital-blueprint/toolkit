@@ -274,10 +274,8 @@ class VPUAuth extends LitElement {
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
               <div class="dropdown-trigger">
-                <button class="button main-button" aria-haspopup="true" aria-controls="dropdown-menu2">
                   <span>${this.name}</span>
                   <vpu-icon name="menu-down"></vpu-icon>
-                </button>
               </div>
               <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                 <div class="dropdown-content">
@@ -292,12 +290,11 @@ class VPUAuth extends LitElement {
 
     renderLoggedOut() {
         return html`
-            <button id="login-button" @click="${this.login}" class="button main-button">
-                <img src="/local/vpu-auth/icon_key_normal_tugprod.png"
-                    onmouseover="this.setAttribute('src', '/local/vpu-auth/icon_key_hover_tugprod.png');"
-                    onmouseout="this.setAttribute('src', '/local/vpu-auth/icon_key_normal_tugprod.png');"
-                    title="${i18n.t('login')}" alt="${i18n.t('login')}">
-            </button>
+            <img src="/local/vpu-auth/icon_key_normal_tugprod.png"
+                @click="${this.login}"
+                onmouseover="this.setAttribute('src', '/local/vpu-auth/icon_key_hover_tugprod.png');"
+                onmouseout="this.setAttribute('src', '/local/vpu-auth/icon_key_normal_tugprod.png');"
+                title="${i18n.t('login')}" alt="${i18n.t('login')}">
         `;
     }
 
@@ -306,6 +303,11 @@ class VPUAuth extends LitElement {
         const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
+            <style>
+                vpu-icon {
+                    vertical-align: -0.7rem;
+                }
+            </style>
 
             <div>
             ${this.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
