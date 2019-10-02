@@ -36,6 +36,11 @@ class VpuCommonDemo extends VPULitElement {
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}
 
+            a:hover {
+                color: #ffbb00 !important;
+                background-color: blue;
+            }
+
             a:after {
                 ${ unsafeCSS(getIconCSS('bolt')) };
             }
