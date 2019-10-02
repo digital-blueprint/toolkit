@@ -45,7 +45,7 @@ export default {
         copy({
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
-                {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/' + pkg.name + '/icons'},
+                {src: 'assets/icons/*.svg', dest: 'dist/local/' + pkg.name + '/icons'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false

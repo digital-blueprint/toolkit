@@ -1,9 +1,9 @@
 import {i18n} from './i18n.js';
-import {css, html} from 'lit-element';
+import {css, html, unsafeCSS} from 'lit-element';
 import * as commonUtils from './utils.js';
 import './vpu-mini-spinner.js';
 import './vpu-spinner.js';
-import './vpu-icon.js';
+import {getIconCSS} from './vpu-icon.js';
 import './vpu-button.js';
 import VPULitElement from './vpu-lit-element.js';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
@@ -35,6 +35,10 @@ class VpuCommonDemo extends VPULitElement {
         return css`
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}
+
+            a:after {
+                ${ unsafeCSS(getIconCSS('bolt')) };
+            }
         `;
     }
 
@@ -80,11 +84,12 @@ class VpuCommonDemo extends VPULitElement {
                 <div class="container">
                     <label class="label">Icons</label>
                     <div class="control">
-                        <vpu-icon name="access-point-network-off"></vpu-icon>
-                        <vpu-icon style="color: green"></vpu-icon>
-                        <vpu-icon style="color: red"></vpu-icon>
-                        <vpu-icon style="color: blue"></vpu-icon>
-                        <vpu-icon style="color: orange" name="menu-down"></vpu-icon>
+                        <p style="text-decoration: underline">Foo <vpu-icon name="cloudnetwork"></vpu-icon> bar</p>
+                        <p style="font-size: 2em;">Foo <vpu-icon name="cloudnetwork"></vpu-icon> bar</p>
+                        <p style="font-size: 2em; color: orange">Foo <vpu-icon name="cloudnetwork"></vpu-icon> bar</p>
+                        <span style="background-color: #000"><a href="#" style=" color: #fff">foobar</a></span>
+                        <br>
+                        <vpu-icon style="color: green; height: 50px; border: #000 solid 1px"></vpu-icon>
                     </div>
                 </div>
                 <div class="container">
