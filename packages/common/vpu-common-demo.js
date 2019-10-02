@@ -81,10 +81,10 @@ class VpuCommonDemo extends VPULitElement {
                     <label class="label">Icons</label>
                     <div class="control">
                         <vpu-icon name="access-point-network-off"></vpu-icon>
-                        <vpu-icon color="green"></vpu-icon>
-                        <vpu-icon color="red"></vpu-icon>
-                        <vpu-icon color="blue"></vpu-icon>
-                        <vpu-icon color="orange" name="menu-down"></vpu-icon>
+                        <vpu-icon style="color: green"></vpu-icon>
+                        <vpu-icon style="color: red"></vpu-icon>
+                        <vpu-icon style="color: blue"></vpu-icon>
+                        <vpu-icon style="color: orange" name="menu-down"></vpu-icon>
                     </div>
                 </div>
                 <div class="container">

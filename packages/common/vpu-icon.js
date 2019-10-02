@@ -43,7 +43,7 @@ class Icon extends LitElement {
         return html`
             <style>
                 :host path {
-                    fill: ${this.color};
+                    fill: currentColor;
                 }
             </style>
 
