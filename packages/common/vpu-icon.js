@@ -28,8 +28,11 @@ export function getIconCSS(name) {
         mask-image: url(${ iconURL });
         -webkit-mask-image: url(${ iconURL });
         mask-size: contain;
+        -webkit-mask-size: contain;
         mask-repeat: no-repeat;
+        -webkit-mask-repeat: no-repeat;
         mask-position: center center;
+        -webkit-mask-position: center center;
         font-size: 1.1em;
         content: "X";
     `;
