@@ -13,7 +13,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build !='test') ? 'vpu-common-demo.js' : 'test/**/*.js',
+    input: (build !='test') ? 'demo.js' : 'test/**/*.js',
     output: {
         file: 'dist/bundle.js',
         format: 'esm'
