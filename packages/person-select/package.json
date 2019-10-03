@@ -1,7 +1,7 @@
 {
   "name": "vpu-person-select",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "src/vpu-person-select.js",
   "devDependencies": {
     "chai": "^4.2.0",
     "i18next-scanner": "^2.10.2",
@@ -22,6 +22,7 @@
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^5.1.1",
     "rollup-plugin-url": "^2.2.2",
+    "rollup-plugin-delete": "^1.1.0",
     "vpu-auth": "file:./vendor/auth",
     "vpu-common": "file:./vendor/common"
   },

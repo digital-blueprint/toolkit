@@ -1,2 +1,1 @@
-import 'vpu-auth';
-import './person-select-demo.js';
+import './vpu-person-select-demo.js';

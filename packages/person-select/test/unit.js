@@ -1,5 +1,5 @@
-import '../src/person-select';
-import '../src/demo';
+import '../src/vpu-person-select.js';
+import '../src/demo.js';
 
 describe('vpu-person-select basics', () => {
   let node;

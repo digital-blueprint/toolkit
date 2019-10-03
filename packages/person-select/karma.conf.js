@@ -7,7 +7,7 @@ module.exports = function(config) {
     basePath: 'dist',
     frameworks: ['mocha', 'chai'],
     files: [
-      {pattern: './' + pkg.name + '.js', included: true, watched: true, served: true, type: 'module'},
+      {pattern: './*.js', included: true, watched: true, served: true, type: 'module'},
       {pattern: './**/*', included: false, watched: true, served: true},
     ],
     autoWatch: true,
