@@ -42,7 +42,7 @@ class VpuCommonDemo extends VPULitElement {
             }
 
             a:after {
-                ${ unsafeCSS(getIconCSS('bolt')) };
+                ${ unsafeCSS(getIconCSS('envelope')) };
             }
         `;
     }
@@ -62,7 +62,7 @@ class VpuCommonDemo extends VPULitElement {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-person-select-src');
+        commonUtils.initAssetBaseURL('vpu-common-demo-src');
         const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">

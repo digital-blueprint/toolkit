@@ -33,7 +33,8 @@ export function getIconCSS(name) {
         -webkit-mask-repeat: no-repeat;
         mask-position: center center;
         -webkit-mask-position: center center;
-        font-size: 1.1em;
+        margin-left: 0.2em;
+        padding-left: 0.3em;
         content: "X";
     `;
 }
