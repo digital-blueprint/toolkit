@@ -1,7 +1,7 @@
 {
   "name": "vpu-knowledge-base-web-page-element-view",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "src/vpu-knowledge-base-web-page-element-view.js",
   "devDependencies": {
     "chai": "^4.2.0",
     "i18next-scanner": "^2.10.2",
