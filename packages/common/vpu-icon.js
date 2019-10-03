@@ -45,8 +45,10 @@ async function getSVGTextElement(name) {
         return unsafeHTML(errorIcon);
     }
     let text = await response.text();
-    if (text.indexOf('<svg') !== -1)
-        text = text.slice(text.indexOf('<svg'));
+    if (text.indexOf('<svg') === -1) {
+        return unsafeHTML(errorIcon);
+    }
+    text = text.slice(text.indexOf('<svg'));
     return unsafeHTML(text);
 }
 
@@ -86,10 +88,8 @@ class Icon extends LitElement {
 
     render() {
         let svg = getSVGTextElement(this.name);
-        let placeholder = unsafeHTML('<svg></svg>');
-
         return html`
-            ${until(svg, placeholder)}
+            ${until(svg)}
         `;
     }
 }
