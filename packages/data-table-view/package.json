@@ -1,7 +1,7 @@
 {
   "name": "vpu-data-table-view",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "src/vpu-data-table-view.js",
   "devDependencies": {
     "karma": "^4.2.0",
     "karma-chai": "^0.1.0",
