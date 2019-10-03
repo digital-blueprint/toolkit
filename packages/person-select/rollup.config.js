@@ -48,7 +48,7 @@ export default {
         copy({
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
-                {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
+                {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
