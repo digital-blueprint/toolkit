@@ -1,7 +1,8 @@
+import 'vpu-auth';
 import {i18n} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import VPULitElement from 'vpu-common/vpu-lit-element';
-import './person-profile.js';
+import './vpu-person-profile.js';
 import * as commonUtils from 'vpu-common/utils';
 import bulmaCSSPath from "bulma/css/bulma.min.css";
 import $ from 'jquery';

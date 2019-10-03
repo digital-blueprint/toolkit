@@ -14,16 +14,19 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? 'src/demo.js' : 'test/**/*.js',
+    input: (build != 'test') ? ['src/vpu-person-profile.js', 'src/vpu-person-profile-demo.js'] : 'test/**/*.js',
     output: {
-        file: 'dist/bundle.js',
-        format: 'esm'
+        dir: 'dist',
+        entryFileNames: '[name].js',
+        chunkFileNames: 'shared/[name].[hash].[format].js',
+        format: 'esm',
+        sourcemap: true
     },
     plugins: [
         del({
             targets: 'dist/*'
         }),
-        multiEntry(),
+        (build == 'test') ? multiEntry() : false,
         consts({
             environment: build,
         }),
@@ -51,6 +54,7 @@ export default {
         copy({
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
+                {src: 'assets/vpu-person-profile.metadata.json', dest: 'dist'},
                 {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
             ],
         }),
