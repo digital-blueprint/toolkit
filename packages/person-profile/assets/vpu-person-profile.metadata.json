@@ -1,0 +1,17 @@
+{
+  "element": "vpu-person-profile",
+  "module_src": "person-profile.js",
+  "name": {
+    "de": "Benutzerprofil",
+    "en": "User profile"
+  },
+  "short_name": {
+    "de": "Profil",
+    "en": "Profile"
+  },
+  "description": {
+    "de": "Zeigt informationen über den Benutzer an",
+    "en": "Shows information about the user"
+  }
+}
+
