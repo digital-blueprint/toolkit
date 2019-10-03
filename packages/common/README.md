@@ -4,7 +4,7 @@
 
 ## Icon Web Component
 
-For valid icon names see: https://materialdesignicons.com
+For valid icon names see: [LineIcons](https://lineicons.com/icons/)
 
 ```html
  <vpu-icon color="orange" name="menu-down"></vpu-icon>
