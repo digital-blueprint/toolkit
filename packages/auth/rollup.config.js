@@ -10,13 +10,14 @@ import url from "rollup-plugin-url";
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 
+const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
 export default {
     input: (build != 'test') ? 'src/demo.js' : 'test/**/*.js',
     output: {
-        file: 'dist/bundle.js',
+        file: 'dist/' + pkg.name + '.js',
         format: 'esm'
     },
     plugins: [
