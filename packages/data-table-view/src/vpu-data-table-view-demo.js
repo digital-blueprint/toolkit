@@ -1,6 +1,5 @@
 import 'vpu-auth';
 import './vpu-data-table-view.js';
-import {setting,} from './utils.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
@@ -99,7 +98,7 @@ class DataTableViewDemo extends LitElement {
     getAuthComponentHtml() {
         return this.noAuth ? html`` : html`
             <div class="content">
-                <vpu-auth lang="${this.lang}" client-id="${setting('keyCloakClientId')}" load-person force-login></vpu-auth>
+                <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
             </div>
         `;
     }

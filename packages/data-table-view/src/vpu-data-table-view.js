@@ -8,7 +8,6 @@ import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
 
 import * as commonUtils from 'vpu-common/utils';
-import * as utils from "./utils";
 import bulmaCSSPath from "bulma/css/bulma.min.css";
 
 dt(window, $);
