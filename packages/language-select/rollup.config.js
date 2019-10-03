@@ -7,18 +7,25 @@ import json from 'rollup-plugin-json';
 import serve from 'rollup-plugin-serve';
 import multiEntry from 'rollup-plugin-multi-entry';
 import consts from 'rollup-plugin-consts';
+import del from 'rollup-plugin-delete';
 
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? 'src/demo.js' : 'test/**/*.js',
+    input: (build != 'test') ? ['src/vpu-language-select.js', 'src/vpu-language-select-demo.js'] : 'test/**/*.js',
     output: {
-        file: 'dist/bundle.js',
-        format: 'esm'
+        dir: 'dist',
+        entryFileNames: '[name].js',
+        chunkFileNames: 'shared/[name].[hash].[format].js',
+        format: 'esm',
+        sourcemap: true
     },
     plugins: [
-        multiEntry(),
+        del({
+            targets: 'dist/*'
+        }),
+        (build == 'test') ? multiEntry() : false,
         consts({
             environment: build,
         }),

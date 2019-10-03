@@ -1,4 +1,4 @@
-import '../src/language-select.js';
+import '../src/vpu-language-select.js';
 import '../src/demo.js';
 
 describe('vpu-language-select basics', () => {
