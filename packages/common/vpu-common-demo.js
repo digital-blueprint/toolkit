@@ -40,10 +40,6 @@ class VpuCommonDemo extends VPULitElement {
                 color: #ffbb00 !important;
                 background-color: blue;
             }
-
-            a:after {
-                ${ unsafeCSS(getIconCSS('envelope')) };
-            }
         `;
     }
 
@@ -66,6 +62,11 @@ class VpuCommonDemo extends VPULitElement {
         const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
+            <style>
+            a:after {
+                ${ getIconCSS('envelope') };
+            }
+            </style>
 
             <section class="section">
                 <div class="container">
