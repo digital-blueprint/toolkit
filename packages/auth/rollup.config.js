@@ -53,7 +53,7 @@ export default {
                 {src: 'assets/favicon.ico', dest:'dist'},
                 {src: 'assets/icon_key_hover_tugprod.png', dest:'dist/local/vpu-auth'},
                 {src: 'assets/icon_key_normal_tugprod.png', dest:'dist/local/vpu-auth'},
-                {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
+                {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
             ]
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false

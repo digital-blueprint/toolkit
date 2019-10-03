@@ -250,8 +250,9 @@ class VPUAuth extends LitElement {
             }
 
             vpu-icon {
-                height: 2em;
-                width: 2em;
+                height: 1em;
+                width: 1em;
+                vertical-align: -0.1rem;
             }
         `;
     }
@@ -275,7 +276,7 @@ class VPUAuth extends LitElement {
             <div class="dropdown" @click="${this.onDropdownClick}">
               <div class="dropdown-trigger">
                   <span>${this.name}</span>
-                  <vpu-icon name="menu-down"></vpu-icon>
+                  <vpu-icon name="chevron-down"></vpu-icon>
               </div>
               <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                 <div class="dropdown-content">
@@ -303,11 +304,6 @@ class VPUAuth extends LitElement {
         const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
             <link rel="stylesheet" href="${bulmaCSS}">
-            <style>
-                vpu-icon {
-                    vertical-align: -0.7rem;
-                }
-            </style>
 
             <div>
             ${this.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
