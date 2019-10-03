@@ -94,7 +94,7 @@ export default {
                 {src: 'assets/*.css', dest: 'dist/local/' + pkg.name},
                 {src: 'assets/*.ico', dest: 'dist/local/' + pkg.name},
                 {src: 'node_modules/vpu-common/vpu-spinner.js', dest: 'dist/local/' + pkg.name, rename: 'spinner.js'},
-                {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
+                {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
                 {src: 'assets/nomodule.js', dest: 'dist/local/' + pkg.name},
 
                 {src: 'node_modules/datatables.net-dt/css', dest: 'dist/local/vpu-data-table-view'},
