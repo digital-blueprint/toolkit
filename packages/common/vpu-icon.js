@@ -41,6 +41,7 @@ export function getIconCSS(name) {
 
 async function getSVGTextElement(name) {
     const iconURL = getIconSVGURL(name);
+
     const response = await fetch(iconURL);
     if (!response.ok) {
         return unsafeHTML(errorIcon);
@@ -53,10 +54,28 @@ async function getSVGTextElement(name) {
     return unsafeHTML(text);
 }
 
+const iconCache =  {};
+
 /**
- * For icon names see https://materialdesignicons.com/
+ * Avoid lots of requests in case an icon is used multiple times on the same page.
+ *
+ * @param {string} name
+ */
+async function getSVGTextElementCached(name) {
+    if (iconCache[name] === undefined) {
+        let promise = getSVGTextElement(name);
+        iconCache[name] = promise;
+        return promise;
+    } else {
+        return iconCache[name];
+    }
+}
+
+/**
+ * For icon names see https://lineicons.com
  */
 class Icon extends LitElement {
+
     constructor() {
         super();
         this.name = "bolt";
@@ -88,7 +107,7 @@ class Icon extends LitElement {
     } 
 
     render() {
-        let svg = getSVGTextElement(this.name);
+        let svg = getSVGTextElementCached(this.name);
         return html`
             ${until(svg)}
         `;
