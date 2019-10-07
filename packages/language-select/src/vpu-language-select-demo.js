@@ -2,7 +2,7 @@ import {html, LitElement} from 'lit-element';
 import './vpu-language-select.js';
 import * as commonUtils from 'vpu-common/utils';
 
-class LanguageSelectDemo extends LitElement {
+class LanguageSelectDisplay extends LitElement {
 
     constructor() {
         super();
@@ -32,6 +32,30 @@ class LanguageSelectDemo extends LitElement {
 
     render() {
         return html`${this.lang}`;
+    }
+}
+
+commonUtils.defineCustomElement('vpu-language-select-display', LanguageSelectDisplay);
+
+class LanguageSelectDemo extends LitElement {
+
+    constructor() {
+        super();
+    }
+
+    render() {
+        return html`
+            Select 1: <vpu-language-select></vpu-language-select>
+            <br>
+            <br>
+            Select 2: <vpu-language-select></vpu-language-select>
+            <br>
+            <br>
+            Current language 1: <vpu-language-select-display></vpu-language-select-display>
+            <br>
+            <br>
+            Current language 2: <vpu-language-select-display></vpu-language-select-display>
+        `;
     }
 }
 

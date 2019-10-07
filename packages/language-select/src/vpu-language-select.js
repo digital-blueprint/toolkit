@@ -55,6 +55,7 @@ class LanguageSelect extends LitElement {
         if (oldValue !== value) {
             const event = new CustomEvent("vpu-language-changed", {
                 bubbles: true,
+                composed: true,
                 detail: {'lang': value}
             });
             this.dispatchEvent(event);
