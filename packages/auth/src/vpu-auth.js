@@ -260,6 +260,10 @@ class VPUAuth extends LitElement {
     onDropdownClick(event) {
         event.stopPropagation();
         event.currentTarget.classList.toggle('is-active');
+        const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
+        if (chevron !== null) {
+            chevron.name = event.currentTarget.classList.contains('is-active') ? 'chevron-up' : 'chevron-down';
+        }
     }
 
     closeDropdown() {
@@ -276,7 +280,7 @@ class VPUAuth extends LitElement {
             <div class="dropdown" @click="${this.onDropdownClick}">
               <div class="dropdown-trigger">
                   <span>${this.name}</span>
-                  <vpu-icon name="chevron-down"></vpu-icon>
+                  <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
               </div>
               <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                 <div class="dropdown-content">
