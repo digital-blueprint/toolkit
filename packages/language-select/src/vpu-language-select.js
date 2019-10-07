@@ -81,9 +81,11 @@ class LanguageSelect extends LitElement {
 
     static get styles() {
         return css`
+            ${commonUtils.getThemeCSS()}
+
             a:hover {
-                background-color: #000;
-                color: #fff;
+                background-color: var(--vpu-dark);
+                color: var(--vpu-light);
                 transition: none;
             }
 
@@ -91,9 +93,10 @@ class LanguageSelect extends LitElement {
                 padding: 5px;
                 display: inline-block;
                 text-decoration: none;
-                color: #000;
                 transition: background-color 0.15s, color 0.15s;
                 font-weight: 300;
+                color: var(--vpu-dark);
+                border-radius: var(--vpu-border-radius);
             }
         `;
     }
