@@ -1,4 +1,29 @@
+import {css} from 'lit-element';
 import env from './env.js';
+
+export function getThemeCSS() {
+    return css`
+        :host {
+            --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #007bff);
+            --vpu-primary-text-color: var(--vpu-override-primary-text-color, #fff);
+            --vpu-secondary-bg-color: var(--vpu-override-secondary-bg-color, #6c757d);
+            --vpu-secondary-text-color: var(--vpu-override-secondary-text-color, #fff);
+            --vpu-info-bg-color: var(--vpu-override-info-bg-color, #17a2b8);
+            --vpu-info-text-color: var(--vpu-override-info-text-color, #fff);
+            --vpu-success-bg-color: var(--vpu-override-success-bg-color, #28a745);
+            --vpu-success-text-color: var(--vpu-override-success-text-color, #fff);
+            --vpu-warning-bg-color: var(--vpu-override-warning-bg-color, #ffc107);
+            --vpu-warning-text-color: var(--vpu-override-warning-text-color, #343a40);
+            --vpu-danger-bg-color: var(--vpu-override-danger-bg-color, #dc3545);
+            --vpu-danger-text-color: var(--vpu-override-danger-text-color, #fff);
+            --vpu-light: var(--vpu-override-light, #f8f9fa);
+            --vpu-dark: var(--vpu-override-dark, #343a40);
+            --vpu-muted-text: var(--vpu-override-muted-text, #6c757d);
+            --vpu-border-radius: var(--vpu-override-border-radius, 0px);
+            --vpu-border-width: var(--vpu-override-border-width, 1px);
+        }
+    `;
+}
 
 /**
  * Parses a link header

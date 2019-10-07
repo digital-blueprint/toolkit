@@ -38,4 +38,8 @@ describe('utils', () => {
         assert(utils.getAssetURL("foo/bar") == "foo/bar");
         assert(utils.getAssetURL("foo/bar") == "foo/bar");
     })
+
+    it('getThemeCSS', () => {
+        utils.getThemeCSS();
+    })
 });
