@@ -28,6 +28,7 @@ class PersonSelect extends VPULitElementJQuery {
         this.selectId = 'person-select-' + commonUtils.makeId(24);
         this.value = '';
         this.ignoreValueUpdate = false;
+        this.isSearching = false;
     }
 
     static get properties() {
@@ -88,11 +89,12 @@ class PersonSelect extends VPULitElementJQuery {
             placeholder: i18n.t('person-select.placeholder'),
             dropdownParent: this.$('#person-select-dropdown'),
             ajax: {
-                delay: 250,
+                delay: 500,
                 url: apiUrl,
                 contentType: "application/ld+json",
                 beforeSend: function (jqXHR) {
                     jqXHR.setRequestHeader('Authorization', 'Bearer ' + window.VPUAuthToken);
+                    that.isSearching = true;
                 },
                 data: function (params) {
                     return {
@@ -113,7 +115,10 @@ class PersonSelect extends VPULitElementJQuery {
                         results: results
                     };
                 },
-                error: errorUtils.handleXhrError
+                error: errorUtils.handleXhrError,
+                complete: (jqXHR, textStatus) => {
+                    that.isSearching = false;
+                }
             }
         }).on("select2:select", function (e) {
             // set custom element attributes
@@ -135,7 +140,16 @@ class PersonSelect extends VPULitElementJQuery {
                     bubbles: true
                 }));
             }
+        }).on("select2:closing", (e) => {
+            if (that.isSearching) {
+                e.preventDefault();
+            }
         });
+
+        // TODO: doesn't work here
+        // this.$('.select2-selection__arrow').click(() => {
+        //     console.log("click");
+        // });
 
         // preset a person
         if (!ignorePreset && this.value !== '') {
