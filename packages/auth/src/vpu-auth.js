@@ -240,13 +240,22 @@ class VPUAuth extends LitElement {
     }
 
     static get styles() {
+        // language=css
         return css`
+            .dropdown, img.login {
+                cursor: pointer;
+            }
+
             a.dropdown-item {
                 width: initial !important;
             }
 
             .main-button {
                 min-width: 150px;
+            }
+
+            .dropdown-trigger {
+                white-space: nowrap;
             }
 
             vpu-icon {
@@ -296,6 +305,7 @@ class VPUAuth extends LitElement {
     renderLoggedOut() {
         return html`
             <img src="/local/vpu-auth/icon_key_normal_tugprod.png"
+                class="login"
                 @click="${this.login}"
                 onmouseover="this.setAttribute('src', '/local/vpu-auth/icon_key_hover_tugprod.png');"
                 onmouseout="this.setAttribute('src', '/local/vpu-auth/icon_key_normal_tugprod.png');"
