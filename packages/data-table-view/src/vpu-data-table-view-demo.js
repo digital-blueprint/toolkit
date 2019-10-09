@@ -1,7 +1,7 @@
 import 'vpu-auth';
 import './vpu-data-table-view.js';
 import {i18n} from './i18n';
-import {html, LitElement} from 'lit-element';
+import {html, css, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
 
 class DataTableViewDemo extends LitElement {
@@ -99,6 +99,13 @@ class DataTableViewDemo extends LitElement {
             <div class="content">
                 <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
             </div>
+        `;
+    }
+
+    static get styles() {
+        // language=css
+        return css`
+            ${commonUtils.getThemeCSS()}
         `;
     }
 

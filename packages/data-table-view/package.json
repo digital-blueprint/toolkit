@@ -28,7 +28,6 @@
     "vpu-common": "file:./vendor/common"
   },
   "dependencies": {
-    "bulma": "^0.7.5",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "datatables.net-dt": "^1.10.19",
     "datatables.net-responsive": "^2.2.3",
