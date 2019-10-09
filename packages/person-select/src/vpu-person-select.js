@@ -4,12 +4,11 @@ import select2 from 'select2';
 import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
 import JSONLD from 'vpu-common/jsonld';
-import {html} from 'lit-element';
+import {css, html} from 'lit-element';
 import {i18n} from './i18n.js';
 import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
 import * as commonUtils from 'vpu-common/utils';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
 import * as errorUtils from "vpu-common/error";
 
 
@@ -218,12 +217,21 @@ class PersonSelect extends VPULitElementJQuery {
         super.update(changedProperties);
     }
 
+    static get styles() {
+        // language=css
+        return css`
+            ${commonUtils.getThemeCSS()}
+
+            .select2-container--default .select2-selection--single {
+                border-radius: var(--vpu-border-radius);
+            }
+        `;
+    }
+
     render() {
         commonUtils.initAssetBaseURL('vpu-person-select-src');
         const select2CSS = commonUtils.getAssetURL(select2CSSPath);
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
             <link rel="stylesheet" href="${select2CSS}">
             <style>
                 #${this.selectId} {
