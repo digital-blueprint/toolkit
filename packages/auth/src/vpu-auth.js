@@ -242,7 +242,38 @@ class VPUAuth extends LitElement {
     static get styles() {
         // language=css
         return css`
-            .dropdown, img.login {
+            ${commonUtils.getThemeCSS()}
+
+            .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-menu {
+                display: none;
+                min-width: 12rem;
+                padding-top: 4px;
+                position: absolute;
+                z-index: 20;
+            }
+
+            .dropdown-content {
+                background-color: white;
+                border-radius: var(--vpu-border-radius);
+                box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+                padding-bottom: 0.5rem;
+                padding-top: 0.5rem;
+            }
+
+            .dropdown-item {
+                color: #4a4a4a;
+                display: block;
+                font-size: 0.875rem;
+                line-height: 1.5;
+                padding: 0.375rem 1rem;
+                position: relative;
+            }
+
+              .dropdown, img.login {
                 cursor: pointer;
             }
 
@@ -315,10 +346,7 @@ class VPUAuth extends LitElement {
 
     render() {
         commonUtils.initAssetBaseURL('vpu-auth-src');
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
-
             <div>
             ${this.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
             </div>

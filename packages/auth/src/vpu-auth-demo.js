@@ -28,10 +28,22 @@ class AuthDemo extends LitElement {
 
     render() {
         commonUtils.initAssetBaseURL('vpu-auth-src');
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
-
+            <style>
+               /* from BULMA.CSS */
+                .section {
+                   padding: 3rem 1.5rem;
+                }
+                .content h1 {
+                    font-size: 2em;
+                    margin-bottom: .5em;
+                }
+                .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+                    color: #363636;
+                    font-weight: 600;
+                    line-height: 1.125;
+                }
+            </style>
             <section class="section">
                 <div class="container">
                     <h1 class="title">Auth-Demo</h1>

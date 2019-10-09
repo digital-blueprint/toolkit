@@ -42,7 +42,7 @@ export default {
             include: 'node_modules/**'
         }),
         json(),
-        url({
+        url({ // TODO: remove when dependecy for BULMA.CSS is deleted
             limit: 0,
             include: [
                 "node_modules/bulma/**/*.css",
