@@ -42,15 +42,6 @@ export default {
             include: 'node_modules/**'
         }),
         json(),
-        url({ // TODO: remove when dependecy for BULMA.CSS is deleted
-            limit: 0,
-            include: [
-                "node_modules/bulma/**/*.css",
-                "node_modules/bulma/**/*.sass",
-            ],
-            emitFiles: true,
-            fileName: 'shared/[name].[hash][extname]'
-        }),
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [

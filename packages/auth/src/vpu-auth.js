@@ -3,7 +3,6 @@ import {html, css, LitElement} from 'lit-element';
 import JSONLD from 'vpu-common/jsonld'
 import * as commonUtils from 'vpu-common/utils';
 import 'vpu-common/vpu-icon.js';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
 
 /**
  * Keycloak auth web component

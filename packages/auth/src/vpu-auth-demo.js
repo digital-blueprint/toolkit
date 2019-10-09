@@ -2,7 +2,6 @@ import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import './vpu-auth';
 import * as commonUtils from 'vpu-common/utils';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
 
 class AuthDemo extends LitElement {
     constructor() {
