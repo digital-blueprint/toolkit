@@ -2,6 +2,7 @@ import {css} from 'lit-element';
 import env from './env.js';
 
 export function getThemeCSS() {
+    // language=css
     return css`
         :host {
             --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #007bff);
