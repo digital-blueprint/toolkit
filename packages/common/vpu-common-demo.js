@@ -6,7 +6,6 @@ import './vpu-spinner.js';
 import {getIconCSS} from './vpu-icon.js';
 import './vpu-button.js';
 import VPULitElement from './vpu-lit-element.js';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
 
 class VpuCommonDemo extends VPULitElement {
     constructor() {
@@ -50,6 +49,23 @@ class VpuCommonDemo extends VPULitElement {
                 display: inline-block;
                 padding: 0px 0px 0px 3px;
             }
+
+           /* from BULMA.CSS */
+            .section {
+               padding: 3rem 1.5rem;
+            }
+            .content h1 {
+                font-size: 2em;
+                margin-bottom: .5em;
+            }
+            .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+                color: #363636;
+                font-weight: 600;
+                line-height: 1.125;
+            }
+            .control:not(:last-child) {
+                margin-bottom: 0.5rem;
+            }
         `;
     }
 
@@ -69,36 +85,33 @@ class VpuCommonDemo extends VPULitElement {
 
     render() {
         commonUtils.initAssetBaseURL('vpu-common-demo-src');
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
             <style>
-            a:after {
-                ${ getIconCSS('envelope') };
-            }
+                a:after {
+                    ${ getIconCSS('envelope') };
+                }
             </style>
-
             <section class="section">
-                <div class="container">
-                    <h1 class="title">Common-Demo</h1>
+                <div class="content">
+                    <h1>Common-Demo</h1>
                 </div>
                 ${this.getAuthComponentHtml()}
-                <div class="container">
-                    <label class="label">Mini Spinner</label>
+                <div class="content">
+                    <h2>Mini Spinner</h2>
                     <div class="control">
                         <vpu-mini-spinner></vpu-mini-spinner>
                         <vpu-mini-spinner style="font-size: 2em"></vpu-mini-spinner>
                         <vpu-mini-spinner style="font-size: 3em"></vpu-mini-spinner>
                     </div>
                 </div>
-                <div class="container">
-                    <label class="label">Spinner</label>
+                <div class="content">
+                    <h2>Spinner</h2>
                     <div class="control">
                         <vpu-spinner></vpu-spinner>
                     </div>
                 </div>
-                <div class="container">
-                    <label class="label">Icons</label>
+                <div class="content">
+                    <h2>Icons</h2>
                     <div class="control">
                         <p style="text-decoration: underline">Foo <vpu-icon name="cloudnetwork"></vpu-icon> bar</p>
                         <p style="font-size: 2em;">Foo <vpu-icon name="cloudnetwork"></vpu-icon> bar</p>
@@ -106,17 +119,17 @@ class VpuCommonDemo extends VPULitElement {
                         <span style="background-color: #000"><a href="#" style=" color: #fff">foobar</a></span>
                         <br>
 
-                        ${(new Array(50).fill(0)).map(i => html`<vpu-icon style="color: green; width: 50px; height: 50px; border: #000 solid 1px"name="coffee-cup"></vpu-icon>`)}
+                        ${(new Array(100).fill(0)).map(i => html`<vpu-icon style="color: green; width: 50px; height: 50px; border: #000 solid 1px"name="coffee-cup"></vpu-icon>`)}
                     </div>
                 </div>
-                <div class="container">
-                    <label class="label">Button</label>
+                <div class="content">
+                    <h2>Button</h2>
                     <div class="control">
-                        <vpu-button value="Load" @click="${this.buttonClickHandler}"></vpu-button>
+                        <vpu-button value="Load" @click="${this.buttonClickHandler}" type="primary"></vpu-button>
                     </div>
                 </div>
-                <div class="container">
-                    <label class="label">Theming CSS API</label>
+                <div class="content">
+                    <h2>Theming CSS API</h2>
                     <div class="control">
                         <ul>
                             <li><code>--vpu-primary-bg-color</code>: Primary background color <div class="demoblock" style="background-color: var(--vpu-primary-bg-color)"></div></li>
@@ -140,10 +153,8 @@ class VpuCommonDemo extends VPULitElement {
                         </ul>
                     </div>
                 </div>
-                <div class="container">
-                    <label class="label">Theming CSS Override API</label>
-                    <div class="control">
-                    </div>
+                <div class="content">
+                    <h2>Theming CSS Override API</h2>
                     <pre>
 &lt;style&gt;
 html {

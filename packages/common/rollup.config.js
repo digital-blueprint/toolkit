@@ -5,7 +5,6 @@ import multiEntry from 'rollup-plugin-multi-entry';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
-import url from "rollup-plugin-url";
 import json from 'rollup-plugin-json';
 
 const pkg = require('./package.json');
@@ -33,15 +32,6 @@ export default {
             include: 'node_modules/**'
         }),
         json(),
-        url({
-            limit: 0,
-            include: [
-              "node_modules/bulma/**/*.css",
-              "node_modules/bulma/**/*.sass",
-            ],
-            emitFiles: true,
-            fileName: 'shared/[name].[hash][extname]'
-          }),
         copy({
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},

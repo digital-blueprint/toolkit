@@ -1,6 +1,5 @@
 import {html, LitElement, css} from 'lit-element';
 import * as commonUtils from './utils.js';
-import bulmaCSSPath from 'bulma/css/bulma.min.css';
 import VPULitElement from './vpu-lit-element.js';
 
 /**
@@ -70,11 +69,30 @@ class Button extends VPULitElement {
         return this.button.hasAttribute("disabled");
     }
 
-    render() {
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
+    static get styles() {
+        // language=css
+        return css`
+            ${commonUtils.getThemeCSS()}
+            .button {
+                cursor: pointer;
+                justify-content: center;
+                padding-bottom: calc(.375rem - 1px);
+                padding-left: .75rem;
+                padding-right: .75rem;
+                padding-top: calc(.375rem - 1px);
+                text-align: center;
+                white-space: nowrap;
+            }`;
+    }
 
+    render() {
         return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
+            <style>
+                .primary {
+                    background: var(--vpu-primary-bg-color);
+                    color: var(--vpu-primary-text-color);
+                }
+            </style>
             <button @click="${this.clickHandler}" class="button ${this.type}" ?disabled="${this.disabled}">
                 ${this.value} <vpu-mini-spinner style="display: ${this.spinner ? "inline" : "none"}"></vpu-mini-spinner>
             </button>
