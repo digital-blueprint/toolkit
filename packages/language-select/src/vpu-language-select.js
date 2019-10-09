@@ -80,6 +80,7 @@ class LanguageSelect extends LitElement {
     }
 
     static get styles() {
+        // language=css
         return css`
             ${commonUtils.getThemeCSS()}
 
