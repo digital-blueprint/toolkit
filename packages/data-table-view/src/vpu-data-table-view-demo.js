@@ -3,7 +3,6 @@ import './vpu-data-table-view.js';
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
 
 class DataTableViewDemo extends LitElement {
     constructor() {
@@ -105,14 +104,46 @@ class DataTableViewDemo extends LitElement {
 
     render() {
         commonUtils.initAssetBaseURL('vpu-data-table-view-src');
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
             <style>
                 .box {
                     margin: 10px;
                     padding: 10px;
                     border: 1px solid orange;
+                }
+                /* from BULMA.CSS */
+                .section {
+                   padding: 3rem 1.5rem;
+                }
+                .content h1 {
+                    font-size: 2em;
+                    margin-bottom: .5em;
+                }
+                .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+                    color: #363636;
+                    font-weight: 600;
+                    line-height: 1.125;
+                }
+                .content table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    border-spacing: 0;
+                }
+                .content table th:not([align]) {
+                    text-align: left;
+                }
+                .content table thead th {
+                    border-width: 0 0 2px;
+                    color: #363636;
+                }
+                .content table th {
+                    border: 1px solid #dbdbdb;
+                    padding: .5em .75em;
+                    vertical-align: top;
+                }
+                .content table td {
+                    padding: .5em .75em;
+                    vertical-align: top;
                 }
             </style>
 
