@@ -72,8 +72,10 @@ export function getGeneralCSS() {
         .label {
             margin-bottom: .5em;
             display: block;
-            font-weight: 400;
+            font-weight: 600;
         }
+
+        .hidden { display: none; }
 
         *, ::after, ::before {
             box-sizing: inherit;
