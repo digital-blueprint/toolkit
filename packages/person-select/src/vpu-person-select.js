@@ -225,6 +225,10 @@ class PersonSelect extends VPULitElementJQuery {
             .select2-container--default .select2-selection--single {
                 border-radius: var(--vpu-border-radius);
             }
+
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                color: inherit;
+            }
         `;
     }
 
