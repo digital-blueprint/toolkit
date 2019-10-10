@@ -171,6 +171,11 @@ export function getButtonCSS() {
             font-family: inherit;
         }
 
+        .button.is-small {
+            border-radius: calc(var(--vpu-border-radius) / 2);
+            font-size: .75rem;
+        }
+
         .button.is-primary {
             background-color: var(--vpu-primary-bg-color);
             color: var(--vpu-primary-text-color);
