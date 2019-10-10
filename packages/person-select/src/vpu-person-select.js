@@ -221,6 +221,7 @@ class PersonSelect extends VPULitElementJQuery {
         // language=css
         return css`
             ${commonUtils.getThemeCSS()}
+            ${commonUtils.getGeneralCSS()}
 
             .select2-container--default .select2-selection--single {
                 border-radius: var(--vpu-border-radius);
