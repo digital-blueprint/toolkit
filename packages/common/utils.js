@@ -53,6 +53,26 @@ export function getGeneralCSS() {
             padding-left: calc(.625em - 1px);
             padding-right: calc(.625em - 1px);
             padding-top: calc(.375em - 1px);
+            font-size: inherit;
+            font-family: inherit;
+        }
+
+        .control {
+            box-sizing: border-box;
+            clear: both;
+            font-size: 1rem;
+            position: relative;
+            text-align: left;
+        }
+
+        .label {
+            margin-bottom: .5em;
+            display: block;
+            font-weight: 400;
+        }
+
+        *, ::after, ::before {
+            box-sizing: inherit;
         }
     `;
 }
@@ -122,6 +142,54 @@ export function getNotificationCSS() {
             background-color: var(--vpu-danger-bg-color);
             color: var(--vpu-danger-text-color);
         }
+    `;
+}
+
+export function getButtonCSS() {
+    // language=css
+    return css`
+        .button {
+            border-color: transparent;
+            border-width: 1px;
+            border-radius: var(--vpu-border-radius);
+            color: #363636;
+            cursor: pointer;
+            justify-content: center;
+            padding-bottom: calc(0.375em - 1px);
+            padding-left: 0.75em;
+            padding-right: 0.75em;
+            padding-top: calc(0.375em - 1px);
+            text-align: center;
+            white-space: nowrap;
+            font-size: inherit;
+            font-family: inherit;
+        }
+
+        .button.is-primary {
+            background-color: var(--vpu-primary-bg-color);
+            color: var(--vpu-primary-text-color);
+        }
+
+        .button.is-info {
+            background-color: var(--vpu-info-bg-color);
+            color: var(--vpu-info-text-color);
+        }
+
+        .button.is-success {
+            background-color: var(--vpu-success-bg-color);
+            color: var(--vpu-success-text-color);
+        }
+
+        .button.is-warning {
+            background-color: var(--vpu-warning-bg-color);
+            color: var(--vpu-warning-text-color);
+        }
+
+        .button.is-danger {
+            background-color: var(--vpu-danger-bg-color);
+            color: var(--vpu-danger-text-color);
+        }
+
     `;
 }
 
