@@ -3,7 +3,7 @@ import dt from 'datatables.net';
 import resp from 'datatables.net-responsive';
 import resp2 from 'datatables.net-responsive-dt';
 import {i18n} from './i18n';
-import {html, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
 
@@ -106,6 +106,20 @@ class DataTableView extends LitElement {
 
         super.update(changedProperties);
         this.updateComplete.then(this.set_datatable()).catch(e => { console.log(e)});
+    }
+
+    static get styles() {
+        // language=css
+        return css`
+            ${commonUtils.getThemeCSS()}
+            ${commonUtils.getGeneralCSS()}
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+                color: var(--vpu-muted-text);
+                border-radius: var(--vpu-border-radius);
+                background: transparent;
+            }
+        `;
     }
 
     render() {
