@@ -1,8 +1,6 @@
-image: debian:buster
+image: registry.gitlab.tugraz.at/vpu/webcomponents/common/main:v1
 
 before_script:
-  - apt update
-  - apt install -y git
   - "sed -i 's|git@gitlab.tugraz.at:VPU|../..|g' .gitmodules"
   - git submodule sync
   - git submodule update --init
@@ -13,8 +11,6 @@ stages:
 test:
   stage: test
   script:
-    - apt update
-    - apt install -y npm chromium
     - npm install
     - npm run build
     - npm test
