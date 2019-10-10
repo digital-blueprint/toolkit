@@ -125,7 +125,7 @@ class VpuCommonDemo extends VPULitElement {
                 <div class="content">
                     <h2>Button</h2>
                     <div class="control">
-                        <vpu-button value="Load" @click="${this.buttonClickHandler}" type="primary"></vpu-button>
+                        <vpu-button value="Load" @click="${this.buttonClickHandler}" type="is-primary"></vpu-button>
                     </div>
                 </div>
                 <div class="content">
