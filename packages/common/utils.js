@@ -5,8 +5,9 @@ export function getThemeCSS() {
     // language=css
     return css`
         :host {
-            --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #007bff);
-            --vpu-primary-text-color: var(--vpu-override-primary-text-color, #fff);
+//            --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #007bff);
+            --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #f2f2f2);
+            --vpu-primary-text-color: var(--vpu-override-primary-text-color, rgb(54, 54, 54));
             --vpu-secondary-bg-color: var(--vpu-override-secondary-bg-color, #6c757d);
             --vpu-secondary-text-color: var(--vpu-override-secondary-text-color, #fff);
 //            --vpu-info-bg-color: var(--vpu-override-info-bg-color, #17a2b8);
@@ -53,6 +54,9 @@ export function getGeneralCSS() {
             padding-left: calc(.625em - 1px);
             padding-right: calc(.625em - 1px);
             padding-top: calc(.375em - 1px);
+        }
+
+        input, ::placeholder, textarea, select, .select select {
             font-size: inherit;
             font-family: inherit;
         }
