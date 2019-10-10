@@ -1,22 +1,20 @@
 import path from 'path';
+import glob from 'glob';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import {terser} from "rollup-plugin-terser";
 import json from 'rollup-plugin-json';
 import serve from 'rollup-plugin-serve';
-import multiEntry from 'rollup-plugin-multi-entry';
-import url from "rollup-plugin-url";
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 
-const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
 
 export default {
-    input: (build != 'test') ? ['src/vpu-auth.js', 'src/vpu-auth-demo.js'] : 'test/**/*.js',
+    input: (build != 'test') ? ['src/vpu-auth.js', 'src/vpu-auth-demo.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
@@ -28,7 +26,6 @@ export default {
         del({
             targets: 'dist/*'
         }),
-        (build == 'test') ? multiEntry() : false,
         consts({
             environment: build,
         }),
