@@ -3,6 +3,9 @@ import {createUUID} from './utils'
 import {css, html} from 'lit-element';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import * as commonUtils from 'vpu-common/utils';
+import { send } from 'vpu-common/notification';
+
+export { send };
 
 /**
  * Notification web component
