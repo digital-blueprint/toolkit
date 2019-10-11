@@ -1,17 +1,20 @@
 import {css} from 'lit-element';
 import env from './env.js';
 
+/**
+ * We want to have "neutral" colors here
+ *
+ * @returns {CSSResult}
+ */
 export function getThemeCSS() {
     // language=css
     return css`
         :host {
-//            --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #007bff);
-            --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #f2f2f2);
+            --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #007bff);
             --vpu-primary-text-color: var(--vpu-override-primary-text-color, rgb(54, 54, 54));
             --vpu-secondary-bg-color: var(--vpu-override-secondary-bg-color, #6c757d);
             --vpu-secondary-text-color: var(--vpu-override-secondary-text-color, #fff);
-//            --vpu-info-bg-color: var(--vpu-override-info-bg-color, #17a2b8);
-            --vpu-info-bg-color: var(--vpu-override-info-bg-color, #245b78);
+            --vpu-info-bg-color: var(--vpu-override-info-bg-color, #17a2b8);
             --vpu-info-text-color: var(--vpu-override-info-text-color, #fff);
             --vpu-success-bg-color: var(--vpu-override-success-bg-color, #28a745);
             --vpu-success-text-color: var(--vpu-override-success-text-color, #fff);
@@ -155,10 +158,10 @@ export function getButtonCSS() {
     // language=css
     return css`
         .button {
-            border-color: transparent;
+            border-color: black;
             border-width: 1px;
             border-radius: var(--vpu-border-radius);
-            color: #363636;
+            color: black;
             cursor: pointer;
             justify-content: center;
             padding-bottom: calc(0.375em - 1px);
@@ -169,6 +172,12 @@ export function getButtonCSS() {
             white-space: nowrap;
             font-size: inherit;
             font-family: inherit;
+            background-color: transparent;
+        }
+
+        .button:hover {
+            color: white;
+            background-color: black;
         }
 
         .button.is-small {
