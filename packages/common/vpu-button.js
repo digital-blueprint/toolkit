@@ -17,7 +17,7 @@ class Button extends VPULitElement {
         super();
         this.value = "";
         // see: https://bulma.io/documentation/elements/button/#colors
-        this.type = "is-primary";
+        this.type = "";
         this.spinner = false;
         this.noSpinnerOnClick = false;
         this.disabled = false;
