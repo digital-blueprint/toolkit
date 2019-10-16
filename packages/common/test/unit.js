@@ -18,7 +18,7 @@ describe('utils', () => {
                 super();
                 this.foo = 42;
             }
-        };
+        }
         var res = utils.defineCustomElement("test-some-element", SomeElement);
         expect(res).to.equal(true);
 
@@ -36,11 +36,11 @@ describe('utils', () => {
 
     it('getAssetURL', () => {
         utils.initAssetBaseURL();
-        assert(utils.getAssetURL("foo/bar") == "foo/bar");
-        assert(utils.getAssetURL("foo/bar") == "foo/bar");
-    })
+        assert(utils.getAssetURL("foo/bar") === "foo/bar");
+        assert(utils.getAssetURL("foo/bar") === "foo/bar");
+    });
 
     it('getThemeCSS', () => {
         styles.getThemeCSS();
-    })
+    });
 });
