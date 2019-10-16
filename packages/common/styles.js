@@ -172,6 +172,7 @@ export function getButtonCSS() {
             font-size: inherit;
             font-family: inherit;
             background-color: transparent;
+            transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
         }
 
         .button:hover {
