@@ -8,6 +8,7 @@ import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
 
 import * as commonUtils from 'vpu-common/utils';
+import * as commonStyles from 'vpu-common/styles';
 
 dt(window, $);
 resp(window, $);
@@ -111,8 +112,8 @@ class DataTableView extends LitElement {
     static get styles() {
         // language=css
         return css`
-            ${commonUtils.getThemeCSS()}
-            ${commonUtils.getGeneralCSS()}
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
 
             .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
                 color: var(--vpu-muted-text);

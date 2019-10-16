@@ -3,6 +3,7 @@ import './vpu-data-table-view.js';
 import {i18n} from './i18n';
 import {html, css, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
+import * as commonStyles from 'vpu-common/styles';
 
 class DataTableViewDemo extends LitElement {
     constructor() {
@@ -105,7 +106,7 @@ class DataTableViewDemo extends LitElement {
     static get styles() {
         // language=css
         return css`
-            ${commonUtils.getThemeCSS()}
+            ${commonStyles.getThemeCSS()}
         `;
     }
 
