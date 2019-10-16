@@ -3,6 +3,7 @@ import {createUUID} from './utils'
 import {css, html} from 'lit-element';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import * as commonUtils from 'vpu-common/utils';
+import * as commonStyles from 'vpu-common/styles';
 import { send } from 'vpu-common/notification';
 
 export { send };
@@ -79,9 +80,9 @@ class VPUNotification extends VPULitElement {
     static get styles() {
         // language=css
         return css`
-            ${commonUtils.getThemeCSS()}
-            ${commonUtils.getGeneralCSS()}
-            ${commonUtils.getNotificationCSS()}
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
+            ${commonStyles.getNotificationCSS()}
 
             .notification:not(:last-child) {
                 margin-bottom: 1.5rem;
