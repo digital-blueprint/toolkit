@@ -1,6 +1,7 @@
 import {i18n} from './i18n.js';
 import {css, html, unsafeCSS} from 'lit-element';
 import * as commonUtils from './utils.js';
+import * as commonStyles from './styles.js';
 import './vpu-mini-spinner.js';
 import './vpu-spinner.js';
 import {getIconCSS} from './vpu-icon.js';
@@ -32,7 +33,7 @@ class VpuCommonDemo extends VPULitElement {
     static get styles() {
         // language=css
         return css`
-            ${ commonUtils.getThemeCSS() }
+            ${ commonStyles.getThemeCSS() }
 
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}

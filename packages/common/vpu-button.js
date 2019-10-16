@@ -1,5 +1,6 @@
 import {html, LitElement, css} from 'lit-element';
 import * as commonUtils from './utils.js';
+import * as commonStyles from './styles.js';
 import VPULitElement from './vpu-lit-element.js';
 
 /**
@@ -72,8 +73,8 @@ class Button extends VPULitElement {
     static get styles() {
         // language=css
         return css`
-            ${commonUtils.getThemeCSS()}
-            ${commonUtils.getButtonCSS()}
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getButtonCSS()}
         `;
     }
 
