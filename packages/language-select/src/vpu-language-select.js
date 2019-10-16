@@ -1,6 +1,7 @@
 import {html, css, LitElement} from 'lit-element';
 import {i18n} from './i18n.js';
 import * as commonUtils from 'vpu-common/utils';
+import * as commonStyles from 'vpu-common/styles';
 
 /**
  * Emits a vpu-language-changed event where event.detail.lang is the new selected language
@@ -82,7 +83,7 @@ class LanguageSelect extends LitElement {
     static get styles() {
         // language=css
         return css`
-            ${commonUtils.getThemeCSS()}
+            ${commonStyles.getThemeCSS()}
 
             a:hover {
                 background-color: var(--vpu-dark);
