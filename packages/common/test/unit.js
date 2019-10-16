@@ -1,4 +1,5 @@
 import * as utils from '../utils';
+import * as styles from '../styles';
 import '../vpu-mini-spinner.js';
 import '../vpu-spinner.js';
 import '../jsonld.js';
@@ -40,6 +41,6 @@ describe('utils', () => {
     })
 
     it('getThemeCSS', () => {
-        utils.getThemeCSS();
+        styles.getThemeCSS();
     })
 });
