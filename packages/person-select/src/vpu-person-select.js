@@ -8,6 +8,7 @@ import {css, html} from 'lit-element';
 import {i18n} from './i18n.js';
 import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
 import * as commonUtils from 'vpu-common/utils';
+import * as commonStyles from 'vpu-common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from "vpu-common/error";
 
@@ -220,8 +221,8 @@ class PersonSelect extends VPULitElementJQuery {
     static get styles() {
         // language=css
         return css`
-            ${commonUtils.getThemeCSS()}
-            ${commonUtils.getGeneralCSS()}
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
 
             .select2-container--default .select2-selection--single {
                 border-radius: var(--vpu-border-radius);
