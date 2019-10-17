@@ -335,11 +335,11 @@ class VPUAuth extends LitElement {
 
     renderLoggedOut() {
         return html`
-            <img src="/local/vpu-auth/icon_key_normal_tugprod.png"
+            <img src="${commonUtils.getAssetURL('/local/vpu-auth/icon_key_normal_tugprod.png')}"
                 class="login"
                 @click="${this.login}"
-                onmouseover="this.setAttribute('src', '/local/vpu-auth/icon_key_hover_tugprod.png');"
-                onmouseout="this.setAttribute('src', '/local/vpu-auth/icon_key_normal_tugprod.png');"
+                onmouseover="this.setAttribute('src', '${commonUtils.getAssetURL('/local/vpu-auth/icon_key_hover_tugprod.png')}');"
+                onmouseout="this.setAttribute('src', '${commonUtils.getAssetURL('/local/vpu-auth/icon_key_normal_tugprod.png')}');"
                 title="${i18n.t('login')}" alt="${i18n.t('login')}">
         `;
     }
