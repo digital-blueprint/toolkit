@@ -28,7 +28,6 @@
     "vpu-person-select": "file:./vendor/person-select"
   },
   "dependencies": {
-    "bulma": "^0.7.5",
     "lit-element": "^2.2.1",
     "jquery": "^3.4.1"
   },

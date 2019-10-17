@@ -4,7 +4,7 @@ import {css, html, LitElement} from 'lit-element';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import './vpu-person-profile.js';
 import * as commonUtils from 'vpu-common/utils';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as commonStyles from 'vpu-common/styles';
 import $ from 'jquery';
 import 'vpu-person-select';
 
@@ -47,6 +47,9 @@ class PersonProfileDemo extends VPULitElement {
     static get styles() {
         // language=css
         return css`
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
+
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}
         `;
@@ -64,10 +67,8 @@ class PersonProfileDemo extends VPULitElement {
 
     render() {
         commonUtils.initAssetBaseURL('vpu-person-profile-src');
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
-        return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
 
+        return html`
             ${this.getAuthComponentHtml()}
 
             <section class="section">

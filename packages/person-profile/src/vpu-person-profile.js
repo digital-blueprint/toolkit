@@ -1,10 +1,10 @@
 
 import JSONLD from 'vpu-common/jsonld';
-import {html} from 'lit-element';
+import {css, html} from 'lit-element';
 import {i18n} from './i18n.js';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import * as commonUtils from 'vpu-common/utils';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as commonStyles from 'vpu-common/styles';
 
 
 class PersonProfile extends VPULitElement {
@@ -72,6 +72,14 @@ class PersonProfile extends VPULitElement {
         super.update(changedProperties);
     }
 
+    static get styles() {
+        // language=css
+        return css`
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
+        `;
+    }
+
     render() {
         let role = i18n.t('person-profile.unknown');
         if (this.person !== null && this.person.roles !== undefined) {
@@ -83,9 +91,7 @@ class PersonProfile extends VPULitElement {
             }
         }
         commonUtils.initAssetBaseURL('vpu-person-profile-src');
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
             <style>
             .profile {
                 padding: 1rem
