@@ -27,7 +27,6 @@
     "vpu-common": "file:./vendor/common"
   },
   "dependencies": {
-    "bulma": "^0.7.5",
     "jquery": "^3.4.1",
     "lit-element": "^2.1.0",
     "select2": "^4.0.9"

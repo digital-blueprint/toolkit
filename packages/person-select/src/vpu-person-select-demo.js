@@ -3,7 +3,7 @@ import {i18n} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import './vpu-person-select.js';
 import * as commonUtils from 'vpu-common/utils';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as commonStyles from 'vpu-common/styles';
 
 class PersonSelectDemo extends LitElement {
     constructor() {
@@ -30,6 +30,9 @@ class PersonSelectDemo extends LitElement {
     static get styles() {
         // language=css
         return css`
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
+
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}
         `;
@@ -45,10 +48,8 @@ class PersonSelectDemo extends LitElement {
 
     render() {
         commonUtils.initAssetBaseURL('vpu-person-select-src');
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
-        return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
 
+        return html`
             <section class="section">
                 <div class="container">
                     <h1 class="title">Person-Select-Demo</h1>
