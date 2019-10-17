@@ -3,7 +3,7 @@ import {css, html, LitElement} from 'lit-element';
 import 'vpu-auth';
 import './vpu-knowledge-base-web-page-element-view.js';
 import * as commonUtils from 'vpu-common/utils';
-import bulmaCSSPath from "bulma/css/bulma.min.css";
+import * as commonStyles from 'vpu-common/styles';
 
 class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     constructor() {
@@ -32,8 +32,21 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
     static get styles() {
         // language=css
         return css`
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
+
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}
+
+            vpu-knowledge-base-web-page-element-view.clean {
+                --KBBorder: initial;
+                --KBBorderRadius: initial;
+                --KBMargin: initial;
+                --KBPadding: initial;
+            }
+            vpu-knowledge-base-web-page-element-view.opt {
+                --KBBorder: 2px solid blue;
+            }
         `;
     }
 
@@ -47,21 +60,7 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
 
     render() {
         commonUtils.initAssetBaseURL('vpu-knowledge-base-web-page-element-view-src');
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
         return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
-            <style>
-                vpu-knowledge-base-web-page-element-view.clean {
-                    --KBBorder: initial;
-                    --KBBorderRadius: initial;
-                    --KBMargin: initial;
-                    --KBPadding: initial;
-                }
-                vpu-knowledge-base-web-page-element-view.opt {
-                    --KBBorder: 2px solid blue;
-                }
-            </style>
- 
             <section class="section">
                 <div class="container">
                     <h1 class="title">KnowledgeBaseWebPageElementView-Demo</h1>
