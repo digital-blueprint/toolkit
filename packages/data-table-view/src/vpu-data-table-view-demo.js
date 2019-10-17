@@ -107,11 +107,13 @@ class DataTableViewDemo extends LitElement {
         // language=css
         return css`
             ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
         `;
     }
 
     render() {
         commonUtils.initAssetBaseURL('vpu-data-table-view-src');
+
         return html`
             <style>
                 .box {
@@ -120,9 +122,6 @@ class DataTableViewDemo extends LitElement {
                     border: 1px solid orange;
                 }
                 /* from BULMA.CSS */
-                .section {
-                   padding: 3rem 1.5rem;
-                }
                 .content h1 {
                     font-size: 2em;
                     margin-bottom: .5em;
