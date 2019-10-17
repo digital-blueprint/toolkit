@@ -60,10 +60,6 @@ export default {
         json(),
         urlPlugin({
             limit: 0,
-            include: [
-              "node_modules/bulma/**/*.css",
-              "node_modules/bulma/**/*.sass",
-            ],
             emitFiles: true,
             fileName: 'shared/[name].[hash][extname]'
           }),
