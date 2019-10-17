@@ -32,6 +32,7 @@ class AuthDemo extends LitElement {
                /* from BULMA.CSS */
                 .section {
                    padding: 3rem 1.5rem;
+                   font-family: sans-serif;
                 }
                 .content h1 {
                     font-size: 2em;

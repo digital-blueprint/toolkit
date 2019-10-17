@@ -1,5 +1,6 @@
 import {i18n} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
+import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import JSONLD from 'vpu-common/jsonld'
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
@@ -244,6 +245,10 @@ class VPUAuth extends LitElement {
         return css`
             ${commonStyles.getThemeCSS()}
 
+            :host {
+                display: inline-block;
+            }
+
             .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
                 display: block;
             }
@@ -294,6 +299,40 @@ class VPUAuth extends LitElement {
                 width: 1em;
                 vertical-align: -0.1rem;
             }
+
+            /* login button */
+            .loginbox svg path {
+                fill: var(--vpu-primary-bg-color);
+            }
+
+            .loginbox svg {
+                width: 1.2em;
+                height: 1.2em;
+                padding-top: 0.25em;
+            }
+
+            .loginbox {
+                display: flex;
+
+                align-items: center;
+                padding: 0 0.1em;
+                transition: background-color 0.15s, color 0.15s;
+            }
+
+            .loginbox:hover {
+                background-color: var(--vpu-dark);
+                color: var(--vpu-light);
+                cursor: pointer;
+                transition: none;
+            }
+
+            .loginbox:hover svg path {
+                fill: var(--vpu-light);
+            }
+
+            .loginbox .label {
+                padding-left: 0.2em;
+            }
         `;
     }
 
@@ -334,13 +373,31 @@ class VPUAuth extends LitElement {
     }
 
     renderLoggedOut() {
+        let loginSVG = `
+        <svg
+           viewBox="0 0 100 100"
+           y="0px"
+           x="0px"
+           id="icon"
+           version="1.1">
+        <g
+           id="g6">
+            <path
+           style="stroke-width:1.33417916"
+           id="path2"
+           d="m 42.943908,38.894934 5.885859,6.967885 H 5.4215537 c -1.8393311,0 -3.4334181,1.741972 -3.4334181,4.064599 0,2.322628 1.4714649,4.064599 3.4334181,4.064599 H 48.829767 L 42.943908,60.9599 c -1.348843,1.596808 -1.348843,4.064599 0,5.661406 1.348843,1.596808 3.433418,1.596808 4.782261,0 L 61.705085,49.927418 47.726169,33.378693 c -1.348843,-1.596806 -3.433418,-1.596806 -4.782261,0 -1.348843,1.596807 -1.348843,4.064599 0,5.516241 z" />
+            <path
+           id="path4"
+           d="m 50,2.3007812 c -18.777325,0 -35.049449,10.9124408 -42.8261719,26.7246098 H 13.390625 C 20.672112,16.348362 34.336876,7.8007812 50,7.8007812 73.3,7.8007812 92.300781,26.7 92.300781,50 92.300781,73.3 73.3,92.300781 50,92.300781 c -15.673389,0 -29.345175,-8.60579 -36.623047,-21.326172 H 7.1640625 C 14.942553,86.8272 31.242598,97.800781 50.099609,97.800781 76.399609,97.800781 97.900391,76.4 97.900391,50 97.800391,23.7 76.3,2.3007812 50,2.3007812 Z" />
+        </g>
+        </svg>
+        `;
+
         return html`
-            <img src="${commonUtils.getAssetURL('/local/vpu-auth/icon_key_normal_tugprod.png')}"
-                class="login"
-                @click="${this.login}"
-                onmouseover="this.setAttribute('src', '${commonUtils.getAssetURL('/local/vpu-auth/icon_key_hover_tugprod.png')}');"
-                onmouseout="this.setAttribute('src', '${commonUtils.getAssetURL('/local/vpu-auth/icon_key_normal_tugprod.png')}');"
-                title="${i18n.t('login')}" alt="${i18n.t('login')}">
+            <div class="loginbox" @click="${this.login}">
+                <div class="icon">${unsafeHTML(loginSVG)}</div>
+                <div class="label">${i18n.t('login')}</div>
+            </div>
         `;
     }
 

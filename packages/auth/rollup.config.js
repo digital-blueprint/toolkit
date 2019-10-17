@@ -44,8 +44,6 @@ export default {
             targets: [
                 {src: 'assets/index.html', dest:'dist'},
                 {src: 'assets/favicon.ico', dest:'dist'},
-                {src: 'assets/icon_key_hover_tugprod.png', dest:'dist/local/vpu-auth'},
-                {src: 'assets/icon_key_normal_tugprod.png', dest:'dist/local/vpu-auth'},
                 {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
             ]
         }),
