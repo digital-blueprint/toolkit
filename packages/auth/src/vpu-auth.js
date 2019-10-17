@@ -2,6 +2,7 @@ import {i18n} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
 import JSONLD from 'vpu-common/jsonld'
 import * as commonUtils from 'vpu-common/utils';
+import * as commonStyles from 'vpu-common/styles';
 import 'vpu-common/vpu-icon.js';
 
 /**
@@ -30,7 +31,7 @@ class VPUAuth extends LitElement {
         this.name = "";
         this.personId = "";
         this.loggedIn = false;
-        this.rememberLogin = false
+        this.rememberLogin = false;
         this.person = null;
 
         // Create the events
@@ -241,7 +242,7 @@ class VPUAuth extends LitElement {
     static get styles() {
         // language=css
         return css`
-            ${commonUtils.getThemeCSS()}
+            ${commonStyles.getThemeCSS()}
 
             .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
                 display: block;
@@ -323,7 +324,7 @@ class VPUAuth extends LitElement {
               </div>
               <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                 <div class="dropdown-content">
-                  ${imageURL ? html`<img src="${imageURL}" width="40%" height="40%" class="dropdown-item">` : ''}
+                  ${imageURL ? html`<img alt="" src="${imageURL}" width="40%" height="40%" class="dropdown-item">` : ''}
                   <a href="#" @click="${(e) => {e.preventDefault(); this.dispatchProfileEvent();}}" class="dropdown-item">${i18n.t('profile')}</a>
                   <a href="#" @click="${this.logout}" class="dropdown-item">${i18n.t('logout')}</a>
                 </div>
