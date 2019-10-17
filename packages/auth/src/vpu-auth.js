@@ -308,7 +308,8 @@ class VPUAuth extends LitElement {
             .loginbox svg {
                 width: 1.2em;
                 height: 1.2em;
-                padding-top: 0.25em;
+                top: 0.15em;
+                position: relative;
             }
 
             .loginbox {
@@ -328,6 +329,10 @@ class VPUAuth extends LitElement {
 
             .loginbox:hover svg path {
                 fill: var(--vpu-light);
+            }
+
+            .loginbox .icon {
+                display: inline-block;
             }
 
             .loginbox .label {
