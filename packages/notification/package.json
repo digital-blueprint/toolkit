@@ -26,7 +26,6 @@
     "vpu-common": "file:./vendor/common"
   },
   "dependencies": {
-    "bulma": "^0.7.5",
     "lit-element": "^2.1.0"
   },
   "scripts": {

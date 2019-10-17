@@ -1,9 +1,9 @@
 import {i18n} from './i18n';
 import {send as notify} from 'vpu-common/notification';
-import {html, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import './vpu-notification';
 import * as commonUtils from 'vpu-common/utils';
-import bulmaCSSPath from 'bulma/css/bulma.min.css';
+import * as commonStyles from "vpu-common/styles";
 
 class NotificationDemo extends LitElement {
     constructor() {
@@ -25,11 +25,17 @@ class NotificationDemo extends LitElement {
         });
     }
 
-    render() {
-        const bulmaCSS = commonUtils.getAssetURL(bulmaCSSPath);
-        return html`
-            <link rel="stylesheet" href="${bulmaCSS}">
+    static get styles() {
+        // language=css
+        return css`
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getGeneralCSS()}
+            ${commonStyles.getButtonCSS()}
+        `;
+    }
 
+    render() {
+        return html`
             <section class="section">
                 <div class="container">
                     <h1 class="title">Notification-Demo</h1>
