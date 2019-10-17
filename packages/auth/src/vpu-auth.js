@@ -331,7 +331,7 @@ class VPUAuth extends LitElement {
                 fill: var(--vpu-light);
             }
 
-            .loginbox .icon {
+            .loginbox .icon, .authbox {
                 display: inline-block;
             }
 
@@ -409,8 +409,8 @@ class VPUAuth extends LitElement {
     render() {
         commonUtils.initAssetBaseURL('vpu-auth-src');
         return html`
-            <div>
-            ${this.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
+            <div class="authbox">
+                ${this.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
             </div>
         `;
     }
