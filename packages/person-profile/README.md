@@ -1,4 +1,4 @@
-## VPU Person Profile Web Component
+# VPU Person Profile Web Component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/PersonProfile)
 
