@@ -36,7 +36,8 @@ export function getGeneralCSS() {
         code {
             background-color: var(--vpu-light);
             color: var(--vpu-danger-bg-color);
-            font-size: 0.875em;
+            font-size: 1em;
+            line-height: 1.5em;
             font-weight: normal;
             padding: 0.25em 0.5em 0.25em;
         }
@@ -424,6 +425,15 @@ export function getDocumentationCSS() {
         .documentation a:hover {
             color: #fff;
             background-color: #000;
+        }
+
+        .documentation ul, .documentation ol, .documentation li {
+            margin: inherit;
+            padding: inherit;
+        }
+
+        .documentation li > ul {
+            margin-left: 0.5em;
         }
     `;
 }
