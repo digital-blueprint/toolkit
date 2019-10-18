@@ -1,4 +1,4 @@
-## VPU Language Select Web Component
+# VPU Language Select Web Component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/LanguageSelect)
 
