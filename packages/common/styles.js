@@ -404,3 +404,26 @@ export function getTagCSS() {
         }
     `;
 }
+
+export function getDocumentationCSS() {
+    // language=css
+    return css`
+        .documentation h1, .documentation h2, .documentation h3 {
+            margin: 1em 0 0.8em 0;
+        }
+
+        .documentation p {
+            margin: 1em 0;
+        }
+
+        .documentation a {
+            border-bottom: 1px solid var(--vpu-muted-text);
+            transition: background-color 0.15s, color 0.15s;
+        }
+
+        .documentation a:hover {
+            color: #fff;
+            background-color: #000;
+        }
+    `;
+}
