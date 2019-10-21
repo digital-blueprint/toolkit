@@ -78,7 +78,7 @@ class PersonSelect extends VPULitElementJQuery {
             "text": "http://schema.org/name"
         };
 
-        if (this.$select.hasClass('select2-hidden-accessible')) {
+        if (this.$select && this.$select.hasClass('select2-hidden-accessible')) {
             this.$select.select2('destroy');
         }
 
