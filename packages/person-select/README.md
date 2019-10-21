@@ -14,6 +14,11 @@
     - example `<vpu-person-select lang="de"></vpu-person-select>`
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
     - example `<vpu-person-select entry-point-url="http://127.0.0.1:8000"></vpu-person-select>`
+- `value` (optional): api path of person to preload the selector with
+    - example `<vpu-person-select value="/people/testuser"></vpu-person-select>`
+    - the `value` will also be set automatically when a person is chosen in the selector
+- `data-object` (read-only): when a person is selected the person object will be set as json string
+    - example `<vpu-person-select data-object="{"@id":"/people/testuser", "@type":"http://schema.org/Person", "identifier":"testuser", "givenName":"Hans", "familyName":"Tester", "honorificSuffix":"Ing.", "telephone":"+43 (876) 123-4567", "phoneExtension":"4567", "email":"hans.tester@email.com", "name":"Hans Tester"}"></vpu-person-select>`
 
 ## Local development
 
