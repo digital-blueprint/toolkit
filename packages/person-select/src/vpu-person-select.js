@@ -57,7 +57,23 @@ class PersonSelect extends VPULitElementJQuery {
                 // because the blur gets also fired when clicking in the selector
                 setTimeout(() => {that.$select.select2('close')}, 500);
             });
+
+            // try an init when user-interface is loaded
+            that.initJSONLD();
         });
+    }
+
+    initJSONLD() {
+        const that = this;
+
+        JSONLD.initialize(this.entryPointUrl, function (jsonld) {
+            that.jsonld = jsonld;
+            that.active = true;
+
+            // we need to poll because maybe the user interface isn't loaded yet
+            // Note: we need to call initSelect2() in a different function so we can access "this" inside initSelect2()
+            commonUtils.pollFunc(() => { return that.initSelect2(); }, 10000, 100);
+        }, {}, this.lang);
     }
 
     /**
@@ -67,6 +83,10 @@ class PersonSelect extends VPULitElementJQuery {
         const that = this;
         const $this = $(this);
         let lastResult = {};
+
+        if (this.jsonld === null) {
+            return false;
+        }
 
         // find the correct api url for a person
         const apiUrl = this.jsonld.getApiUrlForIdentifier("http://schema.org/Person");
@@ -78,6 +98,11 @@ class PersonSelect extends VPULitElementJQuery {
             "text": "http://schema.org/name"
         };
 
+        if (this.$select === null) {
+            return false;
+        }
+
+        // we need to destroy Select2 before we can initialize it again
         if (this.$select && this.$select.hasClass('select2-hidden-accessible')) {
             this.$select.select2('destroy');
         }
@@ -182,7 +207,7 @@ class PersonSelect extends VPULitElementJQuery {
             }).catch(() => {});
         }
 
-        return this.$select;
+        return true;
     }
 
     update(changedProperties) {
@@ -204,13 +229,7 @@ class PersonSelect extends VPULitElementJQuery {
                     this.ignoreValueUpdate = false;
                     break;
                 case "entryPointUrl":
-                    const that = this;
-
-                    JSONLD.initialize(this.entryPointUrl, function (jsonld) {
-                        that.jsonld = jsonld;
-                        that.active = true;
-                        that.$select = that.initSelect2();
-                    }, {}, that.lang);
+                    this.initJSONLD();
                     break;
             }
         });
