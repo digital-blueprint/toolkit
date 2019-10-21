@@ -14,6 +14,8 @@
     - example `<vpu-person-profile lang="de"></vpu-person-profile>`
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
     - example `<vpu-person-profile entry-point-url="http://127.0.0.1:8000"></vpu-person-profile>`
+- `value` (optional): api path of person to preload the selector with
+    - example `<vpu-person-profile value="/people/testuser"></vpu-person-profile>`
 
 ## Local development
 
