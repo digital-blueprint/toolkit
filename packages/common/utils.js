@@ -226,3 +226,27 @@ export const getAssetURL = (path) => {
     // html is on the same path as the bundle
     return path;
 };
+
+/**
+ * Poll <fn> every <interval> ms until <timeout> ms
+ *
+ * @param fn
+ * @param timeout
+ * @param interval
+ */
+export const pollFunc =  (fn, timeout, interval) => {
+    var startTime = (new Date()).getTime();
+    interval = interval || 1000;
+
+    (function p() {
+        // don't retry if we took longer than timeout ms
+        if (((new Date).getTime() - startTime ) > timeout) {
+            return;
+        }
+
+        // retry until fn() returns true
+        if (!fn())  {
+            setTimeout(p, interval);
+        }
+    })();
+};
