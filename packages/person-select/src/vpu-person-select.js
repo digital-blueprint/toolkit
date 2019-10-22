@@ -266,9 +266,11 @@ class PersonSelect extends VPULitElementJQuery {
                 }
             </style>
 
-            <!-- https://select2.org-->
-            <select id="${this.selectId}" name="person" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}</select>
-            <div id="person-select-dropdown"></div>
+            <div class="select">
+                <!-- https://select2.org-->
+                <select id="${this.selectId}" name="person" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}</select>
+                <div id="person-select-dropdown"></div>
+            </div>
         `;
     }
 }
