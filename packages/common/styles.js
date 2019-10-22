@@ -228,6 +228,11 @@ export function getButtonCSS() {
             background-color: var(--vpu-danger-bg-color);
             color: var(--vpu-danger-text-color);
         }
+
+        .button[disabled], fieldset[disabled] .button {
+            opacity: .5;
+            cursor: not-allowed;
+        }
     `;
 }
 
