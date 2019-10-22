@@ -98,6 +98,22 @@ export function getGeneralCSS() {
             padding: 0;
         }
 
+        .button[disabled], .file-cta[disabled], .file-name[disabled], .input[disabled], .pagination-ellipsis[disabled],
+        .pagination-link[disabled], .pagination-next[disabled], .pagination-previous[disabled], .select fieldset[disabled] select,
+        .select select[disabled], .textarea[disabled], fieldset[disabled] .button, fieldset[disabled] .file-cta,
+        fieldset[disabled] .file-name, fieldset[disabled] .input, fieldset[disabled] .pagination-ellipsis,
+        fieldset[disabled] .pagination-link, fieldset[disabled] .pagination-next, fieldset[disabled] .pagination-previous,
+        fieldset[disabled] .select select, fieldset[disabled] .textarea {
+            cursor: not-allowed;
+        }
+
+        .input, .select select, .textarea {
+            background-color: #fff;
+            border-color: var(--vpu-muted);
+            border-radius: var(--vpu-border-radius);
+            color: var(--vpu-muted);
+        }
+
         *, ::after, ::before {
             box-sizing: inherit;
         }
@@ -231,7 +247,6 @@ export function getButtonCSS() {
 
         .button[disabled], fieldset[disabled] .button {
             opacity: .5;
-            cursor: not-allowed;
         }
     `;
 }
