@@ -253,6 +253,10 @@ class PersonSelect extends VPULitElementJQuery {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
 
+            .select2-dropdown {
+                border-radius: var(--vpu-border-radius);
+            }
+
             .select2-container--default .select2-selection--single {
                 border-radius: var(--vpu-border-radius);
             }
