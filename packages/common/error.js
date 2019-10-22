@@ -43,9 +43,9 @@ export const handleFetchError = async (error, summary = "") => {
             body = error.statusText !== undefined ? error.statusText : error;
         });
     } catch (e) {
-        // we get a TypeError if the connection to the server was refused
+        // a TypeError means the connection to the server was refused most of the times
         if (error.name === "TypeError") {
-            body = i18n.t('error.connection-to-server-refused');
+            body = error.message !== "" ? error.message : i18n.t('error.connection-to-server-refused');
         }
     }
 
