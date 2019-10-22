@@ -56,7 +56,11 @@ class PersonSelect extends VPULitElementJQuery {
             $(that).blur(() => {
                 // the 500ms delay is a workaround to actually get an item selected when clicking on it,
                 // because the blur gets also fired when clicking in the selector
-                setTimeout(() => {that.$select.select2('close')}, 500);
+                setTimeout(() => {
+                    if (this.select2IsInitialized()) {
+                        that.$select.select2('close');
+                    }
+                }, 500);
             });
 
             // try an init when user-interface is loaded
@@ -218,13 +222,13 @@ class PersonSelect extends VPULitElementJQuery {
                 case "lang":
                     i18n.changeLanguage(this.lang);
 
-                    if (this.$select !== null && this.$select.hasClass("select2-hidden-accessible")) {
+                    if (this.select2IsInitialized()) {
                         // no other way to set an other language at runtime did work
                         this.initSelect2(true);
                     }
                     break;
                 case "value":
-                    if (!this.ignoreValueUpdate && this.$select !== null && this.$select.hasClass("select2-hidden-accessible")) {
+                    if (!this.ignoreValueUpdate && this.select2IsInitialized()) {
                         this.initSelect2();
                     }
 
@@ -237,6 +241,10 @@ class PersonSelect extends VPULitElementJQuery {
         });
 
         super.update(changedProperties);
+    }
+
+    select2IsInitialized() {
+        return this.$select !== null && this.$select.hasClass("select2-hidden-accessible");
     }
 
     static get styles() {
