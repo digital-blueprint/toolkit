@@ -29,6 +29,7 @@ class PersonSelect extends VPULitElementJQuery {
         this.value = '';
         this.ignoreValueUpdate = false;
         this.isSearching = false;
+        this.lastResult = {};
     }
 
     static get properties() {
@@ -82,7 +83,6 @@ class PersonSelect extends VPULitElementJQuery {
     initSelect2(ignorePreset = false) {
         const that = this;
         const $this = $(this);
-        let lastResult = {};
 
         if (this.jsonld === null) {
             return false;
@@ -102,9 +102,11 @@ class PersonSelect extends VPULitElementJQuery {
             return false;
         }
 
-        // we need to destroy Select2 before we can initialize it again
+        // we need to destroy Select2 and remove the event listeners before we can initialize it again
         if (this.$select && this.$select.hasClass('select2-hidden-accessible')) {
             this.$select.select2('destroy');
+            this.$select.off('select2:select');
+            this.$select.off('select2:closing');
         }
 
         this.$select.select2({
@@ -129,7 +131,7 @@ class PersonSelect extends VPULitElementJQuery {
                 },
                 processResults: function (data) {
                     console.log(data);
-                    lastResult = data;
+                    that.lastResult = data;
 
                     const results = that.jsonld.transformMembers(data, localContext);
 
@@ -148,7 +150,7 @@ class PersonSelect extends VPULitElementJQuery {
         }).on("select2:select", function (e) {
             // set custom element attributes
             const identifier = e.params.data.id;
-            const object = findObjectInApiResults(identifier, lastResult);
+            const object = findObjectInApiResults(identifier, that.lastResult);
 
             $this.attr("data-object", JSON.stringify(object));
             $this.data("object", object);
