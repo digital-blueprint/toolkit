@@ -300,11 +300,6 @@ class VPUAuth extends LitElement {
                 vertical-align: -0.1rem;
             }
 
-            /* login button */
-            .loginbox svg path {
-                fill: var(--vpu-primary-bg-color);
-            }
-
             .loginbox svg {
                 width: 1.2em;
                 height: 1.2em;
