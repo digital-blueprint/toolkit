@@ -16,6 +16,8 @@
     - example `<vpu-knowledge-base-web-page-element-view lang="de"></vpu-knowledge-base-web-page-element-view>`
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
     - example `<vpu-knowledge-base-web-page-element-view entry-point-url="http://127.0.0.1:8000"></vpu-knowledge-base-web-page-element-view>`
+- `text` (optional): text to click to show the information loaded from the webpage
+    - example `<vpu-knowledge-base-web-page-element-view text="Click me to show more information"></vpu-knowledge-base-web-page-element-view>`
 
 ## Local development
 
