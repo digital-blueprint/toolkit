@@ -120,6 +120,155 @@ export function getGeneralCSS() {
     `;
 }
 
+export function getFormAddonsCSS() {
+    // language=css
+    return css`
+        .buttons.has-addons .button:not(:first-child) {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .buttons.has-addons .button:not(:last-child) {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+            margin-right: -1px;
+        }
+
+        .buttons.has-addons .button:last-child {
+            margin-right: 0;
+        }
+
+        .buttons.has-addons .button:hover, .buttons.has-addons .button.is-hovered {
+            z-index: 2;
+        }
+
+        .buttons.has-addons .button:focus, .buttons.has-addons .button.is-focused, .buttons.has-addons .button:active, .buttons.has-addons .button.is-active, .buttons.has-addons .button.is-selected {
+            z-index: 3;
+        }
+
+        .buttons.has-addons .button:focus:hover, .buttons.has-addons .button.is-focused:hover, .buttons.has-addons .button:active:hover, .buttons.has-addons .button.is-active:hover, .buttons.has-addons .button.is-selected:hover {
+            z-index: 4;
+        }
+
+        .buttons.has-addons .button.is-expanded {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+
+        .buttons.is-centered {
+            justify-content: center;
+        }
+
+        .buttons.is-centered:not(.has-addons) .button:not(.is-fullwidth) {
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+        }
+
+        .buttons.is-right {
+            justify-content: flex-end;
+        }
+
+        .buttons.is-right:not(.has-addons) .button:not(.is-fullwidth) {
+            margin-left: 0.25rem;
+            margin-right: 0.25rem;
+        }
+
+        .tags.has-addons .tag {
+            margin-right: 0;
+        }
+
+        .tags.has-addons .tag:not(:first-child) {
+            margin-left: 0;
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .tags.has-addons .tag:not(:last-child) {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .field.has-addons {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .field.has-addons .control:not(:last-child) {
+            margin-right: -1px;
+        }
+
+        .field.has-addons .control:not(:first-child):not(:last-child) .button,
+        .field.has-addons .control:not(:first-child):not(:last-child) .input,
+        .field.has-addons .control:not(:first-child):not(:last-child) .select select {
+            border-radius: 0;
+        }
+
+        .field.has-addons .control:first-child:not(:only-child) .button,
+        .field.has-addons .control:first-child:not(:only-child) .input,
+        .field.has-addons .control:first-child:not(:only-child) .select select {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .field.has-addons .control:last-child:not(:only-child) .button,
+        .field.has-addons .control:last-child:not(:only-child) .input,
+        .field.has-addons .control:last-child:not(:only-child) .select select {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        .field.has-addons .control .button:not([disabled]):hover, .field.has-addons .control .button:not([disabled]).is-hovered,
+        .field.has-addons .control .input:not([disabled]):hover,
+        .field.has-addons .control .input:not([disabled]).is-hovered,
+        .field.has-addons .control .select select:not([disabled]):hover,
+        .field.has-addons .control .select select:not([disabled]).is-hovered {
+            z-index: 2;
+        }
+
+        .field.has-addons .control .button:not([disabled]):focus, .field.has-addons .control .button:not([disabled]).is-focused, .field.has-addons .control .button:not([disabled]):active, .field.has-addons .control .button:not([disabled]).is-active,
+        .field.has-addons .control .input:not([disabled]):focus,
+        .field.has-addons .control .input:not([disabled]).is-focused,
+        .field.has-addons .control .input:not([disabled]):active,
+        .field.has-addons .control .input:not([disabled]).is-active,
+        .field.has-addons .control .select select:not([disabled]):focus,
+        .field.has-addons .control .select select:not([disabled]).is-focused,
+        .field.has-addons .control .select select:not([disabled]):active,
+        .field.has-addons .control .select select:not([disabled]).is-active {
+            z-index: 3;
+        }
+
+        .field.has-addons .control .button:not([disabled]):focus:hover, .field.has-addons .control .button:not([disabled]).is-focused:hover, .field.has-addons .control .button:not([disabled]):active:hover, .field.has-addons .control .button:not([disabled]).is-active:hover,
+        .field.has-addons .control .input:not([disabled]):focus:hover,
+        .field.has-addons .control .input:not([disabled]).is-focused:hover,
+        .field.has-addons .control .input:not([disabled]):active:hover,
+        .field.has-addons .control .input:not([disabled]).is-active:hover,
+        .field.has-addons .control .select select:not([disabled]):focus:hover,
+        .field.has-addons .control .select select:not([disabled]).is-focused:hover,
+        .field.has-addons .control .select select:not([disabled]):active:hover,
+        .field.has-addons .control .select select:not([disabled]).is-active:hover {
+            z-index: 4;
+        }
+
+        .field.has-addons .control.is-expanded {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+
+        .field.has-addons.has-addons-centered {
+            justify-content: center;
+        }
+
+        .field.has-addons.has-addons-right {
+            justify-content: flex-end;
+        }
+
+        .field.has-addons.has-addons-fullwidth .control {
+            flex-grow: 1;
+            flex-shrink: 0;
+        }
+    `;
+}
+
 export function getNotificationCSS() {
     // language=css
     return css`
