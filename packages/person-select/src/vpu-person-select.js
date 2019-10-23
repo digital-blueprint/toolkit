@@ -63,6 +63,16 @@ class PersonSelect extends VPULitElementJQuery {
                 }, 500);
             });
 
+            that.$('#reload-button').click(() => {
+                // fire a change event
+                that.dispatchEvent(new CustomEvent('change', {
+                    detail: {
+                        value: that.value,
+                    },
+                    bubbles: true
+                }));
+            });
+
             // try an init when user-interface is loaded
             that.initJSONLD();
         });
@@ -252,6 +262,12 @@ class PersonSelect extends VPULitElementJQuery {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
+            ${commonStyles.getButtonCSS()}
+            ${commonStyles.getFormAddonsCSS()}
+
+            .select2-control.control {
+                width: 100%;
+            }
 
             .select2-dropdown {
                 border-radius: var(--vpu-border-radius);
@@ -263,6 +279,20 @@ class PersonSelect extends VPULitElementJQuery {
 
             .select2-container--default .select2-selection--single .select2-selection__rendered {
                 color: inherit;
+            }
+
+            .field .button.control {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid #aaa;
+                -moz-border-radius-topright: var(--vpu-border-radius);
+                -moz-border-radius-bottomright: var(--vpu-border-radius);
+                line-height: 100%;
+            }
+
+            .field .button.control vpu-icon {
+                top: 0;
             }
         `;
     }
@@ -279,8 +309,15 @@ class PersonSelect extends VPULitElementJQuery {
             </style>
 
             <div class="select">
-                <!-- https://select2.org-->
-                <select id="${this.selectId}" name="person" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}</select>
+                <div class="field has-addons">
+                    <div class="select2-control control">
+                        <!-- https://select2.org-->
+                        <select id="${this.selectId}" name="person" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}</select>
+                    </div>
+                    <a class="control button" id="reload-button" style="display: none">
+                        <vpu-icon name="reload"></vpu-icon>
+                    </a>
+                </div>
                 <div id="person-select-dropdown"></div>
             </div>
         `;
