@@ -19,6 +19,12 @@
     - the `value` will also be set automatically when a person is chosen in the selector
 - `data-object` (read-only): when a person is selected the person object will be set as json string
     - example `<vpu-person-select data-object="{"@id":"/people/testuser", "@type":"http://schema.org/Person", "identifier":"testuser", "givenName":"Hans", "familyName":"Tester", "honorificSuffix":"Ing.", "telephone":"+43 (876) 123-4567", "phoneExtension":"4567", "email":"hans.tester@email.com", "name":"Hans Tester"}"></vpu-person-select>`
+- `show-reload-button` (optional): if set a reload button will be viewed next to the select box
+    - the button triggers a `change` event on the web component
+    - the button is disabled if no person is selected
+    - example `<vpu-person-select show-reload-button></vpu-person-select>`
+- `reload-button-title` (optional): sets a title text on the reload button
+    - example `<vpu-person-select show-reload-button reload-button-text="Reload result list"></vpu-person-select>`
 
 ## Local development
 

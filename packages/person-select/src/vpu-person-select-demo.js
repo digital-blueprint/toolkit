@@ -66,7 +66,7 @@ class PersonSelectDemo extends LitElement {
                         <div class="field">
                             <label class="label">Person 2</label>
                             <div class="control">
-                                <vpu-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></vpu-person-select>
+                                <vpu-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></vpu-person-select>
                             </div>
                         </div>
                     </form>

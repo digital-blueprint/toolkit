@@ -30,6 +30,8 @@ class PersonSelect extends VPULitElementJQuery {
         this.ignoreValueUpdate = false;
         this.isSearching = false;
         this.lastResult = {};
+        this.showReloadButton = false;
+        this.reloadButtonTitle = '';
     }
 
     static get properties() {
@@ -38,6 +40,8 @@ class PersonSelect extends VPULitElementJQuery {
             active: { type: Boolean, attribute: false },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             value: { type: String },
+            showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
+            reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
         };
     }
 
@@ -61,16 +65,6 @@ class PersonSelect extends VPULitElementJQuery {
                         that.$select.select2('close');
                     }
                 }, 500);
-            });
-
-            that.$('#reload-button').click(() => {
-                // fire a change event
-                that.dispatchEvent(new CustomEvent('change', {
-                    detail: {
-                        value: that.value,
-                    },
-                    bubbles: true
-                }));
             });
 
             // try an init when user-interface is loaded
@@ -257,6 +251,20 @@ class PersonSelect extends VPULitElementJQuery {
         return this.$select !== null && this.$select.hasClass("select2-hidden-accessible");
     }
 
+    reloadClick() {
+        if (this.value === "") {
+            return;
+        }
+
+        // fire a change event
+        this.dispatchEvent(new CustomEvent('change', {
+            detail: {
+                value: this.value,
+            },
+            bubbles: true
+        }));
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -314,7 +322,12 @@ class PersonSelect extends VPULitElementJQuery {
                         <!-- https://select2.org-->
                         <select id="${this.selectId}" name="person" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}</select>
                     </div>
-                    <a class="control button" id="reload-button" style="display: none">
+                    <a class="control button"
+                       id="reload-button"
+                       ?disabled=${this.value === ""}
+                       @click="${this.reloadClick}"
+                       style="display: ${this.showReloadButton ? "flex" : "none"}"
+                       title="${this.reloadButtonTitle}">
                         <vpu-icon name="reload"></vpu-icon>
                     </a>
                 </div>
