@@ -1,10 +1,11 @@
 import {i18n} from './i18n.js';
-import {html, css, LitElement} from 'lit-element';
+import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import JSONLD from 'vpu-common/jsonld'
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import 'vpu-common/vpu-icon.js';
+import VPULitElement from 'vpu-common/vpu-lit-element';
 
 /**
  * Keycloak auth web component
@@ -18,7 +19,7 @@ import 'vpu-common/vpu-icon.js';
  *   window.VPUPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
  *                     which will dispatch a `vpu-auth-person-init` event when loaded)
  */
-class VPUAuth extends LitElement {
+class VPUAuth extends VPULitElement {
     constructor() {
         super();
         this.lang = 'de';
@@ -77,10 +78,29 @@ class VPUAuth extends LitElement {
             this.loadKeycloak();
         }
 
+        const that = this;
+
         this.updateComplete.then(()=>{
+            window.onresize = () => {
+                that.updateDropdownWidth();
+            };
         });
 
         document.addEventListener('click', this.closeDropdown);
+    }
+
+    /**
+     * Set the dropdown width to almost the width of the web component
+     * We need to set the width manually because a percent width is in relation to the viewport
+     */
+    updateDropdownWidth() {
+        const dropdown = this._("div.dropdown-menu");
+
+        if (!dropdown) {
+            return;
+        }
+
+        dropdown.setAttribute("style", `width: ${this.offsetWidth - 5}px`);
     }
 
     disconnectedCallback() {
@@ -255,19 +275,38 @@ class VPUAuth extends LitElement {
 
             .dropdown-menu {
                 display: none;
-                min-width: 12rem;
+                min-width: 8em;
                 padding-top: 4px;
                 position: absolute;
                 z-index: 20;
+                border: solid 1px black;
+                border-radius: var(--vpu-border-radius);
+                overflow: hidden;
             }
 
             .dropdown-content {
                 background-color: white;
-                border-radius: var(--vpu-border-radius);
-                box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
                 padding-bottom: 0.5rem;
                 padding-top: 0.5rem;
             }
+
+            .dropdown-content img {
+                max-width: 120px;
+            }
+
+            .menu a {
+                /*padding: 0.3em;*/
+                font-weight: 400;
+                color: #000;
+                display: block;
+                text-decoration: none;
+            }
+
+            .menu a:hover {
+                color: #E4154B;
+            }
+
+            .menu a.selected { color: white; background-color: black; }
 
             .dropdown-item {
                 color: #4a4a4a;
@@ -343,6 +382,7 @@ class VPUAuth extends LitElement {
         if (chevron !== null) {
             chevron.name = event.currentTarget.classList.contains('is-active') ? 'chevron-up' : 'chevron-down';
         }
+        this.updateDropdownWidth();
     }
 
     closeDropdown() {
@@ -357,17 +397,19 @@ class VPUAuth extends LitElement {
 
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
-              <div class="dropdown-trigger">
-                  <span>${this.name}</span>
-                  <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
-              </div>
-              <div class="dropdown-menu" id="dropdown-menu2" role="menu">
-                <div class="dropdown-content">
-                  ${imageURL ? html`<img alt="" src="${imageURL}" width="40%" height="40%" class="dropdown-item">` : ''}
-                  <a href="#" @click="${(e) => {e.preventDefault(); this.dispatchProfileEvent();}}" class="dropdown-item">${i18n.t('profile')}</a>
-                  <a href="#" @click="${this.logout}" class="dropdown-item">${i18n.t('logout')}</a>
+                <div class="dropdown-trigger">
+                    <span>${this.name}</span>
+                    <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
                 </div>
-              </div>
+                <div class="dropdown-menu" id="dropdown-menu2" role="menu">
+                    <div class="dropdown-content">
+                        ${imageURL ? html`<img alt="" src="${imageURL}" class="dropdown-item">` : ''}
+                        <div class="menu">
+                            <a href="#" @click="${(e) => {e.preventDefault(); this.dispatchProfileEvent();}}" class="dropdown-item">${i18n.t('profile')}</a>
+                            <a href="#" @click="${this.logout}" class="dropdown-item">${i18n.t('logout')}</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     }
