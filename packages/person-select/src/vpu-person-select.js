@@ -27,6 +27,7 @@ class PersonSelect extends VPULitElementJQuery {
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
         this.selectId = 'person-select-' + commonUtils.makeId(24);
         this.value = '';
+        this.object = null;
         this.ignoreValueUpdate = false;
         this.isSearching = false;
         this.lastResult = {};
@@ -40,12 +41,16 @@ class PersonSelect extends VPULitElementJQuery {
             active: { type: Boolean, attribute: false },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             value: { type: String },
+            object: { type: Object, attribute: false },
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
         };
     }
 
     clear() {
+        this.object = null;
+        $(this).attr("data-object", "");
+        $(this).data("object", null);
         this.$select.val(null).trigger('change').trigger('select2:unselect');
     }
 
@@ -158,10 +163,10 @@ class PersonSelect extends VPULitElementJQuery {
         }).on("select2:select", function (e) {
             // set custom element attributes
             const identifier = e.params.data.id;
-            const object = findObjectInApiResults(identifier, that.lastResult);
+            that.object = findObjectInApiResults(identifier, that.lastResult);
 
-            $this.attr("data-object", JSON.stringify(object));
-            $this.data("object", object);
+            $this.attr("data-object", JSON.stringify(that.object));
+            $this.data("object", that.object);
 
             if ($this.attr("value") !== identifier) {
                 that.ignoreValueUpdate = true;
@@ -201,6 +206,7 @@ class PersonSelect extends VPULitElementJQuery {
                 return result.json();
             })
             .then((person) => {
+                that.object = person;
                 const identifier = person["@id"];
                 const option = new Option(person.name, identifier, true, true);
                 $this.attr("data-object", JSON.stringify(person));
@@ -214,7 +220,9 @@ class PersonSelect extends VPULitElementJQuery {
                     },
                     bubbles: true
                 }));
-            }).catch(() => {});
+            }).catch(() => {
+                that.clear();
+            });
         }
 
         return true;
@@ -252,7 +260,7 @@ class PersonSelect extends VPULitElementJQuery {
     }
 
     reloadClick() {
-        if (this.value === "") {
+        if (this.object === null) {
             return;
         }
 
@@ -324,7 +332,7 @@ class PersonSelect extends VPULitElementJQuery {
                     </div>
                     <a class="control button"
                        id="reload-button"
-                       ?disabled=${this.value === ""}
+                       ?disabled=${this.object === null}
                        @click="${this.reloadClick}"
                        style="display: ${this.showReloadButton ? "flex" : "none"}"
                        title="${this.reloadButtonTitle}">
