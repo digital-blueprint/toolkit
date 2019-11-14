@@ -1,3 +1,4 @@
+import {expect, assert} from 'chai';
 import * as utils from '../utils';
 import * as styles from '../styles';
 import '../vpu-mini-spinner.js';

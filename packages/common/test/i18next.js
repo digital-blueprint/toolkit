@@ -1,3 +1,4 @@
+import {assert} from 'chai';
 import * as i18next from '../i18next.js';
 
 describe('i18next', () => {
