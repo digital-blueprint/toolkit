@@ -1,7 +1,7 @@
 import path from 'path';
+import glob from 'glob';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import multiEntry from 'rollup-plugin-multi-entry';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
@@ -14,11 +14,14 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build !='test') ? 'demo.js' : 'test/**/*.js',
+    input: (build !='test') ? ['demo.js'] : glob.sync('test/**/*.js'),
     output: {
-        file: 'dist/bundle.js',
-        format: 'esm'
-    },
+        dir: 'dist',
+        entryFileNames: '[name].js',
+        chunkFileNames: 'shared/[name].[hash].[format].js',
+        format: 'esm',
+        sourcemap: true
+      },
     onwarn: function (warning, warn) {
         // ignore chai warnings
         if (warning.code === 'CIRCULAR_DEPENDENCY') {
@@ -30,7 +33,6 @@ export default {
         del({
             targets: 'dist/*'
           }),
-        multiEntry(),
         consts({
             environment: build,
         }),
