@@ -5,15 +5,15 @@ import '../vpu-mini-spinner.js';
 import '../vpu-spinner.js';
 import '../jsonld.js';
 
-describe('utils', () => {
-    it('base64EncodeUnicode', () => {
+suite('utils', () => {
+    test('base64EncodeUnicode', () => {
         expect(utils.base64EncodeUnicode('')).to.equal('');
         expect(utils.base64EncodeUnicode('foo')).to.equal('Zm9v');
         expect(utils.base64EncodeUnicode('äöü')).to.equal('w6TDtsO8');
         expect(utils.base64EncodeUnicode('😊')).to.equal('8J+Yig==');
     });
 
-    it('defineCustomElement', () => {
+    test('defineCustomElement', () => {
         class SomeElement extends HTMLElement {
             constructor() {
                 super();
@@ -27,21 +27,21 @@ describe('utils', () => {
         expect(node.foo).to.equal(42);
     });
 
-    it('getAPiUrl', () => {
+    test('getAPiUrl', () => {
         assert(utils.getAPiUrl().startsWith("http"));
     });
 
-    it('setting', () => {
+    test('setting', () => {
         assert(utils.setting('apiBaseUrl').startsWith("http"));
     });
 
-    it('getAssetURL', () => {
+    test('getAssetURL', () => {
         utils.initAssetBaseURL();
         assert(utils.getAssetURL("foo/bar") === "foo/bar");
         assert(utils.getAssetURL("foo/bar") === "foo/bar");
     });
 
-    it('getThemeCSS', () => {
+    test('getThemeCSS', () => {
         styles.getThemeCSS();
     });
 });

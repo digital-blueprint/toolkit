@@ -5,6 +5,11 @@ module.exports = function(config) {
   config.set({
     basePath: 'dist',
     frameworks: ['mocha'],
+    client: {
+      mocha: {
+        ui: 'tdd',
+      },
+    },
     files: [
       {pattern: './*.js', included: true, watched: true, served: true, type: 'module'},
       {pattern: './**/*', included: false, watched: true, served: true},

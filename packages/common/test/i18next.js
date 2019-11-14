@@ -1,14 +1,14 @@
 import {assert} from 'chai';
 import * as i18next from '../i18next.js';
 
-describe('i18next', () => {
-    it('createInstance', () => {
+suite('i18next', () => {
+    test('createInstance', () => {
         var inst = i18next.createInstance({de:  {}}, 'de', 'en');
         assert.exists(inst);
         assert.deepEqual(inst.languages, ['de', 'en']);
     });
 
-    it('translations', () => {
+    test('translations', () => {
         var inst = i18next.createInstance({de:  {foo: 'bar'}, en: {foo: 'baz', extra: 'quux'}}, 'de', 'en');
         assert.deepEqual(inst.languages, ['de', 'en']);
         assert.equal( inst.t('foo'), 'bar');
@@ -24,7 +24,7 @@ describe('i18next', () => {
         assert.equal( inst.t('nope'), 'nope');
     });
 
-    it('date format', () => {
+    test('date format', () => {
         var inst = i18next.createInstance({de:  {}}, 'de', 'en');
         assert.deepEqual(inst.languages, ['de', 'en']);
 
@@ -35,7 +35,7 @@ describe('i18next', () => {
         assert.equal(i18next.dateTimeFormat(inst, date), '12/17/1995');
     });
 
-    it('number format', () => {
+    test('number format', () => {
         var inst = i18next.createInstance({de:  {}}, 'de', 'en');
         assert.deepEqual(inst.languages, ['de', 'en']);
 
