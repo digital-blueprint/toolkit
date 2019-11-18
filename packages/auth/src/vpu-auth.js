@@ -1,7 +1,7 @@
 import {i18n} from './i18n.js';
 import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import JSONLD from 'vpu-common/jsonld'
+import JSONLD from 'vpu-common/jsonld';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import * as events from 'vpu-common/events.js';
@@ -18,10 +18,19 @@ const LoginStatus = Object.freeze({
 });
 
 
-async function importKeycloak() {
-    const keycloakSrc = '//auth-dev.tugraz.at/auth/js/keycloak.min.js';
+/**
+ * Imports the keycloak JS API as if it was a module.
+ *
+ * @param baseUrl {string}
+ */
+async function importKeycloak(baseUrl) {
+    const keycloakSrc = baseUrl + '/js/keycloak.min.js';
     await import(keycloakSrc);
-    return window.Keycloak;
+    if (importKeycloak._keycloakMod !== undefined)
+        return importKeycloak._keycloakMod;
+    importKeycloak._keycloakMod = {Keycloak: window.Keycloak};
+    delete window.Keycloak;
+    return importKeycloak._keycloakMod;
 }
 
 
@@ -150,14 +159,16 @@ class VPUAuth extends VPULitElement {
 
     loadKeycloak() {
         const that = this;
+        const baseURL = commonUtils.setting('keyCloakBaseURL');
+        const realm = commonUtils.setting('keyCloakRealm');
 
         if (!this.keyCloakInitCalled) {
-            importKeycloak().then((Keycloak) => {
+            importKeycloak(baseURL).then((module) => {
                 that.keyCloakInitCalled = true;
 
-                that._keycloak = Keycloak({
-                    url: 'https://auth-dev.tugraz.at/auth',
-                    realm: 'tugraz',
+                that._keycloak = module.Keycloak({
+                    url: baseURL,
+                    realm: realm,
                     clientId: that.clientId,
                 });
 
