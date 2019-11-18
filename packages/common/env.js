@@ -7,6 +7,8 @@ switch(environment) {
         config = {
             apiBaseUrl: 'https://mw-dev.tugraz.at',
             apiUrlPrefix: '',
+            keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
+            keyCloakRealm: 'tugraz',
             keyCloakClientId: 'auth-dev-mw-frontend',
             //sentryDSN: 'http://0405d811e8d746cca2e70f6eff764570@129.27.166.25:9000/2',
         };
@@ -16,6 +18,8 @@ switch(environment) {
         config = {
             apiBaseUrl: 'https://mw.tugraz.at',
             apiUrlPrefix: '',
+            keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
+            keyCloakRealm: 'tugraz',
             keyCloakClientId: 'auth-prod-mw-frontend',
         };
         break;
@@ -23,6 +27,8 @@ switch(environment) {
         config = {
             apiBaseUrl: 'https://api-demo.tugraz.at',
             apiUrlPrefix: '',
+            keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
+            keyCloakRealm: 'tugraz',
             keyCloakClientId: 'auth-dev-mw-frontend',
         };
         break;
@@ -31,6 +37,8 @@ switch(environment) {
         config = {
             apiBaseUrl: 'http://127.0.0.1:8000',
             apiUrlPrefix: '',
+            keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
+            keyCloakRealm: 'tugraz',
             keyCloakClientId: 'auth-dev-mw-frontend-local',
         };
 }
