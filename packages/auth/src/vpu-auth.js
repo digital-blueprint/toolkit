@@ -4,8 +4,19 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import JSONLD from 'vpu-common/jsonld'
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
+import * as events from 'vpu-common/events.js';
 import 'vpu-common/vpu-icon.js';
 import VPULitElement from 'vpu-common/vpu-lit-element';
+
+
+const LoginStatus = Object.freeze({
+    UNKNOWN: 'unknown',
+    LOGGING_IN: 'logging-in',
+    LOGGED_IN: 'logged-in',
+    LOGGING_OUT: 'logging-out',
+    LOGGED_OUT: 'logged-out',
+});
+
 
 /**
  * Keycloak auth web component
@@ -36,6 +47,19 @@ class VPUAuth extends VPULitElement {
         this.rememberLogin = false;
         this.person = null;
 
+        const _getLoginData = () => {
+            const message = {
+                status: this._loginStatus,
+                token: this.token,
+            };
+            console.log('Login status: ' + this._loginStatus);
+            return message;
+        };
+
+        this._loginStatus = LoginStatus.UNKNOWN;
+        this._emitter = new events.EventEmitter('vpu-auth-update', 'vpu-auth-update-request');
+        this._emitter.registerCallback(_getLoginData);
+
         // Create the events
         this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
         this.personInitEvent = new CustomEvent("vpu-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true, composed: true });
@@ -43,6 +67,13 @@ class VPUAuth extends VPULitElement {
         this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
 
         this.closeDropdown = this.closeDropdown.bind(this);
+    }
+
+    _setLoginStatus(status, force) {
+        if (this._loginStatus === status && !force)
+            return;
+        this._loginStatus = status;
+        this._emitter.emit();
     }
 
     /**
@@ -76,6 +107,8 @@ class VPUAuth extends VPULitElement {
         // load Keycloak if we want to force the login or if we were redirected from the Keycloak login page
         if (this.forceLogin || (href.search('[&#]state=') >= 0 && href.search('[&#]session_state=') >= 0)) {
             this.loadKeycloak();
+        } else {
+            this._setLoginStatus(LoginStatus.LOGGED_OUT);
         }
 
         const that = this;
@@ -110,14 +143,13 @@ class VPUAuth extends VPULitElement {
 
     loadKeycloak() {
         const that = this;
-        console.log("loadKeycloak");
 
         if (!this.keyCloakInitCalled) {
             // inject Keycloak javascript file
             const script = document.createElement('script');
             script.type = 'text/javascript';
             //script.async = true;
-            script.onload = function () {
+            script.onload = () => {
                 that.keyCloakInitCalled = true;
 
                 that._keycloak = Keycloak({
@@ -126,10 +158,11 @@ class VPUAuth extends VPULitElement {
                     clientId: that.clientId,
                 });
 
+                this._setLoginStatus(LoginStatus.LOGGING_IN);
+
                 // See: https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
                 that._keycloak.init().success((authenticated) => {
-                    console.log(authenticated ? 'authenticated' : 'not authenticated!');
-                    console.log(that._keycloak);
+
 
                     if (!authenticated) {
                         // set locale of Keycloak login page
@@ -164,7 +197,8 @@ class VPUAuth extends VPULitElement {
                         }, {}, that.lang);
                     }
 
-                }).error(function () {
+                }).error(() => {
+                    this._setLoginStatus(LoginStatus.LOGGED_OUT);
                     console.error('Keycloak failed to initialize!');
                 });
 
@@ -196,6 +230,7 @@ class VPUAuth extends VPULitElement {
     }
 
     logout(e) {
+        this._setLoginStatus(LoginStatus.LOGGING_OUT);
         sessionStorage.removeItem('vpu-logged-in');
         this._keycloak.logout();
     }
@@ -240,8 +275,9 @@ class VPUAuth extends VPULitElement {
         window.VPUUserFullName = this.name;
         window.VPUPersonId = this.personId;
 
-        console.log("Bearer " + this.token);
         this.dispatchKeycloakDataUpdateEvent();
+
+        this._setLoginStatus(LoginStatus.LOGGED_IN, true);
     }
 
     update(changedProperties) {
