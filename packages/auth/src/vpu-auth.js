@@ -18,6 +18,13 @@ const LoginStatus = Object.freeze({
 });
 
 
+async function importKeycloak() {
+    const keycloakSrc = '//auth-dev.tugraz.at/auth/js/keycloak.min.js';
+    await import(keycloakSrc);
+    return window.Keycloak;
+}
+
+
 /**
  * Keycloak auth web component
  * https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
@@ -145,11 +152,7 @@ class VPUAuth extends VPULitElement {
         const that = this;
 
         if (!this.keyCloakInitCalled) {
-            // inject Keycloak javascript file
-            const script = document.createElement('script');
-            script.type = 'text/javascript';
-            //script.async = true;
-            script.onload = () => {
+            importKeycloak().then((Keycloak) => {
                 that.keyCloakInitCalled = true;
 
                 that._keycloak = Keycloak({
@@ -214,14 +217,10 @@ class VPUAuth extends VPULitElement {
                     }).error(function() {
                         console.log('Failed to refresh the token, or the session has expired');
                     });
-                }
-            };
-
-            // https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_a
-            script.src = '//auth-dev.tugraz.at/auth/js/keycloak.min.js';
-
-            //Append it to the document header
-            document.head.appendChild(script);
+                };
+            }).catch((e) => {
+                console.log('Loading keycloack failed', e);
+            });
         }
     }
 
