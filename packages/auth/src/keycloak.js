@@ -19,7 +19,7 @@ async function kcMakeAsync(promise) {
     // the native keycloak promise implementation is broken, wrap it instead
     // https://stackoverflow.com/questions/58436689/react-keycloak-typeerror-kc-updatetoken-success-is-not-a-function
     return new Promise(function(resolve, reject) {
-        promise.success((...args) => { resolve(...args); }).error((...args) => { reject(...args)});
+        promise.success((...args) => { resolve(...args); }).error((...args) => { reject(...args); });
     });
 }
 
@@ -62,7 +62,7 @@ export class KeycloakWrapper extends EventTarget {
         let refreshed = false;
 
         try {
-            refreshed = await kcMakeAsync(that._keycloak.updateToken(5));
+            refreshed = await kcMakeAsync(this._keycloak.updateToken(5));
         } catch (error) {
             console.log('Failed to refresh the token', error);
             return;
@@ -79,7 +79,7 @@ export class KeycloakWrapper extends EventTarget {
         if (this._keycloak !== null)
             return;
 
-        const module = await importKeycloak(this._baseURL)
+        const module = await importKeycloak(this._baseURL);
 
         this._keycloak = module.Keycloak({
             url: this._baseURL,
