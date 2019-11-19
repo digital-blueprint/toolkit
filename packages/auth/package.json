@@ -28,6 +28,7 @@
     "vpu-common": "file:./vendor/common"
   },
   "dependencies": {
+    "keycloak-js": "^8.0.0",
     "lit-element": "^2.1.0"
   },
   "scripts": {

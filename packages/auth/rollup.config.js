@@ -22,6 +22,13 @@ export default {
         format: 'esm',
         sourcemap: true
     },
+    onwarn: function (warning, warn) {
+        // keycloak bundled code uses eval
+        if (warning.code === 'EVAL') {
+            return;
+        }
+        warn(warning);
+    },
     plugins: [
         del({
             targets: 'dist/*'
@@ -43,6 +50,7 @@ export default {
         copy({
             targets: [
                 {src: 'assets/index.html', dest:'dist'},
+                {src: 'assets/silent-check-sso.html', dest:'dist'},
                 {src: 'assets/favicon.ico', dest:'dist'},
                 {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
             ]

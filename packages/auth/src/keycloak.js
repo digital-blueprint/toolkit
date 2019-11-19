@@ -1,30 +1,4 @@
 /**
- * Imports the keycloak JS API as if it was a module.
- *
- * @param baseUrl {string}
- */
-async function importKeycloak(baseUrl) {
-    const keycloakSrc = baseUrl + '/js/keycloak.js';
-    // Importing will write it to window so we take it from there
-    await import(keycloakSrc);
-    if (importKeycloak._keycloakMod !== undefined)
-        return importKeycloak._keycloakMod;
-    importKeycloak._keycloakMod = {Keycloak: window.Keycloak};
-    delete window.Keycloak;
-    return importKeycloak._keycloakMod;
-}
-
-
-async function kcMakeAsync(promise) {
-    // the native keycloak promise implementation is broken, wrap it instead
-    // https://stackoverflow.com/questions/58436689/react-keycloak-typeerror-kc-updatetoken-success-is-not-a-function
-    return new Promise(function(resolve, reject) {
-        promise.success((...args) => { resolve(...args); }).error((...args) => { reject(...args); });
-    });
-}
-
-
-/**
  * Wraps the keycloak API to support async/await, adds auto token refreshing and consolidates all
  * events into one native "changed" event
  * 
@@ -32,7 +6,7 @@ async function kcMakeAsync(promise) {
  */
 export class KeycloakWrapper extends EventTarget {
 
-    constructor(baseURL, realm, clientId) {
+    constructor(baseURL, realm, clientId, silentCheckSsoUri) {
         super();
 
         this._baseURL = baseURL;
@@ -40,6 +14,7 @@ export class KeycloakWrapper extends EventTarget {
         this._clientId = clientId;
         this._keycloak = null;
         this._initDone = false;
+        this._silentCheckSsoUri = silentCheckSsoUri;
     }
 
     _onChanged() {
@@ -62,7 +37,7 @@ export class KeycloakWrapper extends EventTarget {
         let refreshed = false;
 
         try {
-            refreshed = await kcMakeAsync(this._keycloak.updateToken(5));
+            refreshed = await this._keycloak.updateToken(5);
         } catch (error) {
             console.log('Failed to refresh the token', error);
             return;
@@ -79,9 +54,9 @@ export class KeycloakWrapper extends EventTarget {
         if (this._keycloak !== null)
             return;
 
-        const module = await importKeycloak(this._baseURL);
+        const Keycloak = await import('keycloak-js').then((mod) => { return mod.default; });
 
-        this._keycloak = module.Keycloak({
+        this._keycloak = Keycloak({
             url: this._baseURL,
             realm: this._realm,
             clientId: this._clientId,
@@ -101,7 +76,14 @@ export class KeycloakWrapper extends EventTarget {
         if (this._initDone)
             return;
         this._initDone = true;
-        await kcMakeAsync(this._keycloak.init());
+
+        const options = {promiseType: 'native'};
+        if (this._silentCheckSsoUri) {
+            options['onLoad'] = 'check-sso';
+            options['silentCheckSsoRedirectUri'] = this._silentCheckSsoUri;
+        }
+
+        await this._keycloak.init(options);
     }
 
     /**
@@ -119,9 +101,9 @@ export class KeycloakWrapper extends EventTarget {
         const language = options['lang'] || 'en';
 
         if (!this._keycloak.authenticated) {
-            await kcMakeAsync(this._keycloak.login({
+            await this._keycloak.login({
                 kcLocale: language,
-            }));
+            });
         }
     }
 

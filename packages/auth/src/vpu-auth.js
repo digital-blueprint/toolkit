@@ -146,6 +146,7 @@ class VPUAuth extends VPULitElement {
             rememberLogin: { type: Boolean, attribute: 'remember-login' },
             loadPerson: { type: Boolean, attribute: 'load-person' },
             clientId: { type: String, attribute: 'client-id' },
+            silentCheckSsoUri: { type: String, attribute: 'silent-check-sso-uri' },
             name: { type: String, attribute: false },
             token: { type: String, attribute: false },
             subject: { type: String, attribute: false },
@@ -160,7 +161,7 @@ class VPUAuth extends VPULitElement {
 
         const baseURL = commonUtils.setting('keyCloakBaseURL');
         const realm = commonUtils.setting('keyCloakRealm');
-        this._kcwrapper = new KeycloakWrapper(baseURL, realm, this.clientId);
+        this._kcwrapper = new KeycloakWrapper(baseURL, realm, this.clientId, this.silentCheckSsoUri);
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 
 
