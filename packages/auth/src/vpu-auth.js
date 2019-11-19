@@ -7,6 +7,7 @@ import * as commonStyles from 'vpu-common/styles';
 import * as events from 'vpu-common/events.js';
 import 'vpu-common/vpu-icon.js';
 import VPULitElement from 'vpu-common/vpu-lit-element';
+import  {KeycloakWrapper} from './keycloak.js';
 
 
 const LoginStatus = Object.freeze({
@@ -16,23 +17,6 @@ const LoginStatus = Object.freeze({
     LOGGING_OUT: 'logging-out',
     LOGGED_OUT: 'logged-out',
 });
-
-
-/**
- * Imports the keycloak JS API as if it was a module.
- *
- * @param baseUrl {string}
- */
-async function importKeycloak(baseUrl) {
-    const keycloakSrc = baseUrl + '/js/keycloak.min.js';
-    await import(keycloakSrc);
-    if (importKeycloak._keycloakMod !== undefined)
-        return importKeycloak._keycloakMod;
-    importKeycloak._keycloakMod = {Keycloak: window.Keycloak};
-    delete window.Keycloak;
-    return importKeycloak._keycloakMod;
-}
-
 
 /**
  * Keycloak auth web component
@@ -53,13 +37,10 @@ class VPUAuth extends VPULitElement {
         this.forceLogin = false;
         this.loadPerson = false;
         this.clientId = "";
-        this.keyCloakInitCalled = false;
-        this._keycloak = null;
         this.token = "";
         this.subject = "";
         this.name = "";
         this.personId = "";
-        this.loggedIn = false;
         this.rememberLogin = false;
         this.person = null;
 
@@ -83,11 +64,74 @@ class VPUAuth extends VPULitElement {
         this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
 
         this.closeDropdown = this.closeDropdown.bind(this);
+        this._onKCChanged = this._onKCChanged.bind(this)
+   }
+
+    _onKCChanged(event) {
+        const kc = event.detail;
+        let newPerson = false;
+
+        if (kc.authenticated) {
+            this.name = kc.idTokenParsed.name;
+            this.token = kc.token;
+            this.subject = kc.subject;
+            const personId = kc.idTokenParsed.preferred_username;
+            if (personId !== this.personId) {
+                this.person = null;
+                newPerson = true;
+            }
+            this.personId = personId;
+            this._setLoginStatus(LoginStatus.LOGGED_IN);
+        } else {
+            this.name = "";
+            this.token = "";
+            this.subject = "";
+            this.personId = "";
+            this.person = null;
+            this._setLoginStatus(LoginStatus.LOGGED_OUT);
+        }
+
+        window.VPUAuthSubject = this.subject;
+        window.VPUAuthToken = this.token;
+        window.VPUUserFullName = this.name;
+        window.VPUPersonId = this.personId;
+        window.VPUPerson = this.person;
+
+        const that = this;
+
+        if (newPerson) {
+            this.dispatchEvent(this.initEvent);
+        }
+
+        if (newPerson && this.loadPerson) {
+            JSONLD.initialize(commonUtils.getAPiUrl(), (jsonld) => {
+                // find the correct api url for the current person
+                // we are fetching the logged-in person directly to respect the REST philosophy
+                // see: https://github.com/api-platform/api-platform/issues/337
+                const apiUrl = jsonld.getApiUrlForEntityName("Person") + '/' + that.personId;
+
+                fetch(apiUrl, {
+                    headers: {
+                        'Content-Type': 'application/ld+json',
+                        'Authorization': 'Bearer ' + that.token,
+                    },
+                })
+                .then(response => response.json())
+                .then((person) => {
+                    that.person = person;
+                    window.VPUPerson = person;
+                    that.dispatchEvent(that.personInitEvent);
+                });
+            }, {}, that.lang);
+        }
+
+        this.dispatchEvent(this.keycloakDataUpdateEvent);
     }
 
     _setLoginStatus(status, force) {
         if (this._loginStatus === status && !force)
             return;
+
         this._loginStatus = status;
         this._emitter.emit();
     }
@@ -100,38 +144,42 @@ class VPUAuth extends VPULitElement {
             lang: { type: String },
             forceLogin: { type: Boolean, attribute: 'force-login' },
             rememberLogin: { type: Boolean, attribute: 'remember-login' },
-            loggedIn: { type: Boolean},
             loadPerson: { type: Boolean, attribute: 'load-person' },
             clientId: { type: String, attribute: 'client-id' },
             name: { type: String, attribute: false },
             token: { type: String, attribute: false },
             subject: { type: String, attribute: false },
             personId: { type: String, attribute: false },
-            keycloak: { type: Object, attribute: false },
             person: { type: Object, attribute: false },
+            _loginStatus: { type: String, attribute: false },
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
-        const href = window.location.href;
 
-        if (this.rememberLogin && sessionStorage.getItem('vpu-logged-in')) {
-            this.forceLogin = true;
+        const baseURL = commonUtils.setting('keyCloakBaseURL');
+        const realm = commonUtils.setting('keyCloakRealm');
+        this._kcwrapper = new KeycloakWrapper(baseURL, realm, this.clientId);
+        this._kcwrapper.addEventListener('changed', this._onKCChanged);
+
+
+        let doLogin = false;
+        if ((this.rememberLogin && sessionStorage.getItem('vpu-logged-in')) || this.forceLogin) {
+            doLogin = true;
         }
 
         // load Keycloak if we want to force the login or if we were redirected from the Keycloak login page
-        if (this.forceLogin || (href.search('[&#]state=') >= 0 && href.search('[&#]session_state=') >= 0)) {
-            this.loadKeycloak();
+        if (doLogin || this._kcwrapper.isLoggingIn()) {
+            this._setLoginStatus(LoginStatus.LOGGING_IN);
+            this._kcwrapper.login()
         } else {
             this._setLoginStatus(LoginStatus.LOGGED_OUT);
         }
 
-        const that = this;
-
-        this.updateComplete.then(()=>{
+        this.updateComplete.then(() => {
             window.onresize = () => {
-                that.updateDropdownWidth();
+                this.updateDropdownWidth();
             };
         });
 
@@ -153,141 +201,18 @@ class VPUAuth extends VPULitElement {
     }
 
     disconnectedCallback() {
+        this._kcwrapper.removeEventListener('changed', this._onKCChanged);
         document.removeEventListener('click', this.closeDropdown);
         super.disconnectedCallback();
     }
 
-    loadKeycloak() {
-        const that = this;
-        const baseURL = commonUtils.setting('keyCloakBaseURL');
-        const realm = commonUtils.setting('keyCloakRealm');
-
-        if (!this.keyCloakInitCalled) {
-            importKeycloak(baseURL).then((module) => {
-                that.keyCloakInitCalled = true;
-
-                that._keycloak = module.Keycloak({
-                    url: baseURL,
-                    realm: realm,
-                    clientId: that.clientId,
-                });
-
-                this._setLoginStatus(LoginStatus.LOGGING_IN);
-
-                // See: https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
-                that._keycloak.init().success((authenticated) => {
-
-
-                    if (!authenticated) {
-                        // set locale of Keycloak login page
-                        that._keycloak.login({kcLocale: that.lang});
-
-                        return;
-                    }
-
-                    that.loggedIn = false;
-                    that.updateKeycloakData();
-                    that.dispatchInitEvent();
-
-                    if (that.loadPerson) {
-                        JSONLD.initialize(commonUtils.getAPiUrl(), (jsonld) => {
-                            // find the correct api url for the current person
-                            // we are fetching the logged-in person directly to respect the REST philosophy
-                            // see: https://github.com/api-platform/api-platform/issues/337
-                            const apiUrl = jsonld.getApiUrlForEntityName("Person") + '/' + that.personId;
-
-                            fetch(apiUrl, {
-                                headers: {
-                                    'Content-Type': 'application/ld+json',
-                                    'Authorization': 'Bearer ' + that.token,
-                                },
-                            })
-                            .then(response => response.json())
-                            .then((person) => {
-                                that.person = person;
-                                window.VPUPerson = person;
-                                that.dispatchPersonInitEvent();
-                            });
-                        }, {}, that.lang);
-                    }
-
-                }).error(() => {
-                    this._setLoginStatus(LoginStatus.LOGGED_OUT);
-                    console.error('Keycloak failed to initialize!');
-                });
-
-                // auto-refresh token
-                that._keycloak.onTokenExpired = function() {
-                    that._keycloak.updateToken(5).success(function(refreshed) {
-                        if (refreshed) {
-                            console.log('Token was successfully refreshed');
-                            that.updateKeycloakData();
-                        } else {
-                            console.log('Token is still valid');
-                        }
-                    }).error(function() {
-                        console.log('Failed to refresh the token, or the session has expired');
-                    });
-                };
-            }).catch((e) => {
-                console.log('Loading keycloack failed', e);
-            });
-        }
+    onLoginClicked(e) {
+        this._kcwrapper.login();
     }
 
-    login(e) {
-        this.loadKeycloak();
-    }
-
-    logout(e) {
+    onLogoutClicked(e) {
         this._setLoginStatus(LoginStatus.LOGGING_OUT);
-        sessionStorage.removeItem('vpu-logged-in');
-        this._keycloak.logout();
-    }
-
-    /**
-     * Dispatches the init event
-     */
-    dispatchInitEvent() {
-        this.loggedIn = true;
-        this.dispatchEvent(this.initEvent);
-    }
-
-    /**
-     * Dispatches the person init event
-     */
-    dispatchPersonInitEvent() {
-        this.dispatchEvent(this.personInitEvent);
-    }
-
-    /**
-     * Dispatches the profile event
-     */
-    dispatchProfileEvent() {
-        this.dispatchEvent(this.profileEvent);
-    }
-
-    /**
-     * Dispatches the keycloak data update event
-     */
-    dispatchKeycloakDataUpdateEvent() {
-        this.dispatchEvent(this.keycloakDataUpdateEvent);
-    }
-
-    updateKeycloakData() {
-        this.name = this._keycloak.idTokenParsed.name;
-        this.token = this._keycloak.token;
-        this.subject = this._keycloak.subject;
-        this.personId = this._keycloak.idTokenParsed.preferred_username;
-
-        window.VPUAuthSubject = this.subject;
-        window.VPUAuthToken = this.token;
-        window.VPUUserFullName = this.name;
-        window.VPUPersonId = this.personId;
-
-        this.dispatchKeycloakDataUpdateEvent();
-
-        this._setLoginStatus(LoginStatus.LOGGED_IN, true);
+        this._kcwrapper.logout();
     }
 
     update(changedProperties) {
@@ -295,8 +220,8 @@ class VPUAuth extends VPULitElement {
             if (propName === "lang") {
                 i18n.changeLanguage(this.lang);
             }
-            if (propName == "loggedIn") {
-                if (this.loggedIn)
+            if (propName == "_loginStatus") {
+                if (this._loginStatus === LoginStatus.LOGGED_IN)
                     sessionStorage.setItem('vpu-logged-in', true);
                 else
                     sessionStorage.removeItem('vpu-logged-in');
@@ -438,6 +363,11 @@ class VPUAuth extends VPULitElement {
         });
     }
 
+    onProfileClicked(event) {
+        event.preventDefault();
+        this.dispatchEvent(this.profileEvent);
+    }
+
     renderLoggedIn() {
         const imageURL = (this.person && this.person.image) ? this.person.image : null;
 
@@ -451,8 +381,8 @@ class VPUAuth extends VPULitElement {
                     <div class="dropdown-content">
                         ${imageURL ? html`<img alt="" src="${imageURL}" class="dropdown-item">` : ''}
                         <div class="menu">
-                            <a href="#" @click="${(e) => {e.preventDefault(); this.dispatchProfileEvent();}}" class="dropdown-item">${i18n.t('profile')}</a>
-                            <a href="#" @click="${this.logout}" class="dropdown-item">${i18n.t('logout')}</a>
+                            <a href="#" @click="${this.onProfileClicked}" class="dropdown-item">${i18n.t('profile')}</a>
+                            <a href="#" @click="${this.onLogoutClicked}" class="dropdown-item">${i18n.t('logout')}</a>
                         </div>
                     </div>
                 </div>
@@ -482,7 +412,7 @@ class VPUAuth extends VPULitElement {
         `;
 
         return html`
-            <div class="loginbox" @click="${this.login}">
+            <div class="loginbox" @click="${this.onLoginClicked}">
                 <div class="icon">${unsafeHTML(loginSVG)}</div>
                 <div class="label">${i18n.t('login')}</div>
             </div>
@@ -491,9 +421,10 @@ class VPUAuth extends VPULitElement {
 
     render() {
         commonUtils.initAssetBaseURL('vpu-auth-src');
+        const loggedIn = (this._loginStatus === LoginStatus.LOGGED_IN);
         return html`
             <div class="authbox">
-                ${this.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
+                ${loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
             </div>
         `;
     }
