@@ -1,7 +1,7 @@
 /**
  * Sends a notification via the event
  *
- * For type see: https://bulma.io/documentation/elements/notification/#colors
+ * Type can be info/success/warning/danger
  *
  * example options:
  *

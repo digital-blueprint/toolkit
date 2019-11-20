@@ -10,14 +10,12 @@ import VPULitElement from './vpu-lit-element.js';
  * Use the attribute "no-spinner-on-click" to disable the spinner, then you can
  * start it with start() and stop it with stop()
  *
- * Use the attribute "type" to set Bulma styles like "is-info"
- * See https://bulma.io/documentation/elements/button/#colors for a list of all styles
+ * Type can be is-primary/is-info/is-success/is-warning/is-danger
  */
 class Button extends VPULitElement {
     constructor() {
         super();
         this.value = "";
-        // see: https://bulma.io/documentation/elements/button/#colors
         this.type = "";
         this.spinner = false;
         this.noSpinnerOnClick = false;
