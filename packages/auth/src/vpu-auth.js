@@ -41,7 +41,7 @@ class VPUAuth extends VPULitElement {
         this.subject = "";
         this.name = "";
         this.personId = "";
-        this.rememberLogin = false;
+        this.tryLogin = false;
         this.person = null;
 
         const _getLoginData = () => {
@@ -143,7 +143,7 @@ class VPUAuth extends VPULitElement {
         return {
             lang: { type: String },
             forceLogin: { type: Boolean, attribute: 'force-login' },
-            rememberLogin: { type: Boolean, attribute: 'remember-login' },
+            tryLogin: { type: Boolean, attribute: 'try-login' },
             loadPerson: { type: Boolean, attribute: 'load-person' },
             clientId: { type: String, attribute: 'client-id' },
             silentCheckSsoUri: { type: String, attribute: 'silent-check-sso-uri' },
@@ -164,19 +164,21 @@ class VPUAuth extends VPULitElement {
         this._kcwrapper = new KeycloakWrapper(baseURL, realm, this.clientId, this.silentCheckSsoUri);
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 
+        const handleLogin = async () => {
+            if (this.forceLogin || this._kcwrapper.isLoggingIn()) {
+                this._setLoginStatus(LoginStatus.LOGGING_IN);
+                await this._kcwrapper.login();
+            } else if (this.tryLogin) {
+                this._setLoginStatus(LoginStatus.LOGGING_IN);
+                await this._kcwrapper.tryLogin();
+                if (this._loginStatus === LoginStatus.LOGGING_IN)
+                    this._setLoginStatus(LoginStatus.LOGGED_OUT);
+            } else {
+                this._setLoginStatus(LoginStatus.LOGGED_OUT);
+            }
+        };
 
-        let doLogin = false;
-        if ((this.rememberLogin && sessionStorage.getItem('vpu-logged-in')) || this.forceLogin) {
-            doLogin = true;
-        }
-
-        // load Keycloak if we want to force the login or if we were redirected from the Keycloak login page
-        if (doLogin || this._kcwrapper.isLoggingIn()) {
-            this._setLoginStatus(LoginStatus.LOGGING_IN);
-            this._kcwrapper.login()
-        } else {
-            this._setLoginStatus(LoginStatus.LOGGED_OUT);
-        }
+        handleLogin();
 
         this.updateComplete.then(() => {
             window.onresize = () => {
@@ -220,12 +222,6 @@ class VPUAuth extends VPULitElement {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
                 i18n.changeLanguage(this.lang);
-            }
-            if (propName == "_loginStatus") {
-                if (this._loginStatus === LoginStatus.LOGGED_IN)
-                    sessionStorage.setItem('vpu-logged-in', true);
-                else
-                    sessionStorage.removeItem('vpu-logged-in');
             }
         });
 

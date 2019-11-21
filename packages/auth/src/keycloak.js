@@ -87,13 +87,19 @@ export class KeycloakWrapper extends EventTarget {
     }
 
     /**
-     * Returns true in case we just got redirected from the login page
+     * If this returns true you need to call login() at one point to finish the login process.
      */
     isLoggingIn() {
         const href = window.location.href;
         return (href.search('[&#]state=') >= 0 && href.search('[&#]session_state=') >= 0);
     }
 
+    /**
+     * Logs the user in. Might lead to a site refresh or the user needing to authenticate.
+     *
+     * @param {object} options
+     * @param {string} [options.lang] - The locale to use on the keycloak login page
+     */
     async login(options) {
         await this._ensureInit();
 
@@ -107,10 +113,24 @@ export class KeycloakWrapper extends EventTarget {
         }
     }
 
-    async clearToken() {
+    /**
+     * Logs the user in if it is possible without leaving the page or the user needing to authenticate again.
+     */
+    async tryLogin() {
+        await this._ensureInit();
+    }
+
+    /**
+     * Logs the user out locally, but not with keycloak. Login will instantly log the user back in without
+     * requiring a re-auth.
+     */
+    async localLogout() {
         this._keycloak.clearToken();
     }
 
+    /**
+     * Log the user out from keycloak.
+     */
     async logout() {
         await this._ensureInit();
         this._keycloak.logout();

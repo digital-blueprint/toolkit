@@ -19,8 +19,9 @@
     - example `<vpu-auth client-id="my-client-id" load-person></vpu-auth>`
 - `force-login` (optional, default: off): if enabled a login will be forced, there never will be a login button
     - example `<vpu-auth client-id="my-client-id" force-login></vpu-auth>`
-- `remember-login` (optional, default: off): if enabled a login will be forced if the user was logged in, in the same session
-    - example `<vpu-auth client-id="my-client-id" remember-login></vpu-auth>`
+- `try-login` (optional, default: off): if enabled the a login will happen if the user is already logged in
+  and finishing the login process would not result in a page location change (reload/redirect).
+    - example `<vpu-auth client-id="my-client-id" try-login></vpu-auth>`
 
 ## Events to listen to
 
