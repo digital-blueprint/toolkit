@@ -34,6 +34,11 @@ export const handleXhrError = (jqXHR, textStatus, errorThrown) => {
  * @param summary
  */
 export const handleFetchError = async (error, summary = "") => {
+    // return if user aborted the request
+    if (error.name === "AbortError") {
+        return;
+    }
+
     let body;
 
     try {
