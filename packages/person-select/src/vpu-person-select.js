@@ -33,6 +33,7 @@ class PersonSelect extends VPULitElementJQuery {
         this.lastResult = {};
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
+        this.showBirthDate = false;
     }
 
     static get properties() {
@@ -44,6 +45,7 @@ class PersonSelect extends VPULitElementJQuery {
             object: { type: Object, attribute: false },
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
+            showBirthDate: { type: Boolean, attribute: 'show-birth-date' },
         };
     }
 
@@ -143,13 +145,16 @@ class PersonSelect extends VPULitElementJQuery {
                     };
                 },
                 processResults: function (data) {
-                    console.log(data);
+                    // console.log(data);
                     that.lastResult = data;
+                    const members = data["hydra:member"];
+                    let results = [];
+                    members.forEach((person) => {
+                        results.push({id: person["@id"], text: that.generateOptionText(person)});
+                    });
 
-                    const results = that.jsonld.transformMembers(data, localContext);
-
-                    console.log("results");
-                    console.log(results);
+                    // console.log("results");
+                    // console.log(results);
 
                     return {
                         results: results
@@ -208,7 +213,7 @@ class PersonSelect extends VPULitElementJQuery {
             .then((person) => {
                 that.object = person;
                 const identifier = person["@id"];
-                const option = new Option(person.name, identifier, true, true);
+                const option = new Option(that.generateOptionText(person), identifier, true, true);
                 $this.attr("data-object", JSON.stringify(person));
                 $this.data("object", person);
                 that.$select.append(option).trigger('change');
@@ -226,6 +231,18 @@ class PersonSelect extends VPULitElementJQuery {
         }
 
         return true;
+    }
+
+    generateOptionText(person) {
+        let text = person["name"];
+
+        // add birth date to name if present
+        if (this.showBirthDate && (person["birthDate"] !== undefined) && (person["birthDate"] !== "")) {
+            const date = new Date(person["birthDate"]);
+            text += ` (${date.toLocaleDateString("de-AT")})`;
+        }
+
+        return text;
     }
 
     update(changedProperties) {

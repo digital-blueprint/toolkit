@@ -19,6 +19,9 @@
     - the `value` will also be set automatically when a person is chosen in the selector
 - `data-object` (read-only): when a person is selected the person object will be set as json string
     - example `<vpu-person-select data-object="{"@id":"/people/testuser", "@type":"http://schema.org/Person", "identifier":"testuser", "givenName":"Hans", "familyName":"Tester", "honorificSuffix":"Ing.", "telephone":"+43 (876) 123-4567", "phoneExtension":"4567", "email":"hans.tester@email.com", "name":"Hans Tester"}"></vpu-person-select>`
+- `show-birth-date` (optional): also shows the birth date of the persons to distinguish people with the same name
+    - the currently logged in user needs to have permissions to show the birth date of people
+    - example `<vpu-person-select show-birth-date></vpu-person-select>`
 - `show-reload-button` (optional): if set a reload button will be viewed next to the select box
     - the button triggers a `change` event on the web component
     - the button is disabled if no person is selected
