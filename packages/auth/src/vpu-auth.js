@@ -36,6 +36,7 @@ class VPUAuth extends VPULitElement {
         this.lang = 'de';
         this.forceLogin = false;
         this.loadPerson = false;
+        this.showProfile = false;
         this.clientId = "";
         this.token = "";
         this.subject = "";
@@ -147,6 +148,7 @@ class VPUAuth extends VPULitElement {
             loadPerson: { type: Boolean, attribute: 'load-person' },
             clientId: { type: String, attribute: 'client-id' },
             silentCheckSsoUri: { type: String, attribute: 'silent-check-sso-uri' },
+            showProfile: { type: Boolean, attribute: 'show-profile' },
             name: { type: String, attribute: false },
             token: { type: String, attribute: false },
             subject: { type: String, attribute: false },
@@ -378,7 +380,7 @@ class VPUAuth extends VPULitElement {
                     <div class="dropdown-content">
                         ${imageURL ? html`<img alt="" src="${imageURL}" class="dropdown-item">` : ''}
                         <div class="menu">
-                            <a href="#" @click="${this.onProfileClicked}" class="dropdown-item">${i18n.t('profile')}</a>
+                            ${this.showProfile ? html`<a href="#" @click="${this.onProfileClicked}" class="dropdown-item">${i18n.t('profile')}</a>` :''}
                             <a href="#" @click="${this.onLogoutClicked}" class="dropdown-item">${i18n.t('logout')}</a>
                         </div>
                     </div>
