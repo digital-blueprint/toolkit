@@ -1,3 +1,5 @@
+import {EventTarget} from "event-target-shim";  // Because EventTarget() doesn't exist on Safari
+
 /**
  * Wraps the keycloak API to support async/await, adds auto token refreshing and consolidates all
  * events into one native "changed" event

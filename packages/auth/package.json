@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "keycloak-js": "^8.0.0",
-    "lit-element": "^2.1.0"
+    "lit-element": "^2.1.0",
+    "event-target-shim": "^5.0.1"
   },
   "scripts": {
     "clean": "rm dist/*",
