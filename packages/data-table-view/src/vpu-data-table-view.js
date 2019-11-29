@@ -96,7 +96,7 @@ class DataTableView extends LitElement {
             searching: this.searching,
             columns: this.columns,
             columnDefs: this.columnDefs,
-            dom: (this.exportable ? 'B' : '') + 'frtip',
+            dom: (this.exportable ? '<"export-btn"B>' : '') + 'lfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -150,6 +150,9 @@ class DataTableView extends LitElement {
                 color: var(--vpu-muted-text);
                 border-radius: var(--vpu-border-radius);
                 background: transparent;
+            }
+            .export-btn {
+                margin-bottom: .6rem;
             }
         `;
     }
