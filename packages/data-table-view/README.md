@@ -17,6 +17,10 @@
     - example `<vpu-data-table-view searching></vpu-data-table-view>`
 - `columns.count` (optional, default: 1): add placeholder columns before first table setup
     - example `<vpu-data-table-view column-count="7"></vpu-data-table-view>`
+- `exportable` (optional): set to display export buttons
+    - example `<vpu-data-table-view exportable></pu-data-table-view>`
+- `export-name` (optional, default: 'Data Export'): add name for download file (without extension)
+    - example `<vpu-data-table-view exportable export-name="All Items"></pu-data-table-view>`
 
 # Local development
 ```bash

@@ -28,11 +28,14 @@
   },
   "dependencies": {
     "@webcomponents/webcomponentsjs": "^2.2.10",
-    "datatables.net-dt": "^1.10.19",
+    "datatables.net-buttons": "^1.6.1",
+    "datatables.net-buttons-dt": "^1.6.1",
+    "datatables.net-dt": "^1.10.20",
     "datatables.net-responsive": "^2.2.3",
     "datatables.net-responsive-dt": "^2.2.3",
     "i18next": "^17.0.3",
     "jquery": "^3.4.1",
+    "jszip": "^3.2.2",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.1"
   },

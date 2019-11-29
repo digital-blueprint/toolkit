@@ -2,6 +2,11 @@ import $ from 'jquery';
 import dt from 'datatables.net';
 import resp from 'datatables.net-responsive';
 import resp2 from 'datatables.net-responsive-dt';
+import jszip from 'jszip/dist/jszip.js';
+import bttn from 'datatables.net-buttons-dt';
+import bttn2 from 'datatables.net-buttons';
+import bttnHtml5 from 'datatables.net-buttons/js/buttons.html5.js';
+import bttnPrint from 'datatables.net-buttons/js/buttons.print.js';
 import {i18n} from './i18n';
 import {css, html, LitElement} from 'lit-element';
 import de from '../assets/datatables/i18n/German';
@@ -13,6 +18,10 @@ import * as commonStyles from 'vpu-common/styles';
 dt(window, $);
 resp(window, $);
 resp2(window, $);
+bttn(window, $);
+bttn2(window, $);
+bttnHtml5(window, $, jszip);
+bttnPrint(window, $);
 
 class DataTableView extends LitElement {
     constructor() {
@@ -28,6 +37,8 @@ class DataTableView extends LitElement {
         this.data = [];
         this.cc = 1;
         this.cssStyle = '';
+        this.exportable = false;
+        this.exportName = 'Data Export';
     }
 
     setCSSStyle(style) {
@@ -45,6 +56,8 @@ class DataTableView extends LitElement {
             data: { type: Array, attribute: false },
             cc: {type: Number, attribute: 'columns-count'},
             cssStyle: { type: String, attribute: false },
+            exportable: { type: Boolean },
+            exportName: { type: String, attribute: 'export-name' }
         };
     }
 
@@ -83,6 +96,24 @@ class DataTableView extends LitElement {
             searching: this.searching,
             columns: this.columns,
             columnDefs: this.columnDefs,
+            dom: (this.exportable ? 'B' : '') + 'frtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'CSV',
+                    title: this.exportName,
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: 'XSLX',
+                    title: this.exportName,
+                },
+                {
+                    extend: 'print',
+                    text: 'Drucken',
+                    title: this.exportName,
+                },
+            ]
         });
 
         try {
@@ -127,10 +158,12 @@ class DataTableView extends LitElement {
         commonUtils.initAssetBaseURL('vpu-data-table-view-src');
         let dt_css = commonUtils.getAssetURL('local/vpu-data-table-view/css/jquery.dataTables.min.css');
         let rs_css = commonUtils.getAssetURL('local/vpu-data-table-view/css/responsive.dataTables.css');
+        let bt_css = commonUtils.getAssetURL('local/vpu-data-table-view/css/button.dataTables.css');
 
         return html`
             <link rel="stylesheet" href="${dt_css}">
             <link rel="stylesheet" href="${rs_css}">
+            <link rel="stylesheet" href="${bt_css}">
             <style>
                 ${this.cssStyle}
             </style>

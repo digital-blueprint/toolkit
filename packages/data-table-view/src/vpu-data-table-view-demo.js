@@ -160,9 +160,9 @@ class DataTableViewDemo extends LitElement {
                 </div>
                 ${this.getAuthComponentHtml()}
                 <div class="content">
-                    <h4>DataTable: with data, paging and searching</h4>
+                    <h4>DataTable: with data, paging and searching AND exportable</h4>
                      <div class="box">
-                        <vpu-data-table-view lang="${this.lang}" paging searching id="vdtv1"></vpu-data-table-view>
+                        <vpu-data-table-view lang="${this.lang}" paging searching exportable export-name="Demo Export" id="vdtv1"></vpu-data-table-view>
                     </div>
                     <h4>DataTable: no data, no paging, no searching</h4>
                     <div class="box">

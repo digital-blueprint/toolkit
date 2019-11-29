@@ -33,7 +33,7 @@ export default {
         if (warning.code === 'CIRCULAR_DEPENDENCY') {
             return;
           }
-        throw new Error(warning);
+        //throw new Error(warning);
     },
     watch: {
         chokidar: true,
@@ -76,6 +76,7 @@ export default {
                 {src: 'node_modules/datatables.net-dt/css', dest: 'dist/local/vpu-data-table-view'},
                 {src: 'node_modules/datatables.net-dt/images', dest: 'dist/local/vpu-data-table-view'},
                 {src: 'node_modules/datatables.net-responsive-dt/css', dest: 'dist/local/vpu-data-table-view'},
+                {src: 'node_modules/datatables.net-buttons-dt/css', dest: 'dist/local/vpu-data-table-view'},
             ],
         }),
 
