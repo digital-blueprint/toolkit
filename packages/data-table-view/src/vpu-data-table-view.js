@@ -102,11 +102,13 @@ class DataTableView extends LitElement {
                     extend: 'csvHtml5',
                     text: 'CSV',
                     title: this.exportName,
+                    filename: this.exportName,
                 },
                 {
                     extend: 'excelHtml5',
                     text: 'XSLX',
                     title: this.exportName,
+                    filename: this.exportName,
                 },
                 {
                     extend: 'print',
