@@ -82,7 +82,7 @@ class VPUAuth extends VPULitElement {
                 newPerson = true;
             }
             this.personId = personId;
-            this._setLoginStatus(LoginStatus.LOGGED_IN);
+            this._setLoginStatus(LoginStatus.LOGGED_IN, true);
         } else {
             this.name = "";
             this.token = "";
