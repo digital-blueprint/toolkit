@@ -14,15 +14,6 @@ switch(environment) {
         };
 
         break;
-    case "production":
-        config = {
-            apiBaseUrl: 'https://mw.tugraz.at',
-            apiUrlPrefix: '',
-            keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
-            keyCloakRealm: 'tugraz',
-            keyCloakClientId: 'auth-prod-mw-frontend',
-        };
-        break;
     case "demo":
         config = {
             apiBaseUrl: 'https://api-demo.tugraz.at',
