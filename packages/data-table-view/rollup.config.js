@@ -32,8 +32,12 @@ export default {
         // ignore chai warnings
         if (warning.code === 'CIRCULAR_DEPENDENCY') {
             return;
-          }
-        //throw new Error(warning);
+        }
+        // keycloak bundled code uses eval
+        if (warning.code === 'EVAL') {
+            return;
+        }
+        warn(warning);
     },
     watch: {
         chokidar: true,
