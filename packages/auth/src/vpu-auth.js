@@ -73,6 +73,7 @@ class VPUAuth extends VPULitElement {
         let newPerson = false;
 
         if (kc.authenticated) {
+            let tokenChanged = (this.token !== kc.token);
             this.name = kc.idTokenParsed.name;
             this.token = kc.token;
             this.subject = kc.subject;
@@ -82,7 +83,7 @@ class VPUAuth extends VPULitElement {
                 newPerson = true;
             }
             this.personId = personId;
-            this._setLoginStatus(LoginStatus.LOGGED_IN, true);
+            this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged);
         } else {
             this.name = "";
             this.token = "";
