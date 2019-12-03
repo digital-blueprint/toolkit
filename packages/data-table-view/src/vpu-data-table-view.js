@@ -32,10 +32,9 @@ class DataTableView extends LitElement {
         this.responsive = null;
         this.paging = false;
         this.searching = false;
-        this.columns = [{title: 'uninitialized'}];
+        this.columns = [];
         this.columnDefs = [];
         this.data = [];
-        this.cc = 1;
         this.cssStyle = '';
         this.exportable = false;
         this.exportName = 'Data Export';
@@ -54,7 +53,6 @@ class DataTableView extends LitElement {
             columns: { type: Array, attribute: false },
             columnDefs: { type: Array, attribute: false },
             data: { type: Array, attribute: false },
-            cc: {type: Number, attribute: 'columns-count'},
             cssStyle: { type: String, attribute: false },
             exportable: { type: Boolean },
             exportName: { type: String, attribute: 'export-name' }
@@ -82,10 +80,10 @@ class DataTableView extends LitElement {
     set_datatable(data) {
         const lang_obj = this.lang === 'de' ? de : en;
 
-        if (this.cc > this.columns.length) {
-            for (let i = this.columns.length; i < this.cc; ++i) {
-                this.columns.push({title: ''});
-            }
+        if (!this.columns.length) {
+            if (data.length)
+                throw new Error('columns not set-up');
+            return;
         }
 
         this.table = $(this.shadowRoot.querySelector('table')).DataTable({
@@ -125,9 +123,9 @@ class DataTableView extends LitElement {
         } catch (e) {
             // XXX: it throws, but it still works
         }
-        if (data) {
-            this.data = data;
-        }
+
+        this.data = data;
+
         this.table.clear().rows.add(this.data).draw();
     }
 
@@ -139,7 +137,8 @@ class DataTableView extends LitElement {
         });
 
         super.update(changedProperties);
-        this.updateComplete.then(this.set_datatable()).catch(e => { console.log(e)});
+
+        this.updateComplete.then(this.set_datatable(this.data)).catch(e => { console.log(e)});
     }
 
     static get styles() {

@@ -163,12 +163,12 @@ class DataTableViewDemo extends LitElement {
                     <h4>DataTable: with data, paging and searching AND exportable</h4>
                      <div class="box">
                         <vpu-data-table-view paging searching exportable export-name="Demo Export"
-                                             lang="${this.lang}" id="vdtv1" columns-count="5"></vpu-data-table-view>
+                                             lang="${this.lang}" id="vdtv1"></vpu-data-table-view>
                     </div>
                     <h4>DataTable: no data, no paging, no searching</h4>
                     <div class="box">
                     <button @click="${this.vdtv2_add_rows}">noch etwas...</button>
-                        <vpu-data-table-view lang="${this.lang}" id="vdtv2" columns-count="5">></vpu-data-table-view>
+                        <vpu-data-table-view lang="${this.lang}" id="vdtv2">></vpu-data-table-view>
                     </div>
                 </div>
                 <div class="content">
