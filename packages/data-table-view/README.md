@@ -15,8 +15,6 @@
     - example `<vpu-data-table-view paging></vpu-data-table-view>`
 - `searching` (optional, required if a search box is desired)
     - example `<vpu-data-table-view searching></vpu-data-table-view>`
-- `columns.count` (optional, default: 1): add placeholder columns before first table setup
-    - example `<vpu-data-table-view column-count="7"></vpu-data-table-view>`
 - `exportable` (optional): set to display export buttons
     - example `<vpu-data-table-view exportable></pu-data-table-view>`
 - `export-name` (optional, default: 'Data Export'): add name for download file (without extension)
