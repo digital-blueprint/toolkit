@@ -88,7 +88,7 @@ class DataTableView extends LitElement {
 
         this.table = $(this.shadowRoot.querySelector('table')).DataTable({
             destroy: true,
-            autoWidth: false,
+            autoWidth: true,
             language: lang_obj,
             paging: this.paging,
             searching: this.searching,
@@ -116,17 +116,14 @@ class DataTableView extends LitElement {
             ]
         });
 
-        try {
-            new $.fn.dataTable.Responsive(this.table, {
-                details: true
-            });
-        } catch (e) {
-            // XXX: it throws, but it still works
-        }
 
         this.data = data;
 
         this.table.clear().rows.add(this.data).draw();
+
+        new $.fn.dataTable.Responsive(this.table, {
+            details: true
+        });
     }
 
     update(changedProperties) {
@@ -152,8 +149,13 @@ class DataTableView extends LitElement {
                 border-radius: var(--vpu-border-radius);
                 background: transparent;
             }
+
             .export-btn {
                 margin-bottom: .6rem;
+            }
+
+            :host {
+                display: block;
             }
         `;
     }
@@ -171,7 +173,7 @@ class DataTableView extends LitElement {
             <style>
                 ${this.cssStyle}
             </style>
-            <div><table></table></div>
+            <div><table width="100%"></table></div>
         `;
     }
 }
