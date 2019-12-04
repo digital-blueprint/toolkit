@@ -340,7 +340,7 @@ export function getNotificationCSS() {
 export function getButtonCSS() {
     // language=css
     return css`
-        .button {
+        button.button, .button, button.dt-button {
             border-color: black;
             border-width: 1px;
             border-radius: var(--vpu-border-radius);
@@ -355,47 +355,59 @@ export function getButtonCSS() {
             white-space: nowrap;
             font-size: inherit;
             font-family: inherit;
-            background-color: transparent;
             transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
+            background: none;
         }
 
-        .button:hover {
+        button.button:hover, .button:hover, button.dt-button:hover, button.dt-button:hover:not(.disabled) {
             color: white;
+            background: none;
             background-color: black;
         }
 
-        .button.is-small {
+        button.button.is-small, ..button.is-small {
             border-radius: calc(var(--vpu-border-radius) / 2);
             font-size: .75rem;
         }
 
-        .button.is-primary {
+        button.button.is-primary, ..button.is-primary {
             background-color: var(--vpu-primary-bg-color);
             color: var(--vpu-primary-text-color);
         }
 
-        .button.is-info {
+        button.button.is-info, ..button.is-info {
             background-color: var(--vpu-info-bg-color);
             color: var(--vpu-info-text-color);
         }
 
-        .button.is-success {
+        button.button.is-success, ..button.is-success {
             background-color: var(--vpu-success-bg-color);
             color: var(--vpu-success-text-color);
         }
 
-        .button.is-warning {
+        button.button.is-warning, ..button.is-warning {
             background-color: var(--vpu-warning-bg-color);
             color: var(--vpu-warning-text-color);
         }
 
-        .button.is-danger {
+        .button.button.is-danger, .button.is-danger {
             background-color: var(--vpu-danger-bg-color);
             color: var(--vpu-danger-text-color);
         }
 
-        .button[disabled], fieldset[disabled] .button {
+        button.button[disabled], ..button[disabled], fieldset[disabled] .button {
             opacity: .5;
+        }
+
+        select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            background: right/25% no-repeat url("local/vpu-common/icons/chevron-down.svg");
+            border-color: black;
+            border-width: 1px;
+            border-radius: var(--vpu-border-radius);
+            color: black;
+            padding: 0.14rem;
         }
     `;
 }
