@@ -101,17 +101,20 @@ class DataTableView extends LitElement {
                     text: 'CSV',
                     title: this.exportName,
                     filename: this.exportName,
+                    className: 'button is-small',
                 },
                 {
                     extend: 'excelHtml5',
                     text: 'XSLX',
                     title: this.exportName,
                     filename: this.exportName,
+                    className: 'button is-small',
                 },
                 {
                     extend: 'print',
-                    text: 'Drucken',
+                    //text: 'Drucken',
                     title: this.exportName,
+                    className: 'button is-small',
                 },
             ]
         });
@@ -143,6 +146,7 @@ class DataTableView extends LitElement {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
+            ${commonStyles.getButtonCSS()}
 
             .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
                 color: var(--vpu-muted-text);

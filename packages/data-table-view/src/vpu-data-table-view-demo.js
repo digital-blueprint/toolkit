@@ -82,7 +82,7 @@ class DataTableViewDemo extends LitElement {
             Math.floor(1000 * Math.random()),
             '' + day + '.' + month + '.' + year,
             '' + year + '-' + month + '-' + day,
-            '<button onclick="alert(\'' + str + ' clicked\');">OK</button>'
+            '<button class=\'button is-small\' onclick="alert(\'' + str + ' clicked\');">OK</button>'
         ];
     }
 
@@ -108,6 +108,7 @@ class DataTableViewDemo extends LitElement {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
+            ${commonStyles.getButtonCSS()}
         `;
     }
 
@@ -167,7 +168,7 @@ class DataTableViewDemo extends LitElement {
                     </div>
                     <h4>DataTable: no data, no paging, no searching</h4>
                     <div class="box">
-                    <button @click="${this.vdtv2_add_rows}">noch etwas...</button>
+                    <button class="button is-small" @click="${this.vdtv2_add_rows}">noch etwas...</button>
                         <vpu-data-table-view lang="${this.lang}" id="vdtv2">></vpu-data-table-view>
                     </div>
                 </div>
