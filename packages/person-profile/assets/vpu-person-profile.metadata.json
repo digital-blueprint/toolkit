@@ -1,6 +1,7 @@
 {
   "element": "vpu-person-profile",
   "module_src": "vpu-person-profile.js",
+  "routing_name": "person-profile",
   "name": {
     "de": "Benutzerprofil",
     "en": "User profile"
