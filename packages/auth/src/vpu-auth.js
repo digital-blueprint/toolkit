@@ -85,6 +85,9 @@ class VPUAuth extends VPULitElement {
             this.personId = personId;
             this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged);
         } else {
+            if (this._loginStatus === LoginStatus.LOGGED_IN) {
+                this._setLoginStatus(LoginStatus.LOGGING_OUT);
+            }
             this.name = "";
             this.token = "";
             this.subject = "";
@@ -217,7 +220,11 @@ class VPUAuth extends VPULitElement {
     }
 
     onLogoutClicked(e) {
-        this._setLoginStatus(LoginStatus.LOGGING_OUT);
+        // Keycloak will redirect right away without emitting events, so we have
+        // to do this manually here
+        if (this._loginStatus === LoginStatus.LOGGED_IN) {
+            this._setLoginStatus(LoginStatus.LOGGING_OUT);
+        }
         this._kcwrapper.logout();
     }
 
