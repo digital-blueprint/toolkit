@@ -365,27 +365,27 @@ export function getButtonCSS() {
             background-color: black;
         }
 
-        button.button.is-small, ..button.is-small {
+        button.button.is-small, .button.is-small {
             border-radius: calc(var(--vpu-border-radius) / 2);
             font-size: .75rem;
         }
 
-        button.button.is-primary, ..button.is-primary {
+        button.button.is-primary, .button.is-primary {
             background-color: var(--vpu-primary-bg-color);
             color: var(--vpu-primary-text-color);
         }
 
-        button.button.is-info, ..button.is-info {
+        button.button.is-info, .button.is-info {
             background-color: var(--vpu-info-bg-color);
             color: var(--vpu-info-text-color);
         }
 
-        button.button.is-success, ..button.is-success {
+        button.button.is-success, .button.is-success {
             background-color: var(--vpu-success-bg-color);
             color: var(--vpu-success-text-color);
         }
 
-        button.button.is-warning, ..button.is-warning {
+        button.button.is-warning, .button.is-warning {
             background-color: var(--vpu-warning-bg-color);
             color: var(--vpu-warning-text-color);
         }
@@ -395,7 +395,7 @@ export function getButtonCSS() {
             color: var(--vpu-danger-text-color);
         }
 
-        button.button[disabled], ..button[disabled], fieldset[disabled] .button {
+        button.button[disabled], .button[disabled], fieldset[disabled] .button {
             opacity: .5;
         }
 
