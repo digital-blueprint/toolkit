@@ -353,13 +353,17 @@ class VPUAuth extends VPULitElement {
         `;
     }
 
+    setChevron(name) {
+        const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
+        if (chevron !== null) {
+            chevron.name = name;
+        }
+    }
+
     onDropdownClick(event) {
         event.stopPropagation();
         event.currentTarget.classList.toggle('is-active');
-        const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
-        if (chevron !== null) {
-            chevron.name = event.currentTarget.classList.contains('is-active') ? 'chevron-up' : 'chevron-down';
-        }
+        this.setChevron(event.currentTarget.classList.contains('is-active') ? 'chevron-up' : 'chevron-down');
         this.updateDropdownWidth();
     }
 
@@ -368,6 +372,7 @@ class VPUAuth extends VPULitElement {
         dropdowns.forEach(function (el) {
             el.classList.remove('is-active');
         });
+        this.setChevron('chevron-down');
     }
 
     onProfileClicked(event) {
@@ -385,7 +390,7 @@ class VPUAuth extends VPULitElement {
                     <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu2" role="menu">
-                    <div class="dropdown-content">
+                    <div class="dropdown-content" @blur="${this.closeDropdown}">
                         ${imageURL ? html`<img alt="" src="${imageURL}" class="dropdown-item">` : ''}
                         <div class="menu">
                             ${this.showProfile ? html`<a href="#" @click="${this.onProfileClicked}" class="dropdown-item">${i18n.t('profile')}</a>` :''}
