@@ -7,8 +7,9 @@ import {i18n} from "./i18n";
  * @param jqXHR
  * @param textStatus
  * @param errorThrown
+ * @param icon
  */
-export const handleXhrError = (jqXHR, textStatus, errorThrown) => {
+export const handleXhrError = (jqXHR, textStatus, errorThrown, icon = "sad") => {
     if (textStatus !== "abort") {
         // try to show hydra error text
         let body = jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined ?
@@ -22,6 +23,7 @@ export const handleXhrError = (jqXHR, textStatus, errorThrown) => {
         notify({
             "summary": i18n.t('error.summary'),
             "body": body,
+            "icon": icon,
             "type": "danger",
         });
     }
@@ -32,8 +34,9 @@ export const handleXhrError = (jqXHR, textStatus, errorThrown) => {
  *
  * @param error
  * @param summary
+ * @param icon
  */
-export const handleFetchError = async (error, summary = "") => {
+export const handleFetchError = async (error, summary = "", icon = "sad") => {
     // return if user aborted the request
     if (error.name === "AbortError") {
         return;
@@ -57,6 +60,7 @@ export const handleFetchError = async (error, summary = "") => {
     notify({
         "summary": summary === "" ? i18n.t('error.summary') : summary,
         "body": body,
+        "icon": icon,
         "type": "danger",
     });
 };

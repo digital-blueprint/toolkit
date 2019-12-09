@@ -298,6 +298,11 @@ export function getNotificationCSS() {
             background: transparent;
         }
 
+        .notification vpu-icon {
+            font-size: 1.4em;
+            margin-right: 0.4em;
+        }
+
         .notification > .delete {
             position: absolute;
             right: 0.5rem;
