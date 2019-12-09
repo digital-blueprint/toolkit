@@ -119,6 +119,17 @@ class DataTableView extends LitElement {
             ]
         });
 
+        const dataTableLength = sessionStorage.getItem('vpu-data-table-length');
+
+        //Retrieve page length from session storage
+        if (dataTableLength !== null) {
+            this.table.page.len(dataTableLength);
+        }
+
+        //Save page length in session storage
+        this.table.on('length.dt', function ( e, settings, len ) {
+            sessionStorage.setItem('vpu-data-table-length', len);
+        });
 
         this.data = data;
 
