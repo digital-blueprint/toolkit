@@ -402,12 +402,13 @@ export function getButtonCSS() {
         select {
             -moz-appearance: none;
             -webkit-appearance: none;
-            background: right/25% no-repeat url("local/vpu-common/icons/chevron-down.svg");
+            background: calc(100% - 0.2rem) center no-repeat url("/local/vpu-common/icons/chevron-down.svg");
+            background-size: 25%;
             border-color: black;
             border-width: 1px;
             border-radius: var(--vpu-border-radius);
             color: black;
-            padding: 0.14rem;
+            padding: 0.14rem 1.0rem 0.14rem 0.14rem;
         }
     `;
 }
