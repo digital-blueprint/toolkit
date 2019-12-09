@@ -52,7 +52,6 @@ export default {
         copy({
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
-                {src: 'assets/vpu-person-profile.metadata.json', dest: 'dist'},
                 {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
             ],
         }),
