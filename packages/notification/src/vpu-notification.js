@@ -43,13 +43,15 @@ class VPUNotification extends VPULitElement {
             const body = typeof e.detail.body !== 'undefined' ? e.detail.body : "";
             const summary = typeof e.detail.summary !== 'undefined' ? e.detail.summary : "";
             const timeout = typeof e.detail.timeout !== 'undefined' ? e.detail.timeout : 0;
+            const icon = typeof e.detail.icon !== 'undefined' ? e.detail.icon : '';
+            const iconHTML = icon !== '' ? `<vpu-icon name="${icon}"></vpu-icon>` : "";
             const summaryHTML = summary !== "" ? `<h3>${summary}</h3>` : "";
 
             that.notificationBlock.innerHTML = `
                 <div id="${notificationId}" class="notification is-${type}">
                     <button id="${notificationId}-button" onclick="parentNode.parentNode.removeChild(parentNode)" class="delete"></button>
                     ${summaryHTML}
-                    ${body}
+                    ${iconHTML} ${body}
                 </div>
             ` + that.notificationBlock.innerHTML;
 
