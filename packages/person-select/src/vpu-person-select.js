@@ -79,7 +79,7 @@ class PersonSelect extends VPULitElementJQuery {
         });
     }
 
-    initJSONLD() {
+    initJSONLD(ignorePreset = false) {
         const that = this;
 
         JSONLD.initialize(this.entryPointUrl, function (jsonld) {
@@ -88,7 +88,7 @@ class PersonSelect extends VPULitElementJQuery {
 
             // we need to poll because maybe the user interface isn't loaded yet
             // Note: we need to call initSelect2() in a different function so we can access "this" inside initSelect2()
-            commonUtils.pollFunc(() => { return that.initSelect2(); }, 10000, 100);
+            commonUtils.pollFunc(() => { return that.initSelect2(ignorePreset); }, 10000, 100);
         }, {}, this.lang);
     }
 
@@ -264,7 +264,8 @@ class PersonSelect extends VPULitElementJQuery {
                     this.ignoreValueUpdate = false;
                     break;
                 case "entryPointUrl":
-                    this.initJSONLD();
+                    // we don't need to preset the selector if the entry point url changes
+                    this.initJSONLD(true);
                     break;
             }
         });
