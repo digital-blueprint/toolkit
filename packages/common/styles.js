@@ -118,7 +118,7 @@ export function getGeneralCSS() {
             box-sizing: inherit;
         }
 
-        select {
+        select:not(.select) {
             -moz-appearance: none;
             -webkit-appearance: none;
             background: calc(100% - 0.2rem) center no-repeat url("/local/vpu-common/icons/chevron-down.svg");
