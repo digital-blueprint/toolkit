@@ -169,6 +169,12 @@ class DataTableView extends LitElement {
                 margin-bottom: .6rem;
             }
 
+            select {
+                border-radius: calc(var(--vpu-border-radius)/2);
+                height: 28px;
+                margin-left: 3px;
+            }
+
             :host {
                 display: block;
             }
