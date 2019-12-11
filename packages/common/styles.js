@@ -117,6 +117,20 @@ export function getGeneralCSS() {
         *, ::after, ::before {
             box-sizing: inherit;
         }
+
+        select {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            background: calc(100% - 0.2rem) center no-repeat url("/local/vpu-common/icons/chevron-down.svg");
+            background-size: 25%;
+            border-color: black;
+            border-width: 1px;
+            border-radius: var(--vpu-border-radius);
+            color: black;
+            padding: 0.14rem 1.0rem 0.14rem 0.14rem;
+            height: 28px;
+            margin-left: 3px;
+        }
     `;
 }
 
@@ -402,18 +416,6 @@ export function getButtonCSS() {
 
         button.button[disabled], .button[disabled], fieldset[disabled] .button {
             opacity: .5;
-        }
-
-        select {
-            -moz-appearance: none;
-            -webkit-appearance: none;
-            background: calc(100% - 0.2rem) center no-repeat url("/local/vpu-common/icons/chevron-down.svg");
-            background-size: 25%;
-            border-color: black;
-            border-width: 1px;
-            border-radius: var(--vpu-border-radius);
-            color: black;
-            padding: 0.14rem 1.0rem 0.14rem 0.14rem;
         }
     `;
 }
