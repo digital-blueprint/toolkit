@@ -100,7 +100,7 @@ class Icon extends LitElement {
                 height: 100%;
             }
 
-            svg path, svg circle {
+            svg * {
                 fill: currentColor;
             }
         `;

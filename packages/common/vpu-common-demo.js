@@ -118,6 +118,7 @@ class VpuCommonDemo extends VPULitElement {
                         <p style="font-size: 2em;">Foo <vpu-icon name="cloudnetwork"></vpu-icon> bar</p>
                         <p style="font-size: 2em; color: orange">Foo <vpu-icon name="cloudnetwork"></vpu-icon> bar</p>
                         <span style="background-color: #000"><a href="#" style=" color: #fff">foobar</a></span>
+                        <p style="font-size: 2em; color: orange">Foo <vpu-icon name="information"></vpu-icon> bar</p>
                         <br>
 
                         ${(new Array(100).fill(0)).map(i => html`<vpu-icon style="color: green; width: 50px; height: 50px; border: #000 solid 1px"name="happy"></vpu-icon>`)}
