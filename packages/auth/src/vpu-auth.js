@@ -44,6 +44,7 @@ class VPUAuth extends VPULitElement {
         this.personId = "";
         this.tryLogin = false;
         this.person = null;
+        this.entryPointUrl = commonUtils.getAPiUrl();
 
         const _getLoginData = () => {
             const message = {
@@ -109,7 +110,7 @@ class VPUAuth extends VPULitElement {
         }
 
         if (newPerson && this.loadPerson) {
-            JSONLD.initialize(commonUtils.getAPiUrl(), (jsonld) => {
+            JSONLD.initialize(this.entryPointUrl, (jsonld) => {
                 // find the correct api url for the current person
                 // we are fetching the logged-in person directly to respect the REST philosophy
                 // see: https://github.com/api-platform/api-platform/issues/337
@@ -153,6 +154,7 @@ class VPUAuth extends VPULitElement {
             clientId: { type: String, attribute: 'client-id' },
             silentCheckSsoUri: { type: String, attribute: 'silent-check-sso-uri' },
             showProfile: { type: Boolean, attribute: 'show-profile' },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
             name: { type: String, attribute: false },
             token: { type: String, attribute: false },
             subject: { type: String, attribute: false },
