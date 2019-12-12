@@ -23,6 +23,15 @@ switch(environment) {
             keyCloakClientId: 'auth-dev-mw-frontend',
         };
         break;
+    case "production":
+        config = {
+            apiBaseUrl: 'https://api.tugraz.at',
+            apiUrlPrefix: '',
+            keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
+            keyCloakRealm: 'tugraz',
+            keyCloakClientId: 'auth-dev-mw-frontend',
+        };
+        break;
     case "local":
     default:
         config = {
