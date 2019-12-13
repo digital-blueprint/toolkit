@@ -624,3 +624,26 @@ export function getDocumentationCSS() {
         }
     `;
 }
+
+export function getSelect2CSS() {
+    // language=css
+    return css`
+        .select2-dropdown {
+            border-radius: var(--vpu-border-radius);
+        }
+
+        .select2-container--default .select2-selection--single {
+            border-radius: var(--vpu-border-radius);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: inherit;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            font-size: 1.5em;
+            font-weight: 300;
+            /* color: red; */
+        }
+    `;
+}
