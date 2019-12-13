@@ -237,7 +237,7 @@ class PersonSelect extends VPULitElementJQuery {
         let text = person["name"];
 
         // add birth date to name if present
-        if (this.showBirthDate && (person["birthDate"] !== undefined) && (person["birthDate"] !== "")) {
+        if (this.showBirthDate && (person["birthDate"] !== undefined) && (person["birthDate"] !== null)) {
             const date = new Date(person["birthDate"]);
             text += ` (${date.toLocaleDateString("de-AT")})`;
         }
