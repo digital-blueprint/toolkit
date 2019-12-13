@@ -298,21 +298,10 @@ class PersonSelect extends VPULitElementJQuery {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getFormAddonsCSS()}
+            ${commonStyles.getSelect2CSS()}
 
             .select2-control.control {
                 width: 100%;
-            }
-
-            .select2-dropdown {
-                border-radius: var(--vpu-border-radius);
-            }
-
-            .select2-container--default .select2-selection--single {
-                border-radius: var(--vpu-border-radius);
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                color: inherit;
             }
 
             .field .button.control {
