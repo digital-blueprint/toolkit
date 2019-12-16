@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
     chromium-browser \
     firefox \
     composer \
+    php-zip \
     rsync \
     sudo \
     && rm -rf /var/lib/apt/lists/*
