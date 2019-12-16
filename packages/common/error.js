@@ -10,23 +10,35 @@ import {i18n} from "./i18n";
  * @param icon
  */
 export const handleXhrError = (jqXHR, textStatus, errorThrown, icon = "sad") => {
-    if (textStatus !== "abort") {
-        // try to show hydra error text
-        let body = jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined ?
-            jqXHR.responseJSON["hydra:description"] : textStatus;
-
-        // if the server is not reachable at all
-        if (jqXHR.status === 0) {
-            body = i18n.t('error.connection-to-server-refused');
-        }
-
-        notify({
-            "summary": i18n.t('error.summary'),
-            "body": body,
-            "icon": icon,
-            "type": "danger",
-        });
+    // return if user aborted the request
+    if (textStatus === "abort") {
+        return;
     }
+
+    let body;
+
+    if (jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined) {
+        // response is a JSON-LD
+        body = jqXHR.responseJSON["hydra:description"];
+    } else if (jqXHR.responseJSON !== undefined && jqXHR.responseJSON['detail'] !== undefined) {
+        // response is a plain JSON
+        body = jqXHR.responseJSON['detail'];
+    } else {
+        // no description available
+        body = textStatus;
+    }
+
+    // if the server is not reachable at all
+    if (jqXHR.status === 0) {
+        body = i18n.t('error.connection-to-server-refused');
+    }
+
+    notify({
+        "summary": i18n.t('error.summary'),
+        "body": body,
+        "icon": icon,
+        "type": "danger",
+    });
 };
 
 /**
@@ -46,7 +58,16 @@ export const handleFetchError = async (error, summary = "", icon = "sad") => {
 
     try {
         await error.json().then((json) => {
-            body = json["hydra:description"] !== undefined ? json["hydra:description"] : error.statusText;
+            if (json["hydra:description"] !== undefined) {
+                // response is a JSON-LD
+                body = json["hydra:description"];
+            } else if(json['detail'] !== undefined) {
+                // response is a plain JSON
+                body = json['detail'];
+            } else {
+                // no description available
+                body = error.statusText;
+            }
         }).catch(() => {
             body = error.statusText !== undefined ? error.statusText : error;
         });
