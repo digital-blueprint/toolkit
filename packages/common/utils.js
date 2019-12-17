@@ -220,6 +220,8 @@ export const getAssetURL = (path) => {
     // We already found the path before, just go with it
     if (_assetBaseURL) {
         return new URL(path, _assetBaseURL).href;
+    } else {
+        console.error('Using getAssetURL(), but initAssetBaseURL() wasn\'t called yet');
     }
 
     // If all fails we just fall back to relative paths and hope the
