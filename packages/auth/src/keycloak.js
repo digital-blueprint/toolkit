@@ -1,5 +1,21 @@
 import {EventTarget} from "event-target-shim";  // Because EventTarget() doesn't exist on Safari
 
+
+const promiseTimeout = function(ms, promise) {
+    let timeout = new Promise((resolve, reject) => {
+      let id = setTimeout(() => {
+        clearTimeout(id);
+        reject('Timed out in '+ ms + 'ms.');
+      }, ms);
+    });
+
+    return Promise.race([
+      promise,
+      timeout
+    ]);
+};
+
+
 /**
  * Wraps the keycloak API to support async/await, adds auto token refreshing and consolidates all
  * events into one native "changed" event
@@ -83,9 +99,16 @@ export class KeycloakWrapper extends EventTarget {
         if (this._silentCheckSsoUri) {
             options['onLoad'] = 'check-sso';
             options['silentCheckSsoRedirectUri'] = this._silentCheckSsoUri;
-        }
 
-        await this._keycloak.init(options);
+            // When silent-sso-check is active but the iframe doesn't load/work we will
+            // never return here, so add a timeout and emit a signal so the app can continue
+            await promiseTimeout(5000, this._keycloak.init(options)).catch(() => {
+                console.log('Login timed out');
+                this._onChanged();
+            });
+        } else {
+            await this._keycloak.init(options);
+        }
     }
 
     /**
