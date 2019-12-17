@@ -128,6 +128,7 @@ export function getGeneralCSS() {
             border-radius: var(--vpu-border-radius);
             color: black;
             padding: 0.14rem 1.0rem 0.14rem 0.14rem;
+            border-style: solid;
         }
     `;
 }
