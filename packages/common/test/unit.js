@@ -37,8 +37,7 @@ suite('utils', () => {
 
     test('getAssetURL', () => {
         utils.initAssetBaseURL();
-        assert(utils.getAssetURL("foo/bar") === "foo/bar");
-        assert(utils.getAssetURL("foo/bar") === "foo/bar");
+        assert.equal(new URL(utils.getAssetURL("foo/bar")).pathname, "/foo/bar");
     });
 
     test('getThemeCSS', () => {

@@ -203,6 +203,10 @@ export const initAssetBaseURL = (id) => {
     if (document.currentScript && document.currentScript.src) {
         _assetBaseURL = document.currentScript.src;
     }
+
+    // XXX: Can't be parsed in (old) edge, but makes everything so much easier...
+    if (!_assetBaseURL)
+        _assetBaseURL = new URL('..', import.meta.url).href;
 };
 
 /**
