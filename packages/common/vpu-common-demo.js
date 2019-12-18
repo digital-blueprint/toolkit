@@ -1,14 +1,13 @@
 import {i18n} from './i18n.js';
-import {css, html, unsafeCSS} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
 import './vpu-mini-spinner.js';
 import './vpu-spinner.js';
 import {getIconCSS} from './vpu-icon.js';
 import './vpu-button.js';
-import VPULitElement from './vpu-lit-element.js';
 
-class VpuCommonDemo extends VPULitElement {
+class VpuCommonDemo extends LitElement {
     constructor() {
         super();
         this.lang = 'de';
@@ -80,7 +79,7 @@ class VpuCommonDemo extends VPULitElement {
 
     buttonClickHandler() {
         setTimeout(() => {
-            this._("vpu-button").stop();
+            this.shadowRoot.querySelector("vpu-button").stop();
         }, 1000);
     }
 
