@@ -4,9 +4,8 @@ import select2 from 'select2';
 import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
 import JSONLD from 'vpu-common/jsonld';
-import {css, html} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import {i18n} from './i18n.js';
-import VPULitElementJQuery from 'vpu-common/vpu-lit-element-jquery';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
@@ -15,7 +14,7 @@ import * as errorUtils from "vpu-common/error";
 
 select2(window, $);
 
-class PersonSelect extends VPULitElementJQuery {
+class PersonSelect extends LitElement {
 
     constructor() {
         super();
@@ -34,6 +33,10 @@ class PersonSelect extends VPULitElementJQuery {
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
         this.showBirthDate = false;
+    }
+
+    $(selector) {
+        return $(this.shadowRoot.querySelector(selector));
     }
 
     static get properties() {
