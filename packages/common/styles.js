@@ -1,4 +1,5 @@
-import {css} from 'lit-element';
+import {css, unsafeCSS} from 'lit-element';
+import {getIconSVGURL} from './vpu-icon.js';
 
 /**
  * We want to have "neutral" colors here
@@ -121,7 +122,7 @@ export function getGeneralCSS() {
         select:not(.select) {
             -moz-appearance: none;
             -webkit-appearance: none;
-            background: calc(100% - 0.2rem) center no-repeat url("/local/vpu-common/icons/chevron-down.svg");
+            background: calc(100% - 0.2rem) center no-repeat url("${unsafeCSS(getIconSVGURL('chevron-down'))}");
             background-size: 25%;
             border-color: black;
             border-width: 1px;

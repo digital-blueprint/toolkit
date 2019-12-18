@@ -17,7 +17,7 @@ const errorIcon = `
 </svg>
 `;
 
-function getIconSVGURL(name) {
+export function getIconSVGURL(name) {
     return commonUtils.getAssetURL('local/vpu-common/icons/' + encodeURI(name) + '.svg');
 }
 
