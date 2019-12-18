@@ -51,7 +51,6 @@ class VPUAuth extends VPULitElement {
                 status: this._loginStatus,
                 token: this.token,
             };
-            console.log('Login status: ' + this._loginStatus);
             return message;
         };
 
@@ -84,6 +83,13 @@ class VPUAuth extends VPULitElement {
                 newPerson = true;
             }
             this.personId = personId;
+
+            window.VPUAuthSubject = this.subject;
+            window.VPUAuthToken = this.token;
+            window.VPUUserFullName = this.name;
+            window.VPUPersonId = this.personId;
+            window.VPUPerson = this.person;
+
             this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged);
         } else {
             if (this._loginStatus === LoginStatus.LOGGED_IN) {
@@ -94,14 +100,15 @@ class VPUAuth extends VPULitElement {
             this.subject = "";
             this.personId = "";
             this.person = null;
+
+            window.VPUAuthSubject = this.subject;
+            window.VPUAuthToken = this.token;
+            window.VPUUserFullName = this.name;
+            window.VPUPersonId = this.personId;
+            window.VPUPerson = this.person;
+
             this._setLoginStatus(LoginStatus.LOGGED_OUT);
         }
-
-        window.VPUAuthSubject = this.subject;
-        window.VPUAuthToken = this.token;
-        window.VPUUserFullName = this.name;
-        window.VPUPersonId = this.personId;
-        window.VPUPerson = this.person;
 
         const that = this;
 
@@ -127,6 +134,7 @@ class VPUAuth extends VPULitElement {
                     that.person = person;
                     window.VPUPerson = person;
                     that.dispatchEvent(that.personInitEvent);
+                    this._setLoginStatus(this._loginStatus, true);
                 });
             }, {}, that.lang);
         }
