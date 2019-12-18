@@ -1,7 +1,6 @@
 import {html, LitElement, css} from 'lit-element';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
-import VPULitElement from './vpu-lit-element.js';
 
 /**
  * vpu-button implements a button with Bulma styles and automatic spinner and
@@ -12,7 +11,7 @@ import VPULitElement from './vpu-lit-element.js';
  *
  * Type can be is-primary/is-info/is-success/is-warning/is-danger
  */
-class Button extends VPULitElement {
+class Button extends LitElement {
     constructor() {
         super();
         this.value = "";
@@ -20,16 +19,10 @@ class Button extends VPULitElement {
         this.spinner = false;
         this.noSpinnerOnClick = false;
         this.disabled = false;
-        this.button = null;
     }
 
     connectedCallback() {
         super.connectedCallback();
-        const that = this;
-
-        this.updateComplete.then(()=> {
-            this.button = this._("button");
-        });
     }
 
     static get properties() {
@@ -38,7 +31,7 @@ class Button extends VPULitElement {
             type: { type: String },
             spinner: { type: Boolean },
             noSpinnerOnClick: { type: Boolean, attribute: 'no-spinner-on-click' },
-            disabled: { type: Boolean },
+            disabled: { type: Boolean, reflect: true },
         };
     }
 
@@ -55,17 +48,15 @@ class Button extends VPULitElement {
     start() {
         this.spinner = true;
         this.disabled = true;
-        this.setAttribute("disabled", "disabled");
     }
 
     stop() {
         this.spinner = false;
         this.disabled = false;
-        this.removeAttribute("disabled");
     }
 
     isDisabled() {
-        return this.button.hasAttribute("disabled");
+        return this.disabled
     }
 
     static get styles() {
