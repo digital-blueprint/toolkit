@@ -37,7 +37,6 @@ class VPUAuth extends VPULitElement {
         this.forceLogin = false;
         this.loadPerson = false;
         this.showProfile = false;
-        this.clientId = "";
         this.token = "";
         this.subject = "";
         this.name = "";
@@ -45,6 +44,7 @@ class VPUAuth extends VPULitElement {
         this.tryLogin = false;
         this.person = null;
         this.entryPointUrl = commonUtils.getAPiUrl();
+        this.keycloakConfig = null;
 
         const _getLoginData = () => {
             const message = {
@@ -159,10 +159,9 @@ class VPUAuth extends VPULitElement {
             forceLogin: { type: Boolean, attribute: 'force-login' },
             tryLogin: { type: Boolean, attribute: 'try-login' },
             loadPerson: { type: Boolean, attribute: 'load-person' },
-            clientId: { type: String, attribute: 'client-id' },
-            silentCheckSsoUri: { type: String, attribute: 'silent-check-sso-uri' },
             showProfile: { type: Boolean, attribute: 'show-profile' },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            keycloakConfig: { type: Object, attribute: 'keycloak-config' },
             name: { type: String, attribute: false },
             token: { type: String, attribute: false },
             subject: { type: String, attribute: false },
@@ -175,9 +174,22 @@ class VPUAuth extends VPULitElement {
     connectedCallback() {
         super.connectedCallback();
 
-        const baseURL = commonUtils.setting('keyCloakBaseURL');
-        const realm = commonUtils.setting('keyCloakRealm');
-        this._kcwrapper = new KeycloakWrapper(baseURL, realm, this.clientId, this.silentCheckSsoUri);
+        // Keycloak config
+        let baseURL = commonUtils.setting('keyCloakBaseURL');
+        let realm = commonUtils.setting('keyCloakRealm');
+        let clientId = commonUtils.setting('keyCloakClientId');
+        let silentCheckSsoRedirectUri = '';
+        if (this.keycloakConfig !== null) {
+            baseURL = this.keycloakConfig.url || baseURL;
+            realm = this.keycloakConfig.realm || realm;
+            clientId = this.keycloakConfig.clientId || clientId;
+            silentCheckSsoRedirectUri = this.keycloakConfig.silentCheckSsoRedirectUri || silentCheckSsoRedirectUri;
+        }
+        if (!baseURL || !realm || !clientId) {
+            throw Error("Keycloak config not set");
+        }
+
+        this._kcwrapper = new KeycloakWrapper(baseURL, realm, clientId, silentCheckSsoRedirectUri);
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 
         const handleLogin = async () => {

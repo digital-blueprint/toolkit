@@ -5,23 +5,23 @@
 ## Usage
 
 ```html
-<vpu-auth client-id="my-client-id"></vpu-auth>
+<vpu-auth></vpu-auth>
 ```
 
 ## Attributes
 
-- `client-id` (mandatory): set the client id that you have setup on your Keycloak server
-    - example `<vpu-auth client-id="my-client-id"></vpu-auth>`
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-auth lang="de" client-id="my-client-id"></vpu-auth>`
+    - example `<vpu-auth lang="de" </vpu-auth>`
 - `load-person` (optional, default: off): if enabled the logged in user will also be loaded as `Person`
    in the `window.VPUPerson` variable
-    - example `<vpu-auth client-id="my-client-id" load-person></vpu-auth>`
+    - example `<vpu-auth load-person></vpu-auth>`
 - `force-login` (optional, default: off): if enabled a login will be forced, there never will be a login button
-    - example `<vpu-auth client-id="my-client-id" force-login></vpu-auth>`
+    - example `<vpu-auth force-login></vpu-auth>`
 - `try-login` (optional, default: off): if enabled the a login will happen if the user is already logged in
   and finishing the login process would not result in a page location change (reload/redirect).
-    - example `<vpu-auth client-id="my-client-id" try-login></vpu-auth>`
+    - example `<vpu-auth try-login></vpu-auth>`
+- `keycloak-config`: An object which can contain the following keys: url, realm, clientId, silentCheckSsoRedirectUri
+    - example `<vpu-auth  keycloak-config='{"url": "https://auth.tugraz.at/auth", "realm": "tugraz", "clientId": "some-id", "silentCheckSsoRedirectUri": ""}'></vpu-auth>`
 
 ## Events to listen to
 
