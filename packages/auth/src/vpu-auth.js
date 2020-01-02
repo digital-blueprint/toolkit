@@ -195,7 +195,7 @@ class VPUAuth extends VPULitElement {
         const handleLogin = async () => {
             if (this.forceLogin || this._kcwrapper.isLoggingIn()) {
                 this._setLoginStatus(LoginStatus.LOGGING_IN);
-                await this._kcwrapper.login();
+                await this._kcwrapper.login({lang: this.lang});
             } else if (this.tryLogin) {
                 this._setLoginStatus(LoginStatus.LOGGING_IN);
                 await this._kcwrapper.tryLogin();
@@ -238,7 +238,7 @@ class VPUAuth extends VPULitElement {
     }
 
     onLoginClicked(e) {
-        this._kcwrapper.login();
+        this._kcwrapper.login({lang: this.lang});
         e.preventDefault();
     }
 
