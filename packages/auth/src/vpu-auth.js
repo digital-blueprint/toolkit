@@ -438,6 +438,7 @@ class VPUAuth extends VPULitElement {
            y="0px"
            x="0px"
            id="icon"
+           role="img"
            version="1.1">
         <g
            id="g6">
