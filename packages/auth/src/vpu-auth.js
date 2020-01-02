@@ -239,6 +239,7 @@ class VPUAuth extends VPULitElement {
 
     onLoginClicked(e) {
         this._kcwrapper.login();
+        e.preventDefault();
     }
 
     onLogoutClicked(e) {
@@ -267,6 +268,12 @@ class VPUAuth extends VPULitElement {
 
             :host {
                 display: inline-block;
+            }
+
+            a {
+                color: currentColor;
+                cursor: pointer;
+                text-decoration: none;
             }
 
             .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
@@ -446,10 +453,12 @@ class VPUAuth extends VPULitElement {
         `;
 
         return html`
-            <div class="loginbox" @click="${this.onLoginClicked}">
-                <div class="icon">${unsafeHTML(loginSVG)}</div>
-                <div class="label">${i18n.t('login')}</div>
-            </div>
+            <a href="#" @click="${this.onLoginClicked}">
+                <div class="loginbox">
+                    <div class="icon">${unsafeHTML(loginSVG)}</div>
+                    <div class="label">${i18n.t('login')}</div>
+                </div>
+            </a>
         `;
     }
 
