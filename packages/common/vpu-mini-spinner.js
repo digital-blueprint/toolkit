@@ -5,10 +5,21 @@ import * as commonUtils from './utils.js';
 class MiniSpinner extends LitElement {
     constructor() {
         super();
+        this.text = "";
+    }
+
+    static get properties() {
+        return {
+            text: { type: String },
+        };
     }
 
     static get styles() {
+        // language=css
         return css`
+        .outer {
+            display: flex;
+        }
         .ring {
           display: inline-block;
           position: relative;
@@ -42,11 +53,18 @@ class MiniSpinner extends LitElement {
           100% {
             transform: rotate(360deg);
           }
+        }
+        .text {
+            display: inline-block;
+            margin-left: 0.5em;
+            font-size: 0.7em;
         }`;
     } 
 
     render() {
-        return html`<div class="ring"><div></div><div></div><div></div><div></div></div>`;
+        const textHtml = this.text !== "" ? html`<div class="text">${this.text}</div>` : html``;
+
+        return html`<div class="outer"><div class="ring"><div></div><div></div><div></div><div></div></div>${textHtml}</div>`;
     }
 }
 

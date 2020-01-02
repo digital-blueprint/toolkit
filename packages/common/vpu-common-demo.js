@@ -99,6 +99,7 @@ class VpuCommonDemo extends LitElement {
                 <div class="content">
                     <h2>Mini Spinner</h2>
                     <div class="control">
+                        <vpu-mini-spinner text="Loading..."></vpu-mini-spinner>
                         <vpu-mini-spinner></vpu-mini-spinner>
                         <vpu-mini-spinner style="font-size: 2em"></vpu-mini-spinner>
                         <vpu-mini-spinner style="font-size: 3em"></vpu-mini-spinner>
