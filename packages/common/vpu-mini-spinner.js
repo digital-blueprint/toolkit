@@ -18,6 +18,9 @@ class MiniSpinner extends LitElement {
         // language=css
         return css`
         .outer {
+            display: inline-block;
+        }
+        .inner {
             display: flex;
         }
         .ring {
@@ -64,7 +67,7 @@ class MiniSpinner extends LitElement {
     render() {
         const textHtml = this.text !== "" ? html`<div class="text">${this.text}</div>` : html``;
 
-        return html`<div class="outer"><div class="ring"><div></div><div></div><div></div><div></div></div>${textHtml}</div>`;
+        return html`<div class="outer"><div class="inner"><div class="ring"><div></div><div></div><div></div><div></div></div>${textHtml}</div></div>`;
     }
 }
 
