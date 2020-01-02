@@ -1,4 +1,5 @@
 import {EventTarget} from "event-target-shim";  // Because EventTarget() doesn't exist on Safari
+import Keycloak from "keycloak-js";
 
 
 const promiseTimeout = function(ms, promise) {
@@ -71,8 +72,6 @@ export class KeycloakWrapper extends EventTarget {
     async _ensureInstance() {
         if (this._keycloak !== null)
             return;
-
-        const Keycloak = await import('keycloak-js').then((mod) => { return mod.default; });
 
         this._keycloak = Keycloak({
             url: this._baseURL,
