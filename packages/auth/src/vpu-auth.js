@@ -289,6 +289,7 @@ class VPUAuth extends VPULitElement {
                 border: solid 1px black;
                 border-radius: var(--vpu-border-radius);
                 overflow: hidden;
+                background-color: white;
             }
 
             .dropdown-content {
