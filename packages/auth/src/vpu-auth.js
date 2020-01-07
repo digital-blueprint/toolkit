@@ -276,6 +276,12 @@ class VPUAuth extends VPULitElement {
                 text-decoration: none;
             }
 
+            img {
+                border-width: var(--vpu-border-width);
+                border-color: var(--vpu-dark);
+                border-style: solid;
+            }
+
             .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
                 display: block;
             }
@@ -421,7 +427,7 @@ class VPUAuth extends VPULitElement {
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                     <div class="dropdown-content" @blur="${this.closeDropdown}">
-                        ${imageURL ? html`<img alt="" src="${imageURL}" class="dropdown-item">` : ''}
+                        ${imageURL ? html`<div class="dropdown-item"><img alt="" src="${imageURL}"></div>` : ''}
                         <div class="menu">
                             ${this.showProfile ? html`<a href="#" @click="${this.onProfileClicked}" class="dropdown-item">${i18n.t('profile')}</a>` :''}
                             <a href="#" @click="${this.onLogoutClicked}" class="dropdown-item">${i18n.t('logout')}</a>
