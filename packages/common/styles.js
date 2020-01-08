@@ -27,6 +27,7 @@ export function getThemeCSS() {
             --vpu-muted-text: var(--vpu-override-muted-text, #6c757d);
             --vpu-border-radius: var(--vpu-override-border-radius, 0px);
             --vpu-border-width: var(--vpu-override-border-width, 1px);
+            --vpu-placeholder-color: #777; 
         }
     `;
 }
@@ -53,11 +54,16 @@ export function getGeneralCSS() {
         }
 
         .input, .textarea, .select select {
+            border: solid 1px #aaa;
             border-radius: var(--vpu-border-radius);
             padding-bottom: calc(.375em - 1px);
             padding-left: calc(.625em - 1px);
             padding-right: calc(.625em - 1px);
             padding-top: calc(.375em - 1px);
+        }
+
+        .input::placeholder, .textarea::placeholder, .select select::placeholder {
+            color: var(--vpu-placeholder-color);
         }
 
         input, ::placeholder, textarea, select, .select select {
@@ -360,6 +366,7 @@ export function getButtonCSS() {
     // language=css
     return css`
         button.button, .button, button.dt-button {
+            border-style: solid;
             border-color: black;
             border-width: 1px;
             border-radius: var(--vpu-border-radius);
@@ -646,6 +653,10 @@ export function getSelect2CSS() {
             font-size: 1.5em;
             font-weight: 300;
             /* color: red; */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: var(--vpu-placeholder-color);
         }
 
         /* Work around single selections not wrapping and breaking responsivness */
