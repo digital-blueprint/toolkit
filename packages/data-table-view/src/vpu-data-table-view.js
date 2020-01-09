@@ -102,6 +102,8 @@ class DataTableView extends LitElement {
                     title: this.exportName,
                     filename: this.exportName,
                     className: 'button is-small',
+                    charset: 'UTF-8',
+                    bom: true
                 },
                 {
                     extend: 'excelHtml5',
