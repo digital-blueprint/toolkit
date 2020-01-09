@@ -97,6 +97,13 @@ class DataTableView extends LitElement {
             dom: (this.exportable ? '<"export-btn"B>' : '') + 'lfrtip',
             buttons: [
                 {
+                    extend: 'excelHtml5',
+                    text: i18n.t('export-excel'),
+                    title: this.exportName,
+                    filename: this.exportName,
+                    className: 'button is-small',
+                },
+                {
                     extend: 'csvHtml5',
                     text: i18n.t('export-csv'),
                     title: this.exportName,
@@ -105,13 +112,6 @@ class DataTableView extends LitElement {
                     charset: 'UTF-8',
                     bom: true,
                     fieldSeparator: this.lang === 'en' ? ',' : ';'
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: i18n.t('export-excel'),
-                    title: this.exportName,
-                    filename: this.exportName,
-                    className: 'button is-small',
                 },
                 {
                     extend: 'print',
