@@ -94,7 +94,11 @@ export class KeycloakWrapper extends EventTarget {
             return;
         this._initDone = true;
 
-        const options = {promiseType: 'native'};
+        const options = {
+            promiseType: 'native',
+            pkceMethod: 'S256'
+        };
+
         if (this._silentCheckSsoUri) {
             options['onLoad'] = 'check-sso';
             options['silentCheckSsoRedirectUri'] = this._silentCheckSsoUri;
