@@ -98,21 +98,21 @@ class DataTableView extends LitElement {
             buttons: [
                 {
                     extend: 'csvHtml5',
-                    text: 'CSV',
+                    text: i18n.t('export-csv'),
                     title: this.exportName,
                     filename: this.exportName,
                     className: 'button is-small',
                 },
                 {
                     extend: 'excelHtml5',
-                    text: 'XSLX',
+                    text: i18n.t('export-excel'),
                     title: this.exportName,
                     filename: this.exportName,
                     className: 'button is-small',
                 },
                 {
                     extend: 'print',
-                    //text: 'Drucken',
+                    text: i18n.t('print'),
                     title: this.exportName,
                     className: 'button is-small',
                 },
