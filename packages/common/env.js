@@ -18,9 +18,9 @@ switch(environment) {
         config = {
             apiBaseUrl: 'https://api-demo.tugraz.at',
             apiUrlPrefix: '',
-            keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
+            keyCloakBaseURL: 'https://auth-test.tugraz.at/auth',
             keyCloakRealm: 'tugraz',
-            keyCloakClientId: 'auth-dev-mw-frontend',
+            keyCloakClientId: 'frontend-demo_tugraz_at-IBIB',
         };
         break;
     case "production":
