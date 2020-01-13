@@ -20,7 +20,7 @@ switch(environment) {
             apiUrlPrefix: '',
             keyCloakBaseURL: 'https://auth-test.tugraz.at/auth',
             keyCloakRealm: 'tugraz',
-            keyCloakClientId: 'frontend-demo_tugraz_at-IBIB',
+            keyCloakClientId: 'ibib-demo_tugraz_at-IBIB',
         };
         break;
     case "production":
