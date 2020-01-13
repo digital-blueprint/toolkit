@@ -422,8 +422,10 @@ class VPUAuth extends VPULitElement {
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
                 <div class="dropdown-trigger">
-                    <span>${this.name}</span>
-                    <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
+                    <a href="#">
+                        <span>${this.name}</span>
+                        <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
+                    </a>
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                     <div class="dropdown-content" @blur="${this.closeDropdown}">
