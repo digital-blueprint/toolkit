@@ -423,6 +423,7 @@ export function getButtonCSS() {
 
         button.button[disabled], .button[disabled], fieldset[disabled] .button {
             opacity: .5;
+            cursor: not-allowed;
         }
     `;
 }
