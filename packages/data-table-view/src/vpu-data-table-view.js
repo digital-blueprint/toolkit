@@ -8,10 +8,10 @@ import bttn2 from 'datatables.net-buttons';
 import bttnHtml5 from 'datatables.net-buttons/js/buttons.html5.js';
 import bttnPrint from 'datatables.net-buttons/js/buttons.print.js';
 import {i18n} from './i18n';
-import {css, html, LitElement} from 'lit-element';
+import {css, html, LitElement, unsafeCSS} from 'lit-element';
 import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
-
+import {getIconSVGURL} from 'vpu-common/vpu-icon';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 
@@ -156,11 +156,54 @@ class DataTableView extends LitElement {
     }
 
     static get styles() {
+        const orderExpandIconOverrides = css`
+            table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::before {
+                all: initial;
+                top: 0.7em;
+                left: 0.4em;
+                height: 1em;
+                width: 1em;
+                display: block;
+                cursor: pointer;
+                position: absolute;
+                box-sizing: content-box;
+                text-align: center;
+                text-indent: 0 !important;
+                line-height: 0.9em;
+                color: var(--vpu-primary-text-color);
+                background-color: var(--vpu-primary-bg-color);
+                content: '+';
+            }
+
+            table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before {
+                content: '-';
+            }
+
+            table.dataTable thead .sorting {
+                background-image: url('${unsafeCSS(getIconSVGURL('chevron-up'))}'), url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
+                background-position: 100% 40%, 100% 60%;
+                background-size: 0.5em, 0.5em;
+            }
+
+            table.dataTable thead .sorting_desc {
+                background-image: url('${unsafeCSS(getIconSVGURL('chevron-up'))}');
+                background-position: 100% 50%;
+                background-size: 0.8em;
+            }
+
+            table.dataTable thead .sorting_asc {
+                background-image: url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
+                background-size: 0.8em;
+                background-position: 100% 50%;
+            }
+        `;
+
         // language=css
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
+            ${orderExpandIconOverrides}
 
             .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
                 color: var(--vpu-muted-text);
@@ -180,6 +223,14 @@ class DataTableView extends LitElement {
 
             :host {
                 display: block;
+            }
+
+            .dataTables_filter input {
+                border-radius: 0;
+                border-style: solid;
+                border-color: var(--vpu-dark);
+                border-width: 1px;
+                padding: 0.1em;
             }
         `;
     }
