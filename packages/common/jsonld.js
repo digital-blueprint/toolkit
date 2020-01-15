@@ -216,19 +216,19 @@ export default class JSONLD {
      * Expands a member of a list to a object with schema.org properties
      *
      * @param member
+     * @param [context]
      */
-    expandMember(member) {
-        const type = member["@type"];
+    expandMember(member, context) {
+        if (context === undefined) {
+            context = member["@context"];
+        }
 
-        const entity = this.getEntityForIdentifier(type);
         let result = {"@id": member["@id"]};
-
-        entity["hydra:supportedProperty"].forEach(function (property) {
-            const id = property["hydra:property"]["@id"];
-            const title = property["hydra:title"];
-
-            result[id] = member[title];
-        });
+        for (const key of Object.keys(context)) {
+            const value = context[key];
+            if (member[key] !== undefined)
+                result[value] = member[key];
+        }
 
         return result;
     }
@@ -239,7 +239,7 @@ export default class JSONLD {
      * @param member
      * @param localContext
      */
-    static compactMember(member, localContext) {
+    compactMember(member, localContext) {
         let result = {};
 
         for (const property in localContext) {
@@ -267,11 +267,12 @@ export default class JSONLD {
             return [];
         }
 
+        const otherContext = data['@context'];
         let results = [];
         let that = this;
 
         members.forEach(function (member) {
-            results.push(JSONLD.compactMember(that.expandMember(member), localContext));
+            results.push(that.compactMember(that.expandMember(member, otherContext), localContext));
         });
 
         return results;
