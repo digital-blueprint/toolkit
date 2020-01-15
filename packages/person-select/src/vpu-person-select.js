@@ -12,6 +12,12 @@ import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from "vpu-common/error";
 
 
+const personContext = {
+    "@id": "@id",
+    "name": "http://schema.org/name",
+    "birthDate": "http://schema.org/Date"
+};
+
 select2(window, $);
 
 class PersonSelect extends LitElement {
@@ -110,12 +116,6 @@ class PersonSelect extends LitElement {
         const apiUrl = this.jsonld.getApiUrlForIdentifier("http://schema.org/Person");
         // const apiUrl = this.jsonld.getApiUrlForEntityName("Event");
 
-        // the mapping we need for Select2
-        const localContext = {
-            "id": "@id",
-            "text": "http://schema.org/name"
-        };
-
         if (this.$select === null) {
             return false;
         }
@@ -147,16 +147,11 @@ class PersonSelect extends LitElement {
                     };
                 },
                 processResults: function (data) {
-                    // console.log(data);
-                    that.lastResult = data;
-                    const members = data["hydra:member"];
-                    let results = [];
-                    members.forEach((person) => {
+                    let transformed = that.jsonld.transformMembers(data, personContext);
+                    const results = [];
+                    transformed.forEach((person) => {
                         results.push({id: person["@id"], text: that.generateOptionText(person)});
                     });
-
-                    // console.log("results");
-                    // console.log(results);
 
                     return {
                         results: results
@@ -214,8 +209,10 @@ class PersonSelect extends LitElement {
             })
             .then((person) => {
                 that.object = person;
-                const identifier = person["@id"];
-                const option = new Option(that.generateOptionText(person), identifier, true, true);
+                const transformed = that.jsonld.compactMember(that.jsonld.expandMember(person), personContext);
+                const identifier = transformed["@id"];
+
+                const option = new Option(that.generateOptionText(transformed), identifier, true, true);
                 $this.attr("data-object", JSON.stringify(person));
                 $this.data("object", person);
                 that.$select.append(option).trigger('change');
@@ -227,7 +224,8 @@ class PersonSelect extends LitElement {
                     },
                     bubbles: true
                 }));
-            }).catch(() => {
+            }).catch((e) => {
+                console.log(e);
                 that.clear();
             });
         }
