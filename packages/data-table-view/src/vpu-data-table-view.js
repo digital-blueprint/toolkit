@@ -38,6 +38,7 @@ class DataTableView extends LitElement {
         this.cssStyle = '';
         this.exportable = false;
         this.exportName = 'Data Export';
+        this.columnSearching = false;
     }
 
     setCSSStyle(style) {
@@ -55,7 +56,8 @@ class DataTableView extends LitElement {
             data: { type: Array, attribute: false },
             cssStyle: { type: String, attribute: false },
             exportable: { type: Boolean },
-            exportName: { type: String, attribute: 'export-name' }
+            exportName: { type: String, attribute: 'export-name' },
+            columnSearching: { type: Boolean, attribute: 'column-searching'},
         };
     }
 
@@ -76,14 +78,24 @@ class DataTableView extends LitElement {
         this.table.draw();
         return this;
     }
+    columnSearch(col, str) {
+        this.table.column(col).search(str).draw();
+    }
+    columnReduce(col, func, init=0) {
+        return this.table.column(col, { search: 'applied' }).data().reduce( func, init);
+    }
+    on(eventName, func) {
+        this.table.on(eventName, func);
+        return this;
+    }
 
     set_datatable(data) {
         const lang_obj = this.lang === 'de' ? de : en;
 
-        if (!this.columns.length) {
+        if (typeof this.columns === 'undefined' || !this.columns.length) {
             if (data.length)
                 throw new Error('columns not set-up');
-            return;
+            return this;
         }
 
         this.table = $(this.shadowRoot.querySelector('table')).DataTable({
@@ -136,11 +148,48 @@ class DataTableView extends LitElement {
 
         this.data = data;
 
-        this.table.clear().rows.add(this.data).draw();
+        this.table.clear();
+        if (this.data.length) { this.table.rows.add(this.data); }
+        this.table.draw();
 
         new $.fn.dataTable.Responsive(this.table, {
             details: true
         });
+
+        if (this.columnSearching) {
+            const existing_tfoot = this.shadowRoot.querySelector('table tfoot');
+            if (existing_tfoot === null || !existing_tfoot.hasChildNodes()) {
+                const thisTable = this.table;
+                const fragment = document.createDocumentFragment();
+                const tfoot = document.createElement('tfoot');
+                const tr = document.createElement('tr');
+                const that = this;
+                this.columns.forEach(function (element, index) {
+                    const th = document.createElement('th');
+                    if (element !== null
+                        && (typeof element.visible === 'undefined' || element.visible !== false)
+                        && (typeof element.searchable === 'undefined' || element.searchable !== false)) {
+                        const inp = document.createElement('input');
+                        inp.type = 'text';
+                        inp.placeholder = 'Search ' + element.title;
+                        inp.addEventListener('keyup', function () {
+                            thisTable.column(index).search(inp.value).draw();
+//                            console.log('on keyup: '+index+','+inp.value+' sum = '+that.columnReduce(index, function(a,b){return a+b;}));
+
+                        });
+                        th.appendChild(inp);
+                        console.log('inp for ' + element.title);
+                    }
+                    tr.appendChild(th);
+                    //fragment.appendChild(th);
+                });
+                tfoot.appendChild(tr);
+                fragment.appendChild(tfoot);
+                //this.shadowRoot.querySelector('tfoot').appendChild(fragment);
+                this.shadowRoot.querySelector('table').appendChild(fragment);
+            }
+        }
+        return this;
     }
 
     update(changedProperties) {

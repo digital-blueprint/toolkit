@@ -1,7 +1,7 @@
 import 'vpu-auth';
 import './vpu-data-table-view.js';
 import {i18n} from './i18n';
-import {html, css, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 
@@ -41,7 +41,8 @@ class DataTableViewDemo extends LitElement {
                 }
                 vdtv1.set_columns([{title:'Bezeichnung'}, {title:'Nummer'}, {title:'Datum'}, null, null])
                     .set_columnDefs(vdtv1_columnDefs)
-                    .set_datatable(tbl);
+                    .set_datatable(tbl)
+                    .on('draw', this.vdtv_preDraw.bind(this));
             }
 
             /*
@@ -55,7 +56,7 @@ class DataTableViewDemo extends LitElement {
                     { targets: [3, 4], searchable: false },
                     { targets: [4], sortable: false }
                 ];
-                vdtv2.set_columns([{title:'Bezeichnung'}, {title:'Nummer'}, {title:'Datum'}, null, null])
+                vdtv2.set_columns([{title:'Bezeichnung-2'}, {title:'Nummer-2'}, {title:'Datum-2'}, null, null])
                     .set_columnDefs(vdtv2_columnDefs)
                     .set_datatable([]);
             }
@@ -84,6 +85,15 @@ class DataTableViewDemo extends LitElement {
             '' + year + '-' + month + '-' + day,
             '<button class=\'button is-small\' onclick="alert(\'' + str + ' clicked\');">OK</button>'
         ];
+    }
+
+    vdtv_preDraw() {
+        const vdtv1 = this.shadowRoot.querySelector('#vdtv1');
+        const value = vdtv1.columnReduce(1, function (a, b) {
+            return a + b;
+        });
+        console.log('preDraw sum=' + value);
+        this.shadowRoot.querySelector('#id-sum').value = value;
     }
 
     vdtv2_add_rows() {
@@ -163,7 +173,9 @@ class DataTableViewDemo extends LitElement {
                 <div class="content">
                     <h4>DataTable: with data, paging and searching AND exportable</h4>
                      <div class="box">
-                        <vpu-data-table-view paging searching exportable export-name="Demo Export"
+                        <label for="id-sum">Sum of Number</label>
+                        <input type="text" readonly value="" name="sum" id="id-sum">
+                        <vpu-data-table-view paging searching exportable export-name="Demo Export" column-searching
                                              lang="${this.lang}" id="vdtv1"></vpu-data-table-view>
                     </div>
                     <h4>DataTable: no data, no paging, no searching</h4>
