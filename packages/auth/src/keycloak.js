@@ -88,6 +88,16 @@ export class KeycloakWrapper extends EventTarget {
         this._keycloak.onReady = this._onReady.bind(this);
     }
 
+    async _keycloakInit(options) {
+        // https://gitlab.tugraz.at/VPU/Apps/Library/issues/41
+        // retry the keycloak init in case it fails, maybe it helps :/
+        try {
+            return await this._keycloak.init(options);
+        } catch (e) {
+            return await this._keycloak.init(options);
+        }
+    }
+
     async _ensureInit() {
         await this._ensureInstance();
         if (this._initDone)
@@ -105,12 +115,12 @@ export class KeycloakWrapper extends EventTarget {
 
             // When silent-sso-check is active but the iframe doesn't load/work we will
             // never return here, so add a timeout and emit a signal so the app can continue
-            await promiseTimeout(5000, this._keycloak.init(options)).catch(() => {
+            await promiseTimeout(5000, this._keycloakInit(options)).catch(() => {
                 console.log('Login timed out');
                 this._onChanged();
             });
         } else {
-            await this._keycloak.init(options);
+            await this._keycloakInit(options);
         }
     }
 
