@@ -98,6 +98,31 @@ class DataTableView extends LitElement {
             return this;
         }
 
+        if (this.columnSearching) {
+            const existing_tfoot = this.shadowRoot.querySelector('table tfoot');
+            if (existing_tfoot === null || !existing_tfoot.hasChildNodes()) {
+                const fragment = document.createDocumentFragment();
+                const tfoot = document.createElement('tfoot');
+                const tr = document.createElement('tr');
+                this.columns.forEach(function (element, index) {
+                    const th = document.createElement('td');
+                    if (element !== null
+                        && (typeof element.visible === 'undefined' || element.visible !== false)
+                        && (typeof element.searchable === 'undefined' || element.searchable !== false)) {
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.id = 'input-col-' + index;
+                        input.placeholder = 'Search in ' + element.title;
+                        th.appendChild(input);
+                    }
+                    tr.appendChild(th);
+                });
+                tfoot.appendChild(tr);
+                fragment.appendChild(tfoot);
+                this.shadowRoot.querySelector('table').appendChild(fragment);
+            }
+        }
+
         this.table = $(this.shadowRoot.querySelector('table')).DataTable({
             destroy: true,
             autoWidth: true,
@@ -157,37 +182,25 @@ class DataTableView extends LitElement {
         });
 
         if (this.columnSearching) {
-            const existing_tfoot = this.shadowRoot.querySelector('table tfoot');
-            if (existing_tfoot === null || !existing_tfoot.hasChildNodes()) {
                 const thisTable = this.table;
-                const fragment = document.createDocumentFragment();
-                const tfoot = document.createElement('tfoot');
-                const tr = document.createElement('tr');
                 const that = this;
                 this.columns.forEach(function (element, index) {
-                    const th = document.createElement('th');
                     if (element !== null
                         && (typeof element.visible === 'undefined' || element.visible !== false)
                         && (typeof element.searchable === 'undefined' || element.searchable !== false)) {
-                        const inp = document.createElement('input');
-                        inp.type = 'text';
-                        inp.placeholder = 'Search ' + element.title;
-                        inp.addEventListener('keyup', function () {
-                            thisTable.column(index).search(inp.value).draw();
-//                            console.log('on keyup: '+index+','+inp.value+' sum = '+that.columnReduce(index, function(a,b){return a+b;}));
-
-                        });
-                        th.appendChild(inp);
-                        console.log('inp for ' + element.title);
+                        const input = that.shadowRoot.querySelector('#input-col-' + index);
+                        if (input) {
+                            ['keyup', 'change', 'clear'].forEach(function (event) {
+                                input.addEventListener(event, function () {
+                                    const column = thisTable.column(index);
+                                    if (column.search() !== input.value) {
+                                        column.search(input.value).draw();
+                                    }
+                                });
+                            });
+                        }
                     }
-                    tr.appendChild(th);
-                    //fragment.appendChild(th);
                 });
-                tfoot.appendChild(tr);
-                fragment.appendChild(tfoot);
-                //this.shadowRoot.querySelector('tfoot').appendChild(fragment);
-                this.shadowRoot.querySelector('table').appendChild(fragment);
-            }
         }
         return this;
     }

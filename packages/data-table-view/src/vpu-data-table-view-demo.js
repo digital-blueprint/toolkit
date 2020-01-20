@@ -42,7 +42,7 @@ class DataTableViewDemo extends LitElement {
                 vdtv1.set_columns([{title:'Bezeichnung'}, {title:'Nummer'}, {title:'Datum'}, null, null])
                     .set_columnDefs(vdtv1_columnDefs)
                     .set_datatable(tbl)
-                    .on('draw', this.vdtv_preDraw.bind(this));
+                    .on('draw', this.vdtv_draw.bind(this));
             }
 
             /*
@@ -87,12 +87,11 @@ class DataTableViewDemo extends LitElement {
         ];
     }
 
-    vdtv_preDraw() {
+    vdtv_draw() {
         const vdtv1 = this.shadowRoot.querySelector('#vdtv1');
         const value = vdtv1.columnReduce(1, function (a, b) {
-            return a + b;
+            return a * 1 + b * 1;
         });
-        console.log('preDraw sum=' + value);
         this.shadowRoot.querySelector('#id-sum').value = value;
     }
 
@@ -173,15 +172,15 @@ class DataTableViewDemo extends LitElement {
                 <div class="content">
                     <h4>DataTable: with data, paging and searching AND exportable</h4>
                      <div class="box">
-                        <label for="id-sum">Sum of Number</label>
+                        <label for="id-sum">Sum of column <b>Number</b> is</label>
                         <input type="text" readonly value="" name="sum" id="id-sum">
                         <vpu-data-table-view paging searching exportable export-name="Demo Export" column-searching
                                              lang="${this.lang}" id="vdtv1"></vpu-data-table-view>
                     </div>
                     <h4>DataTable: no data, no paging, no searching</h4>
                     <div class="box">
-                    <button class="button is-small" @click="${this.vdtv2_add_rows}">noch etwas...</button>
-                        <vpu-data-table-view lang="${this.lang}" id="vdtv2">></vpu-data-table-view>
+                        <button class="button is-small" @click="${this.vdtv2_add_rows}">add something...</button>
+                        <vpu-data-table-view lang="${this.lang}" id="vdtv2"></vpu-data-table-view>
                     </div>
                 </div>
                 <div class="content">
