@@ -1,4 +1,4 @@
-import '../src/vpu-kb-wpe-view';
+import '../src/vpu-fileupload';
 import '../src/demo';
 
 describe('vpu-fileupload basics', () => {
