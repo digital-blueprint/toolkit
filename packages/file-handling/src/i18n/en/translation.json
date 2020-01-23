@@ -3,5 +3,10 @@
   "is-forbidden": "is forbidden",
   "troubled-server": "troubled server",
   "unknown-problems": "with unknown problems",
-  "was-not-found": "was not found"
+  "was-not-found": "was not found",
+
+  "demo-title": "File Upload Demo",
+  "required-server": "You need an upload server listening at <a href=\"{{- url}}\"><tt>{{- url}}</tt></a> to receive the files...",
+  "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region",
+  "upload-label": "Select some files"
 }

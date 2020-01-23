@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <script type="module" id="vpu-fileupload-src" src="bundle.js"></script>
+    <style>
+      vpu-fileupload-demo {
+          --FUBorderWidth: 2px;
+          --FUBorderStyle: dotted;
+          --FUBorderColor: #555;
+          --FUBorderColorHighlight: #935;
+          --FUBorderRadius: 10px;
+          --FUBorder: 2px dashed red;
+          --FUMargin: 20px;
+          --FUPadding: 5px;
+          --FUWidth: 450px;
+      }
+    </style>
 </head>
-<style>
-  vpu-fileupload-demo {
-      --FUBorderRadius: 10px;
-      --FUBorder: 2px dashed red;
-      --FUMargin: 20px;
-      --FUPadding: 5px;
-  }
-</style>
 <body>
 
 <vpu-fileupload-demo lang="de" url="http://127.0.0.1:8080"></vpu-fileupload-demo>

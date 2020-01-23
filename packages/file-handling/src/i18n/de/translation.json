@@ -3,5 +3,10 @@
   "is-forbidden": "ist verboten",
   "troubled-server": "macht Probleme am Server",
   "unknown-problems": "mit unbekanntem Problem",
-  "was-not-found": "wurde nicht gefunden"
+  "was-not-found": "wurde nicht gefunden",
+
+  "demo-title": "Datei Abgabe Demo",
+  "server-required": "Es wird unter der URL <a href=\"{{- url}}\"><tt>{{- url}}</tt></a> ein Server benötigt um die Dateien zu empfangen.",
+  "intro": "Laden Sie mehrere Dateien mit dem Auswahldialog oder durch Ziehen und Fallenlassen in diesem Bereich hoch",
+  "upload-label": "Dateiauswahl"
 }
