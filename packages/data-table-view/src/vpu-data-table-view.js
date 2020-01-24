@@ -110,7 +110,8 @@ class DataTableView extends LitElement {
                         && (typeof element.visible === 'undefined' || element.visible !== false)
                         && (typeof element.searchable === 'undefined' || element.searchable !== false)) {
                         const input = document.createElement('input');
-                        input.type = 'text';
+                        input.type = 'text123';
+                        input.className = 'search-line';
                         input.id = 'input-col-' + index;
                         input.placeholder = 'Search in ' + element.title;
                         th.appendChild(input);
@@ -218,6 +219,7 @@ class DataTableView extends LitElement {
     }
 
     static get styles() {
+        // language=css
         const orderExpandIconOverrides = css`
             table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::before {
                 all: initial;
@@ -293,6 +295,10 @@ class DataTableView extends LitElement {
                 border-color: var(--vpu-dark);
                 border-width: 1px;
                 padding: 0.1em;
+            }
+
+            table.dataTable .search-line {
+                width: 100%;
             }
         `;
     }
