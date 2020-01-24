@@ -111,7 +111,7 @@ class DataTableView extends LitElement {
                         && (typeof element.searchable === 'undefined' || element.searchable !== false)) {
                         const input = document.createElement('input');
                         input.type = 'text123';
-                        input.className = 'search-line';
+                        input.className = 'column-search-line';
                         input.id = 'input-col-' + index;
                         input.placeholder = 'Search in ' + element.title;
                         th.appendChild(input);
@@ -297,7 +297,7 @@ class DataTableView extends LitElement {
                 padding: 0.1em;
             }
 
-            table.dataTable .search-line {
+            table.dataTable .column-search-line {
                 width: 100%;
             }
         `;
