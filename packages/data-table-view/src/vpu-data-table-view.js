@@ -89,7 +89,7 @@ class DataTableView extends LitElement {
         return this;
     }
 
-    set_datatable(data) {
+    set_datatable(data, languageChange = false) {
         const lang_obj = this.lang === 'de' ? de : en;
 
         if (typeof this.columns === 'undefined' || !this.columns.length) {
@@ -100,7 +100,11 @@ class DataTableView extends LitElement {
 
         if (this.columnSearching) {
             const existing_tfoot = this.shadowRoot.querySelector('table tfoot');
-            if (existing_tfoot === null || !existing_tfoot.hasChildNodes()) {
+            if (existing_tfoot === null || !existing_tfoot.hasChildNodes() || languageChange) {
+                if (existing_tfoot !== null) {
+                    existing_tfoot.remove();
+                }
+
                 const fragment = document.createDocumentFragment();
                 const tfoot = document.createElement('tfoot');
                 const tr = document.createElement('tr');
@@ -113,7 +117,7 @@ class DataTableView extends LitElement {
                         input.type = 'text';
                         input.className = 'column-search-line';
                         input.id = 'input-col-' + index;
-                        input.placeholder = 'Search in ' + element.title;
+                        input.placeholder = i18n.t('column-search-placeholder', {fieldName: element.title});
                         th.appendChild(input);
                     }
                     tr.appendChild(th);
@@ -207,15 +211,18 @@ class DataTableView extends LitElement {
     }
 
     update(changedProperties) {
+        let languageChange = false;
+
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
                 i18n.changeLanguage(this.lang).catch(e => { console.log(e)});
+                languageChange = true;
             }
         });
 
         super.update(changedProperties);
 
-        this.updateComplete.then(this.set_datatable(this.data)).catch(e => { console.log(e)});
+        this.updateComplete.then(this.set_datatable(this.data, languageChange)).catch(e => { console.log(e)});
     }
 
     static get styles() {
