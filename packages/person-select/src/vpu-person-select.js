@@ -147,6 +147,7 @@ class PersonSelect extends LitElement {
                     };
                 },
                 processResults: function (data) {
+                    that.lastResult = data;
                     let transformed = that.jsonld.transformMembers(data, personContext);
                     const results = [];
                     transformed.forEach((person) => {
@@ -163,6 +164,8 @@ class PersonSelect extends LitElement {
                 }
             }
         }).on("select2:select", function (e) {
+            console.log("select2:select");
+            debugger
             // set custom element attributes
             const identifier = e.params.data.id;
             that.object = findObjectInApiResults(identifier, that.lastResult);
