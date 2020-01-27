@@ -164,8 +164,6 @@ class PersonSelect extends LitElement {
                 }
             }
         }).on("select2:select", function (e) {
-            console.log("select2:select");
-            debugger
             // set custom element attributes
             const identifier = e.params.data.id;
             that.object = findObjectInApiResults(identifier, that.lastResult);
