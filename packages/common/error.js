@@ -39,6 +39,10 @@ export const handleXhrError = (jqXHR, textStatus, errorThrown, icon = "sad") => 
         "icon": icon,
         "type": "danger",
     });
+
+    if (_paq !== undefined) {
+        _paq.push(['trackEvent', 'XhrError', body]);
+    }
 };
 
 /**
@@ -84,4 +88,8 @@ export const handleFetchError = async (error, summary = "", icon = "sad") => {
         "icon": icon,
         "type": "danger",
     });
+
+    if (_paq !== undefined) {
+        _paq.push(['trackEvent', 'FetchError', summary === "" ? body : summary + ": " + body]);
+    }
 };
