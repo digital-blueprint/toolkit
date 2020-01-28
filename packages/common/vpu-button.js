@@ -35,10 +35,6 @@ class Button extends LitElement {
         };
     }
 
-    static get styles() {
-        return css`vpu-mini-spinner { margin-left: 0.5em; }`;
-    }
-
     clickHandler() {
         if (!this.noSpinnerOnClick) {
             this.start();
@@ -56,7 +52,7 @@ class Button extends LitElement {
     }
 
     isDisabled() {
-        return this.disabled
+        return this.disabled;
     }
 
     static get styles() {
@@ -64,6 +60,8 @@ class Button extends LitElement {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getButtonCSS()}
+
+            vpu-mini-spinner { margin-left: 0.5em; }
         `;
     }
 

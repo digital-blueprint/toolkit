@@ -258,7 +258,7 @@ export default class JSONLD {
      *
      * @param data
      * @param localContext
-     * @returns {Array}
+     * @returns {Array} An array of transformed objects
      */
     transformMembers(data, localContext) {
         const members = data['hydra:member'];
@@ -277,4 +277,4 @@ export default class JSONLD {
 
         return results;
     }
-};
+}

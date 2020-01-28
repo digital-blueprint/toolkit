@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/browser';
 import env from './env.js';
 import environment from 'consts:environment';
 
-let _isInitialized = false
+let _isInitialized = false;
 let _canReportEvent = false;
 
 /**
@@ -10,8 +10,9 @@ let _canReportEvent = false;
  * 
  * If a sentry DSN is set we will use sentry, if not we will log to the console.
  * 
- * @param {Boolean} [options.debug=false] Enable debug output
- * @param {String} [options.release] The project release
+ * @param {object} [options]
+ * @param {boolean} [options.debug=false] Enable debug output
+ * @param {string} [options.release] The project release
  */
 export function init(options) {
   let defaults = {
@@ -84,8 +85,8 @@ export function captureException(exception) {
 /**
  * Log a message, returns an internal ID
  *
- * @param {String} message The message to log
- * @param {String} [level=error] The loglevel (error, warning, info, debug)
+ * @param {string} message The message to log
+ * @param {string} [level=error] The loglevel (error, warning, info, debug)
  */
 export function captureMessage(message, level) {
   if (!_isInitialized)

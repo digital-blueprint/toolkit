@@ -7,8 +7,8 @@ import i18next from 'i18next';
  *
  * @param {i18next.i18n} i18n - The i18next instance
  * @param {Date} date - The date to format
- * @param options - Options passed to Intl.DateTimeFormat
- * @returns {string}
+ * @param {object} options - Options passed to Intl.DateTimeFormat
+ * @returns {string} The formated datetime
  */
 export function dateTimeFormat(i18n, date, options) {
     return new Intl.DateTimeFormat(i18n.languages, options).format(date);
@@ -20,9 +20,9 @@ export function dateTimeFormat(i18n, date, options) {
  * A i18next instance can be created with createInstance()
  *
  * @param {i18next.i18n} i18n - The i18next instance
- * @param {Number} number - The number to format
- * @param {Object} options - Options passed to Intl.NumberFormat
- * @returns {string}
+ * @param {number} number - The number to format
+ * @param {object} options - Options passed to Intl.NumberFormat
+ * @returns {string} The formated number
  */
 export function numberFormat(i18n, number, options) {
     return new Intl.NumberFormat(i18n.languages, options).format(number);
@@ -33,10 +33,10 @@ export function numberFormat(i18n, number, options) {
  *
  * Call changeLanguage() on the returned object to change the language.
  *
- * @param {Object} languages - Mapping from languages to translation objects
+ * @param {object} languages - Mapping from languages to translation objects
  * @param {string} lng - The default language
  * @param {string} fallback - The fallback language to use for unknown languages or untranslated keys
- * @returns {i18next.i18n}
+ * @returns {i18next.i18n} A new independent i18next instance
  */
 export function createInstance(languages, lng, fallback) {
     var options = {

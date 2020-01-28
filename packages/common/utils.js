@@ -65,12 +65,13 @@ export const parseBaseUrl = (url) => {
  */
 export const stringListToSelect2DataArray = (list) => {
     let data = [];
-    list.forEach((item) => {data.push({id: item, text: item})});
+    list.forEach((item) => {data.push({id: item, text: item});});
     return data;
 };
 
 /**
  * Does generic Base64 Encoding with support for 16-bit encoded strings
+ *
  * @see https://www.base64encoder.io/javascript/
  *
  * @param str
@@ -93,6 +94,13 @@ export const base64EncodeUnicode = (str) => {
  * Returns false in case define failed, true otherwise.
  *
  * @returns {boolean}
+ */
+
+/**
+ * 
+ * @param {string} name 
+ * @param {Function} constructor 
+ * @param {object} options 
  */
 export const defineCustomElement = (name, constructor, options) => {
     // Checks taken from https://github.com/webcomponents/webcomponentsjs/blob/master/webcomponents-loader.js
@@ -133,7 +141,7 @@ export const makeId = (length) => {
  * @param n
  * @returns {string}
  */
-export const pad10 = (n) => { return n < 10 ? '0' + n : n };
+export const pad10 = (n) => { return n < 10 ? '0' + n : n; };
 
 /**
  * Converts a date object or string to a local iso datetime with stripped seconds and timezone for the datetime-local input
