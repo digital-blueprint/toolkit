@@ -1,3 +1,4 @@
-import {EventBus} from './eventbus.js';
+import {EventBus} from './src/eventbus.js';
+import {createLinkedAbortController, createTimeoutAbortSignal} from './src/abort.js';
 
-export {EventBus};
+export {EventBus, createLinkedAbortController, createTimeoutAbortSignal};

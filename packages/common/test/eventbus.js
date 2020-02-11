@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {EventBus, createEventName, checkIndentifier} from '../eventbus.js';
+import {EventBus, createEventName, checkIndentifier} from '../src/eventbus.js';
 
 suite('helpers', () => {
     test('createEventName', () => {
