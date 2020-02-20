@@ -1,38 +1,40 @@
+import {expect} from 'chai';
+
 import '../src/vpu-auth';
 import '../src/vpu-auth-demo';
 
-describe('vpu-auth basics', () => {
+suite('vpu-auth basics', () => {
   let node;
 
-  beforeEach(async () => {
+  suiteSetup(async () => {
     node = document.createElement('vpu-auth');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  suiteTeardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
+  test('should render', () => {
       expect(node).to.have.property('shadowRoot');
   });
 });
 
-describe('vpu-auth-demo basics', () => {
+suite('vpu-auth-demo basics', () => {
   let node;
 
-  beforeEach(async () => {
+  suiteSetup(async () => {
     node = document.createElement('vpu-auth-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  suiteTeardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
+  test('should render', () => {
       expect(node).to.have.property('shadowRoot');
   });
 });

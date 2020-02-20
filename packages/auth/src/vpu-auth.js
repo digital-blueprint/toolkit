@@ -65,7 +65,7 @@ class VPUAuth extends VPULitElement {
         this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
 
         this.closeDropdown = this.closeDropdown.bind(this);
-        this._onKCChanged = this._onKCChanged.bind(this)
+        this._onKCChanged = this._onKCChanged.bind(this);
    }
 
     _onKCChanged(event) {

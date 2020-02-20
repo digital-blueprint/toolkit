@@ -8,6 +8,7 @@ import json from 'rollup-plugin-json';
 import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
+import chai from 'chai';
 
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
@@ -27,6 +28,10 @@ export default {
         if (warning.code === 'EVAL') {
             return;
         }
+        // ignore chai warnings
+        if (warning.code === 'CIRCULAR_DEPENDENCY') {
+            return;
+        }
         warn(warning);
     },
     plugins: [
@@ -43,7 +48,10 @@ export default {
           }
         }),
         commonjs({
-            include: 'node_modules/**'
+            include: 'node_modules/**',
+            namedExports: {
+                'chai': Object.keys(chai),
+            }
         }),
         json(),
         (build !== 'local' && build !== 'test') ? terser() : false,
