@@ -146,7 +146,8 @@ export class KeycloakWrapper extends EventTarget {
 
         if (!this._keycloak.authenticated) {
             await this._keycloak.login({
-                kcLocale: language,
+                kcLocale: language,  // Keycloak < 9.0
+                locale: language,
             });
         }
     }
