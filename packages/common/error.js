@@ -35,7 +35,7 @@ export const handleXhrError = (jqXHR, textStatus, errorThrown, icon = "sad") => 
 
     notify({
         "summary": i18n.t('error.summary'),
-        "body": stripHTML(body),
+        "body": escapeHTML(stripHTML(body)),
         "icon": icon,
         "type": "danger",
     });
@@ -84,7 +84,7 @@ export const handleFetchError = async (error, summary = "", icon = "sad") => {
 
     notify({
         "summary": summary === "" ? i18n.t('error.summary') : summary,
-        "body": stripHTML(body),
+        "body": escapeHTML(stripHTML(body)),
         "icon": icon,
         "type": "danger",
     });
