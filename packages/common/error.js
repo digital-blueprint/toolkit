@@ -35,7 +35,7 @@ export const handleXhrError = (jqXHR, textStatus, errorThrown, icon = "sad") => 
 
     notify({
         "summary": i18n.t('error.summary'),
-        "body": body,
+        "body": stripHTML(body),
         "icon": icon,
         "type": "danger",
     });
@@ -63,7 +63,7 @@ export const handleFetchError = async (error, summary = "", icon = "sad") => {
     try {
         await error.json().then((json) => {
             if (json["hydra:description"] !== undefined) {
-                // response is a JSON-LD
+                // response is a JSON-LD and possibly also contains HTML!
                 body = json["hydra:description"];
             } else if(json['detail'] !== undefined) {
                 // response is a plain JSON
@@ -84,7 +84,7 @@ export const handleFetchError = async (error, summary = "", icon = "sad") => {
 
     notify({
         "summary": summary === "" ? i18n.t('error.summary') : summary,
-        "body": body,
+        "body": stripHTML(body),
         "icon": icon,
         "type": "danger",
     });
@@ -92,4 +92,31 @@ export const handleFetchError = async (error, summary = "", icon = "sad") => {
     if (window._paq !== undefined) {
         window._paq.push(['trackEvent', 'FetchError', summary === "" ? body : summary + ": " + body]);
     }
+};
+
+/**
+ * Escapes html
+ *
+ * @param string
+ * @returns {string}
+ */
+export const escapeHTML = (string) => {
+    const pre = document.createElement('pre');
+    const text = document.createTextNode(string);
+    pre.appendChild(text);
+
+    return pre.innerHTML;
+};
+
+/**
+ * Strips html
+ *
+ * @param string
+ * @returns {string}
+ */
+export const stripHTML = (string) => {
+    var div = document.createElement("div");
+    div.innerHTML = string;
+
+    return div.textContent || div.innerText || "";
 };
