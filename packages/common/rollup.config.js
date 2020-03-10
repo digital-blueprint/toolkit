@@ -1,12 +1,12 @@
 import path from 'path';
 import glob from 'glob';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
-import json from 'rollup-plugin-json';
+import json from '@rollup/plugin-json';
 import chai from 'chai';
 
 const pkg = require('./package.json');
