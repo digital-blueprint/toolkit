@@ -112,6 +112,9 @@ class VPUFileUpload extends VPULitElement {
 
         fetch(url, {
             method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + window.VPUAuthToken,
+            },
             body: formData
         })
             .then((response) => {
