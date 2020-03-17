@@ -108,7 +108,7 @@ class VPUFileUpload extends VPULitElement {
         let url = this.url;
         let formData = new FormData();
 
-        formData.append('my_file', file);
+        formData.append('file', file);
 
         fetch(url, {
             method: 'POST',
