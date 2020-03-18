@@ -170,7 +170,7 @@ class VPUFileUpload extends VPULitElement {
             <div id="dropArea">
                 <form class="my-form">
                     <p>${this.text || i18n.t('intro')}</p>
-                    <input type="file" id="fileElem" multiple accept="${ifDefined(this.accept)}" name='my_file'>
+                    <input type="file" id="fileElem" multiple accept="${ifDefined(this.accept)}" name='file'>
                     <label class="button" for="fileElem">${this.buttonLabel || i18n.t('upload-label')}</label>
                 </form>
             </div>
