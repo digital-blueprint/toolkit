@@ -95,13 +95,17 @@ class VPUFileUpload extends VPULitElement {
         ([...files]).forEach(this.uploadFile.bind(this))
     }
 
-    sendFinishedEvent(status, filename) {
-        const data =  {
-            status: status,
-            filename: filename
-        };
-        const event = new CustomEvent("vpu-fileupload-finished", { "detail": data, bubbles: true, composed: true });
-        this.dispatchEvent(event);
+    sendFinishedEvent(response, file) {
+        response.json().then((json) => {
+            const data =  {
+                status: response.status,
+                filename: file.name,
+                json: json
+            };
+
+            const event = new CustomEvent("vpu-fileupload-finished", { "detail": data, bubbles: true, composed: true });
+            this.dispatchEvent(event);
+        });
     }
 
     uploadFile(file) {
@@ -120,12 +124,12 @@ class VPUFileUpload extends VPULitElement {
             .then((response) => {
                 /* Done. Inform the user */
                 console.log(`Status: ${response.status} for file ${file.name}`);
-                this.sendFinishedEvent(response.status, file.name);
+                this.sendFinishedEvent(response, file);
             })
             .catch((response) => {
                 /* Error. Inform the user */
-                console.log(`Status: ${response.status} for file ${file.name}`);
-                this.sendFinishedEvent(response.status, file.name);
+                console.log(`Error status: ${response.status} for file ${file.name}`);
+                this.sendFinishedEvent(response, file);
             })
     }
 
