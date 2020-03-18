@@ -103,6 +103,7 @@ class VPUFileUpload extends VPULitElement {
                 json: json
             };
 
+            console.log(data);
             const event = new CustomEvent("vpu-fileupload-finished", { "detail": data, bubbles: true, composed: true });
             this.dispatchEvent(event);
         });
