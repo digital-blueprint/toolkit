@@ -141,7 +141,7 @@ class VPUFileUpload extends VPULitElement {
                 border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, #ccc);
                 border-radius: var(--FUBorderRadius, 0);
                 width: var(--FUWidth, auto);
-                margin: var(--FUMargin, 10px);
+                margin: var(--FUMargin, 0px);
                 padding: var(--FUPadding, 20px);
             }
             #dropArea.highlight {
