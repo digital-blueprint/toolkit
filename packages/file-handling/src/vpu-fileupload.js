@@ -90,9 +90,17 @@ class VPUFileUpload extends VPULitElement {
         this.handleFiles(this.shadowRoot.querySelector('#fileElem').files);
     }
 
-    handleFiles(files) {
+    async asyncForEach(array, callback) {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
+    }
+
+    async handleFiles(files) {
         console.log('handleFiles: files.length = ' + files.length);
-        ([...files]).forEach(this.uploadFile.bind(this))
+
+        // we need to wait for each upload until we start the next one
+        this.asyncForEach(files, async (file) => this.uploadFile(file));
     }
 
     sendFinishedEvent(response, file) {
@@ -109,13 +117,13 @@ class VPUFileUpload extends VPULitElement {
         });
     }
 
-    uploadFile(file) {
+    async uploadFile(file) {
         let url = this.url;
         let formData = new FormData();
 
         formData.append('file', file);
 
-        fetch(url, {
+        await fetch(url, {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + window.VPUAuthToken,
