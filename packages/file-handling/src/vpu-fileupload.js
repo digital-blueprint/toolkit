@@ -49,7 +49,7 @@ class VPUFileUpload extends VPULitElement {
         super.connectedCallback();
 
         this.updateComplete.then(() => {
-            this.dropArea = this.shadowRoot.querySelector('#dropArea');
+            this.dropArea = this._('#dropArea');
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 this.dropArea.addEventListener(eventName, this.preventDefaults, false)
             });
@@ -60,8 +60,7 @@ class VPUFileUpload extends VPULitElement {
                 this.dropArea.addEventListener(eventName, this.unhighlight.bind(this), false)
             });
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
-            this.shadowRoot.querySelector('#fileElem').addEventListener('change', this.handleChange.bind(this));
-
+            this._('#fileElem').addEventListener('change', this.handleChange.bind(this));
         });
     }
 
@@ -86,8 +85,17 @@ class VPUFileUpload extends VPULitElement {
         this.handleFiles(files);
     }
 
-    handleChange(e) {
-        this.handleFiles(this.shadowRoot.querySelector('#fileElem').files);
+    async handleChange(e) {
+        let fileElem = this._('#fileElem');
+
+        if (fileElem.files.length === 0) {
+            return;
+        }
+
+        await this.handleFiles(fileElem.files);
+
+        // reset the element's value so the user can upload the same file(s) again
+        fileElem.value = '';
     }
 
     async asyncForEach(array, callback) {
@@ -100,25 +108,32 @@ class VPUFileUpload extends VPULitElement {
         console.log('handleFiles: files.length = ' + files.length);
 
         // we need to wait for each upload until we start the next one
-        this.asyncForEach(files, async (file) => this.uploadFile(file));
+        await this.asyncForEach(files, async (file) => this.uploadFile(file));
     }
 
-    sendFinishedEvent(response, file, sendFile = false) {
-        response.json().then((json) => {
-            let data =  {
-                status: response.status,
-                filename: file.name,
-                json: json
-            };
+    async sendFinishedEvent(response, file, sendFile = false) {
+        if (response === undefined) {
+            return;
+        }
 
-            if (sendFile) {
-                data.file = file;
-            }
+        let data =  {
+            filename: file.name,
+            status: response.status,
+            json: {"hydra:description": ""}
+        };
 
-            console.log(data);
-            const event = new CustomEvent("vpu-fileupload-finished", { "detail": data, bubbles: true, composed: true });
-            this.dispatchEvent(event);
-        });
+        try {
+            await response.json().then((json) => {
+                data.json = json;
+            });
+        } catch (e) {}
+
+        if (sendFile) {
+            data.file = file;
+        }
+
+        const event = new CustomEvent("vpu-fileupload-finished", { "detail": data, bubbles: true, composed: true });
+        this.dispatchEvent(event);
     }
 
     /**
@@ -141,7 +156,7 @@ class VPUFileUpload extends VPULitElement {
             .then((response) => {
                 /* Done. Inform the user */
                 console.log(`Status: ${response.status} for file ${file.name}`);
-                this.sendFinishedEvent(response, file, response.status === 503);
+                this.sendFinishedEvent(response, file, response.status !== 201);
             })
             .catch((response) => {
                 /* Error. Inform the user */
