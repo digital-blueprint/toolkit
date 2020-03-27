@@ -107,8 +107,14 @@ class VPUFileUpload extends VPULitElement {
     async handleFiles(files) {
         console.log('handleFiles: files.length = ' + files.length);
 
+        this.dispatchEvent(new CustomEvent("vpu-fileupload-all-start",
+            { "detail": {}, bubbles: true, composed: true }));
+
         // we need to wait for each upload until we start the next one
         await this.asyncForEach(files, async (file) => this.uploadFile(file));
+
+        this.dispatchEvent(new CustomEvent("vpu-fileupload-all-finished",
+            { "detail": {}, bubbles: true, composed: true }));
     }
 
     async sendFinishedEvent(response, file, sendFile = false) {
@@ -132,8 +138,17 @@ class VPUFileUpload extends VPULitElement {
             data.file = file;
         }
 
-        const event = new CustomEvent("vpu-fileupload-finished", { "detail": data, bubbles: true, composed: true });
+        const event = new CustomEvent("vpu-fileupload-file-finished", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
+    }
+
+    sendStartEvent(file) {
+        let data =  {
+            filename: file.name,
+        };
+
+        this.dispatchEvent(new CustomEvent("vpu-fileupload-file-start",
+            { "detail": data, bubbles: true, composed: true }));
     }
 
     /**
@@ -141,6 +156,7 @@ class VPUFileUpload extends VPULitElement {
      * @returns {Promise<void>}
      */
     async uploadFile(file) {
+        this.sendStartEvent(file);
         let url = this.url;
         let formData = new FormData();
 

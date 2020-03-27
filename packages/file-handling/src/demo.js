@@ -24,7 +24,7 @@ class FileUploadDemo extends LitElement {
         this.updateComplete.then(() => {
             this.shadowRoot.querySelectorAll('vpu-fileupload')
                 .forEach(element => {
-                    element.addEventListener('vpu-fileupload-finished', this.addLogEntry.bind(this));
+                    element.addEventListener('vpu-fileupload-file-finished', this.addLogEntry.bind(this));
                 });
         });
     }
