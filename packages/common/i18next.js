@@ -28,14 +28,12 @@ export function numberFormat(i18n, number, options) {
     return new Intl.NumberFormat(i18n.languages, options).format(number);
 }
 
-export function humanFileSize(bytes, si) {
+export function humanFileSize(bytes, si = false) {
     const thresh = si ? 1000 : 1024;
     if(Math.abs(bytes) < thresh) {
         return bytes + ' B';
     }
-    const units = si
-        ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
-        : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+    const units = ['kB','MB','GB','TB','PB','EB','ZB','YB'];
     let u = -1;
     do {
         bytes /= thresh;
