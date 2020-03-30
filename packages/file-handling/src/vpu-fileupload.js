@@ -123,7 +123,7 @@ class VPUFileUpload extends VPULitElement {
         }
 
         let data =  {
-            filename: file.name,
+            fileName: file.name,
             status: response.status,
             json: {"hydra:description": ""}
         };
@@ -144,7 +144,8 @@ class VPUFileUpload extends VPULitElement {
 
     sendStartEvent(file) {
         let data =  {
-            filename: file.name,
+            fileName: file.name,
+            fileSize: file.size,
         };
 
         this.dispatchEvent(new CustomEvent("vpu-fileupload-file-start",
