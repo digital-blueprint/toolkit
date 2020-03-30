@@ -19,6 +19,7 @@ class VPUFileUpload extends VPULitElement {
         this.accept = '';
         this.text = '';
         this.buttonLabel = '';
+        this.uploadInProgress = false;
     }
 
     /**
@@ -31,6 +32,7 @@ class VPUFileUpload extends VPULitElement {
             accept: { type: String },
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label'},
+            uploadInProgress: { type: Boolean, attribute: false},
         };
     }
 
@@ -70,6 +72,10 @@ class VPUFileUpload extends VPULitElement {
     }
 
     highlight(e) {
+        if (this.uploadInProgress) {
+            return;
+        }
+
         this.dropArea.classList.add('highlight')
     }
 
@@ -78,6 +84,10 @@ class VPUFileUpload extends VPULitElement {
     }
 
     handleDrop(e) {
+        if (this.uploadInProgress) {
+            return;
+        }
+
         let dt = e.dataTransfer;
         console.dir(dt);
         let files = dt.files;
@@ -157,6 +167,7 @@ class VPUFileUpload extends VPULitElement {
      * @returns {Promise<void>}
      */
     async uploadFile(file) {
+        this.uploadInProgress = true;
         this.sendStartEvent(file);
         let url = this.url;
         let formData = new FormData();
@@ -179,7 +190,9 @@ class VPUFileUpload extends VPULitElement {
                 /* Error. Inform the user */
                 console.log(`Error status: ${response.status} for file ${file.name}`);
                 this.sendFinishedEvent(response, file, true);
-            })
+            });
+
+        this.uploadInProgress = false;
     }
 
     static get styles() {
@@ -221,11 +234,11 @@ class VPUFileUpload extends VPULitElement {
     render() {
         return html`
             <div id="dropArea">
-                <form class="my-form">
+                <div class="my-form" title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
                     <p>${this.text || i18n.t('intro')}</p>
-                    <input type="file" id="fileElem" multiple accept="${ifDefined(this.accept)}" name='file'>
-                    <label class="button" for="fileElem">${this.buttonLabel || i18n.t('upload-label')}</label>
-                </form>
+                    <input ?disabled="${this.uploadInProgress}" type="file" id="fileElem" multiple accept="${ifDefined(this.accept)}" name='file'>
+                    <label class="button" for="fileElem"><vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon> ${this.buttonLabel || i18n.t('upload-label')}</label>
+                </div>
             </div>
         `;
     }
