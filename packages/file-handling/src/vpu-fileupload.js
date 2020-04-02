@@ -174,6 +174,7 @@ class VPUFileUpload extends VPULitElement {
 
         formData.append('file', file);
 
+        // I got a 60s timeout in Google Chrome and found no way to increase that
         await fetch(url, {
             method: 'POST',
             headers: {
