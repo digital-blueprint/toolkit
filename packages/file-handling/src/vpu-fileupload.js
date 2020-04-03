@@ -108,12 +108,6 @@ class VPUFileUpload extends VPULitElement {
         fileElem.value = '';
     }
 
-    async asyncForEach(array, callback) {
-        for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array);
-        }
-    }
-
     async handleFiles(files) {
         console.log('handleFiles: files.length = ' + files.length);
 
@@ -121,7 +115,7 @@ class VPUFileUpload extends VPULitElement {
             { "detail": {}, bubbles: true, composed: true }));
 
         // we need to wait for each upload until we start the next one
-        await this.asyncForEach(files, async (file) => this.uploadFile(file));
+        await commonUtils.asyncArrayForEach(files, async (file) => this.uploadFile(file));
 
         this.dispatchEvent(new CustomEvent("vpu-fileupload-all-finished",
             { "detail": {}, bubbles: true, composed: true }));
