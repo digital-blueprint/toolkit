@@ -248,7 +248,7 @@ export const getAssetURL = (path) => {
  * @param timeout
  * @param interval
  */
-export const pollFunc =  (fn, timeout, interval) => {
+export const pollFunc = (fn, timeout, interval) => {
     var startTime = (new Date()).getTime();
     interval = interval || 1000;
 
@@ -264,3 +264,49 @@ export const pollFunc =  (fn, timeout, interval) => {
         }
     })();
 };
+
+/**
+ * Doing a async foreach for non-linear integer keys
+ *
+ * @param array
+ * @param callback
+ * @returns {Promise<void>}
+ */
+export async function asyncObjectForEach(array, callback) {
+    const keys = Object.keys(array);
+
+    for (let index = 0; index < keys.length; index++) {
+        const key = keys[index];
+        await callback(array[key], key, array);
+    }
+}
+
+/**
+ * Doing a async foreach for non-linear integer keys with a copy of the array
+ *
+ * @param array
+ * @param callback
+ * @returns {Promise<void>}
+ */
+export async function asyncCopyObjectForEach(array, callback) {
+    const arrayCopy = {...array};
+    const keys = Object.keys(arrayCopy);
+
+    for (let index = 0; index < keys.length; index++) {
+        const key = keys[index];
+        await callback(arrayCopy[key], key, arrayCopy);
+    }
+}
+
+/**
+ * Doing a async foreach for linear integer keys
+ *
+ * @param array
+ * @param callback
+ * @returns {Promise<void>}
+ */
+export async function asyncArrayForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+    }
+}
