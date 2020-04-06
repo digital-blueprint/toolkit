@@ -3,6 +3,9 @@ FROM debian:buster
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
+# https://github.com/karma-runner/karma-firefox-launcher/issues/104
+ENV MOZ_FORCE_DISABLE_E10S true
+
 RUN apt-get update && apt-get install -y \
     git \
     curl \
