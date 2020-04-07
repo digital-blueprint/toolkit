@@ -35,6 +35,10 @@ export function getThemeCSS() {
 export function getGeneralCSS() {
     // language=css
     return css`
+        h2 {
+            font-weight: 300;
+        }
+
         code {
             background-color: var(--vpu-light);
             color: var(--vpu-danger-bg-color);
