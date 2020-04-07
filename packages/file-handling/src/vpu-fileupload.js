@@ -6,6 +6,7 @@ import VPULitElement from 'vpu-common/vpu-lit-element'
 import "vpu-common/vpu-mini-spinner.js";
 import * as commonUtils from "vpu-common/utils";
 import 'vpu-common/vpu-icon.js';
+import * as commonStyles from 'vpu-common/styles';
 
 /**
  * KnowledgeBaseWebPageElementView web component
@@ -193,33 +194,28 @@ class VPUFileUpload extends VPULitElement {
     static get styles() {
         // language=css
         return css`
+            ${commonStyles.getButtonCSS()}
+
             #dropArea {
-                border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, #ccc);
+                border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, solid) var(--FUBBorderColor, black);
                 border-radius: var(--FUBorderRadius, 0);
                 width: var(--FUWidth, auto);
                 margin: var(--FUMargin, 0px);
                 padding: var(--FUPadding, 20px);
             }
+
             #dropArea.highlight {
                 border-color: var(--FUBorderColorHighlight, purple);
             }
+
             p {
                 margin-top: 0;
             }
+
             .my-form {
                 margin-bottom: 10px;
             }
-            .button {
-                display: inline-block;
-                padding: 10px;
-                background: #ccc;
-                cursor: pointer;
-                border-radius: calc(var(--FUBorderRadius, 0)/2);
-                border: 1px solid #ccc;
-            }
-            .button:hover {
-                background: #ddd;
-            }
+
             #fileElem {
                 display: none;
             }
@@ -232,7 +228,7 @@ class VPUFileUpload extends VPULitElement {
                 <div class="my-form" title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
                     <p>${this.text || i18n.t('intro')}</p>
                     <input ?disabled="${this.uploadInProgress}" type="file" id="fileElem" multiple accept="${ifDefined(this.accept)}" name='file'>
-                    <label class="button" for="fileElem"><vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon> ${this.buttonLabel || i18n.t('upload-label')}</label>
+                    <label class="button is-primary" for="fileElem"><vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon> ${this.buttonLabel || i18n.t('upload-label')}</label>
                 </div>
             </div>
         `;
