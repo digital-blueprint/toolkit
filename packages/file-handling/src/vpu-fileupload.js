@@ -197,7 +197,7 @@ class VPUFileUpload extends VPULitElement {
             ${commonStyles.getButtonCSS()}
 
             #dropArea {
-                border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, solid) var(--FUBBorderColor, black);
+                border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, black);
                 border-radius: var(--FUBorderRadius, 0);
                 width: var(--FUWidth, auto);
                 margin: var(--FUMargin, 0px);
