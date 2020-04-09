@@ -1,0 +1,19 @@
+{
+  "name": {
+    "de": "Beispiel",
+    "en": "Example"
+  },
+  "short_name": {
+    "de": "Beispiel",
+    "en": "Example"
+  },
+  "description": {
+    "de": "",
+    "en": ""
+  },
+  "routing_name": "example",
+  "activities": [
+    {"path": "example.metadata.json"}
+  ],
+  "attributes": []
+}

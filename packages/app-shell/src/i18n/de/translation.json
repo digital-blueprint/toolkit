@@ -1,0 +1,12 @@
+{
+  "logo": {
+    "word1": "Wissen",
+    "word2": "Technik",
+    "word3": "Leidenschaft"
+  },
+  "privacy-policy": "Datenschutz",
+  "page-updated-needs-reload": "Die Applikation wurde aktualisiert. Bitte laden Sie die Seite neu.",
+  "activity-example": {
+    "hello-world": "Hallo Welt"
+  }
+}
