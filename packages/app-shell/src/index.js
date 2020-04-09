@@ -13,6 +13,7 @@ import * as events from 'vpu-common/events.js';
 import './build-info.js';
 import './tugraz-logo.js';
 import {send as notify} from 'vpu-notification';
+import {userProfileMeta} from './vpu-app-shell-user-profile.js';
 
 
 const i18n = createI18nInstance();
@@ -77,8 +78,8 @@ class VPUApp extends LitElement {
      * @param {string} topicURL The topic metadata URL or relative path to load things from
      */
     async fetchMetadata(topicURL) {
-        const metadata = {};
-        const routes = [];
+        let metadata = {};
+        let routes = [];
 
         const result = await (await fetch(topicURL, {
             headers: {'Content-Type': 'application/json'}
@@ -118,6 +119,13 @@ class VPUApp extends LitElement {
                 console.log(error);
             }
         }
+
+        // Inject the user profile activity
+        routes.push("user-profile");
+        metadata = Object.assign(metadata, {
+            "user-profile": userProfileMeta
+        });
+
         // this also triggers a rebuilding of the menu
         this.metadata = metadata;
         this.routes = routes;
@@ -225,7 +233,7 @@ class VPUApp extends LitElement {
 
         // listen to the vpu-auth-profile event to switch to the person profile
         window.addEventListener("vpu-auth-profile", () => {
-            this.switchComponent('person-profile');
+            this.switchComponent('user-profile');
         });
 
         this._subscriber.subscribe(this._updateAuth);
@@ -296,10 +304,20 @@ class VPUApp extends LitElement {
             return;
         }
 
-        importNotify(import(metadata.module_src)).then(() => {
+        let updateFunc = () => {
             this.updatePageTitle();
             this.subtitle = this.activeMetaDataText("short_name");
             this.description = this.activeMetaDataText("description");
+        };
+
+        // If it is empty assume the element is already registered through other means
+        if (!metadata.module_src) {
+            updateFunc();
+            return;
+        }
+
+        importNotify(import(metadata.module_src)).then(() => {
+            updateFunc();
         }).catch((e) => {
             console.error(`Error loading ${ metadata.element }`);
             throw e;
