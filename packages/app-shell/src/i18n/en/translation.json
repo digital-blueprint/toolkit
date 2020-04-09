@@ -8,5 +8,8 @@
   "page-updated-needs-reload": "The application has been updated. Please reload the page.",
   "activity-example": {
     "hello-world": "Hello World"
+  },
+  "welcome": {
+      "headline": "Welcome to the '{{appname}}' application"
   }
 }

@@ -8,8 +8,8 @@
     "en": "Example"
   },
   "description": {
-    "de": "",
-    "en": ""
+    "de": "Ich bin eine Beschreibung der Applikation",
+    "en": "I am a description of this application"
   },
   "routing_name": "example",
   "activities": [

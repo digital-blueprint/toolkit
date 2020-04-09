@@ -14,6 +14,7 @@ import './build-info.js';
 import './tugraz-logo.js';
 import {send as notify} from 'vpu-notification';
 import {userProfileMeta} from './vpu-app-shell-user-profile.js';
+import {appWelcomeMeta} from './vpu-app-shell-welcome.js';
 
 
 const i18n = createI18nInstance();
@@ -120,11 +121,14 @@ class VPUApp extends LitElement {
             }
         }
 
-        // Inject the user profile activity
+        // Inject the user profile and welcome activity
         routes.push("user-profile");
+        routes.unshift("welcome");
         metadata = Object.assign(metadata, {
-            "user-profile": userProfileMeta
+            "user-profile": userProfileMeta,
+            "welcome": appWelcomeMeta,
         });
+        customElements.get("vpu-app-shell-welcome").app = this;
 
         // this also triggers a rebuilding of the menu
         this.metadata = metadata;
