@@ -12,6 +12,7 @@ export function getThemeCSS() {
         :host {
             --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #007bff);
             --vpu-primary-text-color: var(--vpu-override-primary-text-color, #fff);
+            --vpu-primary-button-border: var(--vpu-override-primary-button-border, #007bff);
             --vpu-secondary-bg-color: var(--vpu-override-secondary-bg-color, #6c757d);
             --vpu-secondary-text-color: var(--vpu-override-secondary-text-color, #fff);
             --vpu-info-bg-color: var(--vpu-override-info-bg-color, #17a2b8);
@@ -425,6 +426,7 @@ export function getButtonCSS() {
 
         button.button.is-primary, .button.is-primary {
             background-color: var(--vpu-primary-bg-color);
+            border: var(--vpu-primary-button-border);
             color: var(--vpu-primary-text-color);
         }
 
