@@ -25,6 +25,7 @@ const LoginStatus = Object.freeze({
  * Dispatches an event `vpu-auth-init` and sets some global variables:
  *   window.VPUAuthSubject: Keycloak username
  *   window.VPUAuthToken: Keycloak token to send with your requests
+ *   window.VPUAuthTokenParsed: Keycloak token content
  *   window.VPUUserFullName: Full name of the user
  *   window.VPUPersonId: Person identifier of the user
  *   window.VPUPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
@@ -38,6 +39,7 @@ class VPUAuth extends VPULitElement {
         this.loadPerson = false;
         this.showProfile = false;
         this.token = "";
+        this.tokenParsed = null;
         this.subject = "";
         this.name = "";
         this.personId = "";
@@ -74,8 +76,10 @@ class VPUAuth extends VPULitElement {
 
         if (kc.authenticated) {
             let tokenChanged = (this.token !== kc.token);
+            this.tokenParsed = kc.tokenParsed;
             this.name = kc.idTokenParsed.name;
             this.token = kc.token;
+
             this.subject = kc.subject;
             const personId = kc.idTokenParsed.preferred_username;
             if (personId !== this.personId) {
@@ -86,6 +90,7 @@ class VPUAuth extends VPULitElement {
 
             window.VPUAuthSubject = this.subject;
             window.VPUAuthToken = this.token;
+            window.VPUAuthTokenParsed = this.tokenParsed;
             window.VPUUserFullName = this.name;
             window.VPUPersonId = this.personId;
             window.VPUPerson = this.person;
@@ -97,12 +102,14 @@ class VPUAuth extends VPULitElement {
             }
             this.name = "";
             this.token = "";
+            this.tokenParsed = null;
             this.subject = "";
             this.personId = "";
             this.person = null;
 
             window.VPUAuthSubject = this.subject;
             window.VPUAuthToken = this.token;
+            window.VPUAuthTokenParsed = this.tokenParsed;
             window.VPUUserFullName = this.name;
             window.VPUPersonId = this.personId;
             window.VPUPerson = this.person;

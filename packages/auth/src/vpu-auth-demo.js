@@ -25,6 +25,34 @@ class AuthDemo extends LitElement {
         super.update(changedProperties);
     }
 
+    async _onUserInfoClick() {
+        if (!window.VPUAuthToken) {
+            console.error("not logged in");
+            return;
+        }
+        let userInfoURL = commonUtils.setting('keyCloakBaseURL') + '/realms/tugraz/protocol/openid-connect/userinfo';
+
+        // NOTE: the URL and realm need to match the keycloak config above
+        const response = await fetch(
+            userInfoURL, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + window.VPUAuthToken
+                }
+            }
+        );
+        console.log(await response.json());
+    }
+
+    async _onShowToken() {
+        if (!window.VPUAuthToken) {
+            console.error("not logged in");
+            return;
+        }
+
+        console.log(window.VPUAuthTokenParsed);
+    }
+
     render() {
         commonUtils.initAssetBaseURL('vpu-auth-src');
         const silentCheckSsoUri = commonUtils.getAssetURL('silent-check-sso.html');
@@ -53,6 +81,9 @@ class AuthDemo extends LitElement {
                     <vpu-auth lang="${this.lang}" keycloak-config='{"silentCheckSsoRedirectUri": "${silentCheckSsoUri}"}' load-person try-login></vpu-auth>
                 </div>
             </section>
+
+            <input type="button" value="Fetch userinfo (see console)" @click="${this._onUserInfoClick}">
+            <input type="button" value="Show token (see console)" @click="${this._onShowToken}">
         `;
     }
 }
