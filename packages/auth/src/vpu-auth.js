@@ -178,6 +178,13 @@ class VPUAuth extends VPULitElement {
         };
     }
 
+    _getScope() {
+        if (this.keycloakConfig !== null) {
+            return this.keycloakConfig.scope || "";
+        }
+        return "";
+    }
+
     connectedCallback() {
         super.connectedCallback();
 
@@ -202,7 +209,7 @@ class VPUAuth extends VPULitElement {
         const handleLogin = async () => {
             if (this.forceLogin || this._kcwrapper.isLoggingIn()) {
                 this._setLoginStatus(LoginStatus.LOGGING_IN);
-                await this._kcwrapper.login({lang: this.lang});
+                await this._kcwrapper.login({lang: this.lang, scope: this._getScope()});
             } else if (this.tryLogin) {
                 this._setLoginStatus(LoginStatus.LOGGING_IN);
                 await this._kcwrapper.tryLogin();
@@ -245,7 +252,7 @@ class VPUAuth extends VPULitElement {
     }
 
     onLoginClicked(e) {
-        this._kcwrapper.login({lang: this.lang});
+        this._kcwrapper.login({lang: this.lang, scope: this._getScope()});
         e.preventDefault();
     }
 

@@ -78,7 +78,7 @@ class AuthDemo extends LitElement {
                     <h1 class="title">Auth-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-auth lang="${this.lang}" keycloak-config='{"silentCheckSsoRedirectUri": "${silentCheckSsoUri}"}' load-person try-login></vpu-auth>
+                    <vpu-auth lang="${this.lang}" keycloak-config='{"silentCheckSsoRedirectUri": "${silentCheckSsoUri}", "scope": "optional-test-scope"}' load-person try-login></vpu-auth>
                 </div>
             </section>
 

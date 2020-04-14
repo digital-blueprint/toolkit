@@ -143,11 +143,13 @@ export class KeycloakWrapper extends EventTarget {
 
         options = options || {};
         const language = options['lang'] || 'en';
+        const scope = options['scope'] || '';
 
         if (!this._keycloak.authenticated) {
             await this._keycloak.login({
                 kcLocale: language,  // Keycloak < 9.0
                 locale: language,
+                scope: scope,
             });
         }
     }
