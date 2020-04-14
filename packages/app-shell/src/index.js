@@ -601,7 +601,7 @@ class VPUApp extends LitElement {
 
         const elm = document.createElement(activity.element);
 
-        for(const key of this.topic.attributes) {
+        for(const key of this.topic.attributes || []) {
             let value = sessionStorage.getItem('vpu-attr-' + key);
             if (value !== null) {
                 elm.setAttribute(key, value);
