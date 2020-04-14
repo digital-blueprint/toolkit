@@ -1,11 +1,11 @@
+import glob from 'glob';
 import path from 'path';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import {terser} from "rollup-plugin-terser";
-import json from 'rollup-plugin-json';
+import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import multiEntry from 'rollup-plugin-multi-entry';
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 
@@ -13,7 +13,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? ['src/vpu-language-select.js', 'src/vpu-language-select-demo.js'] : 'test/**/*.js',
+    input: (build != 'test') ? ['src/vpu-language-select.js', 'src/vpu-language-select-demo.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
@@ -25,7 +25,6 @@ export default {
         del({
             targets: 'dist/*'
         }),
-        (build == 'test') ? multiEntry() : false,
         consts({
             environment: build,
         }),
