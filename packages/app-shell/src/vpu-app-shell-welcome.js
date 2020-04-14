@@ -59,7 +59,7 @@ class AppShellWelcome extends LitElement {
                     </div>`);
             }
         }
-        console.log(app.topic.name);
+
         return html`
             <p>${i18n.t('welcome.headline', {appname: app.topic.name[this.lang]})}</p>
             <p>${app.topic.description[this.lang]}</p>
