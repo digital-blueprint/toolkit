@@ -1,11 +1,11 @@
+import glob from 'glob';
 import path from 'path';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import {terser} from "rollup-plugin-terser";
-import json from 'rollup-plugin-json';
+import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import multiEntry from 'rollup-plugin-multi-entry';
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 
@@ -13,16 +13,18 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build !== 'test') ? 'src/demo.js' : 'test/**/*.js',
+    input: (build !== 'test') ? 'src/demo.js' : glob.sync('test/**/*.js'),
     output: {
-        file: 'dist/bundle.js',
-        format: 'esm'
+        dir: 'dist',
+        entryFileNames: '[name].js',
+        chunkFileNames: 'shared/[name].[hash].[format].js',
+        format: 'esm',
+        sourcemap: true
     },
     plugins: [
         del({
             targets: 'dist/*'
         }),
-        multiEntry(),
         consts({
             environment: build,
         }),
