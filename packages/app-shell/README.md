@@ -8,7 +8,7 @@ activities. Handles login, language selection, activity switching, menus etc.
 ## Usage
 
 ```html
-<vpu-app src="/example.topic.metadata.json"></vpu-app>
+<vpu-app-shell src="/example.topic.metadata.json"></vpu-app-shell>
 ```
 
 ## Attributes

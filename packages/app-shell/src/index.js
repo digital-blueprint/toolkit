@@ -717,4 +717,4 @@ class VPUApp extends LitElement {
     }
 }
 
-commonUtils.defineCustomElement('vpu-app', VPUApp);
+commonUtils.defineCustomElement('vpu-app-shell', VPUApp);
