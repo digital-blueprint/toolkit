@@ -53,7 +53,7 @@ class VPUApp extends LitElement {
         this.routes = [];
         this.metadata = {};
         this.topic = {};
-        this.basePath = '';
+        this.basePath = '/';
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
