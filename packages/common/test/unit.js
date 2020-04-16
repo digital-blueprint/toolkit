@@ -27,6 +27,15 @@ suite('utils', () => {
         expect(node.foo).to.equal(42);
     });
 
+    test('defineCustomElement multiple times', () => {
+        class SomeElement2 extends HTMLElement {
+        }
+        let res = utils.defineCustomElement("test-some-element-2", SomeElement2);
+        assert.isTrue(res);
+        res = utils.defineCustomElement("test-some-element-2", SomeElement2);
+        assert.isTrue(res);
+    });
+
     test('getAPiUrl', () => {
         assert(utils.getAPiUrl().startsWith("http"));
     });

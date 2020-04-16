@@ -103,6 +103,10 @@ export const base64EncodeUnicode = (str) => {
  * @param {object} options 
  */
 export const defineCustomElement = (name, constructor, options) => {
+    // In case the constructor is already defined just do nothing
+    if (customElements.get(name) === constructor) {
+        return true;
+    }
     // Checks taken from https://github.com/webcomponents/webcomponentsjs/blob/master/webcomponents-loader.js
     if (!('attachShadow' in Element.prototype && 'getRootNode' in Element.prototype && window.customElements)) {
         var elements = document.getElementsByTagName(name);
