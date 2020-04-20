@@ -1,1 +1,3 @@
-import './vpu-fileupload';
+import {FileUpload} from './fileupload';
+
+export {FileUpload};

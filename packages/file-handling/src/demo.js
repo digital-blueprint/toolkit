@@ -1,14 +1,21 @@
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import './vpu-fileupload';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {FileUpload} from './fileupload.js';
 import * as commonUtils from 'vpu-common/utils';
 
-class FileUploadDemo extends LitElement {
+class FileUploadDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
         this.url = '';
+    }
+
+    static get scopedElements() {
+        return {
+          'vpu-fileupload': FileUpload,
+        };
     }
 
     static get properties() {
