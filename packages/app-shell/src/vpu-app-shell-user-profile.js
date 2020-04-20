@@ -3,7 +3,7 @@ import {css, html, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import 'vpu-person-profile';
+import {PersonProfile} from 'vpu-person-profile';
 
 const i18n = createI18nInstance();
 
@@ -18,7 +18,7 @@ class AppShellUserProfile extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-person-profile': customElements.get('vpu-person-profile'),
+          'vpu-person-profile': PersonProfile,
         };
       }
 
