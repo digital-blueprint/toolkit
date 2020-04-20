@@ -1,12 +1,19 @@
 import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
-import './vpu-auth';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {Auth} from './auth.js';
 import * as commonUtils from 'vpu-common/utils';
 
-class AuthDemo extends LitElement {
+class AuthDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
+    }
+
+    static get scopedElements() {
+        return {
+          'vpu-auth': Auth,
+        };
     }
 
     static get properties() {
