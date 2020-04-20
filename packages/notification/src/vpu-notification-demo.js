@@ -1,15 +1,22 @@
 import {i18n} from './i18n';
 import {send as notify} from 'vpu-common/notification';
 import {css, html, LitElement} from 'lit-element';
-import './vpu-notification';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {Notification} from './notification.js';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from "vpu-common/styles";
 
-class NotificationDemo extends LitElement {
+class NotificationDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
     }
+
+    static get scopedElements() {
+        return {
+          'vpu-notification': Notification,
+        };
+      }
 
     static get properties() {
         return {

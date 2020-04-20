@@ -20,12 +20,12 @@
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^5.1.1",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-multi-entry": "^2.1.0",
     "rollup-plugin-url": "^2.2.2",
     "i18next-scanner": "^2.10.2",
     "vpu-common": "file:./vendor/common"
   },
   "dependencies": {
+    "@open-wc/scoped-elements": "^1.0.8",
     "lit-element": "^2.1.0"
   },
   "scripts": {
