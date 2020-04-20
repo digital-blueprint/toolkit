@@ -1,5 +1,5 @@
 import {html, LitElement} from 'lit-element';
-import {LanguageSelect} from './vpu-language-select.js';
+import {LanguageSelect} from './language-select.js';
 import * as commonUtils from 'vpu-common/utils';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 

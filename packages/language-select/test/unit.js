@@ -1,9 +1,5 @@
-import {LanguageSelect} from '../src/vpu-language-select.js';
-import * as commonUtils from 'vpu-common/utils';
+import '../src/vpu-language-select.js';
 import '../src/demo.js';
-
-
-commonUtils.defineCustomElement('vpu-language-select', LanguageSelect);
 
 describe('vpu-language-select basics', () => {
   let node;

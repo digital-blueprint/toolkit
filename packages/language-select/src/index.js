@@ -1,3 +1,3 @@
-import {LanguageSelect} from './vpu-language-select.js';
+import {LanguageSelect} from './language-select.js';
 
 export {LanguageSelect};
