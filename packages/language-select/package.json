@@ -1,7 +1,7 @@
 {
   "name": "vpu-language-select",
   "version": "1.0.0",
-  "main": "src/vpu-language-select.js",
+  "main": "src/index.js",
   "devDependencies": {
     "karma": "^5.0.1",
     "karma-chai": "^0.1.0",
@@ -24,6 +24,7 @@
     "vpu-common": "file:./vendor/common"
   },
   "dependencies": {
+    "@open-wc/scoped-elements": "^1.0.8",
     "lit-element": "^2.2.1"
   },
   "scripts": {

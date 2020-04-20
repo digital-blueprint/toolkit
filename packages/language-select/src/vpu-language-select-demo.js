@@ -1,6 +1,8 @@
-import {html, LitElement, css} from 'lit-element';
-import './vpu-language-select.js';
+import {html, LitElement} from 'lit-element';
+import {LanguageSelect} from './vpu-language-select.js';
 import * as commonUtils from 'vpu-common/utils';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+
 
 class LanguageSelectDisplay extends LitElement {
 
@@ -35,13 +37,18 @@ class LanguageSelectDisplay extends LitElement {
     }
 }
 
-commonUtils.defineCustomElement('vpu-language-select-display', LanguageSelectDisplay);
-
-class LanguageSelectDemo extends LitElement {
+class LanguageSelectDemo extends ScopedElementsMixin(LitElement) {
 
     constructor() {
         super();
     }
+
+    static get scopedElements() {
+        return {
+          'vpu-language-select': LanguageSelect,
+          'vpu-language-select-display': LanguageSelectDisplay,
+        };
+      }
 
     render() {
         return html`
