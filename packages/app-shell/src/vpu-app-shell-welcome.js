@@ -1,11 +1,12 @@
 import {createI18nInstance} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 
 const i18n = createI18nInstance();
 
-class AppShellWelcome extends LitElement {
+class AppShellWelcome extends ScopedElementsMixin(LitElement) {
 
     constructor() {
         super();

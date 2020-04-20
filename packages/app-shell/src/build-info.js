@@ -1,9 +1,8 @@
 import {html, LitElement, css} from 'lit-element';
-import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import buildinfo from 'consts:buildinfo';
 
-class VPUBuildInfo extends LitElement {
+export class BuildInfo extends LitElement {
 
     constructor() {
         super();
@@ -34,5 +33,3 @@ class VPUBuildInfo extends LitElement {
         `;
     }
 }
-
-commonUtils.defineCustomElement('vpu-build-info', VPUBuildInfo);

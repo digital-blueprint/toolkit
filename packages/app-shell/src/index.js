@@ -1,6 +1,7 @@
 import {createI18nInstance} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
-import 'vpu-language-select';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {LanguageSelect} from 'vpu-language-select';
 import 'vpu-common/vpu-button.js';
 import 'vpu-auth';
 import 'vpu-notification';
@@ -10,8 +11,8 @@ import buildinfo from 'consts:buildinfo';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import * as events from 'vpu-common/events.js';
-import './build-info.js';
-import './tugraz-logo.js';
+import {BuildInfo} from './build-info.js';
+import {TUGrazLogo} from './tugraz-logo.js';
 import {send as notify} from 'vpu-notification';
 import {userProfileMeta} from './vpu-app-shell-user-profile.js';
 import {appWelcomeMeta} from './vpu-app-shell-welcome.js';
@@ -41,8 +42,7 @@ const importNotify = async (promise) => {
     }
 };
 
-
-class VPUApp extends LitElement {
+class VPUApp extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = i18n.language;
@@ -61,6 +61,18 @@ class VPUApp extends LitElement {
 
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
     }
+
+    static get scopedElements() {
+        return {
+          'vpu-language-select': LanguageSelect,
+          'vpu-tugraz-logo': TUGrazLogo,
+          'vpu-build-info': BuildInfo,
+          // https://github.com/open-wc/open-wc/issues/1541
+          'vpu-auth': customElements.get('vpu-auth'),
+          'vpu-notification': customElements.get('vpu-notification'),
+          'vpu-icon': customElements.get('vpu-icon'),
+        };
+      }
 
     onAttributeObserved(mutationsList, observer) {
         for(let mutation of mutationsList) {

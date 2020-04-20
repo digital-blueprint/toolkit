@@ -29,6 +29,7 @@
     "vpu-person-profile": "file:./vendor/person-profile"
   },
   "dependencies": {
+    "@open-wc/scoped-elements": "^1.0.8",
     "i18next": "^19.4.1",
     "lit-element": "^2.2.1",
     "lit-html": "^1.1.2",

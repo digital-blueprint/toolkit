@@ -1,11 +1,10 @@
 import {html, LitElement, css} from 'lit-element';
-import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import {createI18nInstance} from './i18n.js';
 
 const i18n = createI18nInstance();
 
-class VPUTUGrazLogo extends LitElement {
+export class TUGrazLogo extends LitElement {
 
     constructor() {
         super();
@@ -78,5 +77,3 @@ class VPUTUGrazLogo extends LitElement {
         `;
     }
 }
-
-commonUtils.defineCustomElement('vpu-tugraz-logo', VPUTUGrazLogo);

@@ -2,19 +2,25 @@ import {createI18nInstance} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import 'vpu-person-profile';
 
 const i18n = createI18nInstance();
 
-class AppShellUserProfile extends LitElement {
+class AppShellUserProfile extends ScopedElementsMixin(LitElement) {
 
     constructor() {
         super();
         this.lang = i18n.language;
         this._personId = window.VPUPersonId;
         this.entryPointUrl = commonUtils.getAPiUrl();
-
     }
+
+    static get scopedElements() {
+        return {
+          'vpu-person-profile': customElements.get('vpu-person-profile'),
+        };
+      }
 
     static get properties() {
         return {
