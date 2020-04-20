@@ -3,6 +3,7 @@ import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from 'vpu-language-select';
 import 'vpu-common/vpu-button.js';
+import {Icon} from 'vpu-common';
 import {Auth} from 'vpu-auth';
 import {Notification} from 'vpu-notification';
 import * as commonUtils from 'vpu-common/utils';
@@ -69,8 +70,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
           'vpu-build-info': BuildInfo,
           'vpu-auth': Auth,
           'vpu-notification': Notification,
-          // https://github.com/open-wc/open-wc/issues/1541
-          'vpu-icon': customElements.get('vpu-icon'),
+          'vpu-icon': Icon,
         };
     }
 
