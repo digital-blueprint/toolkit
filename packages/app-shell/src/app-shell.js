@@ -4,7 +4,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from 'vpu-language-select';
 import 'vpu-common/vpu-button.js';
 import {Auth} from 'vpu-auth';
-import 'vpu-notification';
+import {Notification} from 'vpu-notification';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import buildinfo from 'consts:buildinfo';
@@ -13,7 +13,7 @@ import {Router} from './router.js';
 import * as events from 'vpu-common/events.js';
 import {BuildInfo} from './build-info.js';
 import {TUGrazLogo} from './tugraz-logo.js';
-import {send as notify} from 'vpu-notification';
+import {send as notify} from 'vpu-common/notification';
 import {userProfileMeta} from './vpu-app-shell-user-profile.js';
 import {appWelcomeMeta} from './vpu-app-shell-welcome.js';
 
@@ -68,11 +68,11 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
           'vpu-tugraz-logo': TUGrazLogo,
           'vpu-build-info': BuildInfo,
           'vpu-auth': Auth,
+          'vpu-notification': Notification,
           // https://github.com/open-wc/open-wc/issues/1541
-          'vpu-notification': customElements.get('vpu-notification'),
           'vpu-icon': customElements.get('vpu-icon'),
         };
-      }
+    }
 
     onAttributeObserved(mutationsList, observer) {
         for(let mutation of mutationsList) {
