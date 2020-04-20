@@ -1,5 +1,5 @@
 import {css, unsafeCSS, CSSResult} from 'lit-element';
-import {getIconSVGURL} from './vpu-icon.js';
+import {getIconSVGURL} from './src/icon.js';
 
 /**
  * We want to have "neutral" colors here

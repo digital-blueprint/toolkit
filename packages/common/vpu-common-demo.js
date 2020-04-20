@@ -1,17 +1,28 @@
 import {i18n} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
 import './vpu-mini-spinner.js';
 import './vpu-spinner.js';
-import {getIconCSS} from './vpu-icon.js';
+import {getIconCSS, Icon} from './index.js';
 import './vpu-button.js';
 
-class VpuCommonDemo extends LitElement {
+class VpuCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
         this.noAuth = false;
+    }
+
+    static get scopedElements() {
+        return {
+            'vpu-icon': Icon,
+            'vpu-mini-spinner': customElements.get('vpu-mini-spinner'),
+            'vpu-spinner': customElements.get('vpu-spinner'),
+            'vpu-button': customElements.get('vpu-button'),
+            'vpu-auth': customElements.get('vpu-auth'),
+        };
     }
 
     static get properties() {

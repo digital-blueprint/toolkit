@@ -1,7 +1,7 @@
 import {html, LitElement, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {until} from 'lit-html/directives/until.js';
-import * as commonUtils from './utils.js';
+import * as commonUtils from '../utils.js';
 
 // Use in case the icon fails to load
 const errorIcon = `
@@ -74,7 +74,7 @@ async function getSVGTextElementCached(name) {
 /**
  * For icon names see https://lineicons.com
  */
-class Icon extends LitElement {
+export class Icon extends LitElement {
 
     constructor() {
         super();
@@ -113,5 +113,3 @@ class Icon extends LitElement {
         `;
     }
 }
-
-commonUtils.defineCustomElement('vpu-icon', Icon);
