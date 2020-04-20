@@ -1,4 +1,3 @@
-import '../src/vpu-person-profile.js';
 import '../src/demo.js';
 
 describe('vpu-person-profile demo', () => {

@@ -1,14 +1,15 @@
 import 'vpu-auth';
 import {i18n} from './i18n.js';
-import {css, html, LitElement} from 'lit-element';
+import {css, html} from 'lit-element';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import VPULitElement from 'vpu-common/vpu-lit-element';
-import './vpu-person-profile.js';
+import {PersonProfile} from './index.js';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import $ from 'jquery';
 import 'vpu-person-select';
 
-class PersonProfileDemo extends VPULitElement {
+class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -16,6 +17,14 @@ class PersonProfileDemo extends VPULitElement {
         this.selectedPerson = '';
         this.noAuth = false;
     }
+
+    static get scopedElements() {
+        return {
+          'vpu-person-profile': PersonProfile,
+          'vpu-auth': customElements.get('vpu-auth'),
+          'vpu-person-select': customElements.get('vpu-person-select'),
+        };
+      }
 
     static get properties() {
         return {
