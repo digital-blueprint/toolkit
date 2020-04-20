@@ -33,7 +33,7 @@ function getBuildInfo() {
 }
 
 export default {
-    input: (build !='test') ? ['src/demo.js', 'src/vpu-activity-example.js'] : glob.sync('test/**/*.js'),
+    input: (build !='test') ? ['src/vpu-app-shell.js', 'src/vpu-activity-example.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
