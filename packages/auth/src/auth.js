@@ -1,11 +1,12 @@
 import {i18n} from './i18n.js';
 import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import JSONLD from 'vpu-common/jsonld';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import * as events from 'vpu-common/events.js';
-import 'vpu-common/vpu-icon.js';
+import {Icon} from 'vpu-common';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import  {KeycloakWrapper} from './keycloak.js';
 
@@ -31,7 +32,7 @@ const LoginStatus = Object.freeze({
  *   window.VPUPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
  *                     which will dispatch a `vpu-auth-person-init` event when loaded)
  */
-export class Auth extends VPULitElement {
+export class Auth extends ScopedElementsMixin(VPULitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -69,6 +70,12 @@ export class Auth extends VPULitElement {
         this.closeDropdown = this.closeDropdown.bind(this);
         this._onKCChanged = this._onKCChanged.bind(this);
    }
+
+    static get scopedElements() {
+        return {
+            'vpu-icon': Icon,
+        };
+    }
 
     _onKCChanged(event) {
         const kc = event.detail;
