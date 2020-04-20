@@ -3,7 +3,7 @@ import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from 'vpu-language-select';
 import 'vpu-common/vpu-button.js';
-import 'vpu-auth';
+import {Auth} from 'vpu-auth';
 import 'vpu-notification';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
@@ -67,8 +67,8 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
           'vpu-language-select': LanguageSelect,
           'vpu-tugraz-logo': TUGrazLogo,
           'vpu-build-info': BuildInfo,
+          'vpu-auth': Auth,
           // https://github.com/open-wc/open-wc/issues/1541
-          'vpu-auth': customElements.get('vpu-auth'),
           'vpu-notification': customElements.get('vpu-notification'),
           'vpu-icon': customElements.get('vpu-icon'),
         };
