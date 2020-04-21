@@ -3,10 +3,7 @@ import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
-import './vpu-mini-spinner.js';
-import './vpu-spinner.js';
-import {getIconCSS, Icon} from './index.js';
-import './vpu-button.js';
+import {getIconCSS, Icon, MiniSpinner, Button, Spinner} from './index.js';
 
 class VpuCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -18,9 +15,9 @@ class VpuCommonDemo extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
             'vpu-icon': Icon,
-            'vpu-mini-spinner': customElements.get('vpu-mini-spinner'),
-            'vpu-spinner': customElements.get('vpu-spinner'),
-            'vpu-button': customElements.get('vpu-button'),
+            'vpu-mini-spinner': MiniSpinner,
+            'vpu-spinner': Spinner,
+            'vpu-button': Button,
             'vpu-auth': customElements.get('vpu-auth'),
         };
     }
