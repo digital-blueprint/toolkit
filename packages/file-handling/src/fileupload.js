@@ -4,7 +4,6 @@ import {ifDefined} from 'lit-html/directives/if-defined';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 // import JSONLD from 'vpu-common/jsonld';
 import VPULitElement from 'vpu-common/vpu-lit-element'
-import "vpu-common/vpu-mini-spinner.js";
 import * as commonUtils from "vpu-common/utils";
 import {Icon} from 'vpu-common';
 import * as commonStyles from 'vpu-common/styles';
