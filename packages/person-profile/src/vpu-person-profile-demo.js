@@ -1,4 +1,4 @@
-import 'vpu-auth';
+import {Auth} from 'vpu-auth';
 import {i18n} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -21,7 +21,7 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
     static get scopedElements() {
         return {
           'vpu-person-profile': PersonProfile,
-          'vpu-auth': customElements.get('vpu-auth'),
+          'vpu-auth': Auth,
           'vpu-person-select': customElements.get('vpu-person-select'),
         };
       }
