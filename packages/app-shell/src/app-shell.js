@@ -2,7 +2,6 @@ import {createI18nInstance} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from 'vpu-language-select';
-import 'vpu-common/vpu-button.js';
 import {Icon} from 'vpu-common';
 import {Auth} from 'vpu-auth';
 import {Notification} from 'vpu-notification';
