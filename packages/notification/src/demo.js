@@ -1,1 +1,0 @@
-import './vpu-notification-demo';
