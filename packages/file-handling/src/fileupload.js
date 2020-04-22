@@ -21,6 +21,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.text = '';
         this.buttonLabel = '';
         this.uploadInProgress = false;
+        this.alwaysSendFile = false;
     }
 
     static get scopedElements() {
@@ -40,6 +41,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label'},
             uploadInProgress: { type: Boolean, attribute: false},
+            alwaysSendFile: { type: Boolean, attribute: 'always-send-file'},
         };
     }
 
@@ -186,7 +188,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             .then((response) => {
                 /* Done. Inform the user */
                 console.log(`Status: ${response.status} for file ${file.name}`);
-                this.sendFinishedEvent(response, file, response.status !== 201);
+                this.sendFinishedEvent(response, file, response.status !== 201 || this.alwaysSendFile);
             })
             .catch((response) => {
                 /* Error. Inform the user */
