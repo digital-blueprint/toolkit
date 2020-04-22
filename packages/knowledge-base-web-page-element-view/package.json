@@ -4,7 +4,6 @@
   "main": "src/index.js",
   "devDependencies": {
     "chai": "^4.2.0",
-    "i18next-scanner": "^2.10.2",
     "karma": "^4.2.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.0.0",
@@ -42,7 +41,6 @@
     "build-prod": "rollup -c --environment BUILD:production",
     "build-demo": "rollup -c --environment BUILD:demo",
     "build-test": "rollup -c --environment BUILD:test",
-    "i18next": "i18next-scanner",
     "watch": "npm run watch-local",
     "watch-local": "rollup -c --watch",
     "watch-dev": "rollup -c --watch --environment BUILD:development",
