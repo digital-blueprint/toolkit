@@ -220,9 +220,8 @@ class DataTableView extends LitElement {
             }
         });
 
-        super.update(changedProperties);
-
         this.updateComplete.then(this.set_datatable(this.data, languageChange)).catch(e => { console.log(e)});
+        super.update(changedProperties);
     }
 
     static get styles() {
