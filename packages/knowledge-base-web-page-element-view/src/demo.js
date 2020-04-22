@@ -1,1 +1,0 @@
-import './vpu-knowledge-base-web-page-element-view-demo.js';

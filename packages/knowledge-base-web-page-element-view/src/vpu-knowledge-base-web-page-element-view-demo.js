@@ -1,15 +1,23 @@
 import {i18n} from './i18n';
 import {css, html, LitElement} from 'lit-element';
-import 'vpu-auth';
-import './vpu-knowledge-base-web-page-element-view.js';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {Auth} from 'vpu-auth';
+import {KnowledgeBaseWebPageElementView} from './knowledge-base-web-page-element-view.js';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 
-class KnowledgeBaseWebPageElementViewDemo extends LitElement {
+class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
         this.noAuth = false;
+    }
+
+    static get scopedElements() {
+        return {
+          'vpu-knowledge-base-web-page-element-view' : KnowledgeBaseWebPageElementView,
+          'vpu-auth': Auth,
+        };
     }
 
     static get properties() {
@@ -38,13 +46,13 @@ class KnowledgeBaseWebPageElementViewDemo extends LitElement {
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}
 
-            vpu-knowledge-base-web-page-element-view.clean {
+            .clean {
                 --KBBorder: initial;
                 --KBBorderRadius: initial;
                 --KBMargin: initial;
                 --KBPadding: initial;
             }
-            vpu-knowledge-base-web-page-element-view.opt {
+            .opt {
                 --KBBorder: 2px solid blue;
             }
         `;

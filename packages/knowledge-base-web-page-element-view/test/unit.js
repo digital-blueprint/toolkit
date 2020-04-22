@@ -1,5 +1,5 @@
 import '../src/vpu-knowledge-base-web-page-element-view.js';
-import '../src/demo.js';
+import '../src/vpu-knowledge-base-web-page-element-view-demo.js';
 
 describe('vpu-knowledge-base-web-page-element-view basics', () => {
   let node;
