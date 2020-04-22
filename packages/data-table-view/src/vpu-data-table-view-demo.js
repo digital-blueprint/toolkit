@@ -1,15 +1,23 @@
-import 'vpu-auth';
-import './vpu-data-table-view.js';
+import {Auth} from 'vpu-auth';
+import {DataTableView} from './data-table-view.js';
 import {i18n} from './i18n';
 import {css, html, LitElement} from 'lit-element';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 
-class DataTableViewDemo extends LitElement {
+class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
         this.noAuth = false;
+    }
+
+    static get scopedElements() {
+        return {
+          'vpu-data-table-view': DataTableView,
+          'vpu-auth': Auth,
+        };
     }
 
     static get properties() {
@@ -183,29 +191,7 @@ class DataTableViewDemo extends LitElement {
                         <vpu-data-table-view lang="${this.lang}" id="vdtv2"></vpu-data-table-view>
                     </div>
                 </div>
-                <div class="content">
-                    <h4>Common Table</h4>
-                      <div class="box">
-                        <!-- <vpu-data-table-view lang="${this.lang}" paging searching> -->
-                            <table class="display">
-                                <thead>
-                                    <tr>
-                                        <th>A</th>
-                                        <th>B</th>
-                                        <th>C</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>abc</td>
-                                        <td>123</td>
-                                        <td>a-2-4-g</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        <!-- </vpu-data-table-view> -->
-                    </div>
-                </div>
+
             </section>
         `;
     }
