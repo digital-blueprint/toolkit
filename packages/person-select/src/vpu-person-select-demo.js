@@ -1,15 +1,23 @@
-import 'vpu-auth';
 import {i18n} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
-import './vpu-person-select.js';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {PersonSelect} from './person-select.js';
+import {Auth} from 'vpu-auth';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 
-class PersonSelectDemo extends LitElement {
+class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
         this.noAuth = false;
+    }
+
+    static get scopedElements() {
+        return {
+          'vpu-auth': Auth,
+          'vpu-person-select': PersonSelect,
+        };
     }
 
     static get properties() {
