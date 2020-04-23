@@ -115,7 +115,7 @@ class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     getAuthComponentHtml() {
         return this.noAuth ? html`` : html`
             <div class="content">
-                <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person force-login></vpu-auth>
+                <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person></vpu-auth>
             </div>
         `;
     }
