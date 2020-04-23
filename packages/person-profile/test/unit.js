@@ -1,4 +1,4 @@
-import '../src/demo.js';
+import '../src/vpu-person-profile-demo.js';
 
 describe('vpu-person-profile demo', () => {
   let node;

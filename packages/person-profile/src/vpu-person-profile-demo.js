@@ -7,7 +7,7 @@ import {PersonProfile} from './index.js';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import $ from 'jquery';
-import 'vpu-person-select';
+import {PersonSelect} from 'vpu-person-select';
 
 class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
     constructor() {
@@ -22,7 +22,7 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
         return {
           'vpu-person-profile': PersonProfile,
           'vpu-auth': Auth,
-          'vpu-person-select': customElements.get('vpu-person-select'),
+          'vpu-person-select': PersonSelect,
         };
       }
 
@@ -45,7 +45,7 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
                 that.person = window.VPUPersonId;
             });
 
-            const personSelect = that._('vpu-person-select');
+            const personSelect = that._(this.constructor.getScopedTagName('vpu-person-select'));
             personSelect.onchange = function () {
                 that.selectedPerson = $(this).data("object").identifier;
             };

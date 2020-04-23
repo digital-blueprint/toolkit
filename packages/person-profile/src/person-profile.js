@@ -116,5 +116,3 @@ export class PersonProfile extends VPULitElement {
         `;
     }
 }
-
-commonUtils.defineCustomElement('vpu-person-profile', PersonProfile);
