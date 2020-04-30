@@ -43,7 +43,6 @@ suite('utils', () => {
     });
 
     test('getAssetURL', () => {
-        utils.initAssetBaseURL();
         assert.equal(new URL(utils.getAssetURL("foo/bar")).pathname, "/foo/bar");
     });
 

@@ -92,7 +92,6 @@ class VpuCommonDemo extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-common-demo-src');
         return html`
             <style>
                 a:after {
