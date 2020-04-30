@@ -22,6 +22,9 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.buttonLabel = '';
         this.uploadInProgress = false;
         this.alwaysSendFile = false;
+        this.isDeferred = false;
+        this.queuedFiles = [];
+        this.queuedFilesCount = 0;
     }
 
     static get scopedElements() {
@@ -42,14 +45,24 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             buttonLabel: { type: String, attribute: 'button-label'},
             uploadInProgress: { type: Boolean, attribute: false},
             alwaysSendFile: { type: Boolean, attribute: 'always-send-file'},
+            isDeferred: { type: Boolean, attribute: 'deferred'},
+            queuedFilesCount: { type: Number, attribute: false },
         };
     }
 
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+            switch (propName) {
+                case "lang":
+                    i18n.changeLanguage(this.lang);
+                    break;
+                case "queuedFilesCount":
+                    const data = { "queuedFilesCount": this.queuedFilesCount, "queuedFiles": this.queuedFiles };
+                    const event = new CustomEvent("vpu-fileupload-queued-files-changed",
+                        { "detail": data, bubbles: true, composed: true });
+                    this.dispatchEvent(event);
+                    break;
             }
         });
 
@@ -124,7 +137,8 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             { "detail": {}, bubbles: true, composed: true }));
 
         // we need to wait for each upload until we start the next one
-        await commonUtils.asyncArrayForEach(files, async (file) => this.uploadFile(file));
+        await commonUtils.asyncArrayForEach(files, async (file) =>
+            this.isDeferred ? this.queueFile(file) : this.uploadFile(file));
 
         this.dispatchEvent(new CustomEvent("vpu-fileupload-all-finished",
             { "detail": {}, bubbles: true, composed: true }));
@@ -163,6 +177,50 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
 
         this.dispatchEvent(new CustomEvent("vpu-fileupload-file-start",
             { "detail": data, bubbles: true, composed: true }));
+    }
+
+    /**
+     * @param file
+     * @returns {Promise<void>}
+     */
+    async queueFile(file) {
+        this.queuedFiles[Math.floor(Math.random() * 1000000)] = file;
+        this.queuedFilesCount++;
+
+        const data = {"file": file};
+        const event = new CustomEvent("vpu-fileupload-file-queued", { "detail": data, bubbles: true, composed: true });
+        this.dispatchEvent(event);
+    }
+
+    /**
+     * Takes a file off of the queue
+     *
+     * @param key
+     */
+    takeFileFromQueue(key) {
+        // splice the data of the key off the queue
+        const file = this.queuedFiles.splice(key, 1)[0];
+        this.updateQueuedFilesCount();
+
+        return file;
+    }
+
+    uploadOneQueuedFile() {
+        const file = this.takeFileFromQueue();
+
+        return this.uploadFile(file);
+    }
+
+    getQueuedFiles() {
+        return this.queuedFiles;
+    }
+
+    updateQueuedFilesCount() {
+        return this.queuedFilesCount = Object.keys(this.queuedFiles).length;
+    }
+
+    getQueuedFilesCount() {
+        return this.queuedFilesCount;
     }
 
     /**

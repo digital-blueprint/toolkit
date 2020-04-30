@@ -14,6 +14,11 @@
     - example `<vpu-fileupload url="path/to/my/page"></vpu-fileupload>`
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<vpu-fileupload lang="de"></vpu-fileupload>`
+- `always-send-file` (optional): if set the uploaded or queued file will always be sent in the event
+    - example `<vpu-fileupload always-send-file></vpu-fileupload>`
+- `deferred` (optional): if set files will not be uploaded immediately but only queued
+    - use method `uploadFile` or `uploadOneQueuedFile` to really upload the queued file  
+    - example `<vpu-fileupload deferred></vpu-fileupload>`
 
 ## Local development
 
