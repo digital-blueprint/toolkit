@@ -5,7 +5,6 @@ import {LanguageSelect} from 'vpu-language-select';
 import {Icon} from 'vpu-common';
 import {Auth} from 'vpu-auth';
 import {Notification} from 'vpu-notification';
-import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import buildinfo from 'consts:buildinfo';
 import {classMap} from 'lit-html/directives/class-map.js';
@@ -47,13 +46,14 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         super();
         this.lang = i18n.language;
         this.activeView = '';
-        this.entryPointUrl = commonUtils.getAPiUrl();
+        this.entryPointUrl = '';
         this.subtitle = '';
         this.description = '';
         this.routes = [];
         this.metadata = {};
         this.topic = {};
         this.basePath = '/';
+        this.keycloakConfig = null;
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
@@ -218,6 +218,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             basePath: { type: String, attribute: 'base-path' },
             activeView: { type: String, attribute: false},
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            keycloakConfig: { type: Object, attribute: 'keycloak-config' },
             metadata: { type: Object, attribute: false },
             topic: { type: Object, attribute: false },
             subtitle: { type: String, attribute: false },
@@ -637,8 +638,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        const silentCheckSsoUri = commonUtils.getAssetURL('silent-check-sso.html');
-
         const getSelectClasses = (name => {
             return classMap({selected: this.activeView === name});
         });
@@ -685,7 +684,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     <div class="hd1-middle">
                     </div>
                     <div class="hd1-right">
-                        <vpu-auth lang="${this.lang}" show-profile keycloak-config='{"clientId": "${commonUtils.setting('keyCloakClientId')}", "silentCheckSsoRedirectUri": "${silentCheckSsoUri}"}' load-person try-login></vpu-auth>
+                        <vpu-auth lang="${this.lang}" show-profile keycloak-config="${JSON.stringify(this.keycloakConfig)}" load-person try-login></vpu-auth>
                     </div>
                     <div class="hd2-left">
                         <div class="header">
