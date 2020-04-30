@@ -330,7 +330,6 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-person-select-src');
         const select2CSS = commonUtils.getAssetURL(select2CSSPath);
         return html`
             <link rel="stylesheet" href="${select2CSS}">

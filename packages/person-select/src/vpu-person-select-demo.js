@@ -55,8 +55,6 @@ class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-person-select-src');
-
         return html`
             <section class="section">
                 <div class="container">
