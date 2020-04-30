@@ -14,11 +14,10 @@ activities. Handles login, language selection, activity switching, menus etc.
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-app-shell lang="de" </vpu-app-shell>`
+    - example `<vpu-auth lang="de" </vpu-auth>`
 - `src`: The path to a topic metadata file (json)
 - `base-path` (optional, default: `/`: An absolute base path for routing
 - `entry-point-url`: Entry point URL to access the API
-- `keycloak-config`: See `vpu-auth` for details
 
 ## Topic Metadata
 
