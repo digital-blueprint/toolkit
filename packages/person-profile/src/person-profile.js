@@ -90,7 +90,7 @@ export class PersonProfile extends VPULitElement {
                 role = i18n.t('person-profile.alumni');
             }
         }
-        commonUtils.initAssetBaseURL('vpu-person-profile-src');
+
         return html`
             <style>
             .profile {

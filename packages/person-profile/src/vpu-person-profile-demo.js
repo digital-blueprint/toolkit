@@ -75,8 +75,6 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-person-profile-src');
-
         return html`
             ${this.getAuthComponentHtml()}
 
