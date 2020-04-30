@@ -18,6 +18,18 @@ const promiseTimeout = function(ms, promise) {
 
 
 /**
+ * Returns a URL for a relative path or URL
+ */
+const ensureURL = function(urlOrPath) {
+    try {
+        return new URL(urlOrPath).href;
+    } catch (e) {
+        return new URL(urlOrPath, window.location.href).href;
+    }
+}
+
+
+/**
  * Wraps the keycloak API to support async/await, adds auto token refreshing and consolidates all
  * events into one native "changed" event
  * 
@@ -111,7 +123,7 @@ export class KeycloakWrapper extends EventTarget {
 
         if (this._silentCheckSsoUri) {
             options['onLoad'] = 'check-sso';
-            options['silentCheckSsoRedirectUri'] = this._silentCheckSsoUri;
+            options['silentCheckSsoRedirectUri'] = ensureURL(this._silentCheckSsoUri);
 
             // When silent-sso-check is active but the iframe doesn't load/work we will
             // never return here, so add a timeout and emit a signal so the app can continue

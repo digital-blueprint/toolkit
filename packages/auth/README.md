@@ -28,7 +28,7 @@
 - `url`: The base URL of the Keycloak server
 - `realm`: The Keycloak realm
 - `clientId`: The Keycloak client to use
-- `silentCheckSsoRedirectUri`: URI to a separate page for checking the login session in an iframe, see https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
+- `silentCheckSsoRedirectUri`: URI or path to a separate page for checking the login session in an iframe, see https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
 - `scope`: Space separated list of scopes to request. These scopes get added in addition to the default ones, assuming the scope is in the optional scopes list of the Keycloak client in use.
 
 ## Events to listen to
