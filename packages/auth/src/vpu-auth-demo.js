@@ -61,7 +61,6 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-auth-src');
         const silentCheckSsoUri = commonUtils.getAssetURL('silent-check-sso.html');
         return html`
             <style>

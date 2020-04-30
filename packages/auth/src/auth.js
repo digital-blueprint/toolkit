@@ -494,7 +494,6 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-auth-src');
         const loggedIn = (this._loginStatus === LoginStatus.LOGGED_IN);
         return html`
             <div class="authbox">
