@@ -159,8 +159,6 @@ export class Notification extends VPULitElement {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-notification-src');
-
         return html`
             <div class="columns">
                 <div class="column" id="notification">
