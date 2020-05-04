@@ -48,7 +48,7 @@ class AppShellUserProfile extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-            <vpu-person-profile value="${this._personId}" entry-point-url="${this.entryPointUrl}"" lang="${this.lang}"></vpu-person-profile>
+            <vpu-person-profile value="${this._personId}" entry-point-url="${this.entryPointUrl}" lang="${this.lang}"></vpu-person-profile>
         `;
     }
 }
