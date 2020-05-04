@@ -6,7 +6,6 @@ switch(environment) {
     case "development":
         config = {
             apiBaseUrl: 'https://mw-dev.tugraz.at',
-            apiUrlPrefix: '',
             keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
             keyCloakRealm: 'tugraz',
             keyCloakClientId: 'auth-dev-mw-frontend',
@@ -17,7 +16,6 @@ switch(environment) {
     case "demo":
         config = {
             apiBaseUrl: 'https://api-demo.tugraz.at',
-            apiUrlPrefix: '',
             keyCloakBaseURL: 'https://auth-test.tugraz.at/auth',
             keyCloakRealm: 'tugraz',
             keyCloakClientId: 'ibib-demo_tugraz_at-IBIB',
@@ -26,7 +24,6 @@ switch(environment) {
     case "production":
         config = {
             apiBaseUrl: 'https://api.tugraz.at',
-            apiUrlPrefix: '',
             keyCloakBaseURL: 'https://auth.tugraz.at/auth',
             keyCloakRealm: 'tugraz',
             keyCloakClientId: 'ibib_tugraz_at-IBIB',
@@ -36,7 +33,6 @@ switch(environment) {
     default:
         config = {
             apiBaseUrl: 'http://127.0.0.1:8000',
-            apiUrlPrefix: '',
             keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
             keyCloakRealm: 'tugraz',
             keyCloakClientId: 'auth-dev-mw-frontend-local',

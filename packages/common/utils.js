@@ -40,8 +40,8 @@ export const setting = (key) => {
     return env[key];
 };
 
-export const getAPiUrl = (path = "", withPrefix = true) => {
-    return env.apiBaseUrl + (withPrefix ? env.apiUrlPrefix : "") + path;
+export const getAPiUrl = (path = "") => {
+    return env.apiBaseUrl + path;
 };
 
 /**
