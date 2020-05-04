@@ -196,9 +196,9 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
         super.connectedCallback();
 
         // Keycloak config
-        let baseURL = commonUtils.setting('keyCloakBaseURL');
-        let realm = commonUtils.setting('keyCloakRealm');
-        let clientId = commonUtils.setting('keyCloakClientId');
+        let baseURL = '';
+        let realm = '';
+        let clientId = '';
         let silentCheckSsoRedirectUri = '';
         if (this.keycloakConfig !== null) {
             baseURL = this.keycloakConfig.url || baseURL;

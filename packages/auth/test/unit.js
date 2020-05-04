@@ -8,6 +8,11 @@ suite('vpu-auth basics', () => {
 
   suiteSetup(async () => {
     node = document.createElement('vpu-auth');
+    node.setAttribute('keycloak-config', JSON.stringify({
+        url: 'url',
+        realm: 'realm',
+        clientId: 'clientId',
+    }));
     document.body.appendChild(node);
     await node.updateComplete;
   });
