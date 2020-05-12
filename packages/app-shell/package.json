@@ -2,6 +2,7 @@
   "name": "vpu-app-shell",
   "version": "1.0.0",
   "main": "src/index.js",
+  "license": "LGPL-2.1-or-later",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-json": "^4.0.2",
