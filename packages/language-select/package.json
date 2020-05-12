@@ -2,6 +2,7 @@
   "name": "vpu-language-select",
   "version": "1.0.0",
   "main": "src/index.js",
+  "license": "LGPL-2.1-or-later",
   "devDependencies": {
     "karma": "^5.0.1",
     "karma-chai": "^0.1.0",
