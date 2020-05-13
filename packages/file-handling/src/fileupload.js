@@ -225,14 +225,15 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
 
     /**
      * @param file
+     * @param params
      * @returns {Promise<void>}
      */
-    async uploadFile(file) {
+    async uploadFile(file, params = {}) {
         this.uploadInProgress = true;
         this.sendStartEvent(file);
-        let url = this.url;
+        let url = new URL(this.url)
+        url.search = new URLSearchParams(params).toString();
         let formData = new FormData();
-
         formData.append('file', file);
 
         // I got a 60s timeout in Google Chrome and found no way to increase that
