@@ -39,9 +39,9 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
 
-            h2 { margin: inherit; }
-            p { margin: 0 0 10px 0; }
-            div.item { margin: 30px 0; }
+            p { line-height: 1.8em }
+            .item {padding-top: 0.5em;}
+            .description {padding-left: 2em;}
         `;
     }
 
@@ -56,14 +56,15 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
                 itemTemplates.push(html`
                     <div class="item">
                         <h2>${data.name[this.lang]}</h2>
-                        ${data.description[this.lang]}
+                        <p class="description">${data.description[this.lang]}</p>
                     </div>`);
             }
         }
 
         return html`
             <p>${i18n.t('welcome.headline', {appname: app.topic.name[this.lang]})}</p>
-            <p>${app.topic.description[this.lang]}</p>
+            <p>${app.topic.description[this.lang] }</p>
+            <br>
             ${itemTemplates}
         `;
     }
