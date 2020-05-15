@@ -5,7 +5,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 // import JSONLD from 'vpu-common/jsonld';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import * as commonUtils from "vpu-common/utils";
-import {Icon} from 'vpu-common';
+import {Icon, MiniSpinner} from 'vpu-common';
 import * as commonStyles from 'vpu-common/styles';
 
 /**
@@ -21,6 +21,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.text = '';
         this.buttonLabel = '';
         this.uploadInProgress = false;
+        this.multipleUploadInProgress = false;
         this.alwaysSendFile = false;
         this.isDeferred = false;
         this.queuedFiles = [];
@@ -29,7 +30,8 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-icon': Icon,
+            'vpu-icon': Icon,
+            'vpu-mini-spinner': MiniSpinner,
         };
     }
 
@@ -44,6 +46,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label'},
             uploadInProgress: { type: Boolean, attribute: false},
+            multipleUploadInProgress: { type: Boolean, attribute: false},
             alwaysSendFile: { type: Boolean, attribute: 'always-send-file'},
             isDeferred: { type: Boolean, attribute: 'deferred'},
             queuedFilesCount: { type: Number, attribute: false },
@@ -130,18 +133,37 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         fileElem.value = '';
     }
 
+    /**
+     * Handles files that were dropped to or selected in the component
+     *
+     * @param files
+     * @returns {Promise<void>}
+     */
     async handleFiles(files) {
         console.log('handleFiles: files.length = ' + files.length);
+        this.multipleUploadInProgress = true;
 
         this.dispatchEvent(new CustomEvent("vpu-fileupload-all-start",
             { "detail": {}, bubbles: true, composed: true }));
 
-        // we need to wait for each upload until we start the next one
-        await commonUtils.asyncArrayForEach(files, async (file) =>
-            this.isDeferred ? this.queueFile(file) : this.uploadFile(file));
+        // we need to copy the files to another array or else they will be gone in the setTimeout function!
+        let tempFilesToHandle = [];
+        await commonUtils.asyncArrayForEach(files, async (file) => {
+            tempFilesToHandle.push(file);
+        });
 
-        this.dispatchEvent(new CustomEvent("vpu-fileupload-all-finished",
-            { "detail": {}, bubbles: true, composed: true }));
+        // the browsers don't render updates to the dom while these files are handled!
+        // if we set a small delay the dom changes will be rendered
+        setTimeout(async () => {
+            // we need to wait for each upload until we start the next one
+            await commonUtils.asyncArrayForEach(tempFilesToHandle, async (file) =>
+                this.isDeferred ? this.queueFile(file) : this.uploadFile(file));
+
+            this.multipleUploadInProgress = false;
+
+            this.dispatchEvent(new CustomEvent("vpu-fileupload-all-finished",
+                { "detail": {}, bubbles: true, composed: true }));
+        }, 100);
     }
 
     async sendFinishedEvent(response, file, sendFile = false) {
@@ -267,6 +289,8 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         return css`
             ${commonStyles.getButtonCSS()}
 
+            .hidden { display: none; }
+
             #dropArea {
                 border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, black);
                 border-radius: var(--FUBorderRadius, 0);
@@ -300,6 +324,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                     <p>${this.text || i18n.t('intro')}</p>
                     <input ?disabled="${this.uploadInProgress}" type="file" id="fileElem" multiple accept="${ifDefined(this.accept)}" name='file'>
                     <label class="button is-primary" for="fileElem"><vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon> ${this.buttonLabel || i18n.t('upload-label')}</label>
+                    <vpu-mini-spinner style="display: ${this.multipleUploadInProgress ? "inline-block" : "none"}"></vpu-mini-spinner>
                 </div>
             </div>
         `;
