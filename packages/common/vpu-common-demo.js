@@ -80,7 +80,7 @@ class VpuCommonDemo extends ScopedElementsMixin(LitElement) {
     getAuthComponentHtml() {
         return this.noAuth ? html`` : html`
             <div class="container">
-                <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person></vpu-auth>
+                <vpu-auth lang="${this.lang}" load-person></vpu-auth>
             </div>
         `;
     }

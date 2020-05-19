@@ -1,9 +1,10 @@
 import * as Sentry from '@sentry/browser';
-import env from './env.js';
 import environment from 'consts:environment';
 
 let _isInitialized = false;
 let _canReportEvent = false;
+
+let sentryDSN = '';
 
 /**
  * Initializes error reporting.
@@ -29,7 +30,7 @@ export function init(options) {
     sentryOptions['release'] = actual.release;
   }
 
-  if (!env.sentryDSN) {
+  if (!sentryDSN) {
     if (options.debug)
       console.log("No sentry DSN set, sentry disabled");
 
@@ -42,7 +43,7 @@ export function init(options) {
       return null;
     };
   } else {
-    sentryOptions['dsn'] = env.sentryDSN;
+    sentryOptions['dsn'] = sentryDSN;
     _canReportEvent = true;
   }
 

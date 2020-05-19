@@ -38,10 +38,6 @@ suite('utils', () => {
         assert(utils.getAPiUrl().startsWith("http"));
     });
 
-    test('setting', () => {
-        assert(utils.setting('apiBaseUrl').startsWith("http"));
-    });
-
     test('getAssetURL', () => {
         assert.equal(new URL(utils.getAssetURL("foo/bar")).pathname, "/foo/bar");
     });
