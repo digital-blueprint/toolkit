@@ -26,6 +26,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.isDeferred = false;
         this.queuedFiles = [];
         this.queuedFilesCount = 0;
+        this.disabled = false;
     }
 
     static get scopedElements() {
@@ -50,6 +51,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             alwaysSendFile: { type: Boolean, attribute: 'always-send-file'},
             isDeferred: { type: Boolean, attribute: 'deferred'},
             queuedFilesCount: { type: Number, attribute: false },
+            disabled: { type: Boolean },
         };
     }
 
@@ -109,7 +111,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
     }
 
     handleDrop(e) {
-        if (this.uploadInProgress) {
+        if (this.uploadInProgress || this.disabled) {
             return;
         }
 
@@ -341,8 +343,11 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             <div id="dropArea">
                 <div class="my-form" title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
                     <p>${this.text || i18n.t('intro')}</p>
-                    <input ?disabled="${this.uploadInProgress}" type="file" id="fileElem" multiple name='file'>
-                    <label class="button is-primary" for="fileElem"><vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon> ${this.buttonLabel || i18n.t('upload-label')}</label>
+                    <input ?disabled="${this.uploadInProgress || this.disabled}" type="file" id="fileElem" multiple name='file'>
+                    <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
+                        <vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon>
+                        ${this.buttonLabel || i18n.t('upload-label')}
+                    </label>
                     <vpu-mini-spinner style="display: ${this.multipleUploadInProgress ? "inline-block" : "none"}"></vpu-mini-spinner>
                 </div>
             </div>

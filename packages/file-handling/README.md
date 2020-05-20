@@ -24,6 +24,8 @@
     - example `<vpu-fileupload allowed-mime-types='image/*'></vpu-fileupload>` ... images (of all sub types) only
     - example `<vpu-fileupload allowed-mime-types='image/png,text/plain'></vpu-fileupload>` ... PNGs or TXTs only
     - example `<vpu-fileupload allowed-mime-types='*/*'></vpu-fileupload>` ... all file types (default)
+- `disabled` (optional): disable input control
+    - example `<vpu-fileupload disabled>`
 
 ## Local development
 
