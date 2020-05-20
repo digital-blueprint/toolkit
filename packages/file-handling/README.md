@@ -19,6 +19,11 @@
 - `deferred` (optional): if set files will not be uploaded immediately but only queued
     - use method `uploadFile` or `uploadOneQueuedFile` to really upload the queued file  
     - example `<vpu-fileupload deferred></vpu-fileupload>`
+- `allowed-mime-types` (optional): if set accept only files matching mime types
+    - example `<vpu-fileupload allowed-mime-types='application/pdf'></vpu-fileupload>` ... PDFs only
+    - example `<vpu-fileupload allowed-mime-types='image/*'></vpu-fileupload>` ... images (of all sub types) only
+    - example `<vpu-fileupload allowed-mime-types='image/png,text/plain'></vpu-fileupload>` ... PNGs or TXTs only
+    - example `<vpu-fileupload allowed-mime-types='*/*'></vpu-fileupload>` ... all file types (default)
 
 ## Local development
 

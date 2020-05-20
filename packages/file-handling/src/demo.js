@@ -80,18 +80,17 @@ class FileUploadDemo extends ScopedElementsMixin(LitElement) {
                 <div class="content">
                     <h2 class="subtitle">Send any File to Server</h2>
                     <p>There is no restriction for a specific file type:</p>
-                    <vpu-fileupload lang="de" url="${this.url}"></vpu-fileupload>
+                    <vpu-fileupload lang="de" url="${this.url}" allowed-mime-types="*/*"></vpu-fileupload>
                     <p>Only images are allowed here (JPG, PNG, GIF, TIF, ...):</p>
-                    <vpu-fileupload lang="de" url="${this.url}" accept="image/*"
+                    <vpu-fileupload lang="de" url="${this.url}" allowed-mime-types="image/*"
                         text="Abgabe nur für Bilder "></vpu-fileupload>
                     <p>This is for PDF only:</p>
-                    <vpu-fileupload lang="de" url="${this.url}" accept="application/pdf"
+                    <vpu-fileupload lang="de" url="${this.url}" allowed-mime-types="application/pdf"
                         text="Einreichung als PDF" button-label="PDF auswählen"></vpu-fileupload>
-                </div>
-                <div class="content">
-                    <h2>Log of uploads</h2>
-                    <ul id="log"></ul>
-                </div>
+                     <p>Text and images (JPG, PNG, GIF, TIF, ...) :</p>
+                    <vpu-fileupload lang="de" url="${this.url}" allowed-mime-types="text/plain,image/*"
+                        text="Abgabe für Text und Bilder "></vpu-fileupload>
+               </div>
             </section>
         `;
     }

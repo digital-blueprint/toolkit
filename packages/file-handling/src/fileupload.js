@@ -17,7 +17,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.lang = 'de';
         this.url = '';
         this.dropArea = null;
-        this.accept = '';
+        this.allowedMimeTypes = '';
         this.text = '';
         this.buttonLabel = '';
         this.uploadInProgress = false;
@@ -42,7 +42,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         return {
             lang: { type: String },
             url: { type: String },
-            accept: { type: String },
+            allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label'},
             uploadInProgress: { type: Boolean, attribute: false},
@@ -150,9 +150,24 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         let tempFilesToHandle = [];
         await commonUtils.asyncArrayForEach(files, async (file) => {
             if (file.size === 0) {
-                console.log('file ' + file.name + ' has size=0 and is denied!')
+                console.log('file \'' + file.name + '\' has size=0 and is denied!')
                 return;
             }
+            if (this.allowedMimeTypes) {
+                // check if file is allowed
+                const [fileMainType, fileSubType] = file.type.split('/');
+                const mimeTypes = this.allowedMimeTypes.split(',');
+                let deny = true;
+                mimeTypes.forEach((str) => {
+                    const [mainType, subType] = str.split('/');
+                    deny = deny && ((mainType !== '*' && mainType !== fileMainType) || (subType !== '*' && subType !== fileSubType));
+                });
+                if (deny) {
+                    console.log(`mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`);
+                    return;
+                }
+            }
+
             tempFilesToHandle.push(file);
         });
 
@@ -326,7 +341,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             <div id="dropArea">
                 <div class="my-form" title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
                     <p>${this.text || i18n.t('intro')}</p>
-                    <input ?disabled="${this.uploadInProgress}" type="file" id="fileElem" multiple accept="${ifDefined(this.accept)}" name='file'>
+                    <input ?disabled="${this.uploadInProgress}" type="file" id="fileElem" multiple name='file'>
                     <label class="button is-primary" for="fileElem"><vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon> ${this.buttonLabel || i18n.t('upload-label')}</label>
                     <vpu-mini-spinner style="display: ${this.multipleUploadInProgress ? "inline-block" : "none"}"></vpu-mini-spinner>
                 </div>
