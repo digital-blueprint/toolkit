@@ -149,6 +149,10 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         // we need to copy the files to another array or else they will be gone in the setTimeout function!
         let tempFilesToHandle = [];
         await commonUtils.asyncArrayForEach(files, async (file) => {
+            if (file.size === 0) {
+                console.log('file ' + file.name + ' has size=0 and is denied!')
+                return;
+            }
             tempFilesToHandle.push(file);
         });
 
