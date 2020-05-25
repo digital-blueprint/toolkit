@@ -33,7 +33,15 @@ export function getThemeCSS() {
     `;
 }
 
-export function getGeneralCSS() {
+export function getGeneralCSS(doMarginPaddingReset = true) {
+    // language=css
+    const marginPaddingResetCss = doMarginPaddingReset ? css`
+        blockquote, body, dd, dl, dt, fieldset, figure, h1, h2, h3, h4, h5, h6, hr, html, iframe, legend, li, ol, p, pre, textarea, ul {
+            margin: 0;
+            padding: 0;
+        }
+    ` : css``;
+
     // language=css
     return css`
         h2 {
@@ -128,10 +136,7 @@ export function getGeneralCSS() {
             line-height: 1.125;
         }
 
-        blockquote, body, dd, dl, dt, fieldset, figure, h1, h2, h3, h4, h5, h6, hr, html, iframe, legend, li, ol, p, pre, textarea, ul {
-            margin: 0;
-            padding: 0;
-        }
+        ${marginPaddingResetCss}
 
         .button[disabled], .file-cta[disabled], .file-name[disabled], .input[disabled], .pagination-ellipsis[disabled],
         .pagination-link[disabled], .pagination-next[disabled], .pagination-previous[disabled], .select fieldset[disabled] select,
