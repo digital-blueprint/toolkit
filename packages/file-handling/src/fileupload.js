@@ -262,6 +262,11 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         return this.queuedFiles;
     }
 
+    clearQueuedFiles() {
+        this.queuedFiles = [];
+        this.queuedFilesCount = 0;
+    }
+
     updateQueuedFilesCount() {
         return this.queuedFilesCount = Object.keys(this.queuedFiles).length;
     }
