@@ -659,7 +659,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             });
         }
 
-        const prodClassMap = classMap({hidden: buildinfo.env === 'production'});
+        const prodClassMap = classMap({hidden: buildinfo.env === 'production' || buildinfo.env === 'demo'});
 
         this.updatePageTitle();
 
