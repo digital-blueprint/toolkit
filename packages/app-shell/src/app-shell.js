@@ -689,7 +689,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     </div>
                     <div class="hd2-left">
                         <div class="header">
-                            <a href="https://www.tugraz.at/" title="TU Graz Home" target="_blank" rel="noopener">TU Graz<br>Graz University of Technology</a>
+                            TU Graz<br>Graz University of Technology
                         </div>
                     </div>
                     <div class="hd2-right">
