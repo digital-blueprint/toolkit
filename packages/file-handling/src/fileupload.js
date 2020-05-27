@@ -17,7 +17,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.lang = 'de';
         this.url = '';
         this.dropArea = null;
-        this.allowedMimeTypes = '';
+        this.allowedMimeTypes = '*/*';
         this.text = '';
         this.buttonLabel = '';
         this.uploadInProgress = false;
@@ -348,7 +348,12 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             <div id="dropArea">
                 <div class="my-form" title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
                     <p>${this.text || i18n.t('intro')}</p>
-                    <input ?disabled="${this.uploadInProgress || this.disabled}" type="file" id="fileElem" multiple name='file'>
+                    <input ?disabled="${this.uploadInProgress || this.disabled}"
+                           type="file"
+                           id="fileElem"
+                           multiple
+                           accept="${this.allowedMimeTypes}"
+                           name='file'>
                     <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
                         <vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon>
                         ${this.buttonLabel || i18n.t('upload-label')}
