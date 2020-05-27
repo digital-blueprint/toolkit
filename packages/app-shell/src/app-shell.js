@@ -14,7 +14,6 @@ import * as events from 'vpu-common/events.js';
 import {BuildInfo} from './build-info.js';
 import {TUGrazLogo} from './tugraz-logo.js';
 import {send as notify} from 'vpu-common/notification';
-import {userProfileMeta} from './vpu-app-shell-user-profile.js';
 import {appWelcomeMeta} from './vpu-app-shell-welcome.js';
 
 
@@ -133,11 +132,9 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             }
         }
 
-        // Inject the user profile and welcome activity
-        routes.push("user-profile");
+        // Inject the welcome activity
         routes.unshift("welcome");
         metadata = Object.assign(metadata, {
-            "user-profile": userProfileMeta,
             "welcome": appWelcomeMeta,
         });
         customElements.get("vpu-app-shell-welcome").app = this;
@@ -247,11 +244,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         if (this.src)
             this.fetchMetadata(this.src);
         this.initRouter();
-
-        // listen to the vpu-auth-profile event to switch to the person profile
-        window.addEventListener("vpu-auth-profile", () => {
-            this.switchComponent('user-profile');
-        });
 
         this._subscriber.subscribe(this._updateAuth);
     }
@@ -685,7 +677,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     <div class="hd1-middle">
                     </div>
                     <div class="hd1-right">
-                        <vpu-auth lang="${this.lang}" show-profile keycloak-config="${JSON.stringify(this.keycloakConfig)}" load-person try-login></vpu-auth>
+                        <vpu-auth lang="${this.lang}" keycloak-config="${JSON.stringify(this.keycloakConfig)}" load-person try-login></vpu-auth>
                     </div>
                     <div class="hd2-left">
                         <div class="header">
