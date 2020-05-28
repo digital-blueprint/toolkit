@@ -665,6 +665,10 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             }
         }
 
+        const imprintUrl = this.lang === "en" ?
+            "https://www.tugraz.at/en/about-this-page/legal-notice/" :
+            "https://www.tugraz.at/ueber-diese-seite/impressum/";
+
         return html`
             <slot class="${slotClassMap}"></slot>
             <div class="${mainClassMap}">
@@ -712,7 +716,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 <footer>
                     <div></div>
                     <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
-                    <a target="_blank" rel="noopener" class="int-link-external" href="https://www.tugraz.at/ueber-diese-seite/impressum/">${i18n.t('imprint')}</a>
+                    <a target="_blank" rel="noopener" class="int-link-external" href="${imprintUrl}">${i18n.t('imprint')}</a>
                     <vpu-build-info class="${prodClassMap}"></vpu-build-info>
                 </footer>
             </div>
