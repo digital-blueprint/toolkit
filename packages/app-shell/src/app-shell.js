@@ -471,7 +471,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             footer {
                 display: grid;
                 grid-gap: 1em;
-                grid-template-columns: 1fr max-content max-content;
+                grid-template-columns: 1fr max-content max-content max-content;
             }
 
             footer a {
@@ -712,6 +712,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 <footer>
                     <div></div>
                     <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
+                    <a target="_blank" rel="noopener" class="int-link-external" href="https://www.tugraz.at/ueber-diese-seite/impressum/">${i18n.t('imprint')}</a>
                     <vpu-build-info class="${prodClassMap}"></vpu-build-info>
                 </footer>
             </div>
