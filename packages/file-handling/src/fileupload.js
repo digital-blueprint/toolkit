@@ -8,6 +8,24 @@ import * as commonUtils from "vpu-common/utils";
 import {Icon, MiniSpinner} from 'vpu-common';
 import * as commonStyles from 'vpu-common/styles';
 
+
+function mimeTypesToAccept(mimeTypes) {
+    // Some operating systems can't handle mime types and
+    // need file extensions, this tries to add them for some..
+    let mapping = {
+        'application/pdf': ['.pdf'],
+    };
+    let accept = [];
+    mimeTypes.split(',').forEach((mime) => {
+        accept.push(mime);
+        if (mime.trim() in mapping) {
+            accept = accept.concat(mapping[mime.trim()]);
+        }
+    });
+    return accept.join(',');
+}
+
+
 /**
  * KnowledgeBaseWebPageElementView web component
  */
@@ -352,7 +370,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                            type="file"
                            id="fileElem"
                            multiple
-                           accept="${this.allowedMimeTypes}"
+                           accept="${mimeTypesToAccept(this.allowedMimeTypes)}"
                            name='file'>
                     <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
                         <vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon>
