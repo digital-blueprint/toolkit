@@ -468,7 +468,7 @@ export function getTagCSS() {
         .tags {
             align-items: center;
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             justify-content: flex-start;
         }
 
