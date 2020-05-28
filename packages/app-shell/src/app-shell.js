@@ -469,9 +469,13 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             }
 
             footer {
-                display: grid;
-                grid-gap: 1em;
-                grid-template-columns: 1fr max-content max-content max-content;
+                display: flex;
+                justify-content: end;
+                flex-wrap: wrap;
+            }
+
+            footer > * {
+                margin: 0.5em 0 0 1em;
             }
 
             footer a {
