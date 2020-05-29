@@ -286,6 +286,23 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
     onMenuItemClick(e) {
         e.preventDefault();
+
+        // if not the current page was clicked we need to check if the page can be left
+        if (!e.currentTarget.className.includes("selected")) {
+            // simulate a "beforeunload" event
+            const event = new CustomEvent("beforeunload", {
+                bubbles: true,
+                cancelable: true,
+            });
+
+            const eventResult = window.dispatchEvent(event);
+
+            // if someone canceled the "beforeunload" event we don't want to leave the page
+            if (!eventResult) {
+                return;
+            }
+        }
+
         const link = e.composedPath()[0];
         const location = link.getAttribute('href');
         this.router.updateFromPathname(location);
