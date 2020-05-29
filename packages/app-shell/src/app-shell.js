@@ -487,7 +487,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
             footer {
                 display: flex;
-                justify-content: end;
+                justify-content: flex-end;
                 flex-wrap: wrap;
             }
 
@@ -735,7 +735,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 </main>
 
                 <footer>
-                    <div></div>
                     <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
                     <a target="_blank" rel="noopener" class="int-link-external" href="${imprintUrl}">${i18n.t('imprint')}</a>
                     <vpu-build-info class="${prodClassMap}"></vpu-build-info>
