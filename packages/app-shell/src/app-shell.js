@@ -573,20 +573,19 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 }
 
                 aside {
-                    margin: 0 15px;
+                    margin: auto;
+                    padding: 0 0.5em;
                 }
 
                 aside h2.subtitle {
                     display: block;
-                    margin-bottom: 0.5em;
-                }
-
-                aside h2.subtitle:not(:last-child) {
-                    margin-bottom: 0.5em;
+                    border: 1px solid black;
+                    padding: 0.25em 0.5em;
                 }
 
                 aside .menu {
                     border: black 1px solid;
+                    border-top-width: 0;
                 }
 
                 .menu li {
