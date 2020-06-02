@@ -50,12 +50,17 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
         let metadata = app.metadata;
         let itemTemplates = [];
 
+        const switchActivity = (e, data) => {
+            e.preventDefault();
+            app.switchComponent(data.routing_name);
+        };
+
         for (let [key, data] of Object.entries(metadata)) {
 
             if (data['visible'] && (key !== "welcome")) {
                 itemTemplates.push(html`
                     <div class="item">
-                        <h2>${data.name[this.lang]}</h2>
+                        <h2><a href="#" @click=${(e) => {switchActivity(e, data);}}>${data.name[this.lang]}</a></h2>
                         <p class="description">${data.description[this.lang]}</p>
                     </div>`);
             }
