@@ -45,6 +45,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.queuedFiles = [];
         this.queuedFilesCount = 0;
         this.disabled = false;
+        this._queueKey = 0;
     }
 
     static get scopedElements() {
@@ -245,9 +246,10 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
      * @returns {Promise<number>} key of the queued item
      */
     async queueFile(file) {
-        const key = Math.floor(Math.random() * 1000000);
+        this._queueKey++;
+        const key = this._queueKey;
         this.queuedFiles[key] = file;
-        this.queuedFilesCount++;
+        this.updateQueuedFilesCount();
 
         const data = {"file": file};
         const event = new CustomEvent("vpu-fileupload-file-queued", { "detail": data, bubbles: true, composed: true });
