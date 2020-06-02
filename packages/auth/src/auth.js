@@ -39,6 +39,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
         this.forceLogin = false;
         this.loadPerson = false;
         this.showProfile = false;
+        this.showImage = false;
         this.token = "";
         this.tokenParsed = null;
         this.subject = "";
@@ -174,6 +175,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
             tryLogin: { type: Boolean, attribute: 'try-login' },
             loadPerson: { type: Boolean, attribute: 'load-person' },
             showProfile: { type: Boolean, attribute: 'show-profile' },
+            showImage: { type: Boolean, attribute: 'show-image' },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             keycloakConfig: { type: Object, attribute: 'keycloak-config' },
             name: { type: String, attribute: false },
@@ -315,7 +317,6 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
             .dropdown-menu {
                 display: none;
                 min-width: 8em;
-                padding-top: 4px;
                 position: absolute;
                 z-index: 20;
                 border: solid 1px black;
@@ -443,7 +444,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
     }
 
     renderLoggedIn() {
-        const imageURL = (this.person && this.person.image) ? this.person.image : null;
+        const imageURL = (this.showImage && this.person && this.person.image) ? this.person.image : null;
 
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
