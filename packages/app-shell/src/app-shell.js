@@ -626,24 +626,29 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             if (this._lastElm.tagName.toLowerCase() == activity.element.toLowerCase()) {
                 return this._lastElm;
             } else {
-                this._attrObserver.disconnect();
+                this._onActivityRemoved(this._lastElm);
                 this._lastElm = undefined;
             }
         }
 
         const elm = document.createElement(activity.element);
+        this._onActivityAdded(elm);
+        this._lastElm = elm;
+        return elm;
+    }
 
+    _onActivityAdded(element) {
         for(const key of this.topic.attributes || []) {
             let value = sessionStorage.getItem('vpu-attr-' + key);
             if (value !== null) {
-                elm.setAttribute(key, value);
+                element.setAttribute(key, value);
             }
         }
+        this._attrObserver.observe(element, {attributes: true, attributeFilter: this.topic.attributes});
+    }
 
-        this._attrObserver.observe(elm, {attributes: true, attributeFilter: this.topic.attributes});
-
-        this._lastElm = elm;
-        return elm;
+    _onActivityRemoved(element) {
+        this._attrObserver.disconnect();
     }
 
     _renderActivity() {
