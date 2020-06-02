@@ -270,6 +270,11 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
             this._setLoginStatus(LoginStatus.LOGGING_OUT);
         }
         this._kcwrapper.logout();
+        // In case logout was aborted, for example with beforeunload,
+        // revert back to being logged in
+        if (this._loginStatus === LoginStatus.LOGGING_OUT) {
+            this._setLoginStatus(LoginStatus.LOGGED_IN);
+        }
     }
 
     update(changedProperties) {
