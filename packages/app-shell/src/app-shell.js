@@ -306,6 +306,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         const link = e.composedPath()[0];
         const location = link.getAttribute('href');
         this.router.updateFromPathname(location);
+        this.toggleMenu();
     }
 
     onLanguageChanged(e) {
