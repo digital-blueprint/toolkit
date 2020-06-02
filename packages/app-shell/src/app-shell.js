@@ -306,7 +306,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         const link = e.composedPath()[0];
         const location = link.getAttribute('href');
         this.router.updateFromPathname(location);
-        this.toggleMenu();
+        this.hideMenu();
     }
 
     onLanguageChanged(e) {
@@ -381,6 +381,12 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         if (chevron !== null) {
             chevron.name = menu.classList.contains('hidden') ? 'chevron-down' : 'chevron-up';
         }
+    }
+
+    hideMenu() {
+        const menu = this.shadowRoot.querySelector("ul.menu");
+        if (menu && !menu.classList.contains('hidden'))
+            this.toggleMenu();
     }
 
     static get styles() {
@@ -725,7 +731,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     </h2>
                     <ul class="menu hidden">
                         ${menuTemplates}
-                        <li class="close" @click="${this.toggleMenu}"><vpu-icon name="close" style="color: red"></vpu-icon></li>
+                        <li class="close" @click="${this.hideMenu}"><vpu-icon name="close" style="color: red"></vpu-icon></li>
                     </ul>
                 </aside>
 
