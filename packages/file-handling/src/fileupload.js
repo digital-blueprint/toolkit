@@ -264,8 +264,8 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
      * @param key
      */
     takeFileFromQueue(key) {
-        // splice the data of the key off the queue
-        const file = this.queuedFiles.splice(key, 1)[0];
+        const file = this.queuedFiles[key];
+        delete this.queuedFiles[key];
         this.updateQueuedFilesCount();
 
         return file;
