@@ -1,4 +1,4 @@
-# VPU Common Code
+# Common Code
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/Common)
 
