@@ -1,4 +1,4 @@
-# VPU FileUpload web component
+# FileUpload web component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/FileUpload)
 
