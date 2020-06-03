@@ -1,4 +1,4 @@
-# VPU App Shell Component
+# App Shell Component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/Apps/AppShell)
 
