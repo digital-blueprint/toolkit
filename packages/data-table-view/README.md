@@ -1,4 +1,4 @@
-# VPU DataTableView Web Component
+# DataTableView Web Component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/KnowledgeBaseWebPageElementView)
 
