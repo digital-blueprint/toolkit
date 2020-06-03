@@ -413,13 +413,6 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
             .loginbox .label {
                 padding-left: 0.2em;
             }
-            
-            .ellipsis {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: inline-block;
-            }
         `;
     }
 
@@ -452,13 +445,12 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
 
     renderLoggedIn() {
         const imageURL = (this.showImage && this.person && this.person.image) ? this.person.image : null;
-        const w = window.innerWidth/2 - 20 - 40;
 
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
                 <div class="dropdown-trigger">
                     <a href="#">
-                        <div class="ellipsis" style="max-width: ${w}px;">${this.name}</div>
+                        <span>${this.name}</span>
                         <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
                     </a>
                 </div>
