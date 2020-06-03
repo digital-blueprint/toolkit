@@ -1,4 +1,4 @@
-# VPU Person Select Web Component
+# Person Select Web Component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/PersonSelect)
 
