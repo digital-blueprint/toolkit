@@ -251,7 +251,9 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
             return;
         }
 
-        dropdown.setAttribute("style", `width: ${this.offsetWidth - 5}px`);
+        let viewportOffset = this.getBoundingClientRect();
+        let spaceToRIght = window.innerWidth - viewportOffset.left;
+        dropdown.setAttribute("style", `width: ${spaceToRIght - 10}px`);
     }
 
     disconnectedCallback() {
