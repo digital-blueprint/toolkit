@@ -1,4 +1,4 @@
-# VPU KnowledgeBaseWebPageElementView Web Component
+# KnowledgeBaseWebPageElementView Web Component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/KnowledgeBaseWebPageElementView)
 
