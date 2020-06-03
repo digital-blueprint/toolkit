@@ -450,9 +450,14 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             header .hd1-right {
                 grid-area: hd1-right;
                 display: flex;
-                flex-direction: column;
-                justify-content: center;
-                padding-left: 20px;
+                justify-content: flex-start;
+                padding: 0 20px;
+                min-width: 0;
+                align-items: center;
+            }
+
+            header .hd1-right .auth-button {
+                min-width: 0;
             }
 
             header .hd2-left {
@@ -713,7 +718,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     <div class="hd1-middle">
                     </div>
                     <div class="hd1-right">
-                        <vpu-auth lang="${this.lang}" keycloak-config="${JSON.stringify(this.keycloakConfig)}" load-person try-login></vpu-auth>
+                        <vpu-auth class="auth-button" lang="${this.lang}" keycloak-config="${JSON.stringify(this.keycloakConfig)}" load-person try-login></vpu-auth>
                     </div>
                     <div class="hd2-left">
                         <div class="header">
