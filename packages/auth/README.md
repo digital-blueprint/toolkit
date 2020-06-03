@@ -1,4 +1,4 @@
-# VPU Auth Web Component
+# Auth Web Component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/Auth)
 
