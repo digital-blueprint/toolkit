@@ -316,7 +316,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
 
             .dropdown-menu {
                 display: none;
-                min-width: 8em;
+                min-width: 5em;
                 position: absolute;
                 z-index: 20;
                 border: solid 1px black;
