@@ -1,4 +1,4 @@
-# VPU Notification Web Component
+# Notification Web Component
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/Notification)
 
