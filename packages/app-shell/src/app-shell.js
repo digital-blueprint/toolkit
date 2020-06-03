@@ -580,7 +580,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 }
 
                 aside {
-                    margin: auto;
+                    margin: 0;
                     padding: 0 0.5em;
                 }
 
