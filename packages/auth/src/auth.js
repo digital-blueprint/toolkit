@@ -370,10 +370,6 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
                 min-width: 150px;
             }
 
-            .dropdown-trigger {
-                white-space: nowrap;
-            }
-
             vpu-icon {
                 height: 1em;
                 width: 1em;
@@ -406,12 +402,21 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
                 fill: var(--vpu-light);
             }
 
-            .loginbox .icon, .authbox {
-                display: inline-block;
-            }
-
             .loginbox .label {
                 padding-left: 0.2em;
+            }
+
+            .dropdown-trigger {
+                display: flex;
+                align-items: center;
+            }
+
+            .dropdown-trigger .name {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                min-width: 0;
+                margin-right: 0.5em
             }
         `;
     }
@@ -448,12 +453,13 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
 
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
-                <div class="dropdown-trigger">
-                    <a href="#">
-                        <span>${this.name}</span>
+                <a href="#">
+                    <div class="dropdown-trigger">
+                        <div class="name">${this.name}</div>
                         <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
-                    </a>
-                </div>
+
+                    </div>
+                </a>
                 <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                     <div class="dropdown-content" @blur="${this.closeDropdown}">
                         ${imageURL ? html`<div class="dropdown-item"><img alt="" src="${imageURL}"></div>` : ''}

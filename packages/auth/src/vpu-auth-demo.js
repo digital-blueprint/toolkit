@@ -78,6 +78,10 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
                     font-weight: 600;
                     line-height: 1.125;
                 }
+
+                .container * {
+                    max-width: 100%;
+                }
             </style>
             <section class="section">
                 <div class="container">
