@@ -2,6 +2,8 @@
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/FileUpload)
 
+Files will be uploaded sequentially (not parallel) to prevent overburdening the destination server. 
+
 ## Usage
 
 ```html
@@ -19,13 +21,15 @@
 - `deferred` (optional): if set files will not be uploaded immediately but only queued
     - use method `uploadFile` or `uploadOneQueuedFile` to really upload the queued file  
     - example `<vpu-fileupload deferred></vpu-fileupload>`
-- `allowed-mime-types` (optional): if set accept only files matching mime types
+- `allowed-mime-types` (optional): if set accepts only files matching mime types
     - example `<vpu-fileupload allowed-mime-types='application/pdf'></vpu-fileupload>` ... PDFs only
     - example `<vpu-fileupload allowed-mime-types='image/*'></vpu-fileupload>` ... images (of all sub types) only
     - example `<vpu-fileupload allowed-mime-types='image/png,text/plain'></vpu-fileupload>` ... PNGs or TXTs only
     - example `<vpu-fileupload allowed-mime-types='*/*'></vpu-fileupload>` ... all file types (default)
 - `disabled` (optional): disable input control
     - example `<vpu-fileupload disabled>`
+- `decompress-zip` (optional): decompress zip file and queue the contained files
+    - example `<vpu-fileupload decompress-zip>`
 
 ## Local development
 

@@ -45,6 +45,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.queuedFiles = [];
         this.queuedFilesCount = 0;
         this.disabled = false;
+        this.decompressZip = false;
         this._queueKey = 0;
     }
 
@@ -64,13 +65,14 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             url: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             text: { type: String },
-            buttonLabel: { type: String, attribute: 'button-label'},
-            uploadInProgress: { type: Boolean, attribute: false},
-            multipleUploadInProgress: { type: Boolean, attribute: false},
-            alwaysSendFile: { type: Boolean, attribute: 'always-send-file'},
-            isDeferred: { type: Boolean, attribute: 'deferred'},
+            buttonLabel: { type: String, attribute: 'button-label' },
+            uploadInProgress: { type: Boolean, attribute: false },
+            multipleUploadInProgress: { type: Boolean, attribute: false },
+            alwaysSendFile: { type: Boolean, attribute: 'always-send-file' },
+            isDeferred: { type: Boolean, attribute: 'deferred' },
             queuedFilesCount: { type: Number, attribute: false },
             disabled: { type: Boolean },
+            decompressZip: { type: Boolean, attribute: 'decompress-zip' },
         };
     }
 
@@ -174,19 +176,15 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                 console.log('file \'' + file.name + '\' has size=0 and is denied!')
                 return;
             }
-            if (this.allowedMimeTypes) {
-                // check if file is allowed
-                const [fileMainType, fileSubType] = file.type.split('/');
-                const mimeTypes = this.allowedMimeTypes.split(',');
-                let deny = true;
-                mimeTypes.forEach((str) => {
-                    const [mainType, subType] = str.split('/');
-                    deny = deny && ((mainType !== '*' && mainType !== fileMainType) || (subType !== '*' && subType !== fileSubType));
-                });
-                if (deny) {
-                    console.log(`mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`);
-                    return;
-                }
+
+            // check if we want to decompress the zip and queue the contained files
+            if (this.decompressZip && file.type === "application/zip") {
+                // add decompressed files to tempFilesToHandle
+                tempFilesToHandle = tempFilesToHandle.concat(await this.decompressZIP(file));
+
+                return;
+            } else if (this.allowedMimeTypes && !this.checkFileType(file)) {
+                return;
             }
 
             tempFilesToHandle.push(file);
@@ -204,6 +202,66 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             this.dispatchEvent(new CustomEvent("vpu-fileupload-all-finished",
                 { "detail": {}, bubbles: true, composed: true }));
         }, 100);
+    }
+
+    checkFileType(file) {
+        // check if file is allowed
+        const [fileMainType, fileSubType] = file.type.split('/');
+        const mimeTypes = this.allowedMimeTypes.split(',');
+        let deny = true;
+
+        mimeTypes.forEach((str) => {
+            const [mainType, subType] = str.split('/');
+            deny = deny && ((mainType !== '*' && mainType !== fileMainType) || (subType !== '*' && subType !== fileSubType));
+        });
+
+        if (deny) {
+            console.log(`mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Decompress files synchronously
+     *
+     * @param file
+     * @returns {Promise<[]>}
+     */
+    async decompressZIP(file) {
+        // see: https://stuk.github.io/jszip/
+        let JSZip = (await import('jszip/dist/jszip.js')).default;
+        let filesToHandle = [];
+
+        // load zip file
+        await JSZip.loadAsync(file)
+            .then(async (zip) => {
+                // we are not using zip.forEach because we need to handle those files synchronously which
+                // isn't supported by JSZip (see https://github.com/Stuk/jszip/issues/281)
+                // using zip.files directly works great!
+                await commonUtils.asyncObjectForEach(zip.files, async (zipEntry) => {
+                    // TODO: find way to check mime type, see https://github.com/Stuk/jszip/issues/626
+                    // if (!this.checkFileType(zipEntry)) {
+                    //     return;
+                    // }
+
+                    await zipEntry.async("blob")
+                        .then((blob) => {
+                                blob.name = zipEntry.name;
+                                filesToHandle.push(blob);
+                            }, (e) => {
+                                // handle the error
+                                console.error("Decompressing of file in " + file.name + " failed:" + e.message);
+                            });
+                    });
+            }, function (e) {
+                // handle the error
+                console.error("Loading of " + file.name + " failed:" + e.message);
+            });
+
+        return filesToHandle;
     }
 
     async sendFinishedEvent(response, file, sendFile = false) {
