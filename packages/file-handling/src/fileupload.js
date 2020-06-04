@@ -242,6 +242,10 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                 // isn't supported by JSZip (see https://github.com/Stuk/jszip/issues/281)
                 // using zip.files directly works great!
                 await commonUtils.asyncObjectForEach(zip.files, async (zipEntry) => {
+                    // skip directory entries
+                    if (zipEntry.dir) {
+                        return;
+                    }
                     // TODO: find way to check mime type, see https://github.com/Stuk/jszip/issues/626
                     // if (!this.checkFileType(zipEntry)) {
                     //     return;
