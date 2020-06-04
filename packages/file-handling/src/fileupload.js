@@ -253,8 +253,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
 
                     await zipEntry.async("blob")
                         .then((blob) => {
-                                blob.name = zipEntry.name;
-                                filesToHandle.push(blob);
+                                filesToHandle.push(new File([blob], zipEntry.name));
                             }, (e) => {
                                 // handle the error
                                 console.error("Decompressing of file in " + file.name + " failed:" + e.message);
