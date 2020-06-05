@@ -278,3 +278,52 @@ export async function asyncArrayForEach(array, callback) {
         await callback(array[index], index, array);
     }
 }
+
+/**
+ * Attempts to determine the mime type of a file or blob
+ *
+ * @param file
+ * @returns {Promise<unknown>}
+ */
+export async function getMimeTypeOfFile(file) {
+    const getMimeType = (signature) => {
+        switch (signature) {
+            case '89504E47':
+                return 'image/png'
+            case '47494638':
+                return 'image/gif'
+            case '25504446':
+                return 'application/pdf'
+            case 'FFD8FFDB':
+            case 'FFD8FFE0':
+            case 'FFD8FFE1':
+                return 'image/jpeg'
+            case '504B0304':
+                return 'application/zip'
+            default:
+                return 'Unknown filetype'
+        }
+    }
+
+    return await new Promise((resolve) => {
+        let fileReader = new FileReader();
+
+        fileReader.onloadend = function (evt) {
+            if (evt.target.readyState === FileReader.DONE) {
+                const uint = new Uint8Array(evt.target.result);
+                let bytes = [];
+
+                uint.forEach((byte) => {
+                    bytes.push(byte.toString(16))
+                })
+
+                const hex = bytes.join('').toUpperCase();
+                const mimeType = getMimeType(hex);
+
+                resolve(mimeType);
+            }
+        }
+
+        fileReader.readAsArrayBuffer(file.slice(0, 4));
+    });
+}
