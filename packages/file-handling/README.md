@@ -28,8 +28,9 @@ Files will be uploaded sequentially (not parallel) to prevent overburdening the 
     - example `<vpu-fileupload allowed-mime-types='*/*'></vpu-fileupload>` ... all file types (default)
 - `disabled` (optional): disable input control
     - example `<vpu-fileupload disabled>`
-- `decompress-zip` (optional): decompress zip file and queue the contained files
+- `decompress-zip` (optional): decompress zip file and queue the contained files (including files in folders)
     - example `<vpu-fileupload decompress-zip>`
+    - mime types of `allowed-mime-types` will also be checked for the files in the zip file
 
 ## Local development
 
