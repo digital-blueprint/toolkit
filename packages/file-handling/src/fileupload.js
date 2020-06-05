@@ -1,6 +1,5 @@
 import {i18n} from './i18n';
 import {css, html} from 'lit-element';
-import {ifDefined} from 'lit-html/directives/if-defined';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 // import JSONLD from 'vpu-common/jsonld';
 import VPULitElement from 'vpu-common/vpu-lit-element';
@@ -246,22 +245,29 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                     if (zipEntry.dir) {
                         return;
                     }
-                    // TODO: find way to check mime type, see https://github.com/Stuk/jszip/issues/626
-                    // if (!this.checkFileType(zipEntry)) {
-                    //     return;
-                    // }
 
                     await zipEntry.async("blob")
-                        .then((blob) => {
-                                filesToHandle.push(new File([blob], zipEntry.name));
-                            }, (e) => {
-                                // handle the error
-                                console.error("Decompressing of file in " + file.name + " failed:" + e.message);
-                            });
+                        .then(async (blob) => {
+                            // get mime type of Blob, see https://github.com/Stuk/jszip/issues/626
+                            const mimeType = await commonUtils.getMimeTypeOfFile(blob);
+
+                            // create new file with name and mime type
+                            const zipEntryFile = new File([blob], zipEntry.name, { type: mimeType });
+
+                            // check mime type
+                            if (!this.checkFileType(zipEntryFile)) {
+                                return;
+                            }
+
+                            filesToHandle.push(zipEntryFile);
+                        }, (e) => {
+                            // handle the error
+                            console.error("Decompressing of file in " + file.name + " failed: " + e.message);
+                        });
                     });
             }, function (e) {
                 // handle the error
-                console.error("Loading of " + file.name + " failed:" + e.message);
+                console.error("Loading of " + file.name + " failed: " + e.message);
             });
 
         return filesToHandle;
