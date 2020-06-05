@@ -435,6 +435,12 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
     }
 
     render() {
+        let allowedMimeTypes = this.allowedMimeTypes;
+
+        if (this.decompressZip) {
+            allowedMimeTypes += ",application/zip";
+        }
+
         return html`
             <div id="dropArea">
                 <div class="my-form" title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
@@ -443,7 +449,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                            type="file"
                            id="fileElem"
                            multiple
-                           accept="${mimeTypesToAccept(this.allowedMimeTypes)}"
+                           accept="${mimeTypesToAccept(allowedMimeTypes)}"
                            name='file'>
                     <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
                         <vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon>
