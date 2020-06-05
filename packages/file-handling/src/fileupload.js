@@ -13,6 +13,7 @@ function mimeTypesToAccept(mimeTypes) {
     // need file extensions, this tries to add them for some..
     let mapping = {
         'application/pdf': ['.pdf'],
+        'application/zip': ['.zip'],
     };
     let accept = [];
     mimeTypes.split(',').forEach((mime) => {
