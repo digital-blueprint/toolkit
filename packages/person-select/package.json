@@ -2,6 +2,7 @@
   "name": "vpu-person-select",
   "version": "1.0.0",
   "main": "src/index.js",
+  "license": "LGPL-2.1-or-later",
   "devDependencies": {
     "chai": "^4.2.0",
     "i18next-scanner": "^2.10.2",
