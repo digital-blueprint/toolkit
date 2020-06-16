@@ -373,39 +373,40 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
                 min-width: 150px;
             }
 
-            vpu-icon {
+            .menu-icon {
                 height: 1em;
                 width: 1em;
                 vertical-align: -0.1rem;
             }
 
-            .loginbox svg {
-                width: 1.2em;
-                height: 1.2em;
-                top: 0.15em;
-                position: relative;
+            .login-box svg {
+                width: 1.1em;
+                height: 1.1em;
+                display: flex;
             }
 
-            .loginbox {
-                display: flex;
-
-                align-items: center;
-                padding: 0 0.1em;
+            .login-button {
+                padding: 0.3em 0.4em;
                 transition: background-color 0.15s, color 0.15s;
             }
 
-            .loginbox:hover {
+            .login-button:hover {
                 background-color: var(--vpu-dark);
                 color: var(--vpu-light);
                 cursor: pointer;
                 transition: none;
             }
 
-            .loginbox:hover svg path {
+            .login-box {
+                display: flex;
+                align-items: center;
+            }
+
+            .login-box:hover svg path {
                 fill: var(--vpu-light);
             }
 
-            .loginbox .label {
+            .login-box .label {
                 padding-left: 0.2em;
             }
 
@@ -457,10 +458,9 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
                 <a href="#">
-                    <div class="dropdown-trigger">
+                    <div class="dropdown-trigger login-button">
                         <div class="name">${this.name}</div>
-                        <vpu-icon name="chevron-down" id="menu-chevron-icon"></vpu-icon>
-
+                        <vpu-icon class="menu-icon" name="chevron-down" id="menu-chevron-icon"></vpu-icon>
                     </div>
                 </a>
                 <div class="dropdown-menu" id="dropdown-menu2" role="menu">
@@ -500,7 +500,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
 
         return html`
             <a href="#" @click="${this.onLoginClicked}">
-                <div class="loginbox">
+                <div class="login-box login-button">
                     <div class="icon">${unsafeHTML(loginSVG)}</div>
                     <div class="label">${i18n.t('login')}</div>
                 </div>
