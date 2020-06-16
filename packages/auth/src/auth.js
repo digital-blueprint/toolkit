@@ -253,7 +253,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
 
         let viewportOffset = this.getBoundingClientRect();
         let spaceToRIght = window.innerWidth - viewportOffset.left;
-        dropdown.setAttribute("style", `width: ${spaceToRIght - 10}px`);
+        dropdown.setAttribute("style", `width: ${spaceToRIght - 20}px`);
     }
 
     disconnectedCallback() {
@@ -319,6 +319,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
             .dropdown-menu {
                 display: none;
                 min-width: 5em;
+                max-width: 25em;
                 position: absolute;
                 z-index: 20;
                 border: solid 1px black;
