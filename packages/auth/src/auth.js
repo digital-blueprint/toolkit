@@ -5,8 +5,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import JSONLD from 'vpu-common/jsonld';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
-import * as events from 'vpu-common/events.js';
-import {Icon} from 'vpu-common';
+import {Icon, EventBus} from 'vpu-common';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import  {KeycloakWrapper} from './keycloak.js';
 
@@ -49,18 +48,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
         this.person = null;
         this.entryPointUrl = commonUtils.getAPiUrl();
         this.keycloakConfig = null;
-
-        const _getLoginData = () => {
-            const message = {
-                status: this._loginStatus,
-                token: this.token,
-            };
-            return message;
-        };
-
         this._loginStatus = LoginStatus.UNKNOWN;
-        this._emitter = new events.EventEmitter('vpu-auth-update', 'vpu-auth-update-request');
-        this._emitter.registerCallback(_getLoginData);
 
         // Create the events
         this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
@@ -162,7 +150,13 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
             return;
 
         this._loginStatus = status;
-        this._emitter.emit();
+
+        this._bus.publish('auth-update', {
+            status: this._loginStatus,
+            token: this.token,
+        }, {
+            retain: true,
+        });
     }
 
     /**
@@ -196,6 +190,8 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
 
     connectedCallback() {
         super.connectedCallback();
+
+        this._bus = new EventBus();
 
         // Keycloak config
         let baseURL = '';
@@ -257,6 +253,7 @@ export class Auth extends ScopedElementsMixin(VPULitElement) {
     }
 
     disconnectedCallback() {
+        this._bus.close();
         this._kcwrapper.removeEventListener('changed', this._onKCChanged);
         document.removeEventListener('click', this.closeDropdown);
         super.disconnectedCallback();
