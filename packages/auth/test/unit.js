@@ -26,6 +26,24 @@ suite('vpu-auth basics', () => {
   });
 });
 
+suite('vpu-auth-button', () => {
+    let node;
+  
+    suiteSetup(async () => {
+      node = document.createElement('vpu-auth-button');
+      document.body.appendChild(node);
+      await node.updateComplete;
+    });
+  
+    suiteTeardown(() => {
+      node.remove();
+    });
+  
+    test('should render', () => {
+        expect(node).to.have.property('shadowRoot');
+    });
+  });
+
 suite('vpu-auth-demo basics', () => {
   let node;
 

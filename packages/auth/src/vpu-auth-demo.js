@@ -2,6 +2,7 @@ import {i18n} from './i18n.js';
 import {html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Auth} from './auth.js';
+import {AuthButton} from './auth-button.js';
 import * as commonUtils from 'vpu-common/utils';
 
 class AuthDemo extends ScopedElementsMixin(LitElement) {
@@ -13,6 +14,7 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
           'vpu-auth': Auth,
+          'vpu-auth-button': AuthButton,
         };
     }
 
@@ -88,7 +90,9 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
                     <h1 class="title">Auth-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-auth lang="${this.lang}" keycloak-config='{"url": "https://auth-dev.tugraz.at/auth", "realm": "tugraz", "clientId": "auth-dev-mw-frontend-local", "silentCheckSsoRedirectUri": "${silentCheckSsoUri}", "scope": "optional-test-scope"}' load-person try-login show-image></vpu-auth>
+                    <vpu-auth lang="${this.lang}" keycloak-config='{"url": "https://auth-dev.tugraz.at/auth", "realm": "tugraz", "clientId": "auth-dev-mw-frontend-local", "silentCheckSsoRedirectUri": "${silentCheckSsoUri}", "scope": "optional-test-scope"}' load-person try-login></vpu-auth>
+
+                    <vpu-auth-button lang="${this.lang}" show-image></vpu-auth-button>
                 </div>
             </section>
 
