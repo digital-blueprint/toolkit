@@ -2,7 +2,7 @@ import {createI18nInstance} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from 'vpu-language-select';
-import {Icon} from 'vpu-common';
+import {Icon, EventBus} from 'vpu-common';
 import {Auth} from 'vpu-auth';
 import {Notification} from 'vpu-notification';
 import * as commonStyles from 'vpu-common/styles';
@@ -10,7 +10,6 @@ import * as commonUtils from 'vpu-common/utils';
 import buildinfo from 'consts:buildinfo';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
-import * as events from 'vpu-common/events.js';
 import {BuildInfo} from './build-info.js';
 import {TUGrazLogo} from './tugraz-logo.js';
 import {send as notify} from 'vpu-common/notification';
@@ -57,7 +56,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
-        this._subscriber = new events.EventSubscriber('vpu-auth-update', 'vpu-auth-update-request');
 
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
     }
@@ -241,15 +239,17 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
     connectedCallback() {
         super.connectedCallback();
 
+        this._bus = new EventBus();
+
         if (this.src)
             this.fetchMetadata(this.src);
         this.initRouter();
 
-        this._subscriber.subscribe(this._updateAuth);
+        this._bus.subscribe('auth-update', this._updateAuth);
     }
 
     disconnectedCallback() {
-        this._subscriber.unsubscribe(this._updateAuth);
+        this._bus.close();
         super.disconnectedCallback();
     }
 
