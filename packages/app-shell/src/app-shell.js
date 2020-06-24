@@ -3,7 +3,8 @@ import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from 'vpu-language-select';
 import {Icon, EventBus} from 'vpu-common';
-import {Auth, AuthButton} from 'vpu-auth';
+import {Auth} from 'vpu-auth';
+import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from 'vpu-notification';
 import * as commonStyles from 'vpu-common/styles';
 import * as commonUtils from 'vpu-common/utils';
@@ -66,7 +67,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
           'vpu-tugraz-logo': TUGrazLogo,
           'vpu-build-info': BuildInfo,
           'vpu-auth': Auth,
-          'vpu-auth-button': AuthButton,
+          'vpu-auth-menu-button': AuthMenuButton,
           'vpu-notification': Notification,
           'vpu-icon': Icon,
         };
@@ -720,7 +721,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     <div class="hd1-middle">
                     </div>
                     <div class="hd1-right">
-                        <vpu-auth-button class="auth-button" lang="${this.lang}"></vpu-auth-button>
+                        <vpu-auth-menu-button class="auth-button" lang="${this.lang}"></vpu-auth-menu-button>
                     </div>
                     <div class="hd2-left">
                         <div class="header">
