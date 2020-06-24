@@ -19,6 +19,8 @@ const promiseTimeout = function(ms, promise) {
 
 /**
  * Returns a URL for a relative path or URL
+ *
+ * @param {string} urlOrPath
  */
 const ensureURL = function(urlOrPath) {
     try {
@@ -26,7 +28,7 @@ const ensureURL = function(urlOrPath) {
     } catch (e) {
         return new URL(urlOrPath, window.location.href).href;
     }
-}
+};
 
 
 /**
