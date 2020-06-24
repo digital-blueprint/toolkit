@@ -14,7 +14,6 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
-        this.showProfile = false;
         this.showImage = false;
         this._loginData = {};
 
@@ -31,7 +30,6 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
     static get properties() {
         return {
             lang: { type: String },
-            showProfile: { type: Boolean, attribute: 'show-profile' },
             showImage: { type: Boolean, attribute: 'show-image' },
             _loginData: { type: Object, attribute: false },
         };
@@ -251,16 +249,6 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
         this.setChevron('chevron-down');
     }
 
-    onProfileClicked(event) {
-        event.preventDefault();
-        const profileEvent = new CustomEvent("vpu-auth-profile", {
-            "detail": "Profile event",
-            bubbles: true,
-            composed: true,
-        });
-        this.dispatchEvent(profileEvent);
-    }
-
     renderLoggedIn() {
         const person = this._loginData.person;
         const imageURL = (this.showImage && person && person.image) ? person.image : null;
@@ -277,7 +265,6 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
                     <div class="dropdown-content" @blur="${this.closeDropdown}">
                         ${imageURL ? html`<div class="dropdown-item"><img alt="" src="${imageURL}"></div>` : ''}
                         <div class="menu">
-                            ${this.showProfile ? html`<a href="#" @click="${this.onProfileClicked}" class="dropdown-item">${i18n.t('profile')}</a>` :''}
                             <a href="#" @click="${this.onLogoutClicked}" class="dropdown-item">${i18n.t('logout')}</a>
                         </div>
                     </div>

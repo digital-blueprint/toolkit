@@ -15,6 +15,5 @@
       "headline": "Willkommen bei der Applikation '{{appname}}'."
   },
   "login": "Einloggen",
-  "logout": "Ausloggen",
-  "profile": "Profil"
+  "logout": "Ausloggen"
 }
