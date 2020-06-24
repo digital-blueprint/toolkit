@@ -5,9 +5,7 @@ import VPULitElement from 'vpu-common/vpu-lit-element';
 import {MiniSpinner} from 'vpu-common';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
-// `import {createClient} from 'webdav/web';` didn't seem to work if fileupload demo page is built
-// `import createClient from 'webdav/web';` didn't seem to work if Signature project is built
-import * as webDavWeb from 'webdav/web';
+import {createClient} from 'webdav/web';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {humanFileSize} from 'vpu-common/i18next';
 import Tabulator from 'tabulator-tables';
@@ -125,7 +123,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
             const apiUrl = this.webDavUrl + "/" + data.loginName;
 
             // https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
-            this.webDavClient = webDavWeb.createClient(
+            this.webDavClient = createClient(
                 apiUrl,
                 {
                     username: data.loginName,
