@@ -414,8 +414,6 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
 
-            .hidden { display: none; }
-
             #dropArea {
                 border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, black);
                 border-radius: var(--FUBorderRadius, 0);
@@ -439,6 +437,10 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             #nextcloud-file-picker {
                 display: inline-block;
                 margin-left: 8px;
+            }
+
+            #nextcloud-file-picker.hidden {
+                display: none;
             }
 
             .block {
