@@ -411,6 +411,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
     static get styles() {
         // language=css
         return css`
+            ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
 
             .hidden { display: none; }
@@ -439,6 +440,10 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                 display: inline-block;
                 margin-left: 8px;
             }
+
+            .block {
+                margin-bottom: 10px;
+            }
         `;
     }
 
@@ -452,7 +457,9 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         return html`
             <div id="dropArea">
                 <div title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
-                    <p>${this.text || i18n.t('intro')}</p>
+                    <div class="block">
+                        ${this.text || i18n.t('intro')}
+                    </div>
                     <input ?disabled="${this.uploadInProgress || this.disabled}"
                            type="file"
                            id="fileElem"
