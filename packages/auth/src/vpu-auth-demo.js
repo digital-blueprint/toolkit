@@ -90,7 +90,7 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
                     <h1 class="title">Auth-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-auth-keycloak lang="${this.lang}" keycloak-config='{"url": "https://auth-dev.tugraz.at/auth", "realm": "tugraz", "clientId": "auth-dev-mw-frontend-local", "silentCheckSsoRedirectUri": "${silentCheckSsoUri}", "scope": "optional-test-scope"}' load-person try-login></vpu-auth-keycloak>
+                    <vpu-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" silent-check-sso-redirect-uri="${silentCheckSsoUri}" scope="optional-test-scope" load-person try-login></vpu-auth-keycloak>
 
                     <vpu-login-button lang="${this.lang}" show-image></vpu-login-button>
                 </div>

@@ -7,7 +7,7 @@
 ### Usage
 
 ```html
-<vpu-auth-keycloak></vpu-auth-keycloak>
+<vpu-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz" client-id="some-id"></vpu-auth-keycloak>
 ```
 
 ### Attributes
@@ -22,16 +22,14 @@
 - `try-login` (optional, default: off): if enabled the a login will happen if the user is already logged in
   and finishing the login process would not result in a page location change (reload/redirect).
     - example `<vpu-auth-keycloak try-login></vpu-auth-keycloak>`
-- `keycloak-config`: An object which can contain the following keys: url, realm, clientId, silentCheckSsoRedirectUri
-    - example `<vpu-auth-keycloak  keycloak-config='{"url": "https://auth.tugraz.at/auth", "realm": "tugraz", "clientId": "some-id", "silentCheckSsoRedirectUri": "", "scope": ""}'></vpu-auth-keycloak>`
 
-### Keycloak Config
+### Keycloak Specific Attributes
 
-- `url`: The base URL of the Keycloak server
-- `realm`: The Keycloak realm
-- `clientId`: The Keycloak client to use
-- `silentCheckSsoRedirectUri`: URI or path to a separate page for checking the login session in an iframe, see https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
-- `scope`: Space separated list of scopes to request. These scopes get added in addition to the default ones, assuming the scope is in the optional scopes list of the Keycloak client in use.
+- `url` (required): The base URL of the Keycloak server
+- `realm` (required): The Keycloak realm
+- `client-id` (required): The Keycloak client to use
+- `silent-check-sso-redirect-uri` (optional): URI or path to a separate page for checking the login session in an iframe, see https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
+- `scope` (optional): Space separated list of scopes to request. These scopes get added in addition to the default ones, assuming the scope is in the optional scopes list of the Keycloak client in use.
 
 ### Events to listen to
 

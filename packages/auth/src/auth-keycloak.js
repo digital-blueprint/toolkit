@@ -34,8 +34,14 @@ export class AuthKeycloak extends LitElement {
         this.tryLogin = false;
         this.person = null;
         this.entryPointUrl = commonUtils.getAPiUrl();
-        this.keycloakConfig = null;
         this._loginStatus = LoginStatus.UNKNOWN;
+
+        // Keycloak config
+        this.keycloakUrl = null;
+        this.realm = null;
+        this.clientId = null;
+        this.silentCheckSsoRedirectUri = null;
+        this.scope = null;
 
         // Create the events
         this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
@@ -157,50 +163,36 @@ export class AuthKeycloak extends LitElement {
             tryLogin: { type: Boolean, attribute: 'try-login' },
             loadPerson: { type: Boolean, attribute: 'load-person' },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            keycloakConfig: { type: Object, attribute: 'keycloak-config' },
             name: { type: String, attribute: false },
             token: { type: String, attribute: false },
             subject: { type: String, attribute: false },
             personId: { type: String, attribute: false },
             person: { type: Object, attribute: false },
             _loginStatus: { type: String, attribute: false },
+            keycloakUrl: { type: String, attribute: 'url' },
+            realm: { type: String },
+            clientId: { type: String, attribute: 'client-id' },
+            silentCheckSsoRedirectUri: { type: String, attribute: 'silent-check-sso-redirect-uri' },
+            scope: { type: String },
         };
-    }
-
-    _getScope() {
-        if (this.keycloakConfig !== null) {
-            return this.keycloakConfig.scope || "";
-        }
-        return "";
     }
 
     connectedCallback() {
         super.connectedCallback();
 
+        if (!this.keycloakUrl)
+            throw Error("url not set");
+        if (!this.realm)
+            throw Error("realm not set");
+        if (!this.clientId)
+            throw Error("client-id not set");
+
         this._bus = new EventBus();
-
-        // Keycloak config
-        let baseURL = '';
-        let realm = '';
-        let clientId = '';
-        let silentCheckSsoRedirectUri = '';
-        if (this.keycloakConfig !== null) {
-            baseURL = this.keycloakConfig.url || baseURL;
-            realm = this.keycloakConfig.realm || realm;
-            clientId = this.keycloakConfig.clientId || clientId;
-            silentCheckSsoRedirectUri = this.keycloakConfig.silentCheckSsoRedirectUri || silentCheckSsoRedirectUri;
-        }
-        if (!baseURL || !realm || !clientId) {
-            throw Error("Keycloak config not set");
-        }
-
-        this._kcwrapper = new KeycloakWrapper(baseURL, realm, clientId, silentCheckSsoRedirectUri);
+        this._kcwrapper = new KeycloakWrapper(this.keycloakUrl, this.realm, this.clientId, this.silentCheckSsoRedirectUri);
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 
-
-
         this._bus.subscribe('auth-login', () => {
-            this._kcwrapper.login({lang: this.lang, scope: this._getScope()});
+            this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
         });
 
         this._bus.subscribe('auth-logout', () => {
@@ -220,7 +212,7 @@ export class AuthKeycloak extends LitElement {
         const handleLogin = async () => {
             if (this.forceLogin || this._kcwrapper.isLoggingIn()) {
                 this._setLoginStatus(LoginStatus.LOGGING_IN);
-                await this._kcwrapper.login({lang: this.lang, scope: this._getScope()});
+                await this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
             } else if (this.tryLogin) {
                 this._setLoginStatus(LoginStatus.LOGGING_IN);
                 await this._kcwrapper.tryLogin();
