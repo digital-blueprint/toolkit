@@ -2,7 +2,7 @@ import {i18n} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import VPULitElement from 'vpu-common/vpu-lit-element';
-import {MiniSpinner} from 'vpu-common';
+import {Icon, MiniSpinner} from 'vpu-common';
 import * as commonUtils from 'vpu-common/utils';
 import * as commonStyles from 'vpu-common/styles';
 import {createClient} from 'webdav/web';
@@ -32,6 +32,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
 
     static get scopedElements() {
         return {
+            'vpu-icon': Icon,
             'vpu-mini-spinner': MiniSpinner,
         };
     }
@@ -47,6 +48,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
             isPickerActive: { type: Boolean, attribute: false },
             statusText: { type: String, attribute: false },
             directoryPath: { type: String, attribute: false },
+            allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
         };
     }
 
@@ -69,25 +71,47 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-
+        const that = this;
         this.updateComplete.then(() => {
             // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
             window.addEventListener('message', this._onReceiveWindowMessage);
 
             // http://tabulator.info/docs/4.7
-            // TODO: format size and lastmod
             // TODO: translation of column headers
-            // TODO: mime type icon
             this.tabulatorTable = new Tabulator(this._("#directory-content-table"), {
                 layout: "fitDataStretch",
                 selectable: true,
                 columns: [
+                    {title: "Type", field: "type", align:"center", formatter:function(cell, formatterParams, onRendered){
+                            const icon_tag =  that.constructor.getScopedTagName("vpu-icon");
+                            let icon = `<${icon_tag} name="empty-file"></${icon_tag}>`;
+                            return (cell.getValue() == "directory") ? `<${icon_tag} name="folder"></${icon_tag}>` : icon;
+                        }},
                     {title: "Filename", field: "basename"},
                     {title: "Size", field: "size", formatter: (cell, formatterParams, onRendered) => {
                             return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());}},
-                    {title: "Type", field: "type"},
-                    {title: "Mime", field: "mime"},
-                    {title: "Last modified", field: "lastmod", sorter: "date"},
+                    {title: "Mime", field: "mime", formatter: (cell, formatterParams, onRendered) => {
+                            if(typeof cell.getValue() === 'undefined') {
+                                return "";
+                            }
+                            const [fileMainType, fileSubType] = cell.getValue().split('/');
+                            return fileSubType;
+                        }},
+                    {title: "Last modified", field: "lastmod",sorter:function(a, b, aRow, bRow, column, dir, sorterParams){
+                            var a_timestamp = Date.parse(a);
+                            var b_timestamp = Date.parse(b);
+                            return a_timestamp - b_timestamp; //you must return the difference between the two values
+                        }, formatter:function(cell, formatterParams, onRendered) {
+                            var d = Date.parse(cell.getValue());
+                            var timestamp = new Date(d);
+                            var year = timestamp.getFullYear();
+                            var month = ("0" + (timestamp.getMonth() + 1)).slice(-2);
+                            var date = ("0" + timestamp.getDate()).slice(-2);
+                            var hours = ("0" + timestamp.getHours()).slice(-2);
+                            var minutes = ("0" + timestamp.getMinutes()).slice(-2);
+                            var date_formatted = date + "." + month + "." + year + " " + hours + ":" + minutes;
+                            return date_formatted;
+                        }},
                 ],
                 rowClick: (e, row) => {
                     const data = row.getData();
@@ -102,7 +126,33 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                     }
                 },
             });
+
+            function checkFileType(data, filterParams) {
+                // check if file is allowed
+                if(typeof data.mime === 'undefined') {
+                    return true;
+                }
+                const [fileMainType, fileSubType] = data.mime.split('/');
+                const mimeTypes = filterParams.split(',');
+                let deny = true;
+
+                mimeTypes.forEach((str) => {
+                    const [mainType, subType] = str.split('/');
+                    deny = deny && ((mainType !== '*' && mainType !== fileMainType) || (subType !== '*' && subType !== fileSubType));
+                });
+
+                if (deny) {
+                    console.log(`mime type ${data.type} of file '${data.filename}' is not compatible with ${filterParams}`);
+                    return false;
+                }
+                return true;
+            }
+            if(typeof this.allowedMimeTypes !== 'undefined') {
+                this.tabulatorTable.setFilter(checkFileType, this.allowedMimeTypes);
+            }
         });
+
+
     }
 
     openFilePicker() {
