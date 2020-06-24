@@ -18,7 +18,7 @@ activities. Handles login, language selection, activity switching, menus etc.
 - `src`: The path to a topic metadata file (json)
 - `base-path` (optional, default: `/`: An absolute base path for routing
 - `entry-point-url`: Entry point URL to access the API
-- `keycloak-config`: See `vpu-auth` for details
+- `keycloak-config`: An object with the following keys: url, realm, clientId, silentCheckSsoRedirectUri, scope
 
 ## Topic Metadata
 

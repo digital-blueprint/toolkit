@@ -3,7 +3,7 @@ import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from 'vpu-language-select';
 import {Icon, EventBus} from 'vpu-common';
-import {Auth} from 'vpu-auth';
+import {AuthKeycloak} from 'vpu-auth';
 import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from 'vpu-notification';
 import * as commonStyles from 'vpu-common/styles';
@@ -66,7 +66,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
           'vpu-language-select': LanguageSelect,
           'vpu-tugraz-logo': TUGrazLogo,
           'vpu-build-info': BuildInfo,
-          'vpu-auth': Auth,
+          'vpu-auth-keycloak': AuthKeycloak,
           'vpu-auth-menu-button': AuthMenuButton,
           'vpu-notification': Notification,
           'vpu-icon': Icon,
@@ -708,9 +708,11 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             "https://www.tugraz.at/en/about-this-page/legal-notice/" :
             "https://www.tugraz.at/ueber-diese-seite/impressum/";
 
+        const kc = this.keycloakConfig;
+
         return html`
             <slot class="${slotClassMap}"></slot>
-            <vpu-auth lang="${this.lang}" keycloak-config="${JSON.stringify(this.keycloakConfig)}" load-person try-login></vpu-auth>
+            <vpu-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}" load-person try-login></vpu-auth-keycloak>
             <div class="${mainClassMap}">
             <div id="main">
                 <vpu-notification lang="${this.lang}"></vpu-notification>
