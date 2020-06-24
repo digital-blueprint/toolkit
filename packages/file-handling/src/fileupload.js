@@ -434,6 +434,11 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             #fileElem {
                 display: none;
             }
+
+            #nextcloud-file-picker {
+                display: inline-block;
+                margin-left: 10px;
+            }
         `;
     }
 
@@ -454,7 +459,12 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                            multiple
                            accept="${mimeTypesToAccept(allowedMimeTypes)}"
                            name='file'>
-                    <vpu-nextcloud-file-picker class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
+                    <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
+                        <vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon>
+                        ${this.buttonLabel || i18n.t('upload-label')}
+                    </label>
+                    <vpu-nextcloud-file-picker id="nextcloud-file-picker"
+                                               class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
                                                ?disabled="${this.uploadInProgress || this.disabled}"
                                                lang="${this.lang}"
                                                auth-url="${this.nextcloudAuthUrl}"
@@ -462,10 +472,6 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                                                @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
                                                    this.queueFile(event.detail.file);
                                                }}"></vpu-nextcloud-file-picker>
-                    <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
-                        <vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon>
-                        ${this.buttonLabel || i18n.t('upload-label')}
-                    </label>
                     <vpu-mini-spinner style="display: ${this.multipleUploadInProgress ? "inline-block" : "none"}"></vpu-mini-spinner>
                 </div>
             </div>
