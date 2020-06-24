@@ -437,7 +437,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
 
             #nextcloud-file-picker {
                 display: inline-block;
-                margin-left: 10px;
+                margin-left: 8px;
             }
         `;
     }
