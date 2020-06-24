@@ -27,10 +27,16 @@ Files will be uploaded sequentially (not parallel) to prevent overburdening the 
     - example `<vpu-fileupload allowed-mime-types='image/png,text/plain'></vpu-fileupload>` ... PNGs or TXTs only
     - example `<vpu-fileupload allowed-mime-types='*/*'></vpu-fileupload>` ... all file types (default)
 - `disabled` (optional): disable input control
-    - example `<vpu-fileupload disabled>`
+    - example `<vpu-fileupload disabled></vpu-fileupload>`
 - `decompress-zip` (optional): decompress zip file and queue the contained files (including files in folders)
-    - example `<vpu-fileupload decompress-zip>`
+    - example `<vpu-fileupload decompress-zip></vpu-fileupload>`
     - mime types of `allowed-mime-types` will also be checked for the files in the zip file
+- `nextcloud-auth-url` (optional): Nextcloud Auth Url to use with the Nextcloud file picker
+    - example `<vpu-fileupload nextcloud-auth-url="http://localhost:8081/index.php/apps/webapppassword"></vpu-fileupload>`
+    - `nextcloud-web-dav-url` also needs to be set for the Nextcloud file picker to be active
+- `nextcloud-web-dav-url` (optional): Nextcloud WebDav Url to use with the Nextcloud file picker
+    - example `<vpu-fileupload nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></vpu-fileupload>`
+    - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
 
 ## Local development
 

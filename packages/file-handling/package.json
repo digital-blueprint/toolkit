@@ -29,7 +29,9 @@
     "i18next": "^19.4.2",
     "lit-element": "^2.1.0",
     "lit-html": "^1.1.1",
-    "material-design-icons-svg": "^3.0.0"
+    "material-design-icons-svg": "^3.0.0",
+    "tabulator-tables": "^4.7.0",
+    "webdav": "^3.3.0"
   },
   "scripts": {
     "clean": "rm dist/*",

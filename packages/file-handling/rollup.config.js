@@ -44,6 +44,7 @@ export default {
                 {src: 'assets/index.html', dest: 'dist'},
                 {src: 'assets/favicon.ico', dest: 'dist'},
                 {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
+                {src: 'node_modules/tabulator-tables/dist/css', dest: 'dist/local/fileupload/tabulator-tables'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false

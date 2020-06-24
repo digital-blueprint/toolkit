@@ -6,6 +6,8 @@ import VPULitElement from 'vpu-common/vpu-lit-element';
 import * as commonUtils from "vpu-common/utils";
 import {Icon, MiniSpinner} from 'vpu-common';
 import * as commonStyles from 'vpu-common/styles';
+import {NextcloudFilePicker} from "./vpu-nextcloud-file-picker";
+import {classMap} from 'lit-html/directives/class-map.js';
 
 
 function mimeTypesToAccept(mimeTypes) {
@@ -34,6 +36,8 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         super();
         this.lang = 'de';
         this.url = '';
+        this.nextcloudAuthUrl = '';
+        this.nextcloudWebDavUrl = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
         this.text = '';
@@ -53,6 +57,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         return {
             'vpu-icon': Icon,
             'vpu-mini-spinner': MiniSpinner,
+            'vpu-nextcloud-file-picker': NextcloudFilePicker,
         };
     }
 
@@ -64,6 +69,8 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             lang: { type: String },
             url: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
+            nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
+            nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label' },
             uploadInProgress: { type: Boolean, attribute: false },
@@ -451,6 +458,14 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                            multiple
                            accept="${mimeTypesToAccept(allowedMimeTypes)}"
                            name='file'>
+                    <vpu-nextcloud-file-picker class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
+                                               ?disabled="${this.uploadInProgress || this.disabled}"
+                                               lang="${this.lang}"
+                                               auth-url="${this.nextcloudAuthUrl}"
+                                               web-dav-url="${this.nextcloudWebDavUrl}"
+                                               @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
+                                                   this.queueFile(event.detail.file);
+                                               }}"></vpu-nextcloud-file-picker>
                     <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
                         <vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon>
                         ${this.buttonLabel || i18n.t('upload-label')}
