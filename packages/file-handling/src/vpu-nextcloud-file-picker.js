@@ -246,7 +246,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                         @click="${() => { this.loadDirectory(this.getParentDirectoryPath()); }}">&#8679;</button>
                 <table id="directory-content-table"></table>
                 <button class="button"
-                        title="${i18n.t('nextcloud-file-picker.folder-up')}"
                         @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
             </div>
         `;

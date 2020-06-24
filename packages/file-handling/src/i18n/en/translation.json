@@ -9,5 +9,12 @@
   "required-server": "You need an upload server listening at <a href=\"{{- url}}\"><tt>{{- url}}</tt></a> to receive the files...",
   "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region",
   "upload-label": "Select some files",
-  "upload-disabled-title": "The file selection is disabled while uploading!"
+  "upload-disabled-title": "The file selection is disabled while uploading!",
+  "nextcloud-file-picker": {
+    "open": "Nextcloud",
+    "open-nextcloud-file-picker": "Select files from your Nextcloud",
+    "folder-last": "Jump to the last directory",
+    "folder-up": "Jump to the parent directory",
+    "select-files": "Select files"
+  }
 }

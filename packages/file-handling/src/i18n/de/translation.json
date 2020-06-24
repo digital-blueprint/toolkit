@@ -9,5 +9,12 @@
   "server-required": "Es wird unter der URL <a href=\"{{- url}}\"><tt>{{- url}}</tt></a> ein Server benötigt um die Dateien zu empfangen.",
   "intro": "Laden Sie mehrere Dateien mit dem Auswahldialog oder durch Ziehen und Fallenlassen in diesem Bereich hoch",
   "upload-label": "Dateiauswahl",
-  "upload-disabled-title": "Die Dateiauswahl ist während dem Hochladvorgang gesperrt!"
+  "upload-disabled-title": "Die Dateiauswahl ist während dem Hochladvorgang gesperrt!",
+  "nextcloud-file-picker": {
+    "open": "Nextcloud",
+    "open-nextcloud-file-picker": "Dateien von Ihrer Nextcloud auswählen",
+    "folder-last": "In das zuletzt ausgewählte Verzeichnis springen",
+    "folder-up": "In das übergeordnete Verzeichnis springen",
+    "select-files": "Dateien auswählen"
+  }
 }
