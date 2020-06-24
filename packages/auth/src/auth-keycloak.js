@@ -20,7 +20,7 @@ import {LoginStatus} from './util.js';
  *   window.VPUPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
  *                     which will dispatch a `vpu-auth-person-init` event when loaded)
  */
-export class Auth extends LitElement {
+export class AuthKeycloak extends LitElement {
     constructor() {
         super();
         this.lang = 'de';

@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import {assert} from 'chai';
 
 import '../src/vpu-auth';
 import '../src/vpu-auth-demo';
@@ -7,7 +7,7 @@ suite('vpu-auth basics', () => {
   let node;
 
   suiteSetup(async () => {
-    node = document.createElement('vpu-auth');
+    node = document.createElement('vpu-auth-keycloak');
     node.setAttribute('keycloak-config', JSON.stringify({
         url: 'url',
         realm: 'realm',
@@ -22,15 +22,15 @@ suite('vpu-auth basics', () => {
   });
 
   test('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+    assert.isNotNull(node.shadowRoot);
   });
 });
 
-suite('vpu-auth-button', () => {
+suite('vpu-login-button', () => {
     let node;
   
     suiteSetup(async () => {
-      node = document.createElement('vpu-auth-button');
+      node = document.createElement('vpu-login-button');
       document.body.appendChild(node);
       await node.updateComplete;
     });
@@ -40,7 +40,7 @@ suite('vpu-auth-button', () => {
     });
   
     test('should render', () => {
-        expect(node).to.have.property('shadowRoot');
+        assert.isNotNull(node.shadowRoot);
     });
   });
 
@@ -58,6 +58,6 @@ suite('vpu-auth-demo basics', () => {
   });
 
   test('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+    assert.isNotNull(node.shadowRoot);
   });
 });

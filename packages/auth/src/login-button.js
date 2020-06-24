@@ -52,7 +52,7 @@ let loginSVG = `
 </svg>
 `;
 
-export class AuthButton extends ScopedElementsMixin(LitElement) {
+export class LoginButton extends ScopedElementsMixin(LitElement) {
 
     constructor() {
         super();

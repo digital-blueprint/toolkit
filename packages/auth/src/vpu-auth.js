@@ -1,6 +1,6 @@
 import {defineCustomElement} from 'vpu-common/utils';
-import {Auth} from './auth.js';
-import {AuthButton} from './auth-button.js';
+import {AuthKeycloak} from './auth-keycloak.js';
+import {LoginButton} from './login-button.js';
 
-defineCustomElement('vpu-auth', Auth);
-defineCustomElement('vpu-auth-button', AuthButton);
+defineCustomElement('vpu-auth-keycloak', AuthKeycloak);
+defineCustomElement('vpu-login-button', LoginButton);

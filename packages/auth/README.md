@@ -1,29 +1,31 @@
-# Auth Web Component
+# Auth Web Components
 
 [GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/Auth)
 
-## Usage
+## Keycloak Component
+
+### Usage
 
 ```html
-<vpu-auth></vpu-auth>
+<vpu-auth-keycloak></vpu-auth-keycloak>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-auth lang="de" </vpu-auth>`
+    - example `<vpu-auth-keycloak lang="de" </vpu-auth-keycloak>`
 - `load-person` (optional, default: off): if enabled the logged in user will also be loaded as `Person`
    in the `window.VPUPerson` variable
-    - example `<vpu-auth load-person></vpu-auth>`
+    - example `<vpu-auth-keycloak load-person></vpu-auth-keycloak>`
 - `force-login` (optional, default: off): if enabled a login will be forced, there never will be a login button
-    - example `<vpu-auth force-login></vpu-auth>`
+    - example `<vpu-auth-keycloak force-login></vpu-auth-keycloak>`
 - `try-login` (optional, default: off): if enabled the a login will happen if the user is already logged in
   and finishing the login process would not result in a page location change (reload/redirect).
-    - example `<vpu-auth try-login></vpu-auth>`
+    - example `<vpu-auth-keycloak try-login></vpu-auth-keycloak>`
 - `keycloak-config`: An object which can contain the following keys: url, realm, clientId, silentCheckSsoRedirectUri
-    - example `<vpu-auth  keycloak-config='{"url": "https://auth.tugraz.at/auth", "realm": "tugraz", "clientId": "some-id", "silentCheckSsoRedirectUri": "", "scope": ""}'></vpu-auth>`
+    - example `<vpu-auth-keycloak  keycloak-config='{"url": "https://auth.tugraz.at/auth", "realm": "tugraz", "clientId": "some-id", "silentCheckSsoRedirectUri": "", "scope": ""}'></vpu-auth-keycloak>`
 
-## Keycloak Config
+### Keycloak Config
 
 - `url`: The base URL of the Keycloak server
 - `realm`: The Keycloak realm
@@ -31,11 +33,19 @@
 - `silentCheckSsoRedirectUri`: URI or path to a separate page for checking the login session in an iframe, see https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
 - `scope`: Space separated list of scopes to request. These scopes get added in addition to the default ones, assuming the scope is in the optional scopes list of the Keycloak client in use.
 
-## Events to listen to
+### Events to listen to
 
 - `vpu-auth-init`: Keycloak init event - happens once
 - `vpu-auth-person-init`: Keycloak person init event - the person entity was loaded from the server
 - `vpu-auth-keycloak-data-update`: Keycloak data was updated - happens for example every time after a token refresh
+
+## Login Button
+
+### Usage
+
+```html
+<vpu-login-button></vpu-login-button>
+```
 
 ## Local development
 

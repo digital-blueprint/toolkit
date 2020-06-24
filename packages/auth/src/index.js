@@ -1,4 +1,4 @@
-import {Auth} from './auth.js';
-import {AuthButton} from './auth-button.js';
+import {AuthKeycloak} from './auth-keycloak.js';
+import {LoginButton} from './login-button.js';
 
-export {Auth, AuthButton};
+export {AuthKeycloak, LoginButton};
