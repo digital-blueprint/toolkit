@@ -431,10 +431,6 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                 margin-top: 0;
             }
 
-            .my-form {
-                margin-bottom: 10px;
-            }
-
             #fileElem {
                 display: none;
             }
@@ -450,7 +446,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
 
         return html`
             <div id="dropArea">
-                <div class="my-form" title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
+                <div title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
                     <p>${this.text || i18n.t('intro')}</p>
                     <input ?disabled="${this.uploadInProgress || this.disabled}"
                            type="file"
