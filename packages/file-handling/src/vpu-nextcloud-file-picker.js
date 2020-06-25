@@ -82,10 +82,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                 layout: "fitDataStretch",
                 selectable: true,
                 columns: [
-                    {title: "Type", field: "type", align:"center", formatter:function(cell, formatterParams, onRendered){
+                    {title: "Type", field: "type", align:"center", formatter: (cell, formatterParams, onRendered) => {
                             const icon_tag =  that.constructor.getScopedTagName("vpu-icon");
                             let icon = `<${icon_tag} name="empty-file"></${icon_tag}>`;
-                            return (cell.getValue() == "directory") ? `<${icon_tag} name="folder"></${icon_tag}>` : icon;
+                            return (cell.getValue() === "directory") ? `<${icon_tag} name="folder"></${icon_tag}>` : icon;
                         }},
                     {title: "Filename", field: "basename"},
                     {title: "Size", field: "size", formatter: (cell, formatterParams, onRendered) => {
@@ -97,20 +97,19 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                             const [fileMainType, fileSubType] = cell.getValue().split('/');
                             return fileSubType;
                         }},
-                    {title: "Last modified", field: "lastmod",sorter:function(a, b, aRow, bRow, column, dir, sorterParams){
-                            var a_timestamp = Date.parse(a);
-                            var b_timestamp = Date.parse(b);
+                    {title: "Last modified", field: "lastmod",sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
+                            const a_timestamp = Date.parse(a);
+                            const b_timestamp = Date.parse(b);
                             return a_timestamp - b_timestamp; //you must return the difference between the two values
                         }, formatter:function(cell, formatterParams, onRendered) {
-                            var d = Date.parse(cell.getValue());
-                            var timestamp = new Date(d);
-                            var year = timestamp.getFullYear();
-                            var month = ("0" + (timestamp.getMonth() + 1)).slice(-2);
-                            var date = ("0" + timestamp.getDate()).slice(-2);
-                            var hours = ("0" + timestamp.getHours()).slice(-2);
-                            var minutes = ("0" + timestamp.getMinutes()).slice(-2);
-                            var date_formatted = date + "." + month + "." + year + " " + hours + ":" + minutes;
-                            return date_formatted;
+                            const d = Date.parse(cell.getValue());
+                            const timestamp = new Date(d);
+                            const year = timestamp.getFullYear();
+                            const month = ("0" + (timestamp.getMonth() + 1)).slice(-2);
+                            const date = ("0" + timestamp.getDate()).slice(-2);
+                            const hours = ("0" + timestamp.getHours()).slice(-2);
+                            const minutes = ("0" + timestamp.getMinutes()).slice(-2);
+                            return date + "." + month + "." + year + " " + hours + ":" + minutes;
                         }},
                 ],
                 rowClick: (e, row) => {
@@ -151,8 +150,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                 this.tabulatorTable.setFilter(checkFileType, this.allowedMimeTypes);
             }
         });
-
-
     }
 
     openFilePicker() {
