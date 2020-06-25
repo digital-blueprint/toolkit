@@ -31,7 +31,7 @@ function mimeTypesToAccept(mimeTypes) {
 /**
  * KnowledgeBaseWebPageElementView web component
  */
-export class FileUpload extends ScopedElementsMixin(VPULitElement) {
+export class FileSource extends ScopedElementsMixin(VPULitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -92,7 +92,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
                     break;
                 case "queuedFilesCount":
                     const data = { "queuedFilesCount": this.queuedFilesCount, "queuedFiles": this.queuedFiles };
-                    const event = new CustomEvent("vpu-fileupload-queued-files-changed",
+                    const event = new CustomEvent("vpu-file-source-queued-files-changed",
                         { "detail": data, bubbles: true, composed: true });
                     this.dispatchEvent(event);
                     break;
@@ -173,7 +173,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         console.log('handleFiles: files.length = ' + files.length);
         this.multipleUploadInProgress = true;
 
-        this.dispatchEvent(new CustomEvent("vpu-fileupload-all-start",
+        this.dispatchEvent(new CustomEvent("vpu-file-source-all-start",
             { "detail": {}, bubbles: true, composed: true }));
 
         // we need to copy the files to another array or else they will be gone in the setTimeout function!
@@ -206,7 +206,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
 
             this.multipleUploadInProgress = false;
 
-            this.dispatchEvent(new CustomEvent("vpu-fileupload-all-finished",
+            this.dispatchEvent(new CustomEvent("vpu-file-source-all-finished",
                 { "detail": {}, bubbles: true, composed: true }));
         }, 100);
     }
@@ -302,7 +302,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             data.file = file;
         }
 
-        const event = new CustomEvent("vpu-fileupload-file-finished", { "detail": data, bubbles: true, composed: true });
+        const event = new CustomEvent("vpu-file-source-file-finished", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
     }
 
@@ -312,7 +312,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
             fileSize: file.size,
         };
 
-        this.dispatchEvent(new CustomEvent("vpu-fileupload-file-start",
+        this.dispatchEvent(new CustomEvent("vpu-file-source-file-start",
             { "detail": data, bubbles: true, composed: true }));
     }
 
@@ -327,7 +327,7 @@ export class FileUpload extends ScopedElementsMixin(VPULitElement) {
         this.updateQueuedFilesCount();
 
         const data = {"file": file};
-        const event = new CustomEvent("vpu-fileupload-file-queued", { "detail": data, bubbles: true, composed: true });
+        const event = new CustomEvent("vpu-file-source-file-queued", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
 
         return key;

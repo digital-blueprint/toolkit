@@ -1,4 +1,4 @@
 import * as commonUtils from "vpu-common/utils";
-import {FileUpload} from './fileupload';
+import {FileSource} from './file-source';
 
-commonUtils.defineCustomElement('vpu-fileupload', FileUpload);
+commonUtils.defineCustomElement('vpu-file-source', FileSource);
