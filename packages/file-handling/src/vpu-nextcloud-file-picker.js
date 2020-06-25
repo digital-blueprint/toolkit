@@ -155,7 +155,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
     openFilePicker() {
         // TODO: translation
         this.statusText = "Auth in progress";
-        this.loginWindow = window.open(this.authUrl, "Nextcloud Login",
+        const authUrl = this.authUrl + "?target-origin=" + encodeURIComponent(window.location.href);
+        this.loginWindow = window.open(authUrl, "Nextcloud Login",
             "width=400,height=400,menubar=no,scrollbars=no,status=no,titlebar=no,toolbar=no");
     }
 
