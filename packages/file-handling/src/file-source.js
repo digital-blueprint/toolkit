@@ -42,12 +42,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         this.allowedMimeTypes = '*/*';
         this.text = '';
         this.buttonLabel = '';
-        this.uploadInProgress = false;
-        this.multipleUploadInProgress = false;
-        this.alwaysSendFile = false;
-        this.isDeferred = false;
-        this.queuedFiles = [];
-        this.queuedFilesCount = 0;
         this.disabled = false;
         this.decompressZip = false;
         this._queueKey = 0;
@@ -73,11 +67,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label' },
-            uploadInProgress: { type: Boolean, attribute: false },
-            multipleUploadInProgress: { type: Boolean, attribute: false },
-            alwaysSendFile: { type: Boolean, attribute: 'always-send-file' },
-            isDeferred: { type: Boolean, attribute: 'deferred' },
-            queuedFilesCount: { type: Number, attribute: false },
             disabled: { type: Boolean },
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
         };
@@ -89,12 +78,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             switch (propName) {
                 case "lang":
                     i18n.changeLanguage(this.lang);
-                    break;
-                case "queuedFilesCount":
-                    const data = { "queuedFilesCount": this.queuedFilesCount, "queuedFiles": this.queuedFiles };
-                    const event = new CustomEvent("vpu-file-source-queued-files-changed",
-                        { "detail": data, bubbles: true, composed: true });
-                    this.dispatchEvent(event);
                     break;
             }
         });
@@ -127,10 +110,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
     }
 
     highlight(e) {
-        if (this.uploadInProgress) {
-            return;
-        }
-
         this.dropArea.classList.add('highlight')
     }
 
@@ -139,7 +118,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
     }
 
     handleDrop(e) {
-        if (this.uploadInProgress || this.disabled) {
+        if (this.disabled) {
             return;
         }
 
@@ -171,13 +150,9 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
      */
     async handleFiles(files) {
         console.log('handleFiles: files.length = ' + files.length);
-        this.multipleUploadInProgress = true;
+        // this.dispatchEvent(new CustomEvent("vpu-file-source-selection-start",
+        //     { "detail": {}, bubbles: true, composed: true }));
 
-        this.dispatchEvent(new CustomEvent("vpu-file-source-all-start",
-            { "detail": {}, bubbles: true, composed: true }));
-
-        // we need to copy the files to another array or else they will be gone in the setTimeout function!
-        let tempFilesToHandle = [];
         await commonUtils.asyncArrayForEach(files, async (file) => {
             if (file.size === 0) {
                 console.log('file \'' + file.name + '\' has size=0 and is denied!')
@@ -187,28 +162,28 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             // check if we want to decompress the zip and queue the contained files
             if (this.decompressZip && file.type === "application/zip") {
                 // add decompressed files to tempFilesToHandle
-                tempFilesToHandle = tempFilesToHandle.concat(await this.decompressZIP(file));
+                await commonUtils.asyncArrayForEach(
+                    await this.decompressZIP(file), (file) => this.sendFileEvent(file));
 
                 return;
             } else if (this.allowedMimeTypes && !this.checkFileType(file)) {
                 return;
             }
 
-            tempFilesToHandle.push(file);
+            await this.sendFileEvent(file);
         });
 
-        // the browsers don't render updates to the dom while these files are handled!
-        // if we set a small delay the dom changes will be rendered
-        setTimeout(async () => {
-            // we need to wait for each upload until we start the next one
-            await commonUtils.asyncArrayForEach(tempFilesToHandle, async (file) =>
-                this.isDeferred ? this.queueFile(file) : this.uploadFile(file));
+        // this.dispatchEvent(new CustomEvent("vpu-file-source-selection-finished",
+        //     { "detail": {}, bubbles: true, composed: true }));
+    }
 
-            this.multipleUploadInProgress = false;
-
-            this.dispatchEvent(new CustomEvent("vpu-file-source-all-finished",
-                { "detail": {}, bubbles: true, composed: true }));
-        }, 100);
+    /**
+     * @param file
+     */
+    sendFileEvent(file) {
+        const data = {"file": file};
+        const event = new CustomEvent("vpu-file-source-file-selected", { "detail": data, bubbles: true, composed: true });
+        this.dispatchEvent(event);
     }
 
     checkFileType(file) {
@@ -306,108 +281,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         this.dispatchEvent(event);
     }
 
-    sendStartEvent(file) {
-        let data =  {
-            fileName: file.name,
-            fileSize: file.size,
-        };
-
-        this.dispatchEvent(new CustomEvent("vpu-file-source-file-start",
-            { "detail": data, bubbles: true, composed: true }));
-    }
-
-    /**
-     * @param file
-     * @returns {Promise<number>} key of the queued item
-     */
-    async queueFile(file) {
-        this._queueKey++;
-        const key = this._queueKey;
-        this.queuedFiles[key] = file;
-        this.updateQueuedFilesCount();
-
-        const data = {"file": file};
-        const event = new CustomEvent("vpu-file-source-file-queued", { "detail": data, bubbles: true, composed: true });
-        this.dispatchEvent(event);
-
-        return key;
-    }
-
-    /**
-     * Takes a file off of the queue
-     *
-     * @param key
-     */
-    takeFileFromQueue(key) {
-        const file = this.queuedFiles[key];
-        delete this.queuedFiles[key];
-        this.updateQueuedFilesCount();
-
-        return file;
-    }
-
-    uploadOneQueuedFile() {
-        const file = this.takeFileFromQueue();
-
-        return this.uploadFile(file);
-    }
-
-    getQueuedFile(key) {
-        return this.queuedFiles[key];
-    }
-
-    getQueuedFiles() {
-        return this.queuedFiles;
-    }
-
-    clearQueuedFiles() {
-        this.queuedFiles = [];
-        this.queuedFilesCount = 0;
-    }
-
-    updateQueuedFilesCount() {
-        return this.queuedFilesCount = Object.keys(this.queuedFiles).length;
-    }
-
-    getQueuedFilesCount() {
-        return this.queuedFilesCount;
-    }
-
-    /**
-     * @param file
-     * @param params
-     * @returns {Promise<void>}
-     */
-    async uploadFile(file, params = {}) {
-        this.uploadInProgress = true;
-        this.sendStartEvent(file);
-        let url = new URL(this.url)
-        url.search = new URLSearchParams(params).toString();
-        let formData = new FormData();
-        formData.append('file', file);
-
-        // I got a 60s timeout in Google Chrome and found no way to increase that
-        await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + window.VPUAuthToken,
-            },
-            body: formData
-        })
-            .then((response) => {
-                /* Done. Inform the user */
-                console.log(`Status: ${response.status} for file ${file.name}`);
-                this.sendFinishedEvent(response, file, response.status !== 201 || this.alwaysSendFile);
-            })
-            .catch((response) => {
-                /* Error. Inform the user */
-                console.log(`Error status: ${response.status} for file ${file.name}`);
-                this.sendFinishedEvent(response, file, true);
-            });
-
-        this.uploadInProgress = false;
-    }
-
     static get styles() {
         // language=css
         return css`
@@ -458,30 +331,28 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
 
         return html`
             <div id="dropArea">
-                <div title="${this.uploadInProgress ? i18n.t('upload-disabled-title') : ''}">
+                <div>
                     <div class="block">
                         ${this.text || i18n.t('intro')}
                     </div>
-                    <input ?disabled="${this.uploadInProgress || this.disabled}"
+                    <input ?disabled="${this.disabled}"
                            type="file"
                            id="fileElem"
                            multiple
                            accept="${mimeTypesToAccept(allowedMimeTypes)}"
                            name='file'>
                     <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
-                        <vpu-icon style="display: ${this.uploadInProgress ? "inline-block" : "none"}" name="lock"></vpu-icon>
                         ${this.buttonLabel || i18n.t('upload-label')}
                     </label>
                     <vpu-nextcloud-file-picker id="nextcloud-file-picker"
                                                class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
-                                               ?disabled="${this.uploadInProgress || this.disabled}"
+                                               ?disabled="${this.disabled}"
                                                lang="${this.lang}"
                                                auth-url="${this.nextcloudAuthUrl}"
                                                web-dav-url="${this.nextcloudWebDavUrl}"
                                                @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
-                                                   this.queueFile(event.detail.file);
+                                                   this.sendFileEvent(event.detail.file);
                                                }}"></vpu-nextcloud-file-picker>
-                    <vpu-mini-spinner style="display: ${this.multipleUploadInProgress ? "inline-block" : "none"}"></vpu-mini-spinner>
                 </div>
             </div>
         `;
