@@ -13,7 +13,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build !== 'test') ? ['src/demo.js', 'src/vpu-fileupload.js'] : glob.sync('test/**/*.js'),
+    input: (build !== 'test') ? ['src/demo.js', 'src/vpu-file-source.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
@@ -44,7 +44,7 @@ export default {
                 {src: 'assets/index.html', dest: 'dist'},
                 {src: 'assets/favicon.ico', dest: 'dist'},
                 {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
-                {src: 'node_modules/tabulator-tables/dist/css', dest: 'dist/local/fileupload/tabulator-tables'},
+                {src: 'node_modules/tabulator-tables/dist/css', dest: 'dist/local/vpu-file-source/tabulator-tables'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false

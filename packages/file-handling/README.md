@@ -1,49 +1,42 @@
-# FileUpload web component
+# File handling web components
 
-[GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/FileUpload)
+[GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/FileHandling)
 
-Files will be uploaded sequentially (not parallel) to prevent overburdening the destination server. 
+## FileSource
 
-## Usage
+### Usage
 
 ```html
-<vpu-fileupload></vpu-fileupload>
+<vpu-file-source></vpu-file-source>
 ```
 
-## Attributes
+### Attributes
 
-- `url`: path to the upload url
-    - example `<vpu-fileupload url="path/to/my/page"></vpu-fileupload>`
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-fileupload lang="de"></vpu-fileupload>`
-- `always-send-file` (optional): if set the uploaded or queued file will always be sent in the event
-    - example `<vpu-fileupload always-send-file></vpu-fileupload>`
-- `deferred` (optional): if set files will not be uploaded immediately but only queued
-    - use method `uploadFile` or `uploadOneQueuedFile` to really upload the queued file  
-    - example `<vpu-fileupload deferred></vpu-fileupload>`
+    - example `<vpu-file-source lang="de"></vpu-file-source>`
 - `allowed-mime-types` (optional): if set accepts only files matching mime types
-    - example `<vpu-fileupload allowed-mime-types='application/pdf'></vpu-fileupload>` ... PDFs only
-    - example `<vpu-fileupload allowed-mime-types='image/*'></vpu-fileupload>` ... images (of all sub types) only
-    - example `<vpu-fileupload allowed-mime-types='image/png,text/plain'></vpu-fileupload>` ... PNGs or TXTs only
-    - example `<vpu-fileupload allowed-mime-types='*/*'></vpu-fileupload>` ... all file types (default)
+    - example `<vpu-file-source allowed-mime-types='application/pdf'></vpu-file-source>` ... PDFs only
+    - example `<vpu-file-source allowed-mime-types='image/*'></vpu-file-source>` ... images (of all sub types) only
+    - example `<vpu-file-source allowed-mime-types='image/png,text/plain'></vpu-file-source>` ... PNGs or TXTs only
+    - example `<vpu-file-source allowed-mime-types='*/*'></vpu-file-source>` ... all file types (default)
 - `disabled` (optional): disable input control
-    - example `<vpu-fileupload disabled></vpu-fileupload>`
-- `decompress-zip` (optional): decompress zip file and queue the contained files (including files in folders)
-    - example `<vpu-fileupload decompress-zip></vpu-fileupload>`
+    - example `<vpu-file-source disabled></vpu-file-source>`
+- `decompress-zip` (optional): decompress zip file and send the contained files (including files in folders)
+    - example `<vpu-file-source decompress-zip></vpu-file-source>`
     - mime types of `allowed-mime-types` will also be checked for the files in the zip file
 - `nextcloud-auth-url` (optional): Nextcloud Auth Url to use with the Nextcloud file picker
-    - example `<vpu-fileupload nextcloud-auth-url="http://localhost:8081/index.php/apps/webapppassword"></vpu-fileupload>`
+    - example `<vpu-file-source nextcloud-auth-url="http://localhost:8081/index.php/apps/webapppassword"></vpu-file-source>`
     - `nextcloud-web-dav-url` also needs to be set for the Nextcloud file picker to be active
 - `nextcloud-web-dav-url` (optional): Nextcloud WebDav Url to use with the Nextcloud file picker
-    - example `<vpu-fileupload nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></vpu-fileupload>`
+    - example `<vpu-file-source nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></vpu-file-source>`
     - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
 
 ## Local development
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:VPU/WebComponents/FileUpload.git
-cd FileUpload
+git clone git@gitlab.tugraz.at:VPU/WebComponents/FileHandling.git
+cd FileHandling
 git submodule update --init
 
 # install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)

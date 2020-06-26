@@ -1,5 +1,5 @@
 {
-  "name": "vpu-fileupload",
+  "name": "vpu-file-source",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",

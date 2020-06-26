@@ -35,7 +35,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
     constructor() {
         super();
         this.lang = 'de';
-        this.url = '';
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
         this.dropArea = null;
@@ -61,7 +60,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
     static get properties() {
         return {
             lang: { type: String },
-            url: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
             nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },

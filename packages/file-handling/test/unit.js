@@ -1,11 +1,11 @@
-import '../src/vpu-fileupload';
+import '../src/vpu-file-source';
 import '../src/demo';
 
-describe('vpu-fileupload basics', () => {
+describe('vpu-file-source basics', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-fileupload');
+    node = document.createElement('vpu-file-source');
     document.body.appendChild(node);
     await node.updateComplete;
   });
@@ -19,11 +19,11 @@ describe('vpu-fileupload basics', () => {
   });
 });
 
-describe('vpu-fileupload demo', () => {
+describe('vpu-file-source demo', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-fileupload-demo');
+    node = document.createElement('vpu-file-source-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });

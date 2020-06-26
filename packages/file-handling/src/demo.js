@@ -2,10 +2,10 @@ import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {FileUpload} from './fileupload.js';
+import {FileSource} from './file-source.js';
 import * as commonUtils from 'vpu-common/utils';
 
-class FileUploadDemo extends ScopedElementsMixin(LitElement) {
+class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -14,7 +14,7 @@ class FileUploadDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-fileupload': FileUpload,
+          'vpu-file-source': FileSource,
         };
     }
 
@@ -29,9 +29,9 @@ class FileUploadDemo extends ScopedElementsMixin(LitElement) {
         super.connectedCallback();
 
         this.updateComplete.then(() => {
-            this.shadowRoot.querySelectorAll('vpu-fileupload')
+            this.shadowRoot.querySelectorAll('vpu-file-source')
                 .forEach(element => {
-                    element.addEventListener('vpu-fileupload-file-finished', this.addLogEntry.bind(this));
+                    element.addEventListener('vpu-file-source-file-finished', this.addLogEntry.bind(this));
                 });
         });
     }
@@ -57,7 +57,7 @@ class FileUploadDemo extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <style>
-                vpu-fileupload.clean {
+                vpu-file-source.clean {
                     --FUBorderWidth: initial;
                     --FUBorderStyle: initial;
                     --FUBorderColor: initial;
@@ -67,7 +67,7 @@ class FileUploadDemo extends ScopedElementsMixin(LitElement) {
                     --FUPadding: initial;
                     --FUWidth: initial;
                 }
-                vpu-fileupload.opt {
+                vpu-file-source.opt {
                     --FUBorder: 2px solid blue;
                 }
             </style>
@@ -78,22 +78,22 @@ class FileUploadDemo extends ScopedElementsMixin(LitElement) {
                     <p>${unsafeHTML(i18n.t('required-server', { url: this.url}))}</p>
                 </div>
                 <div class="content">
-                    <h2 class="subtitle">Send any File to Server</h2>
+                    <h2 class="subtitle">Send files via event</h2>
                     <p>There is no restriction for a specific file type:</p>
-                    <vpu-fileupload lang="de" url="${this.url}" allowed-mime-types="*/*"></vpu-fileupload>
+                    <vpu-file-source lang="de" url="${this.url}" allowed-mime-types="*/*"></vpu-file-source>
                     <p>Only images are allowed here (JPG, PNG, GIF, TIF, ...):</p>
-                    <vpu-fileupload lang="de" url="${this.url}" allowed-mime-types="image/*"
-                        text="Abgabe nur für Bilder "></vpu-fileupload>
+                    <vpu-file-source lang="de" url="${this.url}" allowed-mime-types="image/*"
+                        text="Abgabe nur für Bilder "></vpu-file-source>
                     <p>This is for PDF only:</p>
-                    <vpu-fileupload lang="de" url="${this.url}" allowed-mime-types="application/pdf"
-                        text="Einreichung als PDF" button-label="PDF auswählen"></vpu-fileupload>
+                    <vpu-file-source lang="de" url="${this.url}" allowed-mime-types="application/pdf"
+                        text="Einreichung als PDF" button-label="PDF auswählen"></vpu-file-source>
                      <p>Text and images (JPG, PNG, GIF, TIF, ...) :</p>
-                    <vpu-fileupload lang="de" url="${this.url}" allowed-mime-types="text/plain,image/*"
-                        text="Abgabe für Text und Bilder "></vpu-fileupload>
+                    <vpu-file-source lang="de" url="${this.url}" allowed-mime-types="text/plain,image/*"
+                        text="Abgabe für Text und Bilder "></vpu-file-source>
                </div>
             </section>
         `;
     }
 }
 
-commonUtils.defineCustomElement('vpu-fileupload-demo', FileUploadDemo);
+commonUtils.defineCustomElement('vpu-file-source-demo', FileSourceDemo);
