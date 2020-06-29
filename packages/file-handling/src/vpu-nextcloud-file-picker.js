@@ -21,11 +21,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
         this.webDavUrl = '';
         this.loginWindow = null;
         this.isPickerActive = false;
-        this.statusText = "";
-        this.lastDirectoryPath = "/";
-        this.directoryPath = "/";
+        this.statusText = '';
+        this.lastDirectoryPath = '/';
+        this.directoryPath = '/';
         this.webDavClient = null;
         this.tabulatorTable = null;
+        this.allowedMimeTypes = '*/*';
+        this.directoriesOnly = null;
 
         this._onReceiveWindowMessage = this.onReceiveWindowMessage.bind(this);
     }
@@ -43,12 +45,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
     static get properties() {
         return {
             lang: { type: String },
-            authUrl: { type: String, attribute: "auth-url" },
-            webDavUrl: { type: String, attribute: "web-dav-url" },
+            authUrl: { type: String, attribute: 'auth-url' },
+            webDavUrl: { type: String, attribute: 'web-dav-url' },
             isPickerActive: { type: Boolean, attribute: false },
             statusText: { type: String, attribute: false },
             directoryPath: { type: String, attribute: false },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
+            directoriesOnly: { type: Boolean, attribute: 'directories-only' },
         };
     }
 
@@ -112,18 +115,34 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                             return date + "." + month + "." + year + " " + hours + ":" + minutes;
                         }},
                 ],
+                initialSort:[
+                    {column:"basename", dir:"asc"},
+                    {column:"type", dir:"asc"},
+                ],
                 rowClick: (e, row) => {
                     const data = row.getData();
 
-                    switch(data.type) {
-                        case "directory":
-                            this.directoryClicked(e, data);
-                            break;
-                        case "file":
-                            console.log("file selected", data);
-                            break;
+                    if(this.directoriesOnly) {
+                        console.log("directory selected", data);
+                    }
+                    else
+                    {
+                        switch(data.type) {
+                            case "directory":
+                                this.directoryClicked(e, data);
+                                break;
+                            case "file":
+                                console.log("file selected", data);
+                                break;
+                        }
                     }
                 },
+                rowDblClick: (e, row) => {
+                    const data = row.getData();
+                    if(this.directoriesOnly) {
+                        this.directoryClicked(e, data);
+                    }
+                }
             });
 
             function checkFileType(data, filterParams) {
@@ -141,13 +160,19 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                 });
 
                 if (deny) {
-                    console.log(`mime type ${data.type} of file '${data.filename}' is not compatible with ${filterParams}`);
                     return false;
                 }
                 return true;
             }
             if(typeof this.allowedMimeTypes !== 'undefined') {
                 this.tabulatorTable.setFilter(checkFileType, this.allowedMimeTypes);
+            }
+            if(typeof this.directoriesOnly !== 'undefined' && this.directoriesOnly)
+            {
+                console.log("filter " + this.directoriesOnly);
+                this.tabulatorTable.setFilter([
+                    {field:"type", type:"=", value:"directory"},
+                ]);
             }
         });
     }
@@ -284,6 +309,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
             </div>
             <div class="block ${classMap({hidden: !this.isPickerActive})}">
                 <h2>${this.directoryPath}</h2>
+                <button class="button is-small"
+                        title="${i18n.t('nextcloud-file-picker.folder-home')}"
+                        @click="${() => { this.loadDirectory("/"); }}"><vpu-icon name="home"></vpu-icon></button>
                 <button class="button is-small"
                         title="${i18n.t('nextcloud-file-picker.folder-last')}"
                         @click="${() => { this.loadDirectory(this.lastDirectoryPath); }}">&#8678;</button>

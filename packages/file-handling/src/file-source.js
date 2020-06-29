@@ -348,6 +348,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                                                lang="${this.lang}"
                                                auth-url="${this.nextcloudAuthUrl}"
                                                web-dav-url="${this.nextcloudWebDavUrl}"
+                                               allowed-mime-types="${this.allowedMimeTypes}"                                        
                                                @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
                                                    this.sendFileEvent(event.detail.file);
                                                }}"></vpu-nextcloud-file-picker>

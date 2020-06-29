@@ -15,6 +15,7 @@
     "open-nextcloud-file-picker": "Select files from your Nextcloud",
     "folder-last": "Jump to the last directory",
     "folder-up": "Jump to the parent directory",
+    "folder-up": "Jump to the home directory",
     "select-files": "Select files"
   }
 }

@@ -15,6 +15,7 @@
     "open-nextcloud-file-picker": "Dateien von Ihrer Nextcloud auswählen",
     "folder-last": "In das zuletzt ausgewählte Verzeichnis springen",
     "folder-up": "In das übergeordnete Verzeichnis springen",
+    "folder-home": "In das Home Verzeichnis springen",
     "select-files": "Dateien auswählen"
   }
 }
