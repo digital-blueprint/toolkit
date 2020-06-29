@@ -39,7 +39,10 @@ suite('utils', () => {
     });
 
     test('getAssetURL', () => {
+        // Backwards compat
         assert.equal(new URL(utils.getAssetURL("foo/bar")).pathname, "/foo/bar");
+        // Normal usage
+        assert.equal(new URL(utils.getAssetURL('foobar', 'bar/quux')).pathname, "/local/foobar/bar/quux");
     });
 
     test('getThemeCSS', () => {

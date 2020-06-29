@@ -199,11 +199,21 @@ export const dateToInputTimeString = (date) => {
 /**
  * Get an absolute path for assets given a relative path to the js bundle.
  *
+ * @param {string} pkg The package which provides the asset
  * @param {string} path The relative path based on the js bundle path
  */
-export const getAssetURL = (path) => {
-    return new URL(path, new URL('..', import.meta.url).href).href;
+export const getAssetURL = (pkg, path) => {
+    let fullPath = '';
+    if (path === undefined) {
+        // backwards compat: in case only one parameter is passed
+        // assume it is a full path
+        fullPath = pkg;
+    } else {
+        fullPath = 'local/' + pkg + '/' + path
+    }
+    return new URL(fullPath, new URL('..', import.meta.url).href).href;
 };
+
 
 /**
  * Poll <fn> every <interval> ms until <timeout> ms
