@@ -10,6 +10,7 @@ import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import chai from 'chai';
 
+const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
@@ -58,7 +59,7 @@ export default {
         copy({
             targets: [
                 {src: 'assets/index.html', dest:'dist'},
-                {src: 'assets/silent-check-sso.html', dest:'dist'},
+                {src: 'assets/silent-check-sso.html', dest: 'dist/local/' + pkg.name},
                 {src: 'assets/favicon.ico', dest:'dist'},
                 {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
             ]

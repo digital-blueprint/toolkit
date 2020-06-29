@@ -39,7 +39,7 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
             console.error("not logged in");
             return;
         }
-        let userInfoURL = commonUtils.setting('keyCloakBaseURL') + '/realms/tugraz/protocol/openid-connect/userinfo';
+        let userInfoURL = 'https://auth-dev.tugraz.at/auth/realms/tugraz/protocol/openid-connect/userinfo';
 
         // NOTE: the URL and realm need to match the keycloak config above
         const response = await fetch(
@@ -63,7 +63,7 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        const silentCheckSsoUri = commonUtils.getAssetURL('silent-check-sso.html');
+        const silentCheckSsoUri = commonUtils.getAssetURL('vpu-auth', 'silent-check-sso.html');
         return html`
             <style>
                /* from BULMA.CSS */
