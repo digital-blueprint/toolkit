@@ -31,6 +31,14 @@
     - example `<vpu-file-source nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></vpu-file-source>`
     - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
 
+### Events
+
+#### `vpu-file-source-file-selected`
+
+This event is sent if a file was selected.
+
+**Payload**: `{'file': File}` where `File` is the binary file that was selected
+
 ## Local development
 
 ```bash
