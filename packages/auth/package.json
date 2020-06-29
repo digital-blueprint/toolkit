@@ -21,7 +21,7 @@
     "karma-mocha": "^2.0.1",
     "mocha": "^8.0.1",
     "node-sass": "^4.14.1",
-    "puppeteer": "^4.0.1",
+    "puppeteer": "^2.1.1",
     "rollup": "^2.18.1",
     "rollup-plugin-consts": "^1.0.2",
     "rollup-plugin-copy": "^3.3.0",
