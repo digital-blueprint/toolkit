@@ -196,10 +196,6 @@ export const dateToInputTimeString = (date) => {
     return `${pad10(date.getHours())}:${pad10(date.getMinutes())}`;
 };
 
-export const initAssetBaseURL = (id) => {
-    // No longer needed, remove your call
-};
-
 /**
  * Get an absolute path for assets given a relative path to the js bundle.
  *
