@@ -333,3 +333,29 @@ export async function getMimeTypeOfFile(file) {
         fileReader.readAsArrayBuffer(file.slice(0, 4));
     });
 }
+
+/**
+ * Get the basename of a filename
+ *
+ * @param str
+ * @returns {string}
+ */
+export const getBaseName = (str) => {
+    let base = String(str).substring(str.lastIndexOf('/') + 1);
+
+    if (base.lastIndexOf(".") !== -1) {
+        base = base.substring(0, base.lastIndexOf("."));
+    }
+
+    return base;
+};
+
+/**
+ * Get the file extension of a filename
+ *
+ * @param str
+ * @returns {string}
+ */
+export const getFileExtension = (str) => {
+    return str.split('.').pop();
+};
