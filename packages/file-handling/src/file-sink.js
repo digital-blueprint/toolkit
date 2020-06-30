@@ -118,6 +118,8 @@ export class FileSink extends ScopedElementsMixin(VPULitElement) {
 <!--
             <vpu-nextcloud-file-picker id="nextcloud-file-picker"
                                        class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
+                                       directories-only
+                                       select-button-text="${i18n.t('file-sink.select-directory')}"
                                        ?disabled="${this.disabled}"
                                        lang="${this.lang}"
                                        auth-url="${this.nextcloudAuthUrl}"
