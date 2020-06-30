@@ -292,7 +292,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-tabulator-table');
         const tabulatorCss = commonUtils.getAssetURL('local/vpu-file-source/tabulator-tables/css/tabulator.min.css');
         console.log("tabulatorCss", tabulatorCss);
 
