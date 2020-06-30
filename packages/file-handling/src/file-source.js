@@ -1,7 +1,6 @@
 import {i18n} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-// import JSONLD from 'vpu-common/jsonld';
 import VPULitElement from 'vpu-common/vpu-lit-element';
 import * as commonUtils from "vpu-common/utils";
 import {Icon, MiniSpinner} from 'vpu-common';
@@ -29,7 +28,7 @@ function mimeTypesToAccept(mimeTypes) {
 
 
 /**
- * KnowledgeBaseWebPageElementView web component
+ * FileSource web component
  */
 export class FileSource extends ScopedElementsMixin(VPULitElement) {
     constructor() {
