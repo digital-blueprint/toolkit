@@ -21,6 +21,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
         this.webDavUrl = '';
         this.loginWindow = null;
         this.isPickerActive = false;
+        this.selectButtonText = i18n.t('nextcloud-file-picker.select-files');
         this.statusText = '';
         this.lastDirectoryPath = '/';
         this.directoryPath = '/';
@@ -52,6 +53,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
             directoryPath: { type: String, attribute: false },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             directoriesOnly: { type: Boolean, attribute: 'directories-only' },
+            selectButtonText: { type: String, attribute: 'select-button-text' },
         };
     }
 
@@ -319,7 +321,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                         @click="${() => { this.loadDirectory(this.getParentDirectoryPath()); }}">&#8679;</button>
                 <table id="directory-content-table"></table>
                 <button class="button"
-                        @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
+                        @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${this.selectButtonText}</button>
             </div>
         `;
     }
