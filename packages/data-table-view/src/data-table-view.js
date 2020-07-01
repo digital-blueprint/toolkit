@@ -39,6 +39,7 @@ export class DataTableView extends LitElement {
         this.exportable = false;
         this.exportName = 'Data Export';
         this.columnSearching = false;
+        this.defaultOrder = [];
     }
 
     setCSSStyle(style) {
@@ -58,6 +59,7 @@ export class DataTableView extends LitElement {
             exportable: { type: Boolean },
             exportName: { type: String, attribute: 'export-name' },
             columnSearching: { type: Boolean, attribute: 'column-searching'},
+            defaultOrder: { type: Array, attribute: 'default-order'}
         };
     }
 
@@ -67,6 +69,10 @@ export class DataTableView extends LitElement {
     }
     set_columnDefs(defs) {
         this.columnDefs = defs;
+        return this;
+    }
+    set_defaultOrder(order) {
+        this.defaultOrder = order;
         return this;
     }
     add_row(row) {
@@ -180,7 +186,7 @@ export class DataTableView extends LitElement {
 
         this.table.clear();
         if (this.data.length) { this.table.rows.add(this.data); }
-        this.table.draw();
+        this.table.order(this.defaultOrder).draw();
 
         new $.fn.dataTable.Responsive(this.table, {
             details: true

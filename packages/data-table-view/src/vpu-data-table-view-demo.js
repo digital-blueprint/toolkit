@@ -68,6 +68,27 @@ class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
                     .set_columnDefs(vdtv2_columnDefs)
                     .set_datatable([]);
             }
+            /*
+                    Third Table: ordering demo
+             */
+            const vdtv3 = that.shadowRoot.querySelector('#vdtv3');
+            if (vdtv3 !== null) {
+                const vdtv3_columnDefs = [
+                    { targets: [0,1,2], visible: true},
+                ];
+                vdtv3.set_columns([{title:'City'}, {title:'Zip'}, {title:'Museum'}])
+                    .set_columnDefs(vdtv3_columnDefs)
+                    // .set_defaultOrder([[1,"desc"],[2,"asc"]])
+                    .set_datatable([
+                        { '0': 'Graz', '1': '8020', '2': 'Alte Galerie'},
+                        { '0': 'Graz', '1': '8020', '2': 'Kunsthaus'},
+                        { '0': 'Graz', '1': '8010', '2': 'Haus der Wissenschaft'},
+                        { '0': 'Graz', '1': '8010', '2': 'Landeszeughaus'},
+                        { '0': 'Linz', '1': '4020', '2': 'Lentos Kunstmuseum'},
+                        { '0': 'Linz', '1': '4020', '2': 'Ars Electronica Center'},
+                        { '0': 'Wien', '1': '1010', '2': 'Museum für Plansprachen'},
+                    ]);
+            }
         });
     }
 
@@ -182,13 +203,20 @@ class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
                      <div class="box">
                         <label for="id-sum">Sum of column <b>Number</b> is</label>
                         <input type="text" readonly value="" name="sum" id="id-sum">
-                        <vpu-data-table-view paging searching exportable export-name="Demo Export" column-searching
+                        <vpu-data-table-view paging searching column-searching
+                                             default-order='[1,"asc"]'
+                                             exportable export-name="Demo Export"
                                              lang="${this.lang}" id="vdtv1"></vpu-data-table-view>
                     </div>
                     <h4>DataTable: no data, no paging, no searching</h4>
                     <div class="box">
                         <button class="button is-small" @click="${this.vdtv2_add_rows}">add something...</button>
                         <vpu-data-table-view lang="${this.lang}" id="vdtv2"></vpu-data-table-view>
+                    </div>
+                    <h4>DataTable: ordering by column 'zip' desc, 'museum' asc</h4>
+                    <div class="box">
+                        <vpu-data-table-view default-order='[[1,"desc"],[2,"asc"]]'
+                                             lang="${this.lang}" id="vdtv3"></vpu-data-table-view>
                     </div>
                 </div>
 

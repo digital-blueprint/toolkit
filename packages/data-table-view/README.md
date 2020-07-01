@@ -19,8 +19,11 @@
     - example `<vpu-data-table-view exportable></pu-data-table-view>`
 - `export-name` (optional, default: 'Data Export'): add name for download file (without extension)
     - example `<vpu-data-table-view exportable export-name="All Items"></pu-data-table-view>`
-- `column-searching` (optional, default false): add search fields for every column
+- `column-searching` (optional, default: false): add search fields for every column
     - example `<vpu-data-table-view column-searching></pu-data-table-view>`
+- `default-ordering` (optional, default: [ ]): set the default ordering as column and direction
+    - example `<vpu-data-table-view default-ordering='[1,"asc"]'></pu-data-table-view>` 
+    - example `<vpu-data-table-view default-ordering='[[0,"desc"],[2,"asc"]]'></pu-data-table-view>` 
 
 # Local development
 ```bash
