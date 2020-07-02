@@ -81,9 +81,8 @@ export class LanguageSelect extends LitElement {
 
     static get styles() {
         // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-
+        return [commonStyles.getThemeCSS(),
+            css`
             :host {
                 display: inline-block;
             }
@@ -102,7 +101,8 @@ export class LanguageSelect extends LitElement {
                 color: var(--vpu-dark);
                 border-radius: var(--vpu-border-radius);
             }
-        `;
+            `
+        ];
     }
 
     onExternalChange(e) {
