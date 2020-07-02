@@ -160,8 +160,6 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(VPULitE
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-knowledge-base-web-page-element-view-src');
-
         return html`
             <style>
                 .kb {
