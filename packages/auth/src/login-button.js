@@ -109,9 +109,9 @@ export class LoginButton extends ScopedElementsMixin(LitElement) {
 
     static get styles() {
         // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-
+        return [
+            commonStyles.getThemeCSS(),
+            css`
             :host {
                 display: inline-block;
             }
@@ -149,7 +149,8 @@ export class LoginButton extends ScopedElementsMixin(LitElement) {
             .login-box .label {
                 padding-left: 0.2em;
             }
-        `;
+            `
+        ];
     }
 
     render() {
