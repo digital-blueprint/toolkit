@@ -40,10 +40,7 @@ class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement
 
     static get styles() {
         // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-            ${commonStyles.getGeneralCSS()}
-
+        const styles = css`
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}
 
@@ -57,6 +54,12 @@ class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement
                 --KBBorder: 2px solid blue;
             }
         `;
+
+        return [
+            commonStyles.getThemeCSS(),
+            commonStyles.getGeneralCSS(),
+            styles,
+        ];
     }
 
     getAuthComponentHtml() {
