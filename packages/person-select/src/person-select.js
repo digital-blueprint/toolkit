@@ -301,14 +301,13 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
     }
 
     static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-            ${commonStyles.getGeneralCSS()}
-            ${commonStyles.getButtonCSS()}
-            ${commonStyles.getFormAddonsCSS()}
-            ${commonStyles.getSelect2CSS()}
-
+        return [
+            commonStyles.getThemeCSS(),
+            commonStyles.getGeneralCSS(),
+            commonStyles.getButtonCSS(),
+            commonStyles.getFormAddonsCSS(),
+            commonStyles.getSelect2CSS(),
+            css`
             .select2-control.control {
                 width: 100%;
             }
@@ -326,7 +325,8 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
             .field .button.control vpu-icon {
                 top: 0;
             }
-        `;
+            `
+        ];
     }
 
     render() {

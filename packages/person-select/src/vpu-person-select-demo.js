@@ -38,13 +38,14 @@ class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
 
     static get styles() {
         // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-            ${commonStyles.getGeneralCSS()}
-
+        return [
+            commonStyles.getThemeCSS(),
+            commonStyles.getGeneralCSS(),
+            css`
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em;}
-        `;
+            `
+        ];
     }
 
     getAuthComponentHtml() {
