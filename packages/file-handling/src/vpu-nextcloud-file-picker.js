@@ -21,7 +21,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
         this.webDavUrl = '';
         this.loginWindow = null;
         this.isPickerActive = false;
-        this.selectButtonText = i18n.t('nextcloud-file-picker.select-files');
         this.statusText = '';
         this.lastDirectoryPath = '/';
         this.directoryPath = '/';
@@ -29,6 +28,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
         this.tabulatorTable = null;
         this.allowedMimeTypes = '*/*';
         this.directoriesOnly = null;
+        this.selectNum = true;
 
         this._onReceiveWindowMessage = this.onReceiveWindowMessage.bind(this);
     }
@@ -53,7 +53,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
             directoryPath: { type: String, attribute: false },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             directoriesOnly: { type: Boolean, attribute: 'directories-only' },
-            selectButtonText: { type: String, attribute: 'select-button-text' },
+            selectNum: { type: Number, attribute: 'select-num' },
         };
     }
 
@@ -72,7 +72,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
     disconnectedCallback() {
         window.removeEventListener('message', this._onReceiveWindowMessage);
         super.disconnectedCallback();
-      }
+    }
 
     connectedCallback() {
         super.connectedCallback();
@@ -85,7 +85,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
             // TODO: translation of column headers
             this.tabulatorTable = new Tabulator(this._("#directory-content-table"), {
                 layout: "fitDataStretch",
-                selectable: true,
+                selectable: this.selectNum,
+                selectableRangeMode: "drag",
                 columns: [
                     {title: "Type", field: "type", align:"center", formatter: (cell, formatterParams, onRendered) => {
                             const icon_tag =  that.constructor.getScopedTagName("vpu-icon");
@@ -140,13 +141,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                     }
                 },
                 rowDblClick: (e, row) => {
-                    const data = row.getData();
                     if(this.directoriesOnly) {
+                        const data = row.getData();
                         this.directoryClicked(e, data);
                     }
                 }
             });
 
+            console.log("table: ", this.tabulatorTable);
+            if(this.tabulatorTable.browserMobile === false)
+            {
+                this.tabulatorTable.options.selectableRangeMode = "click";
+            }
             function checkFileType(data, filterParams) {
                 // check if file is allowed
                 if(typeof data.mime === 'undefined') {
@@ -264,9 +270,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
 
                 this.statusText = "";
             }).catch(error => {
-                console.error(error.message);
-                this.statusText = error.message;
-            });
+            console.error(error.message);
+            this.statusText = error.message;
+        });
     }
 
     /**
@@ -289,6 +295,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
 
             .block {
                 margin-bottom: 10px;
+            }
+            
+            .force-no-select{
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
             }
         `;
     }
@@ -319,9 +332,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                 <button class="button is-small"
                         title="${i18n.t('nextcloud-file-picker.folder-up')}"
                         @click="${() => { this.loadDirectory(this.getParentDirectoryPath()); }}">&#8679;</button>
-                <table id="directory-content-table"></table>
+                <table id="directory-content-table" class="force-no-select"></table>
                 <button class="button"
-                        @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${this.selectButtonText}</button>
+                        @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
             </div>
         `;
     }
