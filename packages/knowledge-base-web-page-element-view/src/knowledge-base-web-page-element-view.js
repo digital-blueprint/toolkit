@@ -1,6 +1,5 @@
 import {i18n} from './i18n';
-import {html} from 'lit-element';
-import VPULitElement from 'vpu-common/vpu-lit-element'
+import {html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {MiniSpinner} from 'vpu-common';
 import * as commonUtils from "vpu-common/utils";
@@ -9,7 +8,7 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 /**
  * KnowledgeBaseWebPageElementView web component
  */
-export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(VPULitElement) {
+export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -28,6 +27,10 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(VPULitE
         return {
           'vpu-mini-spinner': MiniSpinner,
         };
+    }
+
+    _(selector) {
+        return this.shadowRoot === null ? this.querySelector(selector) : this.shadowRoot.querySelector(selector);
     }
 
     /**

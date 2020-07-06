@@ -24,8 +24,8 @@
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^6.1.0",
     "@rollup/plugin-url": "^5.0.1",
-    "vpu-auth": "file:./vendor/auth",
-    "vpu-common": "file:./vendor/common"
+    "vpu-auth": "^1.0.0",
+    "vpu-common": "^1.0.0"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.0.9",
