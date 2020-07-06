@@ -1,4 +1,4 @@
-import {Auth} from 'vpu-auth';
+import {AuthKeycloak, LoginButton} from 'vpu-auth';
 import {i18n} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -21,7 +21,8 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
     static get scopedElements() {
         return {
           'vpu-person-profile': PersonProfile,
-          'vpu-auth': Auth,
+          'vpu-auth-keycloak': AuthKeycloak,
+          'vpu-login-button': LoginButton,
           'vpu-person-select': PersonSelect,
         };
       }
@@ -68,7 +69,8 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
         return this.noAuth ? html`` : html`
             <header>
                 <div class="container">
-                    <vpu-auth lang="${this.lang}" client-id="${commonUtils.setting('keyCloakClientId')}" load-person remember-login style="float:right"></vpu-auth>
+                    <vpu-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></vpu-auth-keycloak>
+                    <vpu-login-button lang="${this.lang}" show-image></vpu-login-button>
                 </div>
             </header>
         `;
