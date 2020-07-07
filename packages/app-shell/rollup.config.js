@@ -7,9 +7,7 @@ import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
-import chai from 'chai';
 
-const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
@@ -67,10 +65,7 @@ export default {
           }
         }),
         commonjs({
-            include: 'node_modules/**',
-            namedExports: {
-                'chai': Object.keys(chai),
-            }
+            include: 'node_modules/**'
         }),
         json(),
         copy({
