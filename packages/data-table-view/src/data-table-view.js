@@ -316,10 +316,9 @@ export class DataTableView extends LitElement {
     }
 
     render() {
-        commonUtils.initAssetBaseURL('vpu-data-table-view-src');
-        let dt_css = commonUtils.getAssetURL('local/vpu-data-table-view/css/jquery.dataTables.min.css');
-        let rs_css = commonUtils.getAssetURL('local/vpu-data-table-view/css/responsive.dataTables.min.css');
-        let bt_css = commonUtils.getAssetURL('local/vpu-data-table-view/css/buttons.dataTables.min.css');
+        let dt_css = commonUtils.getAssetURL('vpu-data-table-view', 'css/jquery.dataTables.min.css');
+        let rs_css = commonUtils.getAssetURL('vpu-data-table-view', 'css/responsive.dataTables.min.css');
+        let bt_css = commonUtils.getAssetURL('vpu-data-table-view', 'css/buttons.dataTables.min.css');
 
         return html`
             <link rel="stylesheet" href="${dt_css}">
