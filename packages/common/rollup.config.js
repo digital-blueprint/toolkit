@@ -1,4 +1,3 @@
-import path from 'path';
 import glob from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -7,7 +6,6 @@ import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
-import chai from 'chai';
 
 const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
@@ -36,18 +34,8 @@ export default {
         consts({
             environment: build,
         }),
-        resolve({
-          customResolveOptions: {
-            // ignore node_modules from vendored packages
-            moduleDirectory: path.join(process.cwd(), 'node_modules')
-          }
-        }),
-        commonjs({
-            include: 'node_modules/**',
-            namedExports: {
-                'chai': Object.keys(chai),
-            }
-        }),
+        resolve(),
+        commonjs(),
         json(),
         copy({
             targets: [

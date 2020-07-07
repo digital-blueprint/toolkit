@@ -40,7 +40,7 @@ export default {
         url({
             limit: 0,
             include: [
-                "node_modules/select2/**/*.css",
+                "../../**/node_modules/select2/**/*.css",
             ],
             emitFiles: true,
             fileName: 'shared/[name].[hash][extname]'

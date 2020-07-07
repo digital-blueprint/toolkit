@@ -1,6 +1,5 @@
 
 import glob from 'glob';
-import path from 'path';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
@@ -37,19 +36,12 @@ export default {
         consts({
             environment: build,
         }),
-        resolve({
-          customResolveOptions: {
-            // ignore node_modules from vendored packages
-            moduleDirectory: path.join(process.cwd(), 'node_modules')
-          }
-        }),
-        commonjs({
-            include: 'node_modules/**'
-        }),
+        resolve(),
+        commonjs(),
         url({
             limit: 0,
             include: [
-                "node_modules/select2/**/*.css",
+                "../../**/node_modules/select2/**/*.css",
             ],
             emitFiles: true,
             fileName: 'shared/[name].[hash][extname]'
