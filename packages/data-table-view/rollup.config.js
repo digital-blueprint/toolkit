@@ -1,4 +1,3 @@
-import path from 'path';
 import glob from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -48,15 +47,8 @@ export default {
         consts({
             environment: build,
         }),
-        resolve({
-            customResolveOptions: {
-                // ignore node_modules from vendored packages
-                moduleDirectory: path.join(process.cwd(), 'node_modules')
-            }
-        }),
-        commonjs({
-            include: 'node_modules/**'
-        }),
+        resolve(),
+        commonjs(),
         json(),
         urlPlugin({
             limit: 0,
@@ -73,10 +65,10 @@ export default {
                 {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
                 {src: 'assets/nomodule.js', dest: 'dist/local/' + pkg.name},
 
-                {src: 'node_modules/datatables.net-dt/css', dest: 'dist/local/vpu-data-table-view'},
-                {src: 'node_modules/datatables.net-dt/images', dest: 'dist/local/vpu-data-table-view'},
-                {src: 'node_modules/datatables.net-responsive-dt/css', dest: 'dist/local/vpu-data-table-view'},
-                {src: 'node_modules/datatables.net-buttons-dt/css', dest: 'dist/local/vpu-data-table-view'},
+                {src: '../../node_modules/datatables.net-dt/css', dest: 'dist/local/vpu-data-table-view'},
+                {src: '../../node_modules/datatables.net-dt/images', dest: 'dist/local/vpu-data-table-view'},
+                {src: '../../node_modules/datatables.net-responsive-dt/css', dest: 'dist/local/vpu-data-table-view'},
+                {src: '../../node_modules/datatables.net-buttons-dt/css', dest: 'dist/local/vpu-data-table-view'},
             ],
         }),
 
