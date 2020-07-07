@@ -4,7 +4,7 @@
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "devDependencies": {
-    "karma": "^5.0.1",
+    "karma": "^5.1.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.0.0",
     "karma-mocha": "^2.0.1",
@@ -12,10 +12,10 @@
     "puppeteer": "^2.1.1",
     "mocha": "^8.0.1",
     "chai": "^4.2.0",
-    "rollup": "^2.6.1",
+    "rollup": "^2.19.0",
     "@rollup/plugin-commonjs": "^13.0.0",
     "@rollup/plugin-node-resolve": "^8.1.0",
-    "@rollup/plugin-json": "^4.0.0",
+    "@rollup/plugin-json": "^4.1.0",
     "rollup-plugin-consts": "^1.0.1",
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-serve": "^1.0.1",
@@ -25,8 +25,8 @@
     "vpu-common": "^1.0.0"
   },
   "dependencies": {
-    "@open-wc/scoped-elements": "^1.0.8",
-    "lit-element": "^2.2.1"
+    "@open-wc/scoped-elements": "^1.1.1",
+    "lit-element": "^2.3.1"
   },
   "scripts": {
     "clean": "rm dist/*",

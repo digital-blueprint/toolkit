@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bootstrap": "lerna bootstrap --hoist --strict",
+    "clean": "lerna clean -y"
   },
   "author": "",
   "license": "ISC",
