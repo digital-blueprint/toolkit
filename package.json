@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist --strict",
+    "bootstrap": "lerna bootstrap --hoist --force-local --strict",
     "clean": "lerna clean -y",
     "test": "lerna run test"
   },
