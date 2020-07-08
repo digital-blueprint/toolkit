@@ -1,4 +1,4 @@
-image: registry.gitlab.tugraz.at/vpu/webcomponents/toolkit/main:v6
+image: registry.gitlab.tugraz.at/vpu/webcomponents/toolkit/main:v1
 
 stages:
   - test
