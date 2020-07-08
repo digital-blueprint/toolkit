@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
+  "private": true,
   "devDependencies": {
     "karma": "^5.1.0",
     "karma-chai": "^0.1.0",

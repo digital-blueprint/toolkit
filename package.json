@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap --hoist --force-local --strict",
     "clean": "lerna clean -y",
