@@ -33,6 +33,8 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
 - `nextcloud-web-dav-url` (optional): Nextcloud WebDav Url to use with the Nextcloud file picker
     - example `<vpu-file-source nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></vpu-file-source>`
     - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
+- `dialog-open` (optional): If this attribute is set the dialog for selecting local or Nextcloud files will open
+    - example `<vpu-file-source dialog-open></vpu-file-source>`
 
 ### Outgoing Events
 
