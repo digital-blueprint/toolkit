@@ -7,7 +7,7 @@ import {Icon, MiniSpinner} from 'vpu-common';
 import * as commonStyles from 'vpu-common/styles';
 import {NextcloudFilePicker} from "./vpu-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
-
+import MicroModal from './micromodal.es'
 
 function mimeTypesToAccept(mimeTypes) {
     // Some operating systems can't handle mime types and
@@ -43,6 +43,8 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         this.disabled = false;
         this.decompressZip = false;
         this._queueKey = 0;
+        this.activeSource = 'local';
+        this.isDialogOpen = false;
     }
 
     static get scopedElements() {
@@ -66,6 +68,8 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             buttonLabel: { type: String, attribute: 'button-label' },
             disabled: { type: Boolean },
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
+            activeSource: { type: Boolean, attribute: false },
+            isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
         };
     }
 
@@ -75,6 +79,14 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             switch (propName) {
                 case "lang":
                     i18n.changeLanguage(this.lang);
+                    break;
+                case "isDialogOpen":
+                    if (this.isDialogOpen) {
+                        this.openDialog();
+                    } else {
+                        this.removeAttribute("dialog-open");
+                    }
+
                     break;
             }
         });
@@ -278,6 +290,14 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         this.dispatchEvent(event);
     }
 
+    openDialog() {
+        console.log("openDialog");
+        console.log(this._('#modal-picker'));
+        MicroModal.show(this._('#modal-picker'), {
+            onClose: modal => { this.isDialogOpen = false; }
+        });
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -287,9 +307,19 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             #dropArea {
                 border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, black);
                 border-radius: var(--FUBorderRadius, 0);
-                width: var(--FUWidth, auto);
+                width: auto;
                 margin: var(--FUMargin, 0px);
                 padding: var(--FUPadding, 20px);
+                /*flex-grow: 1;*/
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #nextcloud-file-picker {
+                /*width: 100%;*/
             }
 
             #dropArea.highlight {
@@ -316,6 +346,145 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             .block {
                 margin-bottom: 10px;
             }
+
+            /**************************\\
+              Modal Styles
+            \\**************************/
+
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            }
+            
+            .modal-container {
+                background-color: #fff;
+                max-width: 600px;
+                max-height: 100vh;
+                min-width: 60%;
+                min-height: 50%;
+                overflow-y: auto;
+                box-sizing: border-box;
+                display: grid;
+                grid-template-columns: 50px auto;
+                grid-template-rows: auto;
+                grid-template-areas: "sidebar main";
+            }
+            
+            .modal-nav {
+                cursor: pointer;
+                overflow: hidden;
+                background-color: #eee;
+            }
+            
+            .modal-nav > div {
+                padding: 5px;
+                text-align: center;
+            }
+
+            .modal-nav .nav-icon {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .modal-nav .active {
+                background-color: #777;
+                color: white;
+            }
+
+            .modal-close {
+                position: absolute;
+                background: transparent;
+                border: none;
+                float: right;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .modal-close:hover {
+                font-weight: bold;
+            }
+            
+            button.modal-close:focus {
+                outline: none;
+            }
+            
+            .modal-close:before { content: "\\2715"; }
+            
+            .modal-content {
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                /*height: 50vh;*/
+            }
+
+            .modal-content .source-main {
+                /*flex-grow: 1;*/
+                /*justify-content: center;*/
+                /*align-items: center;*/
+                height: 100%;
+                width: 100%;
+            }
+
+            /**************************\\
+              Modal Animation Style
+            \\**************************/
+            @keyframes mmfadeIn {
+                from { opacity: 0; }
+                  to { opacity: 1; }
+            }
+            
+            @keyframes mmfadeOut {
+                from { opacity: 1; }
+                  to { opacity: 0; }
+            }
+            
+            @keyframes mmslideIn {
+              from { transform: translateY(15%); }
+                to { transform: translateY(0); }
+            }
+            
+            @keyframes mmslideOut {
+                from { transform: translateY(0); }
+                to { transform: translateY(-10%); }
+            }
+            
+            .micromodal-slide {
+                display: none;
+            }
+            
+            .micromodal-slide.is-open {
+                display: block;
+            }
+            
+            .micromodal-slide[aria-hidden="false"] .modal-overlay {
+                animation: mmfadeIn .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+            }
+            
+            .micromodal-slide[aria-hidden="false"] .modal-container {
+                animation: mmslideIn .3s cubic-bezier(0, 0, .2, 1);
+            }
+            
+            .micromodal-slide[aria-hidden="true"] .modal-overlay {
+              animation: mmfadeOut .3s cubic-bezier(0.0, 0.0, 0.2, 1);
+            }
+            
+            .micromodal-slide[aria-hidden="true"] .modal-container {
+                animation: mmslideOut .3s cubic-bezier(0, 0, .2, 1);
+            }
+            
+            .micromodal-slide .modal-container,
+            .micromodal-slide .modal-overlay {
+                will-change: transform;
+            }
         `;
     }
 
@@ -327,32 +496,61 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         }
 
         return html`
-            <div id="dropArea">
-                <div>
-                    <div class="block">
-                        ${this.text || i18n.t('intro')}
+<!--
+            <button class="button"
+                ?disabled="${this.disabled}"
+                @click="${() => { this.openDialog(); }}">${i18n.t('file-source.open-menu')}</button>
+-->
+            <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
+                <div class="modal-overlay" tabindex="-1" data-micromodal-close>
+                    <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
+                        <nav class="modal-nav">
+                            <div title="${i18n.t('file-source.nav-local')}"
+                                 @click="${() => { this.activeSource = "local"; }}"
+                                 class="${classMap({"active": this.activeSource === "local"})}">
+                                <vpu-icon class="nav-icon" name="laptop"></vpu-icon>
+                            </div>
+                            <div title="Nextcloud"
+                                 @click="${() => { this.activeSource = "nextcloud"; }}"
+                                 class="${classMap({"active": this.activeSource === "nextcloud", hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
+                                <vpu-icon class="nav-icon" name="cloud"></vpu-icon>
+                            </div>
+                        </nav>
+                        <main class="modal-content" id="modal-picker-content">
+                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close" aria-label="Close modal" data-micromodal-close></button>
+                            <div class="source-main ${classMap({"hidden": this.activeSource !== "local"})}">
+                                <div id="dropArea">
+                                    <div class="block">
+                                        ${this.text || i18n.t('intro')}
+                                    </div>
+                                    <input ?disabled="${this.disabled}"
+                                           type="file"
+                                           id="fileElem"
+                                           multiple
+                                           accept="${mimeTypesToAccept(allowedMimeTypes)}"
+                                           name='file'>
+                                    <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
+                                        ${this.buttonLabel || i18n.t('upload-label')}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="source-main ${classMap({"hidden": this.activeSource !== "nextcloud"})}">
+                                <vpu-nextcloud-file-picker id="nextcloud-file-picker"
+                                       class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
+                                       ?disabled="${this.disabled}"
+                                       lang="${this.lang}"
+                                       auth-url="${this.nextcloudAuthUrl}"
+                                       web-dav-url="${this.nextcloudWebDavUrl}"
+                                       allowed-mime-types="${this.allowedMimeTypes}"
+                                       @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
+                                    this.sendFileEvent(event.detail.file);
+                                }}"></vpu-nextcloud-file-picker>
+                            </div>
+                        </main>
                     </div>
-                    <input ?disabled="${this.disabled}"
-                           type="file"
-                           id="fileElem"
-                           multiple
-                           accept="${mimeTypesToAccept(allowedMimeTypes)}"
-                           name='file'>
-                    <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
-                        ${this.buttonLabel || i18n.t('upload-label')}
-                    </label>
-                    <vpu-nextcloud-file-picker id="nextcloud-file-picker"
-                                               class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
-                                               ?disabled="${this.disabled}"
-                                               lang="${this.lang}"
-                                               auth-url="${this.nextcloudAuthUrl}"
-                                               web-dav-url="${this.nextcloudWebDavUrl}"
-                                               allowed-mime-types="${this.allowedMimeTypes}"                                        
-                                               @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
-                                                   this.sendFileEvent(event.detail.file);
-                                               }}"></vpu-nextcloud-file-picker>
                 </div>
             </div>
-        `;
+
+          `;
     }
 }

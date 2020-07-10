@@ -10,6 +10,11 @@
   "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region",
   "upload-label": "Select some files",
   "upload-disabled-title": "The file selection is disabled while uploading!",
+  "file-source": {
+    "modal-select-files": "Select files",
+    "modal-close": "Close dialog",
+    "nav-local": "My device"
+  },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
     "open-nextcloud-file-picker": "Select files from your Nextcloud",
