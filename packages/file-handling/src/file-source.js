@@ -82,9 +82,11 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                     break;
                 case "isDialogOpen":
                     if (this.isDialogOpen) {
+                        // this.setAttribute("dialog-open", "");
                         this.openDialog();
                     } else {
                         this.removeAttribute("dialog-open");
+                        // this.closeDialog();
                     }
 
                     break;
@@ -184,6 +186,8 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
 
         // this.dispatchEvent(new CustomEvent("vpu-file-source-selection-finished",
         //     { "detail": {}, bubbles: true, composed: true }));
+
+        this.closeDialog();
     }
 
     /**
@@ -292,10 +296,14 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
 
     openDialog() {
         console.log("openDialog");
-        console.log(this._('#modal-picker'));
         MicroModal.show(this._('#modal-picker'), {
             onClose: modal => { this.isDialogOpen = false; }
         });
+    }
+
+    closeDialog() {
+        console.log("closeDialog");
+        MicroModal.close();
     }
 
     static get styles() {
