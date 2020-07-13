@@ -12,6 +12,9 @@ import del from 'rollup-plugin-delete';
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
+let nextcloudBaseURL = 'https://cloud.tugraz.at';
+let nextcloudFileURL = nextcloudBaseURL + '/apps/files/?dir=';
+
 export default {
     input: (build !== 'test') ? ['src/demo.js', 'src/vpu-file-source.js'] : glob.sync('test/**/*.js'),
     output: {
@@ -27,6 +30,8 @@ export default {
         }),
         consts({
             environment: build,
+            nextcloudBaseURL: nextcloudBaseURL,
+            nextcloudFileURL: nextcloudFileURL,
         }),
         resolve({
             customResolveOptions: {

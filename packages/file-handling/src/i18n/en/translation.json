@@ -21,6 +21,14 @@
     "folder-last": "Jump to the last directory",
     "folder-up": "Jump to the parent directory",
     "folder-up": "Jump to the home directory",
-    "select-files": "Select files"
+    "select-files": "Select files",
+    "refresh-nextcloud-file-picker": "Connect again",
+    "loadpath-nextcloud-file-picker": "Loading directory from Nextcloud",
+    "load-path-link": "Go to {{path}}",
+    "auth-progress": "Authentification in progress",
+    "last-modified": "Last modified",
+    "mime-type": "Type",
+    "filename": "Filename",
+    "size": "Size"
   }
 }

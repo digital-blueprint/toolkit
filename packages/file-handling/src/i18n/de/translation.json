@@ -21,6 +21,14 @@
     "folder-last": "In das zuletzt ausgewählte Verzeichnis springen",
     "folder-up": "In das übergeordnete Verzeichnis springen",
     "folder-home": "In das Home Verzeichnis springen",
-    "select-files": "Dateien auswählen"
+    "select-files": "Dateien auswählen",
+    "refresh-nextcloud-file-picker": "Erneut verbinden",
+    "loadpath-nextcloud-file-picker": "Das Nextcloud Verzeichnis wird geladen",
+    "load-path-link": "Gehe zu {{path}}",
+    "auth-progress": "Anmeldung läuft",
+    "last-modified": "Geändert",
+    "mime-type": "Art",
+    "filename": "Name",
+    "size": "Größe"
   }
 }
