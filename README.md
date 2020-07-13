@@ -3,13 +3,12 @@
 ## Setup
 
 ```
-npm install
-npm run bootstrap
+yarn install
 ```
 
-`cd packges/some-package` and continue development with `npm run watch` etc.
+`cd packges/some-package` and continue development with `yarn run watch` etc.
 
 ## Other commands
 
-* `npm run test` -  Run test for all packages`
-* `npm run clean` - Removes all `node_modules` directories, run `bootstrap` to create them again
+* `yarn run test` -  Run test for all packages`
+* `yarn run clean` - Removes all `node_modules` directories.
