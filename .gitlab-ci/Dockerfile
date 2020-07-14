@@ -14,8 +14,12 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && rm -rf /var/lib/apt/lists/*
 
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
+
 RUN apt-get update && apt-get install -y \
     nodejs \
+    yarn \
     chromium \
     # libgbm1: newer chromium from puppeteer
     libgbm1 \
