@@ -22,10 +22,9 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
     - example `<vpu-file-source allowed-mime-types='image/*'></vpu-file-source>` ... images (of all sub types) only
     - example `<vpu-file-source allowed-mime-types='image/png,text/plain'></vpu-file-source>` ... PNGs or TXTs only
     - example `<vpu-file-source allowed-mime-types='*/*'></vpu-file-source>` ... all file types (default)
-- `enabled-sources` (optional): sets which sources are enabled
+- `enabled-sources` (optional, default: `local`): sets which sources are enabled
     - you can use `local` and `nextcloud`
-    - default is `local`
-    - example `<vpu-file-source enabled-sources='local,nextcloud'></vpu-file-source>`
+    - example `<vpu-file-source enabled-sources="local,nextcloud"></vpu-file-source>`
 - `disabled` (optional): disable input control
     - example `<vpu-file-source disabled></vpu-file-source>`
 - `decompress-zip` (optional): decompress zip file and send the contained files (including files in folders)
@@ -37,8 +36,12 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
 - `nextcloud-web-dav-url` (optional): Nextcloud WebDav Url to use with the Nextcloud file picker
     - example `<vpu-file-source nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></vpu-file-source>`
     - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
-- `dialog-open` (optional): If this attribute is set the dialog for selecting local or Nextcloud files will open
+- `dialog-open` (optional): if this attribute is set the dialog for selecting local or Nextcloud files will open
     - example `<vpu-file-source dialog-open></vpu-file-source>`
+- `text` (optional): the text that is shown above the button to select files
+    - example `<vpu-file-source text="Please select some files"></vpu-file-source>`
+- `button-label` (optional): the text that is shown on the button to select files
+    - example `<vpu-file-source button-label="Select files"></vpu-file-source>`
 
 ### Outgoing Events
 
@@ -61,37 +64,32 @@ This web component is able to receive files and present as them as ZIP file down
 ### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-file-source lang="de"></vpu-file-source>`
+    - example `<vpu-file-sink lang="de"></vpu-file-sink>`
+- `enabled-destinations` (optional, default: `local`): sets which destination are enabled
+    - you can use `local` and `nextcloud`
+    - example `<vpu-file-sink enabled-destinations="local,nextcloud"></vpu-file-sink>`
+- `filename` (optional, default: `files.zip`): sets a file name to use for downloading the zip file
+    - example `<vpu-file-sink filename="signed-documents.zip"></vpu-file-sink>`
 - `nextcloud-auth-url` (optional): Nextcloud Auth Url to use with the Nextcloud file picker
-    - example `<vpu-file-source nextcloud-auth-url="http://localhost:8081/index.php/apps/webapppassword"></vpu-file-source>`
+    - example `<vpu-file-sink nextcloud-auth-url="http://localhost:8081/index.php/apps/webapppassword"></vpu-file-sink>`
     - `nextcloud-web-dav-url` also needs to be set for the Nextcloud file picker to be active
 - `nextcloud-web-dav-url` (optional): Nextcloud WebDav Url to use with the Nextcloud file picker
-    - example `<vpu-file-source nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></vpu-file-source>`
+    - example `<vpu-file-sink nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></vpu-file-sink>`
     - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
+- `text` (optional): the text that is shown above the button to download the zip file
+    - example `<vpu-file-sink text="Download files as ZIP-file"></vpu-file-sink>`
+- `button-label` (optional): the text that is shown on the button to download the zip file
+    - example `<vpu-file-sink button-label="Download files"></vpu-file-sink>`
 
-### Incoming Events
+### Properties
 
-#### `vpu-file-sink-download-compressed-files`
-
-If this event is received a *save-as* dialog will pop up to store a zip file of the received files.
-
-##### Payload
-
-`{'files': [File], 'filename': 'my-file.zip'}` where `[File]` is an array of binary files which should be
-compressed and `filename` is the name of the zip file that should be suggested in the *save-as* dialog
-
-##### Example
-
-```javascript
-const detail = { "files": files, "filename": "signed-documents.zip" };
-const event = new CustomEvent("vpu-file-sink-download-compressed-files", { "detail": detail });
-this._("#file-sink").dispatchEvent(event);
-```
+- `files`: an array of File objects which should be downloaded in the dialog
+    - if the property is set the dialog opens
 
 ## Local development
 
 ```bash
-# get the source
+# get the source code
 git clone git@gitlab.tugraz.at:VPU/WebComponents/FileHandling.git
 cd FileHandling
 git submodule update --init

@@ -15,6 +15,12 @@
     "modal-close": "Dialog schließen",
     "nav-local": "Lokaler Computer"
   },
+  "file-sink": {
+    "local-intro": "{{amount}} Datei(en) als ZIP-Datei herunterladen",
+    "local-button": "ZIP-Datei herunterladen",
+    "modal-close": "Dialog schließen",
+    "nav-local": "Lokaler Computer"
+  },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
     "open-nextcloud-file-picker": "Dateien von Ihrer Nextcloud auswählen",
