@@ -1,3 +1,2 @@
-import {FileSource} from './file-source';
-
-export {FileSource};
+export {FileSource} from './file-source';
+export {FileSink} from './file-sink';
