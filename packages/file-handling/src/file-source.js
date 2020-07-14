@@ -35,10 +35,11 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         super();
         this.lang = 'de';
         this.nextcloudAuthUrl = '';
+        this.nextcloudName ='TU Graz cloud';
         this.nextcloudWebDavUrl = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
-        this.enabledSources = 'local';
+        this.enabledSources = 'local';1
         this.text = '';
         this.buttonLabel = '';
         this.disabled = false;
@@ -66,6 +67,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             enabledSources: { type: String, attribute: 'enabled-sources' },
             nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
             nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
+            nextcloudName: { type: String, attribute: 'nextcloud-name' },
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label' },
             disabled: { type: Boolean },
@@ -338,7 +340,14 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             }
 
             #nextcloud-file-picker {
-                /*width: 100%;*/
+                width: 100%;
+                height: 100%;
+                margin: var(--FUMargin, 0px);
+                padding: var(--FUPadding, 20px);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
 
             #dropArea.highlight {
@@ -351,11 +360,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
 
             #fileElem {
                 display: none;
-            }
-
-            #nextcloud-file-picker {
-                display: inline-block;
-                margin-left: 8px;
             }
 
             #nextcloud-file-picker.hidden {
@@ -421,6 +425,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                                        lang="${this.lang}"
                                        auth-url="${this.nextcloudAuthUrl}"
                                        web-dav-url="${this.nextcloudWebDavUrl}"
+                                       nextcloud-name="${this.nextcloudName}"
                                        allowed-mime-types="${this.allowedMimeTypes}"
                                        @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
                                     this.sendFileEvent(event.detail.file);

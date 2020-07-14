@@ -23,7 +23,7 @@
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
-    "open-nextcloud-file-picker": "Select files from your Nextcloud",
+    "open-nextcloud-file-picker": "Select files from your {{name}}",
     "folder-last": "Jump to the last directory",
     "folder-up": "Jump to the parent directory",
     "folder-up": "Jump to the home directory",
@@ -35,6 +35,11 @@
     "last-modified": "Last modified",
     "mime-type": "Type",
     "filename": "Filename",
-    "size": "Size"
+    "size": "Size",
+    "init-text-1": "Chose your files from {{name}}.",
+    "init-text-2": "You need to authenticate first.",
+    "auth-info": "A new page will open to connect your account.",
+    "connect-nextcloud": "Connect {{name}}",
+    "open-in-nextcloud": "Open in {{name}}"
   }
 }
