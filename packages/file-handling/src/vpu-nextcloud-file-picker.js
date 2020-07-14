@@ -30,7 +30,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
         this.tabulatorTable = null;
         this.allowedMimeTypes = '*/*';
         this.directoriesOnly = null;
-        this.selectNum = true;
+        this.maxSelectedItems = true;
 
         this._onReceiveWindowMessage = this.onReceiveWindowMessage.bind(this);
     }
@@ -55,7 +55,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
             directoryPath: { type: String, attribute: false },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             directoriesOnly: { type: Boolean, attribute: 'directories-only' },
-            selectNum: { type: Number, attribute: 'select-num' },
+            maxSelectedItems: { type: Number, attribute: 'max-selected-items' },
         };
     }
 
@@ -87,7 +87,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
             // TODO: translation of column headers
             this.tabulatorTable = new Tabulator(this._("#directory-content-table"), {
                 layout: "fitDataStretch",
-                selectable: this.selectNum,
+                selectable: this.maxSelectedItems,
                 selectableRangeMode: "drag",
                 columns: [
                     {title: "", field: "type", align:"center", formatter: (cell, formatterParams, onRendered) => {
