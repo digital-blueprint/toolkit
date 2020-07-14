@@ -38,6 +38,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         this.nextcloudWebDavUrl = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
+        this.enabledSources = 'local';
         this.text = '';
         this.buttonLabel = '';
         this.disabled = false;
@@ -62,6 +63,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         return {
             lang: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
+            enabledSources: { type: String, attribute: 'enabled-sources' },
             nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
             nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
             text: { type: String },
@@ -79,6 +81,11 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             switch (propName) {
                 case "lang":
                     i18n.changeLanguage(this.lang);
+                    break;
+                case "enabledSources":
+                    if (!this.hasEnabledSource(this.activeSource)) {
+                        this.activeSource = this.enabledSources.split(",")[0];
+                    }
                     break;
                 case "isDialogOpen":
                     if (this.isDialogOpen) {
@@ -217,6 +224,12 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         }
 
         return true;
+    }
+
+    hasEnabledSource(source) {
+        const enabledSources = this.enabledSources.split(',');
+
+        return enabledSources.includes(source);
     }
 
     /**
@@ -515,12 +528,12 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                         <nav class="modal-nav">
                             <div title="${i18n.t('file-source.nav-local')}"
                                  @click="${() => { this.activeSource = "local"; }}"
-                                 class="${classMap({"active": this.activeSource === "local"})}">
+                                 class="${classMap({"active": this.activeSource === "local", hidden: !this.hasEnabledSource("local")})}">
                                 <vpu-icon class="nav-icon" name="laptop"></vpu-icon>
                             </div>
                             <div title="Nextcloud"
                                  @click="${() => { this.activeSource = "nextcloud"; }}"
-                                 class="${classMap({"active": this.activeSource === "nextcloud", hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
+                                 class="${classMap({"active": this.activeSource === "nextcloud", hidden: !this.hasEnabledSource("nextcloud")})}">
                                 <vpu-icon class="nav-icon" name="cloud"></vpu-icon>
                             </div>
                         </nav>

@@ -22,6 +22,10 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
     - example `<vpu-file-source allowed-mime-types='image/*'></vpu-file-source>` ... images (of all sub types) only
     - example `<vpu-file-source allowed-mime-types='image/png,text/plain'></vpu-file-source>` ... PNGs or TXTs only
     - example `<vpu-file-source allowed-mime-types='*/*'></vpu-file-source>` ... all file types (default)
+- `enabled-sources` (optional): sets which sources are enabled
+    - you can use `local` and `nextcloud`
+    - default is `local`
+    - example `<vpu-file-source enabled-sources='local,nextcloud'></vpu-file-source>`
 - `disabled` (optional): disable input control
     - example `<vpu-file-source disabled></vpu-file-source>`
 - `decompress-zip` (optional): decompress zip file and send the contained files (including files in folders)
