@@ -226,9 +226,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
     }
 
     hasEnabledSource(source) {
-        const enabledSources = this.enabledSources.split(',');
-
-        return enabledSources.includes(source);
+        return this.enabledSources.split(',').includes(source);
     }
 
     /**
