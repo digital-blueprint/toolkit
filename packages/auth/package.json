@@ -1,5 +1,5 @@
 {
-  "name": "vpu-auth",
+  "name": "dbp-auth",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
@@ -30,7 +30,7 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^6.1.0",
-    "vpu-common": "^1.0.0"
+    "dbp-common": "^1.0.0"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",

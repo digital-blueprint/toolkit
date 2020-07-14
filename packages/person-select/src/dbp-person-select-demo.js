@@ -2,9 +2,9 @@ import {i18n} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {PersonSelect} from './person-select.js';
-import {AuthKeycloak, LoginButton} from 'vpu-auth';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import {AuthKeycloak, LoginButton} from 'dbp-auth';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 
 class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -15,9 +15,9 @@ class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-auth-keycloak': AuthKeycloak,
-          'vpu-login-button': LoginButton,
-          'vpu-person-select': PersonSelect,
+          'dbp-auth-keycloak': AuthKeycloak,
+          'dbp-login-button': LoginButton,
+          'dbp-person-select': PersonSelect,
         };
     }
 
@@ -51,8 +51,8 @@ class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     getAuthComponentHtml() {
         return this.noAuth ? html`` : html`
             <div class="container">
-                <vpu-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></vpu-auth-keycloak>
-                <vpu-login-button lang="${this.lang}" show-image></vpu-login-button>
+                <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
             </div>
         `;
     }
@@ -69,13 +69,13 @@ class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
                         <div class="field">
                             <label class="label">Person 1</label>
                             <div class="control">
-                                <vpu-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></vpu-person-select>
+                                <dbp-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></dbp-person-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Person 2</label>
                             <div class="control">
-                                <vpu-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></vpu-person-select>
+                                <dbp-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></dbp-person-select>
                             </div>
                         </div>
                     </form>
@@ -85,4 +85,4 @@ class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     }
 }
 
-commonUtils.defineCustomElement('vpu-person-select-demo', PersonSelectDemo);
+commonUtils.defineCustomElement('dbp-person-select-demo', PersonSelectDemo);

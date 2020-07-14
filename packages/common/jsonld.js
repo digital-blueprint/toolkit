@@ -51,18 +51,18 @@ export default class JSONLD {
 
         initStarted[apiUrl] = true;
 
-        if (window.VPUAuthToken !== undefined) {
+        if (window.DBPAuthToken !== undefined) {
             JSONLD.doInitialization(apiUrl);
         } else {
-            // window.VPUAuthToken will be set by vpu-auth-init event
-            window.addEventListener("vpu-auth-init", () => JSONLD.doInitialization(apiUrl));
+            // window.DBPAuthToken will be set by dbp-auth-init event
+            window.addEventListener("dbp-auth-init", () => JSONLD.doInitialization(apiUrl));
         }
     }
 
     static doInitialization(apiUrl) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", apiUrl, true);
-        xhr.setRequestHeader('Authorization', 'Bearer ' + window.VPUAuthToken);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + window.DBPAuthToken);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState !== 4) {

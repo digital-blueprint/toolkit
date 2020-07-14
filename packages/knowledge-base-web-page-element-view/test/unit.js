@@ -1,11 +1,11 @@
-import '../src/vpu-knowledge-base-web-page-element-view.js';
-import '../src/vpu-knowledge-base-web-page-element-view-demo.js';
+import '../src/dbp-knowledge-base-web-page-element-view.js';
+import '../src/dbp-knowledge-base-web-page-element-view-demo.js';
 
-describe('vpu-knowledge-base-web-page-element-view basics', () => {
+describe('dbp-knowledge-base-web-page-element-view basics', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-knowledge-base-web-page-element-view');
+    node = document.createElement('dbp-knowledge-base-web-page-element-view');
     document.body.appendChild(node);
     await node.updateComplete;
   });
@@ -19,11 +19,11 @@ describe('vpu-knowledge-base-web-page-element-view basics', () => {
   });
 });
 
-describe('vpu-knowledge-base-web-page-element-view demo', () => {
+describe('dbp-knowledge-base-web-page-element-view demo', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-knowledge-base-web-page-element-view-demo');
+    node = document.createElement('dbp-knowledge-base-web-page-element-view-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });

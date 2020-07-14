@@ -1,6 +1,6 @@
 # App Shell Component
 
-[GitLab Repository](https://gitlab.tugraz.at/VPU/Apps/AppShell)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/apps/AppShell)
 
 A web component for building SPAs consisting of one topic with multiple
 activities. Handles login, language selection, activity switching, menus etc.
@@ -8,13 +8,13 @@ activities. Handles login, language selection, activity switching, menus etc.
 ## Usage
 
 ```html
-<vpu-app-shell src="/example.topic.metadata.json"></vpu-app-shell>
+<dbp-app-shell src="/example.topic.metadata.json"></dbp-app-shell>
 ```
 
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-app-shell lang="de" </vpu-app-shell>`
+    - example `<dbp-app-shell lang="de" </dbp-app-shell>`
 - `src`: The path to a topic metadata file (json)
 - `base-path` (optional, default: `/`: An absolute base path for routing
 - `entry-point-url`: Entry point URL to access the API
@@ -48,8 +48,8 @@ activities. Handles login, language selection, activity switching, menus etc.
 
 ```json
 {
-  "element": "vpu-activity-example",
-  "module_src": "vpu-activity-example.js",
+  "element": "dbp-activity-example",
+  "module_src": "dbp-activity-example.js",
   "routing_name": "activity-example",
   "name": {
     "de": "Beispielaktivität",
@@ -70,7 +70,7 @@ activities. Handles login, language selection, activity switching, menus etc.
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:VPU/Apps/AppShell.git
+git clone git@gitlab.tugraz.at:dbp/apps/AppShell.git
 cd AppShell
 git submodule update --init
 

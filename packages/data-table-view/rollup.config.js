@@ -14,7 +14,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? ['src/vpu-data-table-view.js', 'src/vpu-data-table-view-demo.js'] : glob.sync('test/**/*.js'),
+    input: (build != 'test') ? ['src/dbp-data-table-view.js', 'src/dbp-data-table-view-demo.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
@@ -61,14 +61,14 @@ export default {
                 {src: 'assets/index.html', dest: 'dist'}, //rename: pkg.name + '.html'},
                 {src: 'assets/*.css', dest: 'dist/local/' + pkg.name},
                 {src: 'assets/*.ico', dest: 'dist/local/' + pkg.name},
-                {src: 'node_modules/vpu-common/vpu-spinner.js', dest: 'dist/local/' + pkg.name, rename: 'spinner.js'},
-                {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
+                {src: 'node_modules/dbp-common/dbp-spinner.js', dest: 'dist/local/' + pkg.name, rename: 'spinner.js'},
+                {src: 'node_modules/dbp-common/assets/icons/*.svg', dest: 'dist/local/dbp-common/icons'},
                 {src: 'assets/nomodule.js', dest: 'dist/local/' + pkg.name},
 
-                {src: '../../node_modules/datatables.net-dt/css', dest: 'dist/local/vpu-data-table-view'},
-                {src: '../../node_modules/datatables.net-dt/images', dest: 'dist/local/vpu-data-table-view'},
-                {src: '../../node_modules/datatables.net-responsive-dt/css', dest: 'dist/local/vpu-data-table-view'},
-                {src: '../../node_modules/datatables.net-buttons-dt/css', dest: 'dist/local/vpu-data-table-view'},
+                {src: '../../node_modules/datatables.net-dt/css', dest: 'dist/local/dbp-data-table-view'},
+                {src: '../../node_modules/datatables.net-dt/images', dest: 'dist/local/dbp-data-table-view'},
+                {src: '../../node_modules/datatables.net-responsive-dt/css', dest: 'dist/local/dbp-data-table-view'},
+                {src: '../../node_modules/datatables.net-buttons-dt/css', dest: 'dist/local/dbp-data-table-view'},
             ],
         }),
 

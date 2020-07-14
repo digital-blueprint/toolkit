@@ -1,5 +1,5 @@
 {
-  "name": "vpu-app-shell",
+  "name": "dbp-app-shell",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
@@ -24,11 +24,11 @@
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-serve": "^1.0.1",
-    "vpu-auth": "^1.0.0",
-    "vpu-common": "^1.0.0",
-    "vpu-language-select": "^1.0.0",
-    "vpu-notification": "^1.0.0",
-    "vpu-person-profile": "^1.0.0"
+    "dbp-auth": "^1.0.0",
+    "dbp-common": "^1.0.0",
+    "dbp-language-select": "^1.0.0",
+    "dbp-notification": "^1.0.0",
+    "dbp-person-profile": "^1.0.0"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",

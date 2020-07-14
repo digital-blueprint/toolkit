@@ -1,5 +1,5 @@
 {
-  "name": "vpu-person-profile",
+  "name": "dbp-person-profile",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
@@ -24,9 +24,9 @@
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-url": "^3.0.1",
     "i18next-scanner": "^2.10.2",
-    "vpu-auth": "^1.0.0",
-    "vpu-common": "^1.0.0",
-    "vpu-person-select": "^1.0.0"
+    "dbp-auth": "^1.0.0",
+    "dbp-common": "^1.0.0",
+    "dbp-person-select": "^1.0.0"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",

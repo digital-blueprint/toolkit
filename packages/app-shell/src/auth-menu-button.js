@@ -2,9 +2,9 @@ import {createI18nInstance} from './i18n.js';
 import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import * as commonStyles from 'vpu-common/styles';
+import * as commonStyles from 'dbp-common/styles';
 import {LitElement} from "lit-element";
-import {Icon, EventBus} from 'vpu-common';
+import {Icon, EventBus} from 'dbp-common';
 
 
 const i18n = createI18nInstance();
@@ -23,7 +23,7 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-            'vpu-icon': Icon,
+            'dbp-icon': Icon,
         };
     }
 
@@ -109,8 +109,8 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
             }
 
             img {
-                border-width: var(--vpu-border-width);
-                border-color: var(--vpu-dark);
+                border-width: var(--dbp-border-width);
+                border-color: var(--dbp-dark);
                 border-style: solid;
             }
 
@@ -125,7 +125,7 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
                 position: absolute;
                 z-index: 20;
                 border: solid 1px black;
-                border-radius: var(--vpu-border-radius);
+                border-radius: var(--dbp-border-radius);
                 overflow: hidden;
                 background-color: white;
             }
@@ -193,8 +193,8 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
             }
 
             .login-button:hover {
-                background-color: var(--vpu-dark);
-                color: var(--vpu-light);
+                background-color: var(--dbp-dark);
+                color: var(--dbp-light);
                 cursor: pointer;
                 transition: none;
             }
@@ -205,7 +205,7 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
             }
 
             .login-box:hover svg path {
-                fill: var(--vpu-light);
+                fill: var(--dbp-light);
             }
 
             .login-box .label {
@@ -258,7 +258,7 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
                 <a href="#">
                     <div class="dropdown-trigger login-button">
                         <div class="name">${this._loginData.name}</div>
-                        <vpu-icon class="menu-icon" name="chevron-down" id="menu-chevron-icon"></vpu-icon>
+                        <dbp-icon class="menu-icon" name="chevron-down" id="menu-chevron-icon"></dbp-icon>
                     </div>
                 </a>
                 <div class="dropdown-menu" id="dropdown-menu2" role="menu">

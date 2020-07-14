@@ -15,7 +15,7 @@
  * @param options
  */
 function send(options) {
-    const event = new CustomEvent("vpu-notification-send", {
+    const event = new CustomEvent("dbp-notification-send", {
         bubbles: true,
         cancelable: true,
         detail: options,
@@ -26,7 +26,7 @@ function send(options) {
     // true means the event was not handled
     if (result) {
         alert((options.summary !== undefined && options.summary !== "" ? options.summary + ": " : "") + options.body);
-        console.log("Use the web component vpu-notification to show fancy notifications.");
+        console.log("Use the web component dbp-notification to show fancy notifications.");
     }
 }
 

@@ -1,27 +1,27 @@
 # Auth Web Components
 
-[GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/Auth)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/Auth)
 
 ## Keycloak Component
 
 ### Usage
 
 ```html
-<vpu-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz" client-id="some-id"></vpu-auth-keycloak>
+<dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz" client-id="some-id"></dbp-auth-keycloak>
 ```
 
 ### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-auth-keycloak lang="de" </vpu-auth-keycloak>`
+    - example `<dbp-auth-keycloak lang="de" </dbp-auth-keycloak>`
 - `load-person` (optional, default: off): if enabled the logged in user will also be loaded as `Person`
-   in the `window.VPUPerson` variable
-    - example `<vpu-auth-keycloak load-person></vpu-auth-keycloak>`
+   in the `window.DBPPerson` variable
+    - example `<dbp-auth-keycloak load-person></dbp-auth-keycloak>`
 - `force-login` (optional, default: off): if enabled a login will be forced, there never will be a login button
-    - example `<vpu-auth-keycloak force-login></vpu-auth-keycloak>`
+    - example `<dbp-auth-keycloak force-login></dbp-auth-keycloak>`
 - `try-login` (optional, default: off): if enabled the a login will happen if the user is already logged in
   and finishing the login process would not result in a page location change (reload/redirect).
-    - example `<vpu-auth-keycloak try-login></vpu-auth-keycloak>`
+    - example `<dbp-auth-keycloak try-login></dbp-auth-keycloak>`
 
 ### Keycloak Specific Attributes
 
@@ -33,23 +33,23 @@
 
 ### Events to listen to
 
-- `vpu-auth-init`: Keycloak init event - happens once
-- `vpu-auth-person-init`: Keycloak person init event - the person entity was loaded from the server
-- `vpu-auth-keycloak-data-update`: Keycloak data was updated - happens for example every time after a token refresh
+- `dbp-auth-init`: Keycloak init event - happens once
+- `dbp-auth-person-init`: Keycloak person init event - the person entity was loaded from the server
+- `dbp-auth-keycloak-data-update`: Keycloak data was updated - happens for example every time after a token refresh
 
 ## Login Button
 
 ### Usage
 
 ```html
-<vpu-login-button></vpu-login-button>
+<dbp-login-button></dbp-login-button>
 ```
 
 ## Local development
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:VPU/WebComponents/Auth.git
+git clone git@gitlab.tugraz.at:dbp/web-components/Auth.git
 cd Auth
 git submodule update --init
 

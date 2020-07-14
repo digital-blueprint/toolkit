@@ -1,13 +1,13 @@
 
-import JSONLD from 'vpu-common/jsonld';
+import JSONLD from 'dbp-common/jsonld';
 import {css, html} from 'lit-element';
 import {i18n} from './i18n.js';
-import VPULitElement from 'vpu-common/vpu-lit-element';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import DBPLitElement from 'dbp-common/dbp-lit-element';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 
 
-export class PersonProfile extends VPULitElement {
+export class PersonProfile extends DBPLitElement {
 
     constructor() {
         super();
@@ -56,7 +56,7 @@ export class PersonProfile extends VPULitElement {
                         fetch(apiUrl, {
                             headers: {
                                 'Content-Type': 'application/ld+json',
-                                'Authorization': 'Bearer ' + window.VPUAuthToken,
+                                'Authorization': 'Bearer ' + window.DBPAuthToken,
                             },
                         })
                             .then(response => response.json())

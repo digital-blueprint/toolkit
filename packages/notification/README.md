@@ -1,17 +1,17 @@
 # Notification Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/Notification)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/Notification)
 
 ## Usage
 
 ```html
-<vpu-notification></vpu-notification>
+<dbp-notification></dbp-notification>
 ```
 
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-notification lang="de" client-id="my-client-id"></vpu-notification>`
+    - example `<dbp-notification lang="de" client-id="my-client-id"></dbp-notification>`
 
 ## Sending notifications 
 
@@ -30,7 +30,7 @@ send({
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:VPU/WebComponents/Notification.git
+git clone git@gitlab.tugraz.at:dbp/web-components/Notification.git
 cd Notification
 git submodule update --init
 

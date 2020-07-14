@@ -1,5 +1,5 @@
 {
-  "name": "vpu-notification",
+  "name": "dbp-notification",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
@@ -24,7 +24,7 @@
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-url": "^3.0.1",
     "i18next-scanner": "^2.10.2",
-    "vpu-common": "^1.0.0"
+    "dbp-common": "^1.0.0"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",

@@ -1,10 +1,10 @@
-import '../src/vpu-notification';
+import '../src/dbp-notification';
 
-describe('vpu-notification basics', () => {
+describe('dbp-notification basics', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-notification');
+    node = document.createElement('dbp-notification');
     document.body.appendChild(node);
     await node.updateComplete;
   });

@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit-element';
 import {LanguageSelect} from './language-select.js';
-import * as commonUtils from 'vpu-common/utils';
+import * as commonUtils from 'dbp-common/utils';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 
@@ -24,11 +24,11 @@ class LanguageSelectDisplay extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        window.addEventListener('vpu-language-changed', this.handleChange);
+        window.addEventListener('dbp-language-changed', this.handleChange);
     }
 
     disconnectedCallback() {
-        window.removeEventListener('vpu-language-changed', this.handleChange);
+        window.removeEventListener('dbp-language-changed', this.handleChange);
         super.disconnectedCallback();
     }
 
@@ -45,25 +45,25 @@ class LanguageSelectDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-language-select': LanguageSelect,
-          'vpu-language-select-display': LanguageSelectDisplay,
+          'dbp-language-select': LanguageSelect,
+          'dbp-language-select-display': LanguageSelectDisplay,
         };
       }
 
     render() {
         return html`
-            Select 1: <vpu-language-select></vpu-language-select>
+            Select 1: <dbp-language-select></dbp-language-select>
             <br>
             <br>
-            Select 2: <vpu-language-select></vpu-language-select>
+            Select 2: <dbp-language-select></dbp-language-select>
             <br>
             <br>
-            Current language 1: <vpu-language-select-display></vpu-language-select-display>
+            Current language 1: <dbp-language-select-display></dbp-language-select-display>
             <br>
             <br>
-            Current language 2: <vpu-language-select-display></vpu-language-select-display>
+            Current language 2: <dbp-language-select-display></dbp-language-select-display>
         `;
     }
 }
 
-commonUtils.defineCustomElement('vpu-language-select-demo', LanguageSelectDemo);
+commonUtils.defineCustomElement('dbp-language-select-demo', LanguageSelectDemo);

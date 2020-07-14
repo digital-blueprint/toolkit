@@ -30,7 +30,7 @@ function getBuildInfo() {
 }
 
 export default {
-    input: (build !='test') ? ['src/vpu-app-shell.js', 'src/vpu-activity-example.js'] : glob.sync('test/**/*.js'),
+    input: (build !='test') ? ['src/dbp-app-shell.js', 'src/dbp-activity-example.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
@@ -65,7 +65,7 @@ export default {
                 {src: 'assets/silent-check-sso.html', dest:'dist'},
                 {src: 'assets/index.html', dest: 'dist'},
                 {src: 'assets/*.json', dest: 'dist'},
-                {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
+                {src: 'node_modules/dbp-common/assets/icons/*.svg', dest: 'dist/local/dbp-common/icons'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({

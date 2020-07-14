@@ -13,7 +13,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? ['src/vpu-notification.js', 'src/vpu-notification-demo.js'] : glob.sync('test/**/*.js'),
+    input: (build != 'test') ? ['src/dbp-notification.js', 'src/dbp-notification-demo.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',

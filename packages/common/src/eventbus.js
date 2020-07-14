@@ -13,7 +13,7 @@ export function checkIndentifier(name, allowEmpty=false) {
 export function createEventName(busName, eventName, operation) {
     checkIndentifier(busName, true);
     checkIndentifier(eventName);
-    let result = 'vpu' + ':' + busName + ':' + eventName;
+    let result = 'dbp' + ':' + busName + ':' + eventName;
     if (operation !== undefined) {
         checkIndentifier(operation);
         result += ':' + operation;

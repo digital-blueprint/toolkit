@@ -1,15 +1,15 @@
 [submodule "vendor/auth"]
 	path = vendor/auth
-	url = git@gitlab.tugraz.at:VPU/WebComponents/Auth.git
+	url = git@gitlab.tugraz.at:dbp/web-components/Auth.git
 [submodule "vendor/common"]
 	path = vendor/common
-	url = git@gitlab.tugraz.at:VPU/WebComponents/Common
+	url = git@gitlab.tugraz.at:dbp/web-components/Common
 [submodule "vendor/notification"]
 	path = vendor/notification
-	url = git@gitlab.tugraz.at:VPU/WebComponents/Notification
+	url = git@gitlab.tugraz.at:dbp/web-components/Notification
 [submodule "vendor/language-select"]
 	path = vendor/language-select
-	url = git@gitlab.tugraz.at:VPU/WebComponents/LanguageSelect
+	url = git@gitlab.tugraz.at:dbp/web-components/LanguageSelect
 [submodule "vendor/person-profile"]
 	path = vendor/person-profile
-	url = git@gitlab.tugraz.at:VPU/WebComponents/PersonProfile
+	url = git@gitlab.tugraz.at:dbp/web-components/PersonProfile

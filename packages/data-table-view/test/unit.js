@@ -1,13 +1,13 @@
 import {assert} from 'chai';
 
-import '../src/vpu-data-table-view';
-import '../src/vpu-data-table-view-demo';
+import '../src/dbp-data-table-view';
+import '../src/dbp-data-table-view-demo';
 
-suite('vpu-data-table-view basics', () => {
+suite('dbp-data-table-view basics', () => {
   let node;
 
   suiteSetup(async () => {
-    node = document.createElement('vpu-data-table-view');
+    node = document.createElement('dbp-data-table-view');
     document.body.appendChild(node);
     await node.updateComplete;
   });
@@ -21,11 +21,11 @@ suite('vpu-data-table-view basics', () => {
   });
 });
 
-suite('vpu-data-table-view-demo basics', () => {
+suite('dbp-data-table-view-demo basics', () => {
   let node;
 
   suiteSetup(async () => {
-    node = document.createElement('vpu-data-table-view-demo');
+    node = document.createElement('dbp-data-table-view-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });

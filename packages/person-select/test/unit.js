@@ -1,11 +1,11 @@
-import '../src/vpu-person-select.js';
+import '../src/dbp-person-select.js';
 import '../src/demo.js';
 
-describe('vpu-person-select basics', () => {
+describe('dbp-person-select basics', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-person-select');
+    node = document.createElement('dbp-person-select');
     document.body.appendChild(node);
     await node.updateComplete;
   });
@@ -19,11 +19,11 @@ describe('vpu-person-select basics', () => {
   });
 });
 
-describe('vpu-person-select-demo basics', () => {
+describe('dbp-person-select-demo basics', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-person-select-demo');
+    node = document.createElement('dbp-person-select-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });

@@ -1,10 +1,10 @@
 import {i18n} from './i18n';
-import {send as notify} from 'vpu-common/notification';
+import {send as notify} from 'dbp-common/notification';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Notification} from './notification.js';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from "vpu-common/styles";
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from "dbp-common/styles";
 
 class NotificationDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -14,7 +14,7 @@ class NotificationDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-notification': Notification,
+          'dbp-notification': Notification,
         };
       }
 
@@ -55,7 +55,7 @@ class NotificationDemo extends ScopedElementsMixin(LitElement) {
                     </div>
                 </div>
                 <div class="container">
-                    <vpu-notification lang="${this.lang}"></vpu-notification>
+                    <dbp-notification lang="${this.lang}"></dbp-notification>
                 </div>
             </section>
         `;
@@ -72,4 +72,4 @@ class NotificationDemo extends ScopedElementsMixin(LitElement) {
     }
 }
 
-commonUtils.defineCustomElement('vpu-notification-demo', NotificationDemo);
+commonUtils.defineCustomElement('dbp-notification-demo', NotificationDemo);

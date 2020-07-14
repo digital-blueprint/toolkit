@@ -1,1 +1,1 @@
-import './vpu-language-select-demo.js';
+import './dbp-language-select-demo.js';

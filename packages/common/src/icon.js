@@ -18,7 +18,7 @@ const errorIcon = `
 `;
 
 export function getIconSVGURL(name) {
-    return commonUtils.getAssetURL('vpu-common', 'icons/' + encodeURI(name) + '.svg');
+    return commonUtils.getAssetURL('dbp-common', 'icons/' + encodeURI(name) + '.svg');
 }
 
 export function getIconCSS(name) {

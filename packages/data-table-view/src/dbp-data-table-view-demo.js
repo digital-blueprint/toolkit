@@ -1,10 +1,10 @@
-import {AuthKeycloak, LoginButton} from 'vpu-auth';
+import {AuthKeycloak, LoginButton} from 'dbp-auth';
 import {DataTableView} from './data-table-view.js';
 import {i18n} from './i18n';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 
 class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -15,9 +15,9 @@ class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-data-table-view': DataTableView,
-          'vpu-auth-keycloak': AuthKeycloak,
-          'vpu-login-button': LoginButton,
+          'dbp-data-table-view': DataTableView,
+          'dbp-auth-keycloak': AuthKeycloak,
+          'dbp-login-button': LoginButton,
         };
     }
 
@@ -137,8 +137,8 @@ class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     getAuthComponentHtml() {
         return this.noAuth ? html`` : html`
             <div class="content">
-                <vpu-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></vpu-auth-keycloak>
-                <vpu-login-button lang="${this.lang}" show-image></vpu-login-button>
+                <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
             </div>
         `;
     }
@@ -203,20 +203,20 @@ class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
                      <div class="box">
                         <label for="id-sum">Sum of column <b>Number</b> is</label>
                         <input type="text" readonly value="" name="sum" id="id-sum">
-                        <vpu-data-table-view paging searching column-searching
+                        <dbp-data-table-view paging searching column-searching
                                              default-order='[1,"asc"]'
                                              exportable export-name="Demo Export"
-                                             lang="${this.lang}" id="vdtv1"></vpu-data-table-view>
+                                             lang="${this.lang}" id="vdtv1"></dbp-data-table-view>
                     </div>
                     <h4>DataTable: no data, no paging, no searching</h4>
                     <div class="box">
                         <button class="button is-small" @click="${this.vdtv2_add_rows}">add something...</button>
-                        <vpu-data-table-view lang="${this.lang}" id="vdtv2"></vpu-data-table-view>
+                        <dbp-data-table-view lang="${this.lang}" id="vdtv2"></dbp-data-table-view>
                     </div>
                     <h4>DataTable: ordering by column 'zip' desc, 'museum' asc</h4>
                     <div class="box">
-                        <vpu-data-table-view default-order='[[1,"desc"],[2,"asc"]]'
-                                             lang="${this.lang}" id="vdtv3"></vpu-data-table-view>
+                        <dbp-data-table-view default-order='[[1,"desc"],[2,"asc"]]'
+                                             lang="${this.lang}" id="vdtv3"></dbp-data-table-view>
                     </div>
                 </div>
 
@@ -225,4 +225,4 @@ class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     }
 }
 
-commonUtils.defineCustomElement('vpu-data-table-view-demo', DataTableViewDemo);
+commonUtils.defineCustomElement('dbp-data-table-view-demo', DataTableViewDemo);

@@ -1,11 +1,11 @@
 # Common Code
 
-[GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/Common)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/Common)
 
 ## Icon Web Component
 
 For valid icon names see: [LineIcons](https://lineicons.com/icons/)
 
 ```html
- <vpu-icon color="orange" name="menu-down"></vpu-icon>
+ <dbp-icon color="orange" name="menu-down"></dbp-icon>
 ```

@@ -10,25 +10,25 @@ export function getThemeCSS() {
     // language=css
     return css`
         :host {
-            --vpu-primary-bg-color: var(--vpu-override-primary-bg-color, #007bff);
-            --vpu-primary-text-color: var(--vpu-override-primary-text-color, #fff);
-            --vpu-primary-button-border: var(--vpu-override-primary-button-border, #007bff);
-            --vpu-secondary-bg-color: var(--vpu-override-secondary-bg-color, #6c757d);
-            --vpu-secondary-text-color: var(--vpu-override-secondary-text-color, #fff);
-            --vpu-info-bg-color: var(--vpu-override-info-bg-color, #17a2b8);
-            --vpu-info-text-color: var(--vpu-override-info-text-color, #fff);
-            --vpu-success-bg-color: var(--vpu-override-success-bg-color, #28a745);
-            --vpu-success-text-color: var(--vpu-override-success-text-color, #fff);
-            --vpu-warning-bg-color: var(--vpu-override-warning-bg-color, #ffc107);
-            --vpu-warning-text-color: var(--vpu-override-warning-text-color, #343a40);
-            --vpu-danger-bg-color: var(--vpu-override-danger-bg-color, #dc3545);
-            --vpu-danger-text-color: var(--vpu-override-danger-text-color, #fff);
-            --vpu-light: var(--vpu-override-light, #f8f9fa);
-            --vpu-dark: var(--vpu-override-dark, #343a40);
-            --vpu-muted-text: var(--vpu-override-muted-text, #6c757d);
-            --vpu-border-radius: var(--vpu-override-border-radius, 0px);
-            --vpu-border-width: var(--vpu-override-border-width, 1px);
-            --vpu-placeholder-color: #777; 
+            --dbp-primary-bg-color: var(--dbp-override-primary-bg-color, #007bff);
+            --dbp-primary-text-color: var(--dbp-override-primary-text-color, #fff);
+            --dbp-primary-button-border: var(--dbp-override-primary-button-border, #007bff);
+            --dbp-secondary-bg-color: var(--dbp-override-secondary-bg-color, #6c757d);
+            --dbp-secondary-text-color: var(--dbp-override-secondary-text-color, #fff);
+            --dbp-info-bg-color: var(--dbp-override-info-bg-color, #17a2b8);
+            --dbp-info-text-color: var(--dbp-override-info-text-color, #fff);
+            --dbp-success-bg-color: var(--dbp-override-success-bg-color, #28a745);
+            --dbp-success-text-color: var(--dbp-override-success-text-color, #fff);
+            --dbp-warning-bg-color: var(--dbp-override-warning-bg-color, #ffc107);
+            --dbp-warning-text-color: var(--dbp-override-warning-text-color, #343a40);
+            --dbp-danger-bg-color: var(--dbp-override-danger-bg-color, #dc3545);
+            --dbp-danger-text-color: var(--dbp-override-danger-text-color, #fff);
+            --dbp-light: var(--dbp-override-light, #f8f9fa);
+            --dbp-dark: var(--dbp-override-dark, #343a40);
+            --dbp-muted-text: var(--dbp-override-muted-text, #6c757d);
+            --dbp-border-radius: var(--dbp-override-border-radius, 0px);
+            --dbp-border-width: var(--dbp-override-border-width, 1px);
+            --dbp-placeholder-color: #777; 
         }
     `;
 }
@@ -49,8 +49,8 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         code {
-            background-color: var(--vpu-light);
-            color: var(--vpu-danger-bg-color);
+            background-color: var(--dbp-light);
+            color: var(--dbp-danger-bg-color);
             font-size: 1em;
             line-height: 1.5em;
             font-weight: normal;
@@ -68,7 +68,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
 
         .input, .textarea, .select select {
             border: solid 1px #aaa;
-            border-radius: var(--vpu-border-radius);
+            border-radius: var(--dbp-border-radius);
             padding-bottom: calc(.375em - 1px);
             padding-left: calc(.625em - 1px);
             padding-right: calc(.625em - 1px);
@@ -76,7 +76,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         .input::placeholder, .textarea::placeholder, .select select::placeholder {
-            color: var(--vpu-placeholder-color);
+            color: var(--dbp-placeholder-color);
         }
 
         input, ::placeholder, textarea, select, .select select {
@@ -101,7 +101,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         .hidden { display: none; }
 
         a {
-            color: var(--vpu-override-muted-text);
+            color: var(--dbp-override-muted-text);
             cursor: pointer;
             text-decoration: none;
         }
@@ -149,9 +149,9 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
 
         .input, .select select, .textarea {
             background-color: #fff;
-            border-color: var(--vpu-muted);
-            border-radius: var(--vpu-border-radius);
-            color: var(--vpu-muted);
+            border-color: var(--dbp-muted);
+            border-radius: var(--dbp-border-radius);
+            color: var(--dbp-muted);
         }
 
         *, ::after, ::before {
@@ -165,7 +165,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             background-size: 25%;
             border-color: black;
             border-width: 1px;
-            border-radius: var(--vpu-border-radius);
+            border-radius: var(--dbp-border-radius);
             color: black;
             padding: 0.14rem 1.0rem 0.14rem 0.14rem;
             border-style: solid;
@@ -326,10 +326,10 @@ export function getNotificationCSS() {
     // language=css
     return css`
         .notification {
-            background-color: var(--vpu-light);
+            background-color: var(--dbp-light);
             padding: 1.25rem 2.5rem 1.25rem 1.5rem;
             position: relative;
-            border-radius: var(--vpu-border-radius);
+            border-radius: var(--dbp-border-radius);
         }
 
         .notification a:not(.button):not(.dropdown-item) {
@@ -343,15 +343,15 @@ export function getNotificationCSS() {
 
         .notification code,
         .notification pre {
-            color: var(--vpu-light);
-            background: var(--vpu-muted-text);
+            color: var(--dbp-light);
+            background: var(--dbp-muted-text);
         }
 
         .notification pre code {
             background: transparent;
         }
 
-        .notification vpu-icon {
+        .notification dbp-icon {
             font-size: 1.4em;
             margin-right: 0.4em;
         }
@@ -369,28 +369,28 @@ export function getNotificationCSS() {
         }
 
         .notification.is-primary {
-            background-color: var(--vpu-primary-bg-color);
-            color: var(--vpu-primary-text-color);
+            background-color: var(--dbp-primary-bg-color);
+            color: var(--dbp-primary-text-color);
         }
 
         .notification.is-info {
-            background-color: var(--vpu-info-bg-color);
-            color: var(--vpu-info-text-color);
+            background-color: var(--dbp-info-bg-color);
+            color: var(--dbp-info-text-color);
         }
 
         .notification.is-success {
-            background-color: var(--vpu-success-bg-color);
-            color: var(--vpu-success-text-color);
+            background-color: var(--dbp-success-bg-color);
+            color: var(--dbp-success-text-color);
         }
 
         .notification.is-warning {
-            background-color: var(--vpu-warning-bg-color);
-            color: var(--vpu-warning-text-color);
+            background-color: var(--dbp-warning-bg-color);
+            color: var(--dbp-warning-text-color);
         }
 
         .notification.is-danger {
-            background-color: var(--vpu-danger-bg-color);
-            color: var(--vpu-danger-text-color);
+            background-color: var(--dbp-danger-bg-color);
+            color: var(--dbp-danger-text-color);
         }
     `;
 }
@@ -402,7 +402,7 @@ export function getButtonCSS() {
             border-style: solid;
             border-color: black;
             border-width: 1px;
-            border-radius: var(--vpu-border-radius);
+            border-radius: var(--dbp-border-radius);
             color: black;
             cursor: pointer;
             justify-content: center;
@@ -425,34 +425,34 @@ export function getButtonCSS() {
         }
 
         button.button.is-small, .button.is-small {
-            border-radius: calc(var(--vpu-border-radius) / 2);
+            border-radius: calc(var(--dbp-border-radius) / 2);
             font-size: .75rem;
         }
 
         button.button.is-primary, .button.is-primary {
-            background-color: var(--vpu-primary-bg-color);
-            border: var(--vpu-primary-button-border);
-            color: var(--vpu-primary-text-color);
+            background-color: var(--dbp-primary-bg-color);
+            border: var(--dbp-primary-button-border);
+            color: var(--dbp-primary-text-color);
         }
 
         button.button.is-info, .button.is-info {
-            background-color: var(--vpu-info-bg-color);
-            color: var(--vpu-info-text-color);
+            background-color: var(--dbp-info-bg-color);
+            color: var(--dbp-info-text-color);
         }
 
         button.button.is-success, .button.is-success {
-            background-color: var(--vpu-success-bg-color);
-            color: var(--vpu-success-text-color);
+            background-color: var(--dbp-success-bg-color);
+            color: var(--dbp-success-text-color);
         }
 
         button.button.is-warning, .button.is-warning {
-            background-color: var(--vpu-warning-bg-color);
-            color: var(--vpu-warning-text-color);
+            background-color: var(--dbp-warning-bg-color);
+            color: var(--dbp-warning-text-color);
         }
 
         .button.button.is-danger, .button.is-danger {
-            background-color: var(--vpu-danger-bg-color);
-            color: var(--vpu-danger-text-color);
+            background-color: var(--dbp-danger-bg-color);
+            color: var(--dbp-danger-text-color);
         }
 
         button.button[disabled], .button[disabled], fieldset[disabled] .button {
@@ -535,7 +535,7 @@ export function getTagCSS() {
         .tag:not(body) {
             align-items: center;
             background-color: whitesmoke;
-            border-radius: var(--vpu-border-radius);
+            border-radius: var(--dbp-border-radius);
             color: #4a4a4a;
             display: inline-flex;
             font-size: 0.75rem;
@@ -553,12 +553,12 @@ export function getTagCSS() {
         }
 
         .tag:not(body).is-dark {
-            background-color: var(--vpu-dark);
+            background-color: var(--dbp-dark);
             color: whitesmoke;
         }
 
         .tag:not(body).is-light {
-            background-color: var(--vpu-light);
+            background-color: var(--dbp-light);
             color: #363636;
         }
 
@@ -649,7 +649,7 @@ export function getDocumentationCSS() {
         }
 
         .documentation a {
-            border-bottom: 1px solid var(--vpu-muted-text);
+            border-bottom: 1px solid var(--dbp-muted-text);
             transition: background-color 0.15s, color 0.15s;
         }
 
@@ -673,11 +673,11 @@ export function getSelect2CSS() {
     // language=css
     return css`
         .select2-dropdown {
-            border-radius: var(--vpu-border-radius);
+            border-radius: var(--dbp-border-radius);
         }
 
         .select2-container--default .select2-selection--single {
-            border-radius: var(--vpu-border-radius);
+            border-radius: var(--dbp-border-radius);
         }
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -691,7 +691,7 @@ export function getSelect2CSS() {
         }
 
         .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: var(--vpu-placeholder-color);
+            color: var(--dbp-placeholder-color);
         }
 
         /* Work around single selections not wrapping and breaking responsivness */

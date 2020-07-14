@@ -1,1 +1,1 @@
-import './vpu-auth-demo';
+import './dbp-auth-demo';

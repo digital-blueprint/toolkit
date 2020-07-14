@@ -1,29 +1,29 @@
 # KnowledgeBaseWebPageElementView Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/KnowledgeBaseWebPageElementView)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/KnowledgeBaseWebPageElementView)
 
 ## Usage
 
 ```html
-<vpu-knowledge-base-web-page-element-view></vpu-knowledge-base-web-page-element-view>
+<dbp-knowledge-base-web-page-element-view></dbp-knowledge-base-web-page-element-view>
 ```
 
 ## Attributes
 
 - `value`: path to the web page element
-    - example `<vpu-knowledge-base-web-page-element-view value="path/to/my/article"></vpu-knowledge-base-web-page-element-view>`
+    - example `<dbp-knowledge-base-web-page-element-view value="path/to/my/article"></dbp-knowledge-base-web-page-element-view>`
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-knowledge-base-web-page-element-view lang="de"></vpu-knowledge-base-web-page-element-view>`
+    - example `<dbp-knowledge-base-web-page-element-view lang="de"></dbp-knowledge-base-web-page-element-view>`
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
-    - example `<vpu-knowledge-base-web-page-element-view entry-point-url="http://127.0.0.1:8000"></vpu-knowledge-base-web-page-element-view>`
+    - example `<dbp-knowledge-base-web-page-element-view entry-point-url="http://127.0.0.1:8000"></dbp-knowledge-base-web-page-element-view>`
 - `text` (optional): text to click to show the information loaded from the webpage
-    - example `<vpu-knowledge-base-web-page-element-view text="Click me to show more information"></vpu-knowledge-base-web-page-element-view>`
+    - example `<dbp-knowledge-base-web-page-element-view text="Click me to show more information"></dbp-knowledge-base-web-page-element-view>`
 
 ## Local development
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:VPU/WebComponents/KnowledgeBaseWebPageElementView.git
+git clone git@gitlab.tugraz.at:dbp/web-components/KnowledgeBaseWebPageElementView.git
 cd KnowledgeBaseWebPageElementView
 git submodule update --init
 

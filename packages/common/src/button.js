@@ -4,7 +4,7 @@ import {MiniSpinner} from './mini-spinner.js';
 import * as commonStyles from '../styles.js';
 
 /**
- * vpu-button implements a button with Bulma styles and automatic spinner and
+ * dbp-button implements a button with Bulma styles and automatic spinner and
  * disabling if button is clicked
  *
  * Use the attribute "no-spinner-on-click" to disable the spinner, then you can
@@ -24,7 +24,7 @@ export class Button extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-            'vpu-mini-spinner': MiniSpinner,
+            'dbp-mini-spinner': MiniSpinner,
         };
     }
 
@@ -75,7 +75,7 @@ export class Button extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <button @click="${this.clickHandler}" class="button ${this.type}" ?disabled="${this.disabled}">
-                ${this.value} <vpu-mini-spinner class="spinner" style="display: ${this.spinner ? "inline" : "none"}"></vpu-mini-spinner>
+                ${this.value} <dbp-mini-spinner class="spinner" style="display: ${this.spinner ? "inline" : "none"}"></dbp-mini-spinner>
             </button>
         `;
     }

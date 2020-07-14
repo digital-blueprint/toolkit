@@ -1,8 +1,8 @@
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {MiniSpinner} from 'vpu-common';
-import * as commonUtils from "vpu-common/utils";
+import {MiniSpinner} from 'dbp-common';
+import * as commonUtils from "dbp-common/utils";
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 
 /**
@@ -25,7 +25,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
 
     static get scopedElements() {
         return {
-          'vpu-mini-spinner': MiniSpinner,
+          'dbp-mini-spinner': MiniSpinner,
         };
     }
 
@@ -60,7 +60,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
         // });
 
         // disabled, load first on toggle to visible
-        window.addEventListener("vpu-auth-init", () => that.loadWebPageElement());
+        window.addEventListener("dbp-auth-init", () => that.loadWebPageElement());
     }
     */
 
@@ -68,7 +68,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
      * Loads the data from the web page element
      */
     loadWebPageElement() {
-        if (window.VPUAuthToken === undefined || window.VPUAuthToken === "") {
+        if (window.DBPAuthToken === undefined || window.DBPAuthToken === "") {
             return;
         }
 
@@ -81,7 +81,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
         fetch(apiUrl, {
             headers: {
                 'Content-Type': 'application/ld+json',
-                'Authorization': 'Bearer ' + window.VPUAuthToken,
+                'Authorization': 'Bearer ' + window.DBPAuthToken,
             },
         })
         .then(function (res) {
@@ -157,7 +157,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
             img.src = this.eyeOpen;
         }
         if (this.html === '' && div.style.display !== 'none') {
-            this.html = "<vpu-mini-spinner></vpu-mini-spinner>";
+            this.html = "<dbp-mini-spinner></dbp-mini-spinner>";
             this.loadWebPageElement();
         }
     }

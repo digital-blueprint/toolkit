@@ -1,27 +1,27 @@
 # Person Profile Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/PersonProfile)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/PersonProfile)
 
 ## Usage
 
 ```html
-<vpu-person-profile></vpu-person-profile>
+<dbp-person-profile></dbp-person-profile>
 ```
 
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<vpu-person-profile lang="de"></vpu-person-profile>`
+    - example `<dbp-person-profile lang="de"></dbp-person-profile>`
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
-    - example `<vpu-person-profile entry-point-url="http://127.0.0.1:8000"></vpu-person-profile>`
+    - example `<dbp-person-profile entry-point-url="http://127.0.0.1:8000"></dbp-person-profile>`
 - `value` (optional): api path of person to preload the selector with
-    - example `<vpu-person-profile value="/people/testuser"></vpu-person-profile>`
+    - example `<dbp-person-profile value="/people/testuser"></dbp-person-profile>`
 
 ## Local development
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:VPU/WebComponents/PersonProfile.git
+git clone git@gitlab.tugraz.at:dbp/web-components/PersonProfile.git
 cd PersonProfile
 git submodule update --init
 

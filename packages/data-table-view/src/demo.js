@@ -1,1 +1,1 @@
-import './vpu-data-table-view-demo.js';
+import './dbp-data-table-view-demo.js';

@@ -1,14 +1,14 @@
 import {i18n} from './i18n';
 import {createUUID} from './utils'
 import {css, html} from 'lit-element';
-import VPULitElement from 'vpu-common/vpu-lit-element';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import DBPLitElement from 'dbp-common/dbp-lit-element';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 
 /**
  * Notification web component
  */
-export class Notification extends VPULitElement {
+export class Notification extends DBPLitElement {
     constructor() {
         super();
         this.lang = 'de';
@@ -28,7 +28,7 @@ export class Notification extends VPULitElement {
         i18n.changeLanguage(this.lang);
         const that = this;
 
-        const listener = window.addEventListener("vpu-notification-send", (e) => {
+        const listener = window.addEventListener("dbp-notification-send", (e) => {
             if (typeof e.detail === 'undefined') {
                 return;
             }
@@ -41,7 +41,7 @@ export class Notification extends VPULitElement {
             const summary = typeof e.detail.summary !== 'undefined' ? e.detail.summary : "";
             const timeout = typeof e.detail.timeout !== 'undefined' ? e.detail.timeout : 0;
             const icon = typeof e.detail.icon !== 'undefined' ? e.detail.icon : '';
-            const iconHTML = icon !== '' ? `<vpu-icon name="${icon}"></vpu-icon>` : "";
+            const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : "";
             const summaryHTML = summary !== "" ? `<h3>${summary}</h3>` : "";
 
             that.notificationBlock.innerHTML = `

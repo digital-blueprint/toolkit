@@ -103,7 +103,7 @@ export class KeycloakWrapper extends EventTarget {
     }
 
     async _keycloakInit(options) {
-        // https://gitlab.tugraz.at/VPU/Apps/Library/issues/41
+        // https://gitlab.tugraz.at/dbp/apps/library/issues/41
         // retry the keycloak init in case it fails, maybe it helps :/
         try {
             return await this._keycloak.init(options);

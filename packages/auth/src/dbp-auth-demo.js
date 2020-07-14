@@ -3,7 +3,7 @@ import {html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak} from './auth-keycloak.js';
 import {LoginButton} from './login-button.js';
-import * as commonUtils from 'vpu-common/utils';
+import * as commonUtils from 'dbp-common/utils';
 
 class AuthDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -13,8 +13,8 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-auth-keycloak': AuthKeycloak,
-          'vpu-login-button': LoginButton,
+          'dbp-auth-keycloak': AuthKeycloak,
+          'dbp-login-button': LoginButton,
         };
     }
 
@@ -35,7 +35,7 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
     }
 
     async _onUserInfoClick() {
-        if (!window.VPUAuthToken) {
+        if (!window.DBPAuthToken) {
             console.error("not logged in");
             return;
         }
@@ -46,7 +46,7 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
             userInfoURL, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + window.VPUAuthToken
+                    'Authorization': 'Bearer ' + window.DBPAuthToken
                 }
             }
         );
@@ -54,16 +54,16 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
     }
 
     async _onShowToken() {
-        if (!window.VPUAuthToken) {
+        if (!window.DBPAuthToken) {
             console.error("not logged in");
             return;
         }
 
-        console.log(window.VPUAuthTokenParsed);
+        console.log(window.DBPAuthTokenParsed);
     }
 
     render() {
-        const silentCheckSsoUri = commonUtils.getAssetURL('vpu-auth', 'silent-check-sso.html');
+        const silentCheckSsoUri = commonUtils.getAssetURL('dbp-auth', 'silent-check-sso.html');
         return html`
             <style>
                /* from BULMA.CSS */
@@ -90,9 +90,9 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
                     <h1 class="title">Auth-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" silent-check-sso-redirect-uri="${silentCheckSsoUri}" scope="optional-test-scope" load-person try-login></vpu-auth-keycloak>
+                    <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" silent-check-sso-redirect-uri="${silentCheckSsoUri}" scope="optional-test-scope" load-person try-login></dbp-auth-keycloak>
 
-                    <vpu-login-button lang="${this.lang}" show-image></vpu-login-button>
+                    <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
                 </div>
             </section>
 
@@ -102,4 +102,4 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
     }
 }
 
-commonUtils.defineCustomElement('vpu-auth-demo', AuthDemo);
+commonUtils.defineCustomElement('dbp-auth-demo', AuthDemo);

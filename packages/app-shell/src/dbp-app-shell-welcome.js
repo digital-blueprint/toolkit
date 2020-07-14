@@ -1,8 +1,8 @@
 import {createI18nInstance} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 
 const i18n = createI18nInstance();
 
@@ -80,7 +80,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
 }
 
 export const appWelcomeMeta = {
-    "element": "vpu-app-shell-welcome",
+    "element": "dbp-app-shell-welcome",
     "module_src": "",
     "routing_name": "welcome",
     "name": {
@@ -98,4 +98,4 @@ export const appWelcomeMeta = {
     visible: true
 };
 
-commonUtils.defineCustomElement('vpu-app-shell-welcome', AppShellWelcome);
+commonUtils.defineCustomElement('dbp-app-shell-welcome', AppShellWelcome);

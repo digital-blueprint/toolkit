@@ -1,15 +1,15 @@
-import {AuthKeycloak, LoginButton} from 'vpu-auth';
+import {AuthKeycloak, LoginButton} from 'dbp-auth';
 import {i18n} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import VPULitElement from 'vpu-common/vpu-lit-element';
+import DBPLitElement from 'dbp-common/dbp-lit-element';
 import {PersonProfile} from './index.js';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 import $ from 'jquery';
-import {PersonSelect} from 'vpu-person-select';
+import {PersonSelect} from 'dbp-person-select';
 
-class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
+class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -20,10 +20,10 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-person-profile': PersonProfile,
-          'vpu-auth-keycloak': AuthKeycloak,
-          'vpu-login-button': LoginButton,
-          'vpu-person-select': PersonSelect,
+          'dbp-person-profile': PersonProfile,
+          'dbp-auth-keycloak': AuthKeycloak,
+          'dbp-login-button': LoginButton,
+          'dbp-person-select': PersonSelect,
         };
       }
 
@@ -42,11 +42,11 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
         const that = this;
 
         this.updateComplete.then(()=>{
-            window.addEventListener("vpu-auth-person-init", () => {
-                that.person = window.VPUPersonId;
+            window.addEventListener("dbp-auth-person-init", () => {
+                that.person = window.DBPPersonId;
             });
 
-            const personSelect = that._(this.constructor.getScopedTagName('vpu-person-select'));
+            const personSelect = that._(this.constructor.getScopedTagName('dbp-person-select'));
             personSelect.onchange = function () {
                 that.selectedPerson = $(this).data("object").identifier;
             };
@@ -69,8 +69,8 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
         return this.noAuth ? html`` : html`
             <header>
                 <div class="container">
-                    <vpu-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></vpu-auth-keycloak>
-                    <vpu-login-button lang="${this.lang}" show-image></vpu-login-button>
+                    <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                    <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
                 </div>
             </header>
         `;
@@ -85,7 +85,7 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
                     <h1 class="title">Person-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-person-profile lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" value="${this.person}"></vpu-person-profile>
+                    <dbp-person-profile lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" value="${this.person}"></dbp-person-profile>
                 </div>
             </section>
             <section class="section">
@@ -93,14 +93,14 @@ class PersonProfileDemo extends ScopedElementsMixin(VPULitElement) {
                     <h1 class="title">Select-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <vpu-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></vpu-person-select>
+                    <dbp-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></dbp-person-select>
                 </div>
                 <div class="container">
-                    <vpu-person-profile lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" value="${this.selectedPerson}"></vpu-person-profile>
+                    <dbp-person-profile lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" value="${this.selectedPerson}"></dbp-person-profile>
                 </div>
             </section>
         `;
     }
 }
 
-commonUtils.defineCustomElement('vpu-person-profile-demo', PersonProfileDemo);
+commonUtils.defineCustomElement('dbp-person-profile-demo', PersonProfileDemo);

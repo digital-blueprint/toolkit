@@ -1,13 +1,13 @@
 import {assert} from 'chai';
 
-import '../src/vpu-auth';
-import '../src/vpu-auth-demo';
+import '../src/dbp-auth';
+import '../src/dbp-auth-demo';
 
-suite('vpu-auth basics', () => {
+suite('dbp-auth basics', () => {
   let node;
 
   suiteSetup(async () => {
-    node = document.createElement('vpu-auth-keycloak');
+    node = document.createElement('dbp-auth-keycloak');
     node.setAttribute('url', 'someurl');
     node.setAttribute('realm', 'somerealm');
     node.setAttribute('client-id', 'someId');
@@ -24,11 +24,11 @@ suite('vpu-auth basics', () => {
   });
 });
 
-suite('vpu-login-button', () => {
+suite('dbp-login-button', () => {
     let node;
   
     suiteSetup(async () => {
-      node = document.createElement('vpu-login-button');
+      node = document.createElement('dbp-login-button');
       document.body.appendChild(node);
       await node.updateComplete;
     });
@@ -42,11 +42,11 @@ suite('vpu-login-button', () => {
     });
   });
 
-suite('vpu-auth-demo basics', () => {
+suite('dbp-auth-demo basics', () => {
   let node;
 
   suiteSetup(async () => {
-    node = document.createElement('vpu-auth-demo');
+    node = document.createElement('dbp-auth-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });

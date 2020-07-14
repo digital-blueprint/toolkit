@@ -1,10 +1,10 @@
 import {i18n} from './i18n';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {AuthKeycloak, LoginButton} from 'vpu-auth';
+import {AuthKeycloak, LoginButton} from 'dbp-auth';
 import {KnowledgeBaseWebPageElementView} from './knowledge-base-web-page-element-view.js';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 
 class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -15,9 +15,9 @@ class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement
 
     static get scopedElements() {
         return {
-          'vpu-knowledge-base-web-page-element-view' : KnowledgeBaseWebPageElementView,
-          'vpu-auth-keycloak': AuthKeycloak,
-          'vpu-login-button': LoginButton,
+          'dbp-knowledge-base-web-page-element-view' : KnowledgeBaseWebPageElementView,
+          'dbp-auth-keycloak': AuthKeycloak,
+          'dbp-login-button': LoginButton,
         };
     }
 
@@ -65,8 +65,8 @@ class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement
     getAuthComponentHtml() {
         return this.noAuth ? html`` : html`
             <div class="content">
-                <vpu-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></vpu-auth-keycloak>
-                <vpu-login-button lang="${this.lang}" show-image></vpu-login-button>
+                <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
             </div>
         `;
     }
@@ -81,27 +81,27 @@ class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement
                 <div class="container">
                     <h2 class="subtitle">Deutsch</h2>
                     <p>Ein erster Schritt</p>
-                    <vpu-knowledge-base-web-page-element-view lang="de" entry-point-url="${commonUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></vpu-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="de" entry-point-url="${commonUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <div class="container">
                     <h2 class="subtitle">Englisch</h2>
                     <p>A first step</p>
-                    <vpu-knowledge-base-web-page-element-view lang="en" entry-point-url="${commonUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></vpu-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="en" entry-point-url="${commonUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
                 <div class="container">
                     <p>mit Text in der WebComponent:</p>
-                    <vpu-knowledge-base-web-page-element-view lang="${this.lang}" value="abc/def/xyz" text="FAQ"></vpu-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="${this.lang}" value="abc/def/xyz" text="FAQ"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
                 <div class="container">
                     <p>ohne Text in der WebComponent:</p>
                     Kontaktieren Sie uns unter...
-                    <vpu-knowledge-base-web-page-element-view class="opt" lang="${this.lang}" value="abc/def/klm"></vpu-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view class="opt" lang="${this.lang}" value="abc/def/klm"></dbp-knowledge-base-web-page-element-view>
                 </div>
             </section>
         `;
     }
 }
 
-commonUtils.defineCustomElement('vpu-knowledge-base-web-page-element-view-demo', KnowledgeBaseWebPageElementViewDemo);
+commonUtils.defineCustomElement('dbp-knowledge-base-web-page-element-view-demo', KnowledgeBaseWebPageElementViewDemo);

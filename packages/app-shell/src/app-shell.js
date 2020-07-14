@@ -1,20 +1,20 @@
 import {createI18nInstance} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {LanguageSelect} from 'vpu-language-select';
-import {Icon, EventBus} from 'vpu-common';
-import {AuthKeycloak} from 'vpu-auth';
+import {LanguageSelect} from 'dbp-language-select';
+import {Icon, EventBus} from 'dbp-common';
+import {AuthKeycloak} from 'dbp-auth';
 import {AuthMenuButton} from './auth-menu-button.js';
-import {Notification} from 'vpu-notification';
-import * as commonStyles from 'vpu-common/styles';
-import * as commonUtils from 'vpu-common/utils';
+import {Notification} from 'dbp-notification';
+import * as commonStyles from 'dbp-common/styles';
+import * as commonUtils from 'dbp-common/utils';
 import buildinfo from 'consts:buildinfo';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
 import {TUGrazLogo} from './tugraz-logo.js';
-import {send as notify} from 'vpu-common/notification';
-import {appWelcomeMeta} from './vpu-app-shell-welcome.js';
+import {send as notify} from 'dbp-common/notification';
+import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 
 
 const i18n = createI18nInstance();
@@ -63,13 +63,13 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'vpu-language-select': LanguageSelect,
-          'vpu-tugraz-logo': TUGrazLogo,
-          'vpu-build-info': BuildInfo,
-          'vpu-auth-keycloak': AuthKeycloak,
-          'vpu-auth-menu-button': AuthMenuButton,
-          'vpu-notification': Notification,
-          'vpu-icon': Icon,
+          'dbp-language-select': LanguageSelect,
+          'dbp-tugraz-logo': TUGrazLogo,
+          'dbp-build-info': BuildInfo,
+          'dbp-auth-keycloak': AuthKeycloak,
+          'dbp-auth-menu-button': AuthMenuButton,
+          'dbp-notification': Notification,
+          'dbp-icon': Icon,
         };
     }
 
@@ -78,7 +78,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             if (mutation.type === 'attributes') {
                 const key = mutation.attributeName;
                 const value = mutation.target.getAttribute(key);
-                sessionStorage.setItem('vpu-attr-' + key, value);
+                sessionStorage.setItem('dbp-attr-' + key, value);
             }
         }
     }
@@ -137,7 +137,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         metadata = Object.assign(metadata, {
             "welcome": appWelcomeMeta,
         });
-        customElements.get("vpu-app-shell-welcome").app = this;
+        customElements.get("dbp-app-shell-welcome").app = this;
 
         // this also triggers a rebuilding of the menu
         this.metadata = metadata;
@@ -265,7 +265,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             this.lang = lang;
             this.router.update();
 
-            const event = new CustomEvent("vpu-language-changed", {
+            const event = new CustomEvent("dbp-language-changed", {
                 bubbles: true,
                 detail: {'lang': lang}
             });
@@ -544,8 +544,8 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             }
 
             .menu a.selected {
-                color: var(--vpu-light);
-                background-color: var(--vpu-dark);
+                color: var(--dbp-light);
+                background-color: var(--dbp-dark);
             }
 
             aside .subtitle {
@@ -646,7 +646,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
     _onActivityAdded(element) {
         for(const key of this.topic.attributes || []) {
-            let value = sessionStorage.getItem('vpu-attr-' + key);
+            let value = sessionStorage.getItem('dbp-attr-' + key);
             if (value !== null) {
                 element.setAttribute(key, value);
             }
@@ -712,18 +712,18 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
         return html`
             <slot class="${slotClassMap}"></slot>
-            <vpu-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}" load-person try-login></vpu-auth-keycloak>
+            <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}" load-person try-login></dbp-auth-keycloak>
             <div class="${mainClassMap}">
             <div id="main">
-                <vpu-notification lang="${this.lang}"></vpu-notification>
+                <dbp-notification lang="${this.lang}"></dbp-notification>
                 <header>
                     <div class="hd1-left">
-                        <vpu-language-select @vpu-language-changed=${this.onLanguageChanged.bind(this)}></vpu-language-select>
+                        <dbp-language-select @dbp-language-changed=${this.onLanguageChanged.bind(this)}></dbp-language-select>
                     </div>
                     <div class="hd1-middle">
                     </div>
                     <div class="hd1-right">
-                        <vpu-auth-menu-button class="auth-button" lang="${this.lang}"></vpu-auth-menu-button>
+                        <dbp-auth-menu-button class="auth-button" lang="${this.lang}"></dbp-auth-menu-button>
                     </div>
                     <div class="hd2-left">
                         <div class="header">
@@ -731,7 +731,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                         </div>
                     </div>
                     <div class="hd2-right">
-                        <vpu-tugraz-logo id="main-logo" lang="${this.lang}"></vpu-tugraz-logo>
+                        <dbp-tugraz-logo id="main-logo" lang="${this.lang}"></dbp-tugraz-logo>
                     </div>
                 </header>
 
@@ -742,11 +742,11 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 <aside>
                     <h2 class="subtitle" @click="${this.toggleMenu}">
                         ${this.subtitle}
-                        <vpu-icon name="chevron-down" style="color: red" id="menu-chevron-icon"></vpu-icon>
+                        <dbp-icon name="chevron-down" style="color: red" id="menu-chevron-icon"></dbp-icon>
                     </h2>
                     <ul class="menu hidden">
                         ${menuTemplates}
-                        <li class="close" @click="${this.hideMenu}"><vpu-icon name="close" style="color: red"></vpu-icon></li>
+                        <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: red"></dbp-icon></li>
                     </ul>
                 </aside>
 
@@ -759,7 +759,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
                     <a target="_blank" rel="noopener" class="int-link-external" href="${imprintUrl}">${i18n.t('imprint')}</a>
                     <a rel="noopener" class="int-link-external" href="mailto:it-support@tugraz.at">${i18n.t('contact')}</a>
-                    <vpu-build-info class="${prodClassMap}"></vpu-build-info>
+                    <dbp-build-info class="${prodClassMap}"></dbp-build-info>
                 </footer>
             </div>
             </div>

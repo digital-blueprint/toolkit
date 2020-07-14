@@ -1,7 +1,7 @@
-import '../src/vpu-language-select.js';
+import '../src/dbp-language-select.js';
 import '../src/demo.js';
 
-describe('vpu-language-select basics', () => {
+describe('dbp-language-select basics', () => {
   let node;
   let events = [];
 
@@ -11,15 +11,15 @@ describe('vpu-language-select basics', () => {
 
   beforeEach(async () => {
     events.length = 0;
-    window.addEventListener('vpu-language-changed', handler);
-    node = document.createElement('vpu-language-select');
+    window.addEventListener('dbp-language-changed', handler);
+    node = document.createElement('dbp-language-select');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
   afterEach(() => {
     node.remove();
-    window.removeEventListener('vpu-language-changed', handler);
+    window.removeEventListener('dbp-language-changed', handler);
   });
 
   it('should render', () => {
@@ -46,11 +46,11 @@ describe('vpu-language-select basics', () => {
   });
 });
 
-describe('vpu-language-select demo', () => {
+describe('dbp-language-select demo', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-language-select-demo');
+    node = document.createElement('dbp-language-select-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });

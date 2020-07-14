@@ -12,7 +12,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? ['src/vpu-language-select.js', 'src/vpu-language-select-demo.js'] : glob.sync('test/**/*.js'),
+    input: (build != 'test') ? ['src/dbp-language-select.js', 'src/dbp-language-select-demo.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',

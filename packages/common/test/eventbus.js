@@ -3,9 +3,9 @@ import {EventBus, createEventName, checkIndentifier} from '../src/eventbus.js';
 
 suite('helpers', () => {
     test('createEventName', () => {
-        assert.equal(createEventName('foo', 'bar'), 'vpu:foo:bar');
-        assert.equal(createEventName('', 'bar'), 'vpu::bar');
-        assert.equal(createEventName('foo', 'bar', 'baz'), 'vpu:foo:bar:baz');
+        assert.equal(createEventName('foo', 'bar'), 'dbp:foo:bar');
+        assert.equal(createEventName('', 'bar'), 'dbp::bar');
+        assert.equal(createEventName('foo', 'bar', 'baz'), 'dbp:foo:bar:baz');
     });
 
     test('checkIndentifier', () => {

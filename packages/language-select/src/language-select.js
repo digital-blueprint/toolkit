@@ -1,9 +1,9 @@
 import {html, css, LitElement} from 'lit-element';
 import {i18n} from './i18n.js';
-import * as commonStyles from 'vpu-common/styles';
+import * as commonStyles from 'dbp-common/styles';
 
 /**
- * Emits a vpu-language-changed event where event.detail.lang is the new selected language
+ * Emits a dbp-language-changed event where event.detail.lang is the new selected language
  */
 export class LanguageSelect extends LitElement {
 
@@ -53,7 +53,7 @@ export class LanguageSelect extends LitElement {
         this.requestUpdate('next', oldNext);
 
         if (oldValue !== value) {
-            const event = new CustomEvent("vpu-language-changed", {
+            const event = new CustomEvent("dbp-language-changed", {
                 bubbles: true,
                 composed: true,
                 detail: {'lang': value}
@@ -88,8 +88,8 @@ export class LanguageSelect extends LitElement {
             }
 
             a:hover {
-                background-color: var(--vpu-dark);
-                color: var(--vpu-light);
+                background-color: var(--dbp-dark);
+                color: var(--dbp-light);
                 transition: none;
             }
 
@@ -98,8 +98,8 @@ export class LanguageSelect extends LitElement {
                 display: inline-block;
                 text-decoration: none;
                 transition: background-color 0.15s, color 0.15s;
-                color: var(--vpu-dark);
-                border-radius: var(--vpu-border-radius);
+                color: var(--dbp-dark);
+                border-radius: var(--dbp-border-radius);
             }
             `
         ];
@@ -111,11 +111,11 @@ export class LanguageSelect extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        window.addEventListener('vpu-language-changed', this.onExternalChange);
+        window.addEventListener('dbp-language-changed', this.onExternalChange);
     }
 
     disconnectedCallback() {
-        document.removeEventListener('vpu-language-changed', this.onExternalChange);
+        document.removeEventListener('dbp-language-changed', this.onExternalChange);
         super.disconnectedCallback();
     }
 

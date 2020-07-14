@@ -13,7 +13,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? ['src/vpu-knowledge-base-web-page-element-view.js', 'src/vpu-knowledge-base-web-page-element-view-demo.js'] : glob.sync('test/**/*.js'),
+    input: (build != 'test') ? ['src/dbp-knowledge-base-web-page-element-view.js', 'src/dbp-knowledge-base-web-page-element-view-demo.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
@@ -48,7 +48,7 @@ export default {
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
                 {src: 'assets/favicon.ico', dest: 'dist'},
-                {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
+                {src: 'node_modules/dbp-common/assets/icons/*.svg', dest: 'dist/local/dbp-common/icons'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false

@@ -11,9 +11,9 @@ import {i18n} from './i18n';
 import {css, html, LitElement, unsafeCSS} from 'lit-element';
 import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
-import {getIconSVGURL} from 'vpu-common';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import {getIconSVGURL} from 'dbp-common';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 
 dt(window, $);
 resp(window, $);
@@ -170,7 +170,7 @@ export class DataTableView extends LitElement {
             ]
         });
 
-        const dataTableLength = sessionStorage.getItem('vpu-data-table-length');
+        const dataTableLength = sessionStorage.getItem('dbp-data-table-length');
 
         //Retrieve page length from session storage
         if (dataTableLength !== null) {
@@ -179,7 +179,7 @@ export class DataTableView extends LitElement {
 
         //Save page length in session storage
         this.table.on('length.dt', function ( e, settings, len ) {
-            sessionStorage.setItem('vpu-data-table-length', len);
+            sessionStorage.setItem('dbp-data-table-length', len);
         });
 
         this.data = data;
@@ -246,8 +246,8 @@ export class DataTableView extends LitElement {
                 text-align: center;
                 text-indent: 0 !important;
                 line-height: 0.9em;
-                color: var(--vpu-primary-text-color);
-                background-color: var(--vpu-primary-bg-color);
+                color: var(--dbp-primary-text-color);
+                background-color: var(--dbp-primary-bg-color);
                 content: '+';
             }
 
@@ -282,8 +282,8 @@ export class DataTableView extends LitElement {
             ${orderExpandIconOverrides}
 
             .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-                color: var(--vpu-muted-text);
-                border-radius: var(--vpu-border-radius);
+                color: var(--dbp-muted-text);
+                border-radius: var(--dbp-border-radius);
                 background: transparent;
             }
 
@@ -292,7 +292,7 @@ export class DataTableView extends LitElement {
             }
 
             select {
-                border-radius: calc(var(--vpu-border-radius)/2);
+                border-radius: calc(var(--dbp-border-radius)/2);
                 height: 28px;
                 margin-left: 3px;
             }
@@ -304,7 +304,7 @@ export class DataTableView extends LitElement {
             .dataTables_filter input {
                 border-radius: 0;
                 border-style: solid;
-                border-color: var(--vpu-dark);
+                border-color: var(--dbp-dark);
                 border-width: 1px;
                 padding: 0.1em;
             }
@@ -316,9 +316,9 @@ export class DataTableView extends LitElement {
     }
 
     render() {
-        let dt_css = commonUtils.getAssetURL('vpu-data-table-view', 'css/jquery.dataTables.min.css');
-        let rs_css = commonUtils.getAssetURL('vpu-data-table-view', 'css/responsive.dataTables.min.css');
-        let bt_css = commonUtils.getAssetURL('vpu-data-table-view', 'css/buttons.dataTables.min.css');
+        let dt_css = commonUtils.getAssetURL('dbp-data-table-view', 'css/jquery.dataTables.min.css');
+        let rs_css = commonUtils.getAssetURL('dbp-data-table-view', 'css/responsive.dataTables.min.css');
+        let bt_css = commonUtils.getAssetURL('dbp-data-table-view', 'css/buttons.dataTables.min.css');
 
         return html`
             <link rel="stylesheet" href="${dt_css}">

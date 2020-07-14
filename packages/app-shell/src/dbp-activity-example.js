@@ -1,6 +1,6 @@
 import {html , LitElement} from 'lit-element';
 import {createI18nInstance} from './i18n.js';
-import * as commonUtils from 'vpu-common/utils';
+import * as commonUtils from 'dbp-common/utils';
 
 const i18n = createI18nInstance();
 
@@ -36,4 +36,4 @@ class ActivityExample extends LitElement {
     }
 }
 
-commonUtils.defineCustomElement('vpu-activity-example', ActivityExample);
+commonUtils.defineCustomElement('dbp-activity-example', ActivityExample);

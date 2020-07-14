@@ -1,7 +1,7 @@
-image: registry.gitlab.tugraz.at/vpu/webcomponents/common/main:v5
+image: registry.gitlab.tugraz.at/dbp/webcomponents/common/main:v5
 
 before_script:
-  - "sed -i 's|git@gitlab.tugraz.at:VPU|../..|g' .gitmodules"
+  - "sed -i 's|git@gitlab.tugraz.at:dbp|../..|g' .gitmodules"
   - git submodule sync
   - git submodule update --init
 

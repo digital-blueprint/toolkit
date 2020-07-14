@@ -14,7 +14,7 @@ console.log("build: " + build);
 
 
 export default {
-    input: (build != 'test') ? ['src/vpu-auth.js', 'src/vpu-auth-demo.js'] : glob.sync('test/**/*.js'),
+    input: (build != 'test') ? ['src/dbp-auth.js', 'src/dbp-auth-demo.js'] : glob.sync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
@@ -49,7 +49,7 @@ export default {
                 {src: 'assets/index.html', dest:'dist'},
                 {src: 'assets/silent-check-sso.html', dest: 'dist/local/' + pkg.name},
                 {src: 'assets/favicon.ico', dest:'dist'},
-                {src: 'node_modules/vpu-common/assets/icons/*.svg', dest: 'dist/local/vpu-common/icons'},
+                {src: 'node_modules/dbp-common/assets/icons/*.svg', dest: 'dist/local/dbp-common/icons'},
             ]
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false

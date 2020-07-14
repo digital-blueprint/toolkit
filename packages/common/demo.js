@@ -1,1 +1,1 @@
-import './vpu-common-demo.js';
+import './dbp-common-demo.js';

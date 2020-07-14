@@ -1,7 +1,7 @@
 import {i18n} from './i18n.js';
-import JSONLD from 'vpu-common/jsonld';
-import * as commonUtils from 'vpu-common/utils';
-import {EventBus} from 'vpu-common';
+import JSONLD from 'dbp-common/jsonld';
+import * as commonUtils from 'dbp-common/utils';
+import {EventBus} from 'dbp-common';
 import  {KeycloakWrapper} from './keycloak.js';
 import {LitElement} from "lit-element";
 import {LoginStatus} from './util.js';
@@ -11,14 +11,14 @@ import {LoginStatus} from './util.js';
  * Keycloak auth web component
  * https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
  *
- * Dispatches an event `vpu-auth-init` and sets some global variables:
- *   window.VPUAuthSubject: Keycloak username
- *   window.VPUAuthToken: Keycloak token to send with your requests
- *   window.VPUAuthTokenParsed: Keycloak token content
- *   window.VPUUserFullName: Full name of the user
- *   window.VPUPersonId: Person identifier of the user
- *   window.VPUPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
- *                     which will dispatch a `vpu-auth-person-init` event when loaded)
+ * Dispatches an event `dbp-auth-init` and sets some global variables:
+ *   window.DBPAuthSubject: Keycloak username
+ *   window.DBPAuthToken: Keycloak token to send with your requests
+ *   window.DBPAuthTokenParsed: Keycloak token content
+ *   window.DBPUserFullName: Full name of the user
+ *   window.DBPPersonId: Person identifier of the user
+ *   window.DBPPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
+ *                     which will dispatch a `dbp-auth-person-init` event when loaded)
  */
 export class AuthKeycloak extends LitElement {
     constructor() {
@@ -44,9 +44,9 @@ export class AuthKeycloak extends LitElement {
         this.scope = null;
 
         // Create the events
-        this.initEvent = new CustomEvent("vpu-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
-        this.personInitEvent = new CustomEvent("vpu-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true, composed: true });
-        this.keycloakDataUpdateEvent = new CustomEvent("vpu-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
+        this.initEvent = new CustomEvent("dbp-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
+        this.personInitEvent = new CustomEvent("dbp-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true, composed: true });
+        this.keycloakDataUpdateEvent = new CustomEvent("dbp-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
 
         this._onKCChanged = this._onKCChanged.bind(this);
     }
@@ -79,12 +79,12 @@ export class AuthKeycloak extends LitElement {
             }
             this.personId = personId;
 
-            window.VPUAuthSubject = this.subject;
-            window.VPUAuthToken = this.token;
-            window.VPUAuthTokenParsed = this.tokenParsed;
-            window.VPUUserFullName = this.name;
-            window.VPUPersonId = this.personId;
-            window.VPUPerson = this.person;
+            window.DBPAuthSubject = this.subject;
+            window.DBPAuthToken = this.token;
+            window.DBPAuthTokenParsed = this.tokenParsed;
+            window.DBPUserFullName = this.name;
+            window.DBPPersonId = this.personId;
+            window.DBPPerson = this.person;
 
             this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || newPerson);
         } else {
@@ -98,12 +98,12 @@ export class AuthKeycloak extends LitElement {
             this.personId = "";
             this.person = null;
 
-            window.VPUAuthSubject = this.subject;
-            window.VPUAuthToken = this.token;
-            window.VPUAuthTokenParsed = this.tokenParsed;
-            window.VPUUserFullName = this.name;
-            window.VPUPersonId = this.personId;
-            window.VPUPerson = this.person;
+            window.DBPAuthSubject = this.subject;
+            window.DBPAuthToken = this.token;
+            window.DBPAuthTokenParsed = this.tokenParsed;
+            window.DBPUserFullName = this.name;
+            window.DBPPersonId = this.personId;
+            window.DBPPerson = this.person;
 
             this._setLoginStatus(LoginStatus.LOGGED_OUT);
         }
@@ -130,7 +130,7 @@ export class AuthKeycloak extends LitElement {
                 .then(response => response.json())
                 .then((person) => {
                     that.person = person;
-                    window.VPUPerson = person;
+                    window.DBPPerson = person;
                     that.dispatchEvent(that.personInitEvent);
                     this._setLoginStatus(this._loginStatus, true);
                 });

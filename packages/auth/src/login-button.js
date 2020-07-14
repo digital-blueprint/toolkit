@@ -2,9 +2,9 @@ import {i18n} from './i18n.js';
 import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import * as commonStyles from 'vpu-common/styles';
+import * as commonStyles from 'dbp-common/styles';
 import {LitElement} from "lit-element";
-import {Icon, EventBus} from 'vpu-common';
+import {Icon, EventBus} from 'dbp-common';
 import {LoginStatus} from './util.js';
 
 let logoutSVG = `
@@ -62,7 +62,7 @@ export class LoginButton extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-            'vpu-icon': Icon,
+            'dbp-icon': Icon,
         };
     }
 
@@ -136,12 +136,12 @@ export class LoginButton extends ScopedElementsMixin(LitElement) {
             }
 
             .login-box:hover svg path {
-                fill: var(--vpu-light);
+                fill: var(--dbp-light);
             }
 
             .login-box:hover {
-                background-color: var(--vpu-dark);
-                color: var(--vpu-light);
+                background-color: var(--dbp-dark);
+                color: var(--dbp-light);
                 cursor: pointer;
                 transition: none;
             }

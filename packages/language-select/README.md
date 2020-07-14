@@ -1,12 +1,12 @@
 # Language Select Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/VPU/WebComponents/LanguageSelect)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/LanguageSelect)
 
 ## Local development
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:VPU/WebComponents/LanguageSelect.git
+git clone git@gitlab.tugraz.at:dbp/web-components/LanguageSelect.git
 cd LanguageSelect
 git submodule update --init
 

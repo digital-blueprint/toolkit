@@ -1,5 +1,5 @@
 import {html, LitElement, css} from 'lit-element';
-import * as commonStyles from 'vpu-common/styles';
+import * as commonStyles from 'dbp-common/styles';
 import buildinfo from 'consts:buildinfo';
 
 export class BuildInfo extends LitElement {

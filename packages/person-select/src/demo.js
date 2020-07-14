@@ -1,1 +1,1 @@
-import './vpu-person-select-demo.js';
+import './dbp-person-select-demo.js';

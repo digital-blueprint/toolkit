@@ -1,10 +1,10 @@
-import '../src/vpu-person-profile-demo.js';
+import '../src/dbp-person-profile-demo.js';
 
-describe('vpu-person-profile demo', () => {
+describe('dbp-person-profile demo', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('vpu-person-profile-demo');
+    node = document.createElement('dbp-person-profile-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });
