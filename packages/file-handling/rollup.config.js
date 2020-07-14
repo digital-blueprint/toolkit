@@ -1,5 +1,4 @@
 import glob from 'glob';
-import path from 'path';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
@@ -33,23 +32,16 @@ export default {
             nextcloudBaseURL: nextcloudBaseURL,
             nextcloudFileURL: nextcloudFileURL,
         }),
-        resolve({
-            customResolveOptions: {
-                // ignore node_modules from vendored packages
-                moduleDirectory: path.join(process.cwd(), 'node_modules')
-            }
-        }),
-        commonjs({
-            include: 'node_modules/**'
-        }),
+        resolve(),
+        commonjs(),
         json(),
         (build !== 'local' && build !== 'test') ? terser() : false,
         copy({
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
                 {src: 'assets/favicon.ico', dest: 'dist'},
-                {src: 'node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
-                {src: 'node_modules/tabulator-tables/dist/css', dest: 'dist/local/vpu-file-source/tabulator-tables'},
+                {src: '../../node_modules/material-design-icons-svg/paths/*.json', dest: 'dist/local/vpu-common/icons'},
+                {src: '../../node_modules/tabulator-tables/dist/css', dest: 'dist/local/vpu-file-source/tabulator-tables'},
             ],
         }),
         (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
