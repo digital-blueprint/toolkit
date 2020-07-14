@@ -735,7 +735,7 @@ export function getModalDialogCSS() {
             overflow-y: auto;
             box-sizing: border-box;
             display: grid;
-            grid-template-columns: 50px auto;
+            grid-template-columns: 150px auto;
             grid-template-rows: auto;
             grid-template-areas: "sidebar main";
         }
@@ -756,9 +756,8 @@ export function getModalDialogCSS() {
             height: 35px;
         }
 
-        .modal-nav .active {
-            background-color: #777;
-            color: white;
+        .modal-nav .active{
+            background-color: white;
         }
 
         .modal-close {
@@ -766,20 +765,16 @@ export function getModalDialogCSS() {
             background: transparent;
             border: none;
             float: right;
-            top: 10px;
-            right: 10px;
-        }
-
-        .modal-close:hover {
-            font-weight: bold;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--dbp-override-danger-bg-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         button.modal-close:focus {
             outline: none;
-        }
-
-        .modal-close:before {
-            content: "\\2715";
         }
 
         .modal-content {
@@ -864,6 +859,59 @@ export function getModalDialogCSS() {
         .micromodal-slide .modal-container,
         .micromodal-slide .modal-overlay {
             will-change: transform;
+        }
+        
+        @media only screen
+        and (orientation: landscape)
+        and (max-device-width: 896px) {
+             .modal-container {
+                 width: 100%;
+                 height: 100%;
+                 max-width: 100%;
+             }
+         }
+
+        @media only screen
+        and (orientation: portrait)
+        and (max-device-width: 765px) {
+            
+            .modal-nav{
+                grid-area: header;
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            .modal-content{
+                grid-area: main;
+            }
+            
+            .modal-container{
+                grid-template-columns: auto;
+                grid-template-rows: 50px auto;
+                grid-template-areas: "header" "main";
+            }
+            
+            .modal-nav > div{
+                flex-grow: 1;
+            }
+            
+            .micromodal-slide .modal-container{
+                height: 100%;
+            }
+            
+            #nextcloud-file-picker{
+                padding-left: 0px;
+                padding-right: 0px;
+            }
+            
+            .modal-close{
+                position: inherit;
+                display: flex;
+                align-self: center;
+                margin-right: 15px;
+                margin-left: 15px;
+            }
+            
         }
     `;
 }

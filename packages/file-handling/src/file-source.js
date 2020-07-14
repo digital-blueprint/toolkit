@@ -393,19 +393,22 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                  @click="${() => { this.activeSource = "local"; }}"
                                  class="${classMap({"active": this.activeSource === "local", hidden: !this.hasEnabledSource("local")})}">
                                 <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
+                                <p>${i18n.t('file-source.nav-local')}</p>
                             </div>
                             <div title="Nextcloud"
                                  @click="${() => { this.activeSource = "nextcloud"; }}"
                                  class="${classMap({"active": this.activeSource === "nextcloud", hidden: !this.hasEnabledSource("nextcloud")})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
+                                <p> ${this.nextcloudName} </p>
                             </div>
+                            <dbp-icon title="${i18n.t('file-source.modal-close')}" name="close" class="modal-close" aria-label="Close modal" data-micromodal-close></dbp-icon>
                         </nav>
                         <main class="modal-content" id="modal-picker-content">
-                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close" aria-label="Close modal" data-micromodal-close></button>
+                            
                             <div class="source-main ${classMap({"hidden": this.activeSource !== "local"})}">
                                 <div id="dropArea">
                                     <div class="block">
-                                        ${this.text || i18n.t('intro')}
+                                        <p>${this.text || i18n.t('intro')}</p>
                                     </div>
                                     <input ?disabled="${this.disabled}"
                                            type="file"

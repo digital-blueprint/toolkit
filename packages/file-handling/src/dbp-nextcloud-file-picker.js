@@ -89,23 +89,24 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 layout: "fitColumns",
                 selectable: this.maxSelectedItems,
                 selectableRangeMode: "drag",
+                responsiveLayout:"collapse",
                 columns: [
-                    {title: "", field: "type", align:"center", headerSort:false, width:50, formatter: (cell, formatterParams, onRendered) => {
+                    {title: "", field: "type", align:"center", headerSort:false, width:50, responsive:0, formatter: (cell, formatterParams, onRendered) => {
                             const icon_tag =  that.constructor.getScopedTagName("dbp-icon");
                             let icon = `<${icon_tag} name="empty-file"></${icon_tag}>`;
                             return (cell.getValue() === "directory") ? `<${icon_tag} name="folder"></${icon_tag}>` : icon;
                         }},
-                    {title: i18n.t('nextcloud-file-picker.filename'), widthGrow:5, field: "basename", sorter: "alphanum"},
-                    {title: i18n.t('nextcloud-file-picker.size'), widthGrow:1, field: "size", formatter: (cell, formatterParams, onRendered) => {
+                    {title: i18n.t('nextcloud-file-picker.filename'), widthGrow:5, responsive:0, field: "basename", sorter: "alphanum"},
+                    {title: i18n.t('nextcloud-file-picker.size'), responsive:2, widthGrow:1, field: "size", formatter: (cell, formatterParams, onRendered) => {
                             return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());}},
-                    {title: i18n.t('nextcloud-file-picker.mime-type'), widthGrow:1, field: "mime", formatter: (cell, formatterParams, onRendered) => {
+                    {title: i18n.t('nextcloud-file-picker.mime-type'), responsive:1, widthGrow:1, field: "mime", formatter: (cell, formatterParams, onRendered) => {
                             if(typeof cell.getValue() === 'undefined') {
                                 return "";
                             }
                             const [fileMainType, fileSubType] = cell.getValue().split('/');
                             return fileSubType;
                         }},
-                    {title: i18n.t('nextcloud-file-picker.last-modified'), widthGrow:1, field: "lastmod",sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
+                    {title: i18n.t('nextcloud-file-picker.last-modified'), responsive:3, widthGrow:1, field: "lastmod",sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
                             const a_timestamp = Date.parse(a);
                             const b_timestamp = Date.parse(b);
                             return a_timestamp - b_timestamp;
@@ -418,6 +419,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             
             .nextcloud-logo-sm{
                 width: 40px;
+                justify-self: inherit;  
             }
             
             .m-inherit{
