@@ -1,11 +1,11 @@
 import {i18n} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import VPULitElement from 'vpu-common/vpu-lit-element';
-import * as commonUtils from "vpu-common/utils";
-import {Icon, MiniSpinner} from 'vpu-common';
-import * as commonStyles from 'vpu-common/styles';
-import {NextcloudFilePicker} from "./vpu-nextcloud-file-picker";
+import DBPLitElement from 'dbp-common/dbp-lit-element';
+import * as commonUtils from "dbp-common/utils";
+import {Icon, MiniSpinner} from 'dbp-common';
+import * as commonStyles from 'dbp-common/styles';
+import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import FileSaver from 'file-saver';
 import MicroModal from "./micromodal.es";
@@ -14,7 +14,7 @@ import MicroModal from "./micromodal.es";
 /**
  * FileSink web component
  */
-export class FileSink extends ScopedElementsMixin(VPULitElement) {
+export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -31,9 +31,9 @@ export class FileSink extends ScopedElementsMixin(VPULitElement) {
 
     static get scopedElements() {
         return {
-            'vpu-icon': Icon,
-            'vpu-mini-spinner': MiniSpinner,
-            'vpu-nextcloud-file-picker': NextcloudFilePicker,
+            'dbp-icon': Icon,
+            'dbp-mini-spinner': MiniSpinner,
+            'dbp-nextcloud-file-picker': NextcloudFilePicker,
         };
     }
 
@@ -158,12 +158,12 @@ export class FileSink extends ScopedElementsMixin(VPULitElement) {
                             <div title="${i18n.t('file-sink.nav-local')}"
                                  @click="${() => { this.activeDestination = "local"; }}"
                                  class="${classMap({"active": this.activeDestination === "local", hidden: !this.hasEnabledDestination("local")})}">
-                                <vpu-icon class="nav-icon" name="laptop"></vpu-icon>
+                                <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
                             </div>
                             <div title="Nextcloud"
                                  @click="${() => { this.activeDestination = "nextcloud"; }}"
                                  class="${classMap({"active": this.activeDestination === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud")})}">
-                                <vpu-icon class="nav-icon" name="cloud"></vpu-icon>
+                                <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                             </div>
                         </nav>
                         <main class="modal-content" id="modal-picker-content">
@@ -181,7 +181,7 @@ export class FileSink extends ScopedElementsMixin(VPULitElement) {
                                 </div>
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeDestination !== "nextcloud"})}">
-                                <vpu-nextcloud-file-picker id="nextcloud-file-picker"
+                                <dbp-nextcloud-file-picker id="nextcloud-file-picker"
                                                            class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
                                                            directories-only
                                                            max-selected-items="1"
@@ -190,9 +190,9 @@ export class FileSink extends ScopedElementsMixin(VPULitElement) {
                                                            lang="${this.lang}"
                                                            auth-url="${this.nextcloudAuthUrl}"
                                                            web-dav-url="${this.nextcloudWebDavUrl}"
-                                                           @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
+                                                           @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
                                                                this.uploadToNextcloud(event.detail.file);
-                                                           }}"></vpu-nextcloud-file-picker>
+                                                           }}"></dbp-nextcloud-file-picker>
                             </div>
                         </main>
                     </div>

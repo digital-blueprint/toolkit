@@ -1,11 +1,11 @@
 import {i18n} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import VPULitElement from 'vpu-common/vpu-lit-element';
-import * as commonUtils from "vpu-common/utils";
-import {Icon, MiniSpinner} from 'vpu-common';
-import * as commonStyles from 'vpu-common/styles';
-import {NextcloudFilePicker} from "./vpu-nextcloud-file-picker";
+import DBPLitElement from 'dbp-common/dbp-lit-element';
+import * as commonUtils from "dbp-common/utils";
+import {Icon, MiniSpinner} from 'dbp-common';
+import * as commonStyles from 'dbp-common/styles';
+import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es'
 
@@ -30,7 +30,7 @@ function mimeTypesToAccept(mimeTypes) {
 /**
  * FileSource web component
  */
-export class FileSource extends ScopedElementsMixin(VPULitElement) {
+export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -51,9 +51,9 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
 
     static get scopedElements() {
         return {
-            'vpu-icon': Icon,
-            'vpu-mini-spinner': MiniSpinner,
-            'vpu-nextcloud-file-picker': NextcloudFilePicker,
+            'dbp-icon': Icon,
+            'dbp-mini-spinner': MiniSpinner,
+            'dbp-nextcloud-file-picker': NextcloudFilePicker,
         };
     }
 
@@ -169,7 +169,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
      */
     async handleFiles(files) {
         console.log('handleFiles: files.length = ' + files.length);
-        // this.dispatchEvent(new CustomEvent("vpu-file-source-selection-start",
+        // this.dispatchEvent(new CustomEvent("dbp-file-source-selection-start",
         //     { "detail": {}, bubbles: true, composed: true }));
 
         await commonUtils.asyncArrayForEach(files, async (file) => {
@@ -192,7 +192,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             await this.sendFileEvent(file);
         });
 
-        // this.dispatchEvent(new CustomEvent("vpu-file-source-selection-finished",
+        // this.dispatchEvent(new CustomEvent("dbp-file-source-selection-finished",
         //     { "detail": {}, bubbles: true, composed: true }));
 
         this.closeDialog();
@@ -203,7 +203,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
      */
     sendFileEvent(file) {
         const data = {"file": file};
-        const event = new CustomEvent("vpu-file-source-file-selected", { "detail": data, bubbles: true, composed: true });
+        const event = new CustomEvent("dbp-file-source-file-selected", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
     }
 
@@ -302,7 +302,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
             data.file = file;
         }
 
-        const event = new CustomEvent("vpu-file-source-file-finished", { "detail": data, bubbles: true, composed: true });
+        const event = new CustomEvent("dbp-file-source-file-finished", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
     }
 
@@ -392,12 +392,12 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                             <div title="${i18n.t('file-source.nav-local')}"
                                  @click="${() => { this.activeSource = "local"; }}"
                                  class="${classMap({"active": this.activeSource === "local", hidden: !this.hasEnabledSource("local")})}">
-                                <vpu-icon class="nav-icon" name="laptop"></vpu-icon>
+                                <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
                             </div>
                             <div title="Nextcloud"
                                  @click="${() => { this.activeSource = "nextcloud"; }}"
                                  class="${classMap({"active": this.activeSource === "nextcloud", hidden: !this.hasEnabledSource("nextcloud")})}">
-                                <vpu-icon class="nav-icon" name="cloud"></vpu-icon>
+                                <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                             </div>
                         </nav>
                         <main class="modal-content" id="modal-picker-content">
@@ -419,7 +419,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                                 </div>
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeSource !== "nextcloud"})}">
-                                <vpu-nextcloud-file-picker id="nextcloud-file-picker"
+                                <dbp-nextcloud-file-picker id="nextcloud-file-picker"
                                        class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
                                        ?disabled="${this.disabled}"
                                        lang="${this.lang}"
@@ -427,9 +427,9 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                                        web-dav-url="${this.nextcloudWebDavUrl}"
                                        nextcloud-name="${this.nextcloudName}"
                                        allowed-mime-types="${this.allowedMimeTypes}"
-                                       @vpu-nextcloud-file-picker-file-downloaded="${(event) => {
+                                       @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
                                     this.sendFileEvent(event.detail.file);
-                                }}"></vpu-nextcloud-file-picker>
+                                }}"></dbp-nextcloud-file-picker>
                             </div>
                         </main>
                     </div>

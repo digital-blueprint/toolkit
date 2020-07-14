@@ -1,20 +1,20 @@
 import {i18n} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import VPULitElement from 'vpu-common/vpu-lit-element';
-import {Icon, MiniSpinner} from 'vpu-common';
-import * as commonUtils from 'vpu-common/utils';
-import * as commonStyles from 'vpu-common/styles';
+import DBPLitElement from 'dbp-common/dbp-lit-element';
+import {Icon, MiniSpinner} from 'dbp-common';
+import * as commonUtils from 'dbp-common/utils';
+import * as commonStyles from 'dbp-common/styles';
 import {createClient} from 'webdav/web';
 import {classMap} from 'lit-html/directives/class-map.js';
-import {humanFileSize} from 'vpu-common/i18next';
+import {humanFileSize} from 'dbp-common/i18next';
 import Tabulator from 'tabulator-tables';
 import nextcloudFileURL from 'consts:nextcloudFileURL';
 
 /**
  * NextcloudFilePicker web component
  */
-export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
+export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -37,8 +37,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
 
     static get scopedElements() {
         return {
-            'vpu-icon': Icon,
-            'vpu-mini-spinner': MiniSpinner,
+            'dbp-icon': Icon,
+            'dbp-mini-spinner': MiniSpinner,
         };
     }
 
@@ -91,7 +91,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                 selectableRangeMode: "drag",
                 columns: [
                     {title: "", field: "type", align:"center", headerSort:false, width:50, formatter: (cell, formatterParams, onRendered) => {
-                            const icon_tag =  that.constructor.getScopedTagName("vpu-icon");
+                            const icon_tag =  that.constructor.getScopedTagName("dbp-icon");
                             let icon = `<${icon_tag} name="empty-file"></${icon_tag}>`;
                             return (cell.getValue() === "directory") ? `<${icon_tag} name="folder"></${icon_tag}>` : icon;
                         }},
@@ -262,7 +262,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                 this.webDavClient = null;
                 let reloadButton = html`<button class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => { this.openFilePicker(); } }"><vpu-icon name="reload"></button>`;
+                            @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
                 this.statusText = reloadButton;
         });
 
@@ -290,7 +290,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
 
                 // send event
                 const data = {"file": file, "data": fileData};
-                const event = new CustomEvent("vpu-nextcloud-file-picker-file-downloaded",
+                const event = new CustomEvent("dbp-nextcloud-file-picker-file-downloaded",
                     { "detail": data, bubbles: true, composed: true });
                 this.dispatchEvent(event);
 
@@ -320,7 +320,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
      */
     getBreadcrumb() {
         let htmlpath = [];
-        htmlpath[0] =  html`<a @click="${() => { this.loadDirectory("/"); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><vpu-icon name="home"></vpu-icon> ${this.nextcloudName}</a>`;
+        htmlpath[0] =  html`<a @click="${() => { this.loadDirectory("/"); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> ${this.nextcloudName}</a>`;
         const directories = this.directoryPath.split('/');
         if(directories[1] === "")
         {
@@ -530,7 +530,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
     }
 
     render() {
-        const tabulatorCss = commonUtils.getAssetURL('local/vpu-file-source/tabulator-tables/css/tabulator.min.css');
+        const tabulatorCss = commonUtils.getAssetURL('local/dbp-file-source/tabulator-tables/css/tabulator.min.css');
         console.log("tabulatorCss", tabulatorCss);
 
         return html`
@@ -539,7 +539,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                 <div class="nextcloud-header">
                     <button class="button is-small ${classMap({hidden: !this.isPickerActive})}"
                         title="${i18n.t('nextcloud-file-picker.folder-up')}"
-                        @click="${() => { this.loadDirectory(this.getParentDirectoryPath()); }}"><vpu-icon name="arrow-left"></vpu-icon></button>
+                        @click="${() => { this.loadDirectory(this.getParentDirectoryPath()); }}"><dbp-icon name="arrow-left"></dbp-icon></button>
                     <div class="nextcloud-logo ${classMap({"nextcloud-logo-sm": this.isPickerActive})}">
                          ${this.getCloudLogo()}
                     </div>
@@ -578,7 +578,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(VPULitElement) {
                         <button class="button select-button is-primary"
                                 @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
                         <div class="block ${classMap({hidden: this.statusText === ""})}">
-                            <vpu-mini-spinner style="font-size: 0.7em"></vpu-mini-spinner>
+                            <dbp-mini-spinner style="font-size: 0.7em"></dbp-mini-spinner>
                             ${this.statusText}
                         </div>
                        
