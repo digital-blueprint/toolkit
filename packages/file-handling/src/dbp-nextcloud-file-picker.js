@@ -20,7 +20,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.lang = 'de';
         this.authUrl = '';
         this.webDavUrl = '';
-        this.nextcloudName = 'TU Graz cloud';
+        this.nextcloudName = 'Nextcloud';
         this.loginWindow = null;
         this.isPickerActive = false;
         this.statusText = '';
@@ -353,32 +353,25 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getCloudLogo() {
-        let cloudLogo = html`
-        <?xml version="1.0" encoding="utf-8"?>
-                <!-- Generator: Adobe Illustrator 24.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                \t viewBox="0 0 260.2 216.6" style="enable-background:new 0 0 260.2 216.6;" xml:space="preserve">
-                <style type="text/css">
-                \t.st0{fill:#FFFFFF;}
-                \t.st1{fill:#231F20;}
-                \t.st2{fill:#E4154B;}
-                </style>
-                <g>
-                \t<path d="M239,60.7c-11.4-12.6-27.3-21.6-44.4-24.4c-9.8-15.1-23.6-26.1-39.5-31.8C147.4,1.6,139.2,0,129.9,0
-                \t\tC89.2,0,55.8,31.8,53.7,72.1C23.6,75.7,0,101.8,0,133.1c0,31.9,24.3,58.3,55.4,61.2v-20.5C35,171.2,20,154.4,20,133.1
-                \t\tc0-23.2,17.9-41.5,41.5-41.9h2c5.7,0,10.2-4.5,10.2-10.2v-4.5c0-31.4,25.2-57,56.6-57c6.9,0,13,1.2,18.3,3.3
-                \t\tc13,4.5,24,14.3,30.9,26.9c1.6,2.9,4.5,4.9,7.7,5.3c13.8,1.6,27.3,8.6,36.6,18.7c10.2,11.4,15.9,25.7,15.9,40.7
-                \t\tc0,24.1-14.4,44.9-35,54.4v21.9c32.2-10.4,55.4-40.4,55.4-75.5C260.2,94.9,252.8,75.7,239,60.7z"/>
-                \t<g>
-                \t\t<path class="st2" d="M61,194.9h43.2v-43.2l-43.2,0C61,151.7,61,194.9,61,194.9z"/>
-                \t\t<path class="st2" d="M108.5,194.9h43.2v-43.2h-43.2C108.5,151.7,108.5,194.9,108.5,194.9z"/>
-                \t\t<path class="st2" d="M156,194.9h43.2v-43.2H156C156,151.7,156,194.9,156,194.9z"/>
-                \t\t<path class="st2" d="M82.6,216.6h43.2v-43.2H82.6V216.6z"/>
-                \t\t<path class="st2" d="M134.4,173.3h43.2v-43.2h-43.2V173.3z"/>
-                \t</g>
-                </g>
-                </svg>
+        let cloudLogo = html `<dbp-icon name="cloud" class="nextcloud-logo-icon"></dbp-icon>`;
+        if(this.nextcloudName === "TU Graz cloud")
+        {
+            cloudLogo = html`
+            <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 97.6 81.74">
+                  <g>
+                    <path d="M89.8,22.7a28.51,28.51,0,0,0-16.9-9.1,27.84,27.84,0,0,0-14.8-12A24,24,0,0,0,48.9,0,28.36,28.36,0,0,0,20.6,27.4,22.42,22.42,0,0,0,13,70.11v-6.3A16.7,16.7,0,0,1,5.5,50a17,17,0,0,1,17-17h3.6V28.5A23,23,0,0,1,49,5.6a19.75,19.75,0,0,1,7.2,1.2h.1A22.48,22.48,0,0,1,68.9,17.5l.6,1.3,1.4.2a23.07,23.07,0,0,1,14.9,7.5,23.85,23.85,0,0,1-1.23,33.74v7A29.56,29.56,0,0,0,89.8,22.7Z"/>
+                    <g>
+                      <path d="M16.39,71.61H36.65V51.36H16.39Z" style="fill: #e4154b"/>
+                      <path d="M38.67,71.61H58.93V51.36H38.67Z" style="fill: #e4154b"/>
+                      <path d="M61,71.61H81.21V51.36H61Z" style="fill: #e4154b"/>
+                      <path d="M26.52,81.74H46.78V61.49H26.52Z" style="fill: #e4154b"/>
+                      <path d="M50.83,61.49H71.08V41.23H50.83Z" style="fill: #e4154b"/>
+                    </g>
+                  </g>
+            </svg>
         `;
+        }
+
         return cloudLogo;
     }
 
@@ -415,6 +408,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 width: 80px;
                 justify-self: end;  
                 transition: all 0.5s ease;
+            }
+            
+            .nextcloud-logo-icon{
+                height: 100%;
             }
             
             .nextcloud-logo-sm{

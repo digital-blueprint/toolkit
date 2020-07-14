@@ -35,7 +35,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         super();
         this.lang = 'de';
         this.nextcloudAuthUrl = '';
-        this.nextcloudName ='TU Graz cloud';
+        this.nextcloudName ='Nextcloud';
         this.nextcloudWebDavUrl = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
