@@ -75,7 +75,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
         };
     }
 
-
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
@@ -384,7 +383,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                 align-items: center;
                 z-index: 10000;
             }
-            
+
             .modal-container {
                 background-color: #fff;
                 max-width: 600px;
@@ -398,13 +397,13 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                 grid-template-rows: auto;
                 grid-template-areas: "sidebar main";
             }
-            
+
             .modal-nav {
                 cursor: pointer;
                 overflow: hidden;
                 background-color: #eee;
             }
-            
+
             .modal-nav > div {
                 padding: 5px;
                 text-align: center;
@@ -414,7 +413,7 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                 width: 35px;
                 height: 35px;
             }
-            
+
             .modal-nav .active {
                 background-color: #777;
                 color: white;
@@ -428,17 +427,17 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                 top: 10px;
                 right: 10px;
             }
-            
+
             .modal-close:hover {
                 font-weight: bold;
             }
-            
+
             button.modal-close:focus {
                 outline: none;
             }
-            
+
             .modal-close:before { content: "\\2715"; }
-            
+
             .modal-content {
                 padding: 10px;
                 display: flex;
@@ -462,46 +461,46 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                 from { opacity: 0; }
                   to { opacity: 1; }
             }
-            
+
             @keyframes mmfadeOut {
                 from { opacity: 1; }
                   to { opacity: 0; }
             }
-            
+
             @keyframes mmslideIn {
               from { transform: translateY(15%); }
                 to { transform: translateY(0); }
             }
-            
+
             @keyframes mmslideOut {
                 from { transform: translateY(0); }
                 to { transform: translateY(-10%); }
             }
-            
+
             .micromodal-slide {
                 display: none;
             }
-            
+
             .micromodal-slide.is-open {
                 display: block;
             }
-            
+
             .micromodal-slide[aria-hidden="false"] .modal-overlay {
                 animation: mmfadeIn .3s cubic-bezier(0.0, 0.0, 0.2, 1);
             }
-            
+
             .micromodal-slide[aria-hidden="false"] .modal-container {
                 animation: mmslideIn .3s cubic-bezier(0, 0, .2, 1);
             }
-            
+
             .micromodal-slide[aria-hidden="true"] .modal-overlay {
               animation: mmfadeOut .3s cubic-bezier(0.0, 0.0, 0.2, 1);
             }
-            
+
             .micromodal-slide[aria-hidden="true"] .modal-container {
                 animation: mmslideOut .3s cubic-bezier(0, 0, .2, 1);
             }
-            
+
             .micromodal-slide .modal-container,
             .micromodal-slide .modal-overlay {
                 will-change: transform;
@@ -571,7 +570,6 @@ export class FileSource extends ScopedElementsMixin(VPULitElement) {
                     </div>
                 </div>
             </div>
-
           `;
     }
 }
