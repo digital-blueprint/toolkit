@@ -10,6 +10,7 @@ import {classMap} from 'lit-html/directives/class-map.js';
 import {humanFileSize} from 'dbp-common/i18next';
 import Tabulator from 'tabulator-tables';
 import nextcloudFileURL from 'consts:nextcloudFileURL';
+import MicroModal from './micromodal.es'
 
 /**
  * NextcloudFilePicker web component
@@ -278,6 +279,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     downloadFiles(files) {
         files.forEach((fileData) => this.downloadFile(fileData));
+        MicroModal.close();
     }
 
     downloadFile(fileData) {
