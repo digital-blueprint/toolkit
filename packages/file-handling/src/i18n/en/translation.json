@@ -40,6 +40,8 @@
     "init-text-2": "You need to authenticate first.",
     "auth-info": "A new page will open to connect your account.",
     "connect-nextcloud": "Connect {{name}}",
-    "open-in-nextcloud": "Open in {{name}}"
+    "open-in-nextcloud": "Open in {{name}}",
+    "no-data": "No data avaible in this folder.",
+    "select-folder": "Select folder"
   }
 }

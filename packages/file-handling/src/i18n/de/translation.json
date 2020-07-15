@@ -40,6 +40,8 @@
     "init-text-2": "Sie müssen sich zuerst authentifizieren.",
     "auth-info": "Eine neue Seite wird geöffnet, um Ihr Konto zu verbinden.",
     "connect-nextcloud": "{{name}} verbinden",
-    "open-in-nextcloud": "In {{name}} öffnen"
+    "open-in-nextcloud": "In {{name}} öffnen",
+    "no-data": "In diesem Ordner befinden sich keine Daten vom benötigtem Typ.",
+    "select-folder": "Ordner auswählen"
   }
 }

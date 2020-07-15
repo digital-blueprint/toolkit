@@ -738,6 +738,8 @@ export function getModalDialogCSS() {
             grid-template-columns: 150px auto;
             grid-template-rows: auto;
             grid-template-areas: "sidebar main";
+            height: 70%;
+            width: 70%;
         }
 
         .modal-nav {
@@ -783,6 +785,7 @@ export function getModalDialogCSS() {
             justify-content: center;
             align-items: center;
             /*height: 50vh;*/
+            overflow: hidden;
         }
 
         .modal-content .source-main {
@@ -873,7 +876,7 @@ export function getModalDialogCSS() {
 
         @media only screen
         and (orientation: portrait)
-        and (max-device-width: 765px) {
+        and (max-device-width: 800px) {
             
             .modal-nav{
                 grid-area: header;
@@ -897,11 +900,7 @@ export function getModalDialogCSS() {
             
             .micromodal-slide .modal-container{
                 height: 100%;
-            }
-            
-            #nextcloud-file-picker{
-                padding-left: 0px;
-                padding-right: 0px;
+                width: 100%;
             }
             
             .modal-close{
@@ -911,7 +910,6 @@ export function getModalDialogCSS() {
                 margin-right: 15px;
                 margin-left: 15px;
             }
-            
         }
     `;
 }

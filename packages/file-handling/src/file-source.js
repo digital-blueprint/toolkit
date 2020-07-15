@@ -369,6 +369,15 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             .block {
                 margin-bottom: 10px;
             }
+            
+            @media only screen
+            and (orientation: portrait)
+            and (max-device-width: 765px) {                
+                #nextcloud-file-picker{
+                    padding-left: 0px;
+                    padding-right: 0px;
+                } 
+            }
         `;
     }
 
