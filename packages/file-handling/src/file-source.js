@@ -33,6 +33,7 @@ function mimeTypesToAccept(mimeTypes) {
 export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
+        this.context = '';
         this.lang = 'de';
         this.nextcloudAuthUrl = '';
         this.nextcloudName ='Nextcloud';
@@ -62,6 +63,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      */
     static get properties() {
         return {
+            context: { type: String, attribute: 'context'},
             lang: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             enabledSources: { type: String, attribute: 'enabled-sources' },
@@ -337,6 +339,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
+                height: 90%;
             }
 
             #nextcloud-file-picker {
@@ -370,13 +373,70 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 margin-bottom: 10px;
             }
             
+            .modal-content .source-main{
+                display:flex;
+            }
+            
+            .modal-content .source-main.hidden {
+                display: none;
+            }
+            
+            .modal-context{
+                display:none;
+            }
+            
+            .modal-header{
+                grid-area: main;
+            }
+            
+            #modal-picker-content{
+                grid-area: main;
+            }
+            
             @media only screen
             and (orientation: portrait)
             and (max-device-width: 765px) {                
                 #nextcloud-file-picker{
-                    padding-left: 0px;
-                    padding-right: 0px;
+                    padding: 0px;
                 } 
+                
+                .modal-container{
+                    grid-template-rows: 40px 55px auto;
+                    grid-template-areas: "header" "nav" "main";
+                }           
+                
+                .modal-nav{
+                    grid-area: nav;
+                    border: none;
+                    border-bottom: 1px solid black;
+                    align-items: center;
+                }
+                
+                .modal-header{
+                    grid-area: header;
+                    padding: 5px;
+                }
+                
+                .modal-nav .nav-icon{
+                    height: 20px;
+                }
+                
+                .modal-close{
+                    margin-right: 0px;
+                    paddign: 0px;
+                }
+                
+                .modal-context{
+                    line-height: 30px;
+                }
+                
+                #dropArea{
+                    height: 100%;
+                }
+               
+                
+
+                
             }
         `;
     }
@@ -410,10 +470,15 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
-                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
-                                <dbp-icon name="close" class="close-icon"></dbp-icon>
-                            </button>
+                            
                         </nav>
+                        <div class="modal-header">
+                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
+                                    <dbp-icon name="close" class="close-icon"></dbp-icon>
+                            </button>
+                       
+                            <p class="modal-context"> ${this.context}</p>
+                        </div>
                         <main class="modal-content" id="modal-picker-content">
                             
                             <div class="source-main ${classMap({"hidden": this.activeSource !== "local"})}">

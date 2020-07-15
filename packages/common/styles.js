@@ -745,7 +745,8 @@ export function getModalDialogCSS() {
         .modal-nav {
             cursor: pointer;
             overflow: hidden;
-            background-color: #eee;
+            background-color: white;
+            border-right: 1px solid black;
         }
 
         .modal-nav > div {
@@ -759,7 +760,8 @@ export function getModalDialogCSS() {
         }
 
         .modal-nav .active{
-            background-color: white;
+            background-color: var(--dbp-dark);;
+            color: var(--dbp-light);;
         }
 
         .modal-close {
@@ -799,6 +801,7 @@ export function getModalDialogCSS() {
             /*align-items: center;*/
             height: 100%;
             width: 100%;
+            align-items: end;
         }
 
         /**************************\\

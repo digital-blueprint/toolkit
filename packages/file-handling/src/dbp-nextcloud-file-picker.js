@@ -325,7 +325,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      */
     getBreadcrumb() {
         let htmlpath = [];
-        htmlpath[0] =  html`<a @click="${() => { this.loadDirectory("/"); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> ${this.nextcloudName}</a>`;
+        htmlpath[0] =  html`<a @click="${() => { this.loadDirectory("/"); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> </a>`;
         const directories = this.directoryPath.split('/');
         if (directories[1] === "")
         {
@@ -408,10 +408,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 justify-self: start;
             }
             
+            .nextcloud-intro{
+                text-align: center;
+            }
+            
             .nextcloud-logo{
                 width: 80px;
                 justify-self: end;  
                 transition: all 0.5s ease;
+                margin: auto;
             }
             
             .nextcloud-logo-icon{
@@ -422,6 +427,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 width: 40px;
                 justify-self: inherit;  
                 margin-right: 70px;
+                display:none;
             }
             
             .m-inherit{
@@ -472,8 +478,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 border: none;
             }
             
+            .tabulator-row, .tabulator-row.tabulator-row-even{
+                background-color: white;
+            }
+            
+            .tabulator-row.tabulator-selected:hover, .tabulator-row.tabulator-selected{
+                background-color: var(--dbp-dark);
+                color: var(--dbp-light);
+            }
+            
             .tabulator-row.tabulator-selectable:hover{
                 background-color: #eee;
+                color: var(--dbp-dark);
             }
             
             .tabulator .tabulator-header .tabulator-col .tabulator-col-content{
@@ -546,6 +562,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             and (orientation: portrait)
             and (max-device-width: 765px) {
             
+
+            
                 
                 .nextcloud-nav{
                     display: block;
@@ -572,8 +590,51 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     white-space: inherit;
                 }
                 .button-wrapper{
-                    justify-self: end;
+                    justify-self: start;
                 }
+                
+                .wrapper{
+                    display: grid;
+                    grid-template-areas: "header-l header-r" "content content";
+                    grid-template-rows: 50px auto;
+                    grid-template-columns: 50% 50%;
+                }
+                
+                .nextcloud-header{
+                    grid-area: header-l;
+                    margin-bottom: 0px;
+                }
+                
+                .nextcloud-content, .nextcloud-intro{
+                    grid-area: content;
+                }
+                
+                .nextcloud-intro{
+                    grid-column-start: header-l-start;
+                    grid-column-end: header-r-end;
+                    grid-row-start: header-l-start;
+                    grid-row-end: content-end;
+                    text-align: center;
+                }
+                
+                .nextcloud-footer{
+                    grid-area: header-r;
+                    padding-top: 0px;
+                }
+                
+                .info-box{
+                    display: none;
+                }
+                
+                .nextcloud-footer-grid{
+                    display: flex;
+                    justify-content: end;
+                }
+                
+                .select-button{
+                    margin: 0px;
+                }
+                
             }
 
         `;
@@ -595,25 +656,32 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                             @click="${() => { this.loadDirectory(this.directoryPath); }}"><dbp-icon name="reload"></dbp-icon></button>     
                     </div>
-                    <div class="nextcloud-logo ${classMap({"nextcloud-logo-sm": this.isPickerActive})}">
-                         ${this.getCloudLogo()}
-                    </div>
+                    
                 </div>
-                <div class="block text-center ${classMap({hidden: this.isPickerActive})}">
-                    <h2 class="m-inherit">
-                        ${this.nextcloudName}
-                    </h2>
+                <div class="nextcloud-intro">
+                    <div class="nextcloud-logo ${classMap({"nextcloud-logo-sm": this.isPickerActive})}">
+                             ${this.getCloudLogo()}
+                        </div>
+                    <div class="block text-center ${classMap({hidden: this.isPickerActive})}">
+                        <h2 class="m-inherit">
+                            ${this.nextcloudName}
+                        </h2>
+                        <p class="m-inherit">
+                            ${i18n.t('nextcloud-file-picker.init-text-1', {name: this.nextcloudName})}   <br>           
+                            ${i18n.t('nextcloud-file-picker.init-text-2')}              
+                        </p>
+                    </div>
+                    <div class="block ${classMap({hidden: this.isPickerActive})}">
+                        <button class="button  is-primary"
+                                title="${i18n.t('nextcloud-file-picker.open-nextcloud-file-picker', {name: this.nextcloudName})}"
+                                @click="${async () => { this.openFilePicker(); } }">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}</button>
+                    </div>
+                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
                     <p class="m-inherit">
-                        ${i18n.t('nextcloud-file-picker.init-text-1', {name: this.nextcloudName})}   <br>           
-                        ${i18n.t('nextcloud-file-picker.init-text-2')}              
+                         ${i18n.t('nextcloud-file-picker.auth-info')}
                     </p>
                 </div>
-                <div class="block ${classMap({hidden: this.isPickerActive})}">
-                    <button class="button  is-primary"
-                            title="${i18n.t('nextcloud-file-picker.open-nextcloud-file-picker', {name: this.nextcloudName})}"
-                            @click="${async () => { this.openFilePicker(); } }">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}</button>
-                </div>
-               
+               </div>
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-nav">
                         <h2>${this.getBreadcrumb()}</h2>
@@ -623,16 +691,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     </div>
                     <table id="directory-content-table" class="force-no-select"></table>
                 </div>
-                 <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
-                    <p class="m-inherit">
-                         ${i18n.t('nextcloud-file-picker.auth-info')}
-                    </p>
-                </div>
+                 
                 <div class="nextcloud-footer ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-footer-grid">
                         <button class="button select-button is-primary"
                                 @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${this.directoriesOnly ? (i18n.t('nextcloud-file-picker.select-folder')) : (i18n.t('nextcloud-file-picker.select-files'))}</button>
-                        <div class="block ${classMap({hidden: this.statusText === ""})}">
+                        <div class="block info-box ${classMap({hidden: this.statusText === ""})}">
                             <dbp-mini-spinner style="font-size: 0.7em"></dbp-mini-spinner>
                             ${this.statusText}
                         </div>
