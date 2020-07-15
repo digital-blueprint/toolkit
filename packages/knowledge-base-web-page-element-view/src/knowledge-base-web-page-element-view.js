@@ -149,7 +149,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
         const div = this._('#A1');
         const img = this._('#A2');
         const d = div.style.display;
-        if(d === '' || d === 'none') {
+        if (d === '' || d === 'none') {
             div.style.display = 'block';
             img.src = this.eyeClose;
         } else {

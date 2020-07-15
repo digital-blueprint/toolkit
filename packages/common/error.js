@@ -65,7 +65,7 @@ export const handleFetchError = async (error, summary = "", icon = "sad") => {
             if (json["hydra:description"] !== undefined) {
                 // response is a JSON-LD and possibly also contains HTML!
                 body = json["hydra:description"];
-            } else if(json['detail'] !== undefined) {
+            } else if (json['detail'] !== undefined) {
                 // response is a plain JSON
                 body = json['detail'];
             } else {

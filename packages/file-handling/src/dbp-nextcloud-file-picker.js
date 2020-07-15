@@ -101,7 +101,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     {title: i18n.t('nextcloud-file-picker.size'), responsive: 4, widthGrow:1, minWidth: 50, field: "size", formatter: (cell, formatterParams, onRendered) => {
                             return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());}},
                     {title: i18n.t('nextcloud-file-picker.mime-type'), responsive: 2, widthGrow:1, field: "mime", formatter: (cell, formatterParams, onRendered) => {
-                            if(typeof cell.getValue() === 'undefined') {
+                            if (typeof cell.getValue() === 'undefined') {
                                 return "";
                             }
                             const [fileMainType, fileSubType] = cell.getValue().split('/');
@@ -130,7 +130,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 rowClick: (e, row) => {
                     const data = row.getData();
 
-                    if(this.directoriesOnly) {
+                    if (this.directoriesOnly) {
                         console.log("directory selected", data);
                     }
                     else
@@ -146,20 +146,20 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     }
                 },
                 rowDblClick: (e, row) => {
-                    if(this.directoriesOnly) {
+                    if (this.directoriesOnly) {
                         const data = row.getData();
                         this.directoryClicked(e, data);
                     }
                 }
             });
 
-            if(this.tabulatorTable.browserMobile === false)
+            if (this.tabulatorTable.browserMobile === false)
             {
                 this.tabulatorTable.options.selectableRangeMode = "click";
             }
             function checkFileType(data, filterParams) {
                 // check if file is allowed
-                if(typeof data.mime === 'undefined') {
+                if (typeof data.mime === 'undefined') {
                     return true;
                 }
                 const [fileMainType, fileSubType] = data.mime.split('/');
@@ -176,10 +176,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
                 return true;
             }
-            if(typeof this.allowedMimeTypes !== 'undefined') {
+            if (typeof this.allowedMimeTypes !== 'undefined') {
                 this.tabulatorTable.setFilter(checkFileType, this.allowedMimeTypes);
             }
-            if(typeof this.directoriesOnly !== 'undefined' && this.directoriesOnly)
+            if (typeof this.directoriesOnly !== 'undefined' && this.directoriesOnly)
             {
                 console.log("filter " + this.directoriesOnly);
                 this.tabulatorTable.setFilter([
@@ -190,7 +190,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openFilePicker() {
-        if(this.webDavClient === null)
+        if (this.webDavClient === null)
         {
             this.statusText = i18n.t('nextcloud-file-picker.auth-progress');
             const authUrl = this.authUrl + "?target-origin=" + encodeURIComponent(window.location.href);
@@ -252,7 +252,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 console.error(error.message);
 
                 // on Error: try to reload with home directory
-                if(path != "/"){
+                if (path != "/"){
                     this.loadDirectory("/");
                 }
                 else {
@@ -324,7 +324,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         let htmlpath = [];
         htmlpath[0] =  html`<a @click="${() => { this.loadDirectory("/"); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> ${this.nextcloudName}</a>`;
         const directories = this.directoryPath.split('/');
-        if(directories[1] === "")
+        if (directories[1] === "")
         {
             return htmlpath;
         }
@@ -355,7 +355,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     getCloudLogo() {
         let cloudLogo = html `<dbp-icon name="cloud" class="nextcloud-logo-icon"></dbp-icon>`;
-        if(this.nextcloudName === "TU Graz cloud")
+        if (this.nextcloudName === "TU Graz cloud")
         {
             cloudLogo = html`
             <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 97.6 81.74">
