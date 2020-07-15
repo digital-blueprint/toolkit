@@ -306,6 +306,36 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         });
     }
 
+    uploadFiles(files) {
+        files.forEach((fileData) => this.uploadFile(fileData));
+    }
+
+    uploadFile(fileData) {
+        this.statusText = "Uploading " + fileData.filename + "...";
+
+        console.log(fileData);
+
+        // https://github.com/perry-mitchell/webdav-client#putfilecontents
+        this.webDavClient
+            .putFileContents(fileData.filename, f)
+            .then(contents => {
+                // create file to send via event
+                const file = new File([contents], fileData.basename, { type: fileData.mime });
+                console.log("binaryFile", file);
+
+                // send event
+                const data = {"file": file, "data": fileData};
+                const event = new CustomEvent("dbp-nextcloud-file-picker-file-uploaded",
+                    { "detail": data, bubbles: true, composed: true });
+                this.dispatchEvent(event);
+
+                this.statusText = "";
+            }).catch(error => {
+                console.error(error.message);
+                this.statusText = error.message;
+        });
+    }
+
     /**
      * Returns the parent directory path
      *
