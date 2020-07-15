@@ -30,7 +30,7 @@ export function numberFormat(i18n, number, options) {
 
 export function humanFileSize(bytes, si = false) {
     const thresh = si ? 1000 : 1024;
-    if(Math.abs(bytes) < thresh) {
+    if (Math.abs(bytes) < thresh) {
         return bytes + ' B';
     }
     const units = ['kB','MB','GB','TB','PB','EB','ZB','YB'];
