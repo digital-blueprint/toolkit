@@ -42,6 +42,6 @@
     "connect-nextcloud": "Connect {{name}}",
     "open-in-nextcloud": "Open in {{name}}",
     "no-data": "No data avaible in this folder.",
-    "select-folder": "Select folder"
+    "select-folder": "Upload in selected folder"
   }
 }

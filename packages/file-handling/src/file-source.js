@@ -410,7 +410,9 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
-                            <dbp-icon title="${i18n.t('file-source.modal-close')}" name="close" class="modal-close" aria-label="Close modal" data-micromodal-close></dbp-icon>
+                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
+                                <dbp-icon name="close" class="close-icon"></dbp-icon>
+                            </button>
                         </nav>
                         <main class="modal-content" id="modal-picker-content">
                             

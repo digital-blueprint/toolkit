@@ -165,9 +165,11 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                  class="${classMap({"active": this.activeDestination === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud")})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                             </div>
+                            <button  title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" data-micromodal-close>
+                                <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
+                            </button>
                         </nav>
                         <main class="modal-content" id="modal-picker-content">
-                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close" aria-label="Close modal" data-micromodal-close></button>
                             <div class="source-main ${classMap({"hidden": this.activeDestination !== "local"})}">
                                 <div id="zip-download-block">
                                     <div class="block">
@@ -190,6 +192,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                            lang="${this.lang}"
                                                            auth-url="${this.nextcloudAuthUrl}"
                                                            web-dav-url="${this.nextcloudWebDavUrl}"
+                                                           nextcloud-name="${this.nextcloudName}"
                                                            @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
                                                                this.uploadToNextcloud(event.detail.file);
                                                            }}"></dbp-nextcloud-file-picker>

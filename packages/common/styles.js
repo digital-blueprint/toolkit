@@ -773,6 +773,11 @@ export function getModalDialogCSS() {
             color: var(--dbp-override-danger-bg-color);
             cursor: pointer;
             transition: all 0.2s ease;
+            z-index: 1;
+        }
+        
+        .modal-close .close-icon svg, .close-icon{
+            pointer-events: none;
         }
 
         button.modal-close:focus {

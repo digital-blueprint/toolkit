@@ -41,7 +41,7 @@
     "auth-info": "Eine neue Seite wird geöffnet, um Ihr Konto zu verbinden.",
     "connect-nextcloud": "{{name}} verbinden",
     "open-in-nextcloud": "In {{name}} öffnen",
-    "no-data": "In diesem Ordner befinden sich keine Daten vom benötigtem Typ.",
-    "select-folder": "Ordner auswählen"
+    "no-data": "In diesem Ordner befinden sich keine Daten vom benötigten Typ.",
+    "select-folder": "In diesem Ordner hochladen"
   }
 }
