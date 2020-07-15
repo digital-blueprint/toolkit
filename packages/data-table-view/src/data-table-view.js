@@ -185,8 +185,9 @@ export class DataTableView extends LitElement {
         this.data = data;
 
         this.table.clear();
-        if (this.data.length) { this.table.rows.add(this.data); }
-        this.table.order(this.defaultOrder).draw();
+        if (this.data.length) {
+            this.table.rows.add(this.data);
+        }
 
         new $.fn.dataTable.Responsive(this.table, {
             details: true
@@ -213,6 +214,10 @@ export class DataTableView extends LitElement {
                     }
                 });
         }
+
+        this.table.order(this.defaultOrder);
+        this.table.draw();
+
         return this;
     }
 
