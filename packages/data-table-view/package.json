@@ -10,8 +10,6 @@
     "@rollup/plugin-node-resolve": "^8.1.0",
     "@rollup/plugin-url": "^5.0.1",
     "chai": "^4.2.0",
-    "dbp-auth": "^1.0.0",
-    "dbp-common": "^1.0.0",
     "glob": "^7.1.6",
     "i18next-scanner": "^2.10.2",
     "karma": "^5.1.0",
@@ -37,7 +35,9 @@
     "jquery": "^3.4.1",
     "jszip": "^3.2.2",
     "lit-element": "^2.3.1",
-    "lit-html": "^1.1.1"
+    "lit-html": "^1.1.1",
+    "dbp-auth": "^1.0.0",
+    "dbp-common": "^1.0.0"
   },
   "scripts": {
     "clean": "rm -r dist/*",

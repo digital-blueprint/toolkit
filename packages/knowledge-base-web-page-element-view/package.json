@@ -10,8 +10,6 @@
     "@rollup/plugin-node-resolve": "^8.1.0",
     "@rollup/plugin-url": "^5.0.1",
     "chai": "^4.2.0",
-    "dbp-auth": "^1.0.0",
-    "dbp-common": "^1.0.0",
     "karma": "^5.1.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.0.0",
@@ -31,7 +29,9 @@
     "i18next": "^19.5.3",
     "lit-element": "^2.3.1",
     "lit-html": "^1.1.1",
-    "material-design-icons-svg": "^3.0.0"
+    "material-design-icons-svg": "^3.0.0",
+    "dbp-auth": "^1.0.0",
+    "dbp-common": "^1.0.0"
   },
   "scripts": {
     "clean": "rm dist/*",

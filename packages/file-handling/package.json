@@ -9,7 +9,6 @@
     "@rollup/plugin-json": "^4.0.2",
     "@rollup/plugin-node-resolve": "^8.1.0",
     "chai": "^4.2.0",
-    "dbp-common": "^1.0.0",
     "i18next-scanner": "^2.10.2",
     "karma": "^5.0.1",
     "karma-chai": "^0.1.0",
@@ -33,7 +32,8 @@
     "lit-html": "^1.1.1",
     "material-design-icons-svg": "^3.0.0",
     "tabulator-tables": "^4.7.0",
-    "webdav": "^3.3.0"
+    "webdav": "^3.3.0",
+    "dbp-common": "^1.0.0"
   },
   "scripts": {
     "clean": "rm dist/*",
