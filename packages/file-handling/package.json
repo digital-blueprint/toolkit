@@ -5,7 +5,7 @@
   "license": "LGPL-2.1-or-later",
   "private": true,
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-json": "^4.0.2",
     "@rollup/plugin-node-resolve": "^8.1.0",
     "chai": "^4.2.0",
@@ -15,15 +15,13 @@
     "karma-chrome-launcher": "^3.0.0",
     "karma-mocha": "^2.0.0",
     "mocha": "^8.0.1",
-    "node-sass": "^4.12.0",
     "puppeteer": "^2.1.1",
     "rollup": "^2.18.0",
     "rollup-plugin-consts": "^1.0.1",
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-terser": "^6.1.0",
-    "dbp-common": "^1.0.0"
+    "rollup-plugin-terser": "^6.1.0"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.0.8",
@@ -34,7 +32,8 @@
     "lit-html": "^1.1.1",
     "material-design-icons-svg": "^3.0.0",
     "tabulator-tables": "^4.7.0",
-    "webdav": "^3.3.0"
+    "webdav": "^3.3.0",
+    "dbp-common": "^1.0.0"
   },
   "scripts": {
     "clean": "rm dist/*",
