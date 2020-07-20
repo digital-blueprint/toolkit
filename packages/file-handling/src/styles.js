@@ -39,7 +39,7 @@ export function getFileHandlingCss() {
         }
 
         .modal-content {
-            padding: 10px;
+            padding: 10px 20px 20px 20px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -52,11 +52,8 @@ export function getFileHandlingCss() {
             /*align-items: center;*/
             height: 100%;
             width: 100%;
-            align-items: flex-end;
-        }
-        
-        .modal-content .source-main{
             display:flex;
+            align-items: flex-end;
         }
 
         .modal-content .source-main.hidden {
@@ -66,7 +63,7 @@ export function getFileHandlingCss() {
         .modal-header{
             grid-area: header;
             display: flex;
-            padding: 10px 30px 0px 30px;
+            padding: 10px 20px 0px 20px;
             flex-direction: row-reverse;
             justify-content: space-between;
             align-items: center;
