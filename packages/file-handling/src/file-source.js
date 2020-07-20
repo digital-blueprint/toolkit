@@ -311,6 +311,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     openDialog() {
         console.log("openDialog");
+
         MicroModal.show(this._('#modal-picker'), {
             onClose: modal => { this.isDialogOpen = false; }
         });
@@ -401,7 +402,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                             
                         </nav>
                         <div class="modal-header">
-                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
+                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close"  aria-label="Close modal"  @click="${() => {this.closeDialog()}}">
                                     <dbp-icon name="close" class="close-icon"></dbp-icon>
                             </button>
                        
