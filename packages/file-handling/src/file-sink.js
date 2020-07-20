@@ -9,6 +9,7 @@ import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import FileSaver from 'file-saver';
 import MicroModal from "./micromodal.es";
+import * as fileHandlingStyles from './styles';
 
 
 /**
@@ -17,9 +18,11 @@ import MicroModal from "./micromodal.es";
 export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
+        this.context = '';
         this.lang = 'de';
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
+        this.nextcloudName ='Nextcloud';
         this.text = '';
         this.buttonLabel = '';
         this.filename = "files.zip";
@@ -48,6 +51,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             enabledDestinations: { type: String, attribute: 'enabled-destinations' },
             nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
             nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
+            nextcloudName: { type: String, attribute: 'nextcloud-name' },
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label' },
             isDialogOpen: { type: Boolean, attribute: false },
@@ -134,9 +138,11 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getModalDialogCSS()}
+            ${fileHandlingStyles.getFileHandlingCss()}
 
             #zip-download-block {
                 height: 100%;
+                width: 100%;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -159,16 +165,23 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                  @click="${() => { this.activeDestination = "local"; }}"
                                  class="${classMap({"active": this.activeDestination === "local", hidden: !this.hasEnabledDestination("local")})}">
                                 <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
+                                 <p>${i18n.t('file-source.nav-local')}</p>
                             </div>
-                            <div title="Nextcloud"
+                            <div title="${this.nextcloudName}"
                                  @click="${() => { this.activeDestination = "nextcloud"; }}"
                                  class="${classMap({"active": this.activeDestination === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud")})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
+                                <p> ${this.nextcloudName} </p>
                             </div>
-                            <button  title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" data-micromodal-close>
-                                <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
-                            </button>
                         </nav>
+                            <div class="modal-header">
+                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
+                                        <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
+                                </button> 
+                                <p class="modal-context"> ${this.context}</p>
+                        </div>
+                            
+                        
                         <main class="modal-content" id="modal-picker-content">
                             <div class="source-main ${classMap({"hidden": this.activeDestination !== "local"})}">
                                 <div id="zip-download-block">

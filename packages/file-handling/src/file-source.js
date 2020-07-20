@@ -8,6 +8,7 @@ import * as commonStyles from 'dbp-common/styles';
 import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es'
+import * as fileHandlingStyles from './styles';
 
 function mimeTypesToAccept(mimeTypes) {
     // Some operating systems can't handle mime types and
@@ -326,7 +327,18 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getModalDialogCSS()}
+            ${fileHandlingStyles.getFileHandlingCss()}
 
+           
+
+            p {
+                margin-top: 0;
+            }
+            
+            .block {
+                margin-bottom: 10px;
+            }
+            
             #dropArea {
                 border: var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, black);
                 border-radius: var(--FUBorderRadius, 0);
@@ -339,105 +351,21 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                height: 90%;
             }
-
-            #nextcloud-file-picker {
-                width: 100%;
-                height: 100%;
-                margin: var(--FUMargin, 0px);
-                padding: var(--FUPadding, 20px);
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-
+    
             #dropArea.highlight {
                 border-color: var(--FUBorderColorHighlight, purple);
             }
-
-            p {
-                margin-top: 0;
-            }
-
-            #fileElem {
-                display: none;
-            }
-
-            #nextcloud-file-picker.hidden {
-                display: none;
-            }
-
-            .block {
-                margin-bottom: 10px;
-            }
             
-            .modal-content .source-main{
-                display:flex;
-            }
-            
-            .modal-content .source-main.hidden {
-                display: none;
-            }
-            
-            .modal-context{
-                display:none;
-            }
-            
-            .modal-header{
-                grid-area: main;
-            }
-            
-            #modal-picker-content{
-                grid-area: main;
-            }
-            
-            @media only screen
+             @media only screen
             and (orientation: portrait)
-            and (max-device-width: 765px) {                
-                #nextcloud-file-picker{
-                    padding: 0px;
-                } 
-                
-                .modal-container{
-                    grid-template-rows: 40px 55px auto;
-                    grid-template-areas: "header" "nav" "main";
-                }           
-                
-                .modal-nav{
-                    grid-area: nav;
-                    border: none;
-                    border-bottom: 1px solid black;
-                    align-items: center;
-                }
-                
-                .modal-header{
-                    grid-area: header;
-                    padding: 5px;
-                }
-                
-                .modal-nav .nav-icon{
-                    height: 20px;
-                }
-                
-                .modal-close{
-                    margin-right: 0px;
-                    paddign: 0px;
-                }
-                
-                .modal-context{
-                    line-height: 30px;
-                }
-                
+            and (max-device-width: 800px) {
                 #dropArea{
                     height: 100%;
                 }
-               
-                
-
-                
+            
             }
+            
         `;
     }
 

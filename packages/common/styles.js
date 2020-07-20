@@ -735,47 +735,18 @@ export function getModalDialogCSS() {
             overflow-y: auto;
             box-sizing: border-box;
             display: grid;
-            grid-template-columns: 150px auto;
-            grid-template-rows: auto;
-            grid-template-areas: "sidebar main";
             height: 70%;
             width: 70%;
+            position: relative;
         }
-
-        .modal-nav {
-            cursor: pointer;
-            overflow: hidden;
-            background-color: white;
-            border-right: 1px solid black;
-        }
-
-        .modal-nav > div {
-            padding: 5px;
-            text-align: center;
-        }
-
-        .modal-nav .nav-icon {
-            width: 35px;
-            height: 35px;
-        }
-
-        .modal-nav .active{
-            background-color: var(--dbp-dark);;
-            color: var(--dbp-light);;
-        }
-
+        
         .modal-close {
-            position: absolute;
             background: transparent;
             border: none;
-            float: right;
-            top: 20px;
-            right: 20px;
             font-size: 1.5rem;
             color: var(--dbp-override-danger-bg-color);
             cursor: pointer;
-            transition: all 0.2s ease;
-            z-index: 1;
+            padding: 0px;
         }
         
         .modal-close .close-icon svg, .close-icon{
@@ -786,23 +757,6 @@ export function getModalDialogCSS() {
             outline: none;
         }
 
-        .modal-content {
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /*height: 50vh;*/
-            overflow: hidden;
-        }
-
-        .modal-content .source-main {
-            /*flex-grow: 1;*/
-            /*justify-content: center;*/
-            /*align-items: center;*/
-            height: 100%;
-            width: 100%;
-            align-items: end;
-        }
 
         /**************************\\
           Modal Animation Style
@@ -881,44 +835,17 @@ export function getModalDialogCSS() {
                  max-width: 100%;
              }
          }
-
+        
         @media only screen
         and (orientation: portrait)
         and (max-device-width: 800px) {
-            
-            .modal-nav{
-                grid-area: header;
-                display: flex;
-                justify-content: space-around;
-            }
-            
-            .modal-content{
-                grid-area: main;
-            }
-            
-            .modal-container{
-                grid-template-columns: auto;
-                grid-template-rows: 50px auto;
-                grid-template-areas: "header" "main";
-            }
-            
-            .modal-nav > div{
-                flex-grow: 1;
-            }
-            
             .micromodal-slide .modal-container{
                 height: 100%;
                 width: 100%;
             }
-            
-            .modal-close{
-                position: inherit;
-                display: flex;
-                align-self: center;
-                margin-right: 15px;
-                margin-left: 15px;
-            }
         }
+
+        
     `;
 }
 
