@@ -8,49 +8,52 @@ import serve from 'rollup-plugin-serve';
 import url from "@rollup/plugin-url";
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
+import {getPackagePath} from '../../rollup.utils.js';
 
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
-export default {
-    input: (build != 'test') ? ['src/dbp-knowledge-base-web-page-element-view.js', 'src/dbp-knowledge-base-web-page-element-view-demo.js'] : glob.sync('test/**/*.js'),
-    output: {
-        dir: 'dist',
-        entryFileNames: '[name].js',
-        chunkFileNames: 'shared/[name].[hash].[format].js',
-        format: 'esm',
-        sourcemap: true
-    },
-    onwarn: function (warning, warn) {
-        // keycloak bundled code uses eval
-        if (warning.code === 'EVAL') {
-          return;
-        }
-        warn(warning);
-    },
-    plugins: [
-        del({
-            targets: 'dist/*'
-        }),
-        consts({
-            environment: build,
-        }),
-        resolve(),
-        commonjs(),
-        json(),
-        url({
-            limit: 0,
-            emitFiles: true,
-            fileName: 'shared/[name].[hash][extname]'
-        }),
-        (build !== 'local' && build !== 'test') ? terser() : false,
-        copy({
-            targets: [
-                {src: 'assets/index.html', dest: 'dist'},
-                {src: 'assets/favicon.ico', dest: 'dist'},
-                {src: 'node_modules/dbp-common/assets/icons/*.svg', dest: 'dist/local/dbp-common/icons'},
-            ],
-        }),
-        (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
-    ]
-};
+export default (async () => {
+    return {
+        input: (build != 'test') ? ['src/dbp-knowledge-base-web-page-element-view.js', 'src/dbp-knowledge-base-web-page-element-view-demo.js'] : glob.sync('test/**/*.js'),
+        output: {
+            dir: 'dist',
+            entryFileNames: '[name].js',
+            chunkFileNames: 'shared/[name].[hash].[format].js',
+            format: 'esm',
+            sourcemap: true
+        },
+        onwarn: function (warning, warn) {
+            // keycloak bundled code uses eval
+            if (warning.code === 'EVAL') {
+            return;
+            }
+            warn(warning);
+        },
+        plugins: [
+            del({
+                targets: 'dist/*'
+            }),
+            consts({
+                environment: build,
+            }),
+            resolve(),
+            commonjs(),
+            json(),
+            url({
+                limit: 0,
+                emitFiles: true,
+                fileName: 'shared/[name].[hash][extname]'
+            }),
+            (build !== 'local' && build !== 'test') ? terser() : false,
+            copy({
+                targets: [
+                    {src: 'assets/index.html', dest: 'dist'},
+                    {src: 'assets/favicon.ico', dest: 'dist'},
+                    {src: await getPackagePath('dbp-common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
+                ],
+            }),
+            (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
+        ]
+    };
+})();
