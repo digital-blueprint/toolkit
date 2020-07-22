@@ -10,6 +10,7 @@ import {classMap} from 'lit-html/directives/class-map.js';
 import FileSaver from 'file-saver';
 import MicroModal from "./micromodal.es";
 import * as fileHandlingStyles from './styles';
+import { send } from 'dbp-common/notification';
 
 
 /**
@@ -111,8 +112,25 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         return this.enabledDestinations.split(',').includes(source);
     }
 
-    uploadToNextcloud(directory) {
-        console.log(directory);
+    async uploadToNextcloud(directory) {
+
+        let that = this;
+        const element = that._('#nextcloud-file-picker');
+        console.log("davor");
+        const finished = await element.uploadFiles(that.files, directory);
+        console.log("fertig", finished);
+        if(finished) {
+            MicroModal.close();
+            console.log("close");
+            send({
+                "summary": i18n.t('file-sink.upload-success-title'),
+                "body": i18n.t('file-sink.upload-success-body', {name: this.nextcloudName}),
+                "type": "success",
+                "timeout": 5,
+            });
+        }
+
+
     }
 
     preventDefaults (e) {
@@ -157,6 +175,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         return html`
+            <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-1" data-micromodal-close>
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
@@ -206,8 +225,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                            auth-url="${this.nextcloudAuthUrl}"
                                                            web-dav-url="${this.nextcloudWebDavUrl}"
                                                            nextcloud-name="${this.nextcloudName}"
-                                                           @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
-                                                               this.uploadToNextcloud(event.detail.file);
+                                                           @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
+                                                               this.uploadToNextcloud(event.detail);
                                                            }}"></dbp-nextcloud-file-picker>
                             </div>
                         </main>

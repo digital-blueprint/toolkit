@@ -19,7 +19,9 @@
     "local-intro": "Download {{amount}} file(s) as ZIP-file",
     "local-button": "Download ZIP-file",
     "modal-close": "Close dialog",
-    "nav-local": "My device"
+    "nav-local": "My device",
+    "upload-success-title": "Successful uploaded",
+    "upload-success-body": "You have successfully uploaded your files to {{name}}."
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
@@ -29,7 +31,7 @@
     "folder-up": "Jump to the home directory",
     "select-files": "Select files",
     "refresh-nextcloud-file-picker": "Connect again",
-    "loadpath-nextcloud-file-picker": "Loading directory from Nextcloud",
+    "loadpath-nextcloud-file-picker": "Loading directory from {{name}}",
     "load-path-link": "Go to {{path}}",
     "auth-progress": "Authentification in progress",
     "last-modified": "Last modified",
@@ -42,6 +44,9 @@
     "connect-nextcloud": "Connect {{name}}",
     "open-in-nextcloud": "Open in {{name}}",
     "no-data": "No data avaible in this folder.",
-    "select-folder": "Upload in selected folder"
+    "select-folder": "Upload in selected folder",
+    "webdav-error": "Something went wrong",
+    "add-folder": "Add new folder",
+    "new-folder-placeholder": "New folder"
   }
 }

@@ -358,6 +358,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 border-color: var(--FUBorderColorHighlight, purple);
             }
             
+            
              @media only screen
             and (orientation: portrait)
             and (max-device-width: 800px) {

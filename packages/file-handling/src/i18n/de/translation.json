@@ -19,7 +19,9 @@
     "local-intro": "{{amount}} Datei(en) als ZIP-Datei herunterladen",
     "local-button": "ZIP-Datei herunterladen",
     "modal-close": "Dialog schließen",
-    "nav-local": "Lokaler Computer"
+    "nav-local": "Lokaler Computer",
+    "upload-success-title": "Erfolgreich hochgeladen",
+    "upload-success-body": "Sie haben Ihre Dateien erfolgreich in {{name}} hochgeladen."
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
@@ -29,7 +31,7 @@
     "folder-home": "In das Home Verzeichnis springen",
     "select-files": "Dateien auswählen",
     "refresh-nextcloud-file-picker": "Erneut verbinden",
-    "loadpath-nextcloud-file-picker": "Das Nextcloud Verzeichnis wird geladen",
+    "loadpath-nextcloud-file-picker": "Das {{name}} Verzeichnis wird geladen",
     "load-path-link": "Gehe zu {{path}}",
     "auth-progress": "Anmeldung läuft",
     "last-modified": "Geändert",
@@ -42,6 +44,9 @@
     "connect-nextcloud": "{{name}} verbinden",
     "open-in-nextcloud": "In {{name}} öffnen",
     "no-data": "In diesem Ordner befinden sich keine Daten vom benötigten Typ.",
-    "select-folder": "In diesem Ordner hochladen"
+    "select-folder": "In diesem Ordner hochladen",
+    "webdav-error": "Etwas ist schief gelaufen",
+    "add-folder": "Neuen Ordner erstellen",
+    "new-folder-placeholder": "Neuer Ordner"
   }
 }
