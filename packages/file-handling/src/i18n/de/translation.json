@@ -47,6 +47,8 @@
     "select-folder": "In diesem Ordner hochladen",
     "webdav-error": "Etwas ist schief gelaufen",
     "add-folder": "Neuen Ordner erstellen",
-    "new-folder-placeholder": "Neuer Ordner"
+    "new-folder-placeholder": "Neuer Ordner",
+    "load-in-folder": "Ins aktuelle Verzeichnis laden",
+    "load-to-folder": "Im ausgewählten Ordner hochladen"
   }
 }

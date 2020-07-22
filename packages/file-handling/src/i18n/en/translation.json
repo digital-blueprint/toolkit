@@ -47,6 +47,8 @@
     "select-folder": "Upload in selected folder",
     "webdav-error": "Something went wrong",
     "add-folder": "Add new folder",
-    "new-folder-placeholder": "New folder"
+    "new-folder-placeholder": "New folder",
+    "load-in-folder": "Load into the current directory",
+    "load-to-folder": "Upload to the selected folder"
   }
 }

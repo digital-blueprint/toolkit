@@ -46,6 +46,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
      */
     static get properties() {
         return {
+            context: { type: String, attribute: 'context'},
             lang: { type: String },
             filename: { type: String },
             files: { type: Array, attribute: false },
