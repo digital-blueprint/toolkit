@@ -49,6 +49,14 @@
     "add-folder": "Neuen Ordner erstellen",
     "new-folder-placeholder": "Neuer Ordner",
     "load-in-folder": "Ins aktuelle Verzeichnis laden",
-    "load-to-folder": "Im ausgewählten Ordner hochladen"
+    "load-to-folder": "Im ausgewählten Ordner hochladen",
+    "replace-title-1": "Es ist bereits eine Datei mit dem Namen ",
+    "replace-title-2": " vorhanden",
+    "replace-text": "Was möchten Sie tun",
+    "replace-new_name": "Neuer Name",
+    "replace-replace": "Ersetzen",
+    "replace-skip": "Überspringen",
+    "replace-cancel": "Alle abbrechen",
+    "replace-mode-all": "Für alle zukünftigen Konflikte übernehmen"
   }
 }

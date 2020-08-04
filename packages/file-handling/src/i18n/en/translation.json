@@ -28,7 +28,7 @@
     "open-nextcloud-file-picker": "Select files from your {{name}}",
     "folder-last": "Jump to the last directory",
     "folder-up": "Jump to the parent directory",
-    "folder-up": "Jump to the home directory",
+    "folder-home": "Jump to the home directory",
     "select-files": "Select files",
     "refresh-nextcloud-file-picker": "Connect again",
     "loadpath-nextcloud-file-picker": "Loading directory from {{name}}",
@@ -49,6 +49,14 @@
     "add-folder": "Add new folder",
     "new-folder-placeholder": "New folder",
     "load-in-folder": "Load into the current directory",
-    "load-to-folder": "Upload to the selected folder"
+    "load-to-folder": "Upload to the selected folder",
+    "replace-title-1": "There is already a file with the name ",
+    "replace-title-2": " in this location",
+    "replace-text": "What do you want to do",
+    "replace-new_name": "New Name",
+    "replace-replace": "Replace",
+    "replace-skip": "Ignore",
+    "replace-cancel": "Cancel all",
+    "replace-mode-all": "Do this for the next conflicts"
   }
 }

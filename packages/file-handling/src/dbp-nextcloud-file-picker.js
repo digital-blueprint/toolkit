@@ -11,6 +11,7 @@ import {humanFileSize} from 'dbp-common/i18next';
 import Tabulator from 'tabulator-tables';
 import nextcloudFileURL from 'consts:nextcloudFileURL';
 import MicroModal from './micromodal.es';
+import {waitFor} from "@babel/core/lib/gensync-utils/async";
 
 /**
  * NextcloudFilePicker web component
@@ -36,6 +37,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this._onReceiveWindowMessage = this.onReceiveWindowMessage.bind(this);
 
         this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
+        this.replaceFilename = '';
+        this.uploadFileObject = null;
+        this.uploadFileDirectory = null;
+        this.isDialogOpen = true;
     }
 
     static get scopedElements() {
@@ -61,6 +66,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             directoriesOnly: { type: Boolean, attribute: 'directories-only' },
             maxSelectedItems: { type: Number, attribute: 'max-selected-items' },
+            replaceFilename: { type: String, attribute: false },
+            uploadFileObject: { type: Object, attribute: false },
+            uploadFileDirectory: { type: String, attribute: false },
+            isDialogOpen: { type: Boolean, attribute: false },
         };
     }
 
@@ -391,10 +400,111 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         } catch(error ) {
             console.error(error.message);
             this.loading = false;
-            this.statusText = error.message;
+            //this.statusText = error.message;
+            console.log("----", error.message);
+            if(error.message.search("412") !== -1) {
+                this.replaceModalDialog(file, directory);
+                console.log("dialog open after upload? ", this.isDialogOpen);
+            }
         }
         console.log("after one file finished");
         return ret;
+    }
+
+    async uploadFileWithNewName() {
+        let path = "";
+        let overwrite = false;
+        let file = this.uploadFileObject;
+        let directory = this.uploadFileDirectory;
+
+        if(this._("input[name='replacement']:checked").value === "ignore") {
+            MicroModal.close();
+            return true;
+        }
+        else if (this._("input[name='replacement']:checked").value === "new-name") {
+            path = directory + "/" + this._("#replace-filename").value;
+            console.log("new name checked");
+        }
+        else {
+            path =  directory + "/" + this.uploadFileObject.name;
+            overwrite = true;
+            console.log("replace checked");
+        }
+
+        // https://github.com/perry-mitchell/webdav-client#putfilecontents
+        let ret = false;
+        try{
+            let contents = await this.webDavClient
+                .putFileContents(path, file,  { overwrite: overwrite, onUploadProgress: progress => {
+                        console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
+                    }});
+            this.loading = false;
+            this.statusText = "";
+            console.log("try finished");
+            ret = true;
+        } catch(error ) {
+            console.error(error.message);
+            this.loading = false;
+            this.statusText = error.message;
+            console.log("----", error.message);
+            if(error.message.search("412") !== -1) {
+                this.replaceModalDialog(file, directory);
+            }
+        }
+        console.log("after one file finished");
+        MicroModal.close();
+        return ret;
+    }
+
+    /**
+     *
+     *
+     *
+     */
+    replaceModalDialog(file, directory) {
+        console.log("zeig uns an.");
+        this.uploadFileObject = file;
+        this.uploadFileDirectory = directory;
+        this.replaceFilename = file.name;
+        this.isDialogOpen = true;
+        /*MicroModal.init({
+            onShow: modal => { this.isDialogOpen = true },
+            onClose: modal => { this.isDialogOpen = false; },
+        });*/
+        MicroModal.show(this._('#replace-modal'), {
+            onClose: modal => { this.isDialogOpen = false; }
+        });
+        console.log("dialog is open? ", this.isDialogOpen);
+    }
+
+    /**
+     *
+     *
+     *
+     */
+    getNextFilename() {
+        let splitFilename = this.replaceFilename.split(".");
+        let nextFilename = splitFilename[0] + "(1)";
+        if(splitFilename.length > 1) {
+            for(let i = 1; i < splitFilename.length; i++) {
+                nextFilename = nextFilename + "." + splitFilename[i];
+            }
+        }
+        return nextFilename;
+    }
+
+    /**
+     *
+     *
+     *
+     */
+    disableInputField() {
+        if(!this._("#replace-new-name").checked) {
+            this._("#replace-filename").disabled = true;
+        }
+        else {
+            this._("#replace-filename").disabled = false;
+        }
     }
 
     /**
@@ -491,6 +601,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getTextUtilities()}
+            ${commonStyles.getModalDialogCSS()}
             
             .block {
                 margin-bottom: 10px;
@@ -671,6 +782,68 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-top: 10px;
             }
             
+            #replace-modal-box {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 30px;
+                max-height: 470px;
+                min-height: 470px;
+                min-width: 400px;
+                max-width: 190px;
+            }
+            
+            #replace-modal-box .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+            }
+            
+             #replace-modal-box .modal-header h2 {
+                font-size: 1.2rem;
+                padding-right: 5px;
+            }
+            
+            #replace-modal-box .modal-content {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                justify-content: space-around;
+            }
+            
+            #replace-modal-box .radio-btn {
+                margin-right: 5px;
+            }
+            
+            #replace-modal-box .modal-content label {
+                display: block;
+                width: 100%;
+            }
+            
+            #replace-modal-box #replace-filename {
+                display: block;
+                width: 100%;
+                margin-top: 5px;
+            }
+            
+            #replace-modal-box input[type="text"]:disabled {
+                color: #aaa;
+            }
+            
+             #replace-modal-box .modal-content div {
+                display: flex;
+            }
+            
+            #replace-modal-box .modal-footer {
+                padding-top: 30px;
+            }
+            
+            #replace-modal-box .modal-footer .modal-footer-btn {
+                display: flex;
+                justify-content: space-between;
+                padding-bottom: 10px;
+            }
+            
             @media only screen
             and (orientation: portrait)
             and (max-device-width: 765px) {
@@ -710,6 +883,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     margin-bottom: 0px;
                 }
                 
+                
+                
                 .nextcloud-content, .nextcloud-intro{
                     grid-area: content;
                 }
@@ -735,8 +910,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 
                 .nextcloud-footer-grid{
                     display: flex;
-                    justify-content: end;
-                    
                     justify-content: center;
                 }
                 
@@ -747,6 +920,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 #new-folder{
                     width: 86%;
                 }
+                
+                #replace-modal-box {
+                min-width: 100%;
+                max-width: 100%;
+            }
                 
             }
 
@@ -812,6 +990,53 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             ${this.statusText}
                         </div>
                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal micromodal-slide" id="replace-modal" aria-hidden="true">
+                <div class="modal-overlay" tabindex="-2" data-micromodal-close>
+                    <div class="modal-container" id="replace-modal-box" role="dialog" aria-modal="true" aria-labelledby="replace-modal-title" >
+                        <header class="modal-header">
+                            <h2 id="replace-modal-title">
+                                ${i18n.t('nextcloud-file-picker.replace-title-1')}
+                                <span style="word-break: break-all;">${this.replaceFilename}</span>
+                                ${i18n.t('nextcloud-file-picker.replace-title-2')}.
+                            </h2>
+                            
+                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
+                                <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
+                            </button> 
+                        </header>
+                        <main class="modal-content" id="replace-modal-content">
+                            <h3>
+                                ${i18n.t('nextcloud-file-picker.replace-text')}?
+                            </h3>
+                            <div>
+                                <input type="radio" id="replace-new-name" class="radio-btn" name="replacement" value="new-name" checked @click="${() => {this.disableInputField();}}">
+                                <label for="new-name">${i18n.t('nextcloud-file-picker.replace-new_name')}:
+                                     <input type="text" id="replace-filename" name="replace-filename" value="${this.getNextFilename()}" onClick="this.select();">
+                                </label>
+                            </div>
+                            <div>
+                                <input type="radio" class="radio-btn" name="replacement" value="replace" @click="${() => {this.disableInputField();}}">
+                                <label for="replace">${i18n.t('nextcloud-file-picker.replace-replace')}</label>
+                            </div>
+                            <div>
+                                <input type="radio" class="radio-btn" name="replacement" value="ignore" @click="${() => {this.disableInputField();}}">
+                                <label for="ignore">${i18n.t('nextcloud-file-picker.replace-skip')}</label>
+                            </div>
+                        </main>
+                        <footer class="modal-footer">
+                            <div class="modal-footer-btn">
+                                <button class="button" data-micromodal-close aria-label="Close this dialog window">${i18n.t('nextcloud-file-picker.replace-cancel')}</button>
+                                <button class="button select-button is-primary" @click="${() => {this.uploadFileWithNewName();}}">OK</button>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="replace_mode_all" name="replace_mode_all" value="replace_mode_all">
+                                <label for="replace_mode_all">Für alle übernehmen</label>
+                            </div>
+                        </footer>
                     </div>
                 </div>
             </div>
