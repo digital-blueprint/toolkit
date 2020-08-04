@@ -192,10 +192,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     deny = deny && ((mainType !== '*' && mainType !== fileMainType) || (subType !== '*' && subType !== fileSubType));
                 });
 
-                if (deny) {
-                    return false;
-                }
-                return true;
+                return !deny;
             }
             if (typeof this.allowedMimeTypes !== 'undefined') {
                 this.tabulatorTable.setFilter(checkFileType, this.allowedMimeTypes);
