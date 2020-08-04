@@ -41,6 +41,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.uploadFileObject = null;
         this.uploadFileDirectory = null;
         this.isDialogOpen = true;
+        this.fileList = [];
     }
 
     static get scopedElements() {
@@ -66,6 +67,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             directoriesOnly: { type: Boolean, attribute: 'directories-only' },
             maxSelectedItems: { type: Number, attribute: 'max-selected-items' },
+            loading: { type: Boolean, attribute: false },
             replaceFilename: { type: String, attribute: false },
             uploadFileObject: { type: Object, attribute: false },
             uploadFileDirectory: { type: String, attribute: false },
@@ -363,52 +365,53 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
 
-    async uploadFiles(files, directory) {
-        console.log("before all file finished");
-        let ret = false;
-        let ret_outer = true;
-        const start = async () => {
-            for (let index = 0; index < files.length; index++) {
-                ret = await this.uploadFile(files[index], directory);
-                if(ret === false) {
-                    ret_outer = false;
-                    break;
-                }
-            }
-        }
-
-        await start();
-        //let ret = await files.forEach((file) => this.uploadFile(file, directory));
-        console.log("all files finished", ret_outer);
-        return ret_outer;
+    uploadFiles(files, directory) {
+        this.fileList = files;
+        this.uploadFile(directory);
     }
 
-    async uploadFile(file, directory) {
-        console.log("before one file finished");
-        let path = directory + "/" + file.name;
-        // https://github.com/perry-mitchell/webdav-client#putfilecontents
-        let ret = false;
-        try{
-            let contents = await this.webDavClient
-            .putFileContents(path, file,  { overwrite: false, onUploadProgress: progress => {
-                    console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
-                }});
-            this.loading = false;
-            this.statusText = "";
-            console.log("try finished");
-            ret = true;
-        } catch(error ) {
-            console.error(error.message);
-            this.loading = false;
-            //this.statusText = error.message;
-            console.log("----", error.message);
-            if(error.message.search("412") !== -1) {
-                this.replaceModalDialog(file, directory);
-                console.log("dialog open after upload? ", this.isDialogOpen);
+    async uploadFile(directory) {
+        if(this.fileList.length !== 0) {
+            let file = this.fileList[0];
+            this.replaceFilename = file.name;
+            console.log("before one file finished");
+            let path = directory + "/" + file.name;
+            // https://github.com/perry-mitchell/webdav-client#putfilecontents
+            let ret = false;
+            try{
+                let contents = await this.webDavClient
+                    .putFileContents(path, file,  { overwrite: false, onUploadProgress: progress => {
+                            console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
+                        }}).then(function() {
+                            this.loading = false;
+                            this.statusText = "";
+                            console.log("try finished");
+                            console.log("after one file finished");
+                            this.fileList.shift();
+                            console.log("FileList: ", this.fileList);
+                            this.uploadFile(directory);
+                        }
+                    );
+
+            } catch(error ) {
+                console.error(error.message);
+                this.loading = false;
+                this.statusText = error.message;
+                console.log("----", error.message);
+                if(error.message.search("412") !== -1) {
+                    this.replaceModalDialog(file, directory);
+                    console.log("dialog open after upload? ", this.isDialogOpen);
+                }
             }
+
         }
-        console.log("after one file finished");
-        return ret;
+        else {
+            const event = new CustomEvent("dbp-nextcloud-file-picker-file-uploaded-finished",
+                {  bubbles: true, composed: true });
+            this.dispatchEvent(event);
+        }
+
+
     }
 
     async uploadFileWithNewName() {
@@ -419,20 +422,21 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         if(this._("input[name='replacement']:checked").value === "ignore") {
             MicroModal.close();
+            this.fileList.shift();
             return true;
         }
         else if (this._("input[name='replacement']:checked").value === "new-name") {
             path = directory + "/" + this._("#replace-filename").value;
-            console.log("new name checked");
+            console.log("############# new name checked");
+            this.replaceFilename = this._("#replace-filename").value;
         }
         else {
             path =  directory + "/" + this.uploadFileObject.name;
             overwrite = true;
-            console.log("replace checked");
+            console.log("############### replace checked");
         }
 
         // https://github.com/perry-mitchell/webdav-client#putfilecontents
-        let ret = false;
         try{
             let contents = await this.webDavClient
                 .putFileContents(path, file,  { overwrite: overwrite, onUploadProgress: progress => {
@@ -441,19 +445,24 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.loading = false;
             this.statusText = "";
             console.log("try finished");
-            ret = true;
+            console.log("after one file finished");
+            this.fileList.shift();
+            console.log("FileList length: ", this.fileList.length);
+            console.log("########## after one file finished");
+            MicroModal.close();
+            this.uploadFile(directory);
+
         } catch(error ) {
             console.error(error.message);
             this.loading = false;
             this.statusText = error.message;
             console.log("----", error.message);
             if(error.message.search("412") !== -1) {
+                MicroModal.close();
                 this.replaceModalDialog(file, directory);
+                console.log("dialog open after upload? ", this.isDialogOpen);
             }
         }
-        console.log("after one file finished");
-        MicroModal.close();
-        return ret;
     }
 
     /**
@@ -465,15 +474,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         console.log("zeig uns an.");
         this.uploadFileObject = file;
         this.uploadFileDirectory = directory;
-        this.replaceFilename = file.name;
-        this.isDialogOpen = true;
-        /*MicroModal.init({
-            onShow: modal => { this.isDialogOpen = true },
-            onClose: modal => { this.isDialogOpen = false; },
-        });*/
-        MicroModal.show(this._('#replace-modal'), {
-            onClose: modal => { this.isDialogOpen = false; }
-        });
+
+        MicroModal.show(this._('#replace-modal'));
         console.log("dialog is open? ", this.isDialogOpen);
     }
 

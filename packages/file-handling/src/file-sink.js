@@ -118,8 +118,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         let that = this;
         const element = that._('#nextcloud-file-picker');
         console.log("davor");
-        const finished = await element.uploadFiles(that.files, directory);
-        console.log("fertig", finished);
+        await element.uploadFiles(that.files, directory);
+        /*console.log("fertig", finished);
         if(finished) {
             MicroModal.close();
             console.log("close");
@@ -129,9 +129,20 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 "type": "success",
                 "timeout": 5,
             });
-        }
+        }*/
 
 
+    }
+
+    finishedFileUpload() {
+        MicroModal.close();
+        console.log("close");
+        send({
+            "summary": i18n.t('file-sink.upload-success-title'),
+            "body": i18n.t('file-sink.upload-success-body', {name: this.nextcloudName}),
+            "type": "success",
+            "timeout": 5,
+        });
     }
 
     preventDefaults (e) {
@@ -228,7 +239,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                            nextcloud-name="${this.nextcloudName}"
                                                            @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
                                                                this.uploadToNextcloud(event.detail);
-                                                           }}"></dbp-nextcloud-file-picker>
+                                                           }}"
+                                                           @dbp-nextcloud-file-picker-file-uploaded-finished="${(event) => {
+                                                                this.finishedFileUpload();
+                                                            }}"></dbp-nextcloud-file-picker>
                             </div>
                         </main>
                     </div>
