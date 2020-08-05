@@ -325,6 +325,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     static get styles() {
         // language=css
         return css`
+            ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getModalDialogCSS()}
