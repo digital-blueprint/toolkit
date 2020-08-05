@@ -114,28 +114,14 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async uploadToNextcloud(directory) {
-
         let that = this;
         const element = that._('#nextcloud-file-picker');
         console.log("davor");
         await element.uploadFiles(that.files, directory);
-        /*console.log("fertig", finished);
-        if(finished) {
-            MicroModal.close();
-            console.log("close");
-            send({
-                "summary": i18n.t('file-sink.upload-success-title'),
-                "body": i18n.t('file-sink.upload-success-body', {name: this.nextcloudName}),
-                "type": "success",
-                "timeout": 5,
-            });
-        }*/
-
-
     }
 
     finishedFileUpload() {
-        MicroModal.close();
+        MicroModal.close(this._('#modal-picker'));
         console.log("close");
         send({
             "summary": i18n.t('file-sink.upload-success-title'),
@@ -153,13 +139,14 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     openDialog() {
         console.log("openDialog");
         MicroModal.show(this._('#modal-picker'), {
-            onClose: modal => { this.isDialogOpen = false; }
+            onClose: modal => { this.isDialogOpen = false; },
+            closeTrigger: 'data-custom-close',
         });
     }
 
     closeDialog() {
         console.log("closeDialog");
-        MicroModal.close();
+        MicroModal.close(this._('#modal-picker'));
     }
 
     static get styles() {
@@ -189,7 +176,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
-                <div class="modal-overlay" tabindex="-1" data-micromodal-close>
+                <div class="modal-overlay" tabindex="-1" data-custom-close>
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
                         <nav class="modal-nav">
                             <div title="${i18n.t('file-sink.nav-local')}"
@@ -206,7 +193,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                         </nav>
                             <div class="modal-header">
-                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
+                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" data-custom-close @click="${() => { this.closeDialog()}}">
                                         <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
                                 </button> 
                                 <p class="modal-context"> ${this.context}</p>

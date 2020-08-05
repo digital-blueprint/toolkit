@@ -11,7 +11,6 @@ import {humanFileSize} from 'dbp-common/i18next';
 import Tabulator from 'tabulator-tables';
 import nextcloudFileURL from 'consts:nextcloudFileURL';
 import MicroModal from './micromodal.es';
-import {waitFor} from "@babel/core/lib/gensync-utils/async";
 
 /**
  * NextcloudFilePicker web component
@@ -40,7 +39,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.replaceFilename = '';
         this.uploadFileObject = null;
         this.uploadFileDirectory = null;
-        this.isDialogOpen = true;
         this.fileList = [];
     }
 
@@ -71,7 +69,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             replaceFilename: { type: String, attribute: false },
             uploadFileObject: { type: Object, attribute: false },
             uploadFileDirectory: { type: String, attribute: false },
-            isDialogOpen: { type: Boolean, attribute: false },
         };
     }
 
@@ -280,7 +277,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.webDavClient
             .getDirectoryContents(path, {details: true})
             .then(contents => {
-                console.log("contents", contents);
+                //console.log("contents", contents);
                 this.loading = false;
                 this.statusText = "";
                 this.tabulatorTable.setData(contents.data);
@@ -307,6 +304,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.statusText = reloadButton;
         });
 
+        const contents2 = this.webDavClient.customRequest(path, {
+            method: "PROPFIND",
+            headers: {
+                Accept: "text/plain",
+                Depth: 0
+            },
+            data: "<?xml version=\"1.0\"?>\n" +
+                "<d:propfind  xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\" xmlns:nc=\"http://nextcloud.org/ns\">\n" +
+                "  <d:prop>\n" +
+                "        <oc:permissions />\n" +
+                "        <nc:acl-permissions />\n" +
+                "  </d:prop>\n" +
+                "</d:propfind>",
+            responseType: "text"
+        }); // contents => { //console.log("---------", contents)});
+
+
     }
 
     directoryClicked(event, file) {
@@ -316,7 +330,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     downloadFiles(files) {
         files.forEach((fileData) => this.downloadFile(fileData));
-        MicroModal.close();
+
     }
 
     downloadFile(fileData) {
@@ -378,8 +392,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             let path = directory + "/" + file.name;
             // https://github.com/perry-mitchell/webdav-client#putfilecontents
             let ret = false;
-            try{
-                let contents = await this.webDavClient
+            let contents = await this.webDavClient
                     .putFileContents(path, file,  { overwrite: false, onUploadProgress: progress => {
                             console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
                         }}).then(function() {
@@ -390,22 +403,20 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             this.fileList.shift();
                             console.log("FileList: ", this.fileList);
                             this.uploadFile(directory);
+                        }).catch(error => {
+                            console.error(error.message);
+                            //this.loading = false;
+                            //this.statusText = error.message;
+                            console.log("--- h-", error.message);
+                            if(error.message.search("412") !== -1) {
+                                this.replaceModalDialog(file, directory);
+                            }
                         }
-                    );
-
-            } catch(error ) {
-                console.error(error.message);
-                this.loading = false;
-                this.statusText = error.message;
-                console.log("----", error.message);
-                if(error.message.search("412") !== -1) {
-                    this.replaceModalDialog(file, directory);
-                    console.log("dialog open after upload? ", this.isDialogOpen);
-                }
-            }
-
+                        );
         }
         else {
+            this.loading = false;
+            this.statusText = "";
             const event = new CustomEvent("dbp-nextcloud-file-picker-file-uploaded-finished",
                 {  bubbles: true, composed: true });
             this.dispatchEvent(event);
@@ -421,8 +432,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         let directory = this.uploadFileDirectory;
 
         if(this._("input[name='replacement']:checked").value === "ignore") {
-            MicroModal.close();
+            MicroModal.close(this._("#replace-modal"));
             this.fileList.shift();
+            this.uploadFile(directory);
             return true;
         }
         else if (this._("input[name='replacement']:checked").value === "new-name") {
@@ -437,32 +449,29 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
 
         // https://github.com/perry-mitchell/webdav-client#putfilecontents
-        try{
-            let contents = await this.webDavClient
+        let contents = await this.webDavClient
                 .putFileContents(path, file,  { overwrite: overwrite, onUploadProgress: progress => {
                         console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
-                    }});
-            this.loading = false;
-            this.statusText = "";
-            console.log("try finished");
-            console.log("after one file finished");
-            this.fileList.shift();
-            console.log("FileList length: ", this.fileList.length);
-            console.log("########## after one file finished");
-            MicroModal.close();
-            this.uploadFile(directory);
-
-        } catch(error ) {
-            console.error(error.message);
-            this.loading = false;
-            this.statusText = error.message;
-            console.log("----", error.message);
-            if(error.message.search("412") !== -1) {
-                MicroModal.close();
-                this.replaceModalDialog(file, directory);
-                console.log("dialog open after upload? ", this.isDialogOpen);
-            }
-        }
+                    }}).then(content => {
+                        this.loading = false;
+                        this.statusText = "";
+                        console.log("try finished");
+                        console.log("after one file finished");
+                        this.fileList.shift();
+                        console.log("FileList length: ", this.fileList.length);
+                        console.log("########## after one file finished");
+                        MicroModal.close(this._("#replace-modal"));
+                        this.uploadFile(directory);
+                    }).catch(error => {
+                        console.error(error.message);
+                        this.loading = false;
+                        this.statusText = error.message;
+                        console.log("----", error.message);
+                        if(error.message.search("412") !== -1) {
+                            MicroModal.close(this._("#replace-modal"));
+                            this.replaceModalDialog(file, directory);
+                        }
+                    });
     }
 
     /**
@@ -476,7 +485,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.uploadFileDirectory = directory;
 
         MicroModal.show(this._('#replace-modal'));
-        console.log("dialog is open? ", this.isDialogOpen);
     }
 
     /**
