@@ -404,8 +404,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             console.log("try finished");
                             console.log("after one file finished");
                             that.fileList.shift();
-                            console.log("FileList: ", this.fileList);
-                            this.uploadFile(directory);
+                            console.log("FileList: ", that.fileList);
+                            that.uploadFile(directory);
                         }).catch(error => {
                             console.error(error.message);
                             //this.loading = false;
