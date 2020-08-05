@@ -392,15 +392,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             let path = directory + "/" + file.name;
             // https://github.com/perry-mitchell/webdav-client#putfilecontents
             let ret = false;
+            let that = this;
             let contents = await this.webDavClient
                     .putFileContents(path, file,  { overwrite: false, onUploadProgress: progress => {
                             console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
                         }}).then(function() {
-                            this.loading = false;
-                            this.statusText = "";
+
+                            that.loading = false;
+
+                            that.statusText = "";
                             console.log("try finished");
                             console.log("after one file finished");
-                            this.fileList.shift();
+                            that.fileList.shift();
                             console.log("FileList: ", this.fileList);
                             this.uploadFile(directory);
                         }).catch(error => {
