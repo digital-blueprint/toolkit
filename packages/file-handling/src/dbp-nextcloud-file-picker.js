@@ -221,7 +221,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.loadDirectory(this.directoryPath, this.webDavClient);
 
         }
-
     }
 
     onReceiveWindowMessage(event) {
@@ -246,7 +245,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             );
 
             this.loadDirectory(this.directoryPath);
-
         }
     }
 
@@ -292,7 +290,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.loading = false;
                 this.statusText = reloadButton;
         });
-
     }
 
     directoryClicked(event, file) {
