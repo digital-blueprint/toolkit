@@ -106,7 +106,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     {title: i18n.t('nextcloud-file-picker.filename'), responsive: 0, widthGrow:5,  minWidth: 150, field: "basename", sorter: "alphanum",
                         formatter: (cell) => {
                             var data = cell.getRow().getData();
-                            if(data.edit)
+                            if (data.edit)
                             {
                                 cell.getElement().classList.add("fokus-edit");
                             }
@@ -142,7 +142,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 ],
                 rowSelectionChanged: (data, rows) => {
-                    if( data.length > 0  && this.directoriesOnly) {
+                    if ( data.length > 0  && this.directoriesOnly) {
                         this.folderIsSelected = i18n.t('nextcloud-file-picker.load-to-folder');
                     }
                     else {
@@ -228,7 +228,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         console.log("data", data);
 
         if (data.type === "webapppassword") {
-            if(this.loginWindow !== null) {
+            if (this.loginWindow !== null) {
                 this.loginWindow.close();
             }
 
@@ -332,7 +332,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         let path;
 
-        if(!directory[0])
+        if (!directory[0])
         {
             path = this.directoryPath;
         }
@@ -355,7 +355,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         const start = async () => {
             for (let index = 0; index < files.length; index++) {
                 ret = await this.uploadFile(files[index], directory);
-                if(ret === false) {
+                if (ret === false) {
                     ret_outer = false;
                     break;
                 }
@@ -397,7 +397,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     addFolder() {
-        if(this._('#new-folder').value !== "") {
+        if (this._('#new-folder').value !== "") {
             let folderPath = this.directoryPath + "/" +this._('#new-folder').value;
             this.webDavClient.createDirectory(folderPath).then( contents => { this.loadDirectory(this.directoryPath); }).catch(error => {
                 this.loading = false;
