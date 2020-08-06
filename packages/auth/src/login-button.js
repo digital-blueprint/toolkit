@@ -4,7 +4,7 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from 'dbp-common/styles';
 import {LitElement} from "lit-element";
-import {Icon, EventBus} from 'dbp-common';
+import {EventBus} from 'dbp-common';
 import {LoginStatus} from './util.js';
 
 let logoutSVG = `
@@ -62,7 +62,6 @@ export class LoginButton extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-            'dbp-icon': Icon,
         };
     }
 
