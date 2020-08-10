@@ -56,7 +56,8 @@
     "replace-new_name": "New Name",
     "replace-replace": "Replace",
     "replace-skip": "Ignore",
-    "replace-cancel": "Cancel all",
+    "replace-cancel": "Cancel",
+    "replace-cancel-all": "Cancel all",
     "replace-mode-all": "Do this for the next conflicts"
   }
 }

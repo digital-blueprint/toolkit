@@ -56,7 +56,8 @@
     "replace-new_name": "Neuer Name",
     "replace-replace": "Ersetzen",
     "replace-skip": "Überspringen",
-    "replace-cancel": "Alle abbrechen",
+    "replace-cancel": "Abbrechen",
+    "replace-cancel-all": "Alle abbrechen",
     "replace-mode-all": "Für alle zukünftigen Konflikte übernehmen"
   }
 }
