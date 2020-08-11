@@ -41,6 +41,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.uploadFileDirectory = null;
         this.fileList = [];
         this.fileNameCounter = 0;
+        this.forAll = false;
     }
 
     static get scopedElements() {
@@ -383,19 +384,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     uploadFiles(files, directory) {
         this.fileList = files;
         this.fileNameCounter = 1;
+        this.forAll = false;
         this.uploadFile(directory);
     }
 
     async uploadFile(directory) {
         if(this.fileList.length !== 0) {
             let file = this.fileList[0];
-            console.log("FileList length: ", this.fileList.length);
             console.log("FileList: ", this.fileList);
             this.replaceFilename = file.name;
             console.log("before one file finished");
             let path = directory + "/" + file.name;
             // https://github.com/perry-mitchell/webdav-client#putfilecontents
-            let ret = false;
             let that = this;
             let contents = await this.webDavClient
                     .putFileContents(path, file,  { overwrite: false, onUploadProgress: progress => {
@@ -412,13 +412,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             //this.statusText = error.message;
                             console.log("--- h-", error.message);
                             if(error.message.search("412") !== -1) {
-                                this.replaceModalDialog(file, directory);
+                                this.forAll ? this.uploadFileAfterConflict() : this.replaceModalDialog(file, directory);
                             }
                         });
         }
         else {
             this.loading = false;
             this.statusText = "";
+            this._("#replace_mode_all").checked = false;
+            this.forAll = false;
             const event = new CustomEvent("dbp-nextcloud-file-picker-file-uploaded-finished",
                 {  bubbles: true, composed: true });
             this.dispatchEvent(event);
@@ -426,50 +428,49 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async uploadFileAfterConflict() {
-        console.log("uploadFileAfterConflict")
         let path = "";
         let overwrite = false;
         let file = this.uploadFileObject;
         let directory = this.uploadFileDirectory;
 
-        if(this._("input[name='replacement']:checked").value === "ignore") {
+        if (this._("input[name='replacement']:checked").value === "ignore") {
             MicroModal.close(this._("#replace-modal"));
-            console.log("############ ignore");
-            this.fileList.shift();
+            this.forAll ? this.fileList = [] : this.fileList.shift();
             this.uploadFile(directory);
             return true;
-        }
-        else if (this._("input[name='replacement']:checked").value === "new-name") {
+        } else if (this._("input[name='replacement']:checked").value === "new-name") {
             path = directory + "/" + this._("#replace-filename").value;
-            console.log("############# new name checked");
-            this.replaceFilename = this._("#replace-filename").value;
-            //this.fileNameCounter++; //TODO check
-        }
-        else {
-            path =  directory + "/" + this.uploadFileObject.name;
+            this.replaceFilename = this.forAll ? this.getNextFilename() : this._("#replace-filename").value;
+        } else {
+            path = directory + "/" + this.uploadFileObject.name;
             overwrite = true;
+            console.log("uploadFileAfterConflict called");
         }
+
         let that = this;
         // https://github.com/perry-mitchell/webdav-client#putfilecontents
         let contents = await this.webDavClient
-                .putFileContents(path, file,  { overwrite: overwrite, onUploadProgress: progress => {
-                        console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
-                    }}).then(content => {
-                        that.loading = false;
-                        that.statusText = "";
-                        console.log("FileList length: ", this.fileList.length); //TODO
-                        MicroModal.close(this._("#replace-modal"));
-                        that.fileList.shift();
-                        that.uploadFile(directory);
-                    }).catch(error => {
-                        console.error(error.message);
-                        that.loading = false;
-                        that.statusText = error.message;
-                        if(error.message.search("412") !== -1) {
-                            MicroModal.close(that._("#replace-modal"));
-                            that.replaceModalDialog(file, directory);
-                        }
-                    });
+            .putFileContents(path, file, {
+                overwrite: overwrite, onUploadProgress: progress => {
+                    console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
+                }
+            }).then(content => {
+                console.log("write file with name: ", file.name);
+                that.loading = false;
+                that.statusText = "";
+                MicroModal.close(this._("#replace-modal"));
+                that.fileList.shift();
+                that.uploadFile(directory);
+            }).catch(error => {
+                console.error(error.message);
+                //that.loading = false;
+                //that.statusText = error.message;
+                if (error.message.search("412") !== -1) {
+                    MicroModal.close(that._("#replace-modal"));
+                    this.forAll ? that.uploadFileAfterConflict() : that.replaceModalDialog(file, directory);
+                }
+            });
+
         this.fileNameCounter = 1;
     }
 
@@ -487,11 +488,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      * @returns {string} The next filename
      */
-    getNextFilename() { //TODO
+    getNextFilename() { //TODO handle custom filenames
         let nextFilename = "";
         let splitFilename = this.replaceFilename.split(".");
 
-        let splitBracket = splitFilename[0].split('(')
+        let splitBracket = splitFilename[0].split('(');
         if(splitBracket.length > 1) {
             let numberString = splitBracket[1].split(')');
             if (numberString.length > 1 && !isNaN(parseInt(numberString[0]))) {
@@ -518,7 +519,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      * Disables or enables the input field for the new file name
      */
-    disableInputField() {
+    setInputFieldVisibility() {
         this._("#replace-filename").disabled = !this._("#replace-new-name").checked;
     }
 
@@ -537,15 +538,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      *
      */
-    cancelEverything() {
+    cancelOverwrite() { //TODO simplify?
       this.fileList = [];
     }
 
     /**
      *
      */
-    repeatForAllConflicts() {
-        //TODO
+    setRepeatForAllConflicts() {
+        this.forAll = this._("#replace_mode_all").checked;
     }
 
     /**
@@ -1052,27 +1053,27 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 ${i18n.t('nextcloud-file-picker.replace-text')}?
                             </h3>
                             <div>
-                                <input type="radio" id="replace-new-name" class="radio-btn" name="replacement" value="new-name" checked @click="${() => {this.disableInputField();}}">
+                                <input type="radio" id="replace-new-name" class="radio-btn" name="replacement" value="new-name" checked @click="${() => {this.setInputFieldVisibility();}}">
                                 <label for="new-name">${i18n.t('nextcloud-file-picker.replace-new_name')}:
                                      <input type="text" id="replace-filename" name="replace-filename" value="${this.getNextFilename()}" onClick="this.select();">
                                 </label>
                             </div>
                             <div>
-                                <input type="radio" class="radio-btn" name="replacement" value="replace" @click="${() => {this.disableInputField();}}">
+                                <input type="radio" class="radio-btn" name="replacement" value="replace" @click="${() => {this.setInputFieldVisibility();}}">
                                 <label for="replace">${i18n.t('nextcloud-file-picker.replace-replace')}</label>
                             </div>
                             <div>
-                                <input type="radio" class="radio-btn" name="replacement" value="ignore" @click="${() => {this.disableInputField();}}">
+                                <input type="radio" class="radio-btn" name="replacement" value="ignore" @click="${() => {this.setInputFieldVisibility();}}">
                                 <label for="ignore">${i18n.t('nextcloud-file-picker.replace-skip')}</label>
                             </div>
                         </main>
                         <footer class="modal-footer">
                             <div class="modal-footer-btn">
-                                <button class="button" data-micromodal-close aria-label="Close this dialog window" @click="${() => {this.cancelEverything();}}">${this.getCancelText()}</button>
+                                <button class="button" data-micromodal-close aria-label="Close this dialog window" @click="${() => {this.cancelOverwrite();}}">${this.getCancelText()}</button>
                                 <button class="button select-button is-primary" @click="${() => {this.uploadFileAfterConflict();}}">OK</button>
                             </div>
                             <div>
-                                <input type="checkbox" id="replace_mode_all" name="replace_mode_all" value="replace_mode_all" @click="${() => {this.repeatForAllConflicts();}}>
+                                <input type="checkbox" id="replace_mode_all" name="replace_mode_all" value="replace_mode_all" @click="${() => {this.setRepeatForAllConflicts();}}>
                                 <label for="replace_mode_all">${i18n.t('nextcloud-file-picker.replace-mode-all')}</label>
                             </div>
                         </footer>
