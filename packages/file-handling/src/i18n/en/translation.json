@@ -16,8 +16,10 @@
     "nav-local": "My device"
   },
   "file-sink": {
-    "local-intro": "Download {{amount}} file(s) as ZIP-file",
-    "local-button": "Download ZIP-file",
+    "local-intro": "Download {{count}} file",
+    "local-intro_plural": "Download {{count}} files als ZIP",
+    "local-button": "Download file",
+    "local-button_plural": "Download ZIP-file",
     "modal-close": "Close dialog",
     "nav-local": "My device",
     "upload-success-title": "Successful uploaded",

@@ -16,8 +16,10 @@
     "nav-local": "Lokaler Computer"
   },
   "file-sink": {
-    "local-intro": "{{amount}} Datei(en) als ZIP-Datei herunterladen",
-    "local-button": "ZIP-Datei herunterladen",
+    "local-intro": "{{count}} Datei herunterladen",
+    "local-intro_plural": "{{count}} Dateien als ZIP-Datei herunterladen",
+    "local-button": "Datei herunterladen",
+    "local-button_plural": "ZIP-Datei herunterladen",
     "modal-close": "Dialog schließen",
     "nav-local": "Lokaler Computer",
     "upload-success-title": "Erfolgreich hochgeladen",

@@ -41,6 +41,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.uploadFileDirectory = null;
         this.fileList = [];
         this.fileNameCounter = 0;
+        this.activeDirectoryRights = 'SGDNVCK';
+        this.activeDirectoryACL = '';
     }
 
     static get scopedElements() {
@@ -70,6 +72,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             replaceFilename: { type: String, attribute: false },
             uploadFileObject: { type: Object, attribute: false },
             uploadFileDirectory: { type: String, attribute: false },
+            activeDirectoryRights: { type: String, attribute: false },
+            activeDirectoryACL: { type: String, attribute: false },
         };
     }
 
@@ -143,7 +147,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             const hours = ("0" + timestamp.getHours()).slice(-2);
                             const minutes = ("0" + timestamp.getMinutes()).slice(-2);
                             return date + "." + month + "." + year + " " + hours + ":" + minutes;
-                        }}
+                        }},
+                    {title: "rights", field: "props.permissions"},
+                    {title: "acl", field: "props.acl-list.acl.acl-permissions"}
                 ],
                 initialSort:[
                     {column:"basename", dir:"asc"},
@@ -162,6 +168,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     const data = row.getData();
 
                     if (this.directoriesOnly) {
+                        // comment out if you want to navigate through folders with double click
+                        const data = row.getData();
+                        this.directoryClicked(e, data);
+                        this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
                     }
                     else
                     {
@@ -183,10 +193,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
             });
 
-            if (this.tabulatorTable.browserMobile === false)
+
+            // Strg + click select mode on desktop
+            /*if (this.tabulatorTable.browserMobile === false)
             {
                 this.tabulatorTable.options.selectableRangeMode = "click";
-            }
+            }*/
             function checkFileType(data, filterParams) {
                 // check if file is allowed
                 if (typeof data.mime === 'undefined') {
@@ -237,28 +249,30 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     onReceiveWindowMessage(event) {
-        const data = event.data;
-        console.log("data", data);
+        if (this.webDavClient === null)
+        {
+            const data = event.data;
+            console.log("data", data);
+            console.log("context", this.directoriesOnly);
 
-        if (data.type === "webapppassword") {
-            if(this.loginWindow !== null) {
-                this.loginWindow.close();
-            }
-
-            const apiUrl = this.webDavUrl + "/" + data.loginName;
-            console.log("url: ", this.webDavUrl);
-            // see https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
-
-            this.webDavClient = createClient(
-                apiUrl,
-                {
-                    username: data.loginName,
-                    password: data.token
+            if (data.type === "webapppassword") {
+                if(this.loginWindow !== null) {
+                    this.loginWindow.close();
                 }
-            );
 
-            this.loadDirectory(this.directoryPath);
+                const apiUrl = this.webDavUrl + "/" + data.loginName;
+                console.log("url: ", this.webDavUrl);
+                // see https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
 
+                this.webDavClient = createClient(
+                    apiUrl,
+                    {
+                        username: data.loginName,
+                        password: data.token
+                    }
+                );
+                this.loadDirectory(this.directoryPath);
+            }
         }
     }
 
@@ -274,14 +288,34 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.directoryPath = path;
 
         // see https://github.com/perry-mitchell/webdav-client#getdirectorycontents
-
+        if(typeof this.webDavClient === "undefined" && !this.webDavClient)
+        {
+            console.log("no client detected");
+            //todo load new client
+        }
         this.webDavClient
-            .getDirectoryContents(path, {details: true})
+            .getDirectoryContents(path, {details: true, data: "<?xml version=\"1.0\"?>" +
+                    "<d:propfind  xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\" xmlns:nc=\"http://nextcloud.org/ns\"  xmlns:ocs=\"http://open-collaboration-services.org/ns\">" +
+                    "  <d:prop>" +
+                    "        <d:getlastmodified />" +
+                    "        <d:resourcetype />" +
+                    "        <d:getcontenttype />" +
+                    "        <d:getcontentlength />" +
+                    "        <d:getetag />" +
+                    "        <oc:permissions />" +
+                    "        <nc:acl-list>" +
+                    "           <nc:acl>" +
+                    "               <nc:acl-permissions />" +
+                    "           </nc:acl>" +
+                    "           </nc:acl-list>" +
+                    "  </d:prop>" +
+                    "</d:propfind>"})
             .then(contents => {
                 //console.log("contents", contents);
                 this.loading = false;
                 this.statusText = "";
                 this.tabulatorTable.setData(contents.data);
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!", contents.data)
                 this.isPickerActive = true;
             }).catch(error => {
                 console.error(error.message);
@@ -304,27 +338,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.loading = false;
                 this.statusText = reloadButton;
         });
-
-        const contents2 = this.webDavClient.customRequest(path, {
-            method: "PROPFIND",
-            headers: {
-                Accept: "text/plain",
-                Depth: 0
-            },
-            data: "<?xml version=\"1.0\"?>\n" +
-                "<d:propfind  xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\" xmlns:nc=\"http://nextcloud.org/ns\">\n" +
-                "  <d:prop>\n" +
-                "        <oc:permissions />\n" +
-                "        <nc:acl-permissions />\n" +
-                "  </d:prop>\n" +
-                "</d:propfind>",
-            responseType: "text"
-        }); // contents => { //console.log("---------", contents)});
-
-
     }
 
     directoryClicked(event, file) {
+        // save rights of clicked directory
+        this.activeDirectoryRights = file.props.permissions;
+        if(typeof  file.props['acl-list'] !== "undefined" &&
+            typeof  file.props['acl-list']['acl']['acl-permissions'] !== "undefined" && file.props['acl-list']['acl']['acl-permissions']) {
+            this.activeDirectoryACL = file.props['acl-list']['acl']['acl-permissions'];
+        }
+        else {
+            this.activeDirectoryACL = '';
+        }
         this.loadDirectory(file.filename);
         event.preventDefault();
     }
@@ -473,12 +498,111 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.fileNameCounter = 1;
     }
 
+    checkRights(file) {
+        // Todo check rights after an conflict and return which should be grayed out (the options rename or replace)
+        // no rename: if you dont have create permissions
+        // no replace if you dont have write permissions
+
+        // nextcloud permissions
+        let perm = 0;
+        let active_directory_perm = this.activeDirectoryRights;
+        let rows = this.tabulatorTable.searchRows("basename", "=", this.replaceFilename);
+        perm = rows[0].getData().props.permissions;
+
+        console.log("RIGHTS IN THIS FOLDER:", this.activeDirectoryRights);
+        console.log("RIGHT OF FILE:", perm);
+
+        console.log("RIGHTS IN THIS FOLDER:", this.activeDirectoryRights);
+        console.log("RIGHT OF FILE:", perm);
+
+        // if I'm in an group or external folder take the acl permissions
+        if(this.activeDirectoryACL !== '')
+        {
+            console.log("ACL SET");
+            active_directory_perm = this.activeDirectoryACL;
+        }
+
+
+
+        // read only directory
+        if(active_directory_perm === "MG" || active_directory_perm === "SG")
+        {
+            console.log("0");
+            return 0;
+        }
+
+        // read only file
+        if((perm === 'SG' || perm === 'MG') && !active_directory_perm.includes("CK") )
+        {
+            console.log("0");
+            return 0;
+        }
+
+        // read only file
+        if((perm === 'SG' || perm === 'MG') && active_directory_perm.includes("CK") )
+        {
+            console.log("1");
+            return 1;
+        }
+
+        // only create and no edit
+        if((active_directory_perm.includes("CK") && !active_directory_perm.includes("NV")) || (active_directory_perm.includes("CK") && !perm.includes("NV"))) {
+            console.log("1");
+            return 1;
+        }
+
+        // only edit and no create
+        if(perm.includes("NV") && !active_directory_perm.includes("CK")) {
+            console.log("2");
+            return 2;
+        }
+
+        console.log("-1");
+        return -1;
+    }
+
     /**
      *
      */
     replaceModalDialog(file, directory) {
         this.uploadFileObject = file;
         this.uploadFileDirectory = directory;
+        let rights = this.checkRights(file);
+        if(rights === 0) {
+            // TODO Übersetzen
+            this.loading = false;
+            this.statusText = "readonly: Du darfst in diesem ordner nichts schreiben";
+            return;
+        }
+        else if(rights === 1) {
+            this.loading = false;
+            this.statusText = "Du darfst hier nur erstellen";
+            this._("#replace-replace").setAttribute("disabled", "true");
+            this._("#replace-new-name").removeAttribute("disabled");
+            this._("#replace-replace").checked = false;
+            this._("#replace-new-name").checked = true;
+            this.disableInputField();
+            this._("#replace-new-name").focus();
+
+        }
+        else if(rights === 2) {
+            this.loading = false;
+            this.statusText = "Du darfst hier nur bearbeiten";
+            this._("#replace-new-name").setAttribute("disabled", "true");
+            this._("#replace-replace").removeAttribute("disabled");
+            this._("#replace-new-name").checked = false;
+            this._("#replace-replace").checked = true;
+            this.disableInputField();
+            this._("#replace-replace").focus();
+        }
+        else {
+            this._("#replace-new-name").removeAttribute("disabled");
+            this._("#replace-replace").removeAttribute("disabled");
+            this._("#replace-replace").checked = false;
+            this._("#replace-new-name").checked = true;
+            this.disableInputField();
+            this._("#replace-new-name").focus();
+        }
         MicroModal.show(this._('#replace-modal'));
     }
 
@@ -538,7 +662,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     cancelEverything() {
-      this.fileList = [];
+        this.statusText = "";
+        this.loading = false;
+        this.fileList = [];
     }
 
     /**
@@ -582,7 +708,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      */
     getBreadcrumb() {
         let htmlpath = [];
-        htmlpath[0] =  html`<a @click="${() => { this.loadDirectory("/"); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> </a>`;
+        htmlpath[0] =  html`<span class="breadcrumb"><a @click="${() => { this.loadDirectory("/"); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> </a></span>`;
         const directories = this.directoryPath.split('/');
         if (directories[1] === "")
         {
@@ -597,7 +723,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 path += directories[j];
             }
 
-            htmlpath[i] = html` › <a @click="${() => { this.loadDirectory(path); }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a>`;
+            htmlpath[i] = html`<span class="muted"> › </span><span class="breadcrumb"><a @click="${() => { this.loadDirectory(path); }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
         }
 
         return htmlpath;
@@ -739,15 +865,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .tabulator-row, .tabulator-row.tabulator-row-even{
                 background-color: white;
             }
-            
-            .tabulator-row.tabulator-selected:hover, .tabulator-row.tabulator-selected{
-                background-color: var(--dbp-dark);
-                color: var(--dbp-light);
+                        
+            .tabulator-row.tabulator-selectable.tabulator-selectable:hover{
+                background-color: var(--dbp-secondary-bg-color);
+                color: var(--dbp-secondary-text-color);
             }
             
-            .tabulator-row.tabulator-selectable:hover{
-                background-color: #eee;
-                color: var(--dbp-dark);
+            .tabulator-row.tabulator-selectable.tabulator-selected:hover, .tabulator-row.tabulator-selected{
+                background-color: var(--dbp-dark);
+                color: var(--dbp-light);
             }
             
             .tabulator .tabulator-header .tabulator-col .tabulator-col-content{
@@ -883,6 +1009,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 display: flex;
                 justify-content: space-between;
                 padding-bottom: 10px;
+            }
+            
+            .breadcrumb, .muted{
+                color: var(--dbp-muted-text);
+            }
+            
+            .breadcrumb:last-child{
+                color: inherit;
+            }
+            
+            input:disabled+label{
+                color: #aaa;
             }
             
             @media only screen
@@ -1058,7 +1196,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 </label>
                             </div>
                             <div>
-                                <input type="radio" class="radio-btn" name="replacement" value="replace" @click="${() => {this.disableInputField();}}">
+                                <input type="radio" id="replace-replace" class="radio-btn" name="replacement" value="replace" @click="${() => {this.disableInputField();}}">
                                 <label for="replace">${i18n.t('nextcloud-file-picker.replace-replace')}</label>
                             </div>
                             <div>
