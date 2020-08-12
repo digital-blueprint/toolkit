@@ -319,7 +319,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     "  </d:prop>" +
                     "</d:propfind>"})
             .then(contents => {
-                //console.log("contents", contents);
                 this.loading = false;
                 this.statusText = "";
                 this.tabulatorTable.setData(contents.data);
@@ -336,16 +335,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.loading = false;
                     this.statusText = error.message;
                     this.isPickerActive = false;
-                }
-
-                this.tabulatorTable.clearData();
-                this.webDavClient = null;
-                // TODO Übersetzung
-                let reloadButton = html`Something went wrong. Please reload <button class="button"
+                    this.tabulatorTable.clearData();
+                    this.webDavClient = null;
+                    // TODO Übersetzung
+                    let reloadButton = html`Something went wrong. Please reload <button class="button"
                                 title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                                 @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
-                this.loading = false;
-                this.statusText = reloadButton;
+                    this.loading = false;
+                    this.statusText = reloadButton;
+                }
+
+
         });
     }
 
