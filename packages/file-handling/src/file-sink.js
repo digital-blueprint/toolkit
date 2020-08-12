@@ -67,7 +67,14 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         let zip = new JSZip();
         let fileNames = [];
 
-        // add all signed pdf-files
+        // download one file not compressed!
+        if(this.files.length === 1)
+        {
+            FileSaver.saveAs(this.files[0], this.files[0].filename);
+            return;
+        }
+
+        // download all files compressed
         this.files.forEach((file) => {
             let fileName = file.name;
 
@@ -204,12 +211,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             <div class="source-main ${classMap({"hidden": this.activeDestination !== "local"})}">
                                 <div id="zip-download-block">
                                     <div class="block">
-                                        ${this.text || i18n.t('file-sink.local-intro', {'amount': this.files.length})}
+                                        ${this.text || i18n.t('file-sink.local-intro', {'count': this.files.length})}
                                     </div>
                                     <button class="button is-primary"
                                             ?disabled="${this.disabled}"
                                             @click="${() => { this.downloadCompressedFiles(); }}">
-                                        ${this.buttonLabel || i18n.t('file-sink.local-button')}
+                                        ${this.buttonLabel || i18n.t('file-sink.local-button', {'count': this.files.length})}
                                     </button>
                                 </div>
                             </div>
