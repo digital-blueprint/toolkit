@@ -289,10 +289,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.directoryPath = path;
 
         // see https://github.com/perry-mitchell/webdav-client#getdirectorycontents
-        if(typeof this.webDavClient === "undefined" && !this.webDavClient)
+        if(this.webDavClient === null)
         {
-            console.log("no client detected");
-            //todo load new client
+            // client is broken reload try to reset & reconnect
+            this.tabulatorTable.clearData();
+            this.webDavClient = null;
+            // TODO Übersetzung
+            let reloadButton = html`Something went wrong. Please reload <button class="button"
+                            title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                            @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
+            this.loading = false;
+            this.statusText = reloadButton;
         }
         this.webDavClient
             .getDirectoryContents(path, {details: true, data: "<?xml version=\"1.0\"?>" +
@@ -322,7 +329,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 console.error(error.message);
 
                 // on Error: try to reload with home directory
-                if (path != "/"){
+                if (path != "/" && this.webDavClient !== null){
                     this.loadDirectory("/");
                 }
                 else {
@@ -331,11 +338,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.isPickerActive = false;
                 }
 
-                // client is broken reload try to reset & reconnect
+                this.tabulatorTable.clearData();
                 this.webDavClient = null;
-                let reloadButton = html`<button class="button"
-                            title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
+                // TODO Übersetzung
+                let reloadButton = html`Something went wrong. Please reload <button class="button"
+                                title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                                @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
                 this.loading = false;
                 this.statusText = reloadButton;
         });
@@ -356,6 +364,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     downloadFiles(files) {
+        this.tabulatorTable.deselectRow();
         files.forEach((fileData) => this.downloadFile(fileData));
 
     }
@@ -387,7 +396,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     sendDirectory(directory) {
-
+        this.tabulatorTable.deselectRow();
         let path;
 
         if(!directory[0])
@@ -436,7 +445,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             //this.loading = false;
                             //this.statusText = error.message;
                             console.log("--- h-", error.message);
-                            if(error.message.search("412") !== -1) {
+                            if(error.message.search("412") !== -1 || error.message.search("403") !== -1) {
                                 this.forAll ? this.uploadFileAfterConflict() : this.replaceModalDialog(file, directory);
                             }
                         });
@@ -508,7 +517,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         let perm = 0;
         let active_directory_perm = this.activeDirectoryRights;
         let rows = this.tabulatorTable.searchRows("basename", "=", this.replaceFilename);
-        perm = rows[0].getData().props.permissions;
+        if(typeof rows[0] !== 'undefined' && rows[0]) {
+            perm = rows[0].getData().props.permissions;
+        }
+        else {
+            perm = "";
+        }
 
         console.log("RIGHTS IN THIS FOLDER:", this.activeDirectoryRights);
         console.log("RIGHT OF FILE:", perm);
@@ -516,38 +530,69 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         console.log("RIGHTS IN THIS FOLDER:", this.activeDirectoryRights);
         console.log("RIGHT OF FILE:", perm);
 
+        /* ACL TODO Check if ACL > Permissions
         // if I'm in an group or external folder take the acl permissions
         if(this.activeDirectoryACL !== '')
         {
             console.log("ACL SET");
-            active_directory_perm = this.activeDirectoryACL;
+            active_directory_perm = "MG";
+
+            if(this.activeDirectoryACL & (1 << (3 - 1)))
+            {
+                active_directory_perm = "CK";
+                console.log("ACL CREATE");
+            }
+            if(this.activeDirectoryACL & (1 << (2 - 1)))
+            {
+                active_directory_perm += "NV";
+                console.log("ACL WRITE");
+            }
         }
 
+        // if file has acl rights take that
+        if(typeof rows[0].getData().props['acl-list'] !== 'undefined' && rows[0].getData().props['acl-list'] &&
+            rows[0].getData().props['acl-list']['acl']['acl-permissions'] !== '')
+        {
+            console.log("FILE HAS ACL");
+            perm = "MG";
+
+            if(rows[0].getData().props['acl-list']['acl']['acl-permissions'] & (1 << (3 - 1)))
+            {
+                perm = "CK";
+                console.log("FILE ACL CREATE");
+            }
+            if(rows[0].getData().props['acl-list']['acl']['acl-permissions'] & (1 << (2 - 1)))
+            {
+                perm += "NV";
+                console.log("FILE ACL WRITE");
+            }
+        }
+        */
 
 
         // read only directory
-        if(active_directory_perm === "MG" || active_directory_perm === "SG")
+        if(active_directory_perm === "MG" || active_directory_perm === "SG" || (active_directory_perm === "RMGD" && perm === ""))
         {
             console.log("0");
             return 0;
         }
 
         // read only file
-        if((perm === 'SG' || perm === 'MG') && !active_directory_perm.includes("CK") )
+        if((perm === 'SG' || perm === 'MG' || perm === 'MG'|| perm === 'RMGD' || perm === 'SGD') && !active_directory_perm.includes("CK") )
         {
             console.log("0");
             return 0;
         }
 
         // read only file
-        if((perm === 'SG' || perm === 'MG') && active_directory_perm.includes("CK") )
+        if((perm === 'SG' || perm === 'MG'|| perm === 'RMGD' || perm === 'SGD') && active_directory_perm.includes("CK") )
         {
             console.log("1");
             return 1;
         }
 
         // only create and no edit
-        if((active_directory_perm.includes("CK") && !active_directory_perm.includes("NV")) || (active_directory_perm.includes("CK") && !perm.includes("NV"))) {
+        if((active_directory_perm.includes("CK") && !active_directory_perm.includes("NV") && !perm.includes("NV")) || (active_directory_perm.includes("CK") && !perm.includes("NV"))) {
             console.log("1");
             return 1;
         }
@@ -582,7 +627,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this._("#replace-new-name").removeAttribute("disabled");
             this._("#replace-replace").checked = false;
             this._("#replace-new-name").checked = true;
-            this.disableInputField();
+            this.setInputFieldVisibility();
             this._("#replace-new-name").focus();
 
         }
@@ -593,7 +638,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this._("#replace-replace").removeAttribute("disabled");
             this._("#replace-new-name").checked = false;
             this._("#replace-replace").checked = true;
-            this.disableInputField();
+            this.setInputFieldVisibility();
             this._("#replace-replace").focus();
         }
         else {
@@ -601,7 +646,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this._("#replace-replace").removeAttribute("disabled");
             this._("#replace-replace").checked = false;
             this._("#replace-new-name").checked = true;
-            this.disableInputField();
+            this.setInputFieldVisibility();
             this._("#replace-new-name").focus();
         }
         MicroModal.show(this._('#replace-modal'));
@@ -1198,11 +1243,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 </label>
                             </div>
                             <div>
-<<<<<<< HEAD
-                                <input type="radio" id="replace-replace" class="radio-btn" name="replacement" value="replace" @click="${() => {this.disableInputField();}}">
-=======
-                                <input type="radio" class="radio-btn" name="replacement" value="replace" @click="${() => {this.setInputFieldVisibility();}}">
->>>>>>> 5445f10e252841df29248c0c518597ca6264da56
+                                <input type="radio" id="replace-replace" class="radio-btn" name="replacement" value="replace" @click="${() => {this.setInputFieldVisibility();}}">
+
                                 <label for="replace">${i18n.t('nextcloud-file-picker.replace-replace')}</label>
                             </div>
                             <div>
