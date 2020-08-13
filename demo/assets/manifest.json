@@ -1,0 +1,21 @@
+{
+  "short_name": "Toolkit Demo",
+  "name": "Toolkit Demo",
+  "start_url": "./dbp-toolkit-demo.html",
+  "icons": [
+    {
+      "src": "local/dbp-toolkit-demo/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "local/dbp-toolkit-demo/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "background_color": "#245B78",
+  "display": "standalone",
+  "theme_color": "#E4154B"
+}
+

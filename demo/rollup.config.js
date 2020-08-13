@@ -125,6 +125,9 @@ function getBuildInfo() {
 export default {
     input: (build != 'test') ? [
       'src/' + pkg.name + '.js',
+      '../packages/person-select/src/dbp-person-select-demo.js',
+      '../packages/knowledge-base-web-page-element-view/src/dbp-knowledge-base-web-page-element-view-demo.js',
+      '../packages/common/dbp-common-demo.js',
     ] : glob.sync('test/**/*.js'),
     output: {
       dir: 'dist',

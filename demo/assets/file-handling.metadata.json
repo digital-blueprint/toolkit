@@ -1,0 +1,17 @@
+{
+  "element": "dbp-person-select-demo",
+  "module_src": "dbp-person-select-demo.js",
+  "routing_name": "person-select",
+  "name": {
+    "de": "Personensuche",
+    "en": "Person search"
+  },
+  "short_name": {
+    "de": "Personensuche",
+    "en": "Person search"
+  },
+  "description": {
+    "de": "Erlaubt das Suchen von Personen",
+    "en": "Allows searching for persons"
+  }
+}
