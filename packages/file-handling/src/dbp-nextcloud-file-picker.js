@@ -123,7 +123,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     {title: i18n.t('nextcloud-file-picker.filename'), responsive: 0, widthGrow:5,  minWidth: 150, field: "basename", sorter: "alphanum",
                         formatter: (cell) => {
                             var data = cell.getRow().getData();
-                            if(data.edit)
+                            if (data.edit)
                             {
                                 cell.getElement().classList.add("fokus-edit");
                             }
@@ -161,7 +161,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 ],
                 rowSelectionChanged: (data, rows) => {
-                    if( data.length > 0  && this.directoriesOnly) {
+                    if (data.length > 0  && this.directoriesOnly) {
                         this.folderIsSelected = i18n.t('nextcloud-file-picker.load-to-folder');
                     }
                     else {
@@ -217,10 +217,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     deny = deny && ((mainType !== '*' && mainType !== fileMainType) || (subType !== '*' && subType !== fileSubType));
                 });
 
-                if (deny) {
-                    return false;
-                }
-                return true;
+                return !deny;
             }
             if (typeof this.allowedMimeTypes !== 'undefined') {
                 this.tabulatorTable.setFilter(checkFileType, this.allowedMimeTypes);
@@ -249,7 +246,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.loadDirectory(this.directoryPath, this.webDavClient);
 
         }
-
     }
 
     onReceiveWindowMessage(event) {
@@ -424,7 +420,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.deselectRow();
         let path;
 
-        if(!directory[0])
+        if (!directory[0])
         {
             path = this.directoryPath;
         }
@@ -780,9 +776,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     addFolder() {
-        if(this._('#new-folder').value !== "") {
+        if (this._('#new-folder').value !== "") {
             let folderPath = this.directoryPath + "/" +this._('#new-folder').value;
-            this.webDavClient.createDirectory(folderPath).then( contents => { this.loadDirectory(this.directoryPath); }).catch(error => {
+            this.webDavClient.createDirectory(folderPath).then(contents => { this.loadDirectory(this.directoryPath); }).catch(error => {
                 this.loading = false;
                 this.statusText = i18n.t('nextcloud-file-picker.webdav-error');
             });
@@ -873,51 +869,51 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .block {
                 margin-bottom: 10px;
             }
-            
+
             .force-no-select{
                 -webkit-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
             }
-            
+
             .nextcloud-header{
                 margin-bottom: 2rem;  
                 display: inline-grid;
                 width: 100%;
                 grid-template-columns: auto auto;          
             }
-            
+
             .nextcloud-header div button{
                 justify-self: start;
             }
-            
+
             .nextcloud-intro{
                 text-align: center;
             }
-            
+
             .nextcloud-logo{
                 width: 80px;
                 justify-self: end;  
                 transition: all 0.5s ease;
                 margin: auto;
             }
-            
+
             .nextcloud-logo-icon{
                 height: 100%;
             }
-            
+
             .nextcloud-logo-sm{
                 width: 40px;
                 justify-self: inherit;  
                 margin-right: 70px;
                 display:none;
             }
-            
+
             .m-inherit{
                 margin: inherit;
             }
-            
+
             .wrapper{
                 width: 100%;
                 height:100%;
@@ -927,33 +923,33 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 align-items: center;
                 position: relative;
             }
-            
+
             .wrapper-select{
                 justify-content: inherit;
             }
-            
+
             .select-button{
                 justify-self: end;
             }
-            
+
             .nextcloud-content{
                 width: 100%;
                 height: 100%;
                 overflow-y: auto;
             }
-            
+
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title{
                 padding-top: 4px;
                 padding-bottom: 4px;
                 font-weight: normal
             }
-            
+
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow, 
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow,
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
                 padding-bottom: 6px;
             }
-            
+
             .tabulator .tabulator-header, .tabulator .tabulator-header, .tabulator .tabulator-header .tabulator-col, .tabulator, .tabulator-row .tabulator-cell, .tabulator-row.tabulator-row-even,
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover{
                 background-color: unset;
@@ -961,7 +957,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 color: unset;
                 border: none;
             }
-            
+
             .tabulator-row, .tabulator-row.tabulator-row-even{
                 background-color: white;
             }
@@ -979,54 +975,54 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .tabulator .tabulator-header .tabulator-col .tabulator-col-content{
                 display: inline-flex;
             }
-            
+
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
                 top: 16px;
             }
-            
+
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow{
                 border-top: none;
                 border-bottom: 4px solid #666;
             }
-            
+
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow{
                 border-top: none;
                 border-bottom: 4px solid #bbb;
             }
-            
+
             .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow{
                 border-left: 4px solid transparent;
                 border-right: 4px solid transparent;
             }
-            
+
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow,
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
                 border-top: 4px solid #666;
                 border-bottom: none;
             }
-            
+
             .tabulator-row, .tabulator-row.tabulator-row-even{
                 padding-top: 10px;
                 padding-bottom: 10px;
                 border-top: 1px solid #eee;
             }
-            
+
             .tabulator-header{
                 padding-top: 10px;
                 padding-bottom: 10px;
             }
-            
+
             .nextcloud-nav{
                 display: flex;
                 justify-content: space-between;
             }
-            
+
             .nextcloud-footer{
                 background-color: white;
                 width: 100%;
                 padding-top: 10px;
             }
-            
+
             .nextcloud-footer-grid{
                 width: 100%;
                 display: flex;
@@ -1034,17 +1030,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 flex-direction: row-reverse;
                 justify-content: space-between;
             }
-            
+
             .tabulator .tabulator-tableHolder{
                 overflow: hidden;
             }
-            
+
             .tabulator .tabulator-tableHolder .tabulator-placeholder span{
                 font-size: inherit;
                 font-weight: inherit;
                 color: inherit;
             }
-            
+
             .add-folder{
                 padding-top: 10px;
             }
@@ -1126,27 +1122,27 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             @media only screen
             and (orientation: portrait)
             and (max-device-width: 765px) {
-            
-                
+
+
                 .nextcloud-nav h2 > a{
                     font-size: 1.3rem;
                 }
-                
+
                 .nextcloud-nav a{
                     font-size: 0.9rem;
                 }
-                
+
                 .nextcloud-logo-sm{
                     display: none;
                 }
-                
+
                 .tabulator .tabulator-tableHolder{
                     white-space: inherit;
                 }
                 .button-wrapper{
                     justify-self: start;
                 }
-                
+
                 .wrapper{
                     display: grid;
                     /*grid-template-areas: "header-l header-r" "content content";
@@ -1156,16 +1152,16 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     grid-template-columns: 100%;
                     grid-template-areas: "content" "footer";
                 }
-                
+
                 .nextcloud-header{
                     grid-area: header-l;
                     margin-bottom: 0px;
                 }
-                
+
                 .nextcloud-content, .nextcloud-intro{
                     grid-area: content;
                 }
-                
+
                 .nextcloud-intro{
                     /*grid-column-start: header-l-start;
                     grid-column-end: header-r-end;
@@ -1174,26 +1170,26 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     grid-area: content;
                     text-align: center;
                 }
-                
+
                 .nextcloud-footer{
                     /*grid-area: header-r;*/
                     padding-top: 0px;
                     grid-area: footer;
                 }
-                
+
                 .info-box{
                     display: none;
                 }
-                
+
                 .nextcloud-footer-grid{
                     display: flex;
                     justify-content: center;
                 }
-                
+
                 .select-button{
                     margin: 0px;
                 }
-                
+
                 #new-folder{
                     width: 86%;
                 }

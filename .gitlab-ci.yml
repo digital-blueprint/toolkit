@@ -1,10 +1,16 @@
 image: registry.gitlab.tugraz.at/dbp/web-components/toolkit/main:v1
 
+cache:
+  key: ${CI_PROJECT_PATH}
+  paths:
+    - _yarn_cache
+
 stages:
   - test
 
 test:
   stage: test
   script:
+    - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
     - yarn run test

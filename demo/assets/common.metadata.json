@@ -1,0 +1,17 @@
+{
+  "element": "dbp-common-demo",
+  "module_src": "dbp-common-demo.js",
+  "routing_name": "common",
+  "name": {
+    "de": "Common",
+    "en": "Common"
+  },
+  "short_name": {
+    "de": "Common",
+    "en": "Common"
+  },
+  "description": {
+    "de": "Gemeinsame Web Components",
+    "en": "Common web components"
+  }
+}

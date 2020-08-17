@@ -1,0 +1,17 @@
+{
+  "element": "dbp-knowledge-base-web-page-element-view-demo",
+  "module_src": "dbp-knowledge-base-web-page-element-view-demo.js",
+  "routing_name": "knowledge-base-web-page-element-view",
+  "name": {
+    "de": "dbp-knowledge-base-web-page-element-view",
+    "en": "dbp-knowledge-base-web-page-element-view"
+  },
+  "short_name": {
+    "de": "dbp-knowledge-base-web-page-element-view",
+    "en": "dbp-knowledge-base-web-page-element-view"
+  },
+  "description": {
+    "de": "Erlaubt das Einfügen von Webinhalten",
+    "en": "Allows the inserting of web content"
+  }
+}
