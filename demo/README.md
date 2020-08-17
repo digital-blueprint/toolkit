@@ -12,7 +12,7 @@ yarn install
 yarn run watch-local
 ```
 
-You can then open <http://127.0.0.1:8085/>.
+You can then open <http://127.0.0.1:8001/>.
 
 ## Adding demo pages
 

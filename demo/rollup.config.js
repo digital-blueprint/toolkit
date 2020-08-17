@@ -288,7 +288,7 @@ Dependencies:
         watch ? serve({
           contentBase: '.',
           host: '127.0.0.1',
-          port: 8085,
+          port: 8001,
           historyApiFallback: basePath + pkg.name + '.html',
           https: USE_HTTPS ? generateTLSConfig() : false,
           headers: {
