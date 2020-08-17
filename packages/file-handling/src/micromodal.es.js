@@ -185,7 +185,13 @@ var MicroModal = function () {
     }, {
       key: "closeModalById",
       value: function closeModalById(targetModal) {
-        this.modal = document.getElementById(targetModal);
+        // added support to pass on an element or an id -> for webcomponents
+        if (targetModal instanceof HTMLElement) {
+          this.modal = targetModal;
+        }
+        else {
+          this.model = document.getElementById(targetModal);
+        }
         if (this.modal) this.closeModal();
       }
     }, {

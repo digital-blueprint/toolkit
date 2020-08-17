@@ -67,7 +67,14 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         let zip = new JSZip();
         let fileNames = [];
 
-        // add all signed pdf-files
+        // download one file not compressed!
+        if (this.files.length === 1)
+        {
+            FileSaver.saveAs(this.files[0], this.files[0].filename);
+            return;
+        }
+
+        // download all files compressed
         this.files.forEach((file) => {
             let fileName = file.name;
 
@@ -114,24 +121,23 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async uploadToNextcloud(directory) {
-
         let that = this;
         const element = that._('#nextcloud-file-picker');
         console.log("davor");
-        const finished = await element.uploadFiles(that.files, directory);
-        console.log("fertig", finished);
-        if(finished) {
-            MicroModal.close();
-            console.log("close");
+        await element.uploadFiles(that.files, directory);
+    }
+
+    finishedFileUpload(event) {
+        MicroModal.close(this._('#modal-picker'));
+        if (event.detail > 0)
+        {
             send({
                 "summary": i18n.t('file-sink.upload-success-title'),
-                "body": i18n.t('file-sink.upload-success-body', {name: this.nextcloudName}),
+                "body": i18n.t('file-sink.upload-success-body', {name: this.nextcloudName, count: event.detail}),
                 "type": "success",
                 "timeout": 5,
             });
         }
-
-
     }
 
     preventDefaults (e) {
@@ -142,13 +148,14 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     openDialog() {
         console.log("openDialog");
         MicroModal.show(this._('#modal-picker'), {
-            onClose: modal => { this.isDialogOpen = false; }
+            onClose: modal => { this.isDialogOpen = false; },
+            closeTrigger: 'data-custom-close',
         });
     }
 
     closeDialog() {
         console.log("closeDialog");
-        MicroModal.close();
+        MicroModal.close(this._('#modal-picker'));
     }
 
     static get styles() {
@@ -179,7 +186,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
-                <div class="modal-overlay" tabindex="-1" data-micromodal-close>
+                <div class="modal-overlay" tabindex="-1" data-custom-close>
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
                         <nav class="modal-nav">
                             <div title="${i18n.t('file-sink.nav-local')}"
@@ -196,7 +203,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                         </nav>
                             <div class="modal-header">
-                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
+                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" data-custom-close @click="${() => { this.closeDialog()}}">
                                         <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
                                 </button> 
                                 <p class="modal-context"> ${this.context}</p>
@@ -207,12 +214,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             <div class="source-main ${classMap({"hidden": this.activeDestination !== "local"})}">
                                 <div id="zip-download-block">
                                     <div class="block">
-                                        ${this.text || i18n.t('file-sink.local-intro', {'amount': this.files.length})}
+                                        ${this.text || i18n.t('file-sink.local-intro', {'count': this.files.length})}
                                     </div>
                                     <button class="button is-primary"
                                             ?disabled="${this.disabled}"
                                             @click="${() => { this.downloadCompressedFiles(); }}">
-                                        ${this.buttonLabel || i18n.t('file-sink.local-button')}
+                                        ${this.buttonLabel || i18n.t('file-sink.local-button', {'count': this.files.length})}
                                     </button>
                                 </div>
                             </div>
@@ -229,7 +236,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                            nextcloud-name="${this.nextcloudName}"
                                                            @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
                                                                this.uploadToNextcloud(event.detail);
-                                                           }}"></dbp-nextcloud-file-picker>
+                                                           }}"
+                                                           @dbp-nextcloud-file-picker-file-uploaded-finished="${(event) => {
+                                                                this.finishedFileUpload(event);
+                                                            }}"></dbp-nextcloud-file-picker>
                             </div>
                         </main>
                     </div>

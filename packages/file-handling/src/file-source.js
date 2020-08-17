@@ -205,6 +205,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      * @param file
      */
     sendFileEvent(file) {
+        MicroModal.close(this._('#modal-picker'));
+        console.log("close filesource modal.")
         const data = {"file": file};
         const event = new CustomEvent("dbp-file-source-file-selected", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
@@ -319,7 +321,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     closeDialog() {
         console.log("closeDialog");
-        MicroModal.close();
+        MicroModal.close(this._('#modal-picker'));
     }
 
     static get styles() {

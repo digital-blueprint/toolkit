@@ -16,12 +16,15 @@
     "nav-local": "Lokaler Computer"
   },
   "file-sink": {
-    "local-intro": "{{amount}} Datei(en) als ZIP-Datei herunterladen",
-    "local-button": "ZIP-Datei herunterladen",
+    "local-intro": "{{count}} Datei herunterladen",
+    "local-intro_plural": "{{count}} Dateien als ZIP-Datei herunterladen",
+    "local-button": "Datei herunterladen",
+    "local-button_plural": "ZIP-Datei herunterladen",
     "modal-close": "Dialog schließen",
     "nav-local": "Lokaler Computer",
     "upload-success-title": "Erfolgreich hochgeladen",
-    "upload-success-body": "Sie haben Ihre Dateien erfolgreich in {{name}} hochgeladen."
+    "upload-success-body": "Sie haben {{count}} Datei erfolgreich in {{name}} hochgeladen.",
+    "upload-success-body_plural": "Sie haben {{count}} Dateien erfolgreich in {{name}} hochgeladen."
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
@@ -49,6 +52,20 @@
     "add-folder": "Neuen Ordner erstellen",
     "new-folder-placeholder": "Neuer Ordner",
     "load-in-folder": "Ins aktuelle Verzeichnis laden",
-    "load-to-folder": "Im ausgewählten Ordner hochladen"
+    "load-to-folder": "Im ausgewählten Ordner hochladen",
+    "replace-title-1": "Es ist bereits eine Datei mit dem Namen ",
+    "replace-title-2": " vorhanden",
+    "replace-text": "Was möchten Sie tun",
+    "replace-new_name": "Neuer Name",
+    "replace-replace": "Ersetzen",
+    "replace-skip": "Überspringen",
+    "replace-cancel": "Abbrechen",
+    "replace-cancel-all": "Alle abbrechen",
+    "replace-mode-all": "Für alle zukünftigen Konflikte übernehmen",
+    "something-went-wrong": "Etwas ist schief gelaufen. Bitte verbinden Sie sich erneut",
+    "upload-to": "Es wird nach {{- path}} hochgeladen ...",
+    "readonly": "Sie dürfen in diesem Ordner nichts hochladen.",
+    "onlycreate": "Sie dürfen in diesem Ordner nur neue Dateien erstellen.",
+    "onlyedit": "Sie dürfen in diesem Ordner nur Dateien bearbeiten."
   }
 }

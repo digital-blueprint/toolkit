@@ -16,19 +16,22 @@
     "nav-local": "My device"
   },
   "file-sink": {
-    "local-intro": "Download {{amount}} file(s) as ZIP-file",
-    "local-button": "Download ZIP-file",
+    "local-intro": "Download {{count}} file",
+    "local-intro_plural": "Download {{count}} files als ZIP",
+    "local-button": "Download file",
+    "local-button_plural": "Download ZIP-file",
     "modal-close": "Close dialog",
     "nav-local": "My device",
     "upload-success-title": "Successful uploaded",
-    "upload-success-body": "You have successfully uploaded your files to {{name}}."
+    "upload-success-body": "You have successfully uploaded {{count}} file to {{name}}.",
+    "upload-success-body_plural": "You have successfully uploaded {{count}} files to {{name}}."
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
     "open-nextcloud-file-picker": "Select files from your {{name}}",
     "folder-last": "Jump to the last directory",
     "folder-up": "Jump to the parent directory",
-    "folder-up": "Jump to the home directory",
+    "folder-home": "Jump to the home directory",
     "select-files": "Select files",
     "refresh-nextcloud-file-picker": "Connect again",
     "loadpath-nextcloud-file-picker": "Loading directory from {{name}}",
@@ -49,6 +52,21 @@
     "add-folder": "Add new folder",
     "new-folder-placeholder": "New folder",
     "load-in-folder": "Load into the current directory",
-    "load-to-folder": "Upload to the selected folder"
+    "load-to-folder": "Upload to the selected folder",
+    "replace-title-1": "There is already a file with the name ",
+    "replace-title-2": " in this location",
+    "replace-text": "What do you want to do",
+    "replace-new_name": "New Name",
+    "replace-replace": "Replace",
+    "replace-skip": "Ignore",
+    "replace-cancel": "Cancel",
+    "replace-cancel-all": "Cancel all",
+    "replace-mode-all": "Do this for the next conflicts",
+    "something-went-wrong": "Something went wrong. Please reload",
+    "upload-to": "Uploading to {{path}} ...",
+    "readonly": "You are not allowed to uploade files in this directory.",
+    "onlycreate": "You are only allowed to create new files in this directory.",
+    "onlyedit": "You are only allowed to edit files in this directory."
+
   }
 }
