@@ -68,7 +68,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         let fileNames = [];
 
         // download one file not compressed!
-        if(this.files.length === 1)
+        if (this.files.length === 1)
         {
             FileSaver.saveAs(this.files[0], this.files[0].filename);
             return;
@@ -129,7 +129,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
     finishedFileUpload(event) {
         MicroModal.close(this._('#modal-picker'));
-        if(event.detail > 0)
+        if (event.detail > 0)
         {
             send({
                 "summary": i18n.t('file-sink.upload-success-title'),

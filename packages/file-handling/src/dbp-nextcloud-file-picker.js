@@ -256,7 +256,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             console.log("context", this.directoriesOnly);
 
             if (data.type === "webapppassword") {
-                if(this.loginWindow !== null) {
+                if (this.loginWindow !== null) {
                     this.loginWindow.close();
                 }
 
@@ -288,7 +288,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.directoryPath = path;
 
         // see https://github.com/perry-mitchell/webdav-client#getdirectorycontents
-        if(this.webDavClient === null)
+        if (this.webDavClient === null)
         {
             // client is broken reload try to reset & reconnect
             this.tabulatorTable.clearData();
@@ -322,7 +322,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.tabulatorTable.setData(contents.data);
                 console.log("!!!!!!!!!!!!!!!!!!!!!!!!", contents.data)
                 this.isPickerActive = true;
-                if(!this.activeDirectoryRights.includes("CK") && !this.activeDirectoryRights.includes("NV")) {
+                if (!this.activeDirectoryRights.includes("CK") && !this.activeDirectoryRights.includes("NV")) {
                     this._("#download-button").setAttribute("disabled", "true");
                 }
                 else {
@@ -361,7 +361,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     directoryClicked(event, file) {
         // save rights of clicked directory
         this.activeDirectoryRights = file.props.permissions;
-        if(typeof  file.props['acl-list'] !== "undefined" &&
+        if (typeof  file.props['acl-list'] !== "undefined" &&
             typeof  file.props['acl-list']['acl']['acl-permissions'] !== "undefined" && file.props['acl-list']['acl']['acl-permissions']) {
             this.activeDirectoryACL = file.props['acl-list']['acl']['acl-permissions'];
         }
@@ -455,7 +455,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param directory
      */
     async uploadFile(directory) {
-        if(this.fileList.length !== 0) {
+        if (this.fileList.length !== 0) {
             let file = this.fileList[0];
             this.replaceFilename = file.name;
             let path = directory + "/" + file.name;
@@ -471,10 +471,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             that.fileList.shift();
                             that.uploadFile(directory);
                         }).catch(error => {
-                            if(error.message.search("412") !== -1 || error.message.search("403") !== -1) {
+                            if (error.message.search("412") !== -1 || error.message.search("403") !== -1) {
                                 this.generatedFilename = this.getNextFilename();
                                 this._("#replace-filename").value = this.generatedFilename;
-                                if(this.forAll) {
+                                if (this.forAll) {
                                     this.uploadFileObject = file;
                                     this.uploadFileDirectory = directory;
                                     this.uploadFileAfterConflict();
@@ -516,7 +516,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.uploadFile(directory);
             return true;
         } else if (this._("input[name='replacement']:checked").value === "new-name") {
-            if(this.generatedFilename !== this._("#replace-filename").value) {
+            if (this.generatedFilename !== this._("#replace-filename").value) {
                 this.customFilename = this._("#replace-filename").value;
             }
             path = directory + "/" + this._("#replace-filename").value;
@@ -546,7 +546,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     MicroModal.close(that._("#replace-modal"));
                     this.generatedFilename = this.getNextFilename();
                     this._("#replace-filename").value = this.generatedFilename;
-                    if(this.forAll) {
+                    if (this.forAll) {
                         this.uploadFileObject = file;
                         this.uploadFileDirectory = directory;
                         this.uploadFileAfterConflict();
@@ -576,7 +576,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         let file_perm = 0;
         let active_directory_perm = this.activeDirectoryRights;
         let rows = this.tabulatorTable.searchRows("basename", "=", this.replaceFilename);
-        if(typeof rows[0] !== 'undefined' && rows[0]) {
+        if (typeof rows[0] !== 'undefined' && rows[0]) {
             file_perm = rows[0].getData().props.permissions;
         }
         else {
@@ -584,17 +584,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
 
         /* ACL permissions: If ACL > permssions comment this in
-        if(this.activeDirectoryACL !== '')
+        if (this.activeDirectoryACL !== '')
         {
             console.log("ACL SET");
             active_directory_perm = "MG";
 
-            if(this.activeDirectoryACL & (1 << (3 - 1)))
+            if (this.activeDirectoryACL & (1 << (3 - 1)))
             {
                 active_directory_perm = "CK";
                 console.log("ACL CREATE");
             }
-            if(this.activeDirectoryACL & (1 << (2 - 1)))
+            if (this.activeDirectoryACL & (1 << (2 - 1)))
             {
                 active_directory_perm += "NV";
                 console.log("ACL WRITE");
@@ -602,18 +602,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
 
         // if file has acl rights take that
-        if(typeof rows[0].getData().props['acl-list'] !== 'undefined' && rows[0].getData().props['acl-list'] &&
+        if (typeof rows[0].getData().props['acl-list'] !== 'undefined' && rows[0].getData().props['acl-list'] &&
             rows[0].getData().props['acl-list']['acl']['acl-permissions'] !== '')
         {
             console.log("FILE HAS ACL");
             file_perm = "MG";
 
-            if(rows[0].getData().props['acl-list']['acl']['acl-permissions'] & (1 << (3 - 1)))
+            if (rows[0].getData().props['acl-list']['acl']['acl-permissions'] & (1 << (3 - 1)))
             {
                 file_perm = "CK";
                 console.log("FILE ACL CREATE");
             }
-            if(rows[0].getData().props['acl-list']['acl']['acl-permissions'] & (1 << (2 - 1)))
+            if (rows[0].getData().props['acl-list']['acl']['acl-permissions'] & (1 << (2 - 1)))
             {
                 file_perm += "NV";
                 console.log("FILE ACL WRITE");
@@ -622,19 +622,19 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         */
 
         // all allowed
-        if(active_directory_perm.includes("CK") && file_perm.includes("NV"))
+        if (active_directory_perm.includes("CK") && file_perm.includes("NV"))
         {
             return -1;
         }
 
         // read only file but you can write to directory = only create and no edit
-        if(active_directory_perm.includes("CK") && !file_perm.includes("NV"))
+        if (active_directory_perm.includes("CK") && !file_perm.includes("NV"))
         {
             return 1;
         }
 
         // only edit and no create
-        if(!active_directory_perm.includes("CK") && file_perm.includes("NV"))
+        if (!active_directory_perm.includes("CK") && file_perm.includes("NV"))
         {
             return 2;
         }
@@ -654,13 +654,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.uploadFileDirectory = directory;
         let rights = this.checkRights(file);
         // read only directory or read only file
-        if(rights === 0) {
+        if (rights === 0) {
             this.loading = false;
             this.statusText = i18n.t('nextcloud-file-picker.readonly');
             return;
         }
         // read only file but you can write to directory = only create and no edit
-        else if(rights === 1) {
+        else if (rights === 1) {
             this.loading = false;
             this.statusText = i18n.t('nextcloud-file-picker.onlycreate');
             this._("#replace-replace").setAttribute("disabled", "true");
@@ -671,7 +671,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this._("#replace-new-name").focus();
         }
         // only edit and no create
-        else if(rights === 2) {
+        else if (rights === 2) {
             this.loading = false;
             this.statusText = i18n.t('nextcloud-file-picker.onlyedit');
             this._("#replace-new-name").setAttribute("disabled", "true");
@@ -705,7 +705,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     getNextFilename() {
         let nextFilename = "";
         let splitFilename;
-        if(this.forAll && this.customFilename !== '') {
+        if (this.forAll && this.customFilename !== '') {
             splitFilename = this.customFilename.split(".");
         }
         else {
@@ -713,7 +713,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
 
         let splitBracket = splitFilename[0].split('(');
-        if(splitBracket.length > 1) {
+        if (splitBracket.length > 1) {
             let numberString = splitBracket[1].split(')');
             if (numberString.length > 1 && !isNaN(parseInt(numberString[0]))) {
                 let number = parseInt(numberString[0]);
@@ -727,7 +727,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         else {
             nextFilename = splitFilename[0] + "(" + this.fileNameCounter + ")";
         }
-        if(splitFilename.length > 1) {
+        if (splitFilename.length > 1) {
             for(let i = 1; i < splitFilename.length; i++) {
                 nextFilename = nextFilename + "." + splitFilename[i];
             }
@@ -749,7 +749,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @returns {string} correct cancel text
      */
     getCancelText() {
-        if(this.fileList.length > 1) {
+        if (this.fileList.length > 1) {
             return i18n.t('nextcloud-file-picker.replace-cancel-all');
         }
         return i18n.t('nextcloud-file-picker.replace-cancel');
