@@ -23,7 +23,8 @@
     "modal-close": "Dialog schließen",
     "nav-local": "Lokaler Computer",
     "upload-success-title": "Erfolgreich hochgeladen",
-    "upload-success-body": "Sie haben Ihre Dateien erfolgreich in {{name}} hochgeladen."
+    "upload-success-body": "Sie haben {{count}} Datei erfolgreich in {{name}} hochgeladen.",
+    "upload-success-body_plural": "Sie haben {{count}} Dateien erfolgreich in {{name}} hochgeladen."
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
@@ -60,6 +61,11 @@
     "replace-skip": "Überspringen",
     "replace-cancel": "Abbrechen",
     "replace-cancel-all": "Alle abbrechen",
-    "replace-mode-all": "Für alle zukünftigen Konflikte übernehmen"
+    "replace-mode-all": "Für alle zukünftigen Konflikte übernehmen",
+    "something-went-wrong": "Etwas ist schief gelaufen. Bitte verbinden Sie sich erneut",
+    "upload-to": "Es wird nach {{- path}} hochgeladen ...",
+    "readonly": "Sie dürfen in diesem Ordner nichts hochladen.",
+    "onlycreate": "Sie dürfen in diesem Ordner nur neue Dateien erstellen.",
+    "onlyedit": "Sie dürfen in diesem Ordner nur Dateien bearbeiten."
   }
 }

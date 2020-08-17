@@ -46,6 +46,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.activeDirectoryRights = 'SGDNVCK';
         this.activeDirectoryACL = '';
         this.forAll = false;
+        this.uploadCount = 0;
     }
 
     static get scopedElements() {
@@ -151,8 +152,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             const minutes = ("0" + timestamp.getMinutes()).slice(-2);
                             return date + "." + month + "." + year + " " + hours + ":" + minutes;
                         }},
-                    {title: "rights", field: "props.permissions"},
-                    {title: "acl", field: "props.acl-list.acl.acl-permissions"}
+                    {title: "rights", field: "props.permissions"},//, visible:false},
+                    {title: "acl", field: "props.acl-list.acl.acl-permissions"}//, visible:false}
                 ],
                 initialSort:[
                     {column:"basename", dir:"asc"},
@@ -226,7 +227,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
             if (typeof this.directoriesOnly !== 'undefined' && this.directoriesOnly)
             {
-                console.log("filter " + this.directoriesOnly);
+                //console.log("filter " + this.directoriesOnly);
                 this.tabulatorTable.setFilter([
                     {field:"type", type:"=", value:"directory"},
                 ]);
@@ -264,7 +265,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 const apiUrl = this.webDavUrl + "/" + data.loginName;
-                console.log("url: ", this.webDavUrl);
+                //console.log("url: ", this.webDavUrl);
                 // see https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
 
                 this.webDavClient = createClient(
@@ -296,8 +297,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             // client is broken reload try to reset & reconnect
             this.tabulatorTable.clearData();
             this.webDavClient = null;
-            // TODO Übersetzung
-            let reloadButton = html`Something went wrong. Please reload <button class="button"
+            let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                             @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
             this.loading = false;
@@ -326,6 +326,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.tabulatorTable.setData(contents.data);
                 console.log("!!!!!!!!!!!!!!!!!!!!!!!!", contents.data)
                 this.isPickerActive = true;
+                if(!this.activeDirectoryRights.includes("CK") && !this.activeDirectoryRights.includes("NV")) {
+                    this._("#download-button").setAttribute("disabled", "true");
+                }
+                else {
+                    this._("#download-button").removeAttribute("disabled");
+                }
             }).catch(error => {
                 console.error(error.message);
 
@@ -339,8 +345,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.isPickerActive = false;
                     this.tabulatorTable.clearData();
                     this.webDavClient = null;
-                    // TODO Übersetzung
-                    let reloadButton = html`Something went wrong. Please reload <button class="button"
+                    let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
                                 title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                                 @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
                     this.loading = false;
@@ -351,6 +356,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         });
     }
 
+    /**
+     * Event Triggered when a directory in tabulator table is clicked
+     *
+     * @param event
+     * @param file
+     */
     directoryClicked(event, file) {
         // save rights of clicked directory
         this.activeDirectoryRights = file.props.permissions;
@@ -365,12 +376,21 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         event.preventDefault();
     }
 
+    /**
+     * Download all files
+     *
+     * @param files
+     */
     downloadFiles(files) {
         this.tabulatorTable.deselectRow();
         files.forEach((fileData) => this.downloadFile(fileData));
-
     }
 
+    /**
+     * Download a single file
+     *
+     * @param fileData
+     */
     downloadFile(fileData) {
         this.loading = true;
         this.statusText = "Loading " + fileData.filename + "...";
@@ -381,8 +401,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .then(contents => {
                 // create file to send via event
                 const file = new File([contents], fileData.basename, { type: fileData.mime });
-                console.log("binaryFile", file);
-
                 // send event
                 const data = {"file": file, "data": fileData};
                 const event = new CustomEvent("dbp-nextcloud-file-picker-file-downloaded",
@@ -397,6 +415,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         });
     }
 
+    /**
+     * Send the directory to filesink
+     *
+     * @param directory
+     */
     sendDirectory(directory) {
         this.tabulatorTable.deselectRow();
         let path;
@@ -409,20 +432,32 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             path = directory[0].filename;
         }
         this.loading = true;
-        this.statusText = "Uploading to " + path + " ...";
+        this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
 
         const event = new CustomEvent("dbp-nextcloud-file-picker-file-uploaded",
             { "detail": path, bubbles: true, composed: true });
         this.dispatchEvent(event);
     }
 
-
+    /**
+     * Upload Files to a directory
+     *
+     * @param files
+     * @param directory
+     */
     uploadFiles(files, directory) {
+        this.loading = true;
+        this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
         this.fileList = files;
         this.forAll = false;
         this.uploadFile(directory);
     }
 
+    /**
+     * Upload a single file from this.filelist to given directory
+     *
+     * @param directory
+     */
     async uploadFile(directory) {
         if(this.fileList.length !== 0) {
             let file = this.fileList[0];
@@ -430,19 +465,16 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             let path = directory + "/" + file.name;
             // https://github.com/perry-mitchell/webdav-client#putfilecontents
             let that = this;
+            this.loading = true;
+            this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
             let contents = await this.webDavClient
                     .putFileContents(path, file,  { overwrite: false, onUploadProgress: progress => {
                             console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
                         }}).then(function() {
-                            that.loading = false;
-                            that.statusText = "";
+                            that.uploadCount += 1;
                             that.fileList.shift();
                             that.uploadFile(directory);
                         }).catch(error => {
-                            console.error(error.message);
-                            //this.loading = false;
-                            //this.statusText = error.message;
-                            console.log("--- h-", error.message);
                             if(error.message.search("412") !== -1 || error.message.search("403") !== -1) {
                                 this.generatedFilename = this.getNextFilename();
                                 this._("#replace-filename").value = this.generatedFilename;
@@ -458,17 +490,24 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         });
         }
         else {
+            this.loadDirectory(this.directoryPath);
             this.loading = false;
             this.statusText = "";
             this._("#replace_mode_all").checked = false;
             this.forAll = false;
             this.customFilename = '';
             const event = new CustomEvent("dbp-nextcloud-file-picker-file-uploaded-finished",
-                {  bubbles: true, composed: true });
+                {  bubbles: true, composed: true , detail: this.uploadCount});
+            this.uploadCount = 0;
             this.dispatchEvent(event);
+
         }
     }
 
+    /**
+     * Upload a file after a conflict happens on webdav side
+     *
+     */
     async uploadFileAfterConflict() {
         let path = "";
         let overwrite = false;
@@ -489,8 +528,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         } else {
             path = directory + "/" + this.uploadFileObject.name;
             overwrite = true;
-            //console.log("uploadFileAfterConflict called for file ", this.uploadFileObject.name);
         }
+
+        this.loading = true;
+        this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
 
         let that = this;
         // https://github.com/perry-mitchell/webdav-client#putfilecontents
@@ -500,15 +541,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
                 }
             }).then(content => {
-                that.loading = false;
-                that.statusText = "";
                 MicroModal.close(this._("#replace-modal"));
+                this.uploadCount += 1;
                 that.fileList.shift();
                 that.uploadFile(directory);
             }).catch(error => {
-                //console.error(error.message);
-                //that.loading = false;
-                //that.statusText = error.message;
                 if (error.message.search("412") !== -1) {
                     MicroModal.close(that._("#replace-modal"));
                     this.generatedFilename = this.getNextFilename();
@@ -527,30 +564,30 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.fileNameCounter = 1;
     }
 
+    /**
+     * Check permissions of a given file in the active directory
+     * no rename: if you dont have create permissions
+     * no replace: if you dont have write permissions
+     *
+     * R = Share, S = Shared Folder, M = Group folder or external source, G = Read, D = Delete, NV / NVW = Write, CK = Create
+     *
+     * @param file
+     * @return number
+     */
     checkRights(file) {
-        // Todo check rights after an conflict and return which should be grayed out (the options rename or replace)
-        // no rename: if you dont have create permissions
-        // no replace if you dont have write permissions
 
         // nextcloud permissions
-        let perm = 0;
+        let file_perm = 0;
         let active_directory_perm = this.activeDirectoryRights;
         let rows = this.tabulatorTable.searchRows("basename", "=", this.replaceFilename);
         if(typeof rows[0] !== 'undefined' && rows[0]) {
-            perm = rows[0].getData().props.permissions;
+            file_perm = rows[0].getData().props.permissions;
         }
         else {
-            perm = "";
+            file_perm = "";
         }
 
-        console.log("RIGHTS IN THIS FOLDER:", this.activeDirectoryRights);
-        console.log("RIGHT OF FILE:", perm);
-
-        console.log("RIGHTS IN THIS FOLDER:", this.activeDirectoryRights);
-        console.log("RIGHT OF FILE:", perm);
-
-        /* ACL TODO Check if ACL > Permissions
-        // if I'm in an group or external folder take the acl permissions
+        /* ACL permissions: If ACL > permssions comment this in
         if(this.activeDirectoryACL !== '')
         {
             console.log("ACL SET");
@@ -573,86 +610,74 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             rows[0].getData().props['acl-list']['acl']['acl-permissions'] !== '')
         {
             console.log("FILE HAS ACL");
-            perm = "MG";
+            file_perm = "MG";
 
             if(rows[0].getData().props['acl-list']['acl']['acl-permissions'] & (1 << (3 - 1)))
             {
-                perm = "CK";
+                file_perm = "CK";
                 console.log("FILE ACL CREATE");
             }
             if(rows[0].getData().props['acl-list']['acl']['acl-permissions'] & (1 << (2 - 1)))
             {
-                perm += "NV";
+                file_perm += "NV";
                 console.log("FILE ACL WRITE");
             }
         }
         */
 
-
-        // read only directory
-        if(active_directory_perm === "MG" || active_directory_perm === "SG" || (active_directory_perm === "RMGD" && perm === ""))
+        // all allowed
+        if(active_directory_perm.includes("CK") && file_perm.includes("NV"))
         {
-            console.log("0");
-            return 0;
+            return -1;
         }
 
-        // read only file
-        if((perm === 'SG' || perm === 'MG' || perm === 'MG'|| perm === 'RMGD' || perm === 'SGD') && !active_directory_perm.includes("CK") )
+        // read only file but you can write to directory = only create and no edit
+        if(active_directory_perm.includes("CK") && !file_perm.includes("NV"))
         {
-            console.log("0");
-            return 0;
-        }
-
-        // read only file
-        if((perm === 'SG' || perm === 'MG'|| perm === 'RMGD' || perm === 'SGD') && active_directory_perm.includes("CK") )
-        {
-            console.log("1");
-            return 1;
-        }
-
-        // only create and no edit
-        if((active_directory_perm.includes("CK") && !active_directory_perm.includes("NV") && !perm.includes("NV")) || (active_directory_perm.includes("CK") && !perm.includes("NV"))) {
-            console.log("1");
             return 1;
         }
 
         // only edit and no create
-        if(perm.includes("NV") && !active_directory_perm.includes("CK")) {
-            console.log("2");
+        if(!active_directory_perm.includes("CK") && file_perm.includes("NV"))
+        {
             return 2;
         }
 
-        console.log("-1");
-        return -1;
+        // read only directory and read only file
+        return 0;
+
     }
 
     /**
+     * Open the replace Modal Dialog with gui where forbidden actions are disabled
      *
+     * @param file, directory
      */
     replaceModalDialog(file, directory) {
         this.uploadFileObject = file;
         this.uploadFileDirectory = directory;
         let rights = this.checkRights(file);
+        // read only directory or read only file
         if(rights === 0) {
-            // TODO Übersetzen
             this.loading = false;
-            this.statusText = "readonly: Du darfst in diesem ordner nichts schreiben";
+            this.statusText = i18n.t('nextcloud-file-picker.readonly');
             return;
         }
+        // read only file but you can write to directory = only create and no edit
         else if(rights === 1) {
             this.loading = false;
-            this.statusText = "Du darfst hier nur erstellen";
+            this.statusText = i18n.t('nextcloud-file-picker.onlycreate');
             this._("#replace-replace").setAttribute("disabled", "true");
             this._("#replace-new-name").removeAttribute("disabled");
             this._("#replace-replace").checked = false;
             this._("#replace-new-name").checked = true;
             this.setInputFieldVisibility();
             this._("#replace-new-name").focus();
-
         }
+        // only edit and no create
         else if(rights === 2) {
             this.loading = false;
-            this.statusText = "Du darfst hier nur bearbeiten";
+            this.statusText = i18n.t('nextcloud-file-picker.onlyedit');
             this._("#replace-new-name").setAttribute("disabled", "true");
             this._("#replace-replace").removeAttribute("disabled");
             this._("#replace-new-name").checked = false;
@@ -660,6 +685,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.setInputFieldVisibility();
             this._("#replace-replace").focus();
         }
+        // all allowed
         else {
             this._("#replace-new-name").removeAttribute("disabled");
             this._("#replace-replace").removeAttribute("disabled");
@@ -668,7 +694,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.setInputFieldVisibility();
             this._("#replace-new-name").focus();
         }
-        MicroModal.show(this._('#replace-modal'));
+        MicroModal.show(this._('#replace-modal'), {
+            onClose: modal => {
+                this.statusText = "";
+                this.loading = false;},
+        });
     }
 
     /**
@@ -747,7 +777,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     /**
      * Add new folder with webdav
-     *
      *
      */
     addFolder() {
@@ -1133,8 +1162,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     margin-bottom: 0px;
                 }
                 
-                
-                
                 .nextcloud-content, .nextcloud-intro{
                     grid-area: content;
                 }
@@ -1228,7 +1255,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                  
                 <div class="nextcloud-footer ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-footer-grid">
-                        <button class="button select-button is-primary ${classMap({hidden: !this.directoriesOnly})}"
+                        <button id="download-button" class="button select-button is-primary ${classMap({hidden: !this.directoriesOnly})}"
                                 @click="${() => { this.sendDirectory(this.tabulatorTable.getSelectedData()); }}">${this.folderIsSelected}</button>
                         <button class="button select-button is-primary ${classMap({hidden: this.directoriesOnly})}"
                                 @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>

@@ -127,15 +127,17 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         await element.uploadFiles(that.files, directory);
     }
 
-    finishedFileUpload() {
+    finishedFileUpload(event) {
         MicroModal.close(this._('#modal-picker'));
-        console.log("close");
-        send({
-            "summary": i18n.t('file-sink.upload-success-title'),
-            "body": i18n.t('file-sink.upload-success-body', {name: this.nextcloudName}),
-            "type": "success",
-            "timeout": 5,
-        });
+        if(event.detail > 0)
+        {
+            send({
+                "summary": i18n.t('file-sink.upload-success-title'),
+                "body": i18n.t('file-sink.upload-success-body', {name: this.nextcloudName, count: event.detail}),
+                "type": "success",
+                "timeout": 5,
+            });
+        }
     }
 
     preventDefaults (e) {
@@ -235,7 +237,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                                this.uploadToNextcloud(event.detail);
                                                            }}"
                                                            @dbp-nextcloud-file-picker-file-uploaded-finished="${(event) => {
-                                                                this.finishedFileUpload();
+                                                                this.finishedFileUpload(event);
                                                             }}"></dbp-nextcloud-file-picker>
                             </div>
                         </main>
