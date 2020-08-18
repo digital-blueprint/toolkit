@@ -26,7 +26,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isPickerActive = false;
         this.statusText = '';
         this.lastDirectoryPath = '/';
-        this.directoryPath = '/';
+        this.directoryPath = '';
         this.webDavClient = null;
         this.tabulatorTable = null;
         this.allowedMimeTypes = '*/*';
@@ -152,8 +152,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             const minutes = ("0" + timestamp.getMinutes()).slice(-2);
                             return date + "." + month + "." + year + " " + hours + ":" + minutes;
                         }},
-                    {title: "rights", field: "props.permissions"},//, visible:false},
-                    {title: "acl", field: "props.acl-list.acl.acl-permissions"}//, visible:false}
+                    {title: "rights", field: "props.permissions", visible:false},
+                    {title: "acl", field: "props.acl-list.acl.acl-permissions", visible:false}
                 ],
                 initialSort:[
                     {column:"basename", dir:"asc"},
@@ -332,8 +332,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 console.error(error.message);
 
                 // on Error: try to reload with home directory
-                if (path != "/" && this.webDavClient !== null){
-                    this.loadDirectory("/");
+                if ((path !== "/" || path !== "") && this.webDavClient !== null && error.message.search("401") === -1) {
+                    this.loadDirectory("");
                 }
                 else {
                     this.loading = false;
@@ -804,7 +804,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      */
     getBreadcrumb() {
         let htmlpath = [];
-        htmlpath[0] =  html`<span class="breadcrumb"><a @click="${() => { this.loadDirectory("/"); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> </a></span>`;
+        htmlpath[0] =  html`<span class="breadcrumb"><a @click="${() => { this.loadDirectory(""); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> </a></span>`;
         const directories = this.directoryPath.split('/');
         if (directories[1] === "")
         {
