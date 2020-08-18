@@ -1,6 +1,6 @@
 {
-  "element": "dbp-person-select-demo",
-  "module_src": "dbp-person-select-demo.js",
+  "element": "dbp-person-select-demo-activity",
+  "module_src": "dbp-person-select-demo-activity.js",
   "routing_name": "person-select",
   "name": {
     "de": "Personensuche",

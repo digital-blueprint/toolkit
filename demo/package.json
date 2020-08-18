@@ -40,6 +40,7 @@
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-emit-ejs": "^3.1.0",
     "rollup-plugin-license": "^2.1.0",
+    "rollup-plugin-md": "^0.0.7",
     "rollup-plugin-serve": "^1.0.1",
     "rollup-plugin-terser": "^6.1.0",
     "selfsigned": "^1.10.7"
@@ -52,6 +53,7 @@
     "dbp-file-handling": "^1.0.0",
     "dbp-language-select": "^1.0.0",
     "dbp-notification": "^1.0.0",
+    "dbp-person-select": "^1.0.0",
     "dbp-person-profile": "^1.0.0",
     "fabric": "^3.6.3",
     "file-saver": "^2.0.2",
@@ -63,7 +65,8 @@
     "source-sans-pro": "^2.45.0",
     "tabulator-tables": "^4.7.0",
     "universal-router": "^9.0.1",
-    "webdav": "^3.3.0"
+    "webdav": "^3.3.0",
+    "highlight.js": "^10.1.2"
   },
   "scripts": {
     "build-dev": "rollup -c --environment BUILD:development",

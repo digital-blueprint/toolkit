@@ -13,6 +13,7 @@ import urlPlugin from "@rollup/plugin-url";
 import consts from 'rollup-plugin-consts';
 import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
+import md from 'rollup-plugin-md';
 import emitEJS from 'rollup-plugin-emit-ejs'
 import babel from '@rollup/plugin-babel'
 import selfsigned from 'selfsigned';
@@ -123,12 +124,7 @@ function getBuildInfo() {
 }
 
 export default {
-    input: (build != 'test') ? [
-      'src/' + pkg.name + '.js',
-      '../packages/person-select/src/dbp-person-select-demo.js',
-      '../packages/knowledge-base-web-page-element-view/src/dbp-knowledge-base-web-page-element-view-demo.js',
-      '../packages/common/dbp-common-demo.js',
-    ] : glob.sync('test/**/*.js'),
+    input: (build != 'test') ? glob.sync('src/*.js') : glob.sync('test/**/*.js'),
     output: {
       dir: 'dist',
       entryFileNames: '[name].js',
@@ -222,11 +218,20 @@ Dependencies:
             include: 'node_modules/**',
         }),
         json(),
+        md({
+            include: ["../../**/*.md"],
+            marked: {
+                highlight: function(code) {
+                    return require('highlight.js').highlightAuto(code).value;
+                }
+            }
+        }),
         urlPlugin({
           limit: 0,
           include: [
             "node_modules/suggestions/**/*.css",
             "node_modules/select2/**/*.css",
+            "node_modules/highlight.js/**/*.css",
           ],
           emitFiles: true,
           fileName: 'shared/[name].[hash][extname]'
