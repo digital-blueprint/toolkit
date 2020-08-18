@@ -49,6 +49,8 @@
     "no-data": "In diesem Ordner befinden sich keine Daten vom benötigten Typ.",
     "select-folder": "In diesem Ordner hochladen",
     "webdav-error": "Etwas ist schief gelaufen",
+    "add-folder-open": "Neuer Ordner Dialog öffnen",
+    "add-folder-close": "Neuer Ordner Dialog schließen",
     "add-folder": "Neuen Ordner erstellen",
     "new-folder-placeholder": "Neuer Ordner",
     "load-in-folder": "Ins aktuelle Verzeichnis laden",

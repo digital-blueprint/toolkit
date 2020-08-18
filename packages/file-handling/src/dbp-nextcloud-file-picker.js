@@ -775,6 +775,22 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * Add new folder with webdav
      *
      */
+    openAddFolderDialogue() {
+        this._('#new-folder-wrapper').classList.toggle('hidden');
+        if (this._('#new-folder-wrapper').classList.contains('hidden')) {
+            this._('#add-folder-button').setAttribute("name","plus");
+            this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-open'));
+        }
+        else {
+            this._('#add-folder-button').setAttribute("name","close");
+            this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-close'));
+        }
+    }
+
+    /**
+     * Add new folder with webdav
+     *
+     */
     addFolder() {
         if (this._('#new-folder').value !== "") {
             let folderPath = this.directoryPath + "/" +this._('#new-folder').value;
@@ -782,6 +798,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.loading = false;
                 this.statusText = i18n.t('nextcloud-file-picker.webdav-error');
             });
+            this._('#new-folder').value = '';
+            this.openAddFolderDialogue();
         }
     }
 
@@ -1043,6 +1061,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .add-folder{
                 padding-top: 10px;
+                white-space: nowrap;
             }
             
             #replace-modal-box {
@@ -1119,13 +1138,43 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 color: #aaa;
             }
             
+            .inline-block{
+                display: inline-block;
+            }
+            
+            .nextcloud-nav h2{
+                padding-top: 10px;
+            }
+            
             @media only screen
             and (orientation: portrait)
             and (max-device-width: 765px) {
 
 
+                .nextcloud-nav{
+                    position: relative;
+                }
+                
+                .inline-block{
+                    position: absolute;
+                    width: 100%;
+                    right: 0px;
+                    top: 50px;
+                    z-index: 1;
+                    background-color: white;
+                }
+                
+                .add-folder-button{
+                    right: 0px;
+                    position: absolute;
+                }
+                
                 .nextcloud-nav h2 > a{
                     font-size: 1.3rem;
+                }
+                
+                .nextcloud-nav h2{
+                   padding-top: 8px; 
                 }
 
                 .nextcloud-nav a{
@@ -1236,13 +1285,22 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                </div>
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-nav">
-                        <h2>${this.getBreadcrumb()}</h2>
+                        <h2>${this.getBreadcrumb()}</h2>             
                         <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
-                            <input type="text" placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}" name="new-folder" class="input" id="new-folder">
+                            <div class="inline-block">
+                                <div id="new-folder-wrapper" class="hidden">
+                                    <input type="text" placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}" name="new-folder" class="input" id="new-folder" />
+                                    <button class="button add-folder-button"
+                                            title="${i18n.t('nextcloud-file-picker.add-folder')}"
+                                            @click="${() => { this.addFolder(); }}">
+                                        <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
+                                    </button>
+                                </div>
+                            </div>
                             <button class="button"
-                                    title="${i18n.t('nextcloud-file-picker.add-folder')}"
-                                    @click="${() => { this.addFolder(); }}">
-                                <dbp-icon name="plus" class="nextcloud-add-folder"></dbp-icon>
+                                    title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
+                                    @click="${() => { this.openAddFolderDialogue(); }}">
+                                <dbp-icon name="plus" class="nextcloud-add-folder" id="add-folder-button"></dbp-icon>
                             </button>
                         </div>
                     </div>
