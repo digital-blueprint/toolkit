@@ -338,9 +338,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 else {
                     this.loading = false;
                     this.statusText = error.message;
-                    this.isPickerActive = false;
+                    //this.isPickerActive = false;
                     this.tabulatorTable.clearData();
-                    this.webDavClient = null;
+                    //this.webDavClient = null;
                     let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
                                 title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                                 @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
