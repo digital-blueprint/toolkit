@@ -740,6 +740,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * Disables or enables the input field for the new file name
      */
     setInputFieldVisibility() {
+        console.log("yesssss", !this._("#replace-new-name").checked);
         this._("#replace-filename").disabled = !this._("#replace-new-name").checked;
     }
 
@@ -883,6 +884,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getTextUtilities()}
             ${commonStyles.getModalDialogCSS()}
+            ${commonStyles.getRadioAndCheckboxCss()}
             
             .block {
                 margin-bottom: 10px;
@@ -1146,6 +1148,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-top: 10px;
             }
             
+            
+           
             @media only screen
             and (orientation: portrait)
             and (max-device-width: 765px) {
@@ -1342,19 +1346,32 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 ${i18n.t('nextcloud-file-picker.replace-text')}?
                             </h3>
                             <div>
-                                <input type="radio" id="replace-new-name" class="radio-btn" name="replacement" value="new-name" checked @click="${() => {this.setInputFieldVisibility();}}">
-                                <label for="new-name">${i18n.t('nextcloud-file-picker.replace-new_name')}:
-                                     <input type="text" id="replace-filename" name="replace-filename" value="" onClick="this.select();">
+                                <label class="button-container">
+                                    <span> 
+                                        ${i18n.t('nextcloud-file-picker.replace-new_name')}:
+
+                                    </span>
+                                    <input type="radio" id="replace-new-name" class="radio-btn" name="replacement" value="new-name" checked @click="${() => {this.setInputFieldVisibility();}}">
+                                    <span class="radiobutton"></span>
+                                    <input type="text" id="replace-filename" class="input" name="replace-filename" value="" onClick="this.select();">
+                                </label>
+
+                            </div>
+
+                   
+                            <div>
+                                <label class="button-container">
+                                    <span>${i18n.t('nextcloud-file-picker.replace-replace')}</span>
+                                    <input type="radio" id="replace-replace" name="replacement" value="replace" @click="${() => {this.setInputFieldVisibility();}}">
+                                    <span class="radiobutton"></span>
                                 </label>
                             </div>
                             <div>
-                                <input type="radio" id="replace-replace" class="radio-btn" name="replacement" value="replace" @click="${() => {this.setInputFieldVisibility();}}">
-
-                                <label for="replace">${i18n.t('nextcloud-file-picker.replace-replace')}</label>
-                            </div>
-                            <div>
-                                <input type="radio" class="radio-btn" name="replacement" value="ignore" @click="${() => {this.setInputFieldVisibility();}}">
-                                <label for="ignore">${i18n.t('nextcloud-file-picker.replace-skip')}</label>
+                                <label class="button-container">
+                                    <span>${i18n.t('nextcloud-file-picker.replace-skip')}</span>
+                                    <input type="radio" class="radio-btn" name="replacement" value="ignore" @click="${() => {this.setInputFieldVisibility();}}">
+                                    <span class="radiobutton"></span>
+                                </label>
                             </div>
                         </main>
                         <footer class="modal-footer">
@@ -1363,8 +1380,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <button class="button select-button is-primary" @click="${() => {this.uploadFileAfterConflict();}}">OK</button>
                             </div>
                             <div>
-                                <input type="checkbox" id="replace_mode_all" name="replace_mode_all" value="replace_mode_all" @click="${() => {this.setRepeatForAllConflicts();}}>
-                                <label for="replace_mode_all">${i18n.t('nextcloud-file-picker.replace-mode-all')}</label>
+                                <label class="button-container">
+                                    ${i18n.t('nextcloud-file-picker.replace-mode-all')}
+                                    <input type="checkbox" id="replace_mode_all" name="replace_mode_all" value="replace_mode_all" @click="${() => {this.setRepeatForAllConflicts();}}"> 
+                                    <span class="checkmark"></span>
+                                </label>
                             </div>
                         </footer>
                     </div>
