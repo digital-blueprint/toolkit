@@ -488,7 +488,6 @@ export function getRadioAndCheckboxCss() {
             position: relative;
             padding-left: 35px;
             cursor: pointer;
-            line-height: 23px;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
