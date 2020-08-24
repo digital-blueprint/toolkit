@@ -520,17 +520,18 @@ export function getRadioAndCheckboxCss() {
             position: absolute;
             top: 0;
             left: 0;
-            height: 21px;
-            width: 21px;
+            height: 20px;
+            width: 20px;
             background-color: white;
             border: solid;
             border-radius: 100%;
             border-width: var(--dbp-border-width);
             border-color: var(--dbp-border-color);
+            box-sizing: content-box;
         }
 
         .button-container input[type="radio"]:checked ~ .radiobutton:after {
-            border-color: var(--dbp-danger-bg-color);
+            border-color: white;
         }
         
         .button-container input[type="radio"]:disabled ~ .radiobutton {
@@ -554,13 +555,15 @@ export function getRadioAndCheckboxCss() {
         }
         
         .button-container .radiobutton:after {
-            left: 4px;
-            top: 4px;
-            width: 12px;
-            height: 12px;
-            border: solid var(--dbp-danger-bg-color);
-            background-color: var(--dbp-danger-bg-color);
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dbp-border-color);
+            border: none;
             border-radius: 100%;
+            border: 2px solid white;
+            box-sizing: border-box;
         }
         
         .button-container input[type="checkbox"]:checked ~ .checkmark:after {

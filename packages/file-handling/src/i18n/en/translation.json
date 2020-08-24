@@ -49,6 +49,7 @@
     "no-data": "No data avaible in this folder.",
     "select-folder": "Upload in selected folder",
     "webdav-error": "Something went wrong",
+    "add-folder-error": "The resource you tried to create already exists",
     "add-folder": "Add new folder",
     "add-folder-open": "Open new folder dialogue",
     "add-folder-close": "Close new folder dialogue",
