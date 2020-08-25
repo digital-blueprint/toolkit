@@ -311,9 +311,15 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.dispatchEvent(event);
     }
 
+    loadWebdavDirectory() {
+        if (this._('#nextcloud-file-picker').webDavClient !== null) {
+            this._('#nextcloud-file-picker').loadDirectory(this._('#nextcloud-file-picker').directoryPath);
+        }
+    }
+
     openDialog() {
         console.log("openDialog");
-
+        this.loadWebdavDirectory();
         MicroModal.show(this._('#modal-picker'), {
             onClose: modal => { this.isDialogOpen = false; }
         });
@@ -398,7 +404,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                 <p>${i18n.t('file-source.nav-local')}</p>
                             </div>
                             <div title="Nextcloud"
-                                 @click="${() => { this.activeSource = "nextcloud"; }}"
+                                 @click="${() => { this.activeSource = "nextcloud"; this.loadWebdavDirectory();}}"
                                  class="${classMap({"active": this.activeSource === "nextcloud", hidden: !this.hasEnabledSource("nextcloud")})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>

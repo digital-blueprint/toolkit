@@ -50,6 +50,7 @@
     "select-folder": "In diesem Ordner hochladen",
     "webdav-error": "Etwas ist schief gelaufen: {{error}}",
     "add-folder-error": "Die Ressource, die Sie erstellen wollten, ist bereits vorhanden",
+    "add-folder-success": "Der Ordner \"{{folder}}\" wurde erfolgreich erstellt",
     "add-folder-open": "Neuer Ordner Dialog öffnen",
     "add-folder-close": "Neuer Ordner Dialog schließen",
     "add-folder": "Neuen Ordner erstellen",

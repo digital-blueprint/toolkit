@@ -145,8 +145,15 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         e.stopPropagation();
     }
 
+    loadWebdavDirectory() {
+        if (this._('#nextcloud-file-picker').webDavClient !== null) {
+            this._('#nextcloud-file-picker').loadDirectory(this._('#nextcloud-file-picker').directoryPath);
+        }
+    }
+
     openDialog() {
         console.log("openDialog");
+        this.loadWebdavDirectory();
         MicroModal.show(this._('#modal-picker'), {
             onClose: modal => { this.isDialogOpen = false; },
             closeTrigger: 'data-custom-close',
@@ -196,7 +203,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                  <p>${i18n.t('file-source.nav-local')}</p>
                             </div>
                             <div title="${this.nextcloudName}"
-                                 @click="${() => { this.activeDestination = "nextcloud"; }}"
+                                 @click="${() => { this.activeDestination = "nextcloud"; this.loadWebdavDirectory();}}"
                                  class="${classMap({"active": this.activeDestination === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud")})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
