@@ -70,6 +70,10 @@
     "upload-to": "Es wird nach {{- path}} hochgeladen ...",
     "readonly": "Sie dürfen in diesem Ordner nichts hochladen.",
     "onlycreate": "Sie dürfen in diesem Ordner nur neue Dateien erstellen.",
-    "onlyedit": "Sie dürfen in diesem Ordner nur Dateien bearbeiten."
+    "onlyedit": "Sie dürfen in diesem Ordner nur Dateien bearbeiten.",
+    "select-all": "Alle auswählen",
+    "select-all-title": "Alle verfügbaren Dateien in diesem Ordner auswählen",
+    "select-nothing": "Nichts auswählen",
+    "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren"
   }
 }
