@@ -155,6 +155,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         console.log("openDialog");
         this.loadWebdavDirectory();
         MicroModal.show(this._('#modal-picker'), {
+            disableScroll: true,
             onClose: modal => { this.isDialogOpen = false; },
             closeTrigger: 'data-custom-close',
         });

@@ -321,6 +321,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         console.log("openDialog");
         this.loadWebdavDirectory();
         MicroModal.show(this._('#modal-picker'), {
+            disableScroll: true,
             onClose: modal => { this.isDialogOpen = false;
                 this._('#nextcloud-file-picker').selectAllButton = true;}
         });
