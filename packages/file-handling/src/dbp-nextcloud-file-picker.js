@@ -43,7 +43,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.uploadFileDirectory = null;
         this.fileList = [];
         this.fileNameCounter = 1;
-        this.activeDirectoryRights = 'SGDNVCK';
+        this.activeDirectoryRights = 'RGDNVCK';
         this.activeDirectoryACL = '';
         this.forAll = false;
         this.uploadCount = 0;
@@ -1343,8 +1343,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 .nextcloud-footer{
                     /*grid-area: header-r;*/
-                    padding-top: 0px;
-                    grid-area: footer;
+                    position: fixed;
+                    bottom: 0px;
+                    width: 100%;
+                    left: 0px;
+                    padding: 20px;
                 }
 
                 .info-box{

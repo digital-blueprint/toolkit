@@ -43,6 +43,9 @@ export const getAPiUrl = (path = "") => {
         case "production":
             apiBaseUrl = 'https://api.tugraz.at';
             break;
+        case "bs":
+            apiBaseUrl = 'http://bs-local.com:8000';
+            break;
         case "local":
         default:
             apiBaseUrl = 'http://127.0.0.1:8000';
