@@ -1014,7 +1014,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                align-items: center;
+  /*              align-items: center;*/
                 position: relative;
             }
 
@@ -1023,6 +1023,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .select-button{
+                justify-self: end;
                 justify-self: end;
             }
 
@@ -1301,6 +1302,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 .nextcloud-nav .home-link{
                     font-size: 1.2rem;
                 }
+                
+                .nextcloud-content{
+                    height: auto;
+               
+                }  
 
                 .nextcloud-logo-sm{
                     display: none;
