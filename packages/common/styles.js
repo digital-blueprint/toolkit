@@ -567,7 +567,7 @@ export function getRadioAndCheckboxCss() {
         }
         
         .button-container input[type="checkbox"]:checked ~ .checkmark:after {
-            border-color: var(--dbp-danger-bg-color);
+            border-color: var(--dbp-border-color);
         }
         
         .button-container input[type="checkbox"]:disabled ~ .checkmark {
@@ -594,7 +594,7 @@ export function getRadioAndCheckboxCss() {
             top: 4px;
             width: 6px;
             height: 10px;
-            border: solid var(--dbp-danger-bg-color);
+            border: solid var(--dbp-border-color);
             border-width: 0 2px 2px 0;
             -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);

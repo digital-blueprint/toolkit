@@ -118,7 +118,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 columns: [
                     {title: "", field: "type", align:"center", headerSort:false, width:50, responsive:1, formatter: (cell, formatterParams, onRendered) => {
                             const icon_tag =  that.constructor.getScopedTagName("dbp-icon");
-                            let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
+                            let disabled = this.directoriesOnly ? "nextcloud-picker-icon-disabled" : "";
+                            let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon ` + disabled + `"></${icon_tag}>`;
                             return (cell.getValue() === "directory") ? `<${icon_tag} name="folder" class="nextcloud-picker-icon"></${icon_tag}>` : icon;
                         }},
                     {title: i18n.t('nextcloud-file-picker.filename'), responsive: 0, widthGrow:5,  minWidth: 150, field: "basename", sorter: "alphanum",
@@ -849,7 +850,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }).catch(error => {
                 this.loading = false;
                 if (error.message.search("405") !== -1) {
-                    this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.add-folder-error')} </span>`;
+                    this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.add-folder-error', {folder: folderName})} </span>`;
                 } else {
                     this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;
                 }
@@ -1020,7 +1021,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-  /*              align-items: center;*/
                 position: relative;
             }
 
@@ -1285,6 +1285,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .spinner{
                 font-size: 0.7em;
             }
+            
+            .nextcloud-picker-icon-disabled{
+                opacity: 0.4;
+            }
            
             @media only screen
             and (orientation: portrait)
@@ -1332,10 +1336,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 .wrapper{
                     display: grid;
-                    /*grid-template-areas: "header-l header-r" "content content";
-                    grid-template-rows: 50px auto;
-                    grid-template-columns: 50% 50%;*/
-                    grid-template-rows: auto 50px;
+                    grid-template-rows: inherit;
                     grid-template-columns: 100%;
                     grid-template-areas: "content" "footer";
                 }
@@ -1350,32 +1351,19 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 .nextcloud-intro{
-                    /*grid-column-start: header-l-start;
-                    grid-column-end: header-r-end;
-                    grid-row-start: header-l-start;
-                    grid-row-end: content-end;*/
-                    grid-area: content;
                     text-align: center;
+                    display: flex;
+                    flex-direction: column;
                 }
 
                 .nextcloud-footer{
-                    /*grid-area: header-r;*/
-                    /*position: fixed;*/
                     bottom: 0px;
                     width: 100%;
                     left: 0px;
-                    padding: 20px;
                 }
 
                 .mobile-hidden{
                     display: none;
-                }
-                
-                .spinner{
-                    font-size: 1.2em;
-                    position: absolute;
-                    bottom: -19px;
-                    left: -40px;
                 }
                 
                 .info-box{
@@ -1385,6 +1373,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 .nextcloud-footer-grid{
                     display: flex;
                     justify-content: center;
+                    flex-direction: column-reverse;
                 }
 
                 .select-button{
@@ -1481,7 +1470,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 
                         <div class="block info-box ${classMap({hidden: this.statusText === ""})}">
                             <dbp-mini-spinner class="spinner ${classMap({hidden: this.loading === false})}"></dbp-mini-spinner>
-                            <span class="mobile-hidden">${this.statusText}</span>
+                            <span>${this.statusText}</span>
                         </div>
                        
                     </div>
