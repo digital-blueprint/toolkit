@@ -157,11 +157,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         MicroModal.show(this._('#modal-picker'), {
             disableScroll: true,
             onClose: modal => { this.isDialogOpen = false; },
-            closeTrigger: 'data-custom-close',
         });
     }
 
-    closeDialog() {
+    closeDialog(e) {
         console.log("closeDialog");
         MicroModal.close(this._('#modal-picker'));
     }
@@ -194,7 +193,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
-                <div class="modal-overlay" tabindex="-1" data-custom-close>
+                <div class="modal-overlay" tabindex="-1">
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
                         <nav class="modal-nav">
                             <div title="${i18n.t('file-sink.nav-local')}"
@@ -211,7 +210,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                         </nav>
                             <div class="modal-header">
-                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" data-custom-close @click="${() => { this.closeDialog()}}">
+                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => { this.closeDialog()}}">
                                         <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
                                 </button> 
                                 <p class="modal-context"> ${this.context}</p>

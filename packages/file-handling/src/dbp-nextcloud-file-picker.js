@@ -725,10 +725,16 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this._("#replace-new-name").focus();
         }
         MicroModal.show(this._('#replace-modal'), {
+            disableScroll: true,
             onClose: modal => {
                 this.statusText = "";
                 this.loading = false;},
         });
+    }
+
+    closeDialog(e) {
+        console.log("closeDialog");
+        MicroModal.close(this._('#modal-picker'));
     }
 
     /**
@@ -1031,6 +1037,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 width: 100%;
                 height: 100%;
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title{
@@ -1274,6 +1281,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 top: 0px;
                 font-size: 1.4rem;
             }
+            
+            .spinner{
+                font-size: 0.7em;
+            }
            
             @media only screen
             and (orientation: portrait)
@@ -1349,17 +1360,28 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 .nextcloud-footer{
                     /*grid-area: header-r;*/
-                    position: fixed;
+                    /*position: fixed;*/
                     bottom: 0px;
                     width: 100%;
                     left: 0px;
                     padding: 20px;
                 }
 
-                .info-box{
+                .mobile-hidden{
                     display: none;
                 }
-
+                
+                .spinner{
+                    font-size: 1.2em;
+                    position: absolute;
+                    bottom: -19px;
+                    left: -40px;
+                }
+                
+                .info-box{
+                    position:relative;
+                }
+                
                 .nextcloud-footer-grid{
                     display: flex;
                     justify-content: center;
@@ -1458,8 +1480,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                
                                 
                         <div class="block info-box ${classMap({hidden: this.statusText === ""})}">
-                            <dbp-mini-spinner style="font-size: 0.7em" class="${classMap({hidden: this.loading === false})}"></dbp-mini-spinner>
-                            ${this.statusText}
+                            <dbp-mini-spinner class="spinner ${classMap({hidden: this.loading === false})}"></dbp-mini-spinner>
+                            <span class="mobile-hidden">${this.statusText}</span>
                         </div>
                        
                     </div>
@@ -1475,7 +1497,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <span style="word-break: break-all;">${this.replaceFilename}</span>
                                 ${i18n.t('nextcloud-file-picker.replace-title-2')}.
                             </h2>
-                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal"  data-micromodal-close>
+                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => {this.closeDialog()}}">
                                 <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
                             </button> 
                         </header>
