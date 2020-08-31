@@ -408,7 +408,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div title="Nextcloud"
                                  @click="${() => { this.activeSource = "nextcloud"; this.loadWebdavDirectory();}}"
-                                 class="${classMap({"active": this.activeSource === "nextcloud", hidden: !this.hasEnabledSource("nextcloud")})}">
+                                 class="${classMap({"active": this.activeSource === "nextcloud", hidden: !this.hasEnabledSource("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
@@ -439,7 +439,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                     </label>
                                 </div>
                             </div>
-                            <div class="source-main ${classMap({"hidden": this.activeSource !== "nextcloud"})}">
+                            <div class="source-main ${classMap({"hidden": this.activeSource !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-nextcloud-file-picker id="nextcloud-file-picker"
                                        class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
                                        ?disabled="${this.disabled}"

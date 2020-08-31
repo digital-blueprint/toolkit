@@ -204,7 +204,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div title="${this.nextcloudName}"
                                  @click="${() => { this.activeDestination = "nextcloud"; this.loadWebdavDirectory();}}"
-                                 class="${classMap({"active": this.activeDestination === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud")})}">
+                                 class="${classMap({"active": this.activeDestination === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
@@ -230,7 +230,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                     </button>
                                 </div>
                             </div>
-                            <div class="source-main ${classMap({"hidden": this.activeDestination !== "nextcloud"})}">
+                            <div class="source-main ${classMap({"hidden": this.activeDestination !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-nextcloud-file-picker id="nextcloud-file-picker"
                                                            class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
                                                            directories-only
