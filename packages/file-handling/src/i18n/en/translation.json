@@ -47,6 +47,7 @@
     "connect-nextcloud": "Connect {{name}}",
     "open-in-nextcloud": "Open in {{name}}",
     "no-data": "No data avaible in this folder.",
+    "no-data-type": "No data avaible in this folder.",
     "select-folder": "Upload in selected folder",
     "webdav-error": "Something went wrong",
     "add-folder-error": "The resource you tried to create already exists",

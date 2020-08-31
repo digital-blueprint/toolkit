@@ -113,7 +113,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 selectable: this.maxSelectedItems,
                 selectableRangeMode: "drag",
                 responsiveLayout: true,
-                placeholder:i18n.t('nextcloud-file-picker.no-data'),
+                placeholder:this.directoriesOnly ? i18n.t('nextcloud-file-picker.no-data') :  i18n.t('nextcloud-file-picker.no-data-type'),
                 resizableColumns:false,
                 columns: [
                     {title: "", field: "type", align:"center", headerSort:false, width:50, responsive:1, formatter: (cell, formatterParams, onRendered) => {
