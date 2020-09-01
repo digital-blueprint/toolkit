@@ -145,7 +145,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         }
 
         let dt = e.dataTransfer;
-        console.dir(dt);
+        // console.dir(dt);
         let files = dt.files;
 
         this.handleFiles(files);
@@ -171,7 +171,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      * @returns {Promise<void>}
      */
     async handleFiles(files) {
-        console.log('handleFiles: files.length = ' + files.length);
+        // console.log('handleFiles: files.length = ' + files.length);
         // this.dispatchEvent(new CustomEvent("dbp-file-source-selection-start",
         //     { "detail": {}, bubbles: true, composed: true }));
 
@@ -206,7 +206,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      */
     sendFileEvent(file) {
         MicroModal.close(this._('#modal-picker'));
-        console.log("close filesource modal.")
         const data = {"file": file};
         const event = new CustomEvent("dbp-file-source-file-selected", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
@@ -225,7 +224,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
         if (deny) {
             console.log(`mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`);
-
             return false;
         }
 
@@ -318,7 +316,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openDialog() {
-        console.log("openDialog");
         this.loadWebdavDirectory();
         MicroModal.show(this._('#modal-picker'), {
             disableScroll: true,
@@ -328,7 +325,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     closeDialog() {
-        console.log("closeDialog");
         this._('#nextcloud-file-picker').selectAllButton = true;
         MicroModal.close(this._('#modal-picker'));
     }

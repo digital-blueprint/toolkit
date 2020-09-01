@@ -68,9 +68,9 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         let fileNames = [];
 
         // download one file not compressed!
-        if (this.files.length === 1)
-        {
+        if (this.files.length === 1) {
             FileSaver.saveAs(this.files[0], this.files[0].filename);
+            this.closeDialog();
             return;
         }
 
@@ -92,6 +92,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
         // see: https://github.com/eligrey/FileSaver.js#readme
         FileSaver.saveAs(content, this.filename || "files.zip");
+
+        this.closeDialog();
     }
 
     update(changedProperties) {
@@ -123,14 +125,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     async uploadToNextcloud(directory) {
         let that = this;
         const element = that._('#nextcloud-file-picker');
-        console.log("davor");
         await element.uploadFiles(that.files, directory);
     }
 
     finishedFileUpload(event) {
         MicroModal.close(this._('#modal-picker'));
-        if (event.detail > 0)
-        {
+        if (event.detail > 0) {
             send({
                 "summary": i18n.t('file-sink.upload-success-title'),
                 "body": i18n.t('file-sink.upload-success-body', {name: this.nextcloudName, count: event.detail}),
@@ -152,7 +152,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openDialog() {
-        console.log("openDialog");
         this.loadWebdavDirectory();
         MicroModal.show(this._('#modal-picker'), {
             disableScroll: true,
@@ -161,7 +160,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     closeDialog(e) {
-        console.log("closeDialog");
         MicroModal.close(this._('#modal-picker'));
     }
 
