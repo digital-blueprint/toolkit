@@ -156,12 +156,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             const minutes = ("0" + timestamp.getMinutes()).slice(-2);
                             return date + "." + month + "." + year + " " + hours + ":" + minutes;
                         }},
-                    {title: "rights", field: "props.permissions"},
-                    {title: "acl", field: "props.acl-list.acl.acl-permissions"}
+                    {title: "rights", field: "props.permissions", visible: false},
+                    {title: "acl", field: "props.acl-list.acl.acl-permissions", visible: false}
                 ],
                 initialSort:[
-                    {column:"basename", dir:"asc", visible: false},
-                    {column:"type", dir:"asc", visible: false},
+                    {column:"basename", dir:"asc"},
+                    {column:"type", dir:"asc"},
 
                 ],
                 rowFormatter: (row) => {
