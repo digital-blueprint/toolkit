@@ -75,6 +75,7 @@
     "select-all": "Alle auswählen",
     "select-all-title": "Alle verfügbaren Dateien in diesem Ordner auswählen",
     "select-nothing": "Nichts auswählen",
-    "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren"
+    "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren",
+    "abort": "Vorgang abbrechen"
   }
 }

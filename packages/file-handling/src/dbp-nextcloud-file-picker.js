@@ -48,6 +48,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.forAll = false;
         this.uploadCount = 0;
         this.selectAllButton = true;
+        this.abortUploadButton = false;
+        this.abortUpload = false;
     }
 
     static get scopedElements() {
@@ -80,6 +82,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             activeDirectoryRights: { type: String, attribute: false },
             activeDirectoryACL: { type: String, attribute: false },
             selectAllButton: { type: Boolean, attribute: false },
+            abortUploadButton: { type: Boolean, attribute: false },
         };
     }
 
@@ -153,12 +156,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             const minutes = ("0" + timestamp.getMinutes()).slice(-2);
                             return date + "." + month + "." + year + " " + hours + ":" + minutes;
                         }},
-                    {title: "rights", field: "props.permissions", visible:false},
-                    {title: "acl", field: "props.acl-list.acl.acl-permissions", visible:false}
+                    {title: "rights", field: "props.permissions"},
+                    {title: "acl", field: "props.acl-list.acl.acl-permissions"}
                 ],
                 initialSort:[
-                    {column:"basename", dir:"asc"},
-                    {column:"type", dir:"asc"},
+                    {column:"basename", dir:"asc", visible: false},
+                    {column:"type", dir:"asc", visible: false},
 
                 ],
                 rowFormatter: (row) => {
@@ -242,6 +245,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
             */
 
+            // add folder on enter
+            this._('#new-folder').addEventListener('keydown', function(e) {
+                if (e.keyCode === 13) {
+                    that.addFolder();
+                }
+            });
         });
     }
 
@@ -342,10 +351,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     "           <nc:acl>" +
                     "               <nc:acl-permissions />" +
                     "           </nc:acl>" +
-                    "           </nc:acl-list>" +
+                    "        </nc:acl-list>" +
                     "  </d:prop>" +
                     "</d:propfind>"})
             .then(contents => {
+                console.log("------", contents);
                 this.loading = false;
                 this.statusText = "";
                 this.tabulatorTable.setData(contents.data);
@@ -474,6 +484,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
         this.fileList = files;
         this.forAll = false;
+        this.setRepeatForAllConflicts()
         this.uploadFile(directory);
     }
 
@@ -483,6 +494,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param directory
      */
     async uploadFile(directory) {
+        if (this.abortUpload) {
+            this.abortUpload = false;
+            this.abortUploadButton = false;
+            this.forAll = false;
+            this.statusText = "Vorgang wurde abgebrochen";
+            this._("#replace_mode_all").checked = false;
+            return;
+        }
         if (this.fileList.length !== 0) {
             let file = this.fileList[0];
             this.replaceFilename = file.name;
@@ -505,6 +524,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 if (this.forAll) {
                                     this.uploadFileObject = file;
                                     this.uploadFileDirectory = directory;
+                                    this.abortUploadButton = true;
                                     this.uploadFileAfterConflict();
                                 }
                                 else {
@@ -523,6 +543,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             const event = new CustomEvent("dbp-nextcloud-file-picker-file-uploaded-finished",
                 {  bubbles: true, composed: true , detail: this.uploadCount});
             this.uploadCount = 0;
+            this.abortUpload = false;
+            this.abortUploadButton = false;
             this.dispatchEvent(event);
 
         }
@@ -533,6 +555,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async uploadFileAfterConflict() {
+        if (this.abortUpload) {
+            this.abortUpload = false;
+            this.abortUploadButton = false;
+            this.forAll = false;
+            this.statusText = "Vorgang wurde abgebrochen";
+            this._("#replace_mode_all").checked = false;
+            return;
+        }
         let path = "";
         let overwrite = false;
         let file = this.uploadFileObject;
@@ -578,6 +608,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     if (this.forAll) {
                         this.uploadFileObject = file;
                         this.uploadFileDirectory = directory;
+                        this.abortUploadButton = true;
                         this.uploadFileAfterConflict();
                     }
                     else {
@@ -813,6 +844,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-close'));
             this._('#new-folder').focus();
         }
+
+        let that = this;
     }
 
     /**
@@ -1435,6 +1468,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                     @click="${() => { this.deselectAll(); }}">
                                     ${i18n.t('nextcloud-file-picker.select-nothing')}
                             </button>
+                           
                         </div>
                     </div>
                     <table id="directory-content-table" class="force-no-select"></table>
@@ -1442,11 +1476,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                  
                 <div class="nextcloud-footer ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-footer-grid">
-                        <button id="download-button" class="button select-button is-primary ${classMap({hidden: !this.directoriesOnly})}"
+                        <button id="download-button" class="button select-button is-primary ${classMap({hidden: (!this.directoriesOnly  || this.directoriesOnly && this.abortUploadButton && this.forAll)})}"
                                 @click="${() => { this.sendDirectory(this.tabulatorTable.getSelectedData()); }}">${this.folderIsSelected}</button>
                         <button class="button select-button is-primary ${classMap({hidden: this.directoriesOnly})}"
                                 @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
-                               
+                       <button class="button select-button ${classMap({hidden: (!this.abortUploadButton && !this.forAll)})}"
+                                    title="${i18n.t('nextcloud-file-picker.abort')}"  @click="${() => { this.abortUpload = true; }}">${i18n.t('nextcloud-file-picker.abort')}</button>
                                 
                         <div class="block info-box ${classMap({hidden: this.statusText === ""})}">
                             <dbp-mini-spinner class="spinner ${classMap({hidden: this.loading === false})}"></dbp-mini-spinner>

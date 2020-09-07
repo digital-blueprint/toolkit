@@ -68,14 +68,14 @@
     "replace-cancel-all": "Cancel all",
     "replace-mode-all": "Do this for the next conflicts",
     "something-went-wrong": "Something went wrong. Please reload.",
-    "upload-to": "Uploading to {{path}} ...",
+    "upload-to": "Uploading to {{- path}} ...",
     "readonly": "You are not allowed to uploade files in this directory.",
     "onlycreate": "You are only allowed to create new files in this directory.",
     "onlyedit": "You are only allowed to edit files in this directory.",
     "select-all": "Select all",
     "select-all-title": "Select all files in this folder",
     "select-nothing": "Select none",
-    "select-nothing-title": "Select no files"
-
+    "select-nothing-title": "Select no files",
+    "abort": "Cancel process"
   }
 }
