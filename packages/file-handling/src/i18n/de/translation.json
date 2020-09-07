@@ -76,6 +76,7 @@
     "select-all-title": "Alle verfügbaren Dateien in diesem Ordner auswählen",
     "select-nothing": "Nichts auswählen",
     "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren",
-    "abort": "Vorgang abbrechen"
+    "abort": "Vorgang abbrechen",
+    "abort-message": "Vorgang wurde abgebrochen."
   }
 }

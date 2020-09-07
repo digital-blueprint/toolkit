@@ -76,6 +76,7 @@
     "select-all-title": "Select all files in this folder",
     "select-nothing": "Select none",
     "select-nothing-title": "Select no files",
-    "abort": "Cancel process"
+    "abort": "Cancel process",
+    "abort-message": "The process was canceled."
   }
 }

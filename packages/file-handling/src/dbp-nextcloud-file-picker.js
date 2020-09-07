@@ -498,7 +498,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.abortUpload = false;
             this.abortUploadButton = false;
             this.forAll = false;
-            this.statusText = "Vorgang wurde abgebrochen";
+            this.statusText = i18n.t('nextcloud-file-picker.abort-message');
             this._("#replace_mode_all").checked = false;
             return;
         }
@@ -559,7 +559,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.abortUpload = false;
             this.abortUploadButton = false;
             this.forAll = false;
-            this.statusText = "Vorgang wurde abgebrochen";
+            this.statusText = i18n.t('nextcloud-file-picker.abort-message');
             this._("#replace_mode_all").checked = false;
             return;
         }
@@ -1276,6 +1276,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 animation: added 0.4s ease;
             }
             
+            #abortButton{
+                color: var(--dbp-danger-bg-color);
+            }
+            
+            #abortButton:hover{
+                color: white;
+            }
+            
             @keyframes added {
                 0% {
                     background-color: white;
@@ -1480,7 +1488,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 @click="${() => { this.sendDirectory(this.tabulatorTable.getSelectedData()); }}">${this.folderIsSelected}</button>
                         <button class="button select-button is-primary ${classMap({hidden: this.directoriesOnly})}"
                                 @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
-                       <button class="button select-button ${classMap({hidden: (!this.abortUploadButton && !this.forAll)})}"
+                       <button id="abortButton" class="button select-button ${classMap({hidden: (!this.abortUploadButton && !this.forAll)})}"
                                     title="${i18n.t('nextcloud-file-picker.abort')}"  @click="${() => { this.abortUpload = true; }}">${i18n.t('nextcloud-file-picker.abort')}</button>
                                 
                         <div class="block info-box ${classMap({hidden: this.statusText === ""})}">

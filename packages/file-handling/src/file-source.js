@@ -354,7 +354,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 width: auto;
                 margin: var(--FUMargin, 0px);
                 padding: var(--FUPadding, 20px);
-                /*flex-grow: 1;*/
+                flex-grow: 1;
                 height: 100%;
                 display: flex;
                 flex-direction: column;
