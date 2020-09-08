@@ -39,7 +39,7 @@ const ensureURL = function(urlOrPath) {
  */
 export class KeycloakWrapper extends EventTarget {
 
-    constructor(baseURL, realm, clientId, silentCheckSsoUri) {
+    constructor(baseURL, realm, clientId, silentCheckSsoUri, idpHint) {
         super();
 
         this._baseURL = baseURL;
@@ -48,6 +48,7 @@ export class KeycloakWrapper extends EventTarget {
         this._keycloak = null;
         this._initDone = false;
         this._silentCheckSsoUri = silentCheckSsoUri;
+        this._idpHint = idpHint;
     }
 
     _onChanged() {
@@ -105,6 +106,7 @@ export class KeycloakWrapper extends EventTarget {
     async _keycloakInit(options) {
         // https://gitlab.tugraz.at/dbp/apps/library/issues/41
         // retry the keycloak init in case it fails, maybe it helps :/
+        options['idpHint'] = 'eid-oidc';
         try {
             return await this._keycloak.init(options);
         } catch (e) {
@@ -120,10 +122,12 @@ export class KeycloakWrapper extends EventTarget {
 
         const options = {
             promiseType: 'native',
-            pkceMethod: 'S256'
+            pkceMethod: 'S256',
         };
 
+
         if (this._silentCheckSsoUri) {
+
             options['onLoad'] = 'check-sso';
             options['silentCheckSsoRedirectUri'] = ensureURL(this._silentCheckSsoUri);
 
@@ -136,6 +140,7 @@ export class KeycloakWrapper extends EventTarget {
         } else {
             await this._keycloakInit(options);
         }
+
     }
 
     /**
@@ -164,7 +169,9 @@ export class KeycloakWrapper extends EventTarget {
                 kcLocale: language,  // Keycloak < 9.0
                 locale: language,
                 scope: scope,
+                idpHint: this._idpHint,
             });
+            //options['idpHint'] = 'eid-oidc';
         }
     }
 

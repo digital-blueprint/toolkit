@@ -712,7 +712,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
         return html`
             <slot class="${slotClassMap}"></slot>
-            <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}" load-person try-login></dbp-auth-keycloak>
+            <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person try-login></dbp-auth-keycloak>
             <div class="${mainClassMap}">
             <div id="main">
                 <dbp-notification lang="${this.lang}"></dbp-notification>
