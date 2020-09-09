@@ -42,6 +42,7 @@ export class AuthKeycloak extends LitElement {
         this.clientId = null;
         this.silentCheckSsoRedirectUri = null;
         this.scope = null;
+        this.idpHint = '';
 
         // Create the events
         this.initEvent = new CustomEvent("dbp-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
@@ -174,6 +175,7 @@ export class AuthKeycloak extends LitElement {
             clientId: { type: String, attribute: 'client-id' },
             silentCheckSsoRedirectUri: { type: String, attribute: 'silent-check-sso-redirect-uri' },
             scope: { type: String },
+            idpHint: { type: String, attribute: 'idp-hint' },
         };
     }
 
@@ -188,7 +190,7 @@ export class AuthKeycloak extends LitElement {
             throw Error("client-id not set");
 
         this._bus = new EventBus();
-        this._kcwrapper = new KeycloakWrapper(this.keycloakUrl, this.realm, this.clientId, this.silentCheckSsoRedirectUri);
+        this._kcwrapper = new KeycloakWrapper(this.keycloakUrl, this.realm, this.clientId, this.silentCheckSsoRedirectUri, this.idpHint);
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 
         this._bus.subscribe('auth-login', () => {
