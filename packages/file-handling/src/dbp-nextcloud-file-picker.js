@@ -498,6 +498,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.abortUpload = false;
             this.abortUploadButton = false;
             this.forAll = false;
+            this.loading = false;
             this.statusText = i18n.t('nextcloud-file-picker.abort-message');
             this._("#replace_mode_all").checked = false;
             return;
@@ -559,6 +560,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.abortUpload = false;
             this.abortUploadButton = false;
             this.forAll = false;
+            this.loading = false;
             this.statusText = i18n.t('nextcloud-file-picker.abort-message');
             this._("#replace_mode_all").checked = false;
             return;
@@ -976,6 +978,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getTextUtilities()}
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
+            
+            .visible {
+                display: unset;
+            }
             
             .block {
                 margin-bottom: 10px;
@@ -1484,11 +1490,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                  
                 <div class="nextcloud-footer ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-footer-grid">
-                        <button id="download-button" class="button select-button is-primary ${classMap({hidden: (!this.directoriesOnly  || this.directoriesOnly && this.abortUploadButton && this.forAll)})}"
+                        <button id="download-button" class="button select-button is-primary ${classMap({hidden: ((!this.directoriesOnly)  || (this.directoriesOnly && this.abortUploadButton && this.forAll))})}"
                                 @click="${() => { this.sendDirectory(this.tabulatorTable.getSelectedData()); }}">${this.folderIsSelected}</button>
                         <button class="button select-button is-primary ${classMap({hidden: this.directoriesOnly})}"
                                 @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
-                       <button id="abortButton" class="button select-button ${classMap({hidden: (!this.abortUploadButton && !this.forAll)})}"
+                       <button id="abortButton" class="button select-button hidden ${classMap({"visible": (this.directoriesOnly && this.forAll && this.abortUploadButton)})}"
                                     title="${i18n.t('nextcloud-file-picker.abort')}"  @click="${() => { this.abortUpload = true; }}">${i18n.t('nextcloud-file-picker.abort')}</button>
                                 
                         <div class="block info-box ${classMap({hidden: this.statusText === ""})}">
