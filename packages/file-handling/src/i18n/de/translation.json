@@ -44,6 +44,7 @@
     "init-text-1": "Wählen Sie Ihre Dateien von {{name}}.",
     "init-text-2": "Sie müssen sich zuerst authentifizieren.",
     "auth-info": "Eine neue Seite wird geöffnet, um Ihr Konto zu verbinden.",
+    "auth-info-2": "Für diese Funktion ist ein TU Graz Bediensteten Account nötig!",
     "connect-nextcloud": "{{name}} verbinden",
     "open-in-nextcloud": "In {{name}} öffnen",
     "no-data": "In diesem Ordner befinden sich keine Dateien.",
