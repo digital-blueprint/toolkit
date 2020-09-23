@@ -1,5 +1,5 @@
 {
-  "name": "dbp-app-shell",
+  "name": "dbp-matomo",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
@@ -8,14 +8,12 @@
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^8.1.0",
-    "babel-eslint": "^10.1.0",
+    "@rollup/plugin-url": "^5.0.1",
     "chai": "^4.2.0",
-    "eslint": "^7.3.1",
-    "eslint-plugin-jsdoc": "^29.2.0",
-    "glob": "^7.1.6",
+    "i18next-scanner": "^2.10.2",
     "karma": "^5.1.0",
+    "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.0.0",
-    "karma-firefox-launcher": "^1.3.0",
     "karma-mocha": "^2.0.1",
     "mocha": "^8.0.1",
     "puppeteer": "^2.1.1",
@@ -23,29 +21,26 @@
     "rollup-plugin-consts": "^1.0.1",
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-emit-ejs": "^3.1.0",
-    "rollup-plugin-serve": "^1.0.1"
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-terser": "^6.1.0"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",
-    "i18next": "^19.5.3",
     "lit-element": "^2.3.1",
-    "lit-html": "^1.1.1",
-    "universal-router": "^9.0.1",
     "dbp-auth": "^1.0.0",
-    "dbp-common": "^1.0.0",
-    "dbp-language-select": "^1.0.0",
-    "dbp-notification": "^1.0.0",
-    "dbp-person-profile": "^1.0.0",
-    "dbp-matomo": "^1.0.0"
+    "dbp-common": "^1.0.0"
   },
   "scripts": {
-    "build": "npm run build-local",
+    "clean": "rm dist/*",
     "build-local": "rollup -c",
+    "build-dev": "rollup -c --environment BUILD:development",
+    "build-prod": "rollup -c --environment BUILD:production",
+    "build-demo": "rollup -c --environment BUILD:demo",
     "build-test": "rollup -c --environment BUILD:test",
-    "watch": "npm run watch-local",
-    "watch-local": "rollup -c --watch",
-    "test": "npm run build-test && karma start --singleRun",
-    "lint": "eslint ."
+    "i18next": "i18next-scanner",
+    "watch": "rollup -c --watch",
+    "watch-local": "yarn run watch",
+    "watch-dev": "rollup -c --watch --environment BUILD:development",
+    "test": "rollup -c --environment BUILD:test && karma start --singleRun"
   }
 }

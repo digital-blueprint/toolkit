@@ -15,6 +15,7 @@ import {BuildInfo} from './build-info.js';
 import {TUGrazLogo} from './tugraz-logo.js';
 import {send as notify} from 'dbp-common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
+import {MatomoElement} from "dbp-matomo/src/matomo";
 
 
 const i18n = createI18nInstance();
@@ -58,6 +59,10 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
 
+        this.matomoUrl = '';
+        this.matomoSiteId = -1;
+        this.matomo = null;
+
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
     }
 
@@ -70,6 +75,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
           'dbp-auth-menu-button': AuthMenuButton,
           'dbp-notification': Notification,
           'dbp-icon': Icon,
+          'dbp-matomo': MatomoElement,
         };
     }
 
@@ -222,6 +228,8 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             subtitle: { type: String, attribute: false },
             description: { type: String, attribute: false },
             _loginStatus: { type: Boolean, attribute: false },
+            matomoUrl: { type: String, attribute: "matomo-url" },
+            matomoSiteId: { type: Number, attribute: "matomo-site-id" },
         };
     }
 
@@ -248,6 +256,10 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         this.initRouter();
 
         this._bus.subscribe('auth-update', this._updateAuth);
+
+        this.updateComplete.then(()=> {
+            this.matomo = this.shadowRoot.querySelector(this.constructor.getScopedTagName('dbp-matomo'));
+        });
     }
 
     disconnectedCallback() {
@@ -638,6 +650,8 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             }
         }
 
+        this.track('renderActivity', activity.element);
+
         const elm = document.createElement(activity.element);
         this._onActivityAdded(elm);
         this._lastElm = elm;
@@ -656,6 +670,12 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
     _onActivityRemoved(element) {
         this._attrObserver.disconnect();
+    }
+
+    track(action, message) {
+        if (this.matomo !== null) {
+            this.matomo.track(action, message);
+        }
     }
 
     _renderActivity() {
@@ -713,6 +733,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         return html`
             <slot class="${slotClassMap}"></slot>
             <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person try-login></dbp-auth-keycloak>
+            <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}"></dbp-matomo>
             <div class="${mainClassMap}">
             <div id="main">
                 <dbp-notification lang="${this.lang}"></dbp-notification>
