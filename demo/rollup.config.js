@@ -43,7 +43,8 @@ let keyCloakServer = '';
 let keyCloakBaseURL = '';
 let keyCloakClientId = '';
 let pdfAsQualifiedlySigningServer = '';
-let matomoSiteId = 131;
+const matomoUrl = "https://analytics.tugraz.at/";
+const matomoSiteId = 131;
 let useTerser = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
@@ -185,6 +186,7 @@ export default {
             keyCloakClientId: keyCloakClientId,
             pdfAsQualifiedlySigningServer: pdfAsQualifiedlySigningServer,
             environment: build,
+            matomoUrl: matomoUrl,
             matomoSiteId: matomoSiteId,
             buildInfo: getBuildInfo()
           }

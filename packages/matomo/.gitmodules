@@ -1,0 +1,6 @@
+[submodule "vendor/auth"]
+	path = vendor/auth
+	url = git@gitlab.tugraz.at:dbp/web-components/Auth.git
+[submodule "vendor/common"]
+	path = vendor/common
+	url = git@gitlab.tugraz.at:dbp/web-components/Common.git

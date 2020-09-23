@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="module" src="dbp-matomo-demo.js"></script>
+</head>
+
+<body>
+
+<dbp-matomo-demo lang="de" matomo-url="<%= matomoUrl %>" matomo-site-id="<%= matomoSiteId %>"></dbp-matomo-demo>
+
+<p>version: <span style="color: white; background-color: black;"><%= buildInfo.info %></span></p>
+<p>Matomo: url: <%= matomoUrl %>, site-id: <%= matomoSiteId %></p>
+</body>
+</html>
