@@ -1,0 +1,17 @@
+{
+  "element": "dbp-file-handling-demo",
+  "module_src": "dbp-file-handling-demo.js",
+  "routing_name": "file-handling",
+  "name": {
+    "de": "File Handling",
+    "en": "File Handling"
+  },
+  "short_name": {
+    "de": "File Handling",
+    "en": "File Handling"
+  },
+  "description": {
+    "de": "Filepicker für File Upload und Download",
+    "en": "Filepicker for upload and download files"
+  }
+}
