@@ -55,6 +55,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         this.topic = {};
         this.basePath = '/';
         this.keycloakConfig = null;
+        this.noWelcomePage = false;
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
@@ -138,12 +139,14 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             }
         }
 
-        // Inject the welcome activity
-        routes.unshift("welcome");
-        metadata = Object.assign(metadata, {
-            "welcome": appWelcomeMeta,
-        });
-        customElements.get("dbp-app-shell-welcome").app = this;
+        if (!this.noWelcomePage) {
+            // Inject the welcome activity
+            routes.unshift("welcome");
+            metadata = Object.assign(metadata, {
+                "welcome": appWelcomeMeta,
+            });
+            customElements.get("dbp-app-shell-welcome").app = this;
+        }
 
         // this also triggers a rebuilding of the menu
         this.metadata = metadata;
@@ -230,6 +233,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             _loginStatus: { type: Boolean, attribute: false },
             matomoUrl: { type: String, attribute: "matomo-url" },
             matomoSiteId: { type: Number, attribute: "matomo-site-id" },
+            noWelcomePage: { type: Boolean, attribute: "no-welcome-page" }
         };
     }
 
@@ -732,7 +736,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
         return html`
             <slot class="${slotClassMap}"></slot>
-            <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person try-login></dbp-auth-keycloak>
+            <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
             <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}"></dbp-matomo>
             <div class="${mainClassMap}">
             <div id="main">
