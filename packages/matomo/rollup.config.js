@@ -64,7 +64,7 @@ export default (async () => {
             }),
             consts({
                 environment: build,
-                buildInfo: getBuildInfo(),
+                buildinfo: getBuildInfo(),
             }),
             emitEJS({
                 src: 'assets',
