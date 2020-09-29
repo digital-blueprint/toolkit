@@ -2,7 +2,7 @@ import {i18n} from './i18n.js';
 import {LitElement} from "lit-element";
 import DBPLitElement from 'dbp-common/dbp-lit-element';
 import {EventBus} from 'dbp-common';
-import buildInfo from 'consts:buildInfo';
+import buildInfo from 'consts:buildinfo';
 
 
 export class MatomoElement extends DBPLitElement {
