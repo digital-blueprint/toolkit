@@ -21,7 +21,7 @@ export class QrCodeScanner extends DBPLitElement {
         this.notSupported = false;
 
         this.scanIsOk = true;
-
+        this.showOutput = true;
     }
 
     static get scopedElements() {
@@ -40,7 +40,8 @@ export class QrCodeScanner extends DBPLitElement {
             askPermission: { type: Boolean, attribute: false },
             videoRunning: { type: Boolean, attribute: false },
             notSupported: { type: Boolean, attribute: false },
-            scanIsOk: { type: Boolean, attribute: true }
+            scanIsOk: { type: Boolean, attribute: true },
+            showOutput: { type: Boolean, attribute: true }
         };
     }
 
@@ -265,9 +266,9 @@ export class QrCodeScanner extends DBPLitElement {
                         <canvas id="canvas" hidden></canvas>
                         
                        
-                          <div id="output" hidden>
-                            <div id="outputMessage">No QR code detected.</div>
-                            <div hidden><b>Data:</b> <span id="outputData"></span></div>
+                        <div id="output" hidden class="${classMap({hidden: !this.showOutput})}">
+                           <div id="outputMessage">No QR code detected.</div>
+                           <div hidden><b>Data:</b> <span id="outputData"></span></div>
                         </div>
                     </div>
                     <div class="${classMap({hidden: !this.notSupported})}">
