@@ -21,8 +21,8 @@ export class QrCodeScanner extends DBPLitElement {
         this.notSupported = false;
         this.front = false;
 
-        this.scanIsOk = true;
-        this.showOutput = true;
+        this.scanIsOk = false;
+        this.showOutput = false;
     }
 
     static get scopedElements() {
@@ -42,8 +42,8 @@ export class QrCodeScanner extends DBPLitElement {
             videoRunning: { type: Boolean, attribute: false },
             notSupported: { type: Boolean, attribute: false },
             front: { type: Boolean, attribute: false },
-            scanIsOk: { type: Boolean, attribute: true },
-            showOutput: { type: Boolean, attribute: true }
+            scanIsOk: { type: Boolean, attribute: 'scan-is-ok' },
+            showOutput: { type: Boolean, attribute: 'show-output' }
         };
     }
 
