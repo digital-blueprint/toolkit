@@ -19,6 +19,7 @@ export class QrCodeScanner extends DBPLitElement {
         this.askPermission = false;
         this.videoRunning = false;
         this.notSupported = false;
+        this.front = false;
 
         this.scanIsOk = true;
         this.showOutput = true;
@@ -40,6 +41,7 @@ export class QrCodeScanner extends DBPLitElement {
             askPermission: { type: Boolean, attribute: false },
             videoRunning: { type: Boolean, attribute: false },
             notSupported: { type: Boolean, attribute: false },
+            front: { type: Boolean, attribute: false },
             scanIsOk: { type: Boolean, attribute: true },
             showOutput: { type: Boolean, attribute: true }
         };
@@ -51,17 +53,6 @@ export class QrCodeScanner extends DBPLitElement {
         const that = this;
 
         this.updateComplete.then(()=>{
-
-            // Check for support & cams
-           if (!!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-               navigator.mozGetUserMedia || navigator.msGetUserMedia) && !(!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices)) {
-               console.log("Everything works");
-               this.notSupported = false;
-           } else {
-               this.notSupported = true;
-               console.log("not supportet");
-           }
-
            let devices_map = new Map();
 
            const that = this;
@@ -73,10 +64,16 @@ export class QrCodeScanner extends DBPLitElement {
                             " id = " + device.deviceId);
                         if(device.kind === 'videoinput') {
                             // TODO Übersetzen
-                            devices_map.set(device.deviceId, device.label || 'camera ' + (devices_map.size + 1));
+                            let id = device.deviceId;
+                            if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                               devices_map.set('user', 'Frontcamera');
+                               devices_map.set('environment', 'Backcamera');
+                            } else {
+                                devices_map.set(device.deviceId ? device.deviceId : true, device.label || 'camera ' + (devices_map.size + 1));
+                            }
                         }
                     });
-                    if(devices_map.size < 1) {
+                    if (devices_map.size < 1) {
                         that.notSupported = true;
                     }
                     for (let [id, label] of devices_map)
@@ -86,6 +83,7 @@ export class QrCodeScanner extends DBPLitElement {
                         opt.text = label;
                         that._('#videoSource').appendChild(opt);
                     }
+                    console.log(devices_map);
                 })
                 .catch(function(err) {
                     console.log(err.name + ": " + err.message);
@@ -126,8 +124,10 @@ export class QrCodeScanner extends DBPLitElement {
         }
 
         const that = this;
-        // Use facingMode: environment to attemt to get the front camera on phones
-        navigator.mediaDevices.getUserMedia({ video: { deviceId: this._('#videoSource').val } }).then(function(stream) {
+        if ( this._('#videoSource').val === 'user') {
+            this.front = true;
+        }
+        navigator.mediaDevices.getUserMedia({ video:  { deviceId: this._('#videoSource').val, facingMode: (this.front ? "user" : "environment") } }).then(function(stream) {
             video.srcObject = stream;
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
@@ -204,15 +204,8 @@ export class QrCodeScanner extends DBPLitElement {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getSelect2CSS()}
+            ${commonStyles.getButtonCSS()}
             
-             body {
-              font-family: 'Ropa Sans', sans-serif;
-              color: #333;
-              max-width: 640px;
-              margin: 0 auto;
-              position: relative;
-            }
-
             #loadingMessage {
               text-align: center;
               padding: 40px;
@@ -256,11 +249,11 @@ export class QrCodeScanner extends DBPLitElement {
                     <div class="${classMap({hidden: this.notSupported})}">
                     
                         <div class="button-wrapper border">
+                            <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit()}">start scanning</button>
+                            <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}">stop scanning</button>
                             <span class="select">
                                 <select id="videoSource"></select>
                             </span>
-                            <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit()}">start scanning</button>
-                            <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}">stop scanning</button>
                         </div>
                         <div id="loadingMessage" class="${classMap({hidden: !this.askPermission})}">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
                         <canvas id="canvas" hidden></canvas>
