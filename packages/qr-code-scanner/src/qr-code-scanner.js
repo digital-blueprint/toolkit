@@ -16,6 +16,7 @@ export class QrCodeScanner extends DBPLitElement {
         super();
         this.lang = 'de';
 
+        this.askPermission = false;
         this.videoRunning = false;
         this.notSupported = false;
 
@@ -36,6 +37,7 @@ export class QrCodeScanner extends DBPLitElement {
     static get properties() {
         return {
             lang: { type: String },
+            askPermission: { type: Boolean, attribute: false },
             videoRunning: { type: Boolean, attribute: false },
             notSupported: { type: Boolean, attribute: false },
             scanIsOk: { type: Boolean, attribute: true }
@@ -96,6 +98,8 @@ export class QrCodeScanner extends DBPLitElement {
     }
 
     qrCodeScannerInit() {
+        this.askPermission = true;
+
         let video = document.createElement("video");
         let canvasElement = this._("#canvas");
         let canvas = canvasElement.getContext("2d");
@@ -104,6 +108,8 @@ export class QrCodeScanner extends DBPLitElement {
         let outputMessage = this._("#outputMessage");
         let outputData = this._("#outputData");
 
+
+        //TODO
         let color = this.scanIsOk ? getComputedStyle(document.documentElement)
                 .getPropertyValue('--dbp-success-bg-color') : getComputedStyle(document.documentElement)
             .getPropertyValue('--dbp-danger-bg-color');
@@ -134,7 +140,7 @@ export class QrCodeScanner extends DBPLitElement {
                     // Do something with the track such as using the Image Capture API.
                 })
 
-        });
+        }).catch((e) => { console.log(e); that.askPermission = true;});
 
         function tick() {
             if (that.videoRunning === false) {
@@ -181,6 +187,7 @@ export class QrCodeScanner extends DBPLitElement {
     }
 
     stopScanning() {
+        this.askPermission = false;
         this.videoRunning = false;
     }
     
@@ -195,6 +202,7 @@ export class QrCodeScanner extends DBPLitElement {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
+            ${commonStyles.getSelect2CSS()}
             
              body {
               font-family: 'Ropa Sans', sans-serif;
@@ -228,23 +236,15 @@ export class QrCodeScanner extends DBPLitElement {
             #noQRFound {
               text-align: center;
             }
+            
+            .border{
+                border-bottom: 1px solid black;            
+            }
         `;
     }
 
     //doku
     //demo
-
-    //check obs geht: function hasGetUserMedia() {
-    //   // Note: Opera builds are unprefixed.
-    //   return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-    //             navigator.mozGetUserMedia || navigator.msGetUserMedia);
-    // }
-    //
-    // if (hasGetUserMedia()) {
-    //   // Good to go!
-    // } else {
-    //   alert('getUserMedia() is not supported in your browser');
-    // }
 
     render() {
         return html`
@@ -253,12 +253,18 @@ export class QrCodeScanner extends DBPLitElement {
                     
                     
                     <div class="${classMap({hidden: this.notSupported})}">
-                        <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
-                        <button id="switch">On / Off</button>
+                    
+                        <div class="button-wrapper border">
+                            <span class="select">
+                                <select id="videoSource"></select>
+                            </span>
+                            <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit()}">start scanning</button>
+                            <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}">stop scanning</button>
+                        </div>
+                        <div id="loadingMessage" class="${classMap({hidden: !this.askPermission})}">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
                         <canvas id="canvas" hidden></canvas>
-                        <select id="videoSource"></select>
-                        <button class="start ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit()}">start scanning</button>
-                        <button class="stop ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}">stop scanning</button>
+                        
+                       
                           <div id="output" hidden>
                             <div id="outputMessage">No QR code detected.</div>
                             <div hidden><b>Data:</b> <span id="outputData"></span></div>

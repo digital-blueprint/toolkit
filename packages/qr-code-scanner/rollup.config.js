@@ -64,6 +64,7 @@ export default (async () => {
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
+                    {src: await getPackagePath('dbp-common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
                     {
                         src: await getPackagePath('qr-scanner', 'qr-scanner-worker.min.js'),
                         dest: 'dist/local/dbp-qr-scanner'
