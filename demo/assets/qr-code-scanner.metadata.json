@@ -1,0 +1,17 @@
+{
+  "element": "dbp-qr-code-scanner-demo-activity",
+  "module_src": "dbp-qr-code-scanner-demo-activity.js",
+  "routing_name": "qr-code-scanner",
+  "name": {
+    "de": "QR Code Scanner",
+    "en": "QR Code Scanner"
+  },
+  "short_name": {
+    "de": "QR Code Scanner",
+    "en": "QR Code Scanner"
+  },
+  "description": {
+    "de": "Scannt Qr Codes",
+    "en": "Scans Qr Codes"
+  }
+}
