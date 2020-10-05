@@ -67,12 +67,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     devices.forEach(function(device) {
                         console.log(device.kind + ": " + device.label +
                             " id = " + device.deviceId);
+                        that._("#error").innerText +=  " | id: " + device.deviceId + " label: " + device.label + " | ";
                         if(device.kind === 'videoinput') {
                             // TODO Übersetzen
                             let id = device.deviceId;
                             if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-                               devices_map.set('user', i18n.t('front-camera'));
-                               devices_map.set('environment', 'back-camera');
+                                devices_map.set('environment', i18n.t('back-camera'));
+                                devices_map.set('user', i18n.t('front-camera'));
                             } else {
                                 devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
                             }
@@ -306,7 +307,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                        </div>
                        <canvas id="canvas" hidden class="border"></canvas>
-                        
+                        <pre id="error"></pre>
                        
                         <div id="output" hidden class="border ${classMap({hidden: !this.showOutput})}">
                            <div id="outputMessage">${i18n.t('no-qr-detectede')}</div>
