@@ -62,39 +62,64 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
             const that = this;
 
-            navigator.mediaDevices.enumerateDevices()
-                .then(function(devices) {
-                    devices.forEach(function(device) {
-                        console.log(device.kind + ": " + device.label +
-                            " id = " + device.deviceId);
-                        that._("#error").innerText +=  " | id: " + device.deviceId + " label: " + device.label + " | ";
-                        if(device.kind === 'videoinput') {
-                            // TODO Übersetzen
-                            let id = device.deviceId;
-                            if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-                                devices_map.set('environment', i18n.t('back-camera'));
-                                devices_map.set('user', i18n.t('front-camera'));
-                            } else {
-                                devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
+
+            if (navigator.mediaDevices
+                && navigator.mediaDevices.enumerateDevices
+                && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.enumerateDevices()
+                    .then(function (devices) {
+                        devices.forEach(function (device) {
+                            console.log(device.kind + ": " + device.label +
+                                " id = " + device.deviceId);
+                            that._("#error").innerText += " | id: " + device.deviceId + " label: " + device.label + " | ";
+                            if (device.kind === 'videoinput') {
+                                let id = device.deviceId;
+                                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                                    devices_map.set('environment', i18n.t('back-camera'));
+                                    devices_map.set('user', i18n.t('front-camera'));
+                                } else {
+                                    devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
+                                }
                             }
+                        });
+                        if (devices_map.size < 1) {
+                            that.notSupported = true;
                         }
-                    });
-                    if (devices_map.size < 1) {
+                        for (let [id, label] of devices_map) {
+                            let opt = document.createElement("option");
+                            opt.value = id;
+                            opt.text = label;
+                            that._('#videoSource').appendChild(opt);
+                        }
+                        console.log(devices_map);
+                    })
+                    .catch(function (err) {
+                        console.log(err.name + ": " + err.message);
                         that.notSupported = true;
+                    });
+            } else if (MediaStreamTrack && MediaStreamTrack.getSources) {
+                this._log("MediaStreamTrack.getSources used");
+                const callback = sourceInfos => {
+                    const results = [];
+                    for (let i = 0; i !== sourceInfos.length; ++i) {
+                        const sourceInfo = sourceInfos[i];
+                        that._("#error").innerText += " * kind: " + sourceInfo.kind + " id: " + sourceInfo.id + " label: " + sourceInfo.label + " * ";
+                        if (sourceInfo.kind === 'video') {
+                            devices_map.set(sourceInfo.id ? sourceInfo.id : true, sourceInfo.label || i18n.t('camera') + (devices_map.size + 1))
+                            results.push({
+                                id: sourceInfo.id,
+                                label: sourceInfo.label
+                            });
+                        }
                     }
-                    for (let [id, label] of devices_map)
-                    {
-                        let opt = document.createElement("option");
-                        opt.value= id;
-                        opt.text = label;
-                        that._('#videoSource').appendChild(opt);
-                    }
-                    console.log(devices_map);
-                })
-                .catch(function(err) {
-                    console.log(err.name + ": " + err.message);
-                    that.notSupported = true;
-                });
+                    this._log(`${results.length} results found`);
+                    resolve(results);
+                }
+                MediaStreamTrack.getSources(callback);
+            }
+            else {
+                that.notSupported = true;
+            }
 
 
 
