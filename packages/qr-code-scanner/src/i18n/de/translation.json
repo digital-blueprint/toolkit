@@ -7,5 +7,7 @@
   "data": "Inhalt",
   "camera": "Kamera ",
   "front-camera": "Vordere Kamera",
-  "back-camera": "Rückseitige Kamera"
+  "back-camera": "Rückseitige Kamera",
+  "start-scan": "Scannen starten",
+  "stop-scan": "Scannen stoppen"
 }

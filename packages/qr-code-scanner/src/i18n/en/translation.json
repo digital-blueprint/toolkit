@@ -7,5 +7,7 @@
   "data": "Data",
   "camera": "Camera",
   "front-camera": "Frontcamera",
-  "back-camera": "Backcamera"
+  "back-camera": "Backcamera",
+  "start-scan": "Start scan",
+  "stop-scan": "Stop scan"
 }
