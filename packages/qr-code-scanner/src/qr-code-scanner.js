@@ -71,7 +71,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                         devices.forEach(function (device) {
                             console.log(device.kind + ": " + device.label +
                                 " id = " + device.deviceId);
-                            that._("#error").innerText += " | id: " + device.deviceId + " label: " + device.label + " | ";
+                            that._("#error").innerText += " | device.kind: " + device.kind + " id: " + device.deviceId + " label: " + device.label + " | ";
                             if (device.kind === 'videoinput') {
                                 let id = device.deviceId;
                                 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
