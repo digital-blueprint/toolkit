@@ -1,2 +1,11 @@
 {
+  "no-camera-access": "Zugriff auf Kamera nicht möglich (bitte stellen Sie sicher, dass eine Webcam aktiviert ist)",
+  "finished-scan": "Scannen erfolgreich abgeschlossen.",
+  "loading-video": "Video laden ...",
+  "no-qr-detected": "Kein QR-Code erkannt.",
+  "no-support": "Ihr Gerät unterstützt keine Videoaufnahmen,",
+  "data": "Inhalt",
+  "camera": "Kamera ",
+  "front-camera": "Vordere Kamera",
+  "back-camera": "Rückseitige Kamera"
 }

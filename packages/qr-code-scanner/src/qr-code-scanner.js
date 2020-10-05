@@ -1,17 +1,18 @@
 import {i18n} from './i18n';
-import {css, html} from 'lit-element';
+import {css, html, LitElement} from 'lit-element';
 import DBPLitElement from 'dbp-common/dbp-lit-element';
 import * as commonStyles from 'dbp-common/styles';
-import {Icon, MiniSpinner} from 'dbp-common';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import * as commonUtils from 'dbp-common/utils';
+import {Button, Icon, MiniSpinner} from 'dbp-common';
 import {classMap} from 'lit-html/directives/class-map.js';
-import * as commonUtils from "dbp-common/utils";
 import jsQR from "jsqr";
 
 
 /**
  * Notification web component
  */
-export class QrCodeScanner extends DBPLitElement {
+export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -20,9 +21,11 @@ export class QrCodeScanner extends DBPLitElement {
         this.videoRunning = false;
         this.notSupported = false;
         this.front = false;
+        this.loading = false;
 
         this.scanIsOk = false;
         this.showOutput = false;
+        this.stopScan = false;
     }
 
     static get scopedElements() {
@@ -42,8 +45,10 @@ export class QrCodeScanner extends DBPLitElement {
             videoRunning: { type: Boolean, attribute: false },
             notSupported: { type: Boolean, attribute: false },
             front: { type: Boolean, attribute: false },
+            loading: { type: Boolean, attribute: false },
             scanIsOk: { type: Boolean, attribute: 'scan-is-ok' },
-            showOutput: { type: Boolean, attribute: 'show-output' }
+            showOutput: { type: Boolean, attribute: 'show-output' },
+            stopScan: { type: Boolean, attribute: 'stop-scan' }
         };
     }
 
@@ -53,9 +58,9 @@ export class QrCodeScanner extends DBPLitElement {
         const that = this;
 
         this.updateComplete.then(()=>{
-           let devices_map = new Map();
+            let devices_map = new Map();
 
-           const that = this;
+            const that = this;
 
             navigator.mediaDevices.enumerateDevices()
                 .then(function(devices) {
@@ -66,10 +71,10 @@ export class QrCodeScanner extends DBPLitElement {
                             // TODO Übersetzen
                             let id = device.deviceId;
                             if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-                               devices_map.set('user', 'Frontcamera');
-                               devices_map.set('environment', 'Backcamera');
+                               devices_map.set('user', i18n.t('front-camera'));
+                               devices_map.set('environment', 'back-camera');
                             } else {
-                                devices_map.set(device.deviceId ? device.deviceId : true, device.label || 'camera ' + (devices_map.size + 1));
+                                devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
                             }
                         }
                     });
@@ -96,6 +101,11 @@ export class QrCodeScanner extends DBPLitElement {
         });
     }
 
+    getLoadingMsg(string) {
+        let loadingMsg = html `<dbp-mini-spinner class="spinner"></dbp-mini-spinner> ${i18n.t(string)}`;
+        return loadingMsg;
+    }
+
     qrCodeScannerInit() {
         this.askPermission = true;
 
@@ -103,10 +113,10 @@ export class QrCodeScanner extends DBPLitElement {
         let canvasElement = this._("#canvas");
         let canvas = canvasElement.getContext("2d");
         let loadingMessage = this._("#loadingMessage");
+        let loadingMessageInner = this._(".loadingMsg");
         let outputContainer = this._("#output");
         let outputMessage = this._("#outputMessage");
         let outputData = this._("#outputData");
-
 
         //TODO
         let color = this.scanIsOk ? getComputedStyle(document.documentElement)
@@ -124,23 +134,19 @@ export class QrCodeScanner extends DBPLitElement {
         }
 
         const that = this;
-        if ( this._('#videoSource').val === 'user') {
-            this.front = true;
+        let constraint = null;
+        if ( this._('#videoSource').val === 'user' ) {
+            constraint = {facingMode:  {exact: ("user")}};
         }
-        navigator.mediaDevices.getUserMedia({ video:  { deviceId: this._('#videoSource').val, facingMode: (this.front ? "user" : "environment") } }).then(function(stream) {
+        else if ( this._('#videoSource').val === 'environment' ) {
+            constraint = {facingMode:  {exact: ("environment")}};
+        }
+        navigator.mediaDevices.getUserMedia({ video:  { deviceId: this._('#videoSource').val, constraint}}).then(function(stream) {
             video.srcObject = stream;
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
             that.videoRunning = true;
             requestAnimationFrame(tick);
-
-            const track = stream.getVideoTracks()[0];
-            track.applyConstraints(constraints)
-                .then(() => {
-                    advanced : [{ zoom: 3 }]
-                    // Do something with the track such as using the Image Capture API.
-                })
-
         }).catch((e) => { console.log(e); that.askPermission = true;});
 
         function tick() {
@@ -152,13 +158,25 @@ export class QrCodeScanner extends DBPLitElement {
                     canvasElement.hidden = true;
                     outputContainer.hidden = true;
                 });
-                loadingMessage.innerText = "🎥 Unable to access video stream (please make sure you have a webcam enabled)";
+                loadingMessageInner.innerText = i18n.t('no-camera-access');
                 return;
             }
-
-            loadingMessage.innerText = "⌛ Loading video..."
+            if (that.stopScan) {
+                video.srcObject.getTracks().forEach(function(track) {
+                    track.stop();
+                    console.log("stop early");
+                    loadingMessage.hidden = false;
+                    canvasElement.hidden = true;
+                    outputContainer.hidden = true;
+                });
+                loadingMessageInner.innerText = i18n.t('finished-scan');
+                return;
+            }
+            that.loading = true;
+            loadingMessageInner.innerText = i18n.t('loading-video');
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 loadingMessage.hidden = true;
+                that.loading = false;
                 canvasElement.hidden = false;
                 outputContainer.hidden = false;
 
@@ -207,32 +225,58 @@ export class QrCodeScanner extends DBPLitElement {
             ${commonStyles.getButtonCSS()}
             
             #loadingMessage {
-              text-align: center;
-              padding: 40px;
+                text-align: center;
+                padding: 40px;
+            }
+            
+            .wrapper-msg {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: baseline;
             }
         
             #canvas {
-              width: 100%;
+                width: 100%;
             }
         
             #output {
-              margin-top: 20px;
-              background: #eee;
-              padding: 10px;
-              padding-bottom: 0;
+                  margin-top: 20px;
+                  background: #eee;
+                  padding: 10px;
+                  padding-bottom: 0;
             }
         
             #output div {
-              padding-bottom: 10px;
-              word-wrap: break-word;
+                  padding-bottom: 10px;
+                  word-wrap: break-word;
             }
         
             #noQRFound {
-              text-align: center;
+                text-align: center;
+            }
+            
+            .spinner{
+                margin-right: 10px;
+                font-size: 0.7em;
+            }
+            
+            #videoSource{
+                padding-bottom: calc(0.375em - 2px);
+                padding-left: 0.75em;
+                padding-right: 1.75em;
+                padding-top: calc(0.375em - 2px);
+                background-position-x: calc(100% - 0.4rem);
+                font-size: inherit;
+            }
+            select:not(.select)#videoSource{
+                background-size: 15%;
             }
             
             .border{
-                border-bottom: 1px solid black;            
+                margin-top: 2rem;
+                padding-top: 2rem;
+                border-top: 1px solid black;
             }
         `;
     }
@@ -245,27 +289,32 @@ export class QrCodeScanner extends DBPLitElement {
             <div class="columns">
                 <div class="column" id="qr">
                     
-                    
                     <div class="${classMap({hidden: this.notSupported})}">
                     
-                        <div class="button-wrapper border">
+                        <div class="button-wrapper">
                             <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit()}">start scanning</button>
                             <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}">stop scanning</button>
-                            <span class="select">
-                                <select id="videoSource"></select>
-                            </span>
+                            
+                            <select id="videoSource"></select>
+
                         </div>
-                        <div id="loadingMessage" class="${classMap({hidden: !this.askPermission})}">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
-                        <canvas id="canvas" hidden></canvas>
+                       
+                        <div id="loadingMessage" class="border ${classMap({hidden: !this.askPermission})}">
+                            <div class="wrapper-msg">
+                                <dbp-mini-spinner class="spinner ${classMap({hidden: !this.loading})}"></dbp-mini-spinner>
+                                <div class="loadingMsg">${i18n.t('no-camera-access')}</div>
+                            </div>
+                       </div>
+                       <canvas id="canvas" hidden class="border"></canvas>
                         
                        
-                        <div id="output" hidden class="${classMap({hidden: !this.showOutput})}">
-                           <div id="outputMessage">No QR code detected.</div>
-                           <div hidden><b>Data:</b> <span id="outputData"></span></div>
+                        <div id="output" hidden class="border ${classMap({hidden: !this.showOutput})}">
+                           <div id="outputMessage">${i18n.t('no-qr-detectede')}</div>
+                           <div hidden><b>${i18n.t('data')}:</b> <span id="outputData"></span></div>
                         </div>
                     </div>
-                    <div class="${classMap({hidden: !this.notSupported})}">
-                        Ihr device unterstützt keine video aufnahmen
+                    <div class="border ${classMap({hidden: !this.notSupported})}">
+                        ${i18n.t('no-support')}
                     </div>
                 </div>
             </div>
