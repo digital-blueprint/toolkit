@@ -28,7 +28,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.stopScan = false;
 
         this.activeCamera = '';
-
+        this.sourceChanged = false;
     }
 
     static get scopedElements() {
@@ -53,6 +53,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             showOutput: { type: Boolean, attribute: 'show-output' },
             stopScan: { type: Boolean, attribute: 'stop-scan' },
             activeCamera: { type: String, attribute: false },
+            sourceChanged: { type: Boolean, attribute: false }
         };
     }
 
@@ -189,14 +190,15 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }).catch((e) => { console.log(e); that.askPermission = true;});
 
         function tick() {
-           /* if (videoId !== that._('#videoSource').options[that._('#videoSource').selectedIndex].value) {
+           if (that.sourceChanged) {
                 video.srcObject.getTracks().forEach(function(track) {
                     track.stop();
                     console.log("Changed Media");
                 });
+                that.sourceChanged = false;
                 that.qrCodeScannerInit();
                 return;
-            }*/
+            }
             if (that.videoRunning === false) {
                 video.srcObject.getTracks().forEach(function(track) {
                     track.stop();
@@ -252,6 +254,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
+    updateSource(e) {
+        this.activeCamera = e.srcElement.value;
+        this.sourceChanged = true;
+    }
+
     stopScanning() {
         this.askPermission = false;
         this.videoRunning = false;
@@ -285,6 +292,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         
             #canvas {
                 width: 100%;
+                margin-top: 2rem;
             }
         
             #output {
@@ -317,7 +325,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 font-size: inherit;
             }
             select:not(.select)#videoSource{
-                background-size: 15%;
+                background-size: auto 45%;
             }
             
             .border{
@@ -343,20 +351,20 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                             <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit(this)}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
                             <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}" title="${i18n.t('stop-scan')}">${i18n.t('stop-scan')}</button>
                             
-                            <select id="videoSource" class="button"></select>
+                            <select id="videoSource" class="button" @change=${this.updateSource}></select>
 
                         </div>
                        
-                        <div id="loadingMessage" class="border ${classMap({hidden: !this.askPermission})}">
+                        <div id="loadingMessage" class=" ${classMap({hidden: !this.askPermission})}">
                             <div class="wrapper-msg">
                                 <dbp-mini-spinner class="spinner ${classMap({hidden: !this.loading})}"></dbp-mini-spinner>
                                 <div class="loadingMsg">${i18n.t('no-camera-access')}</div>
                             </div>
                        </div>
-                       <canvas id="canvas" hidden class="border"></canvas>
+                       <canvas id="canvas" hidden class=""></canvas>
                         <pre id="error"></pre>
                        
-                        <div id="output" hidden class="border ${classMap({hidden: !this.showOutput})}">
+                        <div id="output" hidden class=" ${classMap({hidden: !this.showOutput})}">
                            <div id="outputMessage">${i18n.t('no-qr-detectede')}</div>
                            <div hidden><b>${i18n.t('data')}:</b> <span id="outputData"></span></div>
                         </div>
