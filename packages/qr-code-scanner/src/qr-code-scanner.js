@@ -71,7 +71,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                         devices.forEach(function (device) {
                             console.log(device.kind + ": " + device.label +
                                 " id = " + device.deviceId);
-                            that._("#error").innerText += " | device.kind: " + device.kind + " id: " + device.deviceId + " label: " + device.label + " | ";
+                            // that._("#error").innerText += " | device.kind: " + device.kind + " id: " + device.deviceId + " label: " + device.label + " | ";
                             if (device.kind === 'videoinput') {
                                 let id = device.deviceId;
                                 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -107,7 +107,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     const results = [];
                     for (let i = 0; i !== sourceInfos.length; ++i) {
                         const sourceInfo = sourceInfos[i];
-                        that._("#error").innerText += " * kind: " + sourceInfo.kind + " id: " + sourceInfo.id + " label: " + sourceInfo.label + " * ";
+                        // that._("#error").innerText += " * kind: " + sourceInfo.kind + " id: " + sourceInfo.id + " label: " + sourceInfo.label + " * ";
                         if (sourceInfo.kind === 'video') {
                             devices_map.set(sourceInfo.id ? sourceInfo.id : true, sourceInfo.label || i18n.t('camera') + (devices_map.size + 1))
                             results.push({
@@ -164,11 +164,12 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
 
         const that = this;
-        let constraint = { video:  { deviceId: this._('#videoSource').val }};
+        let constraint = { video:  { deviceId: this._('#videoSource').options[this._('#videoSource').selectedIndex].value } };
 
-        if ( (this._('#videoSource').val === 'environment') || (this._('#videoSource').val === 'user') ) {
-            constraint =  { video: {facingMode:  "environment"}};
+        if ( (this._('#videoSource').options[this._('#videoSource').selectedIndex].value === 'environment') || (this._('#videoSource').options[this._('#videoSource').selectedIndex].value === 'user') ) {
+            constraint =  { video: { facingMode: "environment" } };
         }
+        that._("#error").innerText += " constraint: " + JSON.stringify(constraint);
 
         navigator.mediaDevices.getUserMedia(constraint).then(function(stream) {
             video.srcObject = stream;
