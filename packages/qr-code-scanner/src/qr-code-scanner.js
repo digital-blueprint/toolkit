@@ -159,17 +159,14 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
 
         const that = this;
-        let constraint = { video:  { deviceId: this._('#videoSource').options[this._('#videoSource').selectedIndex].value } };
+        let videoId = this._('#videoSource').options[this._('#videoSource').selectedIndex].value;
+        let constraint = { video:  { deviceId: videoId } };
 
-        if ( (this._('#videoSource').options[this._('#videoSource').selectedIndex].value === 'environment') ) {
+        if ( (videoId === 'environment') ) {
             constraint =  { video: { facingMode: "environment" } };
-        } else if ( this._('#videoSource').options[this._('#videoSource').selectedIndex].value === 'user' ) {
+        } else if ( videoId === 'user' ) {
             constraint =  { video: { facingMode: "user" } };
         }
-
-
-
-
 
         navigator.mediaDevices.getUserMedia(constraint).then(function(stream) {
             video.srcObject = stream;
@@ -180,6 +177,14 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }).catch((e) => { console.log(e); that.askPermission = true;});
 
         function tick() {
+            if (videoId !== that._('#videoSource').options[that._('#videoSource').selectedIndex].value) {
+                video.srcObject.getTracks().forEach(function(track) {
+                    track.stop();
+                    console.log("Changed Media");
+                });
+                that.qrCodeScannerInit();
+                return;
+            }
             if (that.videoRunning === false) {
                 video.srcObject.getTracks().forEach(function(track) {
                     track.stop();
@@ -321,11 +326,12 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     
                     <div class="${classMap({hidden: this.notSupported})}">
                     
+                        
                         <div class="button-wrapper">
                             <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit()}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
                             <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}" title="${i18n.t('stop-scan')}">${i18n.t('stop-scan')}</button>
                             
-                            <select id="videoSource"></select>
+                            <select id="videoSource" class="button"></select>
 
                         </div>
                        
