@@ -102,12 +102,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                         that._('#videoSource').appendChild(opt);
                     }
                     console.log(devices_map);
-
                     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                         that.activeCamera = 'environment';
                     } else {
                         that.activeCamera = Array.from(devices_map)[0][0];
                     }
+                    console.log(that.activeCamera);
+
 
                 })
                 .catch(function (err) {
@@ -184,12 +185,15 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let videoId = this.activeCamera;
         let constraint = { video:  { deviceId: videoId } };
 
-        if ( (videoId === 'environment') ) {
+        if ( (videoId === 'environment' || videoId === '') ) {
+            console.log("vid:", videoId);
             constraint =  { video: { facingMode: "environment" } };
         } else if ( videoId === 'user' ) {
+            console.log("vid2:", videoId);
             constraint =  { video: { facingMode: "user" } };
         }
 
+        console.log(constraint);
         const that = this;
 
         navigator.mediaDevices.getUserMedia(constraint).then(function(stream) {
