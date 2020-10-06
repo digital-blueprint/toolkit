@@ -102,7 +102,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                         that._('#videoSource').appendChild(opt);
                     }
                     console.log(devices_map);
-                    that.activeCamera = devices_map.keys().next().value;
+                    that.activeCamera = Array.from(devices_map)[0][0];
+
+
                 })
                 .catch(function (err) {
                     console.log(err.name + ": " + err.message);
@@ -124,7 +126,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     }
                 }
                 this._log(`${results.length} results found`);
-                that.activeCamera = devices_map.keys().next().value;
+                that.activeCamera =Array.from(devices_map)[0][0];
                 resolve(results);
             }
             MediaStreamTrack.getSources(callback);
