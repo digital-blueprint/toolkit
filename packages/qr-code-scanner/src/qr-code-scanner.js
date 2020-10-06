@@ -164,13 +164,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
 
         const that = this;
-        let constraint = null;
+        let constraint = { video:  { deviceId: this._('#videoSource').val }};
 
         if ( (this._('#videoSource').val === 'environment') || (this._('#videoSource').val === 'user') ) {
-            constraint = {facingMode:  {exact: ("environment")}};
+            constraint =  { video: {facingMode:  "environment"}};
         }
 
-        navigator.mediaDevices.getUserMedia({ video:  { deviceId: this._('#videoSource').val, constraint}}).then(function(stream) {
+        navigator.mediaDevices.getUserMedia(constraint).then(function(stream) {
             video.srcObject = stream;
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
