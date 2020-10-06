@@ -26,6 +26,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.scanIsOk = false;
         this.showOutput = false;
         this.stopScan = false;
+
+        this.activeCamera = '';
+
     }
 
     static get scopedElements() {
@@ -48,7 +51,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             loading: { type: Boolean, attribute: false },
             scanIsOk: { type: Boolean, attribute: 'scan-is-ok' },
             showOutput: { type: Boolean, attribute: 'show-output' },
-            stopScan: { type: Boolean, attribute: 'stop-scan' }
+            stopScan: { type: Boolean, attribute: 'stop-scan' },
+            activeCamera: { type: String, attribute: false },
         };
     }
 
@@ -58,72 +62,76 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         const that = this;
 
         this.updateComplete.then(()=>{
-            let devices_map = new Map();
-
-            const that = this;
-
-            if (navigator.mediaDevices
-                && navigator.mediaDevices.enumerateDevices
-                && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.enumerateDevices()
-                    .then(function (devices) {
-                        devices.forEach(function (device) {
-                            console.log(device.kind + ": " + device.label +
-                                " id = " + device.deviceId);
-                            // that._("#error").innerText += " | device.kind: " + device.kind + " id: " + device.deviceId + " label: " + device.label + " | ";
-                            if (device.kind === 'videoinput') {
-                                let id = device.deviceId;
-                                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                                    devices_map.set('environment', i18n.t('back-camera'));
-                                    devices_map.set('user', i18n.t('front-camera'));
-                                } else {
-                                    devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
-                                }
-                            }
-                        });
-                        if (devices_map.size < 1) {
-                            that.notSupported = true;
-                        }
-                        for (let [id, label] of devices_map) {
-                            let opt = document.createElement("option");
-                            opt.value = id;
-                            opt.text = label;
-                            that._('#videoSource').appendChild(opt);
-                        }
-                        console.log(devices_map);
-                    })
-                    .catch(function (err) {
-                        console.log(err.name + ": " + err.message);
-                        that.notSupported = true;
-                    });
-            } else if (MediaStreamTrack && MediaStreamTrack.getSources) {
-                this._log("MediaStreamTrack.getSources used");
-                const callback = sourceInfos => {
-                    const results = [];
-                    for (let i = 0; i !== sourceInfos.length; ++i) {
-                        const sourceInfo = sourceInfos[i];
-                        // that._("#error").innerText += " * kind: " + sourceInfo.kind + " id: " + sourceInfo.id + " label: " + sourceInfo.label + " * ";
-                        if (sourceInfo.kind === 'video') {
-                            devices_map.set(sourceInfo.id ? sourceInfo.id : true, sourceInfo.label || i18n.t('camera') + (devices_map.size + 1))
-                            results.push({
-                                id: sourceInfo.id,
-                                label: sourceInfo.label
-                            });
-                        }
-                    }
-                    this._log(`${results.length} results found`);
-                    resolve(results);
-                }
-                MediaStreamTrack.getSources(callback);
+            this.checkSupport();
+            if (!this.stopScan) {
+                this.qrCodeScannerInit();
             }
-            else {
-                that.notSupported = true;
-            }
-
-
-
-
         });
+    }
+
+    checkSupport() {
+        const that = this;
+        let devices_map = new Map();
+        if (navigator.mediaDevices
+            && navigator.mediaDevices.enumerateDevices
+            && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.enumerateDevices()
+                .then(function (devices) {
+                    devices.forEach(function (device) {
+                        console.log(device.kind + ": " + device.label +
+                            " id = " + device.deviceId);
+                        // that._("#error").innerText += " | device.kind: " + device.kind + " id: " + device.deviceId + " label: " + device.label + " | ";
+                        if (device.kind === 'videoinput') {
+                            let id = device.deviceId;
+                            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                                devices_map.set('environment', i18n.t('back-camera'));
+                                devices_map.set('user', i18n.t('front-camera'));
+                            } else {
+                                devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
+                            }
+                        }
+                    });
+                    if (devices_map.size < 1) {
+                        that.notSupported = true;
+                    }
+                    for (let [id, label] of devices_map) {
+                        let opt = document.createElement("option");
+                        opt.value = id;
+                        opt.text = label;
+                        that._('#videoSource').appendChild(opt);
+                    }
+                    console.log(devices_map);
+                    that.activeCamera = devices_map.keys().next().value;
+                })
+                .catch(function (err) {
+                    console.log(err.name + ": " + err.message);
+                    that.notSupported = true;
+                });
+        } else if (MediaStreamTrack && MediaStreamTrack.getSources) {
+            this._log("MediaStreamTrack.getSources used");
+            const callback = sourceInfos => {
+                const results = [];
+                for (let i = 0; i !== sourceInfos.length; ++i) {
+                    const sourceInfo = sourceInfos[i];
+                    // that._("#error").innerText += " * kind: " + sourceInfo.kind + " id: " + sourceInfo.id + " label: " + sourceInfo.label + " * ";
+                    if (sourceInfo.kind === 'video') {
+                        devices_map.set(sourceInfo.id ? sourceInfo.id : true, sourceInfo.label || i18n.t('camera') + (devices_map.size + 1))
+                        results.push({
+                            id: sourceInfo.id,
+                            label: sourceInfo.label
+                        });
+                    }
+                }
+                this._log(`${results.length} results found`);
+                that.activeCamera = devices_map.keys().next().value;
+                resolve(results);
+            }
+            MediaStreamTrack.getSources(callback);
+        }
+        else {
+            that.notSupported = true;
+        }
+
     }
 
     getLoadingMsg(string) {
@@ -132,6 +140,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     }
 
     qrCodeScannerInit() {
+
+        this.stopScan = false;
         this.askPermission = true;
 
         let video = document.createElement("video");
@@ -158,8 +168,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             canvas.stroke();
         }
 
-        const that = this;
-        let videoId = this._('#videoSource').options[this._('#videoSource').selectedIndex].value;
+        console.log(this.activeCamera);
+        let videoId = this.activeCamera;
         let constraint = { video:  { deviceId: videoId } };
 
         if ( (videoId === 'environment') ) {
@@ -167,6 +177,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         } else if ( videoId === 'user' ) {
             constraint =  { video: { facingMode: "user" } };
         }
+
+        const that = this;
 
         navigator.mediaDevices.getUserMedia(constraint).then(function(stream) {
             video.srcObject = stream;
@@ -177,14 +189,14 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }).catch((e) => { console.log(e); that.askPermission = true;});
 
         function tick() {
-            if (videoId !== that._('#videoSource').options[that._('#videoSource').selectedIndex].value) {
+           /* if (videoId !== that._('#videoSource').options[that._('#videoSource').selectedIndex].value) {
                 video.srcObject.getTracks().forEach(function(track) {
                     track.stop();
                     console.log("Changed Media");
                 });
                 that.qrCodeScannerInit();
                 return;
-            }
+            }*/
             if (that.videoRunning === false) {
                 video.srcObject.getTracks().forEach(function(track) {
                     track.stop();
@@ -328,7 +340,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     
                         
                         <div class="button-wrapper">
-                            <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit()}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
+                            <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit(this)}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
                             <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}" title="${i18n.t('stop-scan')}">${i18n.t('stop-scan')}</button>
                             
                             <select id="videoSource" class="button"></select>
