@@ -376,7 +376,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                         <pre id="error"></pre>
                        
                         <div id="output" hidden class=" ${classMap({hidden: !this.showOutput})}">
-                           <div id="outputMessage">${i18n.t('no-qr-detectede')}</div>
+                           <div id="outputMessage">${i18n.t('no-qr-detected')}</div>
                            <div hidden><b>${i18n.t('data')}:</b> <span id="outputData"></span></div>
                         </div>
                     </div>
