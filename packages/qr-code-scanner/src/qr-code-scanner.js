@@ -157,6 +157,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.stopScan = false;
         this.askPermission = true;
 
+
         let video = document.createElement("video");
         let canvasElement = this._("#canvas");
         let canvas = canvasElement.getContext("2d");
@@ -166,11 +167,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let outputMessage = this._("#outputMessage");
         let outputData = this._("#outputData");
 
-        //TODO
-        let color = this.scanIsOk ? getComputedStyle(document.documentElement)
-                .getPropertyValue('--dbp-success-bg-color') : getComputedStyle(document.documentElement)
+        let color = this.scanIsOk ? getComputedStyle(this)
+                .getPropertyValue('--dbp-success-bg-color') : getComputedStyle(this)
             .getPropertyValue('--dbp-danger-bg-color');
-
 
         function drawLine(begin, end, color) {
             canvas.beginPath();
@@ -252,10 +251,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     inversionAttempts: "dontInvert",
                 });
                 if (code) {
-                    drawLine(code.location.topLeftCorner, code.location.topRightCorner, that.scanIsOk ? 'green' : 'red');
-                    drawLine(code.location.topRightCorner, code.location.bottomRightCorner, that.scanIsOk ? 'green' : 'red');
-                    drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, that.scanIsOk ? 'green' : 'red');
-                    drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, that.scanIsOk ? 'green' : 'red');
+                    drawLine(code.location.topLeftCorner, code.location.topRightCorner, color);
+                    drawLine(code.location.topRightCorner, code.location.bottomRightCorner, color);
+                    drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, color);
+                    drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, color);
                     outputMessage.hidden = true;
                     outputData.parentElement.hidden = false;
                     outputData.innerText = code.data;
@@ -279,9 +278,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.videoRunning = false;
     }
     
-    sendUrl(url) {
-        const event = new CustomEvent("dbp-qr-code-scanner-url",
-            {  bubbles: true, composed: true , detail: url});
+    sendUrl(data) {
+       const event = new CustomEvent("dbp-qr-code-scanner-data",
+            {  bubbles: true, composed: true , detail: data});
         this.dispatchEvent(event);
     }
 
@@ -351,9 +350,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         `;
     }
 
-    //doku
-    //demo
-
     render() {
         return html`
             <div class="columns">
@@ -384,7 +380,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                            <div hidden><b>${i18n.t('data')}:</b> <span id="outputData"></span></div>
                         </div>
                     </div>
-                    <div class="border ${classMap({hidden: !this.notSupported})}">
+                    <div class="${classMap({hidden: !this.notSupported})}">
                         ${i18n.t('no-support')}
                     </div>
                 </div>
