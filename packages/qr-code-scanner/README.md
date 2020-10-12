@@ -28,8 +28,10 @@ The colors are from css vars (`--dbp-success-bg-color` and `--dbp-danger-bg-colo
 a box under the video canvas with the read QR code data
     - example `<dbp-qr-code-scanner show-output></dbp-qr-code-scanner>`
 - `stop-scan` (optional, default: `false`): set to `true` when you don't want to start the QR code reader immediatly
-after loaded. This attribute is also used to stop the QR code reader if you don't need it anymore.
+after loaded. This attribute is also used to stop the QR code reader or if you don't need it anymore.
     - example `<dbp-qr-code-scanner stop-scan></dbp-qr-code-scanner>`
+- `clip-mask` (optional, default: `true`): set to `false` when you don't want to use a QR code reader with a mask for better perfomance
+    - example `<dbp-qr-code-scanner clip-mask></dbp-qr-code-scanner>`
 
 ## Events
 

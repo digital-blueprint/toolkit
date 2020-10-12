@@ -29,6 +29,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         this.activeCamera = '';
         this.sourceChanged = false;
+
+        this.clipMask = true;
     }
 
     static get scopedElements() {
@@ -53,7 +55,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             showOutput: { type: Boolean, attribute: 'show-output' },
             stopScan: { type: Boolean, attribute: 'stop-scan' },
             activeCamera: { type: String, attribute: false },
-            sourceChanged: { type: Boolean, attribute: false }
+            sourceChanged: { type: Boolean, attribute: false },
+            slipMask: { type: Boolean, attribute: 'clip-mask' }
         };
     }
 
@@ -248,15 +251,63 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-                var imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height); // TODO smaller input size and make an overlay where no scan happens
+
+
+                let maskWidth = 0;
+                let maskHeight = 0;
+                let maskStartX = canvasElement.width;
+                let maskStartY = canvasElement.height;
+
+                let imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height)
+
+                if (that.clipMask) {
+                    //draw mask
+                    maskWidth = 500;
+                    maskHeight = 500;
+                    maskStartX = canvasElement.width/2 - maskWidth/2;
+                    maskStartY = canvasElement.height/2 - maskHeight/2;
+
+                    canvas.beginPath();
+                    canvas.fillStyle = "#0000006e";
+                    canvas.moveTo(0,0);
+                    canvas.lineTo(0, canvasElement.width);
+                    canvas.lineTo( canvasElement.width, canvasElement.height);
+                    canvas.lineTo( canvasElement.width,0);
+                    canvas.rect(maskStartX, maskStartY, maskWidth, maskHeight);
+                    canvas.fill();
+
+                    imageData = canvas.getImageData(maskStartX , maskStartY, maskWidth, maskHeight);
+                }
+
                 var code = jsQR(imageData.data, imageData.width, imageData.height, {
                     inversionAttempts: "dontInvert",
                 });
                 if (code) {
-                    drawLine(code.location.topLeftCorner, code.location.topRightCorner, color);
+                    let topLeftCorner = code.location.topLeftCorner;
+                    let topRightCorner = code.location.topRightCorner;
+                    let bottomRightCorner = code.location.bottomRightCorner;
+                    let bottomLeftCorner = code.location.bottomLeftCorner;
+
+                    if (that.clipMask) {
+                        topLeftCorner.x += maskStartX;
+                        topLeftCorner.y += maskStartY;
+                        topRightCorner.x += maskStartX;
+                        topRightCorner.y += maskStartY;
+                        bottomRightCorner.x += maskStartX;
+                        bottomRightCorner.y += maskStartY;
+                        bottomLeftCorner.x += maskStartX;
+                        bottomLeftCorner.y += maskStartY;
+                    }
+
+                    drawLine(topLeftCorner, topRightCorner, color);
+                    drawLine(topRightCorner, bottomRightCorner, color);
+                    drawLine(bottomRightCorner, bottomLeftCorner, color);
+                    drawLine(bottomLeftCorner, topLeftCorner, color);
+
+                    /*drawLine(code.location.topLeftCorner, code.location.topRightCorner, color);
                     drawLine(code.location.topRightCorner, code.location.bottomRightCorner, color);
                     drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, color);
-                    drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, color);
+                    drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, color);*/
                     outputMessage.hidden = true;
                     outputData.parentElement.hidden = false;
                     outputData.innerText = code.data;
