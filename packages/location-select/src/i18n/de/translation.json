@@ -1,0 +1,7 @@
+{
+  "location-select": {
+    "placeholder": "Bitte wählen Sie einen Ort aus",
+    "error-summary": "Ein Fehler ist aufgetreten",
+    "login-required": "Anmeldung erforderlich"
+  }
+}
