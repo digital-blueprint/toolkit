@@ -1,6 +1,6 @@
 # Location Select Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/LocationSelect)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/toolkit)
 
 ## Usage
 
