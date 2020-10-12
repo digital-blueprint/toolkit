@@ -340,6 +340,12 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 background-position-x: calc(100% - 0.4rem);
                 font-size: inherit;
             }
+            
+            #videoSource:hover {
+                background: calc(100% - 0.4rem) center no-repeat url("https://localhost:8001/dist/local/dbp-common/icons/chevron-down.svg");
+                color: black;
+            }
+            
             select:not(.select)#videoSource{
                 background-size: auto 45%;
             }
@@ -348,6 +354,15 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 margin-top: 2rem;
                 padding-top: 2rem;
                 border-top: 1px solid black;
+            }
+            
+            @media only screen
+            and (orientation: portrait)
+            and (max-device-width: 765px) {   
+                .button-wrapper{    
+                    display: flex;
+                   justify-content: space-between;
+                }
             }
         `;
     }
