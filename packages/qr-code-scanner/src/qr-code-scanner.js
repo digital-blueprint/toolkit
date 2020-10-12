@@ -169,6 +169,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let outputContainer = this._("#output");
         let outputMessage = this._("#outputMessage");
         let outputData = this._("#outputData");
+        let qrContainer = this._("#qr");
 
         let color = this.scanIsOk ? getComputedStyle(this)
                 .getPropertyValue('--dbp-success-bg-color') : getComputedStyle(this)
@@ -201,6 +202,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
             that.videoRunning = true;
+            qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             requestAnimationFrame(tick);
         }).catch((e) => { console.log(e); that.askPermission = true;});
 
