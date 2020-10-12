@@ -30,7 +30,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.activeCamera = '';
         this.sourceChanged = false;
 
-        this.clipMask = true;
+        this.clipMask = false; //TODO fix clipping mask mobile and set to true
     }
 
     static get scopedElements() {
@@ -393,8 +393,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             }
             
             #videoSource:hover {
-                background: calc(100% - 0.4rem) center no-repeat url("https://localhost:8001/dist/local/dbp-common/icons/chevron-down.svg");
+                background: center no-repeat url("https://localhost:8001/dist/local/dbp-common/icons/chevron-down.svg");
                 color: black;
+                background-position-x: calc(100% - 0.4rem);
             }
             
             select:not(.select)#videoSource{
