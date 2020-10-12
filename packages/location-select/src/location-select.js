@@ -16,6 +16,7 @@ import * as errorUtils from "dbp-common/error";
 
 const locationContext = {
     "@id": "@id",
+    "identifier": "identifier",
     "name": "http://schema.org/name",
     "maximumPhysicalAttendeeCapacity": "http://schema.org/maximumPhysicalAttendeeCapacity"
 };
@@ -62,7 +63,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
             object: { type: Object, attribute: false },
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
-            showBirthDate: { type: Boolean, attribute: 'show-capacity' },
+            showCapacity: { type: Boolean, attribute: 'show-capacity' },
         };
     }
 
@@ -156,10 +157,10 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
                 },
                 processResults: function (data) {
                     that.lastResult = data;
-                    let transformed = that.jsonld.transformMembers(data, locationContext); //TODO
+                    let transformed = that.jsonld.transformMembers(data, locationContext);
                     const results = [];
                     transformed.forEach((place) => {
-                        results.push({id: place["@id"], text: that.generateOptionText(place)});
+                        results.push({id: place["@id"], room: place["identifier"], maximumPhysicalAttendeeCapacity: place["maximumPhysicalAttendeeCapacity"], text: that.generateOptionText(place)});
                     });
 
                     return {
@@ -174,6 +175,8 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
         }).on("select2:select", function (e) {
             // set custom element attributes
             const identifier = e.params.data.id;
+            const maxCapacity = e.params.data.maximumPhysicalAttendeeCapacity;
+            const room = e.params.data.room;
             that.object = findObjectInApiResults(identifier, that.lastResult);
 
             $this.attr("data-object", JSON.stringify(that.object));
@@ -187,6 +190,8 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
                 that.dispatchEvent(new CustomEvent('change', {
                     detail: {
                         value: identifier,
+                        capacity: maxCapacity,
+                        room: room,
                     },
                     bubbles: true
                 }));
@@ -220,16 +225,20 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
                 that.object = place;
                 const transformed = that.jsonld.compactMember(that.jsonld.expandMember(place), locationContext);
                 const identifier = transformed["@id"];
+                const room = transformed["identifier"];
+                const maxCapacity = transformed["maximumPhysicalAttendeeCapacity"];
 
                 const option = new Option(that.generateOptionText(transformed), identifier, true, true);
                 $this.attr("data-object", JSON.stringify(place));
-                $this.data("object", place); //TODO the object is changed here
+                $this.data("object", place);
                 that.$select.append(option).trigger('change');
 
                 // fire a change event
                 that.dispatchEvent(new CustomEvent('change', {
                     detail: {
                         value: identifier,
+                        capacity: maxCapacity,
+                        room: room,
                     },
                     bubbles: true
                 }));
