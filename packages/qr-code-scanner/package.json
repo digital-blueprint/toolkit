@@ -10,7 +10,6 @@
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@rollup/plugin-url": "^5.0.1",
     "chai": "^4.2.0",
-    "file-loader": "^6.1.0",
     "i18next-scanner": "^2.10.2",
     "karma": "^5.1.0",
     "karma-chai": "^0.1.0",
