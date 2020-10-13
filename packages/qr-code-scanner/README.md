@@ -66,7 +66,7 @@ You can use your desktop as a camera, to test the qr code reader
 sudo apt install ffmpeg v4l2loopback-dkms; sudo modprobe v4l2loopback
 
 #start virtual cam - Dummy video device (0x0000)
-ffmpeg -f x11grab -r 15 -s 1280x720 -i :0.0+0,0 -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0
+ffmpeg -f x11grab -r 15 -s 1280x720 -i "${DISPLAY}+0,0" -vcodec rawvideo -pix_fmt yuv420p -threads 0 -f v4l2 /dev/video0
 ```
 
 Then you can place a QR Code in the left corner of your desktop.
