@@ -112,7 +112,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                         that.activeCamera = 'environment';
                     } else {
-                        that.activeCamera = Array.from(devices_map)[0][0];
+                        that.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
                     }
 
 
@@ -141,7 +141,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                     that.activeCamera = 'environment';
                 } else {
-                    that.activeCamera = Array.from(devices_map)[0][0];
+                    that.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
                 }
                 resolve(results);
             }
