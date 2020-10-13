@@ -393,9 +393,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             }
             
             #videoSource:hover {
-                background: center no-repeat url("https://localhost:8001/dist/local/dbp-common/icons/chevron-down.svg");
+                background: calc(100% - 0.2rem) center no-repeat url("https://mw-frontend-dev.tugraz.at/apps/checkin/local/dbp-common/icons/chevron-down.svg");
                 color: black;
                 background-position-x: calc(100% - 0.4rem);
+                background-size: auto 45%;
             }
             
             select:not(.select)#videoSource{
