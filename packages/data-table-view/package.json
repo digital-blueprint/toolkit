@@ -5,9 +5,9 @@
   "license": "LGPL-2.1-or-later",
   "private": true,
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^8.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "@rollup/plugin-url": "^5.0.1",
     "chai": "^4.2.0",
     "glob": "^7.1.6",
@@ -22,7 +22,7 @@
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-terser": "^6.1.0"
+    "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",
