@@ -73,6 +73,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         });
     }
 
+    disconnectedCallback() {
+        this.stopScanning();
+        super.disconnectedCallback();
+    }
+
     updated(changedProperties) {
         if (changedProperties.get('stopScan') && !this.stopScan) {
             this.qrCodeScannerInit();
