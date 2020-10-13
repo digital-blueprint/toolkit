@@ -31,13 +31,13 @@
     "datatables.net-dt": "^1.10.20",
     "datatables.net-responsive": "^2.2.3",
     "datatables.net-responsive-dt": "^2.2.3",
+    "dbp-auth": "^1.0.0",
+    "dbp-common": "^1.0.0",
     "i18next": "^19.5.3",
     "jquery": "^3.4.1",
     "jszip": "^3.2.2",
     "lit-element": "^2.3.1",
-    "lit-html": "^1.1.1",
-    "dbp-auth": "^1.0.0",
-    "dbp-common": "^1.0.0"
+    "lit-html": "^1.1.1"
   },
   "scripts": {
     "clean": "rm -r dist/*",

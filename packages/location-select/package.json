@@ -27,12 +27,12 @@
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",
+    "dbp-auth": "^1.0.0",
+    "dbp-common": "^1.0.0",
     "jquery": "^3.4.1",
     "keycloak-js": "^10.0.2",
     "lit-element": "^2.3.1",
-    "select2": "^4.0.10",
-    "dbp-auth": "^1.0.0",
-    "dbp-common": "^1.0.0"
+    "select2": "^4.0.10"
   },
   "scripts": {
     "clean": "rm dist/*",

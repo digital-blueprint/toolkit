@@ -26,12 +26,12 @@
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",
+    "dbp-auth": "^1.0.0",
+    "dbp-common": "^1.0.0",
     "i18next": "^19.5.3",
     "lit-element": "^2.3.1",
     "lit-html": "^1.1.1",
-    "material-design-icons-svg": "^3.0.0",
-    "dbp-auth": "^1.0.0",
-    "dbp-common": "^1.0.0"
+    "material-design-icons-svg": "^3.0.0"
   },
   "scripts": {
     "clean": "rm dist/*",

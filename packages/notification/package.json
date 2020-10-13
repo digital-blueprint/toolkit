@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.1.1",
-    "lit-element": "^2.3.1",
-    "dbp-common": "^1.0.0"
+    "dbp-common": "^1.0.0",
+    "lit-element": "^2.3.1"
   },
   "scripts": {
     "clean": "rm dist/*",
