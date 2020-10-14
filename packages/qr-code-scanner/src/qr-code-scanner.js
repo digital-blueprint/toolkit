@@ -84,6 +84,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
     };
 
+    /**
+     * Ckecks if browser support video recording
+     * Gets video devices of device
+     *
+     */
     checkSupport() {
         const that = this;
         let devices_map = new Map();
@@ -93,8 +98,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             navigator.mediaDevices.enumerateDevices()
                 .then(function (devices) {
                     devices.forEach(function (device) {
-                        //console.log(device.kind + ": " + device.label +  " id = " + device.deviceId);
-                        // that._("#error").innerText += " | device.kind: " + device.kind + " id: " + device.deviceId + " label: " + device.label + " | ";
                         if (device.kind === 'videoinput') {
                             let id = device.deviceId;
                             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -119,8 +122,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     } else {
                         that.activeCamera = Array.from(devices_map)[0][0];
                     }
-
-
                 })
                 .catch(function (err) {
                     console.log(err.name + ": " + err.message);
@@ -132,7 +133,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 const results = [];
                 for (let i = 0; i !== sourceInfos.length; ++i) {
                     const sourceInfo = sourceInfos[i];
-                    // that._("#error").innerText += " * kind: " + sourceInfo.kind + " id: " + sourceInfo.id + " label: " + sourceInfo.label + " * ";
                     if (sourceInfo.kind === 'video') {
                         devices_map.set(sourceInfo.id ? sourceInfo.id : true, sourceInfo.label || i18n.t('camera') + (devices_map.size + 1))
                         results.push({
@@ -158,16 +158,24 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
     }
 
+    /**
+     * Get a loading message
+     *
+     * @param string
+     */
     getLoadingMsg(string) {
         let loadingMsg = html `<dbp-mini-spinner class="spinner"></dbp-mini-spinner> ${i18n.t(string)}`;
         return loadingMsg;
     }
 
+    /**
+     * Init and start the video and QR code scan
+     *
+     */
     qrCodeScannerInit() {
 
         this.stopScan = false;
         this.askPermission = true;
-
 
         let video = document.createElement("video");
         let canvasElement = this._("#canvas");
@@ -194,7 +202,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         let videoId = this.activeCamera;
         let constraint = { video:  { deviceId: videoId } };
-
         if ( (videoId === 'environment' || videoId === '') ) {
             console.log("vid:", videoId);
             constraint =  { video: { facingMode: "environment" } };
@@ -309,10 +316,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     drawLine(bottomRightCorner, bottomLeftCorner, color);
                     drawLine(bottomLeftCorner, topLeftCorner, color);
 
-                    /*drawLine(code.location.topLeftCorner, code.location.topRightCorner, color);
-                    drawLine(code.location.topRightCorner, code.location.bottomRightCorner, color);
-                    drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, color);
-                    drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, color);*/
                     outputMessage.hidden = true;
                     outputData.parentElement.hidden = false;
                     outputData.innerText = code.data;
@@ -326,16 +329,30 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
+    /**
+     * Update if video source is changed
+     *
+     * @param e
+     */
     updateSource(e) {
         this.activeCamera = e.srcElement.value;
         this.sourceChanged = true;
     }
 
+    /**
+     * Stops the active video and scan process
+     *
+     */
     stopScanning() {
         this.askPermission = false;
         this.videoRunning = false;
     }
-    
+
+    /**
+     * Sends an event with the data which is detected from QR code reader
+     *
+     * @param data
+     */
     sendUrl(data) {
        const event = new CustomEvent("dbp-qr-code-scanner-data",
             {  bubbles: true, composed: true , detail: data});
