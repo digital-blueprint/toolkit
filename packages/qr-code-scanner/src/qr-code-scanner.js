@@ -325,6 +325,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     outputData.parentElement.hidden = true;
                 }
             }
+            qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             requestAnimationFrame(tick);
         }
     }
