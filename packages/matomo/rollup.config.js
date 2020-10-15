@@ -52,10 +52,6 @@ export default (async () => {
             sourcemap: true
         },
         onwarn: function (warning, warn) {
-            // keycloak bundled code uses eval
-            if (warning.code === 'EVAL') {
-                return;
-            }
             warn(warning);
         },
         plugins: [

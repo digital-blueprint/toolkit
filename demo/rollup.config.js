@@ -144,10 +144,6 @@ export default {
         if (warning.code === 'CIRCULAR_DEPENDENCY') {
           return;
         }
-        // keycloak bundled code uses eval
-        if (warning.code === 'EVAL') {
-          return;
-        }
         warn(warning);
     },
     watch: {
