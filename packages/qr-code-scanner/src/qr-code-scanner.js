@@ -221,6 +221,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             requestAnimationFrame(tick);
         }).catch((e) => { console.log(e); that.askPermission = true;});
 
+        let lastVideoTime = -1;
+        let lastCode = null;
+
         function tick() {
            if (that.sourceChanged) {
                 video.srcObject.getTracks().forEach(function(track) {
@@ -291,9 +294,19 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     imageData = canvas.getImageData(maskStartX , maskStartY, maskWidth, maskHeight);
                 }
 
-                var code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: "dontInvert",
-                });
+                let code = null;
+                // We only check for QR codes 5 times a second to improve performance
+                let shouldAnalyze = Math.abs(lastVideoTime - video.currentTime) >= 1/5;
+                if (shouldAnalyze) {
+                    lastVideoTime = video.currentTime;
+                    code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+                    lastCode = code;
+                } else {
+                    code = lastCode;
+                }
+
                 if (code) {
                     let topLeftCorner = code.location.topLeftCorner;
                     let topRightCorner = code.location.topRightCorner;
