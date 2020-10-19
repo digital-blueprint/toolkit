@@ -16,7 +16,6 @@ import * as errorUtils from "dbp-common/error";
 
 const locationContext = {
     "@id": "@id",
-    "identifier": "identifier",
     "name": "http://schema.org/name",
     "maximumPhysicalAttendeeCapacity": "http://schema.org/maximumPhysicalAttendeeCapacity"
 };
@@ -160,7 +159,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
                     let transformed = that.jsonld.transformMembers(data, locationContext);
                     const results = [];
                     transformed.forEach((place) => {
-                        results.push({id: place["@id"], room: place["identifier"], maximumPhysicalAttendeeCapacity: place["maximumPhysicalAttendeeCapacity"], text: that.generateOptionText(place)});
+                        results.push({id: place["@id"], maximumPhysicalAttendeeCapacity: place["maximumPhysicalAttendeeCapacity"], text: that.generateOptionText(place)});
                     });
 
                     return {
@@ -176,8 +175,9 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
             // set custom element attributes
             const identifier = e.params.data.id;
             const maxCapacity = e.params.data.maximumPhysicalAttendeeCapacity;
-            const room = e.params.data.room;
             that.object = findObjectInApiResults(identifier, that.lastResult);
+
+            const room = that.object.identifier;
 
             $this.attr("data-object", JSON.stringify(that.object));
             $this.data("object", that.object);
@@ -225,8 +225,8 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
                 that.object = place;
                 const transformed = that.jsonld.compactMember(that.jsonld.expandMember(place), locationContext);
                 const identifier = transformed["@id"];
-                const room = transformed["identifier"];
                 const maxCapacity = transformed["maximumPhysicalAttendeeCapacity"];
+                const room = place.identifier;
 
                 const option = new Option(that.generateOptionText(transformed), identifier, true, true);
                 $this.attr("data-object", JSON.stringify(place));
@@ -334,6 +334,15 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
             .field .button.control dbp-icon {
                 top: 0;
             }
+
+            input {
+                border-radius: 0;
+            }
+              
+            input[type="search"] {
+                -webkit-appearance: none;
+            }
+
             `
         ];
     }
