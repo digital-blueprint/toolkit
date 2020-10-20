@@ -86,6 +86,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         this.clipMask = false;
         this._devices = new Map();
+        this._frameRequestID = null;
     }
 
     static get scopedElements() {
@@ -192,13 +193,15 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             video.play();
             that.videoRunning = true;
             qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            requestAnimationFrame(tick);
+            that._frameRequestID = requestAnimationFrame(tick);
         }).catch((e) => { console.log(e); that.askPermission = true;});
 
         let lastVideoTime = -1;
         let lastCode = null;
 
         function tick() {
+           that._frameRequestID = null;
+
            if (that.sourceChanged) {
                 video.srcObject.getTracks().forEach(function(track) {
                     track.stop();
@@ -340,7 +343,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 scroll = true;
             }
-            requestAnimationFrame(tick);
+            that._frameRequestID = requestAnimationFrame(tick);
         }
     }
 
@@ -359,6 +362,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     stopScanning() {
+        if (this._frameRequestID !== null) {
+            cancelAnimationFrame(this._frameRequestID);
+            this._frameRequestID = null;
+        }
+
         this.askPermission = false;
         this.videoRunning = false;
     }
