@@ -1,19 +1,21 @@
+import {assert} from 'chai';
+
 import '../src/dbp-qr-code-scanner';
 
-describe('dbp-qr-code-scanner basics', () => {
+suite('dbp-qr-code-scanner basics', () => {
   let node;
 
-  beforeEach(async () => {
+  suiteSetup(async () => {
     node = document.createElement('dbp-qr-code-scanner');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  suiteTeardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });

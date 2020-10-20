@@ -1,10 +1,9 @@
 import {i18n} from './i18n';
-import {css, html, LitElement} from 'lit-element';
+import {css, html} from 'lit-element';
 import DBPLitElement from 'dbp-common/dbp-lit-element';
 import * as commonStyles from 'dbp-common/styles';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import * as commonUtils from 'dbp-common/utils';
-import {Button, Icon, MiniSpinner} from 'dbp-common';
+import {Icon, MiniSpinner} from 'dbp-common';
 import {classMap} from 'lit-html/directives/class-map.js';
 import jsQR from "jsqr";
 
@@ -13,7 +12,7 @@ import jsQR from "jsqr";
  * Returns the ID for the most important device
  *
  * @param {Map} devices
- * @return string|null
+ * @returns {string|null} the ID
  */
 function getPrimaryDevice(devices) {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -31,7 +30,7 @@ function getPrimaryDevice(devices) {
  *
  * Moreimportant devices first.
  *
- * @return Map<string,string>
+ * @returns {Map<string,string>} the map of devices
  */
 async function getVideoDevices() {
     let devices_map = new Map();
@@ -41,7 +40,7 @@ async function getVideoDevices() {
 
         let devices;
         try {
-            devices = await navigator.mediaDevices.enumerateDevices()
+            devices = await navigator.mediaDevices.enumerateDevices();
         } catch (err) {
             console.log(err.name + ": " + err.message);
             return devices_map;
@@ -147,7 +146,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         if (changedProperties.get('stopScan') && !this.stopScan) {
             this.qrCodeScannerInit();
         }
-    };
+    }
 
     /**
      * Get a loading message
@@ -264,7 +263,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 let maskStartX = canvasElement.width;
                 let maskStartY = canvasElement.height;
 
-                let imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height)
+                let imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height);
 
                 if (that.clipMask) {
                     //draw mask
