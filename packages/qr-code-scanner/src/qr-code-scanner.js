@@ -30,7 +30,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.activeCamera = '';
         this.sourceChanged = false;
 
-        this.clipMask = false; //TODO fix clipping mask mobile and set to true
+        this.clipMask = false;
     }
 
     static get scopedElements() {
@@ -56,7 +56,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             stopScan: { type: Boolean, attribute: 'stop-scan' },
             activeCamera: { type: String, attribute: false },
             sourceChanged: { type: Boolean, attribute: false },
-            slipMask: { type: Boolean, attribute: 'clip-mask' }
+            clipMask: { type: Boolean, attribute: 'clip-mask' }
         };
     }
 
@@ -274,11 +274,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 let maskStartY = canvasElement.height;
 
                 let imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height)
-
+                
                 if (that.clipMask) {
                     //draw mask
-                    maskWidth = 500;
-                    maskHeight = 500;
+                    let clip = canvasElement.width > canvasElement.height ? canvasElement.height/4 * 3 : canvasElement.width/4 * 3;
+                    maskWidth = clip < 250 ? 250 : clip;
+                    maskHeight = clip < 250 ? 250 : clip;
+                    clip = clip < 250 ? 250 : clip;
                     maskStartX = canvasElement.width/2 - maskWidth/2;
                     maskStartY = canvasElement.height/2 - maskHeight/2;
 
@@ -289,6 +291,23 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     canvas.lineTo( canvasElement.width, canvasElement.height);
                     canvas.lineTo( canvasElement.width,0);
                     canvas.rect(maskStartX, maskStartY, maskWidth, maskHeight);
+                    canvas.fill();
+
+                    canvas.beginPath();
+                    canvas.fillStyle = "white";
+                    canvas.moveTo(maskStartX,maskStartY);
+                    canvas.rect(maskStartX, maskStartY, clip/3, 10);
+                    canvas.rect(maskStartX, maskStartY, 10, clip/3);
+
+                    canvas.rect(maskStartX + clip/3*2, maskStartY, clip/3, 10);
+                    canvas.rect(maskStartX + clip - 10, maskStartY, 10, clip/3);
+
+                    canvas.rect(maskStartX, maskStartY + clip -10, clip/3, 10);
+                    canvas.rect(maskStartX, maskStartY + clip/3*2, 10, clip/3);
+
+                    canvas.rect(maskStartX + clip/3*2, maskStartY + clip -10, clip/3, 10);
+                    canvas.rect(maskStartX + clip - 10, maskStartY + clip/3*2, 10, clip/3);
+
                     canvas.fill();
 
                     imageData = canvas.getImageData(maskStartX , maskStartY, maskWidth, maskHeight);
