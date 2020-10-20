@@ -130,32 +130,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             } else {
                 that.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
             }
-        } else if (MediaStreamTrack && MediaStreamTrack.getSources) {
-            this._log("MediaStreamTrack.getSources used");
-            const callback = sourceInfos => {
-                const results = [];
-                for (let i = 0; i !== sourceInfos.length; ++i) {
-                    const sourceInfo = sourceInfos[i];
-                    if (sourceInfo.kind === 'video') {
-                        devices_map.set(sourceInfo.id ? sourceInfo.id : true, sourceInfo.label || i18n.t('camera') + (devices_map.size + 1))
-                        results.push({
-                            id: sourceInfo.id,
-                            label: sourceInfo.label
-                        });
-                    }
-                }
-                this._log(`${results.length} results found`);
-
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                    that.activeCamera = 'environment';
-                } else {
-                    that.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
-                }
-                resolve(results);
-            }
-            MediaStreamTrack.getSources(callback);
-        }
-        else {
+        } else {
             that.notSupported = true;
         }
     }
