@@ -286,9 +286,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     canvas.beginPath();
                     canvas.fillStyle = "#0000006e";
                     canvas.moveTo(0,0);
-                    canvas.lineTo(0, canvasElement.width);
+                    canvas.lineTo(0, canvasElement.height);
                     canvas.lineTo( canvasElement.width, canvasElement.height);
-                    canvas.lineTo( 0,canvasElement.height);
+                    canvas.lineTo( canvasElement.width,0);
                     canvas.rect(maskStartX, maskStartY, maskWidth, maskHeight);
                     canvas.fill();
 
