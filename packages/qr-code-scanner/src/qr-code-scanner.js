@@ -89,7 +89,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async checkSupport() {
-        const that = this;
         let devices_map = new Map();
         if (navigator.mediaDevices
             && navigator.mediaDevices.enumerateDevices
@@ -117,21 +116,21 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             }
 
             if (devices_map.size < 1) {
-                that.notSupported = true;
+                this.notSupported = true;
             }
             for (let [id, label] of devices_map) {
                 let opt = document.createElement("option");
                 opt.value = id;
                 opt.text = label;
-                that._('#videoSource').appendChild(opt);
+                this._('#videoSource').appendChild(opt);
             }
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                that.activeCamera = 'environment';
+                this.activeCamera = 'environment';
             } else {
-                that.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
+                this.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
             }
         } else {
-            that.notSupported = true;
+            this.notSupported = true;
         }
     }
 
