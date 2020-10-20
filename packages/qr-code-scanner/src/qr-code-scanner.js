@@ -186,6 +186,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let outputMessage = this._("#outputMessage");
         let outputData = this._("#outputData");
         let qrContainer = this._("#qr");
+        let scroll = false;
 
         let color = this.scanIsOk ? getComputedStyle(this)
                 .getPropertyValue('--dbp-success-bg-color') : getComputedStyle(this)
@@ -362,7 +363,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     outputData.parentElement.hidden = true;
                 }
             }
-            qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (video.readyState === video.HAVE_ENOUGH_DATA && !scroll) {
+                qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                scroll = true;
+            }
             requestAnimationFrame(tick);
         }
     }
@@ -420,6 +424,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             #canvas {
                 width: 100%;
                 margin-top: 2rem;
+                max-height: 100%;
             }
         
             #output {
