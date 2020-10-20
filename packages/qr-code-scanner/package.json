@@ -10,6 +10,8 @@
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@rollup/plugin-url": "^5.0.1",
     "chai": "^4.2.0",
+    "eslint": "^7.11.0",
+    "eslint-plugin-jsdoc": "^30.7.3",
     "i18next-scanner": "^2.10.2",
     "karma": "^5.1.0",
     "karma-chai": "^0.1.0",
@@ -44,6 +46,7 @@
     "watch": "npm run watch-local",
     "watch-local": "rollup -c --watch",
     "watch-dev": "rollup -c --watch --environment BUILD:development",
-    "test": "npm run build-test && karma start --singleRun"
+    "test": "npm run build-test && karma start --singleRun",
+    "lint": "eslint ."
   }
 }
