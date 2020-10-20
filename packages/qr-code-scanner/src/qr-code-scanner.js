@@ -10,6 +10,62 @@ import jsQR from "jsqr";
 
 
 /**
+ * Returns the ID for the most important device
+ *
+ * @param {Map} devices
+ * @return string|null
+ */
+function getPrimaryDevice(devices) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        if (devices.has('environment'))
+            return 'environment';
+    }
+    if (devices.size) {
+        return Array.from(devices)[0][0];
+    }
+    return null;
+}
+
+/**
+ * Returns a map of device IDs and translated names.
+ *
+ * Moreimportant devices first.
+ *
+ * @return Map<string,string>
+ */
+async function getVideoDevices() {
+    let devices_map = new Map();
+    if (navigator.mediaDevices
+        && navigator.mediaDevices.enumerateDevices
+        && navigator.mediaDevices.getUserMedia) {
+
+        let devices;
+        try {
+            devices = await navigator.mediaDevices.enumerateDevices()
+        } catch (err) {
+            console.log(err.name + ": " + err.message);
+            return devices_map;
+        }
+
+        for (let device of devices) {
+            if (device.kind === 'videoinput') {
+                let id = device.deviceId;
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    devices_map.set('environment', i18n.t('back-camera'));
+                    devices_map.set('user', i18n.t('front-camera'));
+                } else {
+                    devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
+                }
+            }
+        }
+        return devices_map;
+    } else {
+        return devices_map;
+    }
+}
+
+
+/**
  * Notification web component
  */
 export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
@@ -65,7 +121,17 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         i18n.changeLanguage(this.lang);
 
         this.updateComplete.then(async ()=>{
-            this.notSupported = (!await this.checkSupport());
+            let devices = await getVideoDevices();
+            this.notSupported = !devices.size;
+            this.activeCamera = getPrimaryDevice(devices) || '';
+
+            for (let [id, label] of devices) {
+                let opt = document.createElement("option");
+                opt.value = id;
+                opt.text = label;
+                this._('#videoSource').appendChild(opt);
+            }
+
             if (!this.stopScan) {
                 this.qrCodeScannerInit();
             }
@@ -82,57 +148,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             this.qrCodeScannerInit();
         }
     };
-
-    /**
-     * Ckecks if browser support video recording
-     * Gets video devices of device
-     *
-     */
-    async checkSupport() {
-        let devices_map = new Map();
-        if (navigator.mediaDevices
-            && navigator.mediaDevices.enumerateDevices
-            && navigator.mediaDevices.getUserMedia) {
-
-            let devices;
-            try {
-                devices = await navigator.mediaDevices.enumerateDevices()
-            } catch (err) {
-                console.log(err.name + ": " + err.message);
-                return false;
-            }
-
-            for (let device of devices) {
-                if (device.kind === 'videoinput') {
-                    let id = device.deviceId;
-                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                        devices_map.set('environment', i18n.t('back-camera'));
-                        devices_map.set('user', i18n.t('front-camera'));
-                    } else {
-                        devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
-                    }
-                }
-            }
-            for (let [id, label] of devices_map) {
-                let opt = document.createElement("option");
-                opt.value = id;
-                opt.text = label;
-                this._('#videoSource').appendChild(opt);
-            }
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                this.activeCamera = 'environment';
-            } else {
-                this.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
-            }
-
-            if (devices_map.size < 1) {
-                return false;
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     /**
      * Get a loading message
