@@ -142,16 +142,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     }
 
     /**
-     * Get a loading message
-     *
-     * @param string
-     */
-    getLoadingMsg(string) {
-        let loadingMsg = html `<dbp-mini-spinner class="spinner"></dbp-mini-spinner> ${i18n.t(string)}`;
-        return loadingMsg;
-    }
-
-    /**
      * Init and start the video and QR code scan
      *
      */
