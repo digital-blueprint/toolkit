@@ -65,7 +65,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         i18n.changeLanguage(this.lang);
 
         this.updateComplete.then(async ()=>{
-            await this.checkSupport();
+            this.notSupported = (!await this.checkSupport());
             if (!this.stopScan) {
                 this.qrCodeScannerInit();
             }
@@ -99,8 +99,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 devices = await navigator.mediaDevices.enumerateDevices()
             } catch (err) {
                 console.log(err.name + ": " + err.message);
-                this.notSupported = true;
-                return;
+                return false;
             }
 
             for (let device of devices) {
@@ -114,10 +113,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     }
                 }
             }
-
-            if (devices_map.size < 1) {
-                this.notSupported = true;
-            }
             for (let [id, label] of devices_map) {
                 let opt = document.createElement("option");
                 opt.value = id;
@@ -129,8 +124,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             } else {
                 this.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
             }
+
+            if (devices_map.size < 1) {
+                return false;
+            }
+            return true;
         } else {
-            this.notSupported = true;
+            return false;
         }
     }
 
