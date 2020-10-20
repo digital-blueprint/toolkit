@@ -63,10 +63,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     connectedCallback() {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
-        const that = this;
 
-        this.updateComplete.then(()=>{
-            this.checkSupport();
+        this.updateComplete.then(async ()=>{
+            await this.checkSupport();
             if (!this.stopScan) {
                 this.qrCodeScannerInit();
             }
@@ -89,44 +88,48 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      * Gets video devices of device
      *
      */
-    checkSupport() {
+    async checkSupport() {
         const that = this;
         let devices_map = new Map();
         if (navigator.mediaDevices
             && navigator.mediaDevices.enumerateDevices
             && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.enumerateDevices()
-                .then(function (devices) {
-                    devices.forEach(function (device) {
-                        if (device.kind === 'videoinput') {
-                            let id = device.deviceId;
-                            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                                devices_map.set('environment', i18n.t('back-camera'));
-                                devices_map.set('user', i18n.t('front-camera'));
-                            } else {
-                                devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
-                            }
-                        }
-                    });
-                    if (devices_map.size < 1) {
-                        that.notSupported = true;
-                    }
-                    for (let [id, label] of devices_map) {
-                        let opt = document.createElement("option");
-                        opt.value = id;
-                        opt.text = label;
-                        that._('#videoSource').appendChild(opt);
-                    }
+
+            let devices;
+            try {
+                devices = await navigator.mediaDevices.enumerateDevices()
+            } catch (err) {
+                console.log(err.name + ": " + err.message);
+                this.notSupported = true;
+                return;
+            }
+
+            for (let device of devices) {
+                if (device.kind === 'videoinput') {
+                    let id = device.deviceId;
                     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                        that.activeCamera = 'environment';
+                        devices_map.set('environment', i18n.t('back-camera'));
+                        devices_map.set('user', i18n.t('front-camera'));
                     } else {
-                        that.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
+                        devices_map.set(id ? id : true, device.label || i18n.t('camera') + (devices_map.size + 1));
                     }
-                })
-                .catch(function (err) {
-                    console.log(err.name + ": " + err.message);
-                    that.notSupported = true;
-                });
+                }
+            }
+
+            if (devices_map.size < 1) {
+                that.notSupported = true;
+            }
+            for (let [id, label] of devices_map) {
+                let opt = document.createElement("option");
+                opt.value = id;
+                opt.text = label;
+                that._('#videoSource').appendChild(opt);
+            }
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                that.activeCamera = 'environment';
+            } else {
+                that.activeCamera = devices_map.size ? Array.from(devices_map)[0][0] : '';
+            }
         } else if (MediaStreamTrack && MediaStreamTrack.getSources) {
             this._log("MediaStreamTrack.getSources used");
             const callback = sourceInfos => {
@@ -155,7 +158,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         else {
             that.notSupported = true;
         }
-
     }
 
     /**
