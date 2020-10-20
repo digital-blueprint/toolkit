@@ -74,7 +74,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         this.askPermission = false;
         this.videoRunning = false;
-        this.notSupported = false;
         this.front = false;
         this.loading = false;
 
@@ -86,6 +85,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.sourceChanged = false;
 
         this.clipMask = false;
+        this._devices = new Map();
     }
 
     static get scopedElements() {
@@ -103,7 +103,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             lang: { type: String },
             askPermission: { type: Boolean, attribute: false },
             videoRunning: { type: Boolean, attribute: false },
-            notSupported: { type: Boolean, attribute: false },
             front: { type: Boolean, attribute: false },
             loading: { type: Boolean, attribute: false },
             scanIsOk: { type: Boolean, attribute: 'scan-is-ok' },
@@ -111,7 +110,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             stopScan: { type: Boolean, attribute: 'stop-scan' },
             activeCamera: { type: String, attribute: false },
             sourceChanged: { type: Boolean, attribute: false },
-            clipMask: { type: Boolean, attribute: 'clip-mask' }
+            clipMask: { type: Boolean, attribute: 'clip-mask' },
+            _devices: { type: Map, attribute: false}
         };
     }
 
@@ -121,15 +121,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         this.updateComplete.then(async ()=>{
             let devices = await getVideoDevices();
-            this.notSupported = !devices.size;
             this.activeCamera = getPrimaryDevice(devices) || '';
-
-            for (let [id, label] of devices) {
-                let opt = document.createElement("option");
-                opt.value = id;
-                opt.text = label;
-                this._('#videoSource').appendChild(opt);
-            }
+            this._devices = devices;
 
             if (!this.stopScan) {
                 this.qrCodeScannerInit();
@@ -476,18 +469,22 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        let hasDevices = this._devices.size > 0;
+
         return html`
             <div class="columns">
                 <div class="column" id="qr">
                     
-                    <div class="${classMap({hidden: this.notSupported})}">
+                    <div class="${classMap({hidden: !hasDevices})}">
                     
                         
                         <div class="button-wrapper">
                             <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit(this)}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
                             <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}" title="${i18n.t('stop-scan')}">${i18n.t('stop-scan')}</button>
                             
-                            <select id="videoSource" class="button" @change=${this.updateSource}></select>
+                            <select id="videoSource" class="button" @change=${this.updateSource}>
+                                ${Array.from(this._devices).map(item => html`<option value="${item[0]}">${item[1]}</option>`)}
+                            </select>
 
                         </div>
                        
@@ -505,7 +502,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                            <div hidden><b>${i18n.t('data')}:</b> <span id="outputData"></span></div>
                         </div>
                     </div>
-                    <div class="${classMap({hidden: !this.notSupported})}">
+                    <div class="${classMap({hidden: hasDevices})}">
                         ${i18n.t('no-support')}
                     </div>
                 </div>
