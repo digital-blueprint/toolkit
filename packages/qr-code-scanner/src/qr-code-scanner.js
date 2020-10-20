@@ -267,14 +267,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvasElement.width = video.videoWidth;
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 
-
                 let maskWidth = 0;
                 let maskHeight = 0;
                 let maskStartX = canvasElement.width;
                 let maskStartY = canvasElement.height;
 
                 let imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height)
-                
+
                 if (that.clipMask) {
                     //draw mask
                     let clip = canvasElement.width > canvasElement.height ? canvasElement.height/4 * 3 : canvasElement.width/4 * 3;
@@ -289,7 +288,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     canvas.moveTo(0,0);
                     canvas.lineTo(0, canvasElement.width);
                     canvas.lineTo( canvasElement.width, canvasElement.height);
-                    canvas.lineTo( canvasElement.width,0);
+                    canvas.lineTo( canvasElement.height,0);
                     canvas.rect(maskStartX, maskStartY, maskWidth, maskHeight);
                     canvas.fill();
 
@@ -327,20 +326,26 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 if (code) {
-                    let topLeftCorner = code.location.topLeftCorner;
-                    let topRightCorner = code.location.topRightCorner;
-                    let bottomRightCorner = code.location.bottomRightCorner;
-                    let bottomLeftCorner = code.location.bottomLeftCorner;
+                    let topLeftCorner = {x: 0, y: 0};
+                    let topRightCorner = {x: 0, y: 0};
+                    let bottomRightCorner = {x: 0, y: 0};
+                    let bottomLeftCorner = {x: 0, y: 0};
 
                     if (that.clipMask) {
-                        topLeftCorner.x += maskStartX;
-                        topLeftCorner.y += maskStartY;
-                        topRightCorner.x += maskStartX;
-                        topRightCorner.y += maskStartY;
-                        bottomRightCorner.x += maskStartX;
-                        bottomRightCorner.y += maskStartY;
-                        bottomLeftCorner.x += maskStartX;
-                        bottomLeftCorner.y += maskStartY;
+                        topLeftCorner.x = code.location.topLeftCorner.x + maskStartX;
+                        topLeftCorner.y = code.location.topLeftCorner.y + maskStartY;
+                        topRightCorner.x = code.location.topRightCorner.x + maskStartX;
+                        topRightCorner.y = code.location.topRightCorner.y + maskStartY;
+                        bottomRightCorner.x = code.location.bottomRightCorner.x + maskStartX;
+                        bottomRightCorner.y = code.location.bottomRightCorner.y + maskStartY;
+                        bottomLeftCorner.x = code.location.bottomLeftCorner.x + maskStartX;
+                        bottomLeftCorner.y = code.location.bottomLeftCorner.y + maskStartY;
+                    }
+                    else {
+                        topLeftCorner = code.location.topLeftCorner;
+                        topRightCorner = code.location.topRightCorner;
+                        bottomRightCorner = code.location.bottomRightCorner;
+                        bottomLeftCorner = code.location.bottomLeftCorner;
                     }
 
                     drawLine(topLeftCorner, topRightCorner, color);
