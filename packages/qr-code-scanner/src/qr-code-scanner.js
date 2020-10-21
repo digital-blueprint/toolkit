@@ -265,39 +265,12 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 let maskStartY = 0;
 
                 if (that.clipMask) {
-                    //draw mask
-                    let clip = canvasElement.width > canvasElement.height ? canvasElement.height/4 * 3 : canvasElement.width/4 * 3;
-                    maskWidth = clip < 250 ? 250 : clip;
-                    maskHeight = clip < 250 ? 250 : clip;
-                    clip = clip < 250 ? 250 : clip;
+                    let maxSize = canvasElement.width > canvasElement.height ? canvasElement.height/4 * 3 : canvasElement.width/4 * 3;
+                    console.assert(maxSize <= canvasElement.width && maxSize <= canvasElement.height);
+                    maskWidth = maxSize;
+                    maskHeight = maxSize;
                     maskStartX = canvasElement.width/2 - maskWidth/2;
                     maskStartY = canvasElement.height/2 - maskHeight/2;
-
-                    canvas.beginPath();
-                    canvas.fillStyle = "#0000006e";
-                    canvas.moveTo(0,0);
-                    canvas.lineTo(0, canvasElement.height);
-                    canvas.lineTo( canvasElement.width, canvasElement.height);
-                    canvas.lineTo( canvasElement.width,0);
-                    canvas.rect(maskStartX, maskStartY, maskWidth, maskHeight);
-                    canvas.fill();
-
-                    canvas.beginPath();
-                    canvas.fillStyle = "white";
-                    canvas.moveTo(maskStartX,maskStartY);
-                    canvas.rect(maskStartX, maskStartY, clip/3, 10);
-                    canvas.rect(maskStartX, maskStartY, 10, clip/3);
-
-                    canvas.rect(maskStartX + clip/3*2, maskStartY, clip/3, 10);
-                    canvas.rect(maskStartX + clip - 10, maskStartY, 10, clip/3);
-
-                    canvas.rect(maskStartX, maskStartY + clip -10, clip/3, 10);
-                    canvas.rect(maskStartX, maskStartY + clip/3*2, 10, clip/3);
-
-                    canvas.rect(maskStartX + clip/3*2, maskStartY + clip -10, clip/3, 10);
-                    canvas.rect(maskStartX + clip - 10, maskStartY + clip/3*2, 10, clip/3);
-
-                    canvas.fill();
                 }
 
                 let code = null;
@@ -314,34 +287,30 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     code = lastCode;
                 }
 
+                //draw mask
+                canvas.beginPath();
+                canvas.fillStyle = "#0000006e";
+                canvas.moveTo(0,0);
+                canvas.lineTo(0, canvasElement.height);
+                canvas.lineTo( canvasElement.width, canvasElement.height);
+                canvas.lineTo( canvasElement.width,0);
+                canvas.rect(maskStartX, maskStartY, maskWidth, maskHeight);
+                canvas.fill();
+
+                canvas.beginPath();
+                canvas.fillStyle = code ? color: "white";
+                canvas.moveTo(maskStartX,maskStartY);
+                canvas.rect(maskStartX, maskStartY, maskWidth/3, 10);
+                canvas.rect(maskStartX, maskStartY, 10, maskHeight/3);
+                canvas.rect(maskStartX + maskWidth/3*2, maskStartY, maskWidth/3, 10);
+                canvas.rect(maskStartX + maskWidth - 10, maskStartY, 10, maskHeight/3);
+                canvas.rect(maskStartX, maskStartY + maskHeight -10, maskWidth/3, 10);
+                canvas.rect(maskStartX, maskStartY + maskHeight/3*2, 10, maskHeight/3);
+                canvas.rect(maskStartX + maskWidth/3*2, maskStartY + maskHeight -10, maskWidth/3, 10);
+                canvas.rect(maskStartX + maskWidth - 10, maskStartY + maskHeight/3*2, 10, maskHeight/3);
+                canvas.fill();
+
                 if (code) {
-                    let topLeftCorner = {x: 0, y: 0};
-                    let topRightCorner = {x: 0, y: 0};
-                    let bottomRightCorner = {x: 0, y: 0};
-                    let bottomLeftCorner = {x: 0, y: 0};
-
-                    if (that.clipMask) {
-                        topLeftCorner.x = code.location.topLeftCorner.x + maskStartX;
-                        topLeftCorner.y = code.location.topLeftCorner.y + maskStartY;
-                        topRightCorner.x = code.location.topRightCorner.x + maskStartX;
-                        topRightCorner.y = code.location.topRightCorner.y + maskStartY;
-                        bottomRightCorner.x = code.location.bottomRightCorner.x + maskStartX;
-                        bottomRightCorner.y = code.location.bottomRightCorner.y + maskStartY;
-                        bottomLeftCorner.x = code.location.bottomLeftCorner.x + maskStartX;
-                        bottomLeftCorner.y = code.location.bottomLeftCorner.y + maskStartY;
-                    }
-                    else {
-                        topLeftCorner = code.location.topLeftCorner;
-                        topRightCorner = code.location.topRightCorner;
-                        bottomRightCorner = code.location.bottomRightCorner;
-                        bottomLeftCorner = code.location.bottomLeftCorner;
-                    }
-
-                    drawLine(topLeftCorner, topRightCorner, color);
-                    drawLine(topRightCorner, bottomRightCorner, color);
-                    drawLine(bottomRightCorner, bottomLeftCorner, color);
-                    drawLine(bottomLeftCorner, topLeftCorner, color);
-
                     outputMessage.hidden = true;
                     outputData.parentElement.hidden = false;
                     outputData.innerText = code.data;
