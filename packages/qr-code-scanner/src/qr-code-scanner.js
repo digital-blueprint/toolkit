@@ -263,8 +263,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 let maskHeight = 0;
                 let maskStartX = canvasElement.width;
                 let maskStartY = canvasElement.height;
-
-                let imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height);
+                let imageData;
 
                 if (that.clipMask) {
                     //draw mask
@@ -302,6 +301,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     canvas.fill();
 
                     imageData = canvas.getImageData(maskStartX , maskStartY, maskWidth, maskHeight);
+                } else {
+                    imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height);
                 }
 
                 let code = null;
