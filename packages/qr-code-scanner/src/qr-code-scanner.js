@@ -87,6 +87,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.clipMask = false;
         this._devices = new Map();
         this._requestID = null;
+        this._loadingMessage = '';
     }
 
     static get scopedElements() {
@@ -112,7 +113,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             activeCamera: { type: String, attribute: false },
             sourceChanged: { type: Boolean, attribute: false },
             clipMask: { type: Boolean, attribute: 'clip-mask' },
-            _devices: { type: Map, attribute: false}
+            _devices: { type: Map, attribute: false},
+            _loadingMessage: { type: String, attribute: false },
         };
     }
 
@@ -121,6 +123,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         i18n.changeLanguage(this.lang);
 
         this.updateComplete.then(async ()=>{
+            this._loadingMessage = i18n.t('no-camera-access');
             let devices = await getVideoDevices();
             this.activeCamera = getPrimaryDevice(devices) || '';
             this._devices = devices;
@@ -155,7 +158,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let canvasElement = this._("#canvas");
         let canvas = canvasElement.getContext("2d");
         let loadingMessage = this._("#loadingMessage");
-        let loadingMessageInner = this._(".loadingMsg");
         let outputContainer = this._("#output");
         let outputMessage = this._("#outputMessage");
         let outputData = this._("#outputData");
@@ -230,7 +232,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     canvasElement.hidden = true;
                     outputContainer.hidden = true;
                 });
-                loadingMessageInner.innerText = i18n.t('no-camera-access');
+                that._loadingMessage = i18n.t('no-camera-access');
                 return;
             }
             if (that.stopScan) {
@@ -241,11 +243,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     canvasElement.hidden = true;
                     outputContainer.hidden = true;
                 });
-                loadingMessageInner.innerText = i18n.t('finished-scan');
+                that._loadingMessage = i18n.t('finished-scan');
                 return;
             }
             that.loading = true;
-            loadingMessageInner.innerText = i18n.t('loading-video');
+            that._loadingMessage = i18n.t('loading-video');
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 loadingMessage.hidden = true;
                 that.loading = false;
@@ -497,7 +499,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                         <div id="loadingMessage" class=" ${classMap({hidden: !this.askPermission})}">
                             <div class="wrapper-msg">
                                 <dbp-mini-spinner class="spinner ${classMap({hidden: !this.loading})}"></dbp-mini-spinner>
-                                <div class="loadingMsg">${i18n.t('no-camera-access')}</div>
+                                <div class="loadingMsg">${this._loadingMessage}</div>
                             </div>
                        </div>
                        <canvas id="canvas" hidden class=""></canvas>
