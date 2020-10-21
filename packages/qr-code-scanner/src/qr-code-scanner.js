@@ -210,7 +210,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
 
         const that = this;
-        let lastVideoTime = -1;
+        let lastVideoScanTime = -1;
         let lastCode = null;
         let lastSentData = null;
 
@@ -307,9 +307,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
                 let code = null;
                 // We only check for QR codes 5 times a second to improve performance
-                let shouldAnalyze = Math.abs(lastVideoTime - video.currentTime) >= 1/5;
+                let shouldAnalyze = Math.abs(lastVideoScanTime - video.currentTime) >= 1/3;
                 if (shouldAnalyze) {
-                    lastVideoTime = video.currentTime;
+                    lastVideoScanTime = video.currentTime;
                     code = jsQR(imageData.data, imageData.width, imageData.height, {
                         inversionAttempts: "dontInvert",
                     });
