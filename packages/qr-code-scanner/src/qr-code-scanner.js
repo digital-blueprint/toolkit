@@ -83,7 +83,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.activeCamera = '';
         this.sourceChanged = false;
 
-        this.clipMask = false;
         this._devices = new Map();
         this._requestID = null;
         this._loadingMessage = '';
@@ -112,7 +111,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             stopScan: { type: Boolean, attribute: 'stop-scan' },
             activeCamera: { type: String, attribute: false },
             sourceChanged: { type: Boolean, attribute: false },
-            clipMask: { type: Boolean, attribute: 'clip-mask' },
             _devices: { type: Map, attribute: false},
             _loadingMessage: { type: String, attribute: false },
             matchRegex: { type: String, attribute: 'match-regex' },
@@ -255,14 +253,12 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 let maskStartX = 0;
                 let maskStartY = 0;
 
-                if (that.clipMask) {
-                    let maxSize = canvasElement.width > canvasElement.height ? canvasElement.height/4 * 3 : canvasElement.width/4 * 3;
-                    console.assert(maxSize <= canvasElement.width && maxSize <= canvasElement.height);
-                    maskWidth = maxSize;
-                    maskHeight = maxSize;
-                    maskStartX = canvasElement.width/2 - maskWidth/2;
-                    maskStartY = canvasElement.height/2 - maskHeight/2;
-                }
+                let maxSize = canvasElement.width > canvasElement.height ? canvasElement.height/4 * 3 : canvasElement.width/4 * 3;
+                console.assert(maxSize <= canvasElement.width && maxSize <= canvasElement.height);
+                maskWidth = maxSize;
+                maskHeight = maxSize;
+                maskStartX = canvasElement.width/2 - maskWidth/2;
+                maskStartY = canvasElement.height/2 - maskHeight/2;
 
                 let code = null;
                 // We only check for QR codes 5 times a second to improve performance
