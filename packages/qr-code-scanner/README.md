@@ -21,7 +21,7 @@ With this camera device you can scan a QR code. If a QR code is detected a event
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-qr-code-scanner lang="de"></dbp-qr-code-scanner>`
-- `match-regex` (optional, default: `'.*'`): a regular expression that when matching the QR code will result in the event being emitted and give feedback to the user
+- `match-regex` (optional, default: `'.*'`): a regular expression that when matching the QR code will result in the user getting feedback
 - `show-output` (optional, default: `false`): set to `true` for showing 
 a box under the video canvas with the read QR code data
     - example `<dbp-qr-code-scanner show-output></dbp-qr-code-scanner>`

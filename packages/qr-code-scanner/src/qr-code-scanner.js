@@ -308,8 +308,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     outputMessage.hidden = true;
                     outputData.parentElement.hidden = false;
                     if (lastSentData !== code.data) {
-                        if (matched)
-                            that.sendUrl(code.data);
+                        that.sendUrl(code.data);
                         outputData.innerText = code.data;
                     }
                     lastSentData = code.data;
