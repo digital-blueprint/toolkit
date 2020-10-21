@@ -31,7 +31,7 @@ after loaded. This attribute is also used to stop the QR code reader or if you d
 
 ## Events
 
-- `'dbp-qr-code-scanner-data'`: Outgoing Event which is fired if a QR code is detected. The data of the detected QR code is in `event.detail`.
+- `'code-detected'`: Outgoing Event which is fired if a QR code is detected. The data of the detected QR code is in `event.detail`.
 
 ## Local development
 

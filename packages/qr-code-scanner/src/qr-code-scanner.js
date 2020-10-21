@@ -352,8 +352,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      * @param data
      */
     sendUrl(data) {
-       const event = new CustomEvent("dbp-qr-code-scanner-data",
-            {  bubbles: true, composed: true , detail: data});
+       const event = new CustomEvent("code-detected",
+            {  bubbles: true, composed: true , detail: {'code': data}});
         this.dispatchEvent(event);
     }
 
