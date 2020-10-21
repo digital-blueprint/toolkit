@@ -49,7 +49,7 @@ class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
                 <div class="container">
                     <div class="columns is-centered">
                         <div class="column">
-                            <dbp-qr-code-scanner lang="${this.lang}"></dbp-qr-code-scanner>
+                            <dbp-qr-code-scanner clip-mask lang="${this.lang}"></dbp-qr-code-scanner>
                         </div>
                     </div>
                 </div>
