@@ -77,7 +77,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.front = false;
         this.loading = false;
 
-        this.scanIsOk = false;
         this.showOutput = false;
         this.stopScan = false;
 
@@ -88,6 +87,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._devices = new Map();
         this._requestID = null;
         this._loadingMessage = '';
+
+        this.matchRegex = '.*';
     }
 
     static get scopedElements() {
@@ -107,7 +108,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             videoRunning: { type: Boolean, attribute: false },
             front: { type: Boolean, attribute: false },
             loading: { type: Boolean, attribute: false },
-            scanIsOk: { type: Boolean, attribute: 'scan-is-ok' },
             showOutput: { type: Boolean, attribute: 'show-output' },
             stopScan: { type: Boolean, attribute: 'stop-scan' },
             activeCamera: { type: String, attribute: false },
@@ -115,6 +115,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             clipMask: { type: Boolean, attribute: 'clip-mask' },
             _devices: { type: Map, attribute: false},
             _loadingMessage: { type: String, attribute: false },
+            matchRegex: { type: String, attribute: 'match-regex' },
         };
     }
 
@@ -164,18 +165,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let qrContainer = this._("#qr");
         let scroll = false;
 
-        let color = this.scanIsOk ? getComputedStyle(this)
-                .getPropertyValue('--dbp-success-bg-color') : getComputedStyle(this)
-            .getPropertyValue('--dbp-danger-bg-color');
-
-        function drawLine(begin, end, color) {
-            canvas.beginPath();
-            canvas.moveTo(begin.x, begin.y);
-            canvas.lineTo(end.x, end.y);
-            canvas.lineWidth = 4;
-            canvas.strokeStyle = color;
-            canvas.stroke();
-        }
+        let okColor = getComputedStyle(this).getPropertyValue('--dbp-success-bg-color');
+        let notOkColor = getComputedStyle(this).getPropertyValue('--dbp-danger-bg-color');
 
         let videoId = this.activeCamera;
         let constraint = { video:  { deviceId: videoId } };
@@ -287,6 +278,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     code = lastCode;
                 }
 
+                let matched = code ? code.data.match(that.matchRegex) !== null : false;
+
                 //draw mask
                 canvas.beginPath();
                 canvas.fillStyle = "#0000006e";
@@ -298,7 +291,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvas.fill();
 
                 canvas.beginPath();
-                canvas.fillStyle = code ? color: "white";
+                if (code)
+                    canvas.fillStyle = matched ? okColor : notOkColor;
+                else
+                    canvas.fillStyle = 'white';
+
                 canvas.moveTo(maskStartX,maskStartY);
                 canvas.rect(maskStartX, maskStartY, maskWidth/3, 10);
                 canvas.rect(maskStartX, maskStartY, 10, maskHeight/3);
@@ -313,9 +310,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 if (code) {
                     outputMessage.hidden = true;
                     outputData.parentElement.hidden = false;
-                    outputData.innerText = code.data;
-                    if (lastSentData !== code.data)
-                        that.sendUrl(code.data);
+                    if (lastSentData !== code.data) {
+                        if (matched)
+                            that.sendUrl(code.data);
+                        outputData.innerText = code.data;
+                    }
                     lastSentData = code.data;
                 } else {
                     outputMessage.hidden = false;
