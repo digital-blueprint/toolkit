@@ -126,7 +126,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             this._devices = devices;
 
             if (!this.stopScan) {
-                this.qrCodeScannerInit();
+                this.startScanning();
             }
         });
     }
@@ -138,7 +138,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
     updated(changedProperties) {
         if (changedProperties.get('stopScan') && !this.stopScan) {
-            this.qrCodeScannerInit();
+            this.startScanning();
         }
     }
 
@@ -146,7 +146,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      * Init and start the video and QR code scan
      *
      */
-    async qrCodeScannerInit() {
+    async startScanning() {
 
         this.stopScan = false;
         this.askPermission = true;
@@ -220,7 +220,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     console.log("Changed Media");
                 });
                 that.sourceChanged = false;
-                that.qrCodeScannerInit();
+                that.startScanning();
                 return;
             }
             if (that.videoRunning === false) {
@@ -485,7 +485,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     
                         
                         <div class="button-wrapper">
-                            <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.qrCodeScannerInit(this)}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
+                            <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.startScanning()}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
                             <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}" title="${i18n.t('stop-scan')}">${i18n.t('stop-scan')}</button>
                             
                             <select id="videoSource" class="button" @change=${this.updateSource}>
