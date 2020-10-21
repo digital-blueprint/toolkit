@@ -146,7 +146,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      * Init and start the video and QR code scan
      *
      */
-    qrCodeScannerInit() {
+    async qrCodeScannerInit() {
 
         this.stopScan = false;
         this.askPermission = true;
@@ -185,22 +185,29 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             constraint =  { video: { facingMode: "user" } };
         }
 
-        const that = this;
+        let stream = null;
+        try {
+            stream = await navigator.mediaDevices.getUserMedia(constraint);
+        } catch(e) {
+            console.log(e);
+            this.askPermission = true;
+        }
 
-        navigator.mediaDevices.getUserMedia(constraint).then(function(stream) {
+        if (stream !== null) {
             video.srcObject = stream;
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
-            that.videoRunning = true;
+            this.videoRunning = true;
             qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (that._requestID !== null) {
-                cancelAnimationFrame(that._requestID);
-                that._requestID = null;
+            if (this._requestID !== null) {
+                cancelAnimationFrame(this._requestID);
+                this._requestID = null;
             }
-            console.assert(that._requestID === null);
-            that._requestID = requestAnimationFrame(tick);
-        }).catch((e) => { console.log(e); that.askPermission = true;});
+            console.assert(this._requestID === null);
+            this._requestID = requestAnimationFrame(tick);
+        }
 
+        const that = this;
         let lastVideoTime = -1;
         let lastCode = null;
 
