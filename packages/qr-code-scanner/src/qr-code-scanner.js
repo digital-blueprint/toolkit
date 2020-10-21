@@ -259,11 +259,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvasElement.width = video.videoWidth;
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 
-                let maskWidth = 0;
-                let maskHeight = 0;
-                let maskStartX = canvasElement.width;
-                let maskStartY = canvasElement.height;
-                let imageData;
+                let maskWidth = canvasElement.width;
+                let maskHeight = canvasElement.height;
+                let maskStartX = 0;
+                let maskStartY = 0;
 
                 if (that.clipMask) {
                     //draw mask
@@ -299,10 +298,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     canvas.rect(maskStartX + clip - 10, maskStartY + clip/3*2, 10, clip/3);
 
                     canvas.fill();
-
-                    imageData = canvas.getImageData(maskStartX , maskStartY, maskWidth, maskHeight);
-                } else {
-                    imageData = canvas.getImageData(0 , 0, canvasElement.width, canvasElement.height);
                 }
 
                 let code = null;
@@ -310,6 +305,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 let shouldAnalyze = Math.abs(lastVideoScanTime - video.currentTime) >= 1/3;
                 if (shouldAnalyze) {
                     lastVideoScanTime = video.currentTime;
+                    let imageData = canvas.getImageData(maskStartX, maskStartY, maskWidth, maskHeight);
                     code = jsQR(imageData.data, imageData.width, imageData.height, {
                         inversionAttempts: "dontInvert",
                     });
