@@ -296,15 +296,16 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 else
                     canvas.fillStyle = 'white';
 
+                let borderWidth = Math.max(maskWidth, maskHeight) / 50;
                 canvas.moveTo(maskStartX,maskStartY);
-                canvas.rect(maskStartX, maskStartY, maskWidth/3, 10);
-                canvas.rect(maskStartX, maskStartY, 10, maskHeight/3);
-                canvas.rect(maskStartX + maskWidth/3*2, maskStartY, maskWidth/3, 10);
-                canvas.rect(maskStartX + maskWidth - 10, maskStartY, 10, maskHeight/3);
-                canvas.rect(maskStartX, maskStartY + maskHeight -10, maskWidth/3, 10);
-                canvas.rect(maskStartX, maskStartY + maskHeight/3*2, 10, maskHeight/3);
-                canvas.rect(maskStartX + maskWidth/3*2, maskStartY + maskHeight -10, maskWidth/3, 10);
-                canvas.rect(maskStartX + maskWidth - 10, maskStartY + maskHeight/3*2, 10, maskHeight/3);
+                canvas.rect(maskStartX, maskStartY, maskWidth/3, borderWidth);
+                canvas.rect(maskStartX, maskStartY, borderWidth, maskHeight/3);
+                canvas.rect(maskStartX + maskWidth/3*2, maskStartY, maskWidth/3, borderWidth);
+                canvas.rect(maskStartX + maskWidth - borderWidth, maskStartY, borderWidth, maskHeight/3);
+                canvas.rect(maskStartX, maskStartY + maskHeight - borderWidth, maskWidth/3, borderWidth);
+                canvas.rect(maskStartX, maskStartY + maskHeight/3*2, borderWidth, maskHeight/3);
+                canvas.rect(maskStartX + maskWidth/3*2, maskStartY + maskHeight - borderWidth, maskWidth/3, borderWidth);
+                canvas.rect(maskStartX + maskWidth - borderWidth, maskStartY + maskHeight/3*2, borderWidth, maskHeight/3);
                 canvas.fill();
 
                 if (code) {
