@@ -212,6 +212,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         const that = this;
         let lastVideoTime = -1;
         let lastCode = null;
+        let lastSentData = null;
 
         function tick() {
            that._requestID = null;
@@ -347,7 +348,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     outputMessage.hidden = true;
                     outputData.parentElement.hidden = false;
                     outputData.innerText = code.data;
-                    that.sendUrl(code.data);
+                    if (lastSentData !== code.data)
+                        that.sendUrl(code.data);
+                    lastSentData = code.data;
                 } else {
                     outputMessage.hidden = false;
                     outputData.parentElement.hidden = true;
