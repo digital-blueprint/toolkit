@@ -144,6 +144,18 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case "lang":
+                    i18n.changeLanguage(this.lang);
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
+    }
+
     /**
      * Init and start the video and QR code scan
      *
