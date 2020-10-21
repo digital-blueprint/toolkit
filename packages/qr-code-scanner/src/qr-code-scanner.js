@@ -315,6 +315,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 } else {
                     outputMessage.hidden = false;
                     outputData.parentElement.hidden = true;
+                    lastSentData = null;
                 }
             }
             if (video.readyState === video.HAVE_ENOUGH_DATA && !scroll) {
