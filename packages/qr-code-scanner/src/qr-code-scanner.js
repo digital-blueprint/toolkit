@@ -309,10 +309,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      *
      * @param e
      */
-    updateSource(e) {
+    async _onUpdateSource(e) {
         this._activeCamera = e.srcElement.value;
-        this.stopScanning();
-        this.startScanning();
+        await this.stopScanning();
+        await this.startScanning();
         console.log("Changed Media");
     }
 
@@ -320,7 +320,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      * Stops the active video and scan process
      *
      */
-    stopScanning() {
+    async stopScanning() {
         if (this._videoElement !== null) {
             let video = this._videoElement;
             video.srcObject.getTracks().forEach(function(track) {
@@ -447,7 +447,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                             <button class="start button is-primary ${classMap({hidden: this._videoRunning})}" @click="${() => this.startScanning()}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
                             <button class="stop button is-primary ${classMap({hidden: !this._videoRunning})}" @click="${() => this.stopScanning()}" title="${i18n.t('stop-scan')}">${i18n.t('stop-scan')}</button>
                             
-                            <select id="videoSource" class="button" @change=${this.updateSource}>
+                            <select id="videoSource" class="button" @change=${this._onUpdateSource}>
                                 ${Array.from(this._devices).map(item => html`<option value="${item[0]}">${item[1]}</option>`)}
                             </select>
 
