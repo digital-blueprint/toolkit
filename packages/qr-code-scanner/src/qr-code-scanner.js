@@ -1,11 +1,12 @@
 import {i18n} from './i18n';
-import {css, html} from 'lit-element';
+import {css, html, unsafeCSS} from 'lit-element';
 import DBPLitElement from 'dbp-common/dbp-lit-element';
 import * as commonStyles from 'dbp-common/styles';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Icon, MiniSpinner} from 'dbp-common';
 import {classMap} from 'lit-html/directives/class-map.js';
 import jsQR from "jsqr";
+import {getIconSVGURL} from 'dbp-common';
 
 
 /**
@@ -394,7 +395,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             }
             
             #videoSource:hover {
-                background: calc(100% - 0.2rem) center no-repeat url("https://mw-frontend-dev.tugraz.at/apps/checkin/local/dbp-common/icons/chevron-down.svg");
+                background: calc(100% - 0.2rem) center no-repeat url("${unsafeCSS(getIconSVGURL('chevron-down'))}");
                 color: black;
                 background-position-x: calc(100% - 0.4rem);
                 background-size: auto 45%;
