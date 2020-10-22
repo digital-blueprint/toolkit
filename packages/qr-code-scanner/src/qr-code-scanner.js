@@ -63,6 +63,38 @@ async function getVideoDevices() {
     }
 }
 
+/**
+ * @param {string} deviceId
+ * @returns {object|null} a video element or null
+ */
+async function createVideoElement(deviceId) {
+
+    let videoId = deviceId;
+    let constraint = { video:  { deviceId: videoId } };
+    if ( (videoId === 'environment' || videoId === '') ) {
+        console.log("vid:", videoId);
+        constraint =  { video: { facingMode: "environment" } };
+    } else if ( videoId === 'user' ) {
+        console.log("vid2:", videoId);
+        constraint =  { video: { facingMode: "user" } };
+    }
+
+    let stream = null;
+    try {
+        stream = await navigator.mediaDevices.getUserMedia(constraint);
+    } catch(e) {
+        console.log(e);
+    }
+
+    if (stream !== null) {
+        let video = document.createElement("video");
+        video.srcObject = stream;
+        return video;
+    }
+
+    return null;
+}
+
 
 /**
  * Notification web component
@@ -164,45 +196,21 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.stopScanning();
 
         this.stopScan = false;
-        this._askPermission = true;
 
-        let video = document.createElement("video");
         let canvasElement = this._("#canvas");
         let qrContainer = this._("#qr");
         let scroll = false;
 
-        let okColor = getComputedStyle(this).getPropertyValue('--dbp-success-bg-color');
-        let notOkColor = getComputedStyle(this).getPropertyValue('--dbp-danger-bg-color');
-
-        let videoId = this._activeCamera;
-        let constraint = { video:  { deviceId: videoId } };
-        if ( (videoId === 'environment' || videoId === '') ) {
-            console.log("vid:", videoId);
-            constraint =  { video: { facingMode: "environment" } };
-        } else if ( videoId === 'user' ) {
-            console.log("vid2:", videoId);
-            constraint =  { video: { facingMode: "user" } };
-        }
-
-        let stream = null;
+        this._askPermission = true;
         this._loadingMessage = i18n.t('no-camera-access');
-        try {
-            stream = await navigator.mediaDevices.getUserMedia(constraint);
-        } catch(e) {
-            console.log(e);
-        }
+        let video = await createVideoElement(this._activeCamera);
         this._askPermission = false;
 
-        if (stream !== null) {
-            video.srcObject = stream;
+        if (video !== null) {
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
             this._videoRunning = true;
 
-            if (this._requestID !== null) {
-                cancelAnimationFrame(this._requestID);
-                this._requestID = null;
-            }
             console.assert(this._requestID === null);
             this._videoElement = video;
             this._loading = true;
@@ -264,10 +272,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvas.fill();
 
                 canvas.beginPath();
-                if (code)
+                if (code) {
+                    let okColor = getComputedStyle(that).getPropertyValue('--dbp-success-bg-color');
+                    let notOkColor = getComputedStyle(that).getPropertyValue('--dbp-danger-bg-color');
                     canvas.fillStyle = matched ? okColor : notOkColor;
-                else
+                } else {
                     canvas.fillStyle = 'white';
+                }
 
                 let borderWidth = Math.max(maskWidth, maskHeight) / 50;
                 canvas.moveTo(maskStartX,maskStartY);
