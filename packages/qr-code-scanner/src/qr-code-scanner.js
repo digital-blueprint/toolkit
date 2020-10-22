@@ -198,8 +198,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.stopScan = false;
 
         let canvasElement = this._("#canvas");
-        let qrContainer = this._("#qr");
-        let scroll = false;
+        let firstDrawDone = false;
 
         this._askPermission = true;
         this._loadingMessage = i18n.t('no-camera-access');
@@ -232,6 +231,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvasElement.width = video.videoWidth;
                 let canvas = canvasElement.getContext("2d");
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                if (!firstDrawDone) {
+                    that.dispatchEvent(new CustomEvent("scan-started", {bubbles: true, composed: true}));
+                    firstDrawDone = true;
+                }
 
                 let maskWidth = canvasElement.width;
                 let maskHeight = canvasElement.height;
@@ -302,10 +305,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     that._outputData = null;
                     lastSentData = null;
                 }
-            }
-            if (video.readyState === video.HAVE_ENOUGH_DATA && !scroll) {
-                qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                scroll = true;
             }
             console.assert(that._requestID === null);
             that._requestID = requestAnimationFrame(tick);
@@ -446,7 +445,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <div class="columns">
-                <div class="column" id="qr">
+                <div class="column">
                     
                     <div class="${classMap({hidden: !hasDevices})}">
                     
