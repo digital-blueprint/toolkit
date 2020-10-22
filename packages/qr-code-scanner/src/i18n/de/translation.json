@@ -1,6 +1,6 @@
 {
   "no-camera-access": "Zugriff auf Kamera nicht möglich (bitte stellen Sie sicher, dass eine Webcam aktiviert ist)",
-  "finished-scan": "Scannen erfolgreich abgeschlossen.",
+  "finished-scan": "Scannen abgeschlossen.",
   "loading-video": "Video laden ...",
   "no-qr-detected": "Kein QR-Code erkannt.",
   "no-support": "Ihr Browser unterstützt keine Videoaufnahmen.",

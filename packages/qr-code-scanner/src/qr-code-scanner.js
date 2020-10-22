@@ -88,6 +88,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         this.matchRegex = '.*';
         this._videoElement = null;
+        this._outputData = null;
     }
 
     static get scopedElements() {
@@ -113,6 +114,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             _devices: { type: Map, attribute: false},
             _loadingMessage: { type: String, attribute: false },
             matchRegex: { type: String, attribute: 'match-regex' },
+            _outputData: { type: String, attribute: false },
         };
     }
 
@@ -168,11 +170,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         let video = document.createElement("video");
         let canvasElement = this._("#canvas");
-        let canvas = canvasElement.getContext("2d");
-        let loadingMessage = this._("#loadingMessage");
-        let outputContainer = this._("#output");
-        let outputMessage = this._("#outputMessage");
-        let outputData = this._("#outputData");
         let qrContainer = this._("#qr");
         let scroll = false;
 
@@ -196,6 +193,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         } catch(e) {
             console.log(e);
         }
+        this.askPermission = false;
 
         if (stream !== null) {
             video.srcObject = stream;
@@ -203,13 +201,14 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             video.play();
             this.videoRunning = true;
 
-            qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             if (this._requestID !== null) {
                 cancelAnimationFrame(this._requestID);
                 this._requestID = null;
             }
             console.assert(this._requestID === null);
             this._videoElement = video;
+            this.loading = true;
+            this._loadingMessage = i18n.t('loading-video');
             this._requestID = requestAnimationFrame(tick);
         }
 
@@ -219,17 +218,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let lastSentData = null;
 
         function tick() {
-           that._requestID = null;
-            that.loading = true;
-            that._loadingMessage = i18n.t('loading-video');
+            that._requestID = null;
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                loadingMessage.hidden = true;
                 that.loading = false;
-                canvasElement.hidden = false;
-                outputContainer.hidden = false;
 
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
+                let canvas = canvasElement.getContext("2d");
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 
                 let maskWidth = canvasElement.width;
@@ -289,16 +284,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvas.fill();
 
                 if (code) {
-                    outputMessage.hidden = true;
-                    outputData.parentElement.hidden = false;
                     if (lastSentData !== code.data) {
+                        that._outputData = code.data;
                         that.sendUrl(code.data);
-                        outputData.innerText = code.data;
                     }
                     lastSentData = code.data;
                 } else {
-                    outputMessage.hidden = false;
-                    outputData.parentElement.hidden = true;
+                    that._outputData = null;
                     lastSentData = null;
                 }
             }
@@ -341,15 +333,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             this._requestID = null;
         }
 
-        let loadingMessage = this._("#loadingMessage");
-        loadingMessage.hidden = false;
-        let canvasElement = this._("#canvas");
-        canvasElement.hidden = true;
-        let outputContainer = this._("#output");
-        outputContainer.hidden = true;
-
         this.askPermission = false;
         this.videoRunning = false;
+        this.loading = false;
 
         this._loadingMessage = i18n.t('finished-scan');
     }
@@ -391,22 +377,18 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 max-height: 100%;
             }
         
-            #output {
+            .output {
                   margin-top: 20px;
                   background: #eee;
                   padding: 10px;
                   padding-bottom: 0;
             }
         
-            #output div {
+            .output div {
                   padding-bottom: 10px;
                   word-wrap: break-word;
             }
-        
-            #noQRFound {
-                text-align: center;
-            }
-            
+
             .spinner{
                 margin-right: 10px;
                 font-size: 0.7em;
@@ -451,6 +433,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         let hasDevices = this._devices.size > 0;
+        let showCanvas = this.videoRunning && !this.askPermission && !this.loading;
 
         return html`
             <div class="columns">
@@ -469,18 +452,19 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
                         </div>
                        
-                        <div id="loadingMessage" class=" ${classMap({hidden: !this.askPermission})}">
+                        <div id="loadingMessage" class="${classMap({hidden: showCanvas})}">
                             <div class="wrapper-msg">
                                 <dbp-mini-spinner class="spinner ${classMap({hidden: !this.loading})}"></dbp-mini-spinner>
                                 <div class="loadingMsg">${this._loadingMessage}</div>
                             </div>
                        </div>
-                       <canvas id="canvas" hidden class=""></canvas>
-                        <pre id="error"></pre>
-                       
-                        <div id="output" hidden class=" ${classMap({hidden: !this.showOutput})}">
-                           <div id="outputMessage">${i18n.t('no-qr-detected')}</div>
-                           <div hidden><b>${i18n.t('data')}:</b> <span id="outputData"></span></div>
+                       <canvas id="canvas" class="${classMap({hidden: !showCanvas})}"></canvas>
+                        <div class="output ${classMap({hidden: !(this.showOutput && showCanvas)})}">
+                          ${ (this._outputData !== null) ? html`
+                            <div><b>${i18n.t('data')}:</b> <span>${this._outputData}</span></div>
+                          ` : html`
+                            <div>${i18n.t('no-qr-detected')}</div>
+                          `}
                         </div>
                     </div>
                     <div class="${classMap({hidden: hasDevices})}">
