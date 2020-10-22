@@ -198,34 +198,21 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let video = await createVideoElement(this._activeCamera);
         this._askPermission = false;
 
-        if (video !== null) {
-            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-            video.play();
-            this._videoRunning = true;
-
-            console.assert(this._requestID === null);
-            this._videoElement = video;
-            this._loading = true;
-            this._loadingMessage = i18n.t('loading-video');
-            this._requestID = requestAnimationFrame(tick);
-        }
-
-        const that = this;
         let lastVideoScanTime = -1;
         let lastCode = null;
         let lastSentData = null;
 
-        function tick() {
-            that._requestID = null;
+        const tick = () => {
+            this._requestID = null;
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                that._loading = false;
+                this._loading = false;
 
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
                 let canvas = canvasElement.getContext("2d");
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
                 if (!firstDrawDone) {
-                    that.dispatchEvent(new CustomEvent("scan-started", {bubbles: true, composed: true}));
+                    this.dispatchEvent(new CustomEvent("scan-started", {bubbles: true, composed: true}));
                     firstDrawDone = true;
                 }
 
@@ -255,7 +242,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     code = lastCode;
                 }
 
-                let matched = code ? code.data.match(that.matchRegex) !== null : false;
+                let matched = code ? code.data.match(this.matchRegex) !== null : false;
 
                 //draw mask
                 canvas.beginPath();
@@ -269,8 +256,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
                 canvas.beginPath();
                 if (code) {
-                    let okColor = getComputedStyle(that).getPropertyValue('--dbp-success-bg-color');
-                    let notOkColor = getComputedStyle(that).getPropertyValue('--dbp-danger-bg-color');
+                    let okColor = getComputedStyle(this).getPropertyValue('--dbp-success-bg-color');
+                    let notOkColor = getComputedStyle(this).getPropertyValue('--dbp-danger-bg-color');
                     canvas.fillStyle = matched ? okColor : notOkColor;
                 } else {
                     canvas.fillStyle = 'white';
@@ -290,18 +277,30 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
                 if (code) {
                     if (lastSentData !== code.data) {
-                        that._outputData = code.data;
-                        that.dispatchEvent(new CustomEvent("code-detected",
+                        this._outputData = code.data;
+                        this.dispatchEvent(new CustomEvent("code-detected",
                             {bubbles: true, composed: true, detail: {'code': code.data}}));
                     }
                     lastSentData = code.data;
                 } else {
-                    that._outputData = null;
+                    this._outputData = null;
                     lastSentData = null;
                 }
             }
-            console.assert(that._requestID === null);
-            that._requestID = requestAnimationFrame(tick);
+            console.assert(this._requestID === null);
+            this._requestID = requestAnimationFrame(tick);
+        };
+
+        if (video !== null) {
+            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+            video.play();
+            this._videoRunning = true;
+
+            console.assert(this._requestID === null);
+            this._videoElement = video;
+            this._loading = true;
+            this._loadingMessage = i18n.t('loading-video');
+            this._requestID = requestAnimationFrame(tick);
         }
     }
 
