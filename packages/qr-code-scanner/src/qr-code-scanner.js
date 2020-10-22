@@ -96,9 +96,6 @@ async function createVideoElement(deviceId) {
 }
 
 
-/**
- * Notification web component
- */
 export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
@@ -129,9 +126,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    /**
-     * See: https://lit-element.polymer-project.org/guide/properties#initialize
-     */
     static get properties() {
         return {
             lang: { type: String },
@@ -190,7 +184,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
     /**
      * Init and start the video and QR code scan
-     *
      */
     async startScanning() {
         this.stopScanning();
