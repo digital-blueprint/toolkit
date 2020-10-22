@@ -72,6 +72,7 @@ export default (async () => {
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
                     {src: await getPackagePath('dbp-common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
+                    {src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'), dest: 'dist/local/qr-code-scanner'},
                 ]
             }),
             (process.env.ROLLUP_WATCH === 'true') ? serve({

@@ -5,9 +5,11 @@ import * as commonStyles from 'dbp-common/styles';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Icon, MiniSpinner} from 'dbp-common';
 import {classMap} from 'lit-html/directives/class-map.js';
+import * as commonUtils from 'dbp-common/utils';
 import jsQR from "jsqr";
 import {getIconSVGURL} from 'dbp-common';
 import {Mutex} from 'async-mutex';
+import QrScanner from 'qr-scanner';
 
 
 /**
@@ -95,6 +97,42 @@ async function createVideoElement(deviceId) {
     }
 
     return null;
+}
+
+
+class jsQRScanner { // eslint-disable-line no-unused-vars
+    constructor() {
+    }
+
+    async scan(canvas, x, y, width, height) {
+        let imageData = canvas.getContext("2d").getImageData(x, y, width, height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: "dontInvert",
+        });
+        if (code === null)
+            return null;
+        return {'data': code.data};
+    }
+}
+
+
+class QRScanner {
+    constructor() {
+        QrScanner.WORKER_PATH = commonUtils.getAssetURL('qr-code-scanner', 'qr-scanner-worker.min.js');
+        this._engine = null;
+        this._canvas = document.createElement("canvas");
+    }
+
+    async scan(canvas, x, y, width, height) {
+        if (this._engine === null) {
+            this._engine = await QrScanner.createQrEngine(QrScanner.WORKER_PATH);
+        }
+        try {
+            return {data: await QrScanner.scanImage(canvas, {x: x, y: y, width: width, height: height}, this._engine, this._canvas)};
+        } catch (e) {
+            return null;
+        }
+    }
 }
 
 
@@ -214,7 +252,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let lastCode = null;
         let lastSentData = null;
 
-        const tick = () => {
+        let detector = new QRScanner();
+
+        const tick = async () => {
             this._requestID = null;
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 this._loading = false;
@@ -242,10 +282,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 let shouldAnalyze = Math.abs(lastVideoScanTime - video.currentTime) >= 1/3;
                 if (shouldAnalyze) {
                     lastVideoScanTime = video.currentTime;
-                    let imageData = canvas.getImageData(maskStartX, maskStartY, maskWidth, maskHeight);
-                    code = jsQR(imageData.data, imageData.width, imageData.height, {
-                        inversionAttempts: "dontInvert",
-                    });
+                    code = await detector.scan(canvasElement, maskStartX, maskStartY, maskWidth, maskHeight);
                     lastCode = code;
                 } else {
                     code = lastCode;
