@@ -248,13 +248,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let video = await createVideoElement(this._activeCamera);
         this._askPermission = false;
 
-        let lastVideoScanTime = -1;
         let lastCode = null;
         let lastSentData = null;
 
         let detector = new QRScanner();
+        let detectorRunning = false;
 
-        const tick = async () => {
+        const tick = () => {
             this._requestID = null;
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 this._loading = false;
@@ -277,18 +277,31 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 maskStartX = canvasElement.width/2 - maskWidth/2;
                 maskStartY = canvasElement.height/2 - maskHeight/2;
 
-                let code = null;
-                // We only check for QR codes 5 times a second to improve performance
-                let shouldAnalyze = Math.abs(lastVideoScanTime - video.currentTime) >= 1/3;
-                if (shouldAnalyze) {
-                    lastVideoScanTime = video.currentTime;
-                    code = await detector.scan(canvasElement, maskStartX, maskStartY, maskWidth, maskHeight);
-                    lastCode = code;
-                } else {
-                    code = lastCode;
+                let lastVideo = video;
+                if (!detectorRunning) {
+                    detectorRunning = true;
+                    detector.scan(canvasElement, maskStartX, maskStartY, maskWidth, maskHeight).then((code) => {
+                        detectorRunning = false;
+                        // if we got restarted then the video element is new, so stop then.
+                        if (lastVideo !== this._videoElement)
+                            return;
+                        lastCode = code;
+
+                        if (code) {
+                            if (lastSentData !== code.data) {
+                                this._outputData = code.data;
+                                this.dispatchEvent(new CustomEvent("code-detected",
+                                    {bubbles: true, composed: true, detail: {'code': code.data}}));
+                            }
+                            lastSentData = code.data;
+                        } else {
+                            this._outputData = null;
+                            lastSentData = null;
+                        }
+                    });
                 }
 
-                let matched = code ? code.data.match(this.matchRegex) !== null : false;
+                let matched = lastCode ? lastCode.data.match(this.matchRegex) !== null : false;
 
                 //draw mask
                 canvas.beginPath();
@@ -301,7 +314,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvas.fill();
 
                 canvas.beginPath();
-                if (code) {
+                if (lastCode) {
                     let okColor = getComputedStyle(this).getPropertyValue('--dbp-success-bg-color');
                     let notOkColor = getComputedStyle(this).getPropertyValue('--dbp-danger-bg-color');
                     canvas.fillStyle = matched ? okColor : notOkColor;
@@ -328,18 +341,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 if (!firstDrawDone) {
                     this.dispatchEvent(new CustomEvent("scan-started", {bubbles: true, composed: true}));
                     firstDrawDone = true;
-                }
-
-                if (code) {
-                    if (lastSentData !== code.data) {
-                        this._outputData = code.data;
-                        this.dispatchEvent(new CustomEvent("code-detected",
-                            {bubbles: true, composed: true, detail: {'code': code.data}}));
-                    }
-                    lastSentData = code.data;
-                } else {
-                    this._outputData = null;
-                    lastSentData = null;
                 }
             }
             console.assert(this._requestID === null);
