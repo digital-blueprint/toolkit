@@ -201,7 +201,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         console.assert(this._lock.isLocked());
         await this.updateComplete;
 
-        let canvasElement = this._("#canvas");
+        let targetCanvas = this._("#canvas");
+        let canvasElement = document.createElement("canvas");
         let firstDrawDone = false;
 
         this._askPermission = true;
@@ -218,14 +219,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 this._loading = false;
 
+                // draw into a temporary canvas first
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
                 let canvas = canvasElement.getContext("2d");
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-                if (!firstDrawDone) {
-                    this.dispatchEvent(new CustomEvent("scan-started", {bubbles: true, composed: true}));
-                    firstDrawDone = true;
-                }
 
                 let maskWidth = canvasElement.width;
                 let maskHeight = canvasElement.height;
@@ -285,6 +283,15 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 canvas.rect(maskStartX + maskWidth/3*2, maskStartY + maskHeight - borderWidth, maskWidth/3, borderWidth);
                 canvas.rect(maskStartX + maskWidth - borderWidth, maskStartY + maskHeight/3*2, borderWidth, maskHeight/3);
                 canvas.fill();
+
+                targetCanvas.height = canvasElement.height;
+                targetCanvas.width = canvasElement.width;
+                targetCanvas.getContext("2d").drawImage(canvasElement, 0, 0);
+
+                if (!firstDrawDone) {
+                    this.dispatchEvent(new CustomEvent("scan-started", {bubbles: true, composed: true}));
+                    firstDrawDone = true;
+                }
 
                 if (code) {
                     if (lastSentData !== code.data) {
