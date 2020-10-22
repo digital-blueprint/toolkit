@@ -291,7 +291,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 if (code) {
                     if (lastSentData !== code.data) {
                         that._outputData = code.data;
-                        that.sendUrl(code.data);
+                        that.dispatchEvent(new CustomEvent("code-detected",
+                            {bubbles: true, composed: true, detail: {'code': code.data}}));
                     }
                     lastSentData = code.data;
                 } else {
@@ -339,17 +340,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._loading = false;
 
         this._loadingMessage = '';
-    }
-
-    /**
-     * Sends an event with the data which is detected from QR code reader
-     *
-     * @param data
-     */
-    sendUrl(data) {
-       const event = new CustomEvent("code-detected",
-            {  bubbles: true, composed: true , detail: {'code': data}});
-        this.dispatchEvent(event);
     }
 
     static get styles() {
