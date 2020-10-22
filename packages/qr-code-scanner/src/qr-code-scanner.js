@@ -72,15 +72,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         super();
         this.lang = 'de';
 
-        this.askPermission = false;
-        this.videoRunning = false;
-        this.front = false;
-        this.loading = false;
+        this._askPermission = false;
+        this._loading = false;
 
         this.showOutput = false;
         this.stopScan = false;
 
-        this.activeCamera = '';
+        this._activeCamera = '';
 
         this._devices = new Map();
         this._requestID = null;
@@ -89,6 +87,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.matchRegex = '.*';
         this._videoElement = null;
         this._outputData = null;
+        this._videoRunning = false;
     }
 
     static get scopedElements() {
@@ -104,17 +103,16 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             lang: { type: String },
-            askPermission: { type: Boolean, attribute: false },
-            videoRunning: { type: Boolean, attribute: false },
-            front: { type: Boolean, attribute: false },
-            loading: { type: Boolean, attribute: false },
             showOutput: { type: Boolean, attribute: 'show-output' },
             stopScan: { type: Boolean, attribute: 'stop-scan' },
-            activeCamera: { type: String, attribute: false },
+            matchRegex: { type: String, attribute: 'match-regex' },
+            _activeCamera: { type: String, attribute: false },
+            _loading: { type: Boolean, attribute: false },
             _devices: { type: Map, attribute: false},
             _loadingMessage: { type: String, attribute: false },
-            matchRegex: { type: String, attribute: 'match-regex' },
             _outputData: { type: String, attribute: false },
+            _askPermission: { type: Boolean, attribute: false },
+            _videoRunning: { type: Boolean, attribute: false },
         };
     }
 
@@ -124,7 +122,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         this.updateComplete.then(async ()=>{
             let devices = await getVideoDevices();
-            this.activeCamera = getPrimaryDevice(devices) || '';
+            this._activeCamera = getPrimaryDevice(devices) || '';
             this._devices = devices;
 
             if (!this.stopScan) {
@@ -166,7 +164,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.stopScanning();
 
         this.stopScan = false;
-        this.askPermission = true;
+        this._askPermission = true;
 
         let video = document.createElement("video");
         let canvasElement = this._("#canvas");
@@ -176,7 +174,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let okColor = getComputedStyle(this).getPropertyValue('--dbp-success-bg-color');
         let notOkColor = getComputedStyle(this).getPropertyValue('--dbp-danger-bg-color');
 
-        let videoId = this.activeCamera;
+        let videoId = this._activeCamera;
         let constraint = { video:  { deviceId: videoId } };
         if ( (videoId === 'environment' || videoId === '') ) {
             console.log("vid:", videoId);
@@ -193,13 +191,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         } catch(e) {
             console.log(e);
         }
-        this.askPermission = false;
+        this._askPermission = false;
 
         if (stream !== null) {
             video.srcObject = stream;
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
-            this.videoRunning = true;
+            this._videoRunning = true;
 
             if (this._requestID !== null) {
                 cancelAnimationFrame(this._requestID);
@@ -207,7 +205,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             }
             console.assert(this._requestID === null);
             this._videoElement = video;
-            this.loading = true;
+            this._loading = true;
             this._loadingMessage = i18n.t('loading-video');
             this._requestID = requestAnimationFrame(tick);
         }
@@ -220,7 +218,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         function tick() {
             that._requestID = null;
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                that.loading = false;
+                that._loading = false;
 
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
@@ -309,7 +307,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      * @param e
      */
     updateSource(e) {
-        this.activeCamera = e.srcElement.value;
+        this._activeCamera = e.srcElement.value;
         this.stopScanning();
         this.startScanning();
         console.log("Changed Media");
@@ -333,11 +331,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             this._requestID = null;
         }
 
-        this.askPermission = false;
-        this.videoRunning = false;
-        this.loading = false;
+        this._askPermission = false;
+        this._videoRunning = false;
+        this._loading = false;
 
-        this._loadingMessage = i18n.t('finished-scan');
+        this._loadingMessage = '';
     }
 
     /**
@@ -433,7 +431,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         let hasDevices = this._devices.size > 0;
-        let showCanvas = this.videoRunning && !this.askPermission && !this.loading;
+        let showCanvas = this._videoRunning && !this._askPermission && !this._loading;
 
         return html`
             <div class="columns">
@@ -443,8 +441,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     
                         
                         <div class="button-wrapper">
-                            <button class="start button is-primary ${classMap({hidden: this.videoRunning})}" @click="${() => this.startScanning()}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
-                            <button class="stop button is-primary ${classMap({hidden: !this.videoRunning})}" @click="${() => this.stopScanning()}" title="${i18n.t('stop-scan')}">${i18n.t('stop-scan')}</button>
+                            <button class="start button is-primary ${classMap({hidden: this._videoRunning})}" @click="${() => this.startScanning()}" title="${i18n.t('start-scan')}">${i18n.t('start-scan')}</button>
+                            <button class="stop button is-primary ${classMap({hidden: !this._videoRunning})}" @click="${() => this.stopScanning()}" title="${i18n.t('stop-scan')}">${i18n.t('stop-scan')}</button>
                             
                             <select id="videoSource" class="button" @change=${this.updateSource}>
                                 ${Array.from(this._devices).map(item => html`<option value="${item[0]}">${item[1]}</option>`)}
@@ -454,7 +452,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                        
                         <div id="loadingMessage" class="${classMap({hidden: showCanvas})}">
                             <div class="wrapper-msg">
-                                <dbp-mini-spinner class="spinner ${classMap({hidden: !this.loading})}"></dbp-mini-spinner>
+                                <dbp-mini-spinner class="spinner ${classMap({hidden: !this._loading})}"></dbp-mini-spinner>
                                 <div class="loadingMsg">${this._loadingMessage}</div>
                             </div>
                        </div>
