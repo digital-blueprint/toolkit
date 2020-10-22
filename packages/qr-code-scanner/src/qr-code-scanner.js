@@ -81,13 +81,13 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this.stopScan = false;
 
         this.activeCamera = '';
-        this.sourceChanged = false;
 
         this._devices = new Map();
         this._requestID = null;
         this._loadingMessage = '';
 
         this.matchRegex = '.*';
+        this._videoElement = null;
     }
 
     static get scopedElements() {
@@ -110,7 +110,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             showOutput: { type: Boolean, attribute: 'show-output' },
             stopScan: { type: Boolean, attribute: 'stop-scan' },
             activeCamera: { type: String, attribute: false },
-            sourceChanged: { type: Boolean, attribute: false },
             _devices: { type: Map, attribute: false},
             _loadingMessage: { type: String, attribute: false },
             matchRegex: { type: String, attribute: 'match-regex' },
@@ -122,7 +121,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         i18n.changeLanguage(this.lang);
 
         this.updateComplete.then(async ()=>{
-            this._loadingMessage = i18n.t('no-camera-access');
             let devices = await getVideoDevices();
             this.activeCamera = getPrimaryDevice(devices) || '';
             this._devices = devices;
@@ -141,6 +139,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     updated(changedProperties) {
         if (changedProperties.get('stopScan') && !this.stopScan) {
             this.startScanning();
+        } else if (!changedProperties.get('stopScan') && this.stopScan) {
+            this.stopScanning();
         }
     }
 
@@ -161,6 +161,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async startScanning() {
+        this.stopScanning();
 
         this.stopScan = false;
         this.askPermission = true;
@@ -189,11 +190,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
 
         let stream = null;
+        this._loadingMessage = i18n.t('no-camera-access');
         try {
             stream = await navigator.mediaDevices.getUserMedia(constraint);
         } catch(e) {
             console.log(e);
-            this.askPermission = true;
         }
 
         if (stream !== null) {
@@ -201,12 +202,14 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
             this.videoRunning = true;
+
             qrContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
             if (this._requestID !== null) {
                 cancelAnimationFrame(this._requestID);
                 this._requestID = null;
             }
             console.assert(this._requestID === null);
+            this._videoElement = video;
             this._requestID = requestAnimationFrame(tick);
         }
 
@@ -217,37 +220,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         function tick() {
            that._requestID = null;
-
-           if (that.sourceChanged) {
-                video.srcObject.getTracks().forEach(function(track) {
-                    track.stop();
-                    console.log("Changed Media");
-                });
-                that.sourceChanged = false;
-                that.startScanning();
-                return;
-            }
-            if (that.videoRunning === false) {
-                video.srcObject.getTracks().forEach(function(track) {
-                    track.stop();
-                    loadingMessage.hidden = false;
-                    canvasElement.hidden = true;
-                    outputContainer.hidden = true;
-                });
-                that._loadingMessage = i18n.t('no-camera-access');
-                return;
-            }
-            if (that.stopScan) {
-                video.srcObject.getTracks().forEach(function(track) {
-                    track.stop();
-                    console.log("stop early");
-                    loadingMessage.hidden = false;
-                    canvasElement.hidden = true;
-                    outputContainer.hidden = true;
-                });
-                that._loadingMessage = i18n.t('finished-scan');
-                return;
-            }
             that.loading = true;
             that._loadingMessage = i18n.t('loading-video');
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -346,7 +318,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      */
     updateSource(e) {
         this.activeCamera = e.srcElement.value;
-        this.sourceChanged = true;
+        this.stopScanning();
+        this.startScanning();
+        console.log("Changed Media");
     }
 
     /**
@@ -354,8 +328,30 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     stopScanning() {
+        if (this._videoElement !== null) {
+            let video = this._videoElement;
+            video.srcObject.getTracks().forEach(function(track) {
+                track.stop();
+            });
+            this._videoElement = null;
+        }
+
+        if (this._requestID !== null) {
+            cancelAnimationFrame(this._requestID);
+            this._requestID = null;
+        }
+
+        let loadingMessage = this._("#loadingMessage");
+        loadingMessage.hidden = false;
+        let canvasElement = this._("#canvas");
+        canvasElement.hidden = true;
+        let outputContainer = this._("#output");
+        outputContainer.hidden = true;
+
         this.askPermission = false;
         this.videoRunning = false;
+
+        this._loadingMessage = i18n.t('finished-scan');
     }
 
     /**
