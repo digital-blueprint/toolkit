@@ -7,6 +7,7 @@ import {Icon, MiniSpinner} from 'dbp-common';
 import {classMap} from 'lit-html/directives/class-map.js';
 import jsQR from "jsqr";
 import {getIconSVGURL} from 'dbp-common';
+import {Mutex} from 'async-mutex';
 
 
 /**
@@ -118,6 +119,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._videoElement = null;
         this._outputData = null;
         this._videoRunning = false;
+        this._lock = new Mutex();
     }
 
     static get scopedElements() {
@@ -143,23 +145,21 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
 
-        this.updateComplete.then(async ()=>{
-            let devices = await getVideoDevices();
-            this._activeCamera = getPrimaryDevice(devices) || '';
-            this._devices = devices;
+        let devices = await getVideoDevices();
+        this._activeCamera = getPrimaryDevice(devices) || '';
+        this._devices = devices;
 
-            if (!this.stopScan) {
-                this.startScanning();
-            }
-        });
+        if (!this.stopScan) {
+            await this.startScanning();
+        }
     }
 
-    disconnectedCallback() {
-        this.stopScanning();
+    async disconnectedCallback() {
+        await this.stopScanning();
         super.disconnectedCallback();
     }
 
@@ -187,9 +187,19 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      * Init and start the video and QR code scan
      */
     async startScanning() {
-        this.stopScanning();
+        await this.stopScanning();
 
-        this.stopScan = false;
+        const release = await this._lock.acquire();
+        try {
+            await this._startScanning();
+        } finally {
+            release();
+        }
+    }
+
+    async _startScanning() {
+        console.assert(this._lock.isLocked());
+        await this.updateComplete;
 
         let canvasElement = this._("#canvas");
         let firstDrawDone = false;
@@ -322,24 +332,29 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async stopScanning() {
-        if (this._videoElement !== null) {
-            let video = this._videoElement;
-            video.srcObject.getTracks().forEach(function(track) {
-                track.stop();
-            });
-            this._videoElement = null;
+        const release = await this._lock.acquire();
+        try {
+            if (this._videoElement !== null) {
+                let video = this._videoElement;
+                video.srcObject.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+                this._videoElement = null;
+            }
+
+            if (this._requestID !== null) {
+                cancelAnimationFrame(this._requestID);
+                this._requestID = null;
+            }
+
+            this._askPermission = false;
+            this._videoRunning = false;
+            this._loading = false;
+
+            this._loadingMessage = '';
+        } finally {
+            release();
         }
-
-        if (this._requestID !== null) {
-            cancelAnimationFrame(this._requestID);
-            this._requestID = null;
-        }
-
-        this._askPermission = false;
-        this._videoRunning = false;
-        this._loading = false;
-
-        this._loadingMessage = '';
     }
 
     static get styles() {
