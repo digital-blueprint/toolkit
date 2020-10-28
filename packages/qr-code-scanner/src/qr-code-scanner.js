@@ -80,7 +80,7 @@ async function createVideoElement(deviceId) {
         constraint =  { video: { facingMode: "environment" } };
     } else if ( videoId === 'user' ) {
         console.log("vid2:", videoId);
-        constraint =  { video: { facingMode: "user" } };
+        constraint =  { video: { facingMode: "user", mirrored: true } };
     }
 
     let stream = null;
