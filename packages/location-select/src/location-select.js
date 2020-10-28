@@ -69,6 +69,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
     clear() {
         this.object = null;
         $(this).attr("data-object", "");
+        $(this).attr("value", "");
         $(this).data("object", null);
         this.$select.val(null).trigger('change').trigger('select2:unselect');
     }
