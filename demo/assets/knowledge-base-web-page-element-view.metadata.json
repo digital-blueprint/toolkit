@@ -1,6 +1,6 @@
 {
-  "element": "dbp-knowledge-base-web-page-element-view-demo",
-  "module_src": "dbp-knowledge-base-web-page-element-view-demo.js",
+  "element": "dbp-knowledge-base-web-page-element-view-demo-activity",
+  "module_src": "dbp-knowledge-base-web-page-element-view-demo-activity.js",
   "routing_name": "knowledge-base-web-page-element-view",
   "name": {
     "de": "dbp-knowledge-base-web-page-element-view",

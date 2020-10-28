@@ -1,0 +1,17 @@
+{
+  "element": "dbp-data-table-view-demo-activity",
+  "module_src": "dbp-data-table-view-demo-activity.js",
+  "routing_name": "data-table-view",
+  "name": {
+    "de": "Data Table View",
+    "en": "Data table view"
+  },
+  "short_name": {
+    "de": "Data Table View",
+    "en": "Data table view"
+  },
+  "description": {
+    "de": "DataTable: mit Daten, Paginierung, Such- und Exportfunktion",
+    "en": "DataTable: with data, paging and searching AND exportable"
+  }
+}

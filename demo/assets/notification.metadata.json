@@ -1,0 +1,17 @@
+{
+  "element": "dbp-notification-demo-activity",
+  "module_src": "dbp-notification-demo-activity.js",
+  "routing_name": "notification",
+  "name": {
+    "de": "Benachrichtigungen",
+    "en": "Notification"
+  },
+  "short_name": {
+    "de": "Benachrichtigungen",
+    "en": "Notification"
+  },
+  "description": {
+    "de": "Zeigt eine Benachrichtigung an",
+    "en": "Shows a message"
+  }
+}

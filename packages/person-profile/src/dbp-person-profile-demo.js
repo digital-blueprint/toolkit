@@ -9,7 +9,7 @@ import * as commonStyles from 'dbp-common/styles';
 import $ from 'jquery';
 import {PersonSelect} from 'dbp-person-select';
 
-class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
+export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';

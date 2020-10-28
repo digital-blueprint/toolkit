@@ -1,0 +1,17 @@
+{
+  "element": "dbp-file-handling-demo-activity",
+  "module_src": "dbp-file-handling-demo-activity.js",
+  "routing_name": "file-handling",
+  "name": {
+    "de": "File Handling",
+    "en": "file handling"
+  },
+  "short_name": {
+    "de": "File Handling",
+    "en": "file handling"
+  },
+  "description": {
+    "de": "Web Componente für file sink und file source. Für mehrere verschiedenen Quellen.",
+    "en": "Web components for file sink and file source. For several different sources."
+  }
+}

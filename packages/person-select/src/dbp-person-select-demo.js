@@ -6,7 +6,7 @@ import {AuthKeycloak, LoginButton} from 'dbp-auth';
 import * as commonUtils from 'dbp-common/utils';
 import * as commonStyles from 'dbp-common/styles';
 
-class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
+export class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';

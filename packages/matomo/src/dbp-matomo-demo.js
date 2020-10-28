@@ -7,7 +7,7 @@ import * as commonStyles from 'dbp-common/styles';
 import {MatomoElement} from './matomo';
 
 
-class MatomoDemo extends ScopedElementsMixin(LitElement) {
+export class MatomoDemo extends ScopedElementsMixin(LitElement) {
 
     constructor() {
         super();

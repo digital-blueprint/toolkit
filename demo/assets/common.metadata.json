@@ -1,6 +1,6 @@
 {
-  "element": "dbp-common-demo",
-  "module_src": "dbp-common-demo.js",
+  "element": "dbp-common-demo-activity",
+  "module_src": "dbp-common-demo-activity.js",
   "routing_name": "common",
   "name": {
     "de": "Common",

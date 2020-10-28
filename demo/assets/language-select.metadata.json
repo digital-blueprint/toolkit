@@ -1,0 +1,17 @@
+{
+  "element": "dbp-language-select-demo-activity",
+  "module_src": "dbp-language-select-demo-activity.js",
+  "routing_name": "language-select",
+  "name": {
+    "de": "Sprachauswahl",
+    "en": "Language select"
+  },
+  "short_name": {
+    "de": "Sprachauswahl",
+    "en": "Language select"
+  },
+  "description": {
+    "de": "Sprachauswahl Web Component",
+    "en": "Language select web component"
+  }
+}

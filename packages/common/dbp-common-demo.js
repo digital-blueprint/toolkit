@@ -5,7 +5,7 @@ import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
 import {getIconCSS, Icon, MiniSpinner, Button, Spinner} from './index.js';
 
-class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
+export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';

@@ -261,6 +261,7 @@ Dependencies:
                 {src: 'assets/*.metadata.json', dest: 'dist'},
                 {src: 'node_modules/dbp-common/assets/icons/*.svg', dest: 'dist/local/dbp-common/icons'},
                 {src: 'node_modules/tabulator-tables/dist/css', dest: 'dist/local/dbp-file-source/tabulator-tables'},
+                {src: 'node_modules/qr-scanner/qr-scanner-worker.*', dest: 'dist/local/qr-code-scanner'},
             ],
         }),
         useBabel && babel({

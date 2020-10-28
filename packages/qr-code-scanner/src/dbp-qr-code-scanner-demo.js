@@ -5,7 +5,7 @@ import * as commonUtils from 'dbp-common/utils';
 import * as commonStyles from "dbp-common/styles";
 import {QrCodeScanner} from './qr-code-scanner.js';
 
-class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
+export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -37,6 +37,14 @@ class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
+            
+            h1{
+                margin-bottom: 20px;
+            }
+            
+            .section{
+                margin-bottom: 50px;
+            }
         `;
     }
 

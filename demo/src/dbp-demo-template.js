@@ -1,17 +1,18 @@
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {PersonSelectDemo} from 'dbp-person-select/src/dbp-person-select-demo';
+//import {ClassName} from 'dbp-package-name/src/dbp-demo-activity-name'; TODO
 import * as commonUtils from 'dbp-common/utils';
 import * as commonStyles from 'dbp-common/styles';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import readme from 'dbp-person-select/README.md';
+// import readme from 'dbp-class-name/README.md'; TODO
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
 
-class DbpPersonSelectDemoActivity extends ScopedElementsMixin(LitElement) {
+class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TODO
     static get scopedElements() {
         return {
-          'dbp-person-select-demo': PersonSelectDemo,
+            // TODO
+            //'dbp-class-name-demo': ClassName,
         };
     }
 
@@ -48,10 +49,13 @@ class DbpPersonSelectDemoActivity extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-            ${unsafeHTML(readme)}
-            <dbp-person-select-demo id="demo" lang="en"></dbp-person-select-demo>
+             <!--
+                TODO
+                ${unsafeHTML(readme)}
+                <dbp-class-name-demo id="demo" lang="en"></dbp-class-name-demo>
+            -->
         `;
     }
 }
 
-commonUtils.defineCustomElement('dbp-person-select-demo-activity', DbpPersonSelectDemoActivity);
+//commonUtils.defineCustomElement('dbp-class-name-demo-activity', DbpClassNameDemoActivity); TODO

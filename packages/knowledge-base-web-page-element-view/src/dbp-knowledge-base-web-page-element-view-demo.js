@@ -6,7 +6,7 @@ import {KnowledgeBaseWebPageElementView} from './knowledge-base-web-page-element
 import * as commonUtils from 'dbp-common/utils';
 import * as commonStyles from 'dbp-common/styles';
 
-class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement) {
+export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';

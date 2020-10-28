@@ -6,7 +6,7 @@ import {Notification} from './notification.js';
 import * as commonUtils from 'dbp-common/utils';
 import * as commonStyles from "dbp-common/styles";
 
-class NotificationDemo extends ScopedElementsMixin(LitElement) {
+export class NotificationDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';

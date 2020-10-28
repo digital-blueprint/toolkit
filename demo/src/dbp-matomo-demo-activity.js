@@ -1,17 +1,17 @@
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {PersonSelectDemo} from 'dbp-person-select/src/dbp-person-select-demo';
+import {MatomoDemo} from 'dbp-matomo/src/dbp-matomo-demo';
 import * as commonUtils from 'dbp-common/utils';
 import * as commonStyles from 'dbp-common/styles';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import readme from 'dbp-person-select/README.md';
+import readme from 'dbp-matomo/README.md';
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
 
-class DbpPersonSelectDemoActivity extends ScopedElementsMixin(LitElement) {
+class DbpMatomoDemoActivity extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
-          'dbp-person-select-demo': PersonSelectDemo,
+            'dbp-matomo-demo': MatomoDemo,
         };
     }
 
@@ -48,10 +48,10 @@ class DbpPersonSelectDemoActivity extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-            ${unsafeHTML(readme)}
-            <dbp-person-select-demo id="demo" lang="en"></dbp-person-select-demo>
+               ${unsafeHTML(readme)}
+                <dbp-matomo-demo id="demo" lang="en"></dbp-matomo-demo>
         `;
     }
 }
 
-commonUtils.defineCustomElement('dbp-person-select-demo-activity', DbpPersonSelectDemoActivity);
+commonUtils.defineCustomElement('dbp-matomo-demo-activity', DbpMatomoDemoActivity);
