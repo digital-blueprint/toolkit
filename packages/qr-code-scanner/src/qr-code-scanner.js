@@ -143,8 +143,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._outputData = null;
         this._videoRunning = false;
         this._lock = new Mutex();
-
-        this.videoReady = false;
     }
 
     static get scopedElements() {
@@ -227,12 +225,14 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         await this.updateComplete;
 
         let targetCanvas = this._("#canvas");
+        let targetvideo = this._("#video");
         let canvasElement = document.createElement("canvas");
         let firstDrawDone = false;
 
         this._askPermission = true;
         this._loadingMessage = i18n.t('no-camera-access');
         let video = await createVideoElement(this._activeCamera);
+        targetvideo.appendChild(video);
         this._askPermission = false;
 
         let lastCode = null;
@@ -242,11 +242,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let detectorRunning = false;
 
         const tick = () => {
-            console.log("---", this.videoReady);
             this._requestID = null;
-            if (video.readyState === video.HAVE_ENOUGH_DATA || this.videoReady) {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 this._loading = false;
-                this.videoReady = true;
                 // draw into a temporary canvas first
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
@@ -385,7 +383,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             this._askPermission = false;
             this._videoRunning = false;
             this._loading = false;
-            this.videoReady = false;
 
             this._loadingMessage = '';
         } finally {
@@ -501,6 +498,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                        </div>
                        <canvas id="canvas" class="${classMap({hidden: !showCanvas})}"></canvas>
+                       <div id="video"></div>
                         <div class="output ${classMap({hidden: !(this.showOutput && showCanvas)})}">
                           ${ (this._outputData !== null) ? html`
                             <div><b>${i18n.t('data')}:</b> <span>${this._outputData}</span></div>
