@@ -161,6 +161,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._outputData = null;
         this._videoRunning = false;
         this._lock = new Mutex();
+
+        this.videoReady = false;
     }
 
     static get scopedElements() {
@@ -261,10 +263,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let detectorRunning = false;
 
         const tick = () => {
+            console.log("---", this.videoReady);
             this._requestID = null;
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            if (video.readyState === video.HAVE_ENOUGH_DATA || this.videoReady) {
                 this._loading = false;
-
+                this.videoReady = true;
                 // draw into a temporary canvas first
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
@@ -404,6 +407,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             this._askPermission = false;
             this._videoRunning = false;
             this._loading = false;
+            this.videoReady = false;
 
             this._loadingMessage = '';
         } finally {
