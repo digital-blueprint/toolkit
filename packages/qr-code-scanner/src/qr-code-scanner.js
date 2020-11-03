@@ -6,7 +6,6 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Icon, MiniSpinner} from 'dbp-common';
 import {classMap} from 'lit-html/directives/class-map.js';
 import * as commonUtils from 'dbp-common/utils';
-import jsQR from "jsqr";
 import {getIconSVGURL} from 'dbp-common';
 import {Mutex} from 'async-mutex';
 import QrScanner from 'qr-scanner';
@@ -101,23 +100,6 @@ async function createVideoElement(deviceId) {
 
     return null;
 }
-
-
-class jsQRScanner { // eslint-disable-line no-unused-vars
-    constructor() {
-    }
-
-    async scan(canvas, x, y, width, height) {
-        let imageData = canvas.getContext("2d").getImageData(x, y, width, height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: "dontInvert",
-        });
-        if (code === null)
-            return null;
-        return {'data': code.data};
-    }
-}
-
 
 class QRScanner {
     constructor() {
@@ -251,9 +233,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._askPermission = true;
         this._loadingMessage = i18n.t('no-camera-access');
         let video = await createVideoElement(this._activeCamera);
-        video.setAttribute('autoplay', '');
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
         this._askPermission = false;
 
         let lastCode = null;
@@ -360,8 +339,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.onloadedmetadata = function(e){
                 video.play();
-            }
-           // video.play();
+            };
             this._videoRunning = true;
 
             console.assert(this._requestID === null);
