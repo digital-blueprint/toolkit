@@ -336,8 +336,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.onloadedmetadata = function(e){
                 video.play();
-            }
-           // video.play();
+            };
             this._videoRunning = true;
 
             console.assert(this._requestID === null);
