@@ -459,6 +459,12 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 border-top: 1px solid black;
             }
             
+            #video video, #video{
+                height: 0px;
+                width: 0px;
+                opacity: 0;
+            }
+            
             @media only screen
             and (orientation: portrait)
             and (max-device-width: 765px) {   
