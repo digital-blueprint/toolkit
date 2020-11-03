@@ -249,6 +249,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._askPermission = true;
         this._loadingMessage = i18n.t('no-camera-access');
         let video = await createVideoElement(this._activeCamera);
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
         this._askPermission = false;
 
         let lastCode = null;
@@ -352,7 +355,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         if (video !== null) {
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-            video.play();
+            video.onloadedmetadata = function(e){
+                video.play();
+            }
+           // video.play();
             this._videoRunning = true;
 
             console.assert(this._requestID === null);
