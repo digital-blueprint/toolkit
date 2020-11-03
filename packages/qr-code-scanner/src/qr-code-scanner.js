@@ -93,6 +93,9 @@ async function createVideoElement(deviceId) {
     if (stream !== null) {
         let video = document.createElement("video");
         video.srcObject = stream;
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
         return video;
     }
 
