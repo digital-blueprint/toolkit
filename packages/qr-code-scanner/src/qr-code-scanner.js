@@ -6,7 +6,6 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Icon, MiniSpinner} from 'dbp-common';
 import {classMap} from 'lit-html/directives/class-map.js';
 import * as commonUtils from 'dbp-common/utils';
-import jsQR from "jsqr";
 import {getIconSVGURL} from 'dbp-common';
 import {Mutex} from 'async-mutex';
 import QrScanner from 'qr-scanner';
@@ -101,23 +100,6 @@ async function createVideoElement(deviceId) {
 
     return null;
 }
-
-
-class jsQRScanner { // eslint-disable-line no-unused-vars
-    constructor() {
-    }
-
-    async scan(canvas, x, y, width, height) {
-        let imageData = canvas.getContext("2d").getImageData(x, y, width, height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: "dontInvert",
-        });
-        if (code === null)
-            return null;
-        return {'data': code.data};
-    }
-}
-
 
 class QRScanner {
     constructor() {
