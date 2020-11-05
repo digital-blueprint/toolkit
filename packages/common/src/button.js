@@ -145,6 +145,10 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
                 padding-left: 12px;
                 padding-right: 12px;
             }
+
+            .button {
+                width: 100%;
+            }
         `;
     }
 
