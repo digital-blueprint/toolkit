@@ -87,7 +87,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
 
     buttonClickHandler() {
         setTimeout(() => {
-            this.shadowRoot.querySelector("dbp-button").stop();
+            const scopedTagName = this.constructor.getScopedTagName('dbp-button');
+            this.shadowRoot.querySelector(scopedTagName).stop();
         }, 1000);
     }
 
