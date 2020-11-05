@@ -80,3 +80,79 @@ export class Button extends ScopedElementsMixin(LitElement) {
         `;
     }
 }
+
+export class LoadingButton extends ScopedElementsMixin(LitElement) {
+    constructor() {
+        super();
+        this.value = "";
+        this.type = "";
+        this.loading = false;
+        this.disabled = false;
+    }
+
+    static get scopedElements() {
+        return {
+            'dbp-mini-spinner': MiniSpinner,
+        };
+    }
+
+    static get properties() {
+        return {
+            value: { type: String },
+            type: { type: String },
+            loading: { type: Boolean },
+            disabled: { type: Boolean, reflect: true },
+        };
+    }
+
+    start() {
+        this.loading = true;
+        this.disabled = true;
+    }
+
+    stop() {
+        this.loading = false;
+        this.disabled = false;
+    }
+
+    static get styles() {
+        // language=css
+        return css`
+            ${commonStyles.getThemeCSS()}
+            ${commonStyles.getButtonCSS()}
+
+            .spinner {
+                padding-left: 0.5em;
+                min-width: 16px;
+            }
+
+            .loading-container {
+                display: flex;
+                align-items: baseline;
+            }
+
+            .label {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            :host {
+                display: inline-block;
+            }
+
+            .is-not-loading .label {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+        `;
+    }
+
+    render() {
+        return html`
+            <button class="button ${this.type} loading-container  ${!this.loading ? "is-not-loading" : ""}" ?disabled="${this.disabled}">
+                <div class="label">${this.value}</div> <dbp-mini-spinner class="spinner" style="display: ${this.loading ? "inline" : "none"}"></dbp-mini-spinner>
+            </button>
+        `;
+    }
+}

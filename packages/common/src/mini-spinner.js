@@ -17,6 +17,7 @@ export class MiniSpinner extends LitElement {
         return css`
         .outer {
             display: inline-block;
+            vertical-align: sub;
         }
         .inner {
             display: flex;
