@@ -1,7 +1,5 @@
 # Language Select Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/LanguageSelect)
-
 ## Local development
 
 ```bash

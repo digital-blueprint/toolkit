@@ -1,7 +1,5 @@
 # Person Select Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/PersonSelect)
-
 ## Usage
 
 ```html

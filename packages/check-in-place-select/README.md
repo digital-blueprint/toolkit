@@ -1,7 +1,5 @@
 # Check-in place select web component
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/toolkit)
-
 ## Usage
 
 ```html

@@ -1,7 +1,5 @@
 # File handling web components
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/FileHandling)
-
 ## FileSource
 
 This web component allows the selection of local files via file dialog or drag and drop and to select and download
