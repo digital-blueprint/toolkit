@@ -1,7 +1,5 @@
 # App Shell Component
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/apps/AppShell)
-
 A web component for building SPAs consisting of one topic with multiple
 activities. Handles login, language selection, activity switching, menus etc.
 

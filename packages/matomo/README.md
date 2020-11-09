@@ -1,7 +1,5 @@
 # Matomo Web Component
 
-[GitLab Repository](git@gitlab.tugraz.at:dbp/web-components/toolkit.git)
-
 ## Usage
 
 ```html

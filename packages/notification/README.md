@@ -1,7 +1,5 @@
 # Notification Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/Notification)
-
 ## Usage
 
 ```html

@@ -1,7 +1,5 @@
 # QR code Scanner Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/qr-code-scanner)
-
 ## Requirements
 - Https
 

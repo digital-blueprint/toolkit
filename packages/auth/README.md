@@ -1,7 +1,5 @@
 # Auth Web Components
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/Auth)
-
 ## Keycloak Component
 
 ### Usage

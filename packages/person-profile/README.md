@@ -1,7 +1,5 @@
 # Person Profile Web Component
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/PersonProfile)
-
 ## Usage
 
 ```html
