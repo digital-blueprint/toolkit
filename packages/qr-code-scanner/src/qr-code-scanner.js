@@ -72,9 +72,15 @@ async function getVideoDevices() {
  * @param {string} devices_map
  * @returns {object|null} a video element or null
  */
-async function checkIosMobileSupport(devices_map) {
+function checkIosMobileSupport(devices_map) {
+    return navigator.userAgent;
     if ( !(devices_map.size > 0) && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        this._iosMobileSupport = false;
+        console.log("hui")
+        return false;
+    } else {
+        console.log("maa")
+
+        return true;
     }
 }
 
@@ -144,7 +150,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._activeCamera = '';
 
         this._devices = new Map();
-        this._iosMobileSupport = true;
         this._requestID = null;
         this._loadingMessage = '';
 
@@ -171,7 +176,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             _activeCamera: { type: String, attribute: false },
             _loading: { type: Boolean, attribute: false },
             _devices: { type: Map, attribute: false},
-            _iosMobileSupport: { type: Boolean, attribute: false},
             _loadingMessage: { type: String, attribute: false },
             _outputData: { type: String, attribute: false },
             _askPermission: { type: Boolean, attribute: false },
@@ -186,7 +190,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let devices = await getVideoDevices();
         this._activeCamera = getPrimaryDevice(devices) || '';
         this._devices = devices;
-        await checkIosMobileSupport(devices);
 
         if (!this.stopScan) {
             await this.startScanning();
@@ -489,6 +492,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     render() {
         let hasDevices = this._devices.size > 0;
         let showCanvas = this._videoRunning && !this._askPermission && !this._loading;
+        let iosMobileSupport = checkIosMobileSupport(this._devices);
 
         return html`
             <div class="columns">
@@ -526,9 +530,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     <div class="${classMap({hidden: hasDevices})}">
                         ${i18n.t('no-support')}
                     </div>
-                    <div class="${classMap({hidden: this._iosMobileSupport})}">
+                    <div class="${classMap({hidden: iosMobileSupport})}">
                         ${i18n.t('no-ios-support')}
                     </div>
+                    ${iosMobileSupport}
                 </div>
             </div>
         `;
