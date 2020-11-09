@@ -42,6 +42,9 @@ yarn run watch-local
 
 # run tests
 yarn test
+
+# build local packages in dist directory
+yarn run build
 ```
 
 Jump to <http://localhost:8002> and you should get a Single Sign On login page.
