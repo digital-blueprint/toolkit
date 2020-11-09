@@ -37,17 +37,17 @@
   },
   "scripts": {
     "clean": "rm dist/*",
-    "build": "npm run build-local",
+    "build": "yarn run build-local",
     "build-local": "rollup -c",
     "build-dev": "rollup -c --environment BUILD:development",
     "build-prod": "rollup -c --environment BUILD:production",
     "build-demo": "rollup -c --environment BUILD:demo",
     "build-test": "rollup -c --environment BUILD:test",
     "i18next": "i18next-scanner",
-    "watch": "npm run watch-local",
+    "watch": "yarn run watch-local",
     "watch-local": "rollup -c --watch",
     "watch-dev": "rollup -c --watch --environment BUILD:development",
-    "test": "npm run build-test && karma start --singleRun",
+    "test": "yarn run build-test && karma start --singleRun",
     "lint": "eslint ."
   }
 }
