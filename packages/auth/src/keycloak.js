@@ -87,17 +87,14 @@ export class KeycloakWrapper extends EventTarget {
         let refreshed = false;
 
         try {
-            refreshed = await this._keycloak.updateToken(5);
+            // -1 means force a refresh
+            refreshed = await this._keycloak.updateToken(-1);
         } catch (error) {
             console.log('Failed to refresh the token', error);
             return;
         }
 
-        if (refreshed) {
-            console.log('Token was successfully refreshed');
-        } else {
-            console.log('Token is still valid');
-        }
+        console.assert(refreshed, "token should have been refreshed");
     }
 
     async _ensureInstance() {
