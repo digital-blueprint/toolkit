@@ -4,6 +4,7 @@
   "loading-video": "⌛ Loading video...",
   "no-qr-detected": "No QR code detected.",
   "no-support": "Your browser does not support video recording.",
+  "no-ios-support": "Your browser does not support video recording. Please use Safari.",
   "data": "Data",
   "camera": "Camera ",
   "front-camera": "Frontcamera",
