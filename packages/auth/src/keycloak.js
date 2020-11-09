@@ -121,7 +121,6 @@ export class KeycloakWrapper extends EventTarget {
     async _keycloakInit(options) {
         // https://gitlab.tugraz.at/dbp/apps/library/issues/41
         // retry the keycloak init in case it fails, maybe it helps :/
-        options['idpHint'] = 'eid-oidc';
         try {
             return await this._keycloak.init(options);
         } catch (e) {
@@ -186,7 +185,6 @@ export class KeycloakWrapper extends EventTarget {
                 scope: scope,
                 idpHint: this._idpHint,
             });
-            //options['idpHint'] = 'eid-oidc';
         }
     }
 
