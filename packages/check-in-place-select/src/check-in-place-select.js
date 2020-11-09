@@ -14,7 +14,7 @@ import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from "dbp-common/error";
 
 
-const locationContext = {
+const checkInPlaceContext = {
     "@id": "@id",
     "name": "http://schema.org/name",
     "maximumPhysicalAttendeeCapacity": "http://schema.org/maximumPhysicalAttendeeCapacity"
@@ -22,7 +22,7 @@ const locationContext = {
 
 select2(window, $);
 
-export class LocationSelect extends ScopedElementsMixin(LitElement) {
+export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
 
     constructor() {
         super();
@@ -32,7 +32,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
         this.$select = null;
         this.active = false;
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
-        this.selectId = 'location-select-' + commonUtils.makeId(24);
+        this.selectId = 'check-in-place-select-' + commonUtils.makeId(24);
         this.value = '';
         this.object = null;
         this.ignoreValueUpdate = false;
@@ -125,7 +125,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
             return false;
         }
 
-        // find the correct api url for a location
+        // find the correct api url for a checkInPlace
         const apiUrl = this.jsonld.getApiUrlForIdentifier("http://schema.org/Place");
         // const apiUrl = this.jsonld.getApiUrlForEntityName("CheckInPlace");
 
@@ -144,8 +144,8 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
             width: '100%',
             language: this.lang === "de" ? select2LangDe() : select2LangEn(),
             minimumInputLength: 2,
-            placeholder: i18n.t('location-select.placeholder'),
-            dropdownParent: this.$('#location-select-dropdown'),
+            placeholder: i18n.t('check-in-place-select.placeholder'),
+            dropdownParent: this.$('#check-in-place-select-dropdown'),
             ajax: {
                 delay: 500,
                 url: apiUrl,
@@ -161,7 +161,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
                 },
                 processResults: function (data) {
                     that.lastResult = data;
-                    let transformed = that.jsonld.transformMembers(data, locationContext);
+                    let transformed = that.jsonld.transformMembers(data, checkInPlaceContext);
                     const results = [];
                     transformed.forEach((place) => {
                         results.push({id: place["@id"], maximumPhysicalAttendeeCapacity: place["maximumPhysicalAttendeeCapacity"], text: that.generateOptionText(place)});
@@ -228,7 +228,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
             })
             .then((place) => {
                 that.object = place;
-                const transformed = that.jsonld.compactMember(that.jsonld.expandMember(place), locationContext);
+                const transformed = that.jsonld.compactMember(that.jsonld.expandMember(place), checkInPlaceContext);
                 const identifier = transformed["@id"];
                 const maxCapacity = transformed["maximumPhysicalAttendeeCapacity"];
                 const room = place.identifier;
@@ -259,7 +259,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
     generateOptionText(place) {
         let text = place["name"];
 
-        // add maximum capacity to location if present
+        // add maximum capacity to checkInPlace if present
         if (this.showCapacity && (place["maximumPhysicalAttendeeCapacity"] !== undefined) && (place["maximumPhysicalAttendeeCapacity"] !== null)) {
             let capacity = place["maximumPhysicalAttendeeCapacity"];
             text += ` (${capacity})`;
@@ -366,7 +366,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
                 <div class="field has-addons">
                     <div class="select2-control control">
                         <!-- https://select2.org-->
-                        <select id="${this.selectId}" name="location" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('location-select.login-required')}</option>` : ''}</select>
+                        <select id="${this.selectId}" name="check-in-place" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('check-in-place-select.login-required')}</option>` : ''}</select>
                     </div>
                     <a class="control button"
                        id="reload-button"
@@ -377,7 +377,7 @@ export class LocationSelect extends ScopedElementsMixin(LitElement) {
                         <dbp-icon name="reload"></dbp-icon>
                     </a>
                 </div>
-                <div id="location-select-dropdown"></div>
+                <div id="check-in-place-select-dropdown"></div>
             </div>
         `;
     }

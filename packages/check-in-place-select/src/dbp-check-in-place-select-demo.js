@@ -1,12 +1,12 @@
 import {i18n} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {LocationSelect} from './location-select.js';
+import {CheckInPlaceSelect} from './check-in-place-select.js';
 import {AuthKeycloak, LoginButton} from 'dbp-auth';
 import * as commonUtils from 'dbp-common/utils';
 import * as commonStyles from 'dbp-common/styles';
 
-class LocationSelectDemo extends ScopedElementsMixin(LitElement) {
+class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -17,7 +17,7 @@ class LocationSelectDemo extends ScopedElementsMixin(LitElement) {
         return {
           'dbp-auth-keycloak': AuthKeycloak,
           'dbp-login-button': LoginButton,
-          'dbp-location-select': LocationSelect,
+          'dbp-check-in-place-select': CheckInPlaceSelect,
         };
     }
 
@@ -61,21 +61,21 @@ class LocationSelectDemo extends ScopedElementsMixin(LitElement) {
         return html`
             <section class="section">
                 <div class="container">
-                    <h1 class="title">Location-Select-Demo</h1>
+                    <h1 class="title">Check-In-Place-Select-Demo</h1>
                 </div>
                 ${this.getAuthComponentHtml()}
                 <div class="container">
                     <form>
                         <div class="field">
-                            <label class="label">Location 1</label>
+                            <label class="label">Check-In-Place 1</label>
                             <div class="control">
-                                <dbp-location-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></dbp-location-select>
+                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></dbp-check-in-place-select>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">Location 2</label>
+                            <label class="label">Check-In-Place 2</label>
                             <div class="control">
-                                <dbp-location-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></dbp-location-select>
+                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></dbp-check-in-place-select>
                             </div>
                         </div>
                     </form>
@@ -85,4 +85,4 @@ class LocationSelectDemo extends ScopedElementsMixin(LitElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-location-select-demo', LocationSelectDemo);
+commonUtils.defineCustomElement('dbp-check-in-place-select-demo', CheckInPlaceSelectDemo);

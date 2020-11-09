@@ -15,7 +15,7 @@ console.log("build: " + build);
 
 export default (async () => {
     return {
-        input: (build != 'test') ? ['src/dbp-location-select.js', 'src/dbp-location-select-demo.js'] : glob.sync('test/**/*.js'),
+        input: (build != 'test') ? ['src/dbp-check-in-place-select.js', 'src/dbp-check-in-place-select-demo.js'] : glob.sync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
