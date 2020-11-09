@@ -31,18 +31,21 @@
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:dbp/web-components/PersonSelect.git
-cd PersonSelect
+git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
+cd toolkit/packages/person-select
 git submodule update --init
 
-# install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)
-npm install
+# install dependencies
+yarn install
 
 # constantly build dist/bundle.js and run a local web-server on port 8002 
-npm run watch-local
+yarn run watch
 
 # run tests
-npm test
+yarn test
+
+# build local packages in dist directory
+yarn run build
 ```
 
 Jump to <http://localhost:8002> and you should get a Single Sign On login page.
