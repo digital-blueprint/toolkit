@@ -1,11 +1,11 @@
-import '../src/dbp-location-select.js';
+import '../src/dbp-check-in-place-select.js';
 import '../src/demo.js';
 
-describe('dbp-location-select basics', () => {
+describe('dbp-check-in-place-select basics', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('dbp-location-select');
+    node = document.createElement('dbp-check-in-place-select');
     document.body.appendChild(node);
     await node.updateComplete;
   });
@@ -19,11 +19,11 @@ describe('dbp-location-select basics', () => {
   });
 });
 
-describe('dbp-location-select-demo basics', () => {
+describe('dbp-check-in-place-select-demo basics', () => {
   let node;
 
   beforeEach(async () => {
-    node = document.createElement('dbp-location-select-demo');
+    node = document.createElement('dbp-check-in-place-select-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });

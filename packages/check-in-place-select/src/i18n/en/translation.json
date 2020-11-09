@@ -1,5 +1,5 @@
 {
-  "location-select": {
+  "check-in-place-select": {
     "placeholder": "Please select a location",
     "error-summary": "An error occurred",
     "login-required": "Login required"

@@ -1,5 +1,5 @@
 {
-  "name": "dbp-location-select",
+  "name": "dbp-check-in-place-select",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",

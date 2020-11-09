@@ -1,0 +1,17 @@
+{
+  "element": "dbp-check-in-place-select-demo-activity",
+  "module_src": "dbp-check-in-place-select-demo-activity.js",
+  "routing_name": "check-in-place-select",
+  "name": {
+    "de": "Ortauswahl",
+    "en": "Check-in place select"
+  },
+  "short_name": {
+    "de": "Ortauswahl",
+    "en": "Check-in place select"
+  },
+  "description": {
+    "de": "Ort Web Component",
+    "en": "Check-in place select web component"
+  }
+}
