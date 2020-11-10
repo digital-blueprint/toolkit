@@ -91,7 +91,6 @@ files to a [Nextcloud](https://nextcloud.com/) instance.
 # get the source
 git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
 cd toolkit/packages/file-handling
-git submodule update --init
 
 # install dependencies
 yarn install

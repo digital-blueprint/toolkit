@@ -30,7 +30,6 @@ send({
 # get the source
 git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
 cd toolkit/packages/notification
-git submodule update --init
 
 # install dependencies
 yarn install

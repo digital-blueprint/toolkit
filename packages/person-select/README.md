@@ -33,7 +33,6 @@
 # get the source
 git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
 cd toolkit/packages/person-select
-git submodule update --init
 
 # install dependencies
 yarn install

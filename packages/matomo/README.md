@@ -38,7 +38,6 @@ class Demo {
 # get the source
 git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
 cd toolkit/packages/matomo
-git submodule update --init
 
 # install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)
 yarn install

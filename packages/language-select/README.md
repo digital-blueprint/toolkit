@@ -6,7 +6,6 @@
 # get the source
 git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
 cd toolkit/packages/language-select
-git submodule update --init
 
 # install dependencies
 yarn install
