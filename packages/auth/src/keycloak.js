@@ -55,6 +55,15 @@ const ensureURL = function(urlOrPath) {
  */
 export class KeycloakWrapper extends EventTarget {
 
+    /* Minimum validity of the token in seconds */
+    MIN_VALIDITY = 20;
+
+    /* Interval at which the token validity is checked, in seconds */
+    CHECK_INTERVAL = 10;
+
+    /* Enables extra debug logging */
+    DEBUG = false;
+
     constructor(baseURL, realm, clientId, silentCheckSsoUri, idpHint) {
         super();
 
@@ -65,6 +74,24 @@ export class KeycloakWrapper extends EventTarget {
         this._initDone = false;
         this._silentCheckSsoUri = silentCheckSsoUri;
         this._idpHint = idpHint;
+        this._checkId = null;
+
+        this._onVisibilityChanged = this._onVisibilityChanged.bind(this);
+        document.addEventListener("visibilitychange", this._onVisibilityChanged);
+    }
+
+    /**
+     * This needs to be called or the instance will leak;
+     */
+    close() {
+        document.removeEventListener("visibilitychange", this._onVisibilityChanged);
+    }
+
+    _onVisibilityChanged() {
+        let isVisible = (document.visibilityState === 'visible');
+        if (isVisible && this._keycloak.authenticated) {
+            this._checkTokeHasExpired();
+        }
     }
 
     _onChanged() {
@@ -97,6 +124,44 @@ export class KeycloakWrapper extends EventTarget {
         console.assert(refreshed, "token should have been refreshed");
     }
 
+    async _checkTokeHasExpired() {
+        let refreshed;
+
+        let minValidity = this.MIN_VALIDITY + this.CHECK_INTERVAL;
+        if (this.DEBUG) {
+            console.log(`Updating token if not valid for at least ${minValidity}s`);
+        }
+        try {
+            refreshed = await this._keycloak.updateToken(minValidity);
+        } catch (error) {
+            console.log('Failed to refresh the token', error);
+        }
+
+        if (this.DEBUG && refreshed)
+            console.log("token has been refreshed");
+    }
+
+    async _onAuthSuccess() {
+        // We check every once in a while if the token is still valid and
+        // and refresh it if needed.
+        if (this._checkId !== null) {
+            clearInterval(this._checkId);
+            this._checkId = null;
+        }
+        this._checkId = setInterval(this._checkTokeHasExpired.bind(this), this.CHECK_INTERVAL * 1000);
+
+        this._onChanged();
+    }
+
+    async _onAuthLogout() {
+        if (this._checkId !== null) {
+            clearInterval(this._checkId);
+            this._checkId = null;
+        }
+
+        this._onChanged();
+    }
+
     async _ensureInstance() {
         if (this._keycloak !== null)
             return;
@@ -112,8 +177,8 @@ export class KeycloakWrapper extends EventTarget {
         this._keycloak.onTokenExpired = this._onTokenExpired.bind(this);
         this._keycloak.onAuthRefreshSuccess = this._onChanged.bind(this);
         this._keycloak.onAuthRefreshError = this._onChanged.bind(this);
-        this._keycloak.onAuthLogout = this._onChanged.bind(this);
-        this._keycloak.onAuthSuccess = this._onChanged.bind(this);
+        this._keycloak.onAuthLogout = this._onAuthLogout.bind(this);
+        this._keycloak.onAuthSuccess = this._onAuthSuccess.bind(this);
         this._keycloak.onAuthError = this._onChanged.bind(this);
         this._keycloak.onReady = this._onReady.bind(this);
     }
@@ -139,6 +204,9 @@ export class KeycloakWrapper extends EventTarget {
             pkceMethod: 'S256',
         };
 
+        if (this.DEBUG) {
+            options['enableLogging'] = true;
+        }
 
         if (this._silentCheckSsoUri) {
 
