@@ -39,7 +39,7 @@ after loaded. This attribute is also used to stop the QR code reader or if you d
 git clone git@gitlab.tugraz.at:dbp/web-components/qr-code-scanner.git
 cd qr-code-scanner
 
-# install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)
+# install dependencies
 yarn install
 
 # constantly build dist/bundle.js and run a local web-server on port 8002 

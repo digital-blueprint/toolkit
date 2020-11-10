@@ -75,7 +75,7 @@ activities. Handles login, language selection, activity switching, menus etc.
 git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
 cd toolkit/packages/app-shell
 
-# install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)
+# install dependencies
 yarn install
 
 # constantly build dist/bundle.js and run a local web-server on port 8002 
