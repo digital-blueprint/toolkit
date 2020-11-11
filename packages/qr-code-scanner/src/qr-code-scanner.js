@@ -73,15 +73,7 @@ async function getVideoDevices() {
  * @returns {object|null} a video element or null
  */
 function checkIosMobileSupport(devices_map) {
-    return navigator.userAgent;
-    if ( !(devices_map.size > 0) && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        console.log("hui")
-        return false;
-    } else {
-        console.log("maa")
-
-        return true;
-    }
+    return /CriOS|FxiOS/i.test(navigator.userAgent);
 }
 
 /**
@@ -492,7 +484,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     render() {
         let hasDevices = this._devices.size > 0;
         let showCanvas = this._videoRunning && !this._askPermission && !this._loading;
-        let iosMobileSupport = checkIosMobileSupport(this._devices);
+        let noSupportString = checkIosMobileSupport(this._devices) ? i18n.t('no-ios-support') : i18n.t('no-support');
 
         return html`
             <div class="columns">
@@ -528,12 +520,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                         </div>
                     </div>
                     <div class="${classMap({hidden: hasDevices})}">
-                        ${i18n.t('no-support')}
+                        ${noSupportString}
                     </div>
-                    <div class="${classMap({hidden: iosMobileSupport})}">
-                        ${i18n.t('no-ios-support')}
-                    </div>
-                    ${iosMobileSupport}
+
                 </div>
             </div>
         `;
