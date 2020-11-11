@@ -229,6 +229,7 @@ export class AuthKeycloak extends LitElement {
     }
 
     disconnectedCallback() {
+        this._kcwrapper.close();
         this._kcwrapper.removeEventListener('changed', this._onKCChanged);
         this._bus.close();
 
