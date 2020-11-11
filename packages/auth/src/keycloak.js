@@ -55,15 +55,6 @@ const ensureURL = function(urlOrPath) {
  */
 export class KeycloakWrapper extends EventTarget {
 
-    /* Minimum validity of the token in seconds */
-    MIN_VALIDITY = 20;
-
-    /* Interval at which the token validity is checked, in seconds */
-    CHECK_INTERVAL = 10;
-
-    /* Enables extra debug logging */
-    DEBUG = false;
-
     constructor(baseURL, realm, clientId, silentCheckSsoUri, idpHint) {
         super();
 
@@ -75,6 +66,15 @@ export class KeycloakWrapper extends EventTarget {
         this._silentCheckSsoUri = silentCheckSsoUri;
         this._idpHint = idpHint;
         this._checkId = null;
+
+        /* Minimum validity of the token in seconds */
+        this.MIN_VALIDITY = 20;
+
+        /* Interval at which the token validity is checked, in seconds */
+        this.CHECK_INTERVAL = 10;
+
+        /* Enables extra debug logging */
+        this.DEBUG = false;
 
         this._onVisibilityChanged = this._onVisibilityChanged.bind(this);
         document.addEventListener("visibilitychange", this._onVisibilityChanged);
