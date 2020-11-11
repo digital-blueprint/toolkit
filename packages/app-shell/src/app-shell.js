@@ -604,17 +604,21 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
                 aside {
                     margin: 0;
-                    padding: 0 15px;
+                    position: sticky;
+                    top: 0;
+                    width: 100%;
+                    background-color: white;
+                    z-index: 10;
                 }
 
                 aside h2.subtitle {
                     display: block;
-                    border: 1px solid black;
+                    border-bottom: 1px solid black;
                     padding: 0.25em 0.5em;
                 }
 
                 aside .menu {
-                    border: black 1px solid;
+                    border-bottom: black 1px solid;
                     border-top-width: 0;
                 }
 
