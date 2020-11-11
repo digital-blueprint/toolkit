@@ -98,6 +98,7 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
 
     static get properties() {
         return {
+            // value is deprecated, use the main slot instead
             value: { type: String },
             type: { type: String },
             loading: { type: Boolean },
@@ -155,7 +156,7 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <button class="button ${this.type} loading-container  ${!this.loading ? "is-not-loading" : ""}" ?disabled="${this.disabled}">
-                <div class="label">${this.value}</div> <dbp-mini-spinner class="spinner" style="display: ${this.loading ? "inline" : "none"}"></dbp-mini-spinner>
+                <div class="label"><slot>${this.value}</slot></div> <dbp-mini-spinner class="spinner" style="display: ${this.loading ? "inline" : "none"}"></dbp-mini-spinner>
             </button>
         `;
     }
