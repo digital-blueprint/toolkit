@@ -1,7 +1,9 @@
+import {assert, expect} from 'chai';
+
 import '../src/dbp-language-select.js';
 import '../src/demo.js';
 
-describe('dbp-language-select basics', () => {
+suite('dbp-language-select basics', () => {
   let node;
   let events = [];
 
@@ -9,7 +11,7 @@ describe('dbp-language-select basics', () => {
     events.push(e);
   }
 
-  beforeEach(async () => {
+  setup(async () => {
     events.length = 0;
     window.addEventListener('dbp-language-changed', handler);
     node = document.createElement('dbp-language-select');
@@ -17,16 +19,16 @@ describe('dbp-language-select basics', () => {
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
     window.removeEventListener('dbp-language-changed', handler);
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 
-  it('change language events', () => {
+  test('change language events', () => {
     node.lang = 'en';
     expect(node.next).to.equal('de');
     expect(events.length).to.equal(1);
@@ -35,7 +37,8 @@ describe('dbp-language-select basics', () => {
     expect(events.length).to.equal(2);
   });
 
-  it('change next', () => {
+  test('change next', () => {
+    expect(events.length).to.equal(0);
     node.lang = 'en';
     expect(node.next).to.equal('de');
     expect(node.lang).to.equal('en');
@@ -46,20 +49,20 @@ describe('dbp-language-select basics', () => {
   });
 });
 
-describe('dbp-language-select demo', () => {
+suite('dbp-language-select demo', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-language-select-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });

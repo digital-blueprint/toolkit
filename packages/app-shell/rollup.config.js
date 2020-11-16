@@ -24,7 +24,7 @@ export default (async () => {
         onwarn: function (warning, warn) {
             // ignore chai warnings
             if (warning.code === 'CIRCULAR_DEPENDENCY') {
-              return;
+                return;
             }
             warn(warning);
         },

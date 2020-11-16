@@ -1,19 +1,21 @@
+import {assert} from 'chai';
+
 import '../src/dbp-notification';
 
-describe('dbp-notification basics', () => {
+suite('dbp-notification basics', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-notification');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });
