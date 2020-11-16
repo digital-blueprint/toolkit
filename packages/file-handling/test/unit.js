@@ -1,38 +1,40 @@
+import {assert} from 'chai';
+
 import '../src/dbp-file-source';
 import '../src/demo';
 
-describe('dbp-file-source basics', () => {
+suite('dbp-file-source basics', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-file-source');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });
 
-describe('dbp-file-source demo', () => {
+suite('dbp-file-source demo', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-file-source-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });
