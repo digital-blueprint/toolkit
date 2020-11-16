@@ -1,6 +1,3 @@
-// Trick to use the auto-downloaded puppeteer chrome binary
-process.env.CHROME_BIN = require('puppeteer').executablePath();
-
 module.exports = function(config) {
     config.set({
       basePath: 'dist',
@@ -15,10 +12,13 @@ module.exports = function(config) {
         {pattern: './**/*', included: false, watched: true, served: true},
       ],
       autoWatch: true,
-      browsers: ['ChromeHeadlessNoSandbox', 'FirefoxHeadless'],
+      browsers: [
+        'ChromiumHeadlessNoSandbox',
+        'FirefoxHeadless',
+      ],
       customLaunchers: {
-        ChromeHeadlessNoSandbox: {
-          base: 'ChromeHeadless',
+        ChromiumHeadlessNoSandbox: {
+          base: 'ChromiumHeadless',
           flags: ['--no-sandbox']
         }
       },
