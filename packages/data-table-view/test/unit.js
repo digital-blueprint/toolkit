@@ -6,13 +6,13 @@ import '../src/dbp-data-table-view-demo';
 suite('dbp-data-table-view basics', () => {
   let node;
 
-  suiteSetup(async () => {
+  setup(async () => {
     node = document.createElement('dbp-data-table-view');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  suiteTeardown(() => {
+  teardown(() => {
     node.remove();
   });
 
@@ -24,13 +24,13 @@ suite('dbp-data-table-view basics', () => {
 suite('dbp-data-table-view-demo basics', () => {
   let node;
 
-  suiteSetup(async () => {
+  setup(async () => {
     node = document.createElement('dbp-data-table-view-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  suiteTeardown(() => {
+  teardown(() => {
     node.remove();
   });
 

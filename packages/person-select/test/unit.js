@@ -1,38 +1,40 @@
+import {assert} from 'chai';
+
 import '../src/dbp-person-select.js';
 import '../src/demo.js';
 
-describe('dbp-person-select basics', () => {
+suite('dbp-person-select basics', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-person-select');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });
 
-describe('dbp-person-select-demo basics', () => {
+suite('dbp-person-select-demo basics', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-person-select-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });

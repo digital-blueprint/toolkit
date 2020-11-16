@@ -1,19 +1,21 @@
+import {assert} from 'chai';
+
 import '../src/dbp-person-profile-demo.js';
 
-describe('dbp-person-profile demo', () => {
+suite('dbp-person-profile demo', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-person-profile-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });

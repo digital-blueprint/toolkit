@@ -1,38 +1,40 @@
+import {assert} from 'chai';
+
 import '../src/dbp-check-in-place-select.js';
 import '../src/demo.js';
 
-describe('dbp-check-in-place-select basics', () => {
+suite('dbp-check-in-place-select basics', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-check-in-place-select');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });
 
-describe('dbp-check-in-place-select-demo basics', () => {
+suite('dbp-check-in-place-select-demo basics', () => {
   let node;
 
-  beforeEach(async () => {
+  setup(async () => {
     node = document.createElement('dbp-check-in-place-select-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  afterEach(() => {
+  teardown(() => {
     node.remove();
   });
 
-  it('should render', () => {
-      expect(node).to.have.property('shadowRoot');
+  test('should render', () => {
+    assert.isNotNull(node.shadowRoot);
   });
 });

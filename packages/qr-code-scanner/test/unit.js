@@ -5,13 +5,13 @@ import '../src/dbp-qr-code-scanner';
 suite('dbp-qr-code-scanner basics', () => {
   let node;
 
-  suiteSetup(async () => {
+  setup(async () => {
     node = document.createElement('dbp-qr-code-scanner');
     document.body.appendChild(node);
     await node.updateComplete;
   });
 
-  suiteTeardown(() => {
+  teardown(() => {
     node.remove();
   });
 
