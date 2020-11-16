@@ -50,8 +50,8 @@ export default (async () => {
             sourcemap: true
         },
         onwarn: function (warning, warn) {
-            // keycloak bundled code uses eval
-            if (warning.code === 'EVAL') {
+            // ignore chai warnings
+            if (warning.code === 'CIRCULAR_DEPENDENCY') {
                 return;
             }
             warn(warning);
