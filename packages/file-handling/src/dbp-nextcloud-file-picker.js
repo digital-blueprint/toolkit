@@ -11,6 +11,7 @@ import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import Tabulator from 'tabulator-tables';
 import nextcloudFileURL from 'consts:nextcloudFileURL';
 import MicroModal from './micromodal.es';
+import {name as pkgName} from './../package.json';
 
 /**
  * NextcloudFilePicker web component
@@ -1422,7 +1423,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        const tabulatorCss = commonUtils.getAssetURL('@dbp-toolkit/file-handling', 'tabulator-tables/css/tabulator.min.css');
+        const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
 
         return html`
             <div class="wrapper">
