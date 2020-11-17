@@ -239,7 +239,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         this._askPermission = true;
         this._loadingMessage = i18n.t('no-camera-access');
         let video = await createVideoElement(this._activeCamera);
-        targetvideo.appendChild(video);
+        console.log(video);
+        if ( video !== null ) {
+            targetvideo.appendChild(video);
+        }
         this._askPermission = false;
 
         let lastCode = null;
