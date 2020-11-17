@@ -1,8 +1,8 @@
 import {i18n} from './i18n';
 import {html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {MiniSpinner} from 'dbp-common';
-import * as commonUtils from "dbp-common/utils";
+import {MiniSpinner} from '@dbp-toolkit/common';
+import * as commonUtils from "@dbp-toolkit/common/utils";
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 
 /**

@@ -1,7 +1,7 @@
 import {i18n} from './i18n.js';
-import JSONLD from 'dbp-common/jsonld';
-import * as commonUtils from 'dbp-common/utils';
-import {EventBus} from 'dbp-common';
+import JSONLD from '@dbp-toolkit/common/jsonld';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import {EventBus} from '@dbp-toolkit/common';
 import  {KeycloakWrapper} from './keycloak.js';
 import {LitElement} from "lit-element";
 import {LoginStatus} from './util.js';

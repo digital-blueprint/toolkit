@@ -1,6 +1,6 @@
 {
-  "name": "dbp-common",
-  "version": "1.0.1",
+  "name": "@dbp-toolkit/common",
+  "version": "0.1.0",
   "module": "index.js",
   "license": "LGPL-2.1-or-later",
   "private": true,

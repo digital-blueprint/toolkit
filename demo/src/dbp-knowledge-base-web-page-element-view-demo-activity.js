@@ -1,10 +1,10 @@
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {KnowledgeBaseWebPageElementViewDemo} from 'dbp-knowledge-base-web-page-element-view/src/dbp-knowledge-base-web-page-element-view-demo';
-import * as commonUtils from 'dbp-common/utils';
-import * as commonStyles from 'dbp-common/styles';
+import {KnowledgeBaseWebPageElementViewDemo} from '@dbp-toolkit/knowledge-base-web-page-element-view/src/dbp-knowledge-base-web-page-element-view-demo';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import readme from 'dbp-knowledge-base-web-page-element-view/README.md';
+import readme from '@dbp-toolkit/knowledge-base-web-page-element-view/README.md';
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
 

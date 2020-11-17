@@ -1,6 +1,6 @@
 import {html, css, LitElement} from 'lit-element';
 import {i18n} from './i18n.js';
-import * as commonStyles from 'dbp-common/styles';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 
 /**
  * Emits a dbp-language-changed event where event.detail.lang is the new selected language

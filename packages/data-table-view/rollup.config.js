@@ -61,7 +61,7 @@ export default (async () => {
                     {src: 'assets/*.ico', dest: 'dist/local/' + pkg.name},
                     {src: 'assets/nomodule.js', dest: 'dist/local/' + pkg.name},
 
-                    {src: await getPackagePath('dbp-common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
+                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
                     {src: await getPackagePath('datatables.net-dt', 'css'), dest: 'dist/local/dbp-data-table-view'},
                     {src: await getPackagePath('datatables.net-dt', 'images'), dest: 'dist/local/dbp-data-table-view'},
                     {src: await getPackagePath('datatables.net-responsive-dt', 'css'), dest: 'dist/local/dbp-data-table-view'},

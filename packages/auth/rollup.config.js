@@ -46,7 +46,7 @@ export default (async () => {
                     {src: 'assets/index.html', dest:'dist'},
                     {src: 'assets/silent-check-sso.html', dest: 'dist/local/' + pkg.name},
                     {src: 'assets/favicon.ico', dest:'dist'},
-                    {src: await getPackagePath('dbp-common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
+                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
                 ]
             }),
             (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false

@@ -3,7 +3,7 @@ import {html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak} from './auth-keycloak.js';
 import {LoginButton} from './login-button.js';
-import * as commonUtils from 'dbp-common/utils';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 
 class AuthDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
