@@ -5,7 +5,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {FileSource} from './file-source.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
-class FileSourceDemo extends ScopedElementsMixin(LitElement) {
+export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';

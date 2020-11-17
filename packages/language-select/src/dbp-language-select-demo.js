@@ -37,7 +37,7 @@ class LanguageSelectDisplay extends LitElement {
     }
 }
 
-class LanguageSelectDemo extends ScopedElementsMixin(LitElement) {
+export class LanguageSelectDemo extends ScopedElementsMixin(LitElement) {
 
     constructor() {
         super();
