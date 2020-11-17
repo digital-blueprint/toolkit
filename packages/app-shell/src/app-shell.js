@@ -445,10 +445,10 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 margin: 0 auto;
             }
 
-            aside { grid-area: sidebar; margin: 30px 15px; }
-            #headline { grid-area: headline; margin: 15px; text-align: center; }
-            main { grid-area: main; margin: 30px 15px; }
-            footer { grid-area: footer; margin: 30px; text-align: right; }
+            aside { grid-area: sidebar; margin: 15px 15px; }
+            #headline { grid-area: headline; margin: 10px; text-align: center; }
+            main { grid-area: main; margin: 15px 15px; }
+            footer { grid-area: footer; margin: 15px; text-align: right; }
 
             header .hd1-left {
                 display: flex;
@@ -614,7 +614,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 aside h2.subtitle {
                     display: block;
                     border-bottom: 1px solid black;
-                    padding: 0.25em 0.5em;
+                    padding: 0.5em 0.5em;
                 }
 
                 aside .menu {
