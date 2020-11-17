@@ -1422,7 +1422,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        const tabulatorCss = commonUtils.getAssetURL('local/dbp-file-source/tabulator-tables/css/tabulator.min.css');
+        const tabulatorCss = commonUtils.getAssetURL('@dbp-toolkit/file-handling', 'tabulator-tables/css/tabulator.min.css');
 
         return html`
             <div class="wrapper">
