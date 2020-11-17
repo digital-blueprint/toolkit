@@ -98,7 +98,7 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
-                    {src: await getPackagePath('dbp-common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
+                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
                     {src: 'assets/favicon.ico', dest:'dist'},
                 ],
             }),

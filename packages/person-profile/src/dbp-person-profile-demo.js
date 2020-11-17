@@ -1,13 +1,13 @@
-import {AuthKeycloak, LoginButton} from 'dbp-auth';
+import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {i18n} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import DBPLitElement from 'dbp-common/dbp-lit-element';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {PersonProfile} from './index.js';
-import * as commonUtils from 'dbp-common/utils';
-import * as commonStyles from 'dbp-common/styles';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 import $ from 'jquery';
-import {PersonSelect} from 'dbp-person-select';
+import {PersonSelect} from '@dbp-toolkit/person-select';
 
 export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {

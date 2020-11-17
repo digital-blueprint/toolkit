@@ -1,21 +1,21 @@
 import {createI18nInstance} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {LanguageSelect} from 'dbp-language-select';
-import {Icon, EventBus} from 'dbp-common';
-import {AuthKeycloak} from 'dbp-auth';
+import {LanguageSelect} from '@dbp-toolkit/language-select';
+import {Icon, EventBus} from '@dbp-toolkit/common';
+import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
-import {Notification} from 'dbp-notification';
-import * as commonStyles from 'dbp-common/styles';
-import * as commonUtils from 'dbp-common/utils';
+import {Notification} from '@dbp-toolkit/notification';
+import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 import buildinfo from 'consts:buildinfo';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
 import {TUGrazLogo} from './tugraz-logo.js';
-import {send as notify} from 'dbp-common/notification';
+import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
-import {MatomoElement} from "dbp-matomo/src/matomo";
+import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
 
 
 const i18n = createI18nInstance();

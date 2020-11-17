@@ -3,7 +3,7 @@ import {html, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {FileSource} from './file-source.js';
-import * as commonUtils from 'dbp-common/utils';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 
 class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     constructor() {

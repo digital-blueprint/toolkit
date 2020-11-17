@@ -1,12 +1,12 @@
 import {i18n} from './i18n';
 import {css, html, unsafeCSS} from 'lit-element';
-import DBPLitElement from 'dbp-common/dbp-lit-element';
-import * as commonStyles from 'dbp-common/styles';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {Icon, MiniSpinner} from 'dbp-common';
+import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {classMap} from 'lit-html/directives/class-map.js';
-import * as commonUtils from 'dbp-common/utils';
-import {getIconSVGURL} from 'dbp-common';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import {getIconSVGURL} from '@dbp-toolkit/common';
 import {Mutex} from 'async-mutex';
 import QrScanner from 'qr-scanner';
 

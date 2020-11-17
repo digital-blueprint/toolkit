@@ -1,10 +1,10 @@
 
-import JSONLD from 'dbp-common/jsonld';
+import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html} from 'lit-element';
 import {i18n} from './i18n.js';
-import DBPLitElement from 'dbp-common/dbp-lit-element';
-import * as commonUtils from 'dbp-common/utils';
-import * as commonStyles from 'dbp-common/styles';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 
 
 export class PersonProfile extends DBPLitElement {
