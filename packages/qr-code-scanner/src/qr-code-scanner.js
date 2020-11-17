@@ -73,7 +73,7 @@ async function getVideoDevices() {
  * @returns {object|null} a video element or null
  */
 function checkIosMobileSupport(devices_map) {
-    return /CriOS|FxiOS/i.test(navigator.userAgent);
+    return /(iPhone|iPad|iPod).*(CriOS|FxiOS|OPT|EdgiOS|YaBrowser|AlohaBrowser)/i.test(navigator.userAgent);
 }
 
 /**
@@ -522,7 +522,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     <div class="${classMap({hidden: hasDevices})}">
                         ${noSupportString}
                     </div>
-                        ${navigator.userAgent}
                 </div>
             </div>
         `;
