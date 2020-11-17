@@ -522,7 +522,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     <div class="${classMap({hidden: hasDevices})}">
                         ${noSupportString}
                     </div>
-
+                        ${navigator.userAgent}
                 </div>
             </div>
         `;
