@@ -2,9 +2,9 @@ import {i18n} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {CheckInPlaceSelect} from './check-in-place-select.js';
-import {AuthKeycloak, LoginButton} from 'dbp-auth';
-import * as commonUtils from 'dbp-common/utils';
-import * as commonStyles from 'dbp-common/styles';
+import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 
 class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
     constructor() {

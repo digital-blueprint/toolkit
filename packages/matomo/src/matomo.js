@@ -1,7 +1,7 @@
 import {i18n} from './i18n.js';
 import {LitElement} from "lit-element";
-import DBPLitElement from 'dbp-common/dbp-lit-element';
-import {EventBus} from 'dbp-common';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {EventBus} from '@dbp-toolkit/common';
 import buildInfo from 'consts:buildinfo';
 
 

@@ -1,4 +1,4 @@
-import {defineCustomElement} from 'dbp-common/utils';
+import {defineCustomElement} from '@dbp-toolkit/common/utils';
 import {AuthKeycloak} from './auth-keycloak.js';
 import {LoginButton} from './login-button.js';
 

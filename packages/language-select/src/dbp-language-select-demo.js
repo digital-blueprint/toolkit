@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit-element';
 import {LanguageSelect} from './language-select.js';
-import * as commonUtils from 'dbp-common/utils';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 

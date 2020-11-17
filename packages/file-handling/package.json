@@ -1,6 +1,6 @@
 {
-  "name": "dbp-file-handling",
-  "version": "1.0.0",
+  "name": "@dbp-toolkit/file-handling",
+  "version": "0.1.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "private": true,
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.3.2",
-    "dbp-common": "^1.0.0",
+    "@dbp-toolkit/common": "^0.1.0",
     "file-saver": "^2.0.2",
     "i18next": "^19.8.3",
     "jszip": "^3.5.0",
