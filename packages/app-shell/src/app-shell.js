@@ -350,6 +350,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         }
 
         let updateFunc = () => {
+            window.scrollTo({ top: 0, left: 0, behavior: "auto" });
             this.updatePageTitle();
             this.subtitle = this.activeMetaDataText("short_name");
             this.description = this.activeMetaDataText("description");
