@@ -21,8 +21,15 @@ export function getBuildInfo(build) {
 
 export async function getPackagePath(packageName, assetPath) {
     const r = resolve();
-    const id = (await r.resolveId(packageName)).id;
-    const packageInfo = r.getPackageInfoForId(id);
-    const fullAssetPath = path.join(packageInfo.root, assetPath);
-    return path.relative(process.cwd(), fullAssetPath);
+    const resolved = await r.resolveId(packageName);
+    let packageRoot;
+    if (resolved !== null) {
+        const id = (await r.resolveId(packageName)).id;
+        const packageInfo = r.getPackageInfoForId(id);
+        packageRoot = packageInfo.root;
+    } else {
+        // Non JS packages
+        packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
+    }
+    return path.relative(process.cwd(), path.join(packageRoot, assetPath));
 }
