@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "lerna run --parallel test"
+    "test": "lerna run test"
   },
   "author": "",
   "license": "LGPL-2.1-or-later",
