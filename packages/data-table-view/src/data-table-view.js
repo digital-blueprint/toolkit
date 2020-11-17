@@ -14,6 +14,7 @@ import en from '../assets/datatables/i18n/English';
 import {getIconSVGURL} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import {name as pkgName} from './../package.json';
 
 dt(window, $);
 resp(window, $);
@@ -321,9 +322,9 @@ export class DataTableView extends LitElement {
     }
 
     render() {
-        let dt_css = commonUtils.getAssetURL('dbp-data-table-view', 'css/jquery.dataTables.min.css');
-        let rs_css = commonUtils.getAssetURL('dbp-data-table-view', 'css/responsive.dataTables.min.css');
-        let bt_css = commonUtils.getAssetURL('dbp-data-table-view', 'css/buttons.dataTables.min.css');
+        let dt_css = commonUtils.getAssetURL(pkgName, 'css/jquery.dataTables.min.css');
+        let rs_css = commonUtils.getAssetURL(pkgName, 'css/responsive.dataTables.min.css');
+        let bt_css = commonUtils.getAssetURL(pkgName, 'css/buttons.dataTables.min.css');
 
         return html`
             <link rel="stylesheet" href="${dt_css}">
