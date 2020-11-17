@@ -19,6 +19,14 @@ export function getBuildInfo(build) {
     }
 }
 
+export async function getDistPath(packageName, assetPath) {
+    if (assetPath === undefined)
+        assetPath = '';
+    // make sure the package exists to avoid typos
+    await getPackagePath(packageName, '');
+    return path.join('local', packageName, assetPath);
+}
+
 export async function getPackagePath(packageName, assetPath) {
     const r = resolve();
     const resolved = await r.resolveId(packageName);

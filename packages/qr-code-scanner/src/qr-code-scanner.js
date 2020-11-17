@@ -9,6 +9,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import {getIconSVGURL} from '@dbp-toolkit/common';
 import {Mutex} from 'async-mutex';
 import QrScanner from 'qr-scanner';
+import {name as pkgName} from './../package.json';
 
 
 /**
@@ -110,7 +111,7 @@ async function createVideoElement(deviceId) {
 
 class QRScanner {
     constructor() {
-        QrScanner.WORKER_PATH = commonUtils.getAssetURL('qr-code-scanner', 'qr-scanner-worker.min.js');
+        QrScanner.WORKER_PATH = commonUtils.getAssetURL(pkgName, 'qr-scanner-worker.min.js');
         this._engine = null;
         this._canvas = document.createElement("canvas");
     }

@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
-import {getPackagePath} from '../../rollup.utils.js';
+import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 
 const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
@@ -44,9 +44,9 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/index.html', dest:'dist'},
-                    {src: 'assets/silent-check-sso.html', dest: 'dist/local/' + pkg.name},
+                    {src: 'assets/silent-check-sso.html', dest: 'dist/' + await getDistPath(pkg.name)},
                     {src: 'assets/favicon.ico', dest:'dist'},
-                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
+                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
                 ]
             }),
             (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false

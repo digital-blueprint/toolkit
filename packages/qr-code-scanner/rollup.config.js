@@ -10,8 +10,9 @@ import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import fs from "fs";
 import selfsigned from "selfsigned";
-import {getPackagePath} from "../../rollup.utils";
+import {getPackagePath, getDistPath} from "../../rollup.utils";
 
+const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
 
@@ -71,8 +72,8 @@ export default (async () => {
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
-                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
-                    {src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'), dest: 'dist/local/qr-code-scanner'},
+                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
+                    {src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'), dest: 'dist/' + await getDistPath(pkg.name)},
                 ]
             }),
             (process.env.ROLLUP_WATCH === 'true') ? serve({

@@ -8,7 +8,7 @@ import serve from 'rollup-plugin-serve';
 import urlPlugin from "@rollup/plugin-url";
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
-import {getPackagePath} from '../../rollup.utils.js';
+import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 
 const pkg = require('./package.json');
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
@@ -57,15 +57,14 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
-                    {src: 'assets/*.css', dest: 'dist/local/' + pkg.name},
-                    {src: 'assets/*.ico', dest: 'dist/local/' + pkg.name},
-                    {src: 'assets/nomodule.js', dest: 'dist/local/' + pkg.name},
-
-                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
-                    {src: await getPackagePath('datatables.net-dt', 'css'), dest: 'dist/local/dbp-data-table-view'},
-                    {src: await getPackagePath('datatables.net-dt', 'images'), dest: 'dist/local/dbp-data-table-view'},
-                    {src: await getPackagePath('datatables.net-responsive-dt', 'css'), dest: 'dist/local/dbp-data-table-view'},
-                    {src: await getPackagePath('datatables.net-buttons-dt', 'css'), dest: 'dist/local/dbp-data-table-view'},
+                    {src: 'assets/*.css', dest: 'dist/' + await getDistPath(pkg.name)},
+                    {src: 'assets/*.ico', dest: 'dist/' + await getDistPath(pkg.name)},
+                    {src: 'assets/nomodule.js', dest: 'dist/' + await getDistPath(pkg.name)},
+                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
+                    {src: await getPackagePath('datatables.net-dt', 'css'), dest: 'dist/' + await getDistPath(pkg.name)},
+                    {src: await getPackagePath('datatables.net-dt', 'images'), dest: 'dist/' + await getDistPath(pkg.name)},
+                    {src: await getPackagePath('datatables.net-responsive-dt', 'css'), dest: 'dist/' + await getDistPath(pkg.name)},
+                    {src: await getPackagePath('datatables.net-buttons-dt', 'css'), dest: 'dist/' + await getDistPath(pkg.name)},
                 ],
             }),
 
