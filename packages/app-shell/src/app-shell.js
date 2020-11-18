@@ -350,9 +350,13 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         }
 
         let updateFunc = () => {
+            if (window.pageYOffset !== 0) {
+                window.scrollTo(0, 96);
+            }
             this.updatePageTitle();
             this.subtitle = this.activeMetaDataText("short_name");
             this.description = this.activeMetaDataText("description");
+           
         };
 
         // If it is empty assume the element is already registered through other means
@@ -640,6 +644,8 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 ul.menu.hidden {
                     display: none;
                 }
+
+                
             }
         `;
     }
