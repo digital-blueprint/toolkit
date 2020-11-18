@@ -1,9 +1,8 @@
 {
   "name": "@dbp-toolkit/file-handling",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
-  "private": true,
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.0.2",
