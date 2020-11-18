@@ -1,5 +1,3 @@
-import {i18n} from '../i18n';
-import {createUUID} from '../utils'
 import {css, html} from 'lit-element';
 import DBPLitElement from '../dbp-lit-element';
 import * as commonStyles from '../styles';
@@ -17,7 +15,6 @@ import * as commonStyles from '../styles';
 export class InlineNotification extends DBPLitElement {
     constructor() {
         super();
-        this.lang = 'de';
         this.type = '';
         this.summary = '';
         this.body = '';
@@ -25,7 +22,6 @@ export class InlineNotification extends DBPLitElement {
 
     static get properties() {
         return {
-            lang: { type: String },
             type: { type: String },
             summary: { type: String },
             body: { type: String },
@@ -34,7 +30,6 @@ export class InlineNotification extends DBPLitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
     }
 
     static get styles() {
@@ -66,13 +61,12 @@ export class InlineNotification extends DBPLitElement {
     }
 
     render() {
-        const notificationId = createUUID();
         const bodyHtml = this.createBodyHtml();
 
         return html`
             <div class="columns">
                 <div class="column">
-                    <div id="inline-notification-${ notificationId }" class="notification is-${ this.type !== '' ? this.type : 'info' }">
+                    <div id="inline-notification" class="notification is-${ this.type !== '' ? this.type : 'info' }">
                         ${ this.summary !== '' ? html`<h3>${ this.summary }</h3>` : `` }
                         ${ bodyHtml }
                     </div>
