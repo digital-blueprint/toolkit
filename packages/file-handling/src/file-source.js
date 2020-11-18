@@ -41,7 +41,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudWebDavUrl = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
-        this.enabledSources = 'local';1
+        this.enabledSources = 'local';
         this.text = '';
         this.buttonLabel = '';
         this.disabled = false;
