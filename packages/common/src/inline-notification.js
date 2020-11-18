@@ -1,11 +1,18 @@
-import {i18n} from './i18n';
-import {createUUID} from './utils'
+import {i18n} from '../i18n';
+import {createUUID} from '../utils'
 import {css, html} from 'lit-element';
-import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import * as commonStyles from '@dbp-toolkit/common/styles';
+import DBPLitElement from '../dbp-lit-element';
+import * as commonStyles from '../styles';
 
 /**
- * Inline Notification web component
+ * Inline Notification
+ * 
+ * Summary can be a string or empty
+ * 
+ * Body can be a string, html or empty
+ * 
+ * Type can be primary/info/success/warning/danger (default: info)
+ *  
  */
 export class InlineNotification extends DBPLitElement {
     constructor() {
@@ -65,7 +72,7 @@ export class InlineNotification extends DBPLitElement {
         return html`
             <div class="columns">
                 <div class="column">
-                    <div id="inline-notification-${ notificationId }" class="notification is-${ this.type }">
+                    <div id="inline-notification-${ notificationId }" class="notification is-${ this.type !== '' ? this.type : 'info' }">
                         ${ this.summary !== '' ? html`<h3>${ this.summary }</h3>` : `` }
                         ${ bodyHtml }
                     </div>
