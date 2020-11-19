@@ -1,6 +1,4 @@
-import $ from 'jquery';
 import {findObjectInApiResults} from './utils.js';
-import select2 from 'select2';
 import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
 import JSONLD from '@dbp-toolkit/common/jsonld';
@@ -20,7 +18,6 @@ const checkInPlaceContext = {
     "maximumPhysicalAttendeeCapacity": "http://schema.org/maximumPhysicalAttendeeCapacity"
 };
 
-select2(window, $);
 
 export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
 
@@ -50,7 +47,10 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
     }
 
     $(selector) {
-        return $(this.shadowRoot.querySelector(selector));
+        if (typeof selector === "string")
+            return this._jquery(this.shadowRoot.querySelector(selector));
+        else
+            return this._jquery(selector);
     }
 
     static get properties() {
@@ -68,29 +68,33 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
 
     clear() {
         this.object = null;
-        $(this).attr("data-object", "");
-        $(this).attr("value", "");
-        $(this).data("object", null);
+        this.$(this).attr("data-object", "");
+        this.$(this).attr("value", "");
+        this.$(this).data("object", null);
         this.$select.val(null).trigger('change').trigger('select2:unselect');
     }
 
-    connectedCallback() {
-        super.connectedCallback();
+    async connectedCallback() {
+        await super.connectedCallback();
+
+        this._jquery = (await import('jquery')).default;
+        let select2 = (await import('select2')).default;
+        select2(window, this._jquery);
+
+        await this.updateComplete;
         const that = this;
 
-        this.updateComplete.then(()=>{
-            that.$select = that.$('#' + that.selectId);
+        this.$select = this.$('#' + that.selectId);
 
-            // Close the popup when clicking outside of select2
-            document.addEventListener('click', (ev) => {
-                if (!ev.composedPath().includes(this)) {
-                    this._closeSelect2();
-                }
-            });
-
-            // try an init when user-interface is loaded
-            that.initJSONLD();
+        // Close the popup when clicking outside of select2
+        document.addEventListener('click', (ev) => {
+            if (!ev.composedPath().includes(this)) {
+                this._closeSelect2();
+            }
         });
+
+        // try an init when user-interface is loaded
+        this.initJSONLD();
     }
 
     _closeSelect2() {
@@ -119,7 +123,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
      */
     initSelect2(ignorePreset = false) {
         const that = this;
-        const $this = $(this);
+        const $this = this.$(this);
 
         if (this.jsonld === null) {
             return false;
