@@ -23,4 +23,6 @@ publish:
       - publish
   script:
     - sudo npm install --global can-npm-publish
+    - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
+    - yarn install
     - yarn run publish
