@@ -45,6 +45,7 @@
     "watch": "npm run watch-local",
     "watch-local": "rollup -c --watch",
     "test": "npm run build-test && karma start --singleRun",
+    "publish": "can-npm-publish --verbose && npm run build && echo 'Todo: Publish'",
     "lint": "eslint ."
   }
 }
