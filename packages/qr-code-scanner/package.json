@@ -47,6 +47,6 @@
     "watch-dev": "rollup -c --watch --environment BUILD:development",
     "test": "npm run build-test && karma start --singleRun",
     "lint": "eslint .",
-    "publish": "can-npm-publish --verbose && npm run build && echo 'Todo: Publish' || true"
+    "publish": "can-npm-publish --verbose 2>&1 && npm run build && echo 'Todo: Publish' || true"
   }
 }
