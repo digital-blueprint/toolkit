@@ -79,20 +79,29 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Send files via event</h2>
+                    <button @click="${() => { this._("#file-source1").setAttribute("dialog-open", ""); }}"
+                            class="button is-primary">
+                        Open dialog
+                    </button>
+
                     <p>There is no restriction for a specific file type:</p>
-                    <dbp-file-source lang="de" url="${this.url}" allowed-mime-types="*/*"></dbp-file-source>
+                    <dbp-file-source id="file-source1" lang="en" url="${this.url}" allowed-mime-types="*/*"></dbp-file-source>
                     <p>Only images are allowed here (JPG, PNG, GIF, TIF, ...):</p>
-                    <dbp-file-source lang="de" url="${this.url}" allowed-mime-types="image/*"
+                    <dbp-file-source lang="en" url="${this.url}" allowed-mime-types="image/*"
                         text="Abgabe nur für Bilder "></dbp-file-source>
                     <p>This is for PDF only:</p>
-                    <dbp-file-source lang="de" url="${this.url}" allowed-mime-types="application/pdf"
+                    <dbp-file-source lang="en" url="${this.url}" allowed-mime-types="application/pdf"
                         text="Einreichung als PDF" button-label="PDF auswählen"></dbp-file-source>
                      <p>Text and images (JPG, PNG, GIF, TIF, ...) :</p>
-                    <dbp-file-source lang="de" url="${this.url}" allowed-mime-types="text/plain,image/*"
+                    <dbp-file-source lang="en" url="${this.url}" allowed-mime-types="text/plain,image/*"
                         text="Abgabe für Text und Bilder "></dbp-file-source>
                </div>
             </section>
         `;
+    }
+
+    _(selector) {
+        return this.shadowRoot === null ? this.querySelector(selector) : this.shadowRoot.querySelector(selector);
     }
 }
 
