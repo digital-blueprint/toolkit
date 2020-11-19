@@ -29,7 +29,7 @@
     "test": "npm run build-test && karma start --singleRun",
     "watch": "rollup -c --watch",
     "lint": "eslint .",
-    "publish": "can-npm-publish --verbose && npm run build && echo 'Todo: Publish'"
+    "publish": "can-npm-publish --verbose && npm run build && echo 'Todo: Publish'; true"
   },
   "dependencies": {
     "@open-wc/scoped-elements": "^1.3.2",
