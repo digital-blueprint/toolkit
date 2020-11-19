@@ -8,7 +8,6 @@ import {classMap} from 'lit-html/directives/class-map.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {getIconSVGURL} from '@dbp-toolkit/common';
 import {Mutex} from 'async-mutex';
-import QrScanner from 'qr-scanner';
 import {name as pkgName} from './../package.json';
 
 
@@ -111,17 +110,21 @@ async function createVideoElement(deviceId) {
 
 class QRScanner {
     constructor() {
-        QrScanner.WORKER_PATH = commonUtils.getAssetURL(pkgName, 'qr-scanner-worker.min.js');
         this._engine = null;
         this._canvas = document.createElement("canvas");
+        this._scanner = null;
     }
 
     async scan(canvas, x, y, width, height) {
+        if (this._scanner === null)  {
+            this._scanner = (await import('qr-scanner')).default;
+            this._scanner.WORKER_PATH = commonUtils.getAssetURL(pkgName, 'qr-scanner-worker.min.js');
+        }
         if (this._engine === null) {
-            this._engine = await QrScanner.createQrEngine(QrScanner.WORKER_PATH);
+            this._engine = await this._scanner.createQrEngine(this._scanner.WORKER_PATH);
         }
         try {
-            return {data: await QrScanner.scanImage(canvas, {x: x, y: y, width: width, height: height}, this._engine, this._canvas)};
+            return {data: await this._scanner.scanImage(canvas, {x: x, y: y, width: width, height: height}, this._engine, this._canvas)};
         } catch (e) {
             return null;
         }
