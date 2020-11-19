@@ -3,7 +3,7 @@ import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
-import {getIconCSS, Icon, MiniSpinner, Button, Spinner} from './index.js';
+import {getIconCSS, Icon, MiniSpinner, Button, Spinner, InlineNotification} from './index.js';
 
 export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -19,6 +19,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
             'dbp-spinner': Spinner,
             'dbp-button': Button,
             'dbp-auth': customElements.get('dbp-auth'),
+            'dbp-inline-notification': InlineNotification,
         };
     }
 
@@ -173,6 +174,16 @@ html {
     /* Same for all other variables, prefix with "override" */
 }
 &lt;/style&gt;</pre>
+                </div>
+                <div class="content">
+                    <h2>Inline Notification</h2>
+                    <div class="control">
+                        <dbp-inline-notification body="Item <b>foo</b> was deleted!" type="primary"></dbp-inline-notification><br>
+                        <dbp-inline-notification summary="Item foo was deleted."></dbp-inline-notification><br>
+                        <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="success"></dbp-inline-notification><br>
+                        <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="danger"></dbp-inline-notification><br>
+                        <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="warning"></dbp-inline-notification>
+                    </div>
                 </div>
             </section>
         `;
