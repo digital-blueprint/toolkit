@@ -310,8 +310,11 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     loadWebdavDirectory() {
-        if (this._('#nextcloud-file-picker').webDavClient !== null) {
-            this._('#nextcloud-file-picker').loadDirectory(this._('#nextcloud-file-picker').directoryPath);
+        const filePicker = this._('#nextcloud-file-picker');
+
+        // check if element is already in the dom (for example if "dialog-open" attribute is set)
+        if (filePicker && filePicker.webDavClient !== null) {
+            filePicker.loadDirectory(filePicker.directoryPath);
         }
     }
 
@@ -320,11 +323,16 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             this.loadWebdavDirectory();
         }
 
-        MicroModal.show(this._('#modal-picker'), {
-            disableScroll: true,
-            onClose: modal => { this.isDialogOpen = false;
-                this._('#nextcloud-file-picker').selectAllButton = true;}
-        });
+        const filePicker = this._('#modal-picker');
+
+        // check if element is already in the dom (for example if "dialog-open" attribute is set)
+        if (filePicker) {
+            MicroModal.show(filePicker, {
+                disableScroll: true,
+                onClose: modal => { this.isDialogOpen = false;
+                    this._('#nextcloud-file-picker').selectAllButton = true;}
+            });
+        }
     }
 
     closeDialog() {
