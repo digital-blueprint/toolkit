@@ -38,6 +38,8 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
         this.showCapacity = false;
+
+        this._onDocumentClicked = this._onDocumentClicked.bind(this);
     }
 
     static get scopedElements() {
@@ -87,17 +89,20 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
         this.$select = this.$('#' + that.selectId);
 
         // Close the popup when clicking outside of select2
-        document.addEventListener('click', (ev) => {
-            if (!ev.composedPath().includes(this)) {
-                this._closeSelect2();
-            }
-        });
+        document.addEventListener('click', this._onDocumentClicked);
 
         // try an init when user-interface is loaded
         this.initJSONLD();
     }
 
-    _closeSelect2() {
+    disconnectedCallback() {
+        document.removeEventListener('click', this._onDocumentClicked);
+        super.disconnectedCallback();
+    }
+
+    _onDocumentClicked(event) {
+        if (event.composedPath().includes(this))
+            return;
         const $select = this.$('#' + this.selectId);
         console.assert($select.length, "select2 missing");
         if (this.select2IsInitialized($select)) {
