@@ -77,12 +77,11 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
     }
 
     async connectedCallback() {
-        await super.connectedCallback();
-
         this._jquery = (await import('jquery')).default;
         let select2 = (await import('select2')).default;
         select2(window, this._jquery);
 
+        await super.connectedCallback();
         await this.updateComplete;
         const that = this;
 
