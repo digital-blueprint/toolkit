@@ -3,6 +3,7 @@ import {html, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {FileSource} from './file-source.js';
+import {FileSink} from './file-sink.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
 export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
@@ -15,6 +16,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
           'dbp-file-source': FileSource,
+          'dbp-file-sink': FileSink,
         };
     }
 
@@ -95,6 +97,8 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                      <p>Text and images (JPG, PNG, GIF, TIF, ...) :</p>
                     <dbp-file-source lang="en" url="${this.url}" allowed-mime-types="text/plain,image/*"
                         text="Abgabe für Text und Bilder "></dbp-file-source>
+
+                    <dbp-file-sink lang="en"></dbp-file-sink>
                </div>
             </section>
         `;

@@ -1,5 +1,42 @@
 # File handling web components
 
+You can install these components via npm:
+
+```bash
+npm i @dbp-toolkit/file-handling
+```
+
+After you have installed the file handling components via npm you can use this example to get a button
+that opens the file source dialog. After you have selected a file you will see it in your browser log,
+and the file sink dialog will open, so you are able to store the file again.
+
+```html
+<button onclick="openFilePicker()">Open file picker</button>
+<dbp-file-source lang="en"></dbp-file-source>
+<dbp-file-sink lang="en"></dbp-file-sink>
+
+<script>
+    const fileSource = document.querySelector("dbp-file-source");
+    const fileSink = document.querySelector("dbp-file-sink");
+
+    // Listen to the event from file source
+    fileSource.addEventListener("dbp-file-source-file-selected", (ev) => {
+        const file = ev.detail.file;
+        console.log("File selected: ", file)
+
+        // This will open the file sink dialog
+        fileSink.files = [file];
+    }); 
+
+    function openFilePicker() {
+        // This will open the file source dialog
+        fileSource.setAttribute("dialog-open", "");
+    }
+</script>
+<script type="module" src="node_modules/@dbp-toolkit/file-handling/dist/dbp-file-source.js"></script>
+<script type="module" src="node_modules/@dbp-toolkit/file-handling/dist/dbp-file-sink.js"></script>
+```
+
 ## FileSource
 
 This web component allows the selection of local files via file dialog or drag and drop and to select and download
@@ -34,8 +71,8 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
 - `nextcloud-web-dav-url` (optional): Nextcloud WebDav Url to use with the Nextcloud file picker
     - example `<dbp-file-source nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></dbp-file-source>`
     - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
-- `dialog-open` (optional): if this attribute is set the dialog for selecting local or Nextcloud files will open
-    - example `<dbp-file-source dialog-open></dbp-file-source>`
+- `dialog-open` (optional): if this attribute is set at runtime the dialog for selecting local or Nextcloud files will open
+    - example `document.querySelector("dbp-file-source").setAttribute("dialog-open", "")`
 - `text` (optional): the text that is shown above the button to select files
     - example `<dbp-file-source text="Please select some files"></dbp-file-source>`
 - `button-label` (optional): the text that is shown on the button to select files
@@ -84,6 +121,7 @@ files to a [Nextcloud](https://nextcloud.com/) instance.
 
 - `files`: an array of [File](https://developer.mozilla.org/en-US/docs/Web/API/File) objects which should be downloaded in the dialog
     - if the property is set the dialog opens
+    - example: `document.querySelector("dbp-file-sink").files = [file]` where `file` is your File object
 
 ## Local development
 
