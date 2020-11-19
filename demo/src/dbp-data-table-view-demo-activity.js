@@ -1,18 +1,17 @@
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-//import {ClassName} from '@dbp-toolkit/package-name/src/dbp-demo-activity-name'; TODO
+import {DataTableViewDemo} from '@dbp-toolkit/data-table-view/src/dbp-data-table-view-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-// import readme from '@dbp-toolkit/class-name/README.md'; TODO
+import readme from '@dbp-toolkit/data-table-view/README.md';
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
 
 class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TODO
     static get scopedElements() {
         return {
-            // TODO
-            //'dbp-class-name-demo': ClassName,
+            'dbp-data-table-view-demo': DataTableViewDemo,
         };
     }
 
@@ -49,13 +48,11 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TO
 
     render() {
         return html`
-             <!--
-                TODO
+
                 ${unsafeHTML(readme)}
-                <dbp-class-name-demo id="demo" lang="en"></dbp-class-name-demo>
-            -->
+                <dbp-data-table-view-demo id="demo" lang="en"></dbp-data-table-view-demo>
         `;
     }
 }
 
-//commonUtils.defineCustomElement('dbp-class-name-demo-activity', DbpClassNameDemoActivity); TODO
+commonUtils.defineCustomElement('dbp-data-table-view-demo-activity', DbpActivityNameDemoActivity);

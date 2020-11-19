@@ -3,9 +3,10 @@ import {html, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {FileSource} from './file-source.js';
-import * as commonUtils from 'dbp-common/utils';
+import {FileSink} from './file-sink.js';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 
-class FileSourceDemo extends ScopedElementsMixin(LitElement) {
+export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -15,6 +16,7 @@ class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
           'dbp-file-source': FileSource,
+          'dbp-file-sink': FileSink,
         };
     }
 
@@ -79,20 +81,31 @@ class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Send files via event</h2>
+                    <button @click="${() => { this._("#file-source1").setAttribute("dialog-open", ""); }}"
+                            class="button is-primary">
+                        Open dialog
+                    </button>
+
                     <p>There is no restriction for a specific file type:</p>
-                    <dbp-file-source lang="de" url="${this.url}" allowed-mime-types="*/*"></dbp-file-source>
+                    <dbp-file-source id="file-source1" lang="en" url="${this.url}" allowed-mime-types="*/*"></dbp-file-source>
                     <p>Only images are allowed here (JPG, PNG, GIF, TIF, ...):</p>
-                    <dbp-file-source lang="de" url="${this.url}" allowed-mime-types="image/*"
+                    <dbp-file-source lang="en" url="${this.url}" allowed-mime-types="image/*"
                         text="Abgabe nur für Bilder "></dbp-file-source>
                     <p>This is for PDF only:</p>
-                    <dbp-file-source lang="de" url="${this.url}" allowed-mime-types="application/pdf"
+                    <dbp-file-source lang="en" url="${this.url}" allowed-mime-types="application/pdf"
                         text="Einreichung als PDF" button-label="PDF auswählen"></dbp-file-source>
                      <p>Text and images (JPG, PNG, GIF, TIF, ...) :</p>
-                    <dbp-file-source lang="de" url="${this.url}" allowed-mime-types="text/plain,image/*"
+                    <dbp-file-source lang="en" url="${this.url}" allowed-mime-types="text/plain,image/*"
                         text="Abgabe für Text und Bilder "></dbp-file-source>
+
+                    <dbp-file-sink lang="en"></dbp-file-sink>
                </div>
             </section>
         `;
+    }
+
+    _(selector) {
+        return this.shadowRoot === null ? this.querySelector(selector) : this.shadowRoot.querySelector(selector);
     }
 }
 

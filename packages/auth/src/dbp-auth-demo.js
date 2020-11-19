@@ -3,7 +3,8 @@ import {html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak} from './auth-keycloak.js';
 import {LoginButton} from './login-button.js';
-import * as commonUtils from 'dbp-common/utils';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import {name as pkgName} from './../package.json';
 
 class AuthDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -63,7 +64,7 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        const silentCheckSsoUri = commonUtils.getAssetURL('dbp-auth', 'silent-check-sso.html');
+        const silentCheckSsoUri = commonUtils.getAssetURL(pkgName, 'silent-check-sso.html');
         return html`
             <style>
                /* from BULMA.CSS */

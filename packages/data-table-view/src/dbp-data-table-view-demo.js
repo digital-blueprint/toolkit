@@ -1,12 +1,12 @@
-import {AuthKeycloak, LoginButton} from 'dbp-auth';
+import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {DataTableView} from './data-table-view.js';
 import {i18n} from './i18n';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import * as commonUtils from 'dbp-common/utils';
-import * as commonStyles from 'dbp-common/styles';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 
-class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
+export class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';

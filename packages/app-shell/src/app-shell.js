@@ -1,21 +1,21 @@
 import {createI18nInstance} from './i18n.js';
 import {html, css, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {LanguageSelect} from 'dbp-language-select';
-import {Icon, EventBus} from 'dbp-common';
-import {AuthKeycloak} from 'dbp-auth';
+import {LanguageSelect} from '@dbp-toolkit/language-select';
+import {Icon, EventBus} from '@dbp-toolkit/common';
+import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
-import {Notification} from 'dbp-notification';
-import * as commonStyles from 'dbp-common/styles';
-import * as commonUtils from 'dbp-common/utils';
+import {Notification} from '@dbp-toolkit/notification';
+import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 import buildinfo from 'consts:buildinfo';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
 import {TUGrazLogo} from './tugraz-logo.js';
-import {send as notify} from 'dbp-common/notification';
+import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
-import {MatomoElement} from "dbp-matomo/src/matomo";
+import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
 
 
 const i18n = createI18nInstance();
@@ -350,9 +350,13 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         }
 
         let updateFunc = () => {
+            if (window.pageYOffset !== 0) {
+                window.scrollTo(0, 96);
+            }
             this.updatePageTitle();
             this.subtitle = this.activeMetaDataText("short_name");
             this.description = this.activeMetaDataText("description");
+           
         };
 
         // If it is empty assume the element is already registered through other means
@@ -445,10 +449,10 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 margin: 0 auto;
             }
 
-            aside { grid-area: sidebar; margin: 30px 15px; }
-            #headline { grid-area: headline; margin: 15px; text-align: center; }
-            main { grid-area: main; margin: 30px 15px; }
-            footer { grid-area: footer; margin: 30px; text-align: right; }
+            aside { grid-area: sidebar; margin: 15px 15px; }
+            #headline { grid-area: headline; margin: 10px; text-align: center; }
+            main { grid-area: main; margin: 15px 15px; }
+            footer { grid-area: footer; margin: 15px; text-align: right; }
 
             header .hd1-left {
                 display: flex;
@@ -614,7 +618,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 aside h2.subtitle {
                     display: block;
                     border-bottom: 1px solid black;
-                    padding: 0.25em 0.5em;
+                    padding: 0.5em 0.5em;
                 }
 
                 aside .menu {
@@ -640,6 +644,8 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 ul.menu.hidden {
                     display: none;
                 }
+
+                
             }
         `;
     }

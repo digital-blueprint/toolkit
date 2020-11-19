@@ -1,18 +1,17 @@
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-//import {ClassName} from '@dbp-toolkit/package-name/src/dbp-demo-activity-name'; TODO
+import {LanguageSelectDemo} from '@dbp-toolkit/language-select/src/dbp-language-select-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-// import readme from '@dbp-toolkit/class-name/README.md'; TODO
+import readme from '@dbp-toolkit/language-select/README.md';
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
 
-class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TODO
+class DbpLanguageSelectDemoActivity extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
-            // TODO
-            //'dbp-class-name-demo': ClassName,
+            'dbp-language-select-demo': LanguageSelectDemo,
         };
     }
 
@@ -49,13 +48,12 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TO
 
     render() {
         return html`
-             <!--
-                TODO
+
                 ${unsafeHTML(readme)}
-                <dbp-class-name-demo id="demo" lang="en"></dbp-class-name-demo>
-            -->
+                <dbp-language-select-demo id="demo" lang="en"></dbp-language-select-demo>
+            
         `;
     }
 }
 
-//commonUtils.defineCustomElement('dbp-class-name-demo-activity', DbpClassNameDemoActivity); TODO
+commonUtils.defineCustomElement('dbp-language-select-demo-activity', DbpLanguageSelectDemoActivity);

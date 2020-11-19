@@ -2,9 +2,9 @@ import {i18n} from './i18n.js';
 import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import * as commonStyles from 'dbp-common/styles';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 import {LitElement} from "lit-element";
-import {EventBus} from 'dbp-common';
+import {EventBus} from '@dbp-toolkit/common';
 import {LoginStatus} from './util.js';
 
 let logoutSVG = `

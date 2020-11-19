@@ -1,17 +1,15 @@
-import $ from 'jquery';
 import {findObjectInApiResults} from './utils.js';
-import select2 from 'select2';
 import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
-import JSONLD from 'dbp-common/jsonld';
+import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {i18n} from './i18n.js';
-import {Icon} from 'dbp-common';
-import * as commonUtils from 'dbp-common/utils';
-import * as commonStyles from 'dbp-common/styles';
+import {Icon} from '@dbp-toolkit/common';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import * as errorUtils from "dbp-common/error";
+import * as errorUtils from "@dbp-toolkit/common/error";
 
 
 const checkInPlaceContext = {
@@ -20,7 +18,6 @@ const checkInPlaceContext = {
     "maximumPhysicalAttendeeCapacity": "http://schema.org/maximumPhysicalAttendeeCapacity"
 };
 
-select2(window, $);
 
 export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
 
@@ -41,6 +38,8 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
         this.showCapacity = false;
+
+        this._onDocumentClicked = this._onDocumentClicked.bind(this);
     }
 
     static get scopedElements() {
@@ -50,7 +49,10 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
     }
 
     $(selector) {
-        return $(this.shadowRoot.querySelector(selector));
+        if (typeof selector === "string")
+            return this._jquery(this.shadowRoot.querySelector(selector));
+        else
+            return this._jquery(selector);
     }
 
     static get properties() {
@@ -68,32 +70,38 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
 
     clear() {
         this.object = null;
-        $(this).attr("data-object", "");
-        $(this).attr("value", "");
-        $(this).data("object", null);
+        this.$(this).attr("data-object", "");
+        this.$(this).attr("value", "");
+        this.$(this).data("object", null);
         this.$select.val(null).trigger('change').trigger('select2:unselect');
     }
 
-    connectedCallback() {
-        super.connectedCallback();
+    async connectedCallback() {
+        this._jquery = (await import('jquery')).default;
+        let select2 = (await import('select2')).default;
+        select2(window, this._jquery);
+
+        await super.connectedCallback();
+        await this.updateComplete;
         const that = this;
 
-        this.updateComplete.then(()=>{
-            that.$select = that.$('#' + that.selectId);
+        this.$select = this.$('#' + that.selectId);
 
-            // Close the popup when clicking outside of select2
-            document.addEventListener('click', (ev) => {
-                if (!ev.composedPath().includes(this)) {
-                    this._closeSelect2();
-                }
-            });
+        // Close the popup when clicking outside of select2
+        document.addEventListener('click', this._onDocumentClicked);
 
-            // try an init when user-interface is loaded
-            that.initJSONLD();
-        });
+        // try an init when user-interface is loaded
+        this.initJSONLD();
     }
 
-    _closeSelect2() {
+    disconnectedCallback() {
+        document.removeEventListener('click', this._onDocumentClicked);
+        super.disconnectedCallback();
+    }
+
+    _onDocumentClicked(event) {
+        if (event.composedPath().includes(this))
+            return;
         const $select = this.$('#' + this.selectId);
         console.assert($select.length, "select2 missing");
         if (this.select2IsInitialized($select)) {
@@ -119,7 +127,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
      */
     initSelect2(ignorePreset = false) {
         const that = this;
-        const $this = $(this);
+        const $this = this.$(this);
 
         if (this.jsonld === null) {
             return false;

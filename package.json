@@ -1,6 +1,6 @@
 {
   "name": "dbp-toolkit",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "private": true,
@@ -8,7 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "lerna run --parallel test"
+    "test": "lerna run test",
+    "publish": "lerna run publish"
   },
   "author": "",
   "license": "LGPL-2.1-or-later",

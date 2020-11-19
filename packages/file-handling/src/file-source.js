@@ -1,10 +1,10 @@
 import {i18n} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import DBPLitElement from 'dbp-common/dbp-lit-element';
-import * as commonUtils from "dbp-common/utils";
-import {Icon, MiniSpinner} from 'dbp-common';
-import * as commonStyles from 'dbp-common/styles';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import * as commonUtils from "@dbp-toolkit/common/utils";
+import {Icon, MiniSpinner} from '@dbp-toolkit/common';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es'
@@ -41,7 +41,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudWebDavUrl = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
-        this.enabledSources = 'local';1
+        this.enabledSources = 'local';
         this.text = '';
         this.buttonLabel = '';
         this.disabled = false;
@@ -310,18 +310,29 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     loadWebdavDirectory() {
-        if (this._('#nextcloud-file-picker').webDavClient !== null) {
-            this._('#nextcloud-file-picker').loadDirectory(this._('#nextcloud-file-picker').directoryPath);
+        const filePicker = this._('#nextcloud-file-picker');
+
+        // check if element is already in the dom (for example if "dialog-open" attribute is set)
+        if (filePicker && filePicker.webDavClient !== null) {
+            filePicker.loadDirectory(filePicker.directoryPath);
         }
     }
 
     openDialog() {
-        this.loadWebdavDirectory();
-        MicroModal.show(this._('#modal-picker'), {
-            disableScroll: true,
-            onClose: modal => { this.isDialogOpen = false;
-                this._('#nextcloud-file-picker').selectAllButton = true;}
-        });
+        if (this.enabledSources.includes('nextcloud')) {
+            this.loadWebdavDirectory();
+        }
+
+        const filePicker = this._('#modal-picker');
+
+        // check if element is already in the dom (for example if "dialog-open" attribute is set)
+        if (filePicker) {
+            MicroModal.show(filePicker, {
+                disableScroll: true,
+                onClose: modal => { this.isDialogOpen = false;
+                    this._('#nextcloud-file-picker').selectAllButton = true;}
+            });
+        }
     }
 
     closeDialog() {

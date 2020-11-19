@@ -1,9 +1,9 @@
 import {i18n} from './i18n';
 import {createUUID} from './utils'
 import {css, html} from 'lit-element';
-import DBPLitElement from 'dbp-common/dbp-lit-element';
-import * as commonUtils from 'dbp-common/utils';
-import * as commonStyles from 'dbp-common/styles';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 
 /**
  * Notification web component

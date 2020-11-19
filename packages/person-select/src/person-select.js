@@ -3,15 +3,15 @@ import {findObjectInApiResults} from './utils.js';
 import select2 from 'select2';
 import select2LangDe from './i18n/de/select2'
 import select2LangEn from './i18n/en/select2'
-import JSONLD from 'dbp-common/jsonld';
+import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {i18n} from './i18n.js';
-import {Icon} from 'dbp-common';
-import * as commonUtils from 'dbp-common/utils';
-import * as commonStyles from 'dbp-common/styles';
+import {Icon} from '@dbp-toolkit/common';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import * as errorUtils from "dbp-common/error";
+import * as errorUtils from "@dbp-toolkit/common/error";
 
 
 const personContext = {

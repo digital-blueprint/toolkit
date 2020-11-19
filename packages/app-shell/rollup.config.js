@@ -6,7 +6,7 @@ import serve from 'rollup-plugin-serve';
 import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
-import {getBuildInfo, getPackagePath} from '../../rollup.utils.js';
+import {getBuildInfo, getPackagePath, getDistPath} from '../../rollup.utils.js';
 
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
@@ -44,7 +44,7 @@ export default (async () => {
                     {src: 'assets/silent-check-sso.html', dest:'dist'},
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/*.json', dest: 'dist'},
-                    {src: await getPackagePath('dbp-common', 'assets/icons/*.svg'), dest: 'dist/local/dbp-common/icons'},
+                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
                 ],
             }),
             (process.env.ROLLUP_WATCH === 'true') ? serve({

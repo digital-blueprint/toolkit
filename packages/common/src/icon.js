@@ -2,6 +2,7 @@ import {html, LitElement, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {until} from 'lit-html/directives/until.js';
 import * as commonUtils from '../utils.js';
+import {name as pkgName} from './../package.json';
 
 // Use in case the icon fails to load
 const errorIcon = `
@@ -18,7 +19,7 @@ const errorIcon = `
 `;
 
 export function getIconSVGURL(name) {
-    return commonUtils.getAssetURL('dbp-common', 'icons/' + encodeURI(name) + '.svg');
+    return commonUtils.getAssetURL(pkgName, 'icons/' + encodeURI(name) + '.svg');
 }
 
 export function getIconCSS(name) {
