@@ -74,6 +74,13 @@ function supportsEval() {
     return true;
 }
 
+// https://caniuse.com/abortcontroller
+function supportsAbortController() {
+    // AbortController in older Safari is broken, so check for the signal property
+    // as well.
+    return (!!window.AbortController && Request.prototype.hasOwnProperty('signal'));
+}
+
 function isBrowserSupported() {
     if (!supportsEval()) {
         console.log("Eval support disabled, skipping browser feature detection.");
@@ -107,6 +114,11 @@ function isBrowserSupported() {
     
     if (!supportsImportMeta()) {
         console.log("import.meta not supported");
+        return false;
+    }
+
+    if (!supportsAbortController()) {
+        console.log("AbortController not supported");
         return false;
     }
 
