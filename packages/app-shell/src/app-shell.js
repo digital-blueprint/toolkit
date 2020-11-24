@@ -65,6 +65,10 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         this.matomo = null;
 
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
+
+        this.shellName = 'TU Graz';
+        this.shellSubname= 'Graz University of Technology';
+        this.noBrand = false;
     }
 
     static get scopedElements() {
@@ -233,7 +237,10 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             _loginStatus: { type: Boolean, attribute: false },
             matomoUrl: { type: String, attribute: "matomo-url" },
             matomoSiteId: { type: Number, attribute: "matomo-site-id" },
-            noWelcomePage: { type: Boolean, attribute: "no-welcome-page" }
+            noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
+            shellName: { type: String, attribute: "shell-name" },
+            shellSubname: { type: String, attribute: "shell-subname" },
+            noBrand: { type: Boolean, attribute: "no-brand" }
         };
     }
 
@@ -762,11 +769,11 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     </div>
                     <div class="hd2-left">
                         <div class="header">
-                            TU Graz<br>Graz University of Technology
+                            ${this.shellName}<br>${this.shellSubname}
                         </div>
                     </div>
                     <div class="hd2-right">
-                        <dbp-tugraz-logo id="main-logo" lang="${this.lang}"></dbp-tugraz-logo>
+                        <dbp-tugraz-logo id="main-logo" lang="${this.lang}" class="${classMap({hidden: this.noBrand})}"></dbp-tugraz-logo>
                     </div>
                 </header>
 
