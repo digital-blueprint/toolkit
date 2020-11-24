@@ -168,6 +168,8 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
                     };
                 },
                 processResults: function (data) {
+                    that.$('#check-in-place-select-dropdown').addClass('select2-bug');
+
                     that.lastResult = data;
                     let transformed = that.jsonld.transformMembers(data, checkInPlaceContext);
                     const results = [];
@@ -185,6 +187,8 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
                 }
             }
         }).on("select2:select", function (e) {
+            that.$('#check-in-place-select-dropdown').removeClass('select2-bug');
+
             // set custom element attributes
             const identifier = e.params.data.id;
             const maxCapacity = e.params.data.maximumPhysicalAttendeeCapacity;
@@ -356,6 +360,10 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
                 -webkit-appearance: none;
             }
 
+            /* https://github.com/select2/select2/issues/5457 */
+            .select2-bug .loading-results {
+                display: none !important;
+            }
             `
         ];
     }
