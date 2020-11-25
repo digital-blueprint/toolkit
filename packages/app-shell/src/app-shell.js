@@ -631,6 +631,12 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 aside .menu {
                     border-bottom: black 1px solid;
                     border-top-width: 0;
+                    width: 100%;
+                    position: absolute;
+                    background-color: white;
+                    z-index: 10;
+                    overflow-y: scroll;
+                    white-space: nowrap;
                 }
 
                 .menu li {
@@ -651,8 +657,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 ul.menu.hidden {
                     display: none;
                 }
-
-                
             }
         `;
     }
@@ -780,7 +784,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 <div id="headline">
                     <h1 class="title">${this.topicMetaDataText('name')}</h1>
                 </div>
-
                 <aside>
                     <h2 class="subtitle" @click="${this.toggleMenu}">
                         ${this.subtitle}
