@@ -156,7 +156,7 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <button class="button ${this.type} loading-container  ${!this.loading ? "is-not-loading" : ""}" ?disabled="${this.disabled}">
-                <div class="label"><slot>${this.value}</slot></div> <dbp-mini-spinner class="spinner" style="display: ${this.loading ? "inline" : "none"}"></dbp-mini-spinner>
+               <div class="label">${this.value}</div> <dbp-mini-spinner class="spinner" style="display: ${this.loading ? "inline" : "none"}"></dbp-mini-spinner>
             </button>
         `;
     }

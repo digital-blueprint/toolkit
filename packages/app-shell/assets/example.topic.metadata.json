@@ -13,7 +13,8 @@
   },
   "routing_name": "example",
   "activities": [
-    {"path": "example.metadata.json"}
+    {"path": "example.metadata.json"},
+    {"path": "example2.metadata.json"}
   ],
   "attributes": []
 }
