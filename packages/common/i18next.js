@@ -10,7 +10,7 @@ import i18next from 'i18next';
  * @param {object} options - Options passed to Intl.DateTimeFormat
  * @returns {string} The formatted datetime
  */
-export function dateTimeFormat(i18n, date, options) {
+export function dateTimeFormat(i18n, date, options = {}) {
     return new Intl.DateTimeFormat(i18n.languages, options).format(date);
 }
 
@@ -24,7 +24,7 @@ export function dateTimeFormat(i18n, date, options) {
  * @param {object} options - Options passed to Intl.NumberFormat
  * @returns {string} The formatted number
  */
-export function numberFormat(i18n, number, options) {
+export function numberFormat(i18n, number, options = {}) {
     return new Intl.NumberFormat(i18n.languages, options).format(number);
 }
 
