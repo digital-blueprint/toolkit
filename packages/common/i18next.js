@@ -8,7 +8,7 @@ import i18next from 'i18next';
  * @param {i18next.i18n} i18n - The i18next instance
  * @param {Date} date - The date to format
  * @param {object} options - Options passed to Intl.DateTimeFormat
- * @returns {string} The formated datetime
+ * @returns {string} The formatted datetime
  */
 export function dateTimeFormat(i18n, date, options) {
     return new Intl.DateTimeFormat(i18n.languages, options).format(date);
@@ -22,7 +22,7 @@ export function dateTimeFormat(i18n, date, options) {
  * @param {i18next.i18n} i18n - The i18next instance
  * @param {number} number - The number to format
  * @param {object} options - Options passed to Intl.NumberFormat
- * @returns {string} The formated number
+ * @returns {string} The formatted number
  */
 export function numberFormat(i18n, number, options) {
     return new Intl.NumberFormat(i18n.languages, options).format(number);
