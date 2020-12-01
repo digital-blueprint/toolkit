@@ -1,5 +1,18 @@
 # Language Select Web Component
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/language-select
+```
+
+## Usage
+
+```html
+<dbp-language-select></dbp-language-select>
+<script type="module" src="node_modules/@dbp-toolkit/app-shell/dist/dbp-app-shell.js"></script>
+```
+
 ## Local development
 
 ```bash
