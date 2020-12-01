@@ -3,10 +3,17 @@
 A web component for building SPAs consisting of one topic with multiple
 activities. Handles login, language selection, activity switching, menus etc.
 
+You can install these component via npm:
+
+```bash
+npm i @dbp-toolkit/app-shell
+```
+
 ## Usage
 
 ```html
 <dbp-app-shell src="/example.topic.metadata.json"></dbp-app-shell>
+<script type="module" src="node_modules/@dbp-toolkit/app-shell/dist/dbp-app-shell.js"></script>
 ```
 
 ## Attributes
@@ -83,6 +90,9 @@ yarn run watch
 
 # run tests
 yarn test
+
+# build local packages in dist directory
+yarn run build
 ```
 
 Jump to <http://localhost:8002> and you should get a Single Sign On login page.

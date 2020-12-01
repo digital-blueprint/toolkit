@@ -57,7 +57,7 @@ export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
                 <div class="container">
                     <div class="columns is-centered">
                         <div class="column">
-                            <dbp-qr-code-scanner show-output lang="${this.lang}"></dbp-qr-code-scanner>
+                            <dbp-qr-code-scanner @code-detected="${(e) => console.log(e)}" @scan-started="${(e) => console.log(e)}" show-output lang="${this.lang}"></dbp-qr-code-scanner>
                         </div>
                     </div>
                 </div>
