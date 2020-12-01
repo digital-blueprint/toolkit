@@ -20,3 +20,10 @@ yarn install
 
 * `yarn run test` -  Run test for all packages
 * `yarn run clean` - Removes all `node_modules` directories.
+
+## Publishing packages to npmjs.com
+
+There is an automatic publishing process initiated for each package if code is pushed
+to the `master` branch, if the package isn't set to private in its `package.json` and
+the version number in its `package.json` is higher than the version number on npmjs.com.
+
