@@ -1,5 +1,6 @@
 {
   "name": "@dbp-toolkit/language-select",
+  "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/language-select",
   "version": "0.1.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
