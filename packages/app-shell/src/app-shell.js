@@ -56,6 +56,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         this.basePath = '/';
         this.keycloakConfig = null;
         this.noWelcomePage = false;
+        this.isMenuOverflow = null;
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
@@ -240,7 +241,8 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
             shellName: { type: String, attribute: "shell-name" },
             shellSubname: { type: String, attribute: "shell-subname" },
-            noBrand: { type: Boolean, attribute: "no-brand" }
+            noBrand: { type: Boolean, attribute: "no-brand" },
+            isMenuOverflow: { type: Boolean, attribute: false }
         };
     }
 
@@ -363,7 +365,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             this.updatePageTitle();
             this.subtitle = this.activeMetaDataText("short_name");
             this.description = this.activeMetaDataText("description");
-           
         };
 
         // If it is empty assume the element is already registered through other means
@@ -405,6 +406,30 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         }
 
         menu.classList.toggle('hidden');
+
+        if (this.isMenuOverflow === null) {
+            if (menu.clientHeight >= window.innerHeight) {
+                this.isMenuOverflow = true;
+            } else {
+                this.isMenuOverflow = false;
+            }
+        }
+
+        if (this.isMenuOverflow && !menu.classList.contains('hidden')) {
+            // default value if menu is in sticky position
+            let topValue = 46.5;
+            // if menu is not in sticky position the top value must be calculated
+            if (window.pageYOffset < 96) {
+                topValue = 142.5 - window.pageYOffset;
+            }
+            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;');
+            menu.scrollTop = 0;
+ 
+            document.body.setAttribute('style', 'overflow:hidden;');
+        
+        } else if (this.isMenuOverflow && menu.classList.contains('hidden')) {
+            document.body.removeAttribute('style', 'overflow:hidden;');
+        }
 
         const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
         if (chevron !== null) {
@@ -635,8 +660,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     position: absolute;
                     background-color: white;
                     z-index: 10;
-                    overflow-y: scroll;
-                    white-space: nowrap;
+                    overflow-y: auto;
                 }
 
                 .menu li {
