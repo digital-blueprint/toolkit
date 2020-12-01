@@ -23,6 +23,7 @@ publish:
 #      - publish
   script:
     - sudo npm install --global can-npm-publish
+    - yarn config set registry https://registry.npmjs.org/:_authToken=${NPM_TOKEN}
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
     - yarn run publish
