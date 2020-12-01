@@ -441,13 +441,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                 min-height: 100vh;
             }
 
-            /* Prevent the page shifting when vertical scrollbars get added */
-            @media (min-width: 680px) {
-                #main {
-                    padding-left: calc(100vw - 100%);
-                }
-            }
-
             #main-logo {
                 padding: 0 50px 0 0;
             }
