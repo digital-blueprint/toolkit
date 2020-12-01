@@ -18,11 +18,12 @@ test:
 
 publish:
   stage: publish
-  only:
-    refs:
-      - publish
+#  only:
+#    refs:
+#      - publish
   script:
     - sudo npm install --global can-npm-publish
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
     - yarn run publish
+    - cd packages/app-shell && npm publish --access public
