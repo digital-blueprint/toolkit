@@ -18,9 +18,10 @@ test:
 
 publish:
   stage: publish
-#  only:
-#    refs:
-#      - publish
+  only:
+    refs:
+      - publish
+      - master
   script:
     - sudo npm install --global can-npm-publish
     - yarn config set registry https://registry.npmjs.org/
