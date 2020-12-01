@@ -26,4 +26,3 @@ publish:
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
     - yarn run publish
-    - cd packages/app-shell && npm publish --access public
