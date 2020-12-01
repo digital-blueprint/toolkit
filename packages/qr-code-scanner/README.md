@@ -32,6 +32,10 @@ after loaded. This attribute is also used to stop the QR code reader or if you d
 - `'code-detected'`: Outgoing Event which is fired if a QR code is detected. The data of the detected QR code is in `event.detail`.
 - `'scan-started`: Fired after the first image is drawn. Can be used to scrolling or other layout dependent tasks.
 
+## Assets
+
+- `qr-scanner/qr-scanner-worker.*` -> `dist/local/@dbp-toolkit/qr-code-scanner/`
+
 ## Local development
 
 ```bash
