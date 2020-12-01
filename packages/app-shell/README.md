@@ -3,7 +3,7 @@
 A web component for building SPAs consisting of one topic with multiple
 activities. Handles login, language selection, activity switching, menus etc.
 
-You can install these component via npm:
+You can install this component via npm:
 
 ```bash
 npm i @dbp-toolkit/app-shell
