@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "test": "lerna run test",
-    "publish": "lerna run publish"
+    "publish": "lerna publish from-package"
   },
   "author": "",
   "license": "LGPL-2.1-or-later",
