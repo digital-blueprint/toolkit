@@ -1,6 +1,6 @@
 {
   "check-in-place-select": {
-    "placeholder": "Bitte wählen Sie einen Ort aus",
+    "placeholder": "Z.B. \"P1\", \"Rechbauerstraße\", \"PZ2EG048\"",
     "error-summary": "Ein Fehler ist aufgetreten",
     "login-required": "Anmeldung erforderlich"
   }

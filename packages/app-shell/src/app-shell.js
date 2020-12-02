@@ -56,6 +56,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         this.basePath = '/';
         this.keycloakConfig = null;
         this.noWelcomePage = false;
+        this.menuHeight = -1;
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
@@ -363,7 +364,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             this.updatePageTitle();
             this.subtitle = this.activeMetaDataText("short_name");
             this.description = this.activeMetaDataText("description");
-           
         };
 
         // If it is empty assume the element is already registered through other means
@@ -399,12 +399,30 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
     toggleMenu() {
         const menu = this.shadowRoot.querySelector("ul.menu");
+        const subtitle = this.shadowRoot.querySelector("h2.subtitle");
 
-        if (menu === null) {
+        if (menu === null || subtitle === null) {
             return;
         }
 
         menu.classList.toggle('hidden');
+
+        if (this.menuHeight === -1) {
+            this.menuHeight = menu.clientHeight;
+        }
+
+        let topValue = subtitle.getBoundingClientRect().bottom;
+        let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
+        
+        if (isMenuOverflow && !menu.classList.contains('hidden')) {
+            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
+            menu.scrollTop = 0;
+            document.body.setAttribute('style', 'overflow:hidden;');
+        
+        } else if (isMenuOverflow && menu.classList.contains('hidden')) {
+            document.body.removeAttribute('style', 'overflow:hidden;');
+            menu.removeAttribute('style');
+        }
 
         const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
         if (chevron !== null) {
@@ -635,8 +653,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     position: absolute;
                     background-color: white;
                     z-index: 10;
-                    overflow-y: scroll;
-                    white-space: nowrap;
                 }
 
                 .menu li {
