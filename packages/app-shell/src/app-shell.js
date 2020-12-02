@@ -420,7 +420,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             let topValue = 45.5;
             // if menu is not in sticky position the top value must be calculated
             if (window.pageYOffset < 96) {
-                topValue = 142.5 - window.pageYOffset;
+                topValue = 141.5 - window.pageYOffset;
             }
             menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;');
             menu.scrollTop = 0;
