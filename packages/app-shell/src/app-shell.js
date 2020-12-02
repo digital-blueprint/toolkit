@@ -421,7 +421,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         
         } else if (isMenuOverflow && menu.classList.contains('hidden')) {
             document.body.removeAttribute('style', 'overflow:hidden;');
-            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
+            menu.removeAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
         }
 
         const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
