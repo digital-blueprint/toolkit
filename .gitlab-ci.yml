@@ -23,13 +23,14 @@ publish:
       - publish
       - master
   script:
-    - echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+    - echo '@dbp-toolkit:registry=https://registry.npmjs.org' >> .npmrc
 #    - echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > packages/auth/.npmrc
 #    - sudo npm install --global can-npm-publish
 #    - yarn config set registry https://registry.npmjs.org/
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
-    - yarn logout; npm logout
+#    - yarn logout; npm logout
     - npm whoami
     - yarn run build
-    - npm run publish
+    - yarn run publish
