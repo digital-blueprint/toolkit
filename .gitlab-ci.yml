@@ -30,4 +30,5 @@ publish:
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
     - npm whoami
-    - npm run publish
+    - lerna run build
+    - lerna publish from-package --yes
