@@ -23,7 +23,7 @@ publish:
       - publish
       - master
   script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
     - yarn run build
