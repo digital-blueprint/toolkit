@@ -29,4 +29,5 @@ publish:
 #    - yarn config set registry https://registry.npmjs.org/
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
+    - npm whoami
     - yarn run publish
