@@ -417,7 +417,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
         if (this.isMenuOverflow && !menu.classList.contains('hidden')) {
             // default value if menu is in sticky position
-            let topValue = 46.5;
+            let topValue = 45.5;
             // if menu is not in sticky position the top value must be calculated
             if (window.pageYOffset < 96) {
                 topValue = 142.5 - window.pageYOffset;
