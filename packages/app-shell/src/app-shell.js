@@ -56,7 +56,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         this.basePath = '/';
         this.keycloakConfig = null;
         this.noWelcomePage = false;
-        this.isMenuOverflow = null;
+        this.menuHeight = -1;
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
@@ -241,8 +241,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
             shellName: { type: String, attribute: "shell-name" },
             shellSubname: { type: String, attribute: "shell-subname" },
-            noBrand: { type: Boolean, attribute: "no-brand" },
-            isMenuOverflow: { type: Boolean, attribute: false }
+            noBrand: { type: Boolean, attribute: "no-brand" }
         };
     }
 
@@ -400,35 +399,29 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
 
     toggleMenu() {
         const menu = this.shadowRoot.querySelector("ul.menu");
+        const subtitle = this.shadowRoot.querySelector("h2.subtitle");
 
-        if (menu === null) {
+        if (menu === null || subtitle === null) {
             return;
         }
 
         menu.classList.toggle('hidden');
 
-        if (this.isMenuOverflow === null) {
-            if (menu.clientHeight >= window.innerHeight) {
-                this.isMenuOverflow = true;
-            } else {
-                this.isMenuOverflow = false;
-            }
+        if (this.menuHeight === -1) {
+            this.menuHeight = menu.clientHeight;
         }
 
-        if (this.isMenuOverflow && !menu.classList.contains('hidden')) {
-            // default value if menu is in sticky position
-            let topValue = 45.5;
-            // if menu is not in sticky position the top value must be calculated
-            if (window.pageYOffset < 96) {
-                topValue = 141.5 - window.pageYOffset;
-            }
-            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;');
+        let topValue = subtitle.getBoundingClientRect().bottom;
+        let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
+        
+        if (isMenuOverflow && !menu.classList.contains('hidden')) {
+            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
             menu.scrollTop = 0;
- 
             document.body.setAttribute('style', 'overflow:hidden;');
         
-        } else if (this.isMenuOverflow && menu.classList.contains('hidden')) {
+        } else if (isMenuOverflow && menu.classList.contains('hidden')) {
             document.body.removeAttribute('style', 'overflow:hidden;');
+            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
         }
 
         const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
@@ -660,7 +653,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     position: absolute;
                     background-color: white;
                     z-index: 10;
-                    overflow-y: auto;
                 }
 
                 .menu li {
