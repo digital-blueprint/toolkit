@@ -12,6 +12,10 @@
     "build": "lerna run build",
     "publish": "lerna publish from-package --yes"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
   "author": "",
   "license": "LGPL-2.1-or-later",
   "devDependencies": {

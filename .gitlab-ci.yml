@@ -31,6 +31,6 @@ publish:
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
 #    - yarn logout; npm logout
-    - npm whoami
+#    - npm whoami
     - yarn run build
     - yarn run publish
