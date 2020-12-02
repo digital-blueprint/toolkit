@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            @import "files/200.css";
+            @import "files/300.css";
+            @import "files/400.css";
+            @import "files/600.css";
+            @import "files/700.css";
+            @import "files/900.css";
+
+            body {
+                font-family: "Source Sans Pro";
+            }
+
+            p {
+                margin: 2em;
+            }
+        </style>
+
+        <script type="module">
+            for (let weight of ['200', '300', '400', '600', '700', '900']) {
+                for (let style of ['normal', 'italic']) {
+                    let par = document.createElement("p");
+                    let text = document.createTextNode(`(${weight}, ${style})
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+                        ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                        aliquip ex ea commodo consequat.`);
+                    par.setAttribute('style', `font-weight: ${weight};font-style: ${style}`);
+                    par.appendChild(text);
+                    document.body.appendChild(par);
+                }
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
