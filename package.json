@@ -10,7 +10,7 @@
   "scripts": {
     "test": "lerna run test",
     "build": "lerna run build",
-    "publish": "lerna publish from-package --yes"
+    "publish": "lerna publish from-package --yes --no-verify-access"
   },
   "author": "",
   "license": "LGPL-2.1-or-later",
