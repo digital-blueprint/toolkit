@@ -23,6 +23,9 @@ publish:
       - publish
       - master
   script:
+    # https://www.npmjs.com/settings/dbp-deploy/tokens
+    # NPM_TOKEN needs to be a "Publish" token with 2FA disabled!
+    # "Automation" tokens don't work with lerna (even if they would work with "npm publish")
     - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
     - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
     - yarn install
