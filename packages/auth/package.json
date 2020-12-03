@@ -1,7 +1,7 @@
 {
   "name": "@dbp-toolkit/auth",
   "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/auth",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "publishConfig": {
