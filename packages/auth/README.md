@@ -1,11 +1,18 @@
 # Auth Web Components
 
+You can install the components via npm:
+
+```bash
+npm i @dbp-toolkit/auth
+```
+
 ## Keycloak Component
 
 ### Usage
 
 ```html
 <dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz" client-id="some-id"></dbp-auth-keycloak>
+<script type="module" src="node_modules/@dbp-toolkit/auth/dist/dbp-auth.js"></script>
 ```
 
 ### Attributes
@@ -41,6 +48,7 @@
 
 ```html
 <dbp-login-button></dbp-login-button>
+<script type="module" src="node_modules/@dbp-toolkit/auth/dist/dbp-auth.js"></script>
 ```
 
 ## Local development
