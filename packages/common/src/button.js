@@ -88,6 +88,12 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
         this.type = "";
         this.loading = false;
         this.disabled = false;
+        
+        this.addEventListener('click', (e) => {
+            if (this.disabled) {
+              e.stopImmediatePropagation();
+            }
+        });
     }
 
     static get scopedElements() {
@@ -155,8 +161,8 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-            <button class="button ${this.type} loading-container  ${!this.loading ? "is-not-loading" : ""}" ?disabled="${this.disabled}">
-               <div class="label">${this.value}</div> <dbp-mini-spinner class="spinner" style="display: ${this.loading ? "inline" : "none"}"></dbp-mini-spinner>
+            <button class="button ${this.type} loading-container ${!this.loading ? "is-not-loading" : ""}" ?disabled="${this.disabled}">
+               <div class="label"><slot>${this.value}</slot></div> <dbp-mini-spinner class="spinner" style="display: ${this.loading ? "inline" : "none"}"></dbp-mini-spinner>
             </button>
         `;
     }
