@@ -159,6 +159,8 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
                     };
                 },
                 processResults: function (data) {
+                    that.$('#person-select-dropdown').addClass('select2-bug');
+
                     that.lastResult = data;
                     let transformed = that.jsonld.transformMembers(data, personContext);
                     const results = [];
@@ -176,6 +178,8 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
                 }
             }
         }).on("select2:select", function (e) {
+            that.$('#person-select-dropdown').removeClass('select2-bug');
+
             // set custom element attributes
             const identifier = e.params.data.id;
             that.object = findObjectInApiResults(identifier, that.lastResult);
@@ -328,6 +332,11 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
 
             .field .button.control dbp-icon {
                 top: 0;
+            }
+
+            /* https://github.com/select2/select2/issues/5457 */
+            .select2-bug .loading-results {
+                display: none !important;
             }
             `
         ];
