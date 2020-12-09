@@ -422,7 +422,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             }
         
             #canvas {
-                /* width: 100%; */
                 margin-top: 2rem;
                 max-height: calc(100vh - 100px);
                 max-width: 100%;
