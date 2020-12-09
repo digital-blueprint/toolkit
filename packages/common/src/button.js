@@ -88,7 +88,8 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
         this.type = "";
         this.loading = false;
         this.disabled = false;
-        
+
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=1061240#c12
         this.addEventListener('click', (e) => {
             if (this.disabled) {
               e.stopImmediatePropagation();

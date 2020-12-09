@@ -3,7 +3,7 @@ import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
-import {getIconCSS, Icon, MiniSpinner, Button, Spinner, InlineNotification} from './index.js';
+import {getIconCSS, Icon, MiniSpinner, Button, LoadingButton, Spinner, InlineNotification} from './index.js';
 
 export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -18,6 +18,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
             'dbp-mini-spinner': MiniSpinner,
             'dbp-spinner': Spinner,
             'dbp-button': Button,
+            'dbp-loading-button': LoadingButton,
             'dbp-auth': customElements.get('dbp-auth'),
             'dbp-inline-notification': InlineNotification,
         };
@@ -93,6 +94,14 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         }, 1000);
     }
 
+    loadingButtonClickHandler(e) {
+        let button = e.target;
+        button.start();
+        setTimeout(() => {
+            button.stop();
+        }, 1000);
+    }
+
     render() {
         return html`
             <style>
@@ -137,6 +146,9 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                     <h2>Button</h2>
                     <div class="control">
                         <dbp-button value="Load" @click="${this.buttonClickHandler}" type="is-primary"></dbp-button>
+
+                        <dbp-loading-button @click="${this.loadingButtonClickHandler}" type="is-primary">Loading Button</dbp-loading-button>
+                        <dbp-loading-button @click="${this.loadingButtonClickHandler}" type="is-primary" disabled>Loading Button Disabled</dbp-loading-button>
                     </div>
                 </div>
                 <div class="content">
