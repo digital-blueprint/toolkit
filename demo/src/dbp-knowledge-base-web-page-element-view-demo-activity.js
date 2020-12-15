@@ -49,7 +49,7 @@ class KnowledgeBaseWebPageElementViewDemoActivity extends ScopedElementsMixin(Li
     render() {
         return html`
                 ${unsafeHTML(readme)}
-                <dbp-knowledge-base-web-page-element-view-demo id="demo" lang="en"></dbp-knowledge-base-web-page-element-view-demo>
+                <dbp-knowledge-base-web-page-element-view-demo id="demo" lang="en" no-auth></dbp-knowledge-base-web-page-element-view-demo>
         `;
     }
 }

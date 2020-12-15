@@ -50,7 +50,7 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TO
         return html`
 
                 ${unsafeHTML(readme)}
-                <dbp-data-table-view-demo id="demo" lang="en"></dbp-data-table-view-demo>
+                <dbp-data-table-view-demo id="demo" lang="en" no-auth></dbp-data-table-view-demo>
         `;
     }
 }

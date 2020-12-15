@@ -49,7 +49,7 @@ class DbpPersonProfileDemoActivity extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
                 ${unsafeHTML(readme)}
-                <dbp-person-profile-demo id="demo" lang="en"></dbp-person-profile-demo>
+                <dbp-person-profile-demo id="demo" lang="en" no-auth></dbp-person-profile-demo>
 
         `;
     }

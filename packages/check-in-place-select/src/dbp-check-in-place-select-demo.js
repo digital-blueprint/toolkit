@@ -6,7 +6,7 @@ import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
+export class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -15,7 +15,6 @@ class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'dbp-auth-keycloak': AuthKeycloak,
           'dbp-login-button': LoginButton,
           'dbp-check-in-place-select': CheckInPlaceSelect,
         };
@@ -49,9 +48,11 @@ class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
     }
 
     getAuthComponentHtml() {
-        return this.noAuth ? html`` : html`
+        return this.noAuth ? html`<dbp-login-button lang="${this.lang}" show-image></dbp-login-button>` : html`
             <div class="container">
-                <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                <dbp-auth-keycloak lang="${this.lang}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                                   url="https://auth-dev.tugraz.at/auth" realm="tugraz"
+                                   client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
                 <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
             </div>
         `;

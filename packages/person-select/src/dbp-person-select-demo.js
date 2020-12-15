@@ -49,9 +49,11 @@ export class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     }
 
     getAuthComponentHtml() {
-        return this.noAuth ? html`` : html`
+        return this.noAuth ? html`<dbp-login-button lang="${this.lang}" show-image></dbp-login-button>` : html`
             <div class="container">
-                <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                <dbp-auth-keycloak lang="${this.lang}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                                   url="https://auth-dev.tugraz.at/auth" realm="tugraz"
+                                   client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
                 <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
             </div>
         `;
