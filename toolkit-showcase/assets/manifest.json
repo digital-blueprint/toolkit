@@ -1,15 +1,15 @@
 {
-  "short_name": "Toolkit Demo",
-  "name": "Toolkit Demo",
-  "start_url": "./dbp-toolkit-demo.html",
+  "short_name": "Toolkit Showcase",
+  "name": "Toolkit Showcase",
+  "start_url": "./dbp-toolkit-showcase.html",
   "icons": [
     {
-      "src": "local/dbp-toolkit-demo/icon-192.png",
+      "src": "local/dbp-toolkit-showcase/icon-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "local/dbp-toolkit-demo/icon-512.png",
+      "src": "local/dbp-toolkit-showcase/icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }

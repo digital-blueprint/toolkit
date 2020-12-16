@@ -1,4 +1,4 @@
 node_modules
-demo/dist
+toolkit-showcase/dist
 .idea
 yarn-error.log
