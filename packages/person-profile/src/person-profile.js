@@ -41,13 +41,14 @@ export class PersonProfile extends DBPLitElement {
                 case "lang":
                     i18n.changeLanguage(this.lang);
                     break;
-                case "entryPointUrl":
+                case "entryPointUrl": {
                     const that = this;
 
                     JSONLD.initialize(this.entryPointUrl, function (jsonld) {
                         that.jsonld = jsonld;
                     }, {}, that.lang);
                     break;
+                }
                 case 'value':
                     if (this.value !== '') {
                         const apiUrl = this.entryPointUrl + '/people/' + this.value;
