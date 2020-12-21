@@ -43,6 +43,7 @@ publish:
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -t rsa "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
     # Deploy
+    - cd toolkit-showcase
     - dep deploy "${CI_ENVIRONMENT_NAME}"
     - echo "Deployed to ${CI_ENVIRONMENT_URL}"
     # Simple health check
