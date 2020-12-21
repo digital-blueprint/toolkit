@@ -238,7 +238,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      * Decompress files synchronously
      *
      * @param file
-     * @returns {Promise<[]>}
+     * @returns {Promise<Array>}
      */
     async decompressZIP(file) {
         // see: https://stuk.github.io/jszip/
@@ -299,7 +299,9 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             await response.json().then((json) => {
                 data.json = json;
             });
-        } catch (e) {}
+        } catch (e) {
+            //
+        }
 
         if (sendFile) {
             data.file = file;

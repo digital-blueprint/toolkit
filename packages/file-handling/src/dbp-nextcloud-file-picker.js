@@ -258,7 +258,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      * check mime type of row
      *
-     * @param row.getDatat(), mimetypes
+     * @param data
+     * @param filterParams
      */
     checkFileType(data, filterParams) {
         if (typeof data.mime === 'undefined') {
@@ -445,7 +446,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }).catch(error => {
                 console.error(error.message);
                 this.loading = false;
-                this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;;
+                this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;
         });
     }
 
@@ -629,7 +630,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * R = Share, S = Shared Folder, M = Group folder or external source, G = Read, D = Delete, NV / NVW = Write, CK = Create
      *
      * @param file
-     * @return number
+     * @returns {number}
      */
     checkRights(file) {
 
@@ -698,7 +699,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      * Open the replace Modal Dialog with gui where forbidden actions are disabled
      *
-     * @param file, directory
+     * @param file
+     * @param directory
      */
     replaceModalDialog(file, directory) {
         this.uploadFileObject = file;

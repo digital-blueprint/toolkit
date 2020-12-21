@@ -2,3 +2,4 @@
 /dist/**
 *.conf.js
 *.config.js
+src/micromodal.es.js

@@ -292,7 +292,7 @@ export async function asyncArrayForEach(array, callback) {
  * Attempts to determine the mime type of a file or blob
  *
  * @param file
- * @returns {Promise<unknown>}
+ * @returns {Promise<string>}
  */
 export async function getMimeTypeOfFile(file) {
     const getMimeType = (signature) => {
