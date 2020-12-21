@@ -92,6 +92,10 @@ export class MatomoElement extends DBPLitElement {
                 _paq.push(['trackEvent', 'Error', e.error.message + '\n' + e.error.stack]);
             });
 
+            window.addEventListener('unhandledrejection', function(e) {
+                _paq.push(['trackEvent', 'UnhandledRejection', e.reason]);
+            });
+
             this.isRunning = true;
             if (this.lastEvent.length > 0) {
                 console.log('MatomoElement* (' + this.isRunning + '): ' + this.lastEvent[1] + ', ' + this.lastEvent[2]);
