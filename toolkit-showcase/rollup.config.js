@@ -62,7 +62,7 @@ switch (build) {
     pdfAsQualifiedlySigningServer = 'sig-dev.tugraz.at';
     break;
   case 'development':
-    basePath = '/apps/toolkit-showcase/';
+    basePath = '/apps/demo/';
     entryPointURL = 'https://mw-dev.tugraz.at';
     // "/pers" can't go here because it's not allowed in the "Content-Security-Policy"
     nextcloudBaseURL = 'https://nc-dev.tugraz.at';
@@ -74,6 +74,7 @@ switch (build) {
     keyCloakClientId = 'auth-dev-mw-frontend';
     pdfAsQualifiedlySigningServer = 'sig-dev.tugraz.at';
     break;
+
   default:
     console.error('Unknown build environment: ' + build);
     process.exit(1);
