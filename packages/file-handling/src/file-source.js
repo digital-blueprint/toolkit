@@ -7,7 +7,7 @@ import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
-import MicroModal from './micromodal.es'
+import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
 
 function mimeTypesToAccept(mimeTypes) {
@@ -113,13 +113,13 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.updateComplete.then(() => {
             this.dropArea = this._('#dropArea');
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                this.dropArea.addEventListener(eventName, this.preventDefaults, false)
+                this.dropArea.addEventListener(eventName, this.preventDefaults, false);
             });
             ['dragenter', 'dragover'].forEach(eventName => {
-                this.dropArea.addEventListener(eventName, this.highlight.bind(this), false)
+                this.dropArea.addEventListener(eventName, this.highlight.bind(this), false);
             });
             ['dragleave', 'drop'].forEach(eventName => {
-                this.dropArea.addEventListener(eventName, this.unhighlight.bind(this), false)
+                this.dropArea.addEventListener(eventName, this.unhighlight.bind(this), false);
             });
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
             this._('#fileElem').addEventListener('change', this.handleChange.bind(this));
@@ -132,11 +132,11 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     highlight(e) {
-        this.dropArea.classList.add('highlight')
+        this.dropArea.classList.add('highlight');
     }
 
     unhighlight(e) {
-        this.dropArea.classList.remove('highlight')
+        this.dropArea.classList.remove('highlight');
     }
 
     handleDrop(e) {
@@ -177,7 +177,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
         await commonUtils.asyncArrayForEach(files, async (file) => {
             if (file.size === 0) {
-                console.log('file \'' + file.name + '\' has size=0 and is denied!')
+                console.log('file \'' + file.name + '\' has size=0 and is denied!');
                 return;
             }
 
@@ -422,7 +422,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                             
                         </nav>
                         <div class="modal-header">
-                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close"  aria-label="Close modal"  @click="${() => {this.closeDialog()}}">
+                            <button title="${i18n.t('file-source.modal-close')}" class="modal-close"  aria-label="Close modal"  @click="${() => {this.closeDialog();}}">
                                     <dbp-icon name="close" class="close-icon"></dbp-icon>
                             </button>
                        

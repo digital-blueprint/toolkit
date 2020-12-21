@@ -140,7 +140,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             if (typeof cell.getValue() === 'undefined') {
                                 return "";
                             }
-                            const [fileMainType, fileSubType] = cell.getValue().split('/');
+                            const [, fileSubType] = cell.getValue().split('/');
                             return fileSubType;
                         }},
                     {title: i18n.t('nextcloud-file-picker.last-modified'), responsive: 3, widthGrow:1, minWidth: 100, field: "lastmod",sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
@@ -404,7 +404,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.activeDirectoryACL = '';
             }
         } else {
-            this.activeDirectoryRights = 'SGDNVCK'
+            this.activeDirectoryRights = 'SGDNVCK';
         }
         this.loadDirectory(file.filename);
         event.preventDefault();
@@ -483,7 +483,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
         this.fileList = files;
         this.forAll = false;
-        this.setRepeatForAllConflicts()
+        this.setRepeatForAllConflicts();
         this.uploadFile(directory);
     }
 
@@ -510,7 +510,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             let that = this;
             this.loading = true;
             this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
-            let contents = await this.webDavClient
+            await this.webDavClient
                     .putFileContents(path, file,  { overwrite: false, onUploadProgress: progress => {
                             /* console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);*/
                         }}).then(function() {
@@ -591,7 +591,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         let that = this;
         // https://github.com/perry-mitchell/webdav-client#putfilecontents
-        let contents = await this.webDavClient
+        await this.webDavClient
             .putFileContents(path, file, {
                 overwrite: overwrite, onUploadProgress: progress => {
                     /*console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);*/
@@ -845,8 +845,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-close'));
             this._('#new-folder').focus();
         }
-
-        let that = this;
     }
 
     /**
@@ -1515,7 +1513,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <span style="word-break: break-all;">${this.replaceFilename}</span>
                                 ${i18n.t('nextcloud-file-picker.replace-title-2')}.
                             </h2>
-                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => {this.closeDialog()}}">
+                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => {this.closeDialog();}}">
                                 <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
                             </button> 
                         </header>

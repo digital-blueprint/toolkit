@@ -1,4 +1,4 @@
-import {css, unsafeCSS, CSSResult} from 'lit-element';
+import {css} from 'lit-element';
 
 export function getFileHandlingCss() {
     // language=css
