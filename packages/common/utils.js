@@ -212,7 +212,7 @@ export const getAssetURL = (pkg, path) => {
         // assume it is a full path
         fullPath = pkg;
     } else {
-        fullPath = 'local/' + pkg + '/' + path
+        fullPath = 'local/' + pkg + '/' + path;
     }
     return new URL(fullPath, new URL('..', import.meta.url).href).href;
 };
@@ -298,21 +298,21 @@ export async function getMimeTypeOfFile(file) {
     const getMimeType = (signature) => {
         switch (signature) {
             case '89504E47':
-                return 'image/png'
+                return 'image/png';
             case '47494638':
-                return 'image/gif'
+                return 'image/gif';
             case '25504446':
-                return 'application/pdf'
+                return 'application/pdf';
             case 'FFD8FFDB':
             case 'FFD8FFE0':
             case 'FFD8FFE1':
-                return 'image/jpeg'
+                return 'image/jpeg';
             case '504B0304':
-                return 'application/zip'
+                return 'application/zip';
             default:
-                return 'Unknown filetype'
+                return 'Unknown filetype';
         }
-    }
+    };
 
     return await new Promise((resolve) => {
         let fileReader = new FileReader();
@@ -323,15 +323,15 @@ export async function getMimeTypeOfFile(file) {
                 let bytes = [];
 
                 uint.forEach((byte) => {
-                    bytes.push(byte.toString(16))
-                })
+                    bytes.push(byte.toString(16));
+                });
 
                 const hex = bytes.join('').toUpperCase();
                 const mimeType = getMimeType(hex);
 
                 resolve(mimeType);
             }
-        }
+        };
 
         fileReader.readAsArrayBuffer(file.slice(0, 4));
     });

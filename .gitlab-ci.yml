@@ -16,6 +16,14 @@ test:
     - yarn install
     - yarn run test
 
+linting:
+  stage: test
+  allow_failure: true
+  script:
+    - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
+    - yarn install
+    - yarn run lint
+
 publish:
   stage: deploy
   only:

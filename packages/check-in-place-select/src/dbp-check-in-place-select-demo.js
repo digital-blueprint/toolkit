@@ -17,6 +17,7 @@ export class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
         return {
           'dbp-login-button': LoginButton,
           'dbp-check-in-place-select': CheckInPlaceSelect,
+          'dbp-auth-keycloak': AuthKeycloak,
         };
     }
 

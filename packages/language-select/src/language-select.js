@@ -106,7 +106,7 @@ export class LanguageSelect extends LitElement {
     }
 
     onExternalChange(e) {
-        this.lang = e.detail.lang
+        this.lang = e.detail.lang;
     }
 
     connectedCallback() {

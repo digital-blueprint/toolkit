@@ -227,12 +227,12 @@ export class DataTableView extends LitElement {
 
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang).catch(e => { console.log(e)});
+                i18n.changeLanguage(this.lang).catch(e => { console.log(e);});
                 languageChange = true;
             }
         });
 
-        this.updateComplete.then(this.set_datatable(this.data, languageChange)).catch(e => { console.log(e)});
+        this.updateComplete.then(this.set_datatable(this.data, languageChange)).catch(e => { console.log(e);});
         super.update(changedProperties);
     }
 
