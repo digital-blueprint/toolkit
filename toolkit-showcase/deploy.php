@@ -55,7 +55,6 @@ task('deploy', [
     'deploy:info',
     'build-demo',
     'build-development',
-    'build-production',
     'deploy:prepare',
     'deploy:lock',
     'deploy:release',
