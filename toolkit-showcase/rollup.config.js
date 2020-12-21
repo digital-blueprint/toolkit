@@ -207,7 +207,7 @@ Dependencies:
 `},
           thirdParty: {
             allow: {
-              test: '(MIT OR BSD-3-Clause OR Apache-2.0 OR LGPL-2.1-or-later)',
+              test: '(MIT OR BSD-3-Clause OR Apache-2.0 OR LGPL-2.1-or-later OR 0BSD)',
               failOnUnlicensed: true,
               failOnViolation: true,
             },
