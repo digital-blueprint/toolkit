@@ -7,7 +7,7 @@ cache:
 
 stages:
   - test
-  - publish
+  - deploy
 
 test:
   stage: test
@@ -17,10 +17,10 @@ test:
     - yarn run test
 
 publish:
-  stage: publish
+  stage: deploy
   only:
     refs:
-      - publish
+      - deploy
       - master
   script:
     # https://www.npmjs.com/settings/dbp-deploy/tokens
