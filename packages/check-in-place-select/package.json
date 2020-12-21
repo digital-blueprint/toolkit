@@ -4,7 +4,11 @@
   "version": "0.1.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+    "directory": "packages/check-in-place-select"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"

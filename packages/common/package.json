@@ -4,6 +4,11 @@
   "version": "0.1.0",
   "module": "index.js",
   "license": "LGPL-2.1-or-later",
+  "repository": {
+    "type" : "git",
+    "url" : "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+    "directory": "packages/common"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",

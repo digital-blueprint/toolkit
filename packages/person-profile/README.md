@@ -1,9 +1,16 @@
 # Person Profile Web Component
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/person-profile
+```
+
 ## Usage
 
 ```html
 <dbp-person-profile></dbp-person-profile>
+<script type="module" src="node_modules/@dbp-toolkit/person-profile/dist/dbp-person-profile.js"></script>
 ```
 
 ## Attributes

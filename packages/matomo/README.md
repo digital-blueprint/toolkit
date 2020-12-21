@@ -1,9 +1,16 @@
 # Matomo Web Component
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/matomo
+```
+
 ## Usage
 
 ```html
 <dbp-matomo></dbp-matomo>
+<script type="module" src="node_modules/@dbp-toolkit/matomo/dist/dbp-matomo.js"></script>
 ```
 
 ## Attributes

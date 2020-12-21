@@ -10,7 +10,7 @@ npm i @dbp-toolkit/language-select
 
 ```html
 <dbp-language-select></dbp-language-select>
-<script type="module" src="node_modules/@dbp-toolkit/app-shell/dist/dbp-language-select.js"></script>
+<script type="module" src="node_modules/@dbp-toolkit/language-select/dist/dbp-language-select.js"></script>
 ```
 
 ## Local development

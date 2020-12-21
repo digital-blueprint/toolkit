@@ -1,9 +1,14 @@
 {
   "name": "@dbp-toolkit/file-handling",
   "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/file-handling",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
+  "repository": {
+    "type" : "git",
+    "url" : "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+    "directory": "packages/file-handling"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
