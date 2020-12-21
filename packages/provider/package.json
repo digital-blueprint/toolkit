@@ -28,7 +28,9 @@
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "eslint": "^7.3.1",
+    "eslint-plugin-jsdoc": "^30.6.4"
   },
   "dependencies": {
     "@dbp-toolkit/auth": "^0.1.0",
@@ -47,6 +49,7 @@
     "watch": "rollup -c --watch",
     "watch-local": "yarn run watch",
     "watch-dev": "rollup -c --watch --environment BUILD:development",
-    "test": "rollup -c --environment BUILD:test && karma start --singleRun"
+    "test": "rollup -c --environment BUILD:test && karma start --singleRun",
+    "lint": "eslint ."
   }
 }

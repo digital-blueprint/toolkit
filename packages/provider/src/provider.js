@@ -72,7 +72,7 @@ export class Provider extends HTMLElement {
                     if (item.sender === sender && item.name === name) {
                         const index = that.callbackStore.indexOf(item);
                         that.callbackStore.splice(index, 1);
-                        console.log('Provider(' + that.id() + ') eventListener for name "' + name + '" removed.')
+                        console.log('Provider(' + that.id() + ') eventListener for name "' + name + '" removed.');
                     }
                 });
 
