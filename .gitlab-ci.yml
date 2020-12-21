@@ -67,7 +67,6 @@ deploy_development:
   environment:
     name: development
     url: https://mw-frontend-dev.tugraz.at/apps/demo
-    url: https://mw-frontend-dev.tugraz.at/apps/demo
   variables:
     DEPLOY_HOST: mw01-dev.tugraz.at
     DEPLOY_KEY: "$DEPLOY_SSH_KEY"
