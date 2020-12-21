@@ -4,7 +4,8 @@ You can install this component via npm:
 
 ```bash
 npm i @dbp-toolkit/notification
-`
+```
+
 ## Usage
 
 ```html
