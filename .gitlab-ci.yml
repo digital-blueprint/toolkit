@@ -20,6 +20,7 @@ linting:
   stage: test
   allow_failure: true
   script:
+    - cd toolkit-showcase
     - yarn install
     - yarn run lint
 
