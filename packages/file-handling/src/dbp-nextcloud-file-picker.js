@@ -140,7 +140,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             if (typeof cell.getValue() === 'undefined') {
                                 return "";
                             }
-                            const [fileMainType, fileSubType] = cell.getValue().split('/');
+                            const [, fileSubType] = cell.getValue().split('/');
                             return fileSubType;
                         }},
                     {title: i18n.t('nextcloud-file-picker.last-modified'), responsive: 3, widthGrow:1, minWidth: 100, field: "lastmod",sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
@@ -258,7 +258,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      * check mime type of row
      *
-     * @param row.getDatat(), mimetypes
+     * @param data
+     * @param filterParams
      */
     checkFileType(data, filterParams) {
         if (typeof data.mime === 'undefined') {
@@ -300,11 +301,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.loginWindow.close();
                 }
 
-                const apiUrl = this.webDavUrl + "/" + data.loginName;
                 // see https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
-
                 this.webDavClient = createClient(
-                    apiUrl,
+                    data.webdavUrl || this.webDavUrl + "/" + data.loginName,
                     {
                         username: data.loginName,
                         password: data.token
@@ -406,7 +405,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.activeDirectoryACL = '';
             }
         } else {
-            this.activeDirectoryRights = 'SGDNVCK'
+            this.activeDirectoryRights = 'SGDNVCK';
         }
         this.loadDirectory(file.filename);
         event.preventDefault();
@@ -447,7 +446,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }).catch(error => {
                 console.error(error.message);
                 this.loading = false;
-                this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;;
+                this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;
         });
     }
 
@@ -485,7 +484,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
         this.fileList = files;
         this.forAll = false;
-        this.setRepeatForAllConflicts()
+        this.setRepeatForAllConflicts();
         this.uploadFile(directory);
     }
 
@@ -512,7 +511,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             let that = this;
             this.loading = true;
             this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
-            let contents = await this.webDavClient
+            await this.webDavClient
                     .putFileContents(path, file,  { overwrite: false, onUploadProgress: progress => {
                             /* console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);*/
                         }}).then(function() {
@@ -593,7 +592,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         let that = this;
         // https://github.com/perry-mitchell/webdav-client#putfilecontents
-        let contents = await this.webDavClient
+        await this.webDavClient
             .putFileContents(path, file, {
                 overwrite: overwrite, onUploadProgress: progress => {
                     /*console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);*/
@@ -631,7 +630,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * R = Share, S = Shared Folder, M = Group folder or external source, G = Read, D = Delete, NV / NVW = Write, CK = Create
      *
      * @param file
-     * @return number
+     * @returns {number}
      */
     checkRights(file) {
 
@@ -700,7 +699,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      * Open the replace Modal Dialog with gui where forbidden actions are disabled
      *
-     * @param file, directory
+     * @param file
+     * @param directory
      */
     replaceModalDialog(file, directory) {
         this.uploadFileObject = file;
@@ -847,8 +847,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-close'));
             this._('#new-folder').focus();
         }
-
-        let that = this;
     }
 
     /**
@@ -1519,7 +1517,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <span style="word-break: break-all;">${this.replaceFilename}</span>
                                 ${i18n.t('nextcloud-file-picker.replace-title-2')}.
                             </h2>
-                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => {this.closeDialog()}}">
+                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => {this.closeDialog();}}">
                                 <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
                             </button> 
                         </header>

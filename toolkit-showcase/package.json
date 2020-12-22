@@ -1,7 +1,7 @@
 {
-  "name": "dbp-toolkit-demo",
+  "name": "dbp-toolkit-showcase",
   "version": "0.1.0",
-  "main": "src/toolkit-demo.js",
+  "main": "src/toolkit-showcase.js",
   "license": "LGPL-2.1-or-later",
   "private": true,
   "workspaces": [

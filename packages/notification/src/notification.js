@@ -1,8 +1,7 @@
 import {i18n} from './i18n';
-import {createUUID} from './utils'
+import {createUUID} from './utils';
 import {css, html} from 'lit-element';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 /**
@@ -28,7 +27,7 @@ export class Notification extends DBPLitElement {
         i18n.changeLanguage(this.lang);
         const that = this;
 
-        const listener = window.addEventListener("dbp-notification-send", (e) => {
+        window.addEventListener("dbp-notification-send", (e) => {
             if (typeof e.detail === 'undefined') {
                 return;
             }

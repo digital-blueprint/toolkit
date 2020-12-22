@@ -1,9 +1,16 @@
 # KnowledgeBaseWebPageElementView Web Component
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/knowledge-base-web-page-element-view
+```
+
 ## Usage
 
 ```html
 <dbp-knowledge-base-web-page-element-view></dbp-knowledge-base-web-page-element-view>
+<script type="module" src="node_modules/@dbp-toolkit/knowledge-base-web-page-element-view/dist/dbp-knowledge-base-web-page-element-view.js"></script>
 ```
 
 ## Attributes

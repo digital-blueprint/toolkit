@@ -48,8 +48,8 @@ class DbpMatomoDemoActivity extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-               ${unsafeHTML(readme)}
-                <dbp-matomo-demo id="demo" lang="en"></dbp-matomo-demo>
+               ${unsafeHTML(readme)} 
+                <dbp-matomo-demo id="demo" lang="en" no-auth></dbp-matomo-demo>
         `;
     }
 }

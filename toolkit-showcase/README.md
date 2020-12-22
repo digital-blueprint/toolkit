@@ -1,4 +1,4 @@
-# Frontend Toolkit Demo
+# Frontend Toolkit Showcase
 
 ## Setup
 

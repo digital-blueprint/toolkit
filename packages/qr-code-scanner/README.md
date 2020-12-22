@@ -1,5 +1,11 @@
 # QR code Scanner Web Component
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/qr-code-scanner
+```
+
 ## Requirements
 - Https
 
@@ -7,6 +13,7 @@
 
 ```html
 <dbp-qr-code-scanner></dbp-qr-code-scanner>
+<script type="module" src="node_modules/@dbp-toolkit/qr-code-scanner/dist/dbp-qr-code-scanner.js"></script>
 ```
 
 The QR code Scanner Web Component uses a camera device, which you can select(if you have more than one).

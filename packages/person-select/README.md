@@ -1,9 +1,16 @@
 # Person Select Web Component
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/person-select
+```
+
 ## Usage
 
 ```html
 <dbp-person-select></dbp-person-select>
+<script type="module" src="node_modules/@dbp-toolkit/person-select/dist/dbp-person-select.js"></script>
 ```
 
 ## Attributes

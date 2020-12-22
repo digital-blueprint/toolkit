@@ -2,10 +2,17 @@
 
 [GitLab Repository](git@gitlab.tugraz.at:dbp/web-components/toolkit.git)
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/provider
+```
+
 ## Usage
 
 ```html
 <provider></provider>
+<script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
 ```
 
 ## Attributes

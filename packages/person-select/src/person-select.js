@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import {findObjectInApiResults} from './utils.js';
 import select2 from 'select2';
-import select2LangDe from './i18n/de/select2'
-import select2LangEn from './i18n/en/select2'
+import select2LangDe from './i18n/de/select2';
+import select2LangEn from './i18n/en/select2';
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -115,6 +115,8 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
 
     /**
      * Initializes the Select2 selector
+     *
+     * @param ignorePreset
      */
     initSelect2(ignorePreset = false) {
         const that = this;

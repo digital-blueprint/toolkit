@@ -49,7 +49,7 @@ class DbpPersonSelectDemoActivity extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-person-select-demo id="demo" lang="en"></dbp-person-select-demo>
+            <dbp-person-select-demo id="demo" lang="en" no-auth></dbp-person-select-demo>
         `;
     }
 }

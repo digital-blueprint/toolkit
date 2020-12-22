@@ -1,9 +1,14 @@
 {
   "name": "@dbp-toolkit/app-shell",
   "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/app-shell",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
+  "repository": {
+    "type" : "git",
+    "url" : "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+    "directory": "packages/app-shell"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"

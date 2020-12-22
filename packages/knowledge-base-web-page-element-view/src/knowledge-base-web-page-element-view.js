@@ -125,7 +125,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
             switch(propName) {
                 case "lang":
                 case "value":
-                case "entry-point-url":
+                case "entry-point-url": {
                     this.html = '';
                     const img = this._('#A2');
                     if (img !== null) {
@@ -136,6 +136,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
                         div.style.display = 'none';
                     }
                     break;
+                }
                 case "text":
                     this.class = this.text !== '' ? 'has-text' : '';
                     break;

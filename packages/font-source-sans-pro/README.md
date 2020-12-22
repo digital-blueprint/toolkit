@@ -1,5 +1,11 @@
 # Subsetted Version of Sans Source Pro 2
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/font-source-sans-pro
+```
+
 ## FAQ
 
 * Why?

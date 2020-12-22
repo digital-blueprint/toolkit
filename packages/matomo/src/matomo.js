@@ -1,9 +1,11 @@
-import {i18n} from './i18n.js';
-import {LitElement} from "lit-element";
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {EventBus} from '@dbp-toolkit/common';
 import buildInfo from 'consts:buildinfo';
 
+function pushEvent(event) {
+    window._paq = window._paq || [];
+    window._paq.push(event);
+}
 
 export class MatomoElement extends DBPLitElement {
 
@@ -53,16 +55,15 @@ export class MatomoElement extends DBPLitElement {
             }
             console.log('add matomo...');
 
-            window._paq = window._paq || [];
-            _paq.push(['setCustomVariable', 1, "GitCommit", buildInfo.info, "visit"]);
-            _paq.push(['enableHeartBeatTimer']);
-            _paq.push(['disableCookies']);
-            _paq.push(['trackPageView']);
-            _paq.push(['enableLinkTracking']);
+            pushEvent(['setCustomVariable', 1, "GitCommit", buildInfo.info, "visit"]);
+            pushEvent(['enableHeartBeatTimer']);
+            pushEvent(['disableCookies']);
+            pushEvent(['trackPageView']);
+            pushEvent(['enableLinkTracking']);
 
             (function (endpoint, siteId) {
-                _paq.push(['setTrackerUrl', endpoint+'matomo.php']);
-                _paq.push(['setSiteId', siteId]);
+                pushEvent(['setTrackerUrl', endpoint+'matomo.php']);
+                pushEvent(['setSiteId', siteId]);
 
                 var g = document.createElement('script');
                 var s = document.getElementsByTagName('script')[0];
@@ -75,27 +76,31 @@ export class MatomoElement extends DBPLitElement {
 
             // track changed locations
             window.addEventListener('locationchanged', function(e) {
-                _paq.push(['setReferrerUrl', e.detail.referrerUrl]);
-                _paq.push(['setCustomUrl', location.href]);
-                // _paq.push(['setDocumentTitle', '']);
-                _paq.push(['trackPageView']);
+                pushEvent(['setReferrerUrl', e.detail.referrerUrl]);
+                pushEvent(['setCustomUrl', location.href]);
+                // pushEvent(['setDocumentTitle', '']);
+                pushEvent(['trackPageView']);
 
                 // make Matomo aware of newly added content
                 var content = document.getElementById('content');
-                _paq.push(['MediaAnalytics::scanForMedia', content]);
-                _paq.push(['FormAnalytics::scanForForms', content]);
-                _paq.push(['trackContentImpressionsWithinNode', content]);
+                pushEvent(['MediaAnalytics::scanForMedia', content]);
+                pushEvent(['FormAnalytics::scanForForms', content]);
+                pushEvent(['trackContentImpressionsWithinNode', content]);
             });
 
             // track errors
             window.addEventListener('error', function(e) {
-                _paq.push(['trackEvent', 'Error', e.error.message + '\n' + e.error.stack]);
+                pushEvent(['trackEvent', 'Error', e.error.message + '\n' + e.error.stack]);
+            });
+
+            window.addEventListener('unhandledrejection', function(e) {
+                pushEvent(['trackEvent', 'UnhandledRejection', e.reason]);
             });
 
             this.isRunning = true;
             if (this.lastEvent.length > 0) {
                 console.log('MatomoElement* (' + this.isRunning + '): ' + this.lastEvent[1] + ', ' + this.lastEvent[2]);
-                _paq.push(this.lastEvent);
+                pushEvent(this.lastEvent);
                 this.lastEvent = [];
             }
             return;
@@ -111,7 +116,7 @@ export class MatomoElement extends DBPLitElement {
         console.log('MatomoElement  (' + this.isRunning + '): ' + action + ', ' + message);
         const event = ['trackEvent', action, message];
         if (this.isRunning) {
-            _paq.push(event);
+            pushEvent(event);
         } else {
             this.lastEvent = event;
         }

@@ -7,7 +7,7 @@ cache:
 
 stages:
   - test
-  - publish
+  - deploy
 
 test:
   stage: test
@@ -16,11 +16,19 @@ test:
     - yarn install
     - yarn run test
 
+linting:
+  stage: test
+  allow_failure: true
+  script:
+    - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
+    - yarn install
+    - yarn run lint
+
 publish:
-  stage: publish
+  stage: deploy
   only:
     refs:
-      - publish
+      - deploy
       - master
   script:
     # https://www.npmjs.com/settings/dbp-deploy/tokens
@@ -31,3 +39,45 @@ publish:
     - yarn install
     - yarn run build
     - yarn run publish
+
+.deploy_defaults: &deploy_defaults
+  except:
+    - schedules
+  stage: deploy
+  script:
+    # Add ssh key
+    - mkdir -p ~/.ssh
+    - echo "${DEPLOY_KEY}" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -t rsa "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
+    # Deploy
+    - cd toolkit-showcase
+    - dep deploy "${CI_ENVIRONMENT_NAME}"
+    - echo "Deployed to ${CI_ENVIRONMENT_URL}"
+    # Simple health check
+    - curl --max-time 10 --retry 3 --output /dev/null --silent --show-error --fail --location "${CI_ENVIRONMENT_URL}"
+
+deploy_demo:
+  only:
+    refs:
+      - demo
+  environment:
+    name: demo
+    url: https://frontend-demo.tugraz.at/apps/demo
+  variables:
+    DEPLOY_HOST: mw01-dev.tugraz.at
+    DEPLOY_KEY: "$DEPLOY_SSH_KEY"
+  <<: *deploy_defaults
+
+deploy_development:
+  only:
+    refs:
+      - master
+  environment:
+    name: development
+    url: https://mw-frontend-dev.tugraz.at/apps/demo
+  variables:
+    DEPLOY_HOST: mw01-dev.tugraz.at
+    DEPLOY_KEY: "$DEPLOY_SSH_KEY"
+  <<: *deploy_defaults
+

@@ -43,4 +43,4 @@ export default function () {
             return 'Entferne alle Gegenstände';
         }
     };
-};
+}

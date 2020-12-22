@@ -52,6 +52,17 @@ let loginSVG = `
 </svg>
 `;
 
+let loggingInSVG = `
+<svg
+   viewBox="0 0 100 100"
+   y="0px"
+   x="0px"
+   id="icon"
+   role="img"
+   version="1.1">
+</svg>
+`;
+
 export class LoginButton extends ScopedElementsMixin(LitElement) {
 
     constructor() {
@@ -77,6 +88,7 @@ export class LoginButton extends ScopedElementsMixin(LitElement) {
 
         this._bus = new EventBus();
         this._bus.subscribe('auth-update', (data) => {
+            console.log(data);
             this._loginData = data;
         });
     }
@@ -153,7 +165,17 @@ export class LoginButton extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        if (this._loginData.status === LoginStatus.LOGGED_IN) {
+        if (this._loginData.status === LoginStatus.LOGGING_IN) {
+            // try to keep the layout the same to avoid layout shifts
+            return html`
+                <a href="#">
+                    <div class="login-box login-button">
+                        <div class="icon">${unsafeHTML(loggingInSVG)}</div>
+                        <div class="label">&#8203;</div>
+                    </div>
+                </a>
+            `;
+        } else if (this._loginData.status === LoginStatus.LOGGED_IN) {
             return html`
                 <a href="#" @click="${this._onLogoutClicked}">
                     <div class="login-box login-button">

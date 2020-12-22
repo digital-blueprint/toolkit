@@ -1,9 +1,16 @@
 # Check-in place select web component
 
+You can install this component via npm:
+
+```bash
+npm i @dbp-toolkit/check-in-place-select
+```
+
 ## Usage
 
 ```html
 <dbp-check-in-place-select></dbp-check-in-place-select>
+<script type="module" src="node_modules/@dbp-toolkit/check-in-place-select/dist/dbp-check-in-place-select.js"></script>
 ```
 
 ## Attributes

@@ -14,6 +14,7 @@ export class MatomoDemo extends ScopedElementsMixin(LitElement) {
         this.lang = 'de';
         this.matomoUrl = '';
         this.matomoSiteId = -1;
+        this.noAuth = false;
     }
 
     static get scopedElements() {
@@ -29,6 +30,7 @@ export class MatomoDemo extends ScopedElementsMixin(LitElement) {
             lang: { type: String },
             matomoUrl: { type: String, attribute: "matomo-url" },
             matomoSiteId: { type: Number, attribute: "matomo-site-id" },
+            noAuth: { type: Boolean, attribute: 'no-auth' },
         };
     }
 
@@ -62,15 +64,26 @@ export class MatomoDemo extends ScopedElementsMixin(LitElement) {
         ];
     }
 
+    getAuthComponentHtml() {
+        return this.noAuth ? html`<dbp-login-button lang="${this.lang}" show-image></dbp-login-button>` : html`
+            <div class="container">
+                <dbp-auth-keycloak lang="${this.lang}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                                   url="https://auth-dev.tugraz.at/auth" realm="tugraz"
+                                   client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
+            </div>
+        `;
+    }
+
     render() {
+
         return html`
             <section class="section">
                 <div class="container">
                     <h1 class="title">Matomo-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
-                    <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
+                    ${ this.getAuthComponentHtml() }
                     <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}"></dbp-matomo>
                 </div>
                 <div class="container">

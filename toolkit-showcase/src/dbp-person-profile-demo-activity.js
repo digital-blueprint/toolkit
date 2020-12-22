@@ -1,17 +1,17 @@
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {DataTableViewDemo} from '@dbp-toolkit/data-table-view/src/dbp-data-table-view-demo';
+import {PersonProfileDemo} from '@dbp-toolkit/person-profile/src/dbp-person-profile-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import readme from '@dbp-toolkit/data-table-view/README.md';
+import readme from '@dbp-toolkit/person-profile/README.md';
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
 
-class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TODO
+class DbpPersonProfileDemoActivity extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
-            'dbp-data-table-view-demo': DataTableViewDemo,
+            'dbp-person-profile-demo': PersonProfileDemo,
         };
     }
 
@@ -48,11 +48,11 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TO
 
     render() {
         return html`
-
                 ${unsafeHTML(readme)}
-                <dbp-data-table-view-demo id="demo" lang="en"></dbp-data-table-view-demo>
+                <dbp-person-profile-demo id="demo" lang="en" no-auth></dbp-person-profile-demo>
+
         `;
     }
 }
 
-commonUtils.defineCustomElement('dbp-data-table-view-demo-activity', DbpActivityNameDemoActivity);
+commonUtils.defineCustomElement('dbp-person-profile-demo-activity', DbpPersonProfileDemoActivity);

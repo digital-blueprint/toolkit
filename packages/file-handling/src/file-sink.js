@@ -208,7 +208,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                         </nav>
                             <div class="modal-header">
-                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => { this.closeDialog()}}">
+                                <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => { this.closeDialog();}}">
                                         <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
                                 </button> 
                                 <p class="modal-context"> ${this.context}</p>
