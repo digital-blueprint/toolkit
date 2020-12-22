@@ -933,7 +933,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 path += directories[j];
             }
 
-            htmlpath[i] = html`<span class="muted"> › </span><span class="breadcrumb"><a @click="${() => { this.loadDirectory(path); }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
+            htmlpath[i] = html`<span> › </span><span class="breadcrumb"><a @click="${() => { this.loadDirectory(path); }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
         }
 
         return htmlpath;
@@ -1168,15 +1168,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .add-folder{
-                padding-top: 10px;
                 white-space: nowrap;
                 align-self: end;
             }
             
             #select-all-wrapper{
-                padding-top: 10px;
                 white-space: nowrap;
                 align-self: end;
+            }
+            
+            .nextcloud-nav p{
+                align-self: center;
             }
             
             #replace-modal-box {
@@ -1240,13 +1242,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 justify-content: space-between;
                 padding-bottom: 15px;
             }
-            
-            .breadcrumb, .muted{
-                color: var(--dbp-muted-text);
+
+            .breadcrumb{
+                border-bottom: 1px solid black;
             }
-            
+
             .breadcrumb:last-child{
-                color: inherit;
+                border-bottom: none;
             }
             
             input:disabled+label{
@@ -1455,7 +1457,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                </div>
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-nav">
-                        <h2>${this.getBreadcrumb()}</h2>             
+                        <p>${this.getBreadcrumb()}</p>             
                         <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
                             <div class="inline-block">
                                 <div id="new-folder-wrapper" class="hidden">
