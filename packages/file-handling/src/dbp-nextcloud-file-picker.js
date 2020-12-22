@@ -360,6 +360,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.statusText = "";
                 this.tabulatorTable.setData(contents.data);
                 this.isPickerActive = true;
+                this._(".nextcloud-content").scrollTop = 0;
                 if (!this.activeDirectoryRights.includes("CK") && !this.activeDirectoryRights.includes("NV")) {
                     this._("#download-button").setAttribute("disabled", "true");
                 }
