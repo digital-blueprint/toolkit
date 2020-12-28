@@ -49,7 +49,7 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <section class="section">
-                <p>Provider <em>"root"</em> is the top most in hirachy:</p>
+                <p>Provider <em>"root"</em> is the top most in hierarchy:</p>
                 <dbp-provider id="root"
                               init="availability=global"
                 ></dbp-provider>
