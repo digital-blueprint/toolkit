@@ -94,7 +94,7 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
                     <dbp-consumer id="c2"
                                   subscribe="foo:foo"
                     ></dbp-consumer>
-                    <p>Consumer <em>"c3"</em> subscribes for <em>status</em> wich is provided as <em>availability</em></p>
+                    <p>Consumer <em>"c3"</em> subscribes for <em>status</em> which is provided as <em>availability</em></p>
 <pre>
 &lt;dbp-consumer  id="c3"  subscribe="availability:status"  border-color="orange" &gt;&lt;/dbp-consumer&gt;
 </pre>
@@ -102,7 +102,7 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
                                   subscribe="availability:status"
                                   border-color="orange"
                     ></dbp-consumer>
-                    <p>Consumer <em>"c4"</em> subscribes for <em>status</em> wich is provided as <em>unknown-name</em> which does not exist...</p>
+                    <p>Consumer <em>"c4"</em> subscribes for <em>status</em> which is provided as <em>unknown-name</em> which does not exist...</p>
 <pre>
 &lt;dbp-consumer  id="c4"  subscribe="unknown-name:status"  border-color="darkgray" &gt;&lt;/dbp-consumer&gt;
 </pre>

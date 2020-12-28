@@ -9,6 +9,10 @@
     "url" : "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
     "directory": "packages/provider"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",
