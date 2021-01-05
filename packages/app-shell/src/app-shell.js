@@ -1,5 +1,5 @@
 import {createI18nInstance} from './i18n.js';
-import {html, css, LitElement} from 'lit-element';
+import {html, css} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon, EventBus} from '@dbp-toolkit/common';
@@ -16,7 +16,7 @@ import {TUGrazLogo} from './tugraz-logo.js';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
-import {AdapterLitElement} from "@dbp-toolkit/common/src/adapter-lit-element";
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 
 const i18n = createI18nInstance();

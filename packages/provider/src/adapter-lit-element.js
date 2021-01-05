@@ -45,7 +45,7 @@ export class AdapterLitElement extends LitElement {
                 detail: {
                     name: global,
                     callback: (value) => {
-                        console.log('AdapterLitElement(' + that.id() + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
+                        console.log('AdapterLitElement() sub/Callback ' + global + ' -> ' + local + ' = ' + value);
                         this.attributeChangedCallback(local, that[local], value);
                     },
                     sender: this,
