@@ -16,6 +16,7 @@ import {TUGrazLogo} from './tugraz-logo.js';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
+import {AdapterLitElement} from "@dbp-toolkit/common/src/adapter-lit-element";
 
 
 const i18n = createI18nInstance();
@@ -42,7 +43,7 @@ const importNotify = async (promise) => {
     }
 };
 
-export class AppShell extends ScopedElementsMixin(LitElement) {
+export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
         this.lang = i18n.language;
@@ -224,7 +225,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return Object.assign({
             lang: { type: String, reflect: true },
             src: { type: String },
             basePath: { type: String, attribute: 'base-path' },
@@ -242,7 +243,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             shellName: { type: String, attribute: "shell-name" },
             shellSubname: { type: String, attribute: "shell-subname" },
             noBrand: { type: Boolean, attribute: "no-brand" }
-        };
+        }, super.properties);
     }
 
     _updateAuth(login) {
