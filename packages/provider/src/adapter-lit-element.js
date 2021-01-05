@@ -19,7 +19,7 @@ export class AdapterLitElement extends LitElement {
 
         if (this.deferUnSubscribe) {
             const attrs = this.unsubscribe.split(',');
-            attrs.forEach(element => this.subscribeProviderFor(element));
+            attrs.forEach(element => this.unSubscribeProviderFor(element));
             this.deferSubscribe = false;
             this.unsubscribe = '';
         }
@@ -76,31 +76,61 @@ export class AdapterLitElement extends LitElement {
         };
     }
 
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch(propName) {
-                case 'subscribe':
-                    if (this.subscribe && this.subscribe.length > 0) {
-                        if (this.connected) {
-                            const attrs = this.subscribe.split(',');
-                            attrs.forEach(element => this.unSubscribeProviderFor(element));
-                        } else {
-                            this.deferUnSubscribe = this.subscribe.length > 0;
-                            this.unsubscribe = this.subscribe;
-                        }
-                    }
-                    if (this.subscribe !== null) {
-                        if (this.connected) {
-                            const attrs = this.subscribe.split(',');
-                            attrs.forEach(element => this.subscribeProviderFor(element));
-                        } else {
-                            this.deferSubscribe = this.subscribe && this.subscribe.length > 0;
-                        }
-                    }
-                    break;
-            }
-        });
+    attributeChangedCallback(name, oldValue, newValue) {
+        switch(name) {
+            case 'subscribe':
+                console.log('AdapterLitElement() attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
 
-        super.update(changedProperties);
+                if (this.subscribe && this.subscribe.length > 0) {
+                    if (this.connected) {
+                        const attrs = this.subscribe.split(',');
+                        attrs.forEach(element => this.unSubscribeProviderFor(element));
+                    } else {
+                        this.deferUnSubscribe = this.subscribe.length > 0;
+                        this.unsubscribe = this.subscribe;
+                    }
+                }
+
+                if (newValue !== null) {
+                    this.subscribe = newValue;
+                    if (this.connected) {
+                        const attrs = newValue.split(',');
+                        attrs.forEach(element => this.subscribeProviderFor(element));
+                    } else {
+                        this.deferSubscribe = newValue && newValue.length > 0;
+                    }
+                }
+                break;
+        }
+
+        super.attributeChangedCallback(name, oldValue, newValue);
     }
+
+    // update(changedProperties) {
+    //     changedProperties.forEach((oldValue, propName) => {
+    //         switch(propName) {
+    //             case 'subscribe':
+    //                 if (this.subscribe && this.subscribe.length > 0) {
+    //                     if (this.connected) {
+    //                         const attrs = this.subscribe.split(',');
+    //                         attrs.forEach(element => this.unSubscribeProviderFor(element));
+    //                     } else {
+    //                         this.deferUnSubscribe = this.subscribe.length > 0;
+    //                         this.unsubscribe = this.subscribe;
+    //                     }
+    //                 }
+    //                 if (this.subscribe !== null) {
+    //                     if (this.connected) {
+    //                         const attrs = this.subscribe.split(',');
+    //                         attrs.forEach(element => this.subscribeProviderFor(element));
+    //                     } else {
+    //                         this.deferSubscribe = this.subscribe && this.subscribe.length > 0;
+    //                     }
+    //                 }
+    //                 break;
+    //         }
+    //     });
+    //
+    //     super.update(changedProperties);
+    // }
 }
