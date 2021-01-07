@@ -44,7 +44,6 @@
     "selfsigned": "^1.10.7"
   },
   "dependencies": {
-    "@open-wc/scoped-elements": "^1.1.1",
     "@dbp-toolkit/app-shell": "^0.1.0",
     "@dbp-toolkit/auth": "^0.1.0",
     "@dbp-toolkit/common": "^0.1.0",
@@ -53,6 +52,8 @@
     "@dbp-toolkit/notification": "^0.1.0",
     "@dbp-toolkit/person-profile": "^0.1.0",
     "@dbp-toolkit/person-select": "^0.1.0",
+    "@dbp-toolkit/font-source-sans-pro": "^0.1.0",
+    "@open-wc/scoped-elements": "^1.1.1",
     "fabric": "^4.2.0",
     "file-saver": "^2.0.2",
     "highlight.js": "^10.1.2",
@@ -61,7 +62,6 @@
     "lit-element": "^2.3.1",
     "lit-html": "^1.2.1",
     "pdfjs-dist": "^2.4.456",
-    "source-sans-pro": "^2.45.0",
     "tabulator-tables": "^4.7.0",
     "universal-router": "^9.0.1",
     "webdav": "^3.3.0"
