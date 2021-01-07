@@ -8,13 +8,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="<%= getPrivateUrl('favicon.ico') %>">
     <link rel="icon" type="image/svg+xml" href="<%= getPrivateUrl('favicon.svg') %>" sizes="any">
 
-<% if (environment === "local") { -%>
-    <!-- XXX: Disable adoptedStyleSheets so that lit-element doesn't use it and we can edit CSS in the Chrome dev tools -->
-    <script>
-        delete Document.prototype.adoptedStyleSheets;
-    </script>
-<% } -%>
-
     <!-- PWA manfiest file -->
     <link rel="manifest" href="<%= getUrl(name + '.manifest.json') %>">
 
