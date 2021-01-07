@@ -36,8 +36,8 @@ export class AdapterLitElement extends LitElement {
     subscribeProviderFor(element) {
         console.log('AdapterLitElement subscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
-        const global = pair[0];
-        const local = pair[1];
+        const local = pair[0];
+        const global = pair[1];
         const that = this;
         const event = new CustomEvent('subscribe',
             {
@@ -57,7 +57,7 @@ export class AdapterLitElement extends LitElement {
     unSubscribeProviderFor(element) {
         console.log('AdapterLitElement unSubscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
-        const global = pair[0];
+        const global = pair[1];
         const event = new CustomEvent('unsubscribe',
             {
                 bubbles: true,
@@ -101,9 +101,13 @@ export class AdapterLitElement extends LitElement {
                     }
                 }
                 break;
+            default:
+                super.attributeChangedCallback(name, oldValue, newValue);
         }
 
-        super.attributeChangedCallback(name, oldValue, newValue);
+        // console.log("this.lang", this.tagName, name, this.lang);
+        // console.log("this.entryPointUrl", this.tagName, name, this.entryPointUrl);
+        // console.trace();
     }
 
     // update(changedProperties) {
