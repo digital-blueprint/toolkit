@@ -18,7 +18,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@rollup/plugin-replace": "^2.3.3",
-    "@rollup/plugin-url": "^5.0.1",
+    "@rollup/plugin-url": "^6.0.0",
     "chai": "^4.2.0",
     "i18next-scanner": "^3.0.0",
     "karma": "^5.1.0",
