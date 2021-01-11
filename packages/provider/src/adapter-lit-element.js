@@ -11,7 +11,7 @@ export class AdapterLitElement extends LitElement {
         this.subscribe = '';
         this.unsubscribe = '';
 
-        console.log('AdapterLitElement constructor()');
+        console.log('AdapterLitElement(' + this.tagName + ') constructor()');
     }
 
     connectedCallback() {
@@ -34,7 +34,7 @@ export class AdapterLitElement extends LitElement {
     }
 
     subscribeProviderFor(element) {
-        console.log('AdapterLitElement subscribeProviderFor( ' + element + ' )');
+        console.log('AdapterLitElement(' + this.tagName + ') subscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
         const local = pair[0];
         const global = pair[1];
@@ -42,10 +42,11 @@ export class AdapterLitElement extends LitElement {
         const event = new CustomEvent('subscribe',
             {
                 bubbles: true,
+                composed: true,
                 detail: {
                     name: global,
                     callback: (value) => {
-                        console.log('AdapterLitElement() sub/Callback ' + global + ' -> ' + local + ' = ' + value);
+                        console.log('AdapterLitElement(' + this.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
                         this.attributeChangedCallback(local, that[local], value);
                     },
                     sender: this,
@@ -55,12 +56,13 @@ export class AdapterLitElement extends LitElement {
     }
 
     unSubscribeProviderFor(element) {
-        console.log('AdapterLitElement unSubscribeProviderFor( ' + element + ' )');
+        console.log('AdapterLitElement(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
         const global = pair[1];
         const event = new CustomEvent('unsubscribe',
             {
                 bubbles: true,
+                composed: true,
                 detail: {
                     name: global,
                     sender: this,
