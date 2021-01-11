@@ -42,8 +42,7 @@ export class Provider extends HTMLElement {
         console.log('Provider(' + this.id() + ') connectedCallback()');
 
         const that = this;
-        const parent = this.parentElement;
-        parent.addEventListener('inherit', function (e) {
+        this.addEventListener('inherit', function (e) {
             if (that[e.detail.name]) {
                 console.log('Provider(' + that.id() + ') eventListener("inherit",..) name "' + e.detail.name + '" found.');
                 //console.dir(e.detail);
@@ -52,7 +51,7 @@ export class Provider extends HTMLElement {
             }
         }, false);
 
-        parent.addEventListener('subscribe', function (e) {
+        this.addEventListener('subscribe', function (e) {
             const name = e.detail.name;
             if (that[name]) {
                 console.log('Provider(' + that.id() + ') eventListener("subscribe",..) name "' + name + '" found.');
@@ -63,7 +62,7 @@ export class Provider extends HTMLElement {
             }
         }, false);
 
-        parent.addEventListener('unsubscribe', function (e) {
+        this.addEventListener('unsubscribe', function (e) {
             const name = e.detail.name;
             const sender = e.detail.sender;
             if (that[name]) {

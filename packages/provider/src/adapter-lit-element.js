@@ -46,13 +46,21 @@ export class AdapterLitElement extends LitElement {
                 detail: {
                     name: global,
                     callback: (value) => {
-                        console.log('AdapterLitElement(' + this.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
-                        this.attributeChangedCallback(local, that[local], value);
+                        console.log('AdapterLitElement(' + that.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
+                        that.attributeChangedCallback(local, that[local], value);
+
+                        // we don't support attributes and provider values at the same time
+                        if (that.getAttribute(local) !== null) {
+                            console.warn('Provider callback: "' + local + '" is also an attribute in tag "' + that.tagName + '", this is not supported!');
+                        } else {
+                            // we don't want to set the attribute
+                            // that.setAttribute(local, value);
+                        }
                     },
                     sender: this,
                 }
             });
-        this.parentElement.dispatchEvent(event);
+        this.dispatchEvent(event);
     }
 
     unSubscribeProviderFor(element) {
@@ -68,7 +76,7 @@ export class AdapterLitElement extends LitElement {
                     sender: this,
                 }
             });
-        this.parentElement.dispatchEvent(event);
+        this.dispatchEvent(event);
     }
 
     static get properties() {
