@@ -215,6 +215,7 @@ class Consumer extends HTMLElement {
         const event = new CustomEvent('inherit',
             {
                 bubbles: true,
+                composed: true,
                 detail: {
                     name: global,
                     callback: (value) => {
@@ -236,6 +237,7 @@ class Consumer extends HTMLElement {
         const event = new CustomEvent('subscribe',
             {
                 bubbles: true,
+                composed: true,
                 detail: {
                     name: global,
                     callback: (value) => {
@@ -255,6 +257,7 @@ class Consumer extends HTMLElement {
         const event = new CustomEvent('unsubscribe',
             {
                 bubbles: true,
+                composed: true,
                 detail: {
                     name: global,
                     sender: this,
