@@ -8,13 +8,14 @@ import bttn2 from 'datatables.net-buttons';
 import bttnHtml5 from 'datatables.net-buttons/js/buttons.html5.js';
 import bttnPrint from 'datatables.net-buttons/js/buttons.print.js';
 import {i18n} from './i18n';
-import {css, html, LitElement, unsafeCSS} from 'lit-element';
+import {css, html, unsafeCSS} from 'lit-element';
 import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
 import {getIconSVGURL} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {name as pkgName} from './../package.json';
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 dt(window, $);
 resp(window, $);
@@ -24,7 +25,7 @@ bttn2(window, $);
 bttnHtml5(window, $, jszip);
 bttnPrint(window, $);
 
-export class DataTableView extends LitElement {
+export class DataTableView extends AdapterLitElement {
     constructor() {
         super();
         this.lang = 'de';
@@ -48,7 +49,7 @@ export class DataTableView extends LitElement {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
             table: { type: Object, attribute: false },
             paging: { type: Boolean },
@@ -61,7 +62,7 @@ export class DataTableView extends LitElement {
             exportName: { type: String, attribute: 'export-name' },
             columnSearching: { type: Boolean, attribute: 'column-searching'},
             defaultOrder: { type: Array, attribute: 'default-order'}
-        };
+        });
     }
 
     set_columns(cols) {
