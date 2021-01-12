@@ -86,6 +86,10 @@ export class AdapterLitElement extends LitElement {
         };
     }
 
+    static getProperties(properties = {}) {
+        return Object.assign(properties, super.properties);
+    }
+
     attributeChangedCallback(name, oldValue, newValue) {
         switch(name) {
             case 'subscribe':

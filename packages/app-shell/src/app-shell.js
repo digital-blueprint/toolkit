@@ -225,7 +225,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     static get properties() {
-        return Object.assign({
+        return this.getProperties({
             lang: { type: String, reflect: true },
             src: { type: String },
             basePath: { type: String, attribute: 'base-path' },
@@ -243,7 +243,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             shellName: { type: String, attribute: "shell-name" },
             shellSubname: { type: String, attribute: "shell-subname" },
             noBrand: { type: Boolean, attribute: "no-brand" }
-        }, super.properties);
+        });
     }
 
     _updateAuth(login) {
