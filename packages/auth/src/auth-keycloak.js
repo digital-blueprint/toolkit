@@ -3,8 +3,8 @@ import JSONLD from '@dbp-toolkit/common/jsonld';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {EventBus} from '@dbp-toolkit/common';
 import  {KeycloakWrapper} from './keycloak.js';
-import {LitElement} from "lit-element";
 import {LoginStatus} from './util.js';
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 
 /**
@@ -20,7 +20,7 @@ import {LoginStatus} from './util.js';
  *   window.DBPPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
  *                     which will dispatch a `dbp-auth-person-init` event when loaded)
  */
-export class AuthKeycloak extends LitElement {
+export class AuthKeycloak extends AdapterLitElement {
     constructor() {
         super();
         this.lang = 'de';
@@ -158,7 +158,7 @@ export class AuthKeycloak extends LitElement {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
             forceLogin: { type: Boolean, attribute: 'force-login' },
             tryLogin: { type: Boolean, attribute: 'try-login' },
@@ -176,7 +176,7 @@ export class AuthKeycloak extends LitElement {
             silentCheckSsoRedirectUri: { type: String, attribute: 'silent-check-sso-redirect-uri' },
             scope: { type: String },
             idpHint: { type: String, attribute: 'idp-hint' },
-        };
+        });
     }
 
     connectedCallback() {

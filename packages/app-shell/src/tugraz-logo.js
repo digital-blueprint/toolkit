@@ -1,10 +1,11 @@
-import {html, LitElement, css} from 'lit-element';
+import {html, css} from 'lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {createI18nInstance} from './i18n.js';
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 const i18n = createI18nInstance();
 
-export class TUGrazLogo extends LitElement {
+export class TUGrazLogo extends AdapterLitElement {
 
     constructor() {
         super();
@@ -13,9 +14,9 @@ export class TUGrazLogo extends LitElement {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String }
-        };
+        });
     }
 
     update(changedProperties) {
