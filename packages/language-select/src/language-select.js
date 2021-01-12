@@ -53,10 +53,18 @@ export class LanguageSelect extends LitElement {
         this.requestUpdate('next', oldNext);
 
         if (oldValue !== value) {
-            const event = new CustomEvent("dbp-language-changed", {
+            let event = new CustomEvent("dbp-language-changed", {
                 bubbles: true,
                 composed: true,
                 detail: {'lang': value}
+            });
+            this.dispatchEvent(event);
+
+            // tell a dbp-provider to update the "lang" property
+            event = new CustomEvent("set-property", {
+                bubbles: true,
+                composed: true,
+                detail: {'name': 'lang', 'value': value}
             });
             this.dispatchEvent(event);
 

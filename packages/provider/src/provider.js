@@ -78,6 +78,25 @@ export class Provider extends HTMLElement {
                 e.stopPropagation();
             }
         }, false);
+
+        // listen to property changes
+        this.addEventListener('set-property', function (e) {
+            const name = e.detail.name;
+            const value = e.detail.value;
+
+            if (that[name]) {
+                console.log('Provider(' + that.id() + ') eventListener("set-property",..) name "' + name + '" found.');
+                that[name] = value;
+
+                that.callbackStore.forEach(item => {
+                    if (item.name === name) {
+                        item.callback(value);
+                    }
+                });
+
+                e.stopPropagation();
+            }
+        }, false);
     }
 
     id() {
