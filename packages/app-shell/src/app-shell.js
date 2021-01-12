@@ -726,12 +726,20 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             return html``;
 
         const elm =  this._createActivityElement(act);
-        elm.setAttribute("entry-point-url", this.entryPointUrl);
-        elm.setAttribute("lang", this.lang);
 
-        // add subscriptions to the provider component
+        // add subscriptions for the provider component
         if (act.subscribe !== undefined) {
             elm.setAttribute("subscribe", act.subscribe);
+        }
+
+        // only add the entry-point-url attribute if it isn't subscribed
+        if (act.subscribe === undefined || !act.subscribe.includes("entry-point-url:")) {
+            elm.setAttribute("entry-point-url", this.entryPointUrl);
+        }
+
+        // only add the lang attribute if it isn't subscribed
+        if (act.subscribe === undefined || !act.subscribe.includes("lang:")) {
+            elm.setAttribute("lang", this.lang);
         }
 
         return elm;
