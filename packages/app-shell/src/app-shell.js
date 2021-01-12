@@ -348,6 +348,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     switchComponent(componentTag) {
+        let offset = window.pageYOffset;
         const changed = (componentTag !== this.activeView);
         this.activeView = componentTag;
         if (changed)
@@ -359,8 +360,27 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         }
 
         let updateFunc = () => {
-            if (window.pageYOffset !== 0) {
-                window.scrollTo(0, 96);
+           
+            if (offset > 0) {
+
+                const header = this.shadowRoot.querySelector("header");
+                const title = this.shadowRoot.querySelector("#headline");
+
+                if (header === null || title === null) {
+                    return;
+                }
+
+                let style = getComputedStyle(title);
+                let marginTop = isNaN(parseInt(style.marginTop, 10)) ? 0 : parseInt(style.marginTop, 10);
+                let marginBottom = isNaN(parseInt(style.marginBottom, 10)) ? 0 : parseInt(style.marginBottom, 10);
+
+                let topValue = header.getBoundingClientRect().height + title.getBoundingClientRect().height + marginTop + marginBottom;
+
+                if (offset < topValue) {
+                    window.scrollTo(0, offset);
+                } else {
+                    window.scrollTo(0, topValue);
+                }
             }
             this.updatePageTitle();
             this.subtitle = this.activeMetaDataText("short_name");
@@ -811,7 +831,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                         <dbp-tugraz-logo id="main-logo" lang="${this.lang}" class="${classMap({hidden: this.noBrand})}"></dbp-tugraz-logo>
                     </div>
                 </header>
-
                 <div id="headline">
                     <h1 class="title">${this.topicMetaDataText('name')}</h1>
                 </div>
