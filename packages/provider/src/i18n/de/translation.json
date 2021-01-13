@@ -1,5 +1,14 @@
 {
-  "provider": {
+  "de": "Deutsch",
+  "en": "Englisch",
 
+  "demo": {
+    "provider": "Anbieter",
+    "consumer": "Verbraucher"
+  },
+  "consumer": {
+    "item": "Bezeichnung",
+    "price": "Preis",
+    "sum": "Summe"
   }
 }

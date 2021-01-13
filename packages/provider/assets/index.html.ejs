@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <script type="module" src="dbp-provider.js"></script>
     <script type="module" src="dbp-provider-demo.js"></script>
     <!--
         This is for debugging only:
@@ -16,9 +17,13 @@
 </head>
 
 <body>
-
-<dbp-provider-demo lang="de"></dbp-provider-demo>
-
+    <dbp-provider id="root"
+                  root="1"
+                  availability="global"
+                  lang="de"
+    >
+        <dbp-provider-demo id="provider-demo" subscribe="lang:lang"></dbp-provider-demo>
+    </dbp-provider>
 <p>version: <span style="color: white; background-color: black;"><%= buildInfo.info %></span></p>
 </body>
 </html>
