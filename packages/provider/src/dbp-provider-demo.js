@@ -48,13 +48,13 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-            <section class="section">
+            <dbp-provider id="root"
+                          init="availability=global"
+                          blah="777"
+            ><section class="section">
                 <p>Provider <em>"root"</em> is the top most in hierarchy:</p>
-                <dbp-provider id="root"
-                              init="availability=global"
-                ></dbp-provider>
 <pre>
-&lt;dbp-provider  id="root"  init="availability=global" &gt;&lt;/dbp-provider&gt;
+&lt;dbp-provider  id="root"  init="availability=global" >&lt;/dbp-provider&gt;
 </pre>
                 <div class="container">
                     <h1 class="title">Provider-Demo</h1>
@@ -63,19 +63,19 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
                     <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
                     <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
                 </div>
-                <div class="container">
+                <dbp-provider id="demo"
+                              init="bc=blue"
+                >
+                    <dbp-provider id="foo-bar"
+                                  init="foo=9,bar=20"
+                >
+                    <div class="container">
                     <h2>Provider</h2>
                     <p>Provider <em>"demo"</em> has only <em>border-color</em> to offer:</p>
-                    <dbp-provider id="demo"
-                                  init="bc=blue"
-                    ></dbp-provider>
 <pre>
 &lt;dbp-provider  id="demo"  init="bc=blue" &gt;&lt;/dbp-provider&gt;
 </pre>
                     <p>Provider <em>"foo-bar"</em> has some values in its store:</p>
-                    <dbp-provider id="foo-bar"
-                                  init="foo=9,bar=20"
-                    ></dbp-provider>
 <pre>
 &lt;dbp-provider  id="foo-bar"  init="foo=9,bar=20" &gt;&lt;/dbp-provider&gt;
 </pre>
@@ -111,7 +111,10 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
                                   border-color="darkgray"
                     ></dbp-consumer>
                 </div>
+                </dbp-provider>
+                </dbp-provider>
             </section>
+            </dbp-provider>
         `;
     }
 }
