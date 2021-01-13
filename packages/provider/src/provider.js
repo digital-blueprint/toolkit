@@ -107,7 +107,7 @@ export class Provider extends HTMLElement {
             for(const mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
                     const name = mutation.attributeName;
-                    console.log('The ' + name + ' attribute was modified.');
+                    console.log('Provider (' + that.id() + ') observed attribute "' + name + '" changed');
                     that[name] = that.getAttribute(name);
                     that.callbackStore.forEach(item => {
                         if (item.name === name) {
@@ -123,6 +123,22 @@ export class Provider extends HTMLElement {
 
         // Start observing the target node for configured mutations
         observer.observe(this, config);
+
+        // get all *not observed* attributes
+        if (this.hasAttributes()) {
+            const attrs = this.attributes;
+            for(let i = attrs.length - 1; i >= 0; i--) {
+                if (['id', 'class', 'style', 'data-tag-name'].includes(attrs[i].name)) {
+                    continue;
+                }
+                if (Provider.observedAttributes.includes(attrs[i].name)) {
+                    continue;
+                }
+
+                this[attrs[i].name] = attrs[i].value;
+                console.log('Provider (' + that.id() + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
+            }
+        }
     }
 
     id() {
