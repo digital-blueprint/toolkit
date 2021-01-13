@@ -64,7 +64,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * See: https://lit-element.polymer-project.org/guide/properties#initialize
      */
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
             authUrl: { type: String, attribute: 'auth-url' },
             webDavUrl: { type: String, attribute: 'web-dav-url' },
@@ -84,7 +84,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             activeDirectoryACL: { type: String, attribute: false },
             selectAllButton: { type: Boolean, attribute: false },
             abortUploadButton: { type: Boolean, attribute: false },
-        };
+        });
     }
 
     update(changedProperties) {

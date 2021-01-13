@@ -45,7 +45,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
      * See: https://lit-element.polymer-project.org/guide/properties#initialize
      */
     static get properties() {
-        return {
+        return this.getProperties({
             context: { type: String, attribute: 'context'},
             lang: { type: String },
             filename: { type: String },
@@ -58,7 +58,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             buttonLabel: { type: String, attribute: 'button-label' },
             isDialogOpen: { type: Boolean, attribute: false },
             activeDestination: { type: Boolean, attribute: false },
-        };
+        });
     }
 
     async downloadCompressedFiles() {

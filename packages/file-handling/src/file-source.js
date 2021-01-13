@@ -63,7 +63,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      * See: https://lit-element.polymer-project.org/guide/properties#initialize
      */
     static get properties() {
-        return {
+        return this.getProperties({
             context: { type: String, attribute: 'context'},
             lang: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
@@ -77,7 +77,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
             activeSource: { type: Boolean, attribute: false },
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
-        };
+        });
     }
 
     update(changedProperties) {
