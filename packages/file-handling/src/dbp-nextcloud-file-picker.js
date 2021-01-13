@@ -9,7 +9,6 @@ import {createClient} from 'webdav/web';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import Tabulator from 'tabulator-tables';
-import nextcloudFileURL from 'consts:nextcloudFileURL';
 import MicroModal from './micromodal.es';
 import {name as pkgName} from './../package.json';
 
@@ -23,6 +22,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.authUrl = '';
         this.webDavUrl = '';
         this.nextcloudName = 'Nextcloud';
+        this.nextcloudFileURL = '';
         this.loginWindow = null;
         this.isPickerActive = false;
         this.statusText = '';
@@ -68,6 +68,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             lang: { type: String },
             authUrl: { type: String, attribute: 'auth-url' },
             webDavUrl: { type: String, attribute: 'web-dav-url' },
+            nextcloudFileURL: { type: String, attribute: 'nextcloud-file-url' },
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
             isPickerActive: { type: Boolean, attribute: false },
             statusText: { type: String, attribute: false },
@@ -944,8 +945,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @returns {string} actual directory Nextcloud link
      */
     getNextCloudLink() {
-        let link = nextcloudFileURL + this.directoryPath;
-        return link;
+        return this.nextcloudFileURL + this.directoryPath;
     }
 
     getCloudLogo() {

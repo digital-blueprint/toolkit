@@ -39,6 +39,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudAuthUrl = '';
         this.nextcloudName ='Nextcloud';
         this.nextcloudWebDavUrl = '';
+        this.nextcloudFileURL = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
         this.enabledSources = 'local';
@@ -71,6 +72,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
             nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
+            nextcloudFileURL: { type: String, attribute: 'nextcloud-file-url' },
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label' },
             disabled: { type: Boolean },
@@ -456,6 +458,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                        auth-url="${this.nextcloudAuthUrl}"
                                        web-dav-url="${this.nextcloudWebDavUrl}"
                                        nextcloud-name="${this.nextcloudName}"
+                                       nextcloud-file-url="${this.nextcloudFileURL}"
                                        allowed-mime-types="${this.allowedMimeTypes}"
                                        @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
                                     this.sendFileEvent(event.detail.file);
