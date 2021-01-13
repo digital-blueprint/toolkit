@@ -106,7 +106,14 @@ export class Provider extends HTMLElement {
             // Use traditional 'for loops' for IE 11
             for(const mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
-                    console.log('The ' + mutation.attributeName + ' attribute was modified.');
+                    const name = mutation.attributeName;
+                    console.log('The ' + name + ' attribute was modified.');
+                    that[name] = that.getAttribute(name);
+                    that.callbackStore.forEach(item => {
+                        if (item.name === name) {
+                            item.callback(value);
+                        }
+                    });
                 }
             }
         };
