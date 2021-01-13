@@ -49,12 +49,12 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <dbp-provider id="root"
-                          init="availability=global"
                           blah="777"
+                          availability="global"
             ><section class="section">
                 <p>Provider <em>"root"</em> is the top most in hierarchy:</p>
 <pre>
-&lt;dbp-provider  id="root"  init="availability=global" >&lt;/dbp-provider&gt;
+&lt;dbp-provider  id="root"  availability="global" >&lt;/dbp-provider&gt;
 </pre>
                 <div class="container">
                     <h1 class="title">Provider-Demo</h1>
@@ -64,20 +64,21 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
                     <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
                 </div>
                 <dbp-provider id="demo"
-                              init="bc=blue"
+                              bc="blue"
                 >
                     <dbp-provider id="foo-bar"
-                                  init="foo=9,bar=20"
+                                  foo="9"
+                                  bar="20"
                 >
                     <div class="container">
                     <h2>Provider</h2>
                     <p>Provider <em>"demo"</em> has only <em>border-color</em> to offer:</p>
 <pre>
-&lt;dbp-provider  id="demo"  init="bc=blue" &gt;&lt;/dbp-provider&gt;
+&lt;dbp-provider  id="demo"  bc="blue" &gt;&lt;/dbp-provider&gt;
 </pre>
                     <p>Provider <em>"foo-bar"</em> has some values in its store:</p>
 <pre>
-&lt;dbp-provider  id="foo-bar"  init="foo=9,bar=20" &gt;&lt;/dbp-provider&gt;
+&lt;dbp-provider  id="foo-bar"  foo="9" bar="20" &gt;&lt;/dbp-provider&gt;
 </pre>
                     <h2>Consumer</h2>
                     <p>Consumer <em>"c1"</em> will only subscribe to <em>border-color</em></p>

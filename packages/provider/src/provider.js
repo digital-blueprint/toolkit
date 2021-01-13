@@ -6,38 +6,6 @@ export class Provider extends HTMLElement {
         console.log('Provider constructor()');
     }
 
-    static get observedAttributes() {
-        return ['init'];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        console.log('Provider(' + this.id() + ') attribute "' + name + '" changed from "' + oldValue + '" to "' + newValue + '".');
-        switch(name) {
-            case 'init':
-                this.init = newValue;
-                if (newValue) {
-                    const attrs = newValue.split(',');
-                    attrs.forEach(element => {
-                        const pair = element.trim().split('=');
-                        const name = pair[0].trim();
-                        const value = pair[1].trim().replace('"', '').replace("'", '');
-                        if (name.length > 0) {
-                            this[name] = value;
-                            this.callbackStore.forEach(item => {
-                                if (item.name === name) {
-                                    item.callback(value);
-                                }
-                            });
-                        }
-                    });
-                }
-                break;
-            default:
-                console.log('unknown attribute "' + name + '".');
-        }
-    }
-
-
     connectedCallback() {
         console.log('Provider(' + this.id() + ') connectedCallback()');
 
@@ -129,9 +97,6 @@ export class Provider extends HTMLElement {
             const attrs = this.attributes;
             for(let i = attrs.length - 1; i >= 0; i--) {
                 if (['id', 'class', 'style', 'data-tag-name'].includes(attrs[i].name)) {
-                    continue;
-                }
-                if (Provider.observedAttributes.includes(attrs[i].name)) {
                     continue;
                 }
 
