@@ -2,6 +2,7 @@ export class Provider extends HTMLElement {
     constructor() {
         super();
         this.callbackStore = [];
+        this.root = false;
 
         console.log('Provider constructor()');
     }
@@ -11,7 +12,7 @@ export class Provider extends HTMLElement {
 
         const that = this;
         this.addEventListener('inherit', function (e) {
-            if (that[e.detail.name]) {
+            if (that[e.detail.name] || that.root) {
                 console.log('Provider(' + that.id() + ') eventListener("inherit",..) name "' + e.detail.name + '" found.');
                 //console.dir(e.detail);
                 e.detail.callback(that[e.detail.name]);
@@ -21,7 +22,7 @@ export class Provider extends HTMLElement {
 
         this.addEventListener('subscribe', function (e) {
             const name = e.detail.name;
-            if (that[name]) {
+            if (that[name] || that.root) {
                 console.log('Provider(' + that.id() + ') eventListener("subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
@@ -33,7 +34,7 @@ export class Provider extends HTMLElement {
         this.addEventListener('unsubscribe', function (e) {
             const name = e.detail.name;
             const sender = e.detail.sender;
-            if (that[name]) {
+            if (that[name] || that.root) {
                 console.log('Provider(' + that.id() + ') eventListener("unsubscribe",..) name "' + name + '" found.');
                 that.callbackStore.forEach(item => {
                     if (item.sender === sender && item.name === name) {
@@ -52,7 +53,7 @@ export class Provider extends HTMLElement {
             const name = e.detail.name;
             const value = e.detail.value;
 
-            if (that[name]) {
+            if (that[name] || that.root) {
                 console.log('Provider(' + that.id() + ') eventListener("set-property",..) name "' + name + '" found.');
                 that[name] = value;
 

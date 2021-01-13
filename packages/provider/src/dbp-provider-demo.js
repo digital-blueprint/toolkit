@@ -52,13 +52,14 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <dbp-provider id="root"
+                          root="1"
                           blah="777"
                           availability="global"
                           lang="de"
             ><section class="section">
                 <p>Provider <em>"root"</em> is the top most in hierarchy:</p>
 <pre>
-&lt;dbp-provider  id="root"  availability="global" >&lt;/dbp-provider&gt;
+&lt;dbp-provider  id="root"  root="1" availability="global" >&lt;/dbp-provider&gt;
 </pre>
                 <div class="container">
                     <h1 class="title">Provider-Demo</h1>
