@@ -11,14 +11,6 @@ export class Provider extends HTMLElement {
         console.log('Provider(' + this.id() + ') connectedCallback()');
 
         const that = this;
-        this.addEventListener('inherit', function (e) {
-            if (that[e.detail.name] || that.root) {
-                console.log('Provider(' + that.id() + ') eventListener("inherit",..) name "' + e.detail.name + '" found.');
-                //console.dir(e.detail);
-                e.detail.callback(that[e.detail.name]);
-                e.stopPropagation();
-            }
-        }, false);
 
         this.addEventListener('subscribe', function (e) {
             const name = e.detail.name;
