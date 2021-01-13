@@ -5,6 +5,8 @@ import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Provider} from '@dbp-toolkit/provider';
+import {LanguageSelect} from '@dbp-toolkit/language-select';
+
 
 
 class ProviderDemo extends ScopedElementsMixin(LitElement) {
@@ -18,6 +20,7 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
         return {
             'dbp-auth-keycloak': AuthKeycloak,
             'dbp-login-button': LoginButton,
+            'dbp-language-select': LanguageSelect,
             'dbp-provider': Provider,
             'dbp-consumer': DemoConsumer,
         };
@@ -51,6 +54,7 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
             <dbp-provider id="root"
                           blah="777"
                           availability="global"
+                          lang="de"
             ><section class="section">
                 <p>Provider <em>"root"</em> is the top most in hierarchy:</p>
 <pre>
@@ -62,6 +66,7 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
                 <div class="container">
                     <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
                     <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
+                    <dbp-language-select></dbp-language-select>
                 </div>
                 <dbp-provider id="demo"
                               bc="blue"

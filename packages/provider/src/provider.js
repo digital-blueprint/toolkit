@@ -75,13 +75,16 @@ export class Provider extends HTMLElement {
             for(const mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
                     const name = mutation.attributeName;
-                    console.log('Provider (' + that.id() + ') observed attribute "' + name + '" changed');
-                    that[name] = that.getAttribute(name);
-                    that.callbackStore.forEach(item => {
-                        if (item.name === name) {
-                            item.callback(value);
-                        }
-                    });
+                    const value = that.getAttribute(name);
+                    if (that[name] !== value) {
+                        console.log('Provider (' + that.id() + ') observed attribute "' + name + '" changed');
+                        that[name] = value;
+                        that.callbackStore.forEach(item => {
+                            if (item.name === name) {
+                                item.callback(value);
+                            }
+                        });
+                    }
                 }
             }
         };
