@@ -129,6 +129,13 @@ export class AdapterLitElement extends LitElement {
         // console.trace();
     }
 
+    /**
+     * Send a set-property event to the provider components
+     *
+     * @param name
+     * @param value
+     * @returns {boolean}
+     */
     sendSetPropertyEvent(name, value) {
         const event = new CustomEvent("set-property", {
             bubbles: true,
