@@ -6,6 +6,8 @@ export class AdapterLitElement extends LitElement {
         this.connected = false;
         this.deferSubscribe = false;
         this.deferUnSubscribe = false;
+        // attributes (if they exist) will be updated if a property is changed by "subscribe"
+        this.reflectAttribute = true;
 
         // default values
         this.subscribe = '';
@@ -49,12 +51,15 @@ export class AdapterLitElement extends LitElement {
                         console.log('AdapterLitElement(' + that.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
                         that.attributeChangedCallback(local, that[local], value);
 
-                        // we don't support attributes and provider values at the same time
+                        // check if an attribute also exists in the tag
                         if (that.getAttribute(local) !== null) {
+                            // we don't support attributes and provider values at the same time
                             console.warn('Provider callback: "' + local + '" is also an attribute in tag "' + that.tagName + '", this is not supported!');
-                        } else {
-                            // we don't want to set the attribute
-                            // that.setAttribute(local, value);
+
+                            // update attribute if reflectAttribute is enabled
+                            if (that.reflectAttribute) {
+                                that.setAttribute(local, value);
+                            }
                         }
                     },
                     sender: this,
