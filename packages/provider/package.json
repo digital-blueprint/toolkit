@@ -21,7 +21,7 @@
     "chai": "^4.2.0",
     "glob": "^7.1.6",
     "i18next-scanner": "^3.0.0",
-    "karma": "^5.1.0",
+    "karma": "^6.0.0",
     "karma-chrome-launcher": "^3.0.0",
     "karma-firefox-launcher": "^2.1.0",
     "karma-mocha": "^2.0.1",
