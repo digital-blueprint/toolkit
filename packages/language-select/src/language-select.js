@@ -1,11 +1,12 @@
-import {html, css, LitElement} from 'lit-element';
+import {html, css} from 'lit-element';
 import {i18n} from './i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 /**
  * Emits a dbp-language-changed event where event.detail.lang is the new selected language
  */
-export class LanguageSelect extends LitElement {
+export class LanguageSelect extends AdapterLitElement {
 
     constructor() {
         super();
@@ -61,12 +62,7 @@ export class LanguageSelect extends LitElement {
             this.dispatchEvent(event);
 
             // tell a dbp-provider to update the "lang" property
-            event = new CustomEvent("set-property", {
-                bubbles: true,
-                composed: true,
-                detail: {'name': 'lang', 'value': value}
-            });
-            this.dispatchEvent(event);
+            this.sendSetPropertyEvent('lang', value);
 
             // Unlike other cases we use the next language for the translations so that
             // users not knowing the current language can understand it.

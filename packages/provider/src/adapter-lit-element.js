@@ -129,6 +129,16 @@ export class AdapterLitElement extends LitElement {
         // console.trace();
     }
 
+    sendSetPropertyEvent(name, value) {
+        const event = new CustomEvent("set-property", {
+            bubbles: true,
+            composed: true,
+            detail: {'name': name, 'value': value}
+        });
+
+        return this.dispatchEvent(event);
+    }
+
     // update(changedProperties) {
     //     changedProperties.forEach((oldValue, propName) => {
     //         switch(propName) {
