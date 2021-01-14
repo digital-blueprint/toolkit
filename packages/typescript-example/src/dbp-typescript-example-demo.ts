@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {html, LitElement} from 'lit-element';
 import {TypeScriptExample} from './typescript-example';
 import * as commonUtils from '@dbp-toolkit/common/utils';

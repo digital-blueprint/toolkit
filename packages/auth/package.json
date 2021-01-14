@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "repository": {
-    "type" : "git",
-    "url" : "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+    "type": "git",
+    "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
     "directory": "packages/auth"
   },
   "publishConfig": {

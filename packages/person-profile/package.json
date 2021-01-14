@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "repository": {
-    "type" : "git",
-    "url" : "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+    "type": "git",
+    "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
     "directory": "packages/person-profile"
   },
   "publishConfig": {
@@ -19,6 +19,8 @@
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-url": "^6.0.0",
     "chai": "^4.2.0",
+    "eslint": "^7.3.1",
+    "eslint-plugin-jsdoc": "^31.0.0",
     "i18next-scanner": "^3.0.0",
     "karma": "^6.0.0",
     "karma-chrome-launcher": "^3.0.0",
@@ -30,9 +32,7 @@
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-terser": "^7.0.2",
-    "eslint": "^7.3.1",
-    "eslint-plugin-jsdoc": "^31.0.0"
+    "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
     "@dbp-toolkit/auth": "^0.1.0",
