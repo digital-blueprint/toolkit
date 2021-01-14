@@ -87,6 +87,7 @@ export class AuthKeycloak extends AdapterLitElement {
             window.DBPPersonId = this.personId;
             window.DBPPerson = this.person;
 
+            this.sendSetPropertyEvents();
             this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || newPerson);
         } else {
             if (this._loginStatus === LoginStatus.LOGGED_IN) {
@@ -106,6 +107,7 @@ export class AuthKeycloak extends AdapterLitElement {
             window.DBPPersonId = this.personId;
             window.DBPPerson = this.person;
 
+            this.sendSetPropertyEvents();
             this._setLoginStatus(LoginStatus.LOGGED_OUT);
         }
 
@@ -139,6 +141,15 @@ export class AuthKeycloak extends AdapterLitElement {
         }
 
         this.dispatchEvent(this.keycloakDataUpdateEvent);
+    }
+
+    sendSetPropertyEvents() {
+        this.sendSetPropertyEvent('auth-subject', this.subject);
+        this.sendSetPropertyEvent('auth-token', this.token);
+        this.sendSetPropertyEvent('auth-token-parsed', this.tokenParsed);
+        this.sendSetPropertyEvent('user-full-name', this.name);
+        this.sendSetPropertyEvent('person-id', this.personId);
+        this.sendSetPropertyEvent('person', this.person);
     }
 
     _setLoginStatus(status, force) {
