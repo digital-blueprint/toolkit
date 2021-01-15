@@ -8,14 +8,14 @@ export class Provider extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log('Provider(' + this.id() + ') connectedCallback()');
+        console.log('Provider(' + this.id + ') connectedCallback()');
 
         const that = this;
 
         this.addEventListener('subscribe', function (e) {
             const name = e.detail.name;
             if (that[name] || that.root) {
-                console.log('Provider(' + that.id() + ') eventListener("subscribe",..) name "' + name + '" found.');
+                console.log('Provider(' + that.id + ') eventListener("subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
                 e.detail.callback(that[name]);
@@ -27,12 +27,12 @@ export class Provider extends HTMLElement {
             const name = e.detail.name;
             const sender = e.detail.sender;
             if (that[name] || that.root) {
-                console.log('Provider(' + that.id() + ') eventListener("unsubscribe",..) name "' + name + '" found.');
+                console.log('Provider(' + that.id + ') eventListener("unsubscribe",..) name "' + name + '" found.');
                 that.callbackStore.forEach(item => {
                     if (item.sender === sender && item.name === name) {
                         const index = that.callbackStore.indexOf(item);
                         that.callbackStore.splice(index, 1);
-                        console.log('Provider(' + that.id() + ') eventListener for name "' + name + '" removed.');
+                        console.log('Provider(' + that.id + ') eventListener for name "' + name + '" removed.');
                     }
                 });
 
@@ -46,7 +46,7 @@ export class Provider extends HTMLElement {
             const value = e.detail.value;
 
             if (that[name] || that.root) {
-                console.log('Provider(' + that.id() + ') eventListener("set-property",..) name "' + name + '" found.');
+                console.log('Provider(' + that.id + ') eventListener("set-property",..) name "' + name + '" found.');
                 that[name] = value;
 
                 that.callbackStore.forEach(item => {
@@ -70,7 +70,7 @@ export class Provider extends HTMLElement {
                     const name = mutation.attributeName;
                     const value = that.getAttribute(name);
                     if (that[name] !== value) {
-                        console.log('Provider (' + that.id() + ') observed attribute "' + name + '" changed');
+                        console.log('Provider (' + that.id + ') observed attribute "' + name + '" changed');
                         that[name] = value;
                         that.callbackStore.forEach(item => {
                             if (item.name === name) {
@@ -97,12 +97,12 @@ export class Provider extends HTMLElement {
                 }
 
                 this[attrs[i].name] = attrs[i].value;
-                console.log('Provider (' + that.id() + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
+                console.log('Provider (' + that.id + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
             }
         }
     }
 
-    id() {
+    get id() {
         return this.getAttribute('id');
     }
 }
