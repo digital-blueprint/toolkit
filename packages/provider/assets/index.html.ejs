@@ -10,20 +10,18 @@
         -  unhandled requests are logged in the console
     -->
     <script>
-        window.addEventListener('inherit', e => console.log('window eventListener("inherit",..) name "' + e.detail.name + '" not found.'));
         window.addEventListener('subscribe', e => console.log('window eventListener("subscribe",..) name "' + e.detail.name + '" not found.'));
         window.addEventListener('unsubscribe', e => console.log('window eventListener("unsubscribe",..) name "' + e.detail.name + '" not found.'));
     </script>
+    <style>
+        body { padding: 50px;}
+    </style>
 </head>
 
 <body>
-    <dbp-provider id="root"
-                  root="1"
-                  availability="global"
-                  lang="de"
-    >
+    <dbp-provider id="root" root="1" availability="global" lang="de">
         <dbp-provider-demo id="provider-demo" subscribe="lang:lang"></dbp-provider-demo>
     </dbp-provider>
-<p>version: <span style="color: white; background-color: black;"><%= buildInfo.info %></span></p>
+    <p>version: <span style="color: white; background-color: black;"><%= buildInfo.info %></span></p>
 </body>
 </html>

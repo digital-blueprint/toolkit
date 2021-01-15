@@ -4,7 +4,9 @@
 
   "demo": {
     "provider": "Provider",
-    "consumer": "Consumer"
+    "consumer": "Consumer",
+    "provider_description": "Provider \"{{id}}\" {{description}}",
+    "consumer_description": "Consumer \"{{id}}\" will only subscribe to {{subscriptions}}"
   },
   "consumer": {
     "item": "Description",

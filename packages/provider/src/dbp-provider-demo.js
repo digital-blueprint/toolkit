@@ -6,18 +6,14 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Provider} from '@dbp-toolkit/provider';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
+import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
 
-
-class ProviderDemo extends ScopedElementsMixin(LitElement) {
+class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
 
     constructor() {
         super();
         this.lang = 'de';
-        this.subscribe = '';
-
-        this.deferSubscribe = false;
-        this.deferUnSubscribe = false;
     }
 
     static get scopedElements() {
@@ -32,8 +28,8 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
 
     static get properties() {
         return {
+            ...super.properties,
             lang: { type: String },
-            subscribe: { type: String }
         };
     }
 
@@ -41,88 +37,19 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
 
-        if (this.deferUnSubscribe) {
-            const attrs = this.unsubscribe.split(',');
-            attrs.forEach(element => this.subscribeProviderFor(element));
-            this.deferSubscribe = false;
-            this.unsubscribe = '';
-        }
-        if (this.deferSubscribe) {
-            const attrs = this.subscribe.split(',');
-            attrs.forEach(element => this.subscribeProviderFor(element));
-            this.deferSubscribe = false;
-        }
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        console.log('ProviderDemo (' + this.id() + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
+        console.log('ProviderDemo (' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
         switch(name) {
             case 'lang':
                 this.lang = newValue;
                 i18n.changeLanguage(this.lang);
                 break;
-            case 'subscribe':
-                if (this.subscribe && this.subscribe.length > 0) {
-                    if (this.connected) {
-                        const attrs = this.subscribe.split(',');
-                        attrs.forEach(element => this.unSubscribeProviderFor(element));
-                    } else {
-                        this.deferUnSubscribe = this.subscribe.length > 0;
-                        this.unsubscribe = this.subscribe;
-                    }
-                }
-                if (newValue !== null) {
-                    this.subscribe = newValue;
-                    if (this.connected) {
-                        const attrs = newValue.split(',');
-                        attrs.forEach(element => this.subscribeProviderFor(element));
-                    } else {
-                        this.deferSubscribe = newValue && newValue.length > 0;
-                    }
-                }
-                break;
             default:
                 super.attributeChangedCallback(name, oldValue, newValue);
         }
         this.render();
-    }
-
-    subscribeProviderFor(element) {
-        console.log('ProviderDemo (' + this.id() + ') subscribeProviderFor( ' + element + ' )');
-        const pair = element.trim().split(':');
-        const global = pair[0];
-        const local = pair[1];
-        const that = this;
-        const event = new CustomEvent('subscribe',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    callback: (value) => {
-                        console.log('ProviderDemo (' + that.id() + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
-                        that.attributeChangedCallback(local, that[local], value);
-                    },
-                    sender: this,
-                }
-            });
-        this.parentElement.dispatchEvent(event);
-    }
-
-    unSubscribeProviderFor(element) {
-        console.log('ProviderDemo (' + this.id() + ') unSubscribeProviderFor( ' + element + ' )');
-        const pair = element.trim().split(':');
-        const global = pair[0];
-        const event = new CustomEvent('unsubscribe',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    sender: this,
-                }
-            });
-        this.parentElement.dispatchEvent(event);
     }
 
     static get styles() {
@@ -137,13 +64,15 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
         ];
     }
 
+    get id() {
+        return this.getAttribute('id');
+    }
+
     render() {
         return html`
             <section class="section">
-                <p>${i18n.t('demo.provider')} <em>"root"</em> is the top most in hierarchy:</p>
-<pre>
-&lt;dbp-provider  id="root"  root="1" availability="global" >&lt;/dbp-provider&gt;
-</pre>
+                <p>${i18n.t('demo.provider_description', {id: "root", description: "is the top most in hierarchy"})}</p>
+                <pre>&lt;dbp-provider  id="root"  root="1" availability="global" >&lt;/dbp-provider&gt;</pre>
                 <div class="container">
                     <h1 class="title">${i18n.t('demo.provider')}-Demo</h1>
                 </div>
@@ -153,62 +82,36 @@ class ProviderDemo extends ScopedElementsMixin(LitElement) {
                     <dbp-language-select></dbp-language-select>
                 </div>
                 <dbp-provider id="demo"
-                              bc="blue"
-                >
+                              bc="blue">
                     <dbp-provider id="foo-bar"
                                   foo="9"
-                                  bar="20"
-                >
-                    <div class="container">
-                    <h2>${i18n.t('demo.provider')}</h2>
-                    <p>${i18n.t('demo.provider')} <em>"demo"</em> has only <em>border-color</em> to offer:</p>
-<pre>
-&lt;dbp-provider  id="demo"  bc="blue" &gt;&lt;/dbp-provider&gt;
-</pre>
-                    <p>${i18n.t('demo.provider')} <em>"foo-bar"</em> has some values in its store:</p>
-<pre>
-&lt;dbp-provider  id="foo-bar"  foo="9" bar="20" &gt;&lt;/dbp-provider&gt;
-</pre>
-                    <h2>${i18n.t('demo.consumer')}</h2>
-                    <p>${i18n.t('demo.consumer')} <em>"c1"</em> will only subscribe to <em>border-color</em></p>
-<pre>
-&lt;dbp-consumer  id="c1"  subscribe="bc:border-color" &gt;&lt;/dbp-consumer&gt;
-</pre>
-                    <dbp-consumer id="c1"
-                                  subscribe="bc:border-color,lang:lang"
-                    ></dbp-consumer>
-                    <p>${i18n.t('demo.consumer')} <em>"c2"</em> subscribes to <em>foo</em></p>
-<pre>
-&lt;dbp-consumer  id="c2"  subscribe="foo:foo" &gt;&lt;/dbp-consumer&gt;
-</pre>
-                    <dbp-consumer id="c2"
-                                  subscribe="foo:foo,lang:lang"
-                    ></dbp-consumer>
-                    <p>${i18n.t('demo.consumer')} <em>"c3"</em> subscribes for <em>status</em> which is provided as <em>availability</em></p>
-<pre>
-&lt;dbp-consumer  id="c3"  subscribe="availability:status"  border-color="orange" &gt;&lt;/dbp-consumer&gt;
-</pre>
-                    <dbp-consumer id="c3"
-                                  subscribe="availability:status,lang:lang"
-                                  border-color="orange"
-                    ></dbp-consumer>
-                    <p>${i18n.t('demo.consumer')} <em>"c4"</em> subscribes for <em>status</em> which is provided as <em>unknown-name</em> which does not exist...</p>
-<pre>
-&lt;dbp-consumer  id="c4"  subscribe="unknown-name:status"  border-color="darkgray" &gt;&lt;/dbp-consumer&gt;
-</pre>
-                    <dbp-consumer id="c4"
-                                  subscribe="unknown-name:status"
-                                  border-color="darkgray"
-                    ></dbp-consumer>
-                </div>
-                </dbp-provider>
+                                  bar="20">
+                        <div class="container">
+                            <h2>${i18n.t('demo.provider')}</h2>
+                            <p>${i18n.t('demo.provider_description', {id: "demo", description: "has only \"border-color\" to offer"})}</p>                            <pre>&lt;dbp-provider  id="demo"  bc="blue" &gt;&lt;/dbp-provider&gt;</pre>
+                            <p>${i18n.t('demo.provider_description', {id: "foo-bar", description: "has some values in its store"})}</p>
+                            <pre>&lt;dbp-provider  id="foo-bar"  foo="9" bar="20" &gt;&lt;/dbp-provider&gt;</pre>
+
+                            <h2>${i18n.t('demo.consumer')}</h2>
+                            <p>${i18n.t('demo.consumer_description', {id: "c1", subscriptions: "border-color"})}</p>
+                            <pre>&lt;dbp-consumer  id="c1"  subscribe="border-color:bc" &gt;&lt;/dbp-consumer&gt;</pre>
+                            <dbp-consumer id="c1" subscribe="border-color:bc,lang:lang"></dbp-consumer>
+                            <p>${i18n.t('demo.consumer_description', {id: "c2", subscriptions: "foo"})}</p>
+                            <pre>&lt;dbp-consumer  id="c2"  subscribe="foo:foo" &gt;&lt;/dbp-consumer&gt;</pre>
+                            <dbp-consumer id="c2" subscribe="foo:foo,lang:lang"></dbp-consumer>
+                            <p>${i18n.t('demo.consumer_description', {id: "c3", subscriptions: "availability:status"})}</p>
+                            <p>Local <em>status</em> is provided as <em>availability</em></p>
+                            <pre>&lt;dbp-consumer  id="c3"  subscribe="status:availability"  border-color="orange" &gt;&lt;/dbp-consumer&gt;</pre>
+                            <dbp-consumer id="c3" subscribe="status:availability,lang:lang" border-color="orange"></dbp-consumer>
+                            <p>${i18n.t('demo.consumer_description', {id: "c4", subscriptions: "unknown-name:status"})}</p>
+                            <p>Remote <em>unknown-name</em> does not exist, the default value is overwritten by <em>undefined</em></i></p>
+                            <pre>&lt;dbp-consumer  id="c4"  subscribe="status:unknown-name"  border-color="darkgray" &gt;&lt;/dbp-consumer&gt;</pre>
+                            <dbp-consumer id="c4" subscribe="status:unknown-name" border-color="darkgray"></dbp-consumer>
+                        </div>
+                    </dbp-provider>
                 </dbp-provider>
             </section>
         `;
-    }
-
-    id() {
-        return this.getAttribute('id');
     }
 }
 
@@ -216,154 +119,7 @@ commonUtils.defineCustomElement('dbp-provider-demo', ProviderDemo);
 
 // =======================================================
 
-class Consumer extends HTMLElement {
-    constructor() {
-        super();
-        this.connected = false;
-        this.deferInherited = false;
-        this.deferSubscribe = false;
-        this.deferUnSubscribe = false;
-
-        // default values
-        this.inherit = '';
-        this.subscribe = '';
-        this.unsubscribe = '';
-
-        this.attachShadow({mode: 'open'});
-        console.log('Consumer constructor()');
-    }
-
-    connectedCallback() {
-        console.log('Consumer(' + this.id() + ') connectedCallback()');
-
-        if (this.deferInherited) {
-            const attrs = this.inherit.split(',');
-            attrs.forEach(element => this.askProviderFor(element));
-            this.deferInherited = false;
-        }
-        if (this.deferUnSubscribe) {
-            const attrs = this.unsubscribe.split(',');
-            attrs.forEach(element => this.subscribeProviderFor(element));
-            this.deferSubscribe = false;
-            this.unsubscribe = '';
-        }
-        if (this.deferSubscribe) {
-            const attrs = this.subscribe.split(',');
-            attrs.forEach(element => this.subscribeProviderFor(element));
-            this.deferSubscribe = false;
-        }
-        this.connected = true;
-    }
-
-    static get observedAttributes() {
-        return ['inherit', 'subscribe'];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        console.log('Consumer(' + this.id() + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
-        switch(name) {
-            case 'inherit':
-                this.inherit = newValue;
-                if (this.connected && typeof newValue === 'string') {
-                    const attrs = newValue.split(',');
-                    attrs.forEach(element => this.askProviderFor(element));
-                } else {
-                    this.deferInherited = newValue.length > 0;
-                }
-                break;
-            case 'subscribe':
-                if (this.subscribe && this.subscribe.length > 0) {
-                    if (this.connected) {
-                        const attrs = this.subscribe.split(',');
-                        attrs.forEach(element => this.unSubscribeProviderFor(element));
-                    } else {
-                        this.deferUnSubscribe = this.subscribe.length > 0;
-                        this.unsubscribe = this.subscribe;
-                    }
-                }
-                if (newValue !== null) {
-                    this.subscribe = newValue;
-                    if (this.connected) {
-                        const attrs = newValue.split(',');
-                        attrs.forEach(element => this.subscribeProviderFor(element));
-                    } else {
-                        this.deferSubscribe = newValue && newValue.length > 0;
-                    }
-                }
-                break;
-            default:
-                console.log('unknown attribute "' + name + '".');
-        }
-    }
-
-    id() {
-        return this.getAttribute('id');
-    }
-
-    render() {}
-
-    askProviderFor(element) {
-        console.log('Consumer(' + this.id() + ') askProviderFor( ' + element + ' )');
-        const pair = element.trim().split(':');
-        const global = pair[0];
-        const local = pair[1];
-        const that = this;
-        const event = new CustomEvent('inherit',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    callback: (value) => {
-                        console.log('Consumer(' + that.id() + ') ask/Callback ' + global + ' -> ' + local + ' = ' + value);
-                        this.attributeChangedCallback(local, that[local], value);
-                    }
-                }
-            });
-        this.parentElement.dispatchEvent(event);
-        //console.dir(event);
-    }
-
-    subscribeProviderFor(element) {
-        console.log('Consumer(' + this.id() + ') subscribeProviderFor( ' + element + ' )');
-        const pair = element.trim().split(':');
-        const global = pair[0];
-        const local = pair[1];
-        const that = this;
-        const event = new CustomEvent('subscribe',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    callback: (value) => {
-                        console.log('Consumer(' + that.id() + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
-                        this.attributeChangedCallback(local, that[local], value);
-                    },
-                    sender: this,
-                }
-            });
-        this.parentElement.dispatchEvent(event);
-    }
-
-    unSubscribeProviderFor(element) {
-        console.log('Consumer(' + this.id() + ') unSubscribeProviderFor( ' + element + ' )');
-        const pair = element.trim().split(':');
-        const global = pair[0];
-        const event = new CustomEvent('unsubscribe',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    sender: this,
-                }
-            });
-        this.parentElement.dispatchEvent(event);
-    }
-}
-
-class DemoConsumer extends Consumer {
+class DemoConsumer extends DBPLitElement {
     constructor() {
         super();
 
@@ -372,7 +128,7 @@ class DemoConsumer extends Consumer {
         this.foo = 100;
         this.bar = 900;
         this.ping = 0;
-        this['border-color'] = 'green';
+        this.borderColor = 'green';
 
         this.status = 'local';
 
@@ -382,15 +138,21 @@ class DemoConsumer extends Consumer {
     connectedCallback() {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
-        console.log('DemoConsumer(' + this.id() + ') connectedCallback()');
+        console.log('DemoConsumer(' + this.id + ') connectedCallback()');
+        this.connected = true;
         this.render();
     }
 
-    static get observedAttributes() {
-        return [
-            ...Consumer.observedAttributes,
-            'lang', 'foo', 'bar', 'gong', 'border-color', 'ping'
-        ];
+    static get properties() {
+        return {
+            ...super.properties,
+            lang: { type: String },
+            foo: { type: String },
+            bar: { type: String },
+            gong: { type: String },
+            borderColor: { type: String, attribute: 'border-color' },
+            ping: { type: String }
+        };
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -398,7 +160,7 @@ class DemoConsumer extends Consumer {
             return;
         }
 
-        console.log('DemoConsumer(' + this.id() + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
+        console.log('DemoConsumer(' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
         switch(name) {
             case 'lang':
                 this.lang = newValue;
@@ -422,14 +184,18 @@ class DemoConsumer extends Consumer {
         this.render();
     }
 
+    get id() {
+        return this.getAttribute('id');
+    }
+
     render() {
         if (! this.connected) {
-            return;
+            return `not connected!`;
         }
-        console.log('DemoConsumer(' + this.id() + ') render()');
+        console.log('DemoConsumer(' + this.id + ') render()');
 
         const sum = this.foo + this.bar;
-        this.shadowRoot.innerHTML = `
+        return html`
         <div style="border: ${this['border-color']} dotted; padding: 10px;">
             <table style="width:200px;">
                 <tr style="background-color: #aaa;">
