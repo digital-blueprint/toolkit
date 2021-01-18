@@ -14,7 +14,7 @@ export class Provider extends HTMLElement {
 
         this.addEventListener('subscribe', function (e) {
             const name = e.detail.name;
-            if (that.hasOwnProperty(name) || that.root) {
+            if (Object.hasOwnProperty.call(that, name) || that.root) {
                 console.log('Provider(' + that.id + ') eventListener("subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
@@ -26,7 +26,7 @@ export class Provider extends HTMLElement {
         this.addEventListener('unsubscribe', function (e) {
             const name = e.detail.name;
             const sender = e.detail.sender;
-            if (that.hasOwnProperty(name) || that.root) {
+            if (Object.hasOwnProperty.call(that, name) || that.root) {
                 console.log('Provider(' + that.id + ') eventListener("unsubscribe",..) name "' + name + '" found.');
                 that.callbackStore.forEach(item => {
                     if (item.sender === sender && item.name === name) {
@@ -45,7 +45,7 @@ export class Provider extends HTMLElement {
             const name = e.detail.name;
             const value = e.detail.value;
 
-            if (that.hasOwnProperty(name) || that.root) {
+            if (Object.hasOwnProperty.call(that, name) || that.root) {
                 console.log('Provider(' + that.id + ') eventListener("set-property",..) name "' + name + '" found.');
                 that[name] = value;
 
