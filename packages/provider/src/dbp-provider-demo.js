@@ -139,7 +139,6 @@ class DemoConsumer extends DBPLitElement {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
         console.log('DemoConsumer(' + this.id + ') connectedCallback()');
-        this.connected = true;
         this.render();
     }
 
