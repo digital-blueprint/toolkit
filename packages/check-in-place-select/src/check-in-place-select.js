@@ -2,7 +2,7 @@ import {findObjectInApiResults} from './utils.js';
 import select2LangDe from './i18n/de/select2';
 import select2LangEn from './i18n/en/select2';
 import JSONLD from '@dbp-toolkit/common/jsonld';
-import {css, html, LitElement} from 'lit-element';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {i18n} from './i18n.js';
 import {Icon} from '@dbp-toolkit/common';
@@ -10,6 +10,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from "@dbp-toolkit/common/error";
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 
 const checkInPlaceContext = {
@@ -19,7 +20,7 @@ const checkInPlaceContext = {
 };
 
 
-export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
+export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
@@ -56,7 +57,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
             active: { type: Boolean, attribute: false },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
@@ -65,7 +66,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(LitElement) {
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
             showCapacity: { type: Boolean, attribute: 'show-capacity' },
-        };
+        });
     }
 
     clear() {
