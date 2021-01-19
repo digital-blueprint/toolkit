@@ -62,7 +62,7 @@ export class LanguageSelect extends AdapterLitElement {
             this.dispatchEvent(event);
 
             // tell a dbp-provider to update the "lang" property
-            this.sendSetPropertyEvent('lang', value);
+            this.sendSetPropertyEvent('language', value);
 
             // Unlike other cases we use the next language for the translations so that
             // users not knowing the current language can understand it.
