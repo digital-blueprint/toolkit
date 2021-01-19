@@ -7,6 +7,29 @@ export class Provider extends HTMLElement {
         console.log('Provider constructor()');
     }
 
+    /**
+     * The "lang" property seems to be updated before the event from the MutationObserver, so we cannot observe a value change directly
+     * Workaround: use another property (e.g. "langValue") instead of "lang"
+     *
+     * @param name
+     * @returns {string|*}
+     */
+    static getPropertyName(name) {
+        return name === 'lang' ? 'langValue' : name;
+    }
+
+    getValue(name) {
+        return this[Provider.getPropertyName(name)];
+    }
+
+    setValue(name, value) {
+        this[Provider.getPropertyName(name)] = value;
+    }
+
+    hasProperty(name) {
+        return Object.hasOwnProperty.call(this, Provider.getPropertyName(name));
+    }
+
     connectedCallback() {
         console.log('Provider(' + this.id + ') connectedCallback()');
 
@@ -14,11 +37,11 @@ export class Provider extends HTMLElement {
 
         this.addEventListener('subscribe', function (e) {
             const name = e.detail.name;
-            if (Object.hasOwnProperty.call(that, name) || that.root) {
+            if (that.hasProperty(name) || that.root) {
                 console.log('Provider(' + that.id + ') eventListener("subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
-                e.detail.callback(that[name]);
+                e.detail.callback(that.getValue(name));
                 e.stopPropagation();
             }
         }, false);
@@ -26,7 +49,7 @@ export class Provider extends HTMLElement {
         this.addEventListener('unsubscribe', function (e) {
             const name = e.detail.name;
             const sender = e.detail.sender;
-            if (Object.hasOwnProperty.call(that, name) || that.root) {
+            if (that.hasProperty(name) || that.root) {
                 console.log('Provider(' + that.id + ') eventListener("unsubscribe",..) name "' + name + '" found.');
                 that.callbackStore.forEach(item => {
                     if (item.sender === sender && item.name === name) {
@@ -45,9 +68,9 @@ export class Provider extends HTMLElement {
             const name = e.detail.name;
             const value = e.detail.value;
 
-            if (Object.hasOwnProperty.call(that, name) || that.root) {
+            if (that.hasProperty(name) || that.root) {
                 console.log('Provider(' + that.id + ') eventListener("set-property",..) name "' + name + '" found.');
-                that[name] = value;
+                that.setValue(name, value);
 
                 that.callbackStore.forEach(item => {
                     if (item.name === name) {
@@ -69,9 +92,11 @@ export class Provider extends HTMLElement {
                 if (mutation.type === 'attributes') {
                     const name = mutation.attributeName;
                     const value = that.getAttribute(name);
-                    if (that[name] !== value) {
+
+                    if (that.getValue(name) !== value) {
                         console.log('Provider (' + that.id + ') observed attribute "' + name + '" changed');
-                        that[name] = value;
+                        that.setValue(name, value);
+
                         that.callbackStore.forEach(item => {
                             if (item.name === name) {
                                 item.callback(value);
