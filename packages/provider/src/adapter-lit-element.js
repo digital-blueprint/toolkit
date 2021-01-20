@@ -1,8 +1,50 @@
 import {LitElement} from "lit-element";
+import {Provider} from '@dbp-toolkit/provider';
 
 export class AdapterLitElement extends LitElement {
+    static inititialized=false;
+    static pingEventListener = false;
+
+    ping() {
+        if (AdapterLitElement.inititialized) {
+            return;
+        }
+        console.log('ping');
+        AdapterLitElement.pingEventListener = window.addEventListener('ping', e => AdapterLitElement.addRootProvider(e), false);
+        const event = new CustomEvent('ping',
+            {
+                bubbles: true,
+                composed: true,
+                detail: {
+                    callback: () => {
+                        console.log('ping by some Provider cancelled.');
+                        window.removeEventListener('ping', AdapterLitElement.pingEventListener, false);
+                    }
+                }
+            });
+        this.dispatchEvent(event);
+
+        AdapterLitElement.inititialized = true;
+    }
+
+    static addRootProvider(/*e*/) {
+        console.log('pong');
+        //console.dir(e);
+        window.removeEventListener('ping', this.pingEventListener, false);
+        this.pingEventListener = false;
+
+        window.dbpProvider = new Provider();
+        window.dbpProvider.root = true;
+        window.dbpProvider.id = 'magic-root-provider';
+        window.addEventListener('subscribe', window.dbpProvider.subscribing.bind(window.dbpProvider), false);
+        window.addEventListener('unsubscribe', window.dbpProvider.unsubscribing.bind(window.dbpProvider), false);
+        window.addEventListener('set-property', window.dbpProvider.settingProperty.bind(window.dbpProvider), false);
+
+    }
+
     constructor() {
         super();
+        this.ping();
         this.connected = false;
         this.deferSubscribe = false;
         this.deferUnSubscribe = false;

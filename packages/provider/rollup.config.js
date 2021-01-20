@@ -41,7 +41,7 @@ function getBuildInfo() {
 
 export default (async () => {
     return {
-        input: (build != 'test') ? ['src/dbp-provider.js', 'src/dbp-provider-demo.js'] : glob.sync('test/**/*.js'),
+        input: (build !== 'test') ? ['src/dbp-provider.js', 'src/dbp-provider-demo.js', 'src/dbp-provider-demo2.js'] : glob.sync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
@@ -94,6 +94,8 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
+                    {src: 'assets/index2.html', dest: 'dist'},
+                    {src: 'assets/index3.html', dest: 'dist'},
                     {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
                     {src: 'assets/favicon.ico', dest:'dist'},
                 ],

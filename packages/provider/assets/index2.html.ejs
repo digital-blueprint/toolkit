@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Provider Demo 2a</title>
+    <script type="module" src="dbp-provider.js"></script>
+    <script type="module" src="dbp-provider-demo2.js"></script>
+    <style>
+        body { padding: 50px;}
+    </style>
+</head>
+
+<body>
+    <dbp-provider-demo2 id="provider-demo" subscribe="lang:lang"></dbp-provider-demo2>
+    <hr>
+    <ul>
+        <li><a href="/index.html">multiple, explicit providers</a></li>
+        <li>automatic generated provider</li>
+        <li><a href="/index3.html">explicit provider</a></li>
+    </ul>
+    <p>version: <span style="color: white; background-color: black;"><%= buildInfo.info %></span></p>
+</body>
+</html>

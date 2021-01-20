@@ -1,7 +1,8 @@
 <!doctype html>
-<html>
+<html lang="de">
 <head>
     <meta charset="UTF-8">
+    <title>Provider Demo 1</title>
     <script type="module" src="dbp-provider.js"></script>
     <script type="module" src="dbp-provider-demo.js"></script>
     <!--
@@ -19,9 +20,16 @@
 </head>
 
 <body>
+    <pre>&lt;dbp-provider  id="root"  root="1" availability="global" >&lt;/dbp-provider&gt;</pre>
     <dbp-provider id="root" root="1" availability="global" lang="de">
         <dbp-provider-demo id="provider-demo" subscribe="lang:lang"></dbp-provider-demo>
     </dbp-provider>
+    <hr>
+    <ul>
+        <li>multiple, explicit providers</li>
+        <li><a href="/index2.html">automatic generated provider</a></li>
+        <li><a href="/index3.html">explicit provider</a></li>
+    </ul>
     <p>version: <span style="color: white; background-color: black;"><%= buildInfo.info %></span></p>
 </body>
 </html>

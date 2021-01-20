@@ -37,51 +37,12 @@ export class Provider extends HTMLElement {
 
         const that = this;
 
-        this.addEventListener('subscribe', function (e) {
-            const name = e.detail.name;
-            if (that.hasProperty(name) || that.root) {
-                console.log('Provider(' + that.id + ') eventListener("subscribe",..) name "' + name + '" found.');
-                that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
-
-                e.detail.callback(that.getProperty(name));
-                e.stopPropagation();
-            }
-        }, false);
-
-        this.addEventListener('unsubscribe', function (e) {
-            const name = e.detail.name;
-            const sender = e.detail.sender;
-            if (that.hasProperty(name) || that.root) {
-                console.log('Provider(' + that.id + ') eventListener("unsubscribe",..) name "' + name + '" found.');
-                that.callbackStore.forEach(item => {
-                    if (item.sender === sender && item.name === name) {
-                        const index = that.callbackStore.indexOf(item);
-                        that.callbackStore.splice(index, 1);
-                        console.log('Provider(' + that.id + ') eventListener for name "' + name + '" removed.');
-                    }
-                });
-
-                e.stopPropagation();
-            }
-        }, false);
-
-        // listen to property changes
-        this.addEventListener('set-property', function (e) {
-            const name = e.detail.name;
-            const value = e.detail.value;
-
-            if (that.hasProperty(name) || that.root) {
-                console.log('Provider(' + that.id + ') eventListener("set-property",..) name "' + name + '" found.');
-                that.setProperty(name, value);
-
-                that.callbackStore.forEach(item => {
-                    if (item.name === name) {
-                        item.callback(value);
-                    }
-                });
-
-                e.stopPropagation();
-            }
+        this.addEventListener('subscribe', this.subscribing.bind(this), false);
+        this.addEventListener('unsubscribe', this.unsubscribing.bind(this), false);
+        this.addEventListener('set-property', this.settingProperty.bind(this), false);
+        this.addEventListener('ping', function (e) {
+            e.stopPropagation();
+            e.detail.callback();
         }, false);
 
         // Options for the observer (which mutations to observe)
@@ -131,5 +92,55 @@ export class Provider extends HTMLElement {
 
     get id() {
         return this.getAttribute('id');
+    }
+
+    set id(id) {
+        this.setAttribute('id', id);
+    }
+
+    subscribing (e) {
+        const name = e.detail.name;
+        if (this.hasProperty(name) || this.root) {
+            console.log('Provider(' + this.id + ') eventListener("subscribe",..) name "' + name + '" found.');
+            this.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
+
+            e.detail.callback(this.getProperty(name));
+            e.stopPropagation();
+        }
+    }
+
+    unsubscribing (e) {
+        const name = e.detail.name;
+        const sender = e.detail.sender;
+        if (this.hasProperty(name) || this.root) {
+            console.log('Provider(' + this.id + ') eventListener("unsubscribe",..) name "' + name + '" found.');
+            this.callbackStore.forEach(item => {
+                if (item.sender === sender && item.name === name) {
+                    const index = this.callbackStore.indexOf(item);
+                    this.callbackStore.splice(index, 1);
+                    console.log('Provider(' + this.id + ') eventListener for name "' + name + '" removed.');
+                }
+            });
+
+            e.stopPropagation();
+        }
+    }
+
+    settingProperty (e) {
+        const name = e.detail.name;
+        const value = e.detail.value;
+
+        if (this.hasProperty(name) || this.root) {
+            console.log('Provider(' + this.id + ') eventListener("set-property",..) name "' + name + '" found.');
+            this.setProperty(name, value);
+
+            this.callbackStore.forEach(item => {
+                if (item.name === name) {
+                    item.callback(value);
+                }
+            });
+
+            e.stopPropagation();
+        }
     }
 }
