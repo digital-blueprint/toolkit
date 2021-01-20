@@ -4,30 +4,32 @@ export class Provider extends HTMLElement {
         this.callbackStore = [];
         this.root = false;
 
+        // Previously we used direct properties like this["lang"] (instead of this.properties["lang"]) for storing the
+        // properties, but the "lang" property seems to be updated before the event from the MutationObserver, so we
+        // cannot observe a value change directly (as workaround we use another property (e.g. "langValue") instead of "lang")
+        this.properties = {};
+
+        // We need to store our own "last values" because we cannot be sure what the MutationObserver detects
+        this.lastProperties = {};
+
         console.log('Provider constructor()');
     }
 
-    /**
-     * The "lang" property seems to be updated before the event from the MutationObserver, so we cannot observe a value change directly
-     * Workaround: use another property (e.g. "langValue") instead of "lang"
-     *
-     * @param name
-     * @returns {string|*}
-     */
-    static getPropertyName(name) {
-        return name === 'lang' ? 'langValue' : name;
+    getProperty(name) {
+        return this.properties[name];
     }
 
-    getValue(name) {
-        return this[Provider.getPropertyName(name)];
+    setProperty(name, value) {
+        this.lastProperties[name] = value;
+        this.properties[name] = value;
     }
 
-    setValue(name, value) {
-        this[Provider.getPropertyName(name)] = value;
+    hasPropertyChanged(name, value) {
+        return this.lastProperties[name] !== value;
     }
 
     hasProperty(name) {
-        return Object.hasOwnProperty.call(this, Provider.getPropertyName(name));
+        return Object.hasOwnProperty.call(this.properties, name);
     }
 
     connectedCallback() {
@@ -41,7 +43,7 @@ export class Provider extends HTMLElement {
                 console.log('Provider(' + that.id + ') eventListener("subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
-                e.detail.callback(that.getValue(name));
+                e.detail.callback(that.getProperty(name));
                 e.stopPropagation();
             }
         }, false);
@@ -70,7 +72,7 @@ export class Provider extends HTMLElement {
 
             if (that.hasProperty(name) || that.root) {
                 console.log('Provider(' + that.id + ') eventListener("set-property",..) name "' + name + '" found.');
-                that.setValue(name, value);
+                that.setProperty(name, value);
 
                 that.callbackStore.forEach(item => {
                     if (item.name === name) {
@@ -93,9 +95,9 @@ export class Provider extends HTMLElement {
                     const name = mutation.attributeName;
                     const value = that.getAttribute(name);
 
-                    if (that.getValue(name) !== value) {
+                    if (that.hasPropertyChanged(name, value)) {
                         console.log('Provider (' + that.id + ') observed attribute "' + name + '" changed');
-                        that.setValue(name, value);
+                        that.setProperty(name, value);
 
                         that.callbackStore.forEach(item => {
                             if (item.name === name) {
@@ -121,7 +123,7 @@ export class Provider extends HTMLElement {
                     continue;
                 }
 
-                this[attrs[i].name] = attrs[i].value;
+                this.setProperty(attrs[i].name, attrs[i].value);
                 console.log('Provider (' + that.id + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
             }
         }
