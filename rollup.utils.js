@@ -5,7 +5,6 @@ import child_process from 'child_process';
 import resolve from '@rollup/plugin-node-resolve';
 import selfsigned from 'selfsigned';
 import findCacheDir from 'find-cache-dir';
-import { assert } from 'console';
 
 export function getBuildInfo(build) {
     let remote = child_process.execSync('git config --get remote.origin.url').toString().trim();
