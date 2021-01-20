@@ -7,6 +7,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Provider} from '@dbp-toolkit/provider';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
+import {DemoConsumer} from './consumer-demo'
 
 
 class ProviderDemo2 extends ScopedElementsMixin(DBPLitElement) {
@@ -22,7 +23,7 @@ class ProviderDemo2 extends ScopedElementsMixin(DBPLitElement) {
             'dbp-login-button': LoginButton,
             'dbp-language-select': LanguageSelect,
             'dbp-provider': Provider,
-            'dbp-consumer2': DemoConsumer2,
+            'dbp-consumer': DemoConsumer,
         };
     }
 
@@ -82,8 +83,8 @@ class ProviderDemo2 extends ScopedElementsMixin(DBPLitElement) {
                 <div class="container">
                     <h2>${i18n.t('demo.consumer')}</h2>
                     <p>${i18n.t('demo.consumer_description', {id: "c1", subscriptions: "border-color, lang"})}</p>
-                    <pre>&lt;dbp-consumer2  id="c1"  subscribe="border-color:bc,lang:lang" &gt;&lt;/dbp-consumer&gt;</pre>
-                    <dbp-consumer2 id="c1" subscribe="border-color:bc,lang:lang"></dbp-consumer2>
+                    <pre>&lt;dbp-consumer  id="c1"  subscribe="border-color:bc,lang:lang" &gt;&lt;/dbp-consumer&gt;</pre>
+                    <dbp-consumer id="c1" subscribe="border-color:bc,lang:lang"></dbp-consumer>
                 </div>
             </section>
         `;
@@ -91,98 +92,3 @@ class ProviderDemo2 extends ScopedElementsMixin(DBPLitElement) {
 }
 
 commonUtils.defineCustomElement('dbp-provider-demo2', ProviderDemo2);
-
-// =======================================================
-
-class DemoConsumer2 extends DBPLitElement {
-    constructor() {
-        super();
-
-        this.lang = 'de';
-        // default values
-        this.foo = 100;
-        this.bar = 900;
-        this.borderColor = 'green';
-
-        this.status = 'local';
-
-        console.log('DemoConsumer2 constructor()');
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
-        console.log('DemoConsumer2(' + this.id + ') connectedCallback()');
-        this.render();
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: { type: String },
-            foo: { type: String },
-            bar: { type: String },
-            gong: { type: String },
-            borderColor: { type: String, attribute: 'border-color' },
-        };
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue === newValue) {
-            return;
-        }
-
-        console.log('DemoConsumer2(' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
-        switch(name) {
-            case 'lang':
-                this.lang = newValue;
-                i18n.changeLanguage(this.lang);
-                break;
-            case 'foo':
-                this.foo = parseInt(newValue);
-                break;
-            case 'bar':
-                this.bar = parseInt(newValue);
-                break;
-            case 'status':
-                this.status = newValue;
-                break;
-            case 'border-color':
-                this['border-color'] = newValue;
-                break;
-            default:
-                super.attributeChangedCallback(name, oldValue, newValue);
-        }
-        this.render();
-    }
-
-    get id() {
-        return this.getAttribute('id');
-    }
-
-    render() {
-        if (! this.connected) {
-            return `not connected!`;
-        }
-        console.log('DemoConsumer2(' + this.id + ') render()');
-
-        const sum = this.foo + this.bar;
-        return html`
-        <div style="border: ${this['border-color']} dotted; padding: 10px;">
-            <table style="width:200px;">
-                <tr style="background-color: #aaa;">
-                    <th style="text-align: left;">${i18n.t('consumer.item')}</th>
-                    <th style="text-align: right;">${i18n.t('consumer.price')}</th>
-                </tr>
-                <tr><td>foo</td><td style="text-align: right;">${this.foo}</td></tr>
-                <tr><td>bar</td><td style="text-align: right;">${this.bar}</td></tr>
-                <tr><td>${i18n.t('consumer.sum')}</td><td style="text-align: right;">${sum}</td></tr>
-            </table>
-            <p>Status: <b>${this.status}</b></p>
-        </div>
-        `;
-    }
-
-}
-
-customElements.define('dbp-consumer2', DemoConsumer2);
