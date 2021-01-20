@@ -1,7 +1,11 @@
 import path from 'path';
 import url from 'url';
+import fs from 'fs';
 import child_process from 'child_process';
 import resolve from '@rollup/plugin-node-resolve';
+import selfsigned from 'selfsigned';
+import findCacheDir from 'find-cache-dir';
+import { assert } from 'console';
 
 export function getBuildInfo(build) {
     let remote = child_process.execSync('git config --get remote.origin.url').toString().trim();
@@ -40,4 +44,27 @@ export async function getPackagePath(packageName, assetPath) {
         packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
     }
     return path.relative(process.cwd(), path.join(packageRoot, assetPath));
+}
+
+/**
+ * Creates a dummy dev server certificate, caches it and returns it.
+ */
+export async function generateTLSConfig() {
+    const certDir = findCacheDir({name: 'dbp-dev-server-cert'});
+    const keyPath = path.join(certDir, 'server.key');
+    const certPath = path.join(certDir, 'server.cert');
+
+    await fs.promises.mkdir(certDir, {recursive: true});
+
+    if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
+        const attrs = [{name: 'commonName', value: 'dbp-dev.localhost'}];
+        const pems = selfsigned.generate(attrs, {algorithm: 'sha256', days: 9999});
+        await fs.promises.writeFile(keyPath, pems.private);
+        await fs.promises.writeFile(certPath, pems.cert);
+    }
+
+    return {
+        key: await fs.promises.readFile(keyPath),
+        cert: await fs.promises.readFile(certPath)
+    }
 }
