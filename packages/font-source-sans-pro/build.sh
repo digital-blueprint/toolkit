@@ -79,6 +79,74 @@ function build() {
 
 }
 
+function build_variable() {
+    INPUT_NAME=$1
+    INPUT_FORMAT='otf'
+    STYLE=$2
+    CSS_FILE="files/variable.css"
+    FLAVOR=woff2
+
+    echo "variable-$STYLE"
+
+    SUBSET="rest"
+    pyftsubset \
+    "$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
+    --output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
+    --flavor=$FLAVOR \
+    --layout-features='*' \
+    --unicodes="$EXT"
+
+    echo "
+@font-face {
+    font-family: 'Source Sans Variable';
+    font-style: $STYLE;
+    font-weight: 200 900;
+    font-stretch: normal;
+    font-display: swap;
+    src: url(source-sans-variable-$SUBSET-$STYLE.$FLAVOR) format('$FLAVOR');
+    unicode-range: $EXT;
+}" >> "$CSS_FILE"
+
+    SUBSET="base-ext"
+    pyftsubset \
+    "$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
+    --output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
+    --flavor=$FLAVOR \
+    --layout-features='*' \
+    --unicodes="$LATIN_EXT"
+
+    echo "
+@font-face {
+    font-family: 'Source Sans Variable';
+    font-style: $STYLE;
+    font-weight: 200 900;
+    font-stretch: normal;
+    font-display: swap;
+    src: url(source-sans-variable-$SUBSET-$STYLE.$FLAVOR) format('$FLAVOR');
+    unicode-range: $LATIN_EXT;
+}" >> "$CSS_FILE"
+
+    SUBSET="base"
+    pyftsubset \
+    "$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
+    --output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
+    --flavor=$FLAVOR \
+    --layout-features='*' \
+    --unicodes="$LATIN"
+
+    echo "
+@font-face {
+    font-family: 'Source Sans Variable';
+    font-style: $STYLE;
+    font-weight: 200 900;
+    font-stretch: normal;
+    font-display: swap;
+    src: url(source-sans-variable-$SUBSET-$STYLE.woff2) format('$FLAVOR');
+    unicode-range: $LATIN;
+}" >> "$CSS_FILE"
+}
+
+
 function main() {
     # Extract upstream release
     RELEASE="source-sans-pro-2.045R-ro-1.095R-it"
@@ -92,6 +160,9 @@ function main() {
 
     rm -rf files
     mkdir -p "files"
+
+    build_variable "Roman" "normal"
+    build_variable "Italic" "italic"
 
     build "ExtraLight" "normal" "200"
     build "ExtraLightIt" "italic" "200"
@@ -110,6 +181,8 @@ function main() {
 
     build "Black" "normal" "900"
     build "BlackIt" "italic" "900"
+
+    cat files/200.css files/300.css files/400.css files/600.css files/700.css files/900.css > files/static.css
 
     rm -rf "$RELEASE"
 }
