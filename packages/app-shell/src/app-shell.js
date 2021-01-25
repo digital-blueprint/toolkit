@@ -8,7 +8,6 @@ import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from '@dbp-toolkit/notification';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import buildinfo from 'consts:buildinfo';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
@@ -58,6 +57,10 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         this.keycloakConfig = null;
         this.noWelcomePage = false;
         this.menuHeight = -1;
+        this.gitInfo = '';
+        this.env = '';
+        this.buildUrl = '';
+        this.buildTime = '';
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
@@ -242,7 +245,11 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
             shellName: { type: String, attribute: "shell-name" },
             shellSubname: { type: String, attribute: "shell-subname" },
-            noBrand: { type: Boolean, attribute: "no-brand" }
+            noBrand: { type: Boolean, attribute: "no-brand" },
+            gitInfo: { type: String, attribute: "git-info" },
+            buildUrl: { type: String, attribute: "build-url" },
+            buildTime: { type: String, attribute: "build-time" },
+            env: { type: String },
         });
     }
 
@@ -786,7 +793,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             });
         }
 
-        const prodClassMap = classMap({hidden: buildinfo.env === 'production' || buildinfo.env === 'demo'});
+        const prodClassMap = classMap({hidden: this.env === 'production' || this.env === 'demo' || this.env === ''});
 
         this.updatePageTitle();
 
@@ -809,7 +816,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         return html`
             <slot class="${slotClassMap}"></slot>
             <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
-            <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}"></dbp-matomo>
+            <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
             <div class="${mainClassMap}">
             <div id="main">
                 <dbp-notification lang="${this.lang}"></dbp-notification>
@@ -854,7 +861,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                     <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
                     <a target="_blank" rel="noopener" class="int-link-external" href="${imprintUrl}">${i18n.t('imprint')}</a>
                     <a rel="noopener" class="int-link-external" href="mailto:it-support@tugraz.at">${i18n.t('contact')}</a>
-                    <dbp-build-info class="${prodClassMap}"></dbp-build-info>
+                    <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
                 </footer>
             </div>
             </div>

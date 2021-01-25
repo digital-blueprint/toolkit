@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/browser';
-import environment from 'consts:environment';
 
 let _isInitialized = false;
 let _canReportEvent = false;
@@ -24,10 +23,14 @@ export function init(options) {
   if (_isInitialized)
     throw new Error("Already initialized");
 
-  let sentryOptions = {debug: actual.debug, environment: environment};
+  let sentryOptions = {debug: actual.debug};
 
   if (actual.release) {
     sentryOptions['release'] = actual.release;
+  }
+
+  if (actual.environment) {
+    sentryOptions['environment'] = actual.environment;
   }
 
   if (!sentryDSN) {
