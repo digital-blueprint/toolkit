@@ -357,7 +357,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     "  </d:prop>" +
                     "</d:propfind>"})
             .then(contents => {
-                console.log("------", contents);
+                //console.log("------", contents);
                 this.loading = false;
                 this.statusText = "";
                 this.tabulatorTable.setData(contents.data);

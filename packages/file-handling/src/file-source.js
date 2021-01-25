@@ -350,7 +350,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
         const filePicker = this._('#modal-picker');
 
-        // check if element is already in the dom (for example if "dialog-open" attribute is set)
+        // check if element is already^ in the dom (for example if "dialog-open" attribute is set)
         if (filePicker) {
             MicroModal.show(filePicker, {
                 disableScroll: true,
@@ -364,6 +364,9 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         if (this.defaultSink !== '' && this.firstOpen) {
             this.activeDestination = this.defaultSink;
             this.nextcloudDir = this.nextcloudDefaultDir;
+            if (this._('#nextcloud-file-picker').webDavClient !== null) {
+                this._('#nextcloud-file-picker').loadDirectory(this.nextcloudDefaultDir);
+            }
             this.firstOpen = false;
         }
     }

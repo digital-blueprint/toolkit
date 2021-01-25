@@ -197,6 +197,9 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         if (this.defaultSink !== '' && this.firstOpen) {
             this.activeDestination = this.defaultSink;
             this.nextcloudDir = this.nextcloudDefaultDir;
+            if (this._('#nextcloud-file-picker').webDavClient !== null) {
+                this._('#nextcloud-file-picker').loadDirectory(this.nextcloudDefaultDir);
+            }
             this.firstOpen = false;
         }
     }
