@@ -1,6 +1,5 @@
 import {i18n} from './i18n.js';
 import JSONLD from '@dbp-toolkit/common/jsonld';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import {EventBus} from '@dbp-toolkit/common';
 import  {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
@@ -33,7 +32,7 @@ export class AuthKeycloak extends AdapterLitElement {
         this.personId = "";
         this.tryLogin = false;
         this.person = null;
-        this.entryPointUrl = commonUtils.getAPiUrl();
+        this.entryPointUrl = '';
         this._loginStatus = LoginStatus.UNKNOWN;
 
         // Keycloak config

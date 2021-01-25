@@ -198,7 +198,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             }
 
             // check if we want to decompress the zip and queue the contained files
-            if (this.decompressZip && file.type === "application/zip") {
+            if (this.decompressZip
+                && (file.type === "application/zip" || file.type === "application/x-zip-compressed")) {
                 // add decompressed files to tempFilesToHandle
                 await commonUtils.asyncArrayForEach(
                     await this.decompressZIP(file), (file) => this.sendFileEvent(file));
@@ -438,7 +439,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         let allowedMimeTypes = this.allowedMimeTypes;
 
         if (this.decompressZip) {
-            allowedMimeTypes += ",application/zip";
+            allowedMimeTypes += ",application/zip,application/x-zip-compressed";
         }
 
         return html`
