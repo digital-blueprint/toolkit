@@ -1,6 +1,6 @@
 # Provider Web Component
 
-[GitLab Repository](git@gitlab.tugraz.at:dbp/web-components/toolkit.git)
+[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/toolkit)
 
 You can install this component via npm:
 

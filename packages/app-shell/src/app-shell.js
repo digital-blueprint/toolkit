@@ -1,5 +1,5 @@
 import {createI18nInstance} from './i18n.js';
-import {html, css, LitElement} from 'lit-element';
+import {html, css} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon, EventBus} from '@dbp-toolkit/common';
@@ -8,7 +8,6 @@ import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from '@dbp-toolkit/notification';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import buildinfo from 'consts:buildinfo';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
@@ -16,6 +15,7 @@ import {TUGrazLogo} from './tugraz-logo.js';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 
 const i18n = createI18nInstance();
@@ -42,7 +42,7 @@ const importNotify = async (promise) => {
     }
 };
 
-export class AppShell extends ScopedElementsMixin(LitElement) {
+export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
         this.lang = i18n.language;
@@ -57,6 +57,10 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         this.keycloakConfig = null;
         this.noWelcomePage = false;
         this.menuHeight = -1;
+        this.gitInfo = '';
+        this.env = '';
+        this.buildUrl = '';
+        this.buildTime = '';
 
         this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
@@ -224,7 +228,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String, reflect: true },
             src: { type: String },
             basePath: { type: String, attribute: 'base-path' },
@@ -241,8 +245,12 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
             shellName: { type: String, attribute: "shell-name" },
             shellSubname: { type: String, attribute: "shell-subname" },
-            noBrand: { type: Boolean, attribute: "no-brand" }
-        };
+            noBrand: { type: Boolean, attribute: "no-brand" },
+            gitInfo: { type: String, attribute: "git-info" },
+            buildUrl: { type: String, attribute: "build-url" },
+            buildTime: { type: String, attribute: "build-time" },
+            env: { type: String },
+        });
     }
 
     _updateAuth(login) {
@@ -347,6 +355,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
     }
 
     switchComponent(componentTag) {
+        let offset = window.pageYOffset;
         const changed = (componentTag !== this.activeView);
         this.activeView = componentTag;
         if (changed)
@@ -358,8 +367,27 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         }
 
         let updateFunc = () => {
-            if (window.pageYOffset !== 0) {
-                window.scrollTo(0, 96);
+           
+            if (offset > 0) {
+
+                const header = this.shadowRoot.querySelector("header");
+                const title = this.shadowRoot.querySelector("#headline");
+
+                if (header === null || title === null) {
+                    return;
+                }
+
+                let style = getComputedStyle(title);
+                let marginTop = isNaN(parseInt(style.marginTop, 10)) ? 0 : parseInt(style.marginTop, 10);
+                let marginBottom = isNaN(parseInt(style.marginBottom, 10)) ? 0 : parseInt(style.marginBottom, 10);
+
+                let topValue = header.getBoundingClientRect().height + title.getBoundingClientRect().height + marginTop + marginBottom;
+
+                if (offset < topValue) {
+                    window.scrollTo(0, offset);
+                } else {
+                    window.scrollTo(0, topValue);
+                }
             }
             this.updatePageTitle();
             this.subtitle = this.activeMetaDataText("short_name");
@@ -725,8 +753,22 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             return html``;
 
         const elm =  this._createActivityElement(act);
-        elm.setAttribute("entry-point-url", this.entryPointUrl);
-        elm.setAttribute("lang", this.lang);
+
+        // add subscriptions for the provider component
+        if (act.subscribe !== undefined) {
+            elm.setAttribute("subscribe", act.subscribe);
+        }
+
+        // only add the entry-point-url attribute if it isn't subscribed
+        if (act.subscribe === undefined || !act.subscribe.includes("entry-point-url:")) {
+            elm.setAttribute("entry-point-url", this.entryPointUrl);
+        }
+
+        // only add the lang attribute if it isn't subscribed
+        if (act.subscribe === undefined || !act.subscribe.includes("lang:")) {
+            elm.setAttribute("lang", this.lang);
+        }
+
         return elm;
     }
 
@@ -751,7 +793,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
             });
         }
 
-        const prodClassMap = classMap({hidden: buildinfo.env === 'production' || buildinfo.env === 'demo'});
+        const prodClassMap = classMap({hidden: this.env === 'production' || this.env === 'demo' || this.env === ''});
 
         this.updatePageTitle();
 
@@ -774,7 +816,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
         return html`
             <slot class="${slotClassMap}"></slot>
             <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
-            <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}"></dbp-matomo>
+            <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
             <div class="${mainClassMap}">
             <div id="main">
                 <dbp-notification lang="${this.lang}"></dbp-notification>
@@ -796,7 +838,6 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                         <dbp-tugraz-logo id="main-logo" lang="${this.lang}" class="${classMap({hidden: this.noBrand})}"></dbp-tugraz-logo>
                     </div>
                 </header>
-
                 <div id="headline">
                     <h1 class="title">${this.topicMetaDataText('name')}</h1>
                 </div>
@@ -820,7 +861,7 @@ export class AppShell extends ScopedElementsMixin(LitElement) {
                     <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
                     <a target="_blank" rel="noopener" class="int-link-external" href="${imprintUrl}">${i18n.t('imprint')}</a>
                     <a rel="noopener" class="int-link-external" href="mailto:it-support@tugraz.at">${i18n.t('contact')}</a>
-                    <dbp-build-info class="${prodClassMap}"></dbp-build-info>
+                    <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
                 </footer>
             </div>
             </div>

@@ -1,6 +1,5 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {EventBus} from '@dbp-toolkit/common';
-import buildInfo from 'consts:buildinfo';
 
 function pushEvent(event) {
     window._paq = window._paq || [];
@@ -15,6 +14,7 @@ export class MatomoElement extends DBPLitElement {
         this.siteId = -1;
         this.isRunning = false;
         this.lastEvent = [];
+        this.gitInfo = '';
     }
 
 
@@ -22,6 +22,7 @@ export class MatomoElement extends DBPLitElement {
         return {
             endpoint: { type: String },
             siteId: { type: Number, attribute: 'site-id' },
+            gitInfo: { type: Number, attribute: 'git-info' },
         };
     }
 
@@ -55,7 +56,7 @@ export class MatomoElement extends DBPLitElement {
             }
             console.log('add matomo...');
 
-            pushEvent(['setCustomVariable', 1, "GitCommit", buildInfo.info, "visit"]);
+            pushEvent(['setCustomVariable', 1, "GitCommit", this.gitInfo, "visit"]);
             pushEvent(['enableHeartBeatTimer']);
             pushEvent(['disableCookies']);
             pushEvent(['trackPageView']);

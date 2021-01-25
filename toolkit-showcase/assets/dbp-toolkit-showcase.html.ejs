@@ -8,13 +8,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="<%= getPrivateUrl('favicon.ico') %>">
     <link rel="icon" type="image/svg+xml" href="<%= getPrivateUrl('favicon.svg') %>" sizes="any">
 
-<% if (environment === "local") { -%>
-    <!-- XXX: Disable adoptedStyleSheets so that lit-element doesn't use it and we can edit CSS in the Chrome dev tools -->
-    <script>
-        delete Document.prototype.adoptedStyleSheets;
-    </script>
-<% } -%>
-
     <!-- PWA manfiest file -->
     <link rel="manifest" href="<%= getUrl(name + '.manifest.json') %>">
 
@@ -30,46 +23,16 @@
     <!-- Prevent Chrome/Edge from suggesting to translate the page -->
     <meta name="google" content="notranslate">
 
-    <!-- Preload fonts -->
-    <link rel="preload" href="<%= getPrivateUrl('fonts/SourceSansPro-Light.otf.woff2') %>" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="<%= getPrivateUrl('fonts/SourceSansPro-Regular.otf.woff2') %>" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="<%= getPrivateUrl('fonts/SourceSansPro-Semibold.otf.woff2') %>" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="<%= getPrivateUrl('fonts/SourceSansPro-Bold.otf.woff2') %>" as="font" type="font/woff2" crossorigin>
-
     <!-- Font related CSS -->
     <style>
+        @import "<%= getPrivateUrl('fonts/source-sans-pro/300.css') %>";
+        @import "<%= getPrivateUrl('fonts/source-sans-pro/400.css') %>";
+        @import "<%= getPrivateUrl('fonts/source-sans-pro/600.css') %>";
+
         body {
             font-family: 'Source Sans Pro', 'Calibri', 'Arial', 'sans-serif';
             font-weight: 300;
             margin: 0;
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-weight: 300;
-            src: url('<%= getPrivateUrl('fonts/SourceSansPro-Light.otf.woff2') %>') format('woff2');
-            font-display: block;
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-weight: 400;
-            src: url('<%= getPrivateUrl('fonts/SourceSansPro-Regular.otf.woff2') %>') format('woff2');
-            font-display: block;
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-weight: 600;
-            src: url('<%= getPrivateUrl('fonts/SourceSansPro-Semibold.otf.woff2') %>') format('woff2');
-            font-display: block;
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-weight: 700;
-            src: url('<%= getPrivateUrl('fonts/SourceSansPro-Bold.otf.woff2') %>') format('woff2');
-            font-display: block;
         }
 
         /* TU-Graz style override */

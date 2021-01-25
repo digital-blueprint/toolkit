@@ -4,7 +4,7 @@ import select2 from 'select2';
 import select2LangDe from './i18n/de/select2';
 import select2LangEn from './i18n/en/select2';
 import JSONLD from '@dbp-toolkit/common/jsonld';
-import {css, html, LitElement} from 'lit-element';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {i18n} from './i18n.js';
 import {Icon} from '@dbp-toolkit/common';
@@ -12,6 +12,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from "@dbp-toolkit/common/error";
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 
 const personContext = {
@@ -22,7 +23,7 @@ const personContext = {
 
 select2(window, $);
 
-export class PersonSelect extends ScopedElementsMixin(LitElement) {
+export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
@@ -54,7 +55,7 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
             active: { type: Boolean, attribute: false },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
@@ -63,7 +64,7 @@ export class PersonSelect extends ScopedElementsMixin(LitElement) {
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
             showBirthDate: { type: Boolean, attribute: 'show-birth-date' },
-        };
+        });
     }
 
     clear() {

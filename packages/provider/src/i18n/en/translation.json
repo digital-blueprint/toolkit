@@ -1,5 +1,16 @@
 {
-  "provider": {
+  "de": "German",
+  "en": "English",
 
+  "demo": {
+    "provider": "Provider",
+    "consumer": "Consumer",
+    "provider_description": "Provider \"{{id}}\" {{description}}",
+    "consumer_description": "Consumer \"{{id}}\" will only subscribe to {{subscriptions}}"
+  },
+  "consumer": {
+    "item": "Description",
+    "price": "Price",
+    "sum": "sum"
   }
 }

@@ -41,6 +41,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudWebDavUrl = '';
         this.nextcloudDefaultDir = '';
         this.nextcloudDir = '';
+        this.nextcloudFileURL = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
         this.enabledSources = 'local';
@@ -67,7 +68,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      * See: https://lit-element.polymer-project.org/guide/properties#initialize
      */
     static get properties() {
-        return {
+        return this.getProperties({
             context: { type: String, attribute: 'context'},
             lang: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
@@ -75,17 +76,19 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
             nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
+            nextcloudFileURL: { type: String, attribute: 'nextcloud-file-url' },
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label' },
             disabled: { type: Boolean },
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
             activeSource: { type: String, attribute: 'active-source' },
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
+
             defaultSource: { type: String, attribute: 'default-source' },
             firstOpen: { type: Boolean, attribute: false },
             nextcloudDefaultDir: { type: String, attribute: 'nextcloud-default' },
             nextcloudDir: { type: String, attribute: false },
-        };
+        });
     }
 
     update(changedProperties) {
@@ -485,6 +488,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                        auth-url="${this.nextcloudAuthUrl}"
                                        web-dav-url="${this.nextcloudWebDavUrl}"
                                        nextcloud-name="${this.nextcloudName}"
+                                       nextcloud-file-url="${this.nextcloudFileURL}"
                                        allowed-mime-types="${this.allowedMimeTypes}"
                                        @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
                                     this.sendFileEvent(event.detail.file);

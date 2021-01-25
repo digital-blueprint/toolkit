@@ -3,13 +3,13 @@ import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {LitElement} from "lit-element";
 import {Icon, EventBus} from '@dbp-toolkit/common';
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 
 const i18n = createI18nInstance();
 
-export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
+export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
@@ -28,11 +28,11 @@ export class AuthMenuButton extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
             showImage: { type: Boolean, attribute: 'show-image' },
             _loginData: { type: Object, attribute: false },
-        };
+        });
     }
 
     onWindowResize() {

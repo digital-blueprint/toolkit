@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs';
 import url from 'url';
 import glob from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
@@ -16,7 +15,7 @@ import del from 'rollup-plugin-delete';
 import md from 'rollup-plugin-md';
 import emitEJS from 'rollup-plugin-emit-ejs'
 import babel from '@rollup/plugin-babel'
-import selfsigned from 'selfsigned';
+import {generateTLSConfig} from '../rollup.utils.js';
 
 // -------------------------------
 
@@ -95,25 +94,6 @@ switch (build) {
 
 let nextcloudFileURL = nextcloudBaseURL + '/apps/files/?dir=';
 
-/**
- * Creates a server certificate and caches it in the .cert directory
- */
-function generateTLSConfig() {
-  fs.mkdirSync('.cert', {recursive: true});
-
-  if (!fs.existsSync('.cert/server.key') || !fs.existsSync('.cert/server.cert')) {
-    const attrs = [{name: 'commonName', value: 'dbp-dev.localhost'}];
-    const pems = selfsigned.generate(attrs, {algorithm: 'sha256', days: 9999});
-    fs.writeFileSync('.cert/server.key', pems.private);
-    fs.writeFileSync('.cert/server.cert', pems.cert);
-  }
-
-  return {
-    key: fs.readFileSync('.cert/server.key'),
-    cert: fs.readFileSync('.cert/server.cert')
-  }
-}
-
 function getBuildInfo() {
     const child_process = require('child_process');
     const url = require('url');
@@ -138,7 +118,22 @@ function getBuildInfo() {
     }
 }
 
-export default {
+export async function getPackagePath(packageName, assetPath) {
+    const r = resolve();
+    const resolved = await r.resolveId(packageName);
+    let packageRoot;
+    if (resolved !== null) {
+        const id = (await r.resolveId(packageName)).id;
+        const packageInfo = r.getPackageInfoForId(id);
+        packageRoot = packageInfo.root;
+    } else {
+        // Non JS packages
+        packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
+    }
+    return path.relative(process.cwd(), path.join(packageRoot, assetPath));
+}
+
+export default (async () => {return {
     input: (build != 'test') ? glob.sync('src/*.js') : glob.sync('test/**/*.js'),
     output: {
       dir: 'dist',
@@ -266,7 +261,7 @@ Dependencies:
                     transform: (contents) => contents.toString().replace('if("Sig"===a.fieldType){a.fieldValue=null;this.setFlags(r.AnnotationFlag.HIDDEN)}', '')
                 },
                 {src: 'node_modules/pdfjs-dist/cmaps/*', dest: 'dist/local/' + pkg.name + '/pdfjs'}, // do we want all map files?
-                {src: 'node_modules/source-sans-pro/WOFF2/OTF/*', dest: 'dist/local/' + pkg.name + '/fonts'},
+                {src: await getPackagePath('@dbp-toolkit/font-source-sans-pro', 'files/*'), dest: 'dist/local/' + pkg.name + '/fonts/source-sans-pro'},
                 {src: 'node_modules/@dbp-toolkit/common/src/spinner.js', dest: 'dist/local/' + pkg.name, rename: 'spinner.js'},
                 {src: 'node_modules/@dbp-toolkit/common/misc/browser-check.js', dest: 'dist/local/' + pkg.name, rename: 'browser-check.js'},
                 {src: 'assets/icon-*.png', dest: 'dist/local/' + pkg.name},
@@ -308,10 +303,11 @@ Dependencies:
           host: '127.0.0.1',
           port: 8001,
           historyApiFallback: basePath + pkg.name + '.html',
-          https: USE_HTTPS ? generateTLSConfig() : false,
+          https: USE_HTTPS ? await generateTLSConfig() : false,
           headers: {
               'Content-Security-Policy': `default-src 'self' 'unsafe-eval' 'unsafe-inline' analytics.tugraz.at ${keyCloakServer} ${entryPointURL} httpbin.org ${nextcloudBaseURL} www.handy-signatur.at ${pdfAsQualifiedlySigningServer} ; img-src * blob: data:`
           },
         }) : false
     ]
-};
+};})();
+

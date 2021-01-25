@@ -26,6 +26,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudName ='Nextcloud';
         this.nextcloudDefaultDir = '';
         this.nextcloudDir = '';
+        this.nextcloudFileURL = '';
         this.text = '';
         this.buttonLabel = '';
         this.filename = "files.zip";
@@ -49,25 +50,28 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
      * See: https://lit-element.polymer-project.org/guide/properties#initialize
      */
     static get properties() {
-        return {
-            context: { type: String, attribute: 'context'},
-            lang: { type: String },
-            filename: { type: String },
-            files: { type: Array, attribute: false },
-            enabledDestinations: { type: String, attribute: 'enabled-destinations' },
-            nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
-            nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
-            nextcloudName: { type: String, attribute: 'nextcloud-name' },
-            text: { type: String },
-            buttonLabel: { type: String, attribute: 'button-label' },
-            isDialogOpen: { type: Boolean, attribute: false },
-            activeDestination: { type: String, attribute: 'active-destination' },
-            defaultSink: { type: String, attribute: 'default-sink' },
-            firstOpen: { type: Boolean, attribute: false },
-            nextcloudDefaultDir: { type: String, attribute: 'nextcloud-default' },
-            nextcloudDir: { type: String, attribute: false },
-        };
+        return this.getProperties({
+            context: {type: String, attribute: 'context'},
+            lang: {type: String},
+            filename: {type: String},
+            files: {type: Array, attribute: false},
+            enabledDestinations: {type: String, attribute: 'enabled-destinations'},
+            nextcloudAuthUrl: {type: String, attribute: 'nextcloud-auth-url'},
+            nextcloudWebDavUrl: {type: String, attribute: 'nextcloud-web-dav-url'},
+            nextcloudName: {type: String, attribute: 'nextcloud-name'},
+            nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
+            text: {type: String},
+            buttonLabel: {type: String, attribute: 'button-label'},
+            isDialogOpen: {type: Boolean, attribute: false},
+
+            activeDestination: {type: String, attribute: 'active-destination'},
+            defaultSink: {type: String, attribute: 'default-sink'},
+            firstOpen: {type: Boolean, attribute: false},
+            nextcloudDefaultDir: {type: String, attribute: 'nextcloud-default'},
+            nextcloudDir: {type: String, attribute: false},
+        });
     }
+
 
     connectedCallback() {
         super.connectedCallback();
@@ -279,6 +283,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                            web-dav-url="${this.nextcloudWebDavUrl}"
                                                            nextcloud-name="${this.nextcloudName}"
                                                            directory-path="${this.nextcloudDir}"
+                                                           nextcloud-file-url="${this.nextcloudFileURL}"
                                                            @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
                                                                this.uploadToNextcloud(event.detail);
                                                            }}"
