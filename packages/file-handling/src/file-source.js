@@ -111,6 +111,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                         // this.closeDialog();
                     }
                     break;
+            case "nextcloudDefaultDir":
+                //check if default destination is set
+                if (this.firstOpen) {
+                    this.nextcloudDir = this.nextcloudDefaultDir;
+                }
+                break;
 
             }
         });

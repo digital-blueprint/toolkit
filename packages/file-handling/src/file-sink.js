@@ -132,6 +132,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                         this.openDialog();
                     }
                     break;
+                case "nextcloudDefaultDir":
+                    //check if default destination is set
+                    if (this.firstOpen) {
+                        this.nextcloudDir = this.nextcloudDefaultDir;
+                    }
+                    break;
             }
         });
 
