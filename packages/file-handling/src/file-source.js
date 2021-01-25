@@ -39,6 +39,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudAuthUrl = '';
         this.nextcloudName ='Nextcloud';
         this.nextcloudWebDavUrl = '';
+        this.nextcloudDefaultDir = '';
+        this.nextcloudDir = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
         this.enabledSources = 'local';
@@ -49,6 +51,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this._queueKey = 0;
         this.activeSource = 'local';
         this.isDialogOpen = false;
+        this.defaultSource = '';
+        this.firstOpen = true;
     }
 
     static get scopedElements() {
@@ -75,8 +79,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             buttonLabel: { type: String, attribute: 'button-label' },
             disabled: { type: Boolean },
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
-            activeSource: { type: Boolean, attribute: false },
+            activeSource: { type: String, attribute: 'active-source' },
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
+            defaultSource: { type: String, attribute: 'default-source' },
+            firstOpen: { type: Boolean, attribute: false },
+            nextcloudDefaultDir: { type: String, attribute: 'nextcloud-default' },
+            nextcloudDir: { type: String, attribute: false },
         };
     }
 
@@ -99,11 +107,10 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                         this.removeAttribute("dialog-open");
                         // this.closeDialog();
                     }
-
                     break;
+
             }
         });
-
         super.update(changedProperties);
     }
 
@@ -205,9 +212,22 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      * @param file
      */
     sendFileEvent(file) {
+        this.sendSource();
         MicroModal.close(this._('#modal-picker'));
         const data = {"file": file};
         const event = new CustomEvent("dbp-file-source-file-selected", { "detail": data, bubbles: true, composed: true });
+        this.dispatchEvent(event);
+    }
+
+    sendSource() {
+        let data = {};
+        if (this.activeSource == 'nextcloud') {
+            data = {"source": this.activeSource, "nextcloud": this._("#nextcloud-file-picker").directoryPath};
+
+        } else {
+            data = {"source": this.activeSource};
+        }
+        const event = new CustomEvent("dbp-file-source-switched", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
     }
 
@@ -335,9 +355,18 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                     this._('#nextcloud-file-picker').selectAllButton = true;}
             });
         }
+
+
+        //check if default source is set
+        if (this.defaultSink !== '' && this.firstOpen) {
+            this.activeDestination = this.defaultSink;
+            this.nextcloudDir = this.nextcloudDefaultDir;
+            this.firstOpen = false;
+        }
     }
 
     closeDialog() {
+        this.sendSource();
         this._('#nextcloud-file-picker').selectAllButton = true;
         MicroModal.close(this._('#modal-picker'));
     }

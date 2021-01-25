@@ -24,6 +24,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
         this.nextcloudName ='Nextcloud';
+        this.nextcloudDefaultDir = '';
+        this.nextcloudDir = '';
         this.text = '';
         this.buttonLabel = '';
         this.filename = "files.zip";
@@ -31,6 +33,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.activeDestination = 'local';
         this.isDialogOpen = false;
         this.enabledDestinations = 'local';
+        this.defaultSink = 'a';
+        this.firstOpen = true;
     }
 
     static get scopedElements() {
@@ -57,8 +61,20 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label' },
             isDialogOpen: { type: Boolean, attribute: false },
-            activeDestination: { type: Boolean, attribute: false },
+            activeDestination: { type: String, attribute: 'active-destination' },
+            defaultSink: { type: String, attribute: 'default-sink' },
+            firstOpen: { type: Boolean, attribute: false },
+            nextcloudDefaultDir: { type: String, attribute: 'nextcloud-default' },
+            nextcloudDir: { type: String, attribute: false },
         };
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+
+        this.updateComplete.then(() => {
+
+        });
     }
 
     async downloadCompressedFiles() {
@@ -129,6 +145,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     finishedFileUpload(event) {
+        this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
         if (event.detail > 0) {
             send({
@@ -139,6 +156,19 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             });
         }
     }
+
+    sendDestination() {
+        let data = {};
+        if (this.activeDestination == 'nextcloud') {
+            data = {"source": this.activeDestination, "nextcloud": this._("#nextcloud-file-picker").directoryPath};
+
+        } else {
+            data = {"source": this.activeDestination};
+        }
+        const event = new CustomEvent("dbp-file-sink-switched", { "detail": data, bubbles: true, composed: true });
+        this.dispatchEvent(event);
+    }
+
 
     preventDefaults (e) {
         e.preventDefault();
@@ -157,9 +187,18 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             disableScroll: true,
             onClose: modal => { this.isDialogOpen = false; },
         });
+
+
+        //check if default destination is set
+        if (this.defaultSink !== '' && this.firstOpen) {
+            this.activeDestination = this.defaultSink;
+            this.nextcloudDir = this.nextcloudDefaultDir;
+            this.firstOpen = false;
+        }
     }
 
     closeDialog(e) {
+        this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
     }
 
@@ -239,6 +278,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                            auth-url="${this.nextcloudAuthUrl}"
                                                            web-dav-url="${this.nextcloudWebDavUrl}"
                                                            nextcloud-name="${this.nextcloudName}"
+                                                           directory-path="${this.nextcloudDir}"
                                                            @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
                                                                this.uploadToNextcloud(event.detail);
                                                            }}"

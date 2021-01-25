@@ -72,7 +72,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             isPickerActive: { type: Boolean, attribute: false },
             statusText: { type: String, attribute: false },
             folderIsSelected: { type: String, attribute: false },
-            directoryPath: { type: String, attribute: false },
+            directoryPath: { type: String, attribute: 'directory-path' },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             directoriesOnly: { type: Boolean, attribute: 'directories-only' },
             maxSelectedItems: { type: Number, attribute: 'max-selected-items' },
@@ -84,6 +84,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             activeDirectoryACL: { type: String, attribute: false },
             selectAllButton: { type: Boolean, attribute: false },
             abortUploadButton: { type: Boolean, attribute: false },
+
         };
     }
 
@@ -473,6 +474,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             { "detail": path, bubbles: true, composed: true });
         this.dispatchEvent(event);
     }
+
 
     /**
      * Upload Files to a directory
@@ -1246,7 +1248,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 border-bottom: 1px solid black;
             }
 
-            .breadcrumb:last-child{
+            .breadcrumb:last-child, .breadcrumb:first-child{
                 border-bottom: none;
             }
             
