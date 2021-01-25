@@ -7,7 +7,6 @@ import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from '@dbp-toolkit/notification';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
@@ -47,7 +46,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         super();
         this.lang = i18n.language;
         this.activeView = '';
-        this.entryPointUrl = commonUtils.getAPiUrl();
+        this.entryPointUrl = '';
         this.subtitle = '';
         this.description = '';
         this.routes = [];
@@ -815,7 +814,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         return html`
             <slot class="${slotClassMap}"></slot>
-            <dbp-auth-keycloak lang="${this.lang}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
+            <dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
             <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
             <div class="${mainClassMap}">
             <div id="main">
