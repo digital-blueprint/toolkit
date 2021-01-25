@@ -286,10 +286,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             const authUrl = this.authUrl + "?target-origin=" + encodeURIComponent(window.location.href);
             this.loginWindow = window.open(authUrl, "Nextcloud Login",
                 "width=400,height=400,menubar=no,scrollbars=no,status=no,titlebar=no,toolbar=no");
-        }
-        else {
+            console.log("open nextcloud filepicker, no webdavclient");
+        } else {
             this.loadDirectory(this.directoryPath, this.webDavClient);
-
+            console.log("load in nextcloud webcomponent");
         }
     }
 
@@ -322,6 +322,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param path
      */
     loadDirectory(path) {
+        console.log("load nextcloud directory", path);
         this.selectAllButton = true;
         this.loading = true;
         this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {name: this.nextcloudName});

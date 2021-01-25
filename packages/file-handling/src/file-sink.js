@@ -199,6 +199,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             this.nextcloudDir = this.nextcloudDefaultDir;
             if (this._('#nextcloud-file-picker').webDavClient !== null) {
                 this._('#nextcloud-file-picker').loadDirectory(this.nextcloudDefaultDir);
+                console.log("load default nextcloud sink", this.nextcloudDefaultDir);
             }
             this.firstOpen = false;
         }
