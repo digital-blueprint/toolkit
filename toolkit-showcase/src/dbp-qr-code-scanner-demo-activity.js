@@ -10,6 +10,12 @@ import * as demoStyles from './styles';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 class DbpQrCodeScannerDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+    constructor() {
+        super();
+        this.lang = 'en';
+        this.entryPointUrl = '';
+    }
+
     static get scopedElements() {
         return {
             'dbp-qr-code-scanner-demo': QrCodeScannerDemo,
@@ -18,6 +24,8 @@ class DbpQrCodeScannerDemoActivity extends ScopedElementsMixin(AdapterLitElement
 
     static get properties() {
         return this.getProperties({
+            lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         });
     }
 
@@ -47,7 +55,7 @@ class DbpQrCodeScannerDemoActivity extends ScopedElementsMixin(AdapterLitElement
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-qr-code-scanner-demo id="scanner-demo" lang="en"></dbp-qr-code-scanner-demo>
+            <dbp-qr-code-scanner-demo id="scanner-demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-qr-code-scanner-demo>
         `;
     }
 }

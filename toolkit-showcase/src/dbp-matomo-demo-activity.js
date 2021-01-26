@@ -10,6 +10,12 @@ import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+    constructor() {
+        super();
+        this.lang = 'en';
+        this.entryPointUrl = '';
+    }
+
     static get scopedElements() {
         return {
             'dbp-matomo-demo': MatomoDemo,
@@ -18,6 +24,8 @@ class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     static get properties() {
         return this.getProperties({
+            lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         });
     }
 
@@ -50,7 +58,7 @@ class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     render() {
         return html`
                ${unsafeHTML(readme)} 
-                <dbp-matomo-demo id="demo" lang="en" no-auth></dbp-matomo-demo>
+                <dbp-matomo-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" no-auth></dbp-matomo-demo>
         `;
     }
 }

@@ -10,6 +10,12 @@ import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 class DbpLanguageSelectDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+    constructor() {
+        super();
+        this.lang = 'en';
+        this.entryPointUrl = '';
+    }
+
     static get scopedElements() {
         return {
             'dbp-language-select-demo': LanguageSelectDemo,
@@ -18,6 +24,8 @@ class DbpLanguageSelectDemoActivity extends ScopedElementsMixin(AdapterLitElemen
 
     static get properties() {
         return this.getProperties({
+            lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         });
     }
 
@@ -51,7 +59,7 @@ class DbpLanguageSelectDemoActivity extends ScopedElementsMixin(AdapterLitElemen
         return html`
 
                 ${unsafeHTML(readme)}
-                <dbp-language-select-demo id="demo" lang="en"></dbp-language-select-demo>
+                <dbp-language-select-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-language-select-demo>
             
         `;
     }

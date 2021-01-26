@@ -10,6 +10,12 @@ import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+    constructor() {
+        super();
+        this.lang = 'en';
+        this.entryPointUrl = '';
+    }
+
     static get scopedElements() {
         return {
             'dbp-check-in-place-select-demo': CheckInPlaceSelectDemo,
@@ -18,6 +24,8 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement)
 
     static get properties() {
         return this.getProperties({
+            lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         });
     }
 
@@ -48,9 +56,9 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement)
     }
 
     render() {
-        return html`                
+        return html`
                 ${unsafeHTML(readme)}
-                <dbp-check-in-place-select-demo id="demo" lang="en" no-auth></dbp-check-in-place-select-demo>
+                <dbp-check-in-place-select-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" no-auth></dbp-check-in-place-select-demo>
         `;
     }
 }

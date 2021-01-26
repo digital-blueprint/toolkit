@@ -1,6 +1,5 @@
 import {expect, assert} from 'chai';
 import * as utils from '../utils';
-import * as tugUtils from '../tug-utils';
 import * as styles from '../styles';
 import '../jsonld.js';
 
@@ -33,10 +32,6 @@ suite('utils', () => {
         assert.isTrue(res);
         res = utils.defineCustomElement("test-some-element-2", SomeElement2);
         assert.isTrue(res);
-    });
-
-    test('getAPiUrl', () => {
-        assert(tugUtils.getAPiUrl().startsWith("http"));
     });
 
     test('getAssetURL', () => {

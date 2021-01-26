@@ -10,6 +10,12 @@ import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 class KnowledgeBaseWebPageElementViewDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+    constructor() {
+        super();
+        this.lang = 'en';
+        this.entryPointUrl = '';
+    }
+
     static get scopedElements() {
         return {
             'dbp-knowledge-base-web-page-element-view-demo': KnowledgeBaseWebPageElementViewDemo,
@@ -18,6 +24,8 @@ class KnowledgeBaseWebPageElementViewDemoActivity extends ScopedElementsMixin(Ad
 
     static get properties() {
         return this.getProperties({
+            lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         });
     }
 
@@ -50,7 +58,7 @@ class KnowledgeBaseWebPageElementViewDemoActivity extends ScopedElementsMixin(Ad
     render() {
         return html`
                 ${unsafeHTML(readme)}
-                <dbp-knowledge-base-web-page-element-view-demo id="demo" lang="en" no-auth></dbp-knowledge-base-web-page-element-view-demo>
+                <dbp-knowledge-base-web-page-element-view-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" no-auth></dbp-knowledge-base-web-page-element-view-demo>
         `;
     }
 }

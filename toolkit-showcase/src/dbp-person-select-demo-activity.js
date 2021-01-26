@@ -10,6 +10,12 @@ import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 class DbpPersonSelectDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+    constructor() {
+        super();
+        this.lang = 'en';
+        this.entryPointUrl = '';
+    }
+
     static get scopedElements() {
         return {
           'dbp-person-select-demo': PersonSelectDemo,
@@ -18,6 +24,8 @@ class DbpPersonSelectDemoActivity extends ScopedElementsMixin(AdapterLitElement)
 
     static get properties() {
         return this.getProperties({
+            lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         });
     }
 
@@ -50,7 +58,7 @@ class DbpPersonSelectDemoActivity extends ScopedElementsMixin(AdapterLitElement)
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-person-select-demo id="demo" lang="en" no-auth></dbp-person-select-demo>
+            <dbp-person-select-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" no-auth></dbp-person-select-demo>
         `;
     }
 }

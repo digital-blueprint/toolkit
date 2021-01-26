@@ -10,6 +10,12 @@ import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+    constructor() {
+        super();
+        this.lang = 'en';
+        this.entryPointUrl = '';
+    }
+
     static get scopedElements() {
         return {
             'dbp-file-handling-demo': FileSourceDemo,
@@ -18,6 +24,8 @@ class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitElement)
 
     static get properties() {
         return this.getProperties({
+            lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         });
     }
 
@@ -50,7 +58,7 @@ class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitElement)
     render() {
         return html`
                 ${unsafeHTML(readme)}
-                <dbp-file-handling-demo id="demo" lang="en"></dbp-file-handling-demo>
+                <dbp-file-handling-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-file-handling-demo>
         `;
     }
 }

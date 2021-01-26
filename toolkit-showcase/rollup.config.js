@@ -9,8 +9,6 @@ import json from '@rollup/plugin-json';
 import replace from "@rollup/plugin-replace";
 import serve from 'rollup-plugin-serve';
 import urlPlugin from "@rollup/plugin-url";
-// TODO: remove consts if "environment" isn't needed because "getAPiUrl" is removed
-import consts from 'rollup-plugin-consts';
 import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
 import md from 'rollup-plugin-md';
@@ -164,10 +162,6 @@ export default (async () => {return {
     plugins: [
         del({
           targets: 'dist/*'
-        }),
-        // TODO: remove consts if "environment" isn't needed because "getAPiUrl" is removed
-        consts({
-          environment: build,
         }),
         emitEJS({
           src: 'assets',

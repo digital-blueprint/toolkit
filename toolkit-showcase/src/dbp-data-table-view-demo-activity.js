@@ -10,6 +10,12 @@ import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement) { //TODO
+    constructor() {
+        super();
+        this.lang = 'en';
+        this.entryPointUrl = '';
+    }
+
     static get scopedElements() {
         return {
             'dbp-data-table-view-demo': DataTableViewDemo,
@@ -18,6 +24,8 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement)
 
     static get properties() {
         return this.getProperties({
+            lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         });
     }
 
@@ -51,7 +59,7 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement)
         return html`
 
                 ${unsafeHTML(readme)}
-                <dbp-data-table-view-demo id="demo" lang="en" no-auth></dbp-data-table-view-demo>
+                <dbp-data-table-view-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" no-auth></dbp-data-table-view-demo>
         `;
     }
 }
