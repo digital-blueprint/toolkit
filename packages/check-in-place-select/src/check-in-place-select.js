@@ -25,7 +25,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
         this.lang = 'de';
-        this.entryPointUrl = commonUtils.getAPiUrl();
+        this.entryPointUrl = '';
         this.jsonld = null;
         this.$select = null;
         this.active = false;
