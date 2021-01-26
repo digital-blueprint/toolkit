@@ -1,16 +1,19 @@
 import {i18n} from './i18n.js';
-import {css, html, LitElement} from 'lit-element';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {PersonSelect} from './person-select.js';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as tugUtils from '@dbp-toolkit/common/tug-utils';
+import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
-export class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
+export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
+        // TODO: for this to get out we would need the emitEJS rollup module to inject variables
+        this.entryPointUrl = tugUtils.getAPiUrl();
         this.noAuth = false;
     }
 
@@ -23,10 +26,11 @@ export class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
             noAuth: { type: Boolean, attribute: 'no-auth' },
-        };
+        });
     }
 
     connectedCallback() {
@@ -72,13 +76,13 @@ export class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
                         <div class="field">
                             <label class="label">Person 1</label>
                             <div class="control">
-                                <dbp-person-select lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}"></dbp-person-select>
+                                <dbp-person-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Person 2</label>
                             <div class="control">
-                                <dbp-person-select lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></dbp-person-select>
+                                <dbp-person-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}" show-reload-button reload-button-title="Click me"></dbp-person-select>
                             </div>
                         </div>
                     </form>

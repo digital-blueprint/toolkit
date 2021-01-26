@@ -14,6 +14,8 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
+        // TODO: for this to get out we would need the emitEJS rollup module to inject variables
+        this.entryPointUrl = tugUtils.getAPiUrl();
         this.person = '';
         this.selectedPerson = '';
         this.noAuth = false;
@@ -29,12 +31,13 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
       }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
             person: { type: String, attribute: false },
             selectedPerson: { type: String, attribute: false },
             noAuth: { type: Boolean, attribute: 'no-auth' },
-        };
+        });
     }
 
     connectedCallback() {
@@ -86,7 +89,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Person-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-profile lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}" value="${this.person}"></dbp-person-profile>
+                    <dbp-person-profile lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.person}"></dbp-person-profile>
                 </div>
             </section>
             <section class="section">
@@ -94,10 +97,10 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Select-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-select lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}"></dbp-person-select>
+                    <dbp-person-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
                 </div>
                 <div class="container">
-                    <dbp-person-profile lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}" value="${this.selectedPerson}"></dbp-person-profile>
+                    <dbp-person-profile lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.selectedPerson}"></dbp-person-profile>
                 </div>
             </section>
         `;

@@ -1,16 +1,19 @@
 import {i18n} from './i18n';
-import {css, html, LitElement} from 'lit-element';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {KnowledgeBaseWebPageElementView} from './knowledge-base-web-page-element-view.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as tugUtils from '@dbp-toolkit/common/tug-utils';
+import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
-export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement) {
+export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
+        // TODO: for this to get out we would need the emitEJS rollup module to inject variables
+        this.entryPointUrl = tugUtils.getAPiUrl();
         this.noAuth = false;
     }
 
@@ -23,10 +26,11 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(Lit
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
             noAuth: { type: Boolean, attribute: 'no-auth' },
-        };
+        });
     }
 
     update(changedProperties) {
@@ -83,12 +87,12 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(Lit
                 <div class="container">
                     <h2 class="subtitle">Deutsch</h2>
                     <p>Ein erster Schritt</p>
-                    <dbp-knowledge-base-web-page-element-view lang="de" entry-point-url="${tugUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="de" entry-point-url="${this.entryPointUrl}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <div class="container">
                     <h2 class="subtitle">Englisch</h2>
                     <p>A first step</p>
-                    <dbp-knowledge-base-web-page-element-view lang="en" entry-point-url="${tugUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="en" entry-point-url="${this.entryPointUrl}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
                 <div class="container">
