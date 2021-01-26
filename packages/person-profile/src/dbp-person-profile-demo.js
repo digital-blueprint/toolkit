@@ -6,7 +6,6 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {PersonProfile} from './index.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import * as tugUtils from '@dbp-toolkit/common/tug-utils';
 import $ from 'jquery';
 import {PersonSelect} from '@dbp-toolkit/person-select';
 
@@ -14,8 +13,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
-        // TODO: for this to get out we would need the emitEJS rollup module to inject variables
-        this.entryPointUrl = tugUtils.getAPiUrl();
+        this.entryPointUrl = '';
         this.person = '';
         this.selectedPerson = '';
         this.noAuth = false;
