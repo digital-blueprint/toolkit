@@ -1,17 +1,19 @@
 import {i18n} from './i18n.js';
-import {css, html, LitElement} from 'lit-element';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {MatomoElement} from './matomo';
+import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
 
-export class MatomoDemo extends ScopedElementsMixin(LitElement) {
+export class MatomoDemo extends ScopedElementsMixin(DBPLitElement) {
 
     constructor() {
         super();
         this.lang = 'de';
+        this.entryPointUrl = '';
         this.matomoUrl = '';
         this.matomoSiteId = -1;
         this.noAuth = false;
@@ -26,12 +28,13 @@ export class MatomoDemo extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
             matomoUrl: { type: String, attribute: "matomo-url" },
             matomoSiteId: { type: Number, attribute: "matomo-site-id" },
             noAuth: { type: Boolean, attribute: 'no-auth' },
-        };
+        });
     }
 
     connectedCallback() {
@@ -67,7 +70,7 @@ export class MatomoDemo extends ScopedElementsMixin(LitElement) {
     getAuthComponentHtml() {
         return this.noAuth ? html`<dbp-login-button lang="${this.lang}" show-image></dbp-login-button>` : html`
             <div class="container">
-                <dbp-auth-keycloak lang="${this.lang}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                <dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
                                    url="https://auth-dev.tugraz.at/auth" realm="tugraz"
                                    client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
                 <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>

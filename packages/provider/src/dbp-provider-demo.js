@@ -77,7 +77,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">${i18n.t('demo.provider')}-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                    <dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
                     <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
                     <dbp-language-select></dbp-language-select>
                 </div>
@@ -124,6 +124,7 @@ class DemoConsumer extends DBPLitElement {
         super();
 
         this.lang = 'de';
+        this.entryPointUrl = '';
         // default values
         this.foo = 100;
         this.bar = 900;
@@ -143,15 +144,15 @@ class DemoConsumer extends DBPLitElement {
     }
 
     static get properties() {
-        return {
-            ...super.properties,
+        return this.getProperties({
             lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
             foo: { type: String },
             bar: { type: String },
             gong: { type: String },
             borderColor: { type: String, attribute: 'border-color' },
             ping: { type: String }
-        };
+        });
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

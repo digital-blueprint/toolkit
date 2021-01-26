@@ -1,15 +1,17 @@
 import {i18n} from './i18n.js';
-import {html, LitElement} from 'lit-element';
+import {html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak} from './auth-keycloak.js';
 import {LoginButton} from './login-button.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {name as pkgName} from './../package.json';
+import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
-class AuthDemo extends ScopedElementsMixin(LitElement) {
+class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
+        this.entryPointUrl = '';
     }
 
     static get scopedElements() {
@@ -20,9 +22,10 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
-        };
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
+        });
     }
 
     update(changedProperties) {
@@ -91,7 +94,7 @@ class AuthDemo extends ScopedElementsMixin(LitElement) {
                     <h1 class="title">Auth-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-auth-keycloak lang="${this.lang}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" silent-check-sso-redirect-uri="${silentCheckSsoUri}" scope="optional-test-scope" load-person try-login></dbp-auth-keycloak>
+                    <dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" silent-check-sso-redirect-uri="${silentCheckSsoUri}" scope="optional-test-scope" load-person try-login></dbp-auth-keycloak>
 
                     <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
                 </div>

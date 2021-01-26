@@ -10,6 +10,7 @@ export class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
+        this.entryPointUrl = '';
         this.noAuth = false;
     }
 
@@ -22,10 +23,11 @@ export class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
+        return this.getProperties({
             lang: { type: String },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
             noAuth: { type: Boolean, attribute: 'no-auth' },
-        };
+        });
     }
 
     connectedCallback() {
@@ -137,7 +139,7 @@ export class DataTableViewDemo extends ScopedElementsMixin(LitElement) {
     getAuthComponentHtml() {
         return this.noAuth ? html`<dbp-login-button lang="${this.lang}" show-image></dbp-login-button>` : html`
             <div class="container">
-                <dbp-auth-keycloak lang="${this.lang}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                <dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
                                    url="https://auth-dev.tugraz.at/auth" realm="tugraz"
                                    client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
                 <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
