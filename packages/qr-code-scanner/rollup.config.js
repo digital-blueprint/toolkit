@@ -6,7 +6,6 @@ import {terser} from "rollup-plugin-terser";
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import url from "@rollup/plugin-url";
-import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import fs from "fs";
 import selfsigned from "selfsigned";
@@ -55,9 +54,6 @@ export default (async () => {
         plugins: [
             del({
                 targets: 'dist/*'
-            }),
-            consts({
-                environment: build,
             }),
             resolve(),
             commonjs(),

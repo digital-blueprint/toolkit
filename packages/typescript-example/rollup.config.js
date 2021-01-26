@@ -5,7 +5,6 @@ import copy from 'rollup-plugin-copy';
 import {terser} from "rollup-plugin-terser";
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import typescript from 'rollup-plugin-typescript2';
 
@@ -31,9 +30,6 @@ export default {
     plugins: [
         del({
             targets: 'dist/*'
-        }),
-        consts({
-            environment: build,
         }),
         resolve(),
         commonjs(),

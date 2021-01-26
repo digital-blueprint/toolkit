@@ -3,10 +3,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
-import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
-import {getBuildInfo, getPackagePath, getDistPath} from '../../rollup.utils.js';
+import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 
 const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
 console.log("build: " + build);
@@ -32,10 +31,6 @@ export default (async () => {
             del({
                 targets: 'dist/*'
               }),
-            consts({
-                environment: build,
-                buildinfo: getBuildInfo(build),
-            }),
             resolve(),
             commonjs(),
             json(),

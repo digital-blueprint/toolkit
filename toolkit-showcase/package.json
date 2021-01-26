@@ -34,7 +34,6 @@
     "karma-mocha": "^2.0.1",
     "mocha": "^8.0.1",
     "rollup": "^2.18.1",
-    "rollup-plugin-consts": "^1.0.2",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-emit-ejs": "^3.1.0",

@@ -3,7 +3,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
-import consts from 'rollup-plugin-consts';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
 import {getDistPath} from '../../rollup.utils.js';
@@ -32,9 +31,6 @@ export default (async () => {
         plugins: [
             del({
                 targets: 'dist/*'
-            }),
-            consts({
-                environment: build,
             }),
             resolve(),
             commonjs(),
