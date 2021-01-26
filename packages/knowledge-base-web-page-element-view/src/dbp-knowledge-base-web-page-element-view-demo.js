@@ -5,6 +5,7 @@ import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {KnowledgeBaseWebPageElementView} from './knowledge-base-web-page-element-view.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as tugUtils from '@dbp-toolkit/common/tug-utils';
 
 export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -82,12 +83,12 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(Lit
                 <div class="container">
                     <h2 class="subtitle">Deutsch</h2>
                     <p>Ein erster Schritt</p>
-                    <dbp-knowledge-base-web-page-element-view lang="de" entry-point-url="${commonUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="de" entry-point-url="${tugUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <div class="container">
                     <h2 class="subtitle">Englisch</h2>
                     <p>A first step</p>
-                    <dbp-knowledge-base-web-page-element-view lang="en" entry-point-url="${commonUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="en" entry-point-url="${tugUtils.getAPiUrl()}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
                 <div class="container">

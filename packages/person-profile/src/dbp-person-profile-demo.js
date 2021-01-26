@@ -6,6 +6,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {PersonProfile} from './index.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as tugUtils from '@dbp-toolkit/common/tug-utils';
 import $ from 'jquery';
 import {PersonSelect} from '@dbp-toolkit/person-select';
 
@@ -85,7 +86,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Person-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-profile lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" value="${this.person}"></dbp-person-profile>
+                    <dbp-person-profile lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}" value="${this.person}"></dbp-person-profile>
                 </div>
             </section>
             <section class="section">
@@ -93,10 +94,10 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Select-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></dbp-person-select>
+                    <dbp-person-select lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}"></dbp-person-select>
                 </div>
                 <div class="container">
-                    <dbp-person-profile lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" value="${this.selectedPerson}"></dbp-person-profile>
+                    <dbp-person-profile lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}" value="${this.selectedPerson}"></dbp-person-profile>
                 </div>
             </section>
         `;

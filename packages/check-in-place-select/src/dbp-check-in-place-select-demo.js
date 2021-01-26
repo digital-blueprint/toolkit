@@ -4,6 +4,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {CheckInPlaceSelect} from './check-in-place-select.js';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as tugUtils from '@dbp-toolkit/common/tug-utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
@@ -71,13 +72,13 @@ export class CheckInPlaceSelectDemo extends ScopedElementsMixin(LitElement) {
                         <div class="field">
                             <label class="label">Check-In-Place 1</label>
                             <div class="control">
-                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></dbp-check-in-place-select>
+                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}"></dbp-check-in-place-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Check-In-Place 2</label>
                             <div class="control">
-                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></dbp-check-in-place-select>
+                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></dbp-check-in-place-select>
                             </div>
                         </div>
                     </form>

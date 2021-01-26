@@ -5,6 +5,7 @@ import {PersonSelect} from './person-select.js';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as tugUtils from '@dbp-toolkit/common/tug-utils';
 
 export class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -71,13 +72,13 @@ export class PersonSelectDemo extends ScopedElementsMixin(LitElement) {
                         <div class="field">
                             <label class="label">Person 1</label>
                             <div class="control">
-                                <dbp-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}"></dbp-person-select>
+                                <dbp-person-select lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}"></dbp-person-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Person 2</label>
                             <div class="control">
-                                <dbp-person-select lang="${this.lang}" entry-point-url="${commonUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></dbp-person-select>
+                                <dbp-person-select lang="${this.lang}" entry-point-url="${tugUtils.getAPiUrl()}" show-reload-button reload-button-title="Click me"></dbp-person-select>
                             </div>
                         </div>
                     </form>
