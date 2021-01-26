@@ -3,7 +3,6 @@ import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html} from 'lit-element';
 import {i18n} from './i18n.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 
@@ -12,7 +11,7 @@ export class PersonProfile extends DBPLitElement {
     constructor() {
         super();
         this.lang = 'de';
-        this.entryPointUrl = commonUtils.getAPiUrl();
+        this.entryPointUrl = '';
         this.jsonld = null;
         this.value = '';
         this.person = null;
