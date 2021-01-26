@@ -7,8 +7,9 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/data-table-view/README.md';
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
-class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TODO
+class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement) { //TODO
     static get scopedElements() {
         return {
             'dbp-data-table-view-demo': DataTableViewDemo,
@@ -16,8 +17,8 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(LitElement) { //TO
     }
 
     static get properties() {
-        return {
-        };
+        return this.getProperties({
+        });
     }
 
     connectedCallback() {

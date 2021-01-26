@@ -13,5 +13,6 @@
   "description": {
     "de": "Gemeinsame Web Components",
     "en": "Person profile web components"
-  }
+  },
+  "subscribe": "lang:lang,entry-point-url:entry-point-url"
 }

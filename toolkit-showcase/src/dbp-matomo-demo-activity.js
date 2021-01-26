@@ -7,8 +7,9 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/matomo/README.md';
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
-class DbpMatomoDemoActivity extends ScopedElementsMixin(LitElement) {
+class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     static get scopedElements() {
         return {
             'dbp-matomo-demo': MatomoDemo,
@@ -16,8 +17,8 @@ class DbpMatomoDemoActivity extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
-        };
+        return this.getProperties({
+        });
     }
 
     connectedCallback() {

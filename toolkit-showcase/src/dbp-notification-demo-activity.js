@@ -7,8 +7,9 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/notification/README.md';
 import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
-class DbpNotificationDemoActivity extends ScopedElementsMixin(LitElement) {
+class DbpNotificationDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     static get scopedElements() {
         return {
             'dbp-notification-demo': NotificationDemo,
@@ -16,8 +17,8 @@ class DbpNotificationDemoActivity extends ScopedElementsMixin(LitElement) {
     }
 
     static get properties() {
-        return {
-        };
+        return this.getProperties({
+        });
     }
 
     connectedCallback() {

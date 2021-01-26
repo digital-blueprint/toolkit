@@ -13,5 +13,6 @@
   "description": {
     "de": "Sprachauswahl Web Component",
     "en": "Language select web component"
-  }
+  },
+  "subscribe": "lang:lang,entry-point-url:entry-point-url"
 }

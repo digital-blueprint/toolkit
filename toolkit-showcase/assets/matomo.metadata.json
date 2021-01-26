@@ -13,5 +13,6 @@
   "description": {
     "de": "Matomo Web Component",
     "en": "Matomo web component"
-  }
+  },
+  "subscribe": "lang:lang,entry-point-url:entry-point-url"
 }
