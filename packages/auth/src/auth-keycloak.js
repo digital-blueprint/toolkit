@@ -45,7 +45,6 @@ export class AuthKeycloak extends AdapterLitElement {
 
         // Create the events
         this.personInitEvent = new CustomEvent("dbp-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true, composed: true });
-        this.keycloakDataUpdateEvent = new CustomEvent("dbp-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
 
         this._onKCChanged = this._onKCChanged.bind(this);
     }
@@ -133,8 +132,6 @@ export class AuthKeycloak extends AdapterLitElement {
                 });
             }, {}, that.lang);
         }
-
-        this.dispatchEvent(this.keycloakDataUpdateEvent);
     }
 
     sendSetPropertyEvents() {
