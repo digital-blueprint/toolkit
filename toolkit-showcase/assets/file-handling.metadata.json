@@ -4,14 +4,14 @@
   "routing_name": "file-handling",
   "name": {
     "de": "File Handling",
-    "en": "file handling"
+    "en": "File handling"
   },
   "short_name": {
     "de": "File Handling",
-    "en": "file handling"
+    "en": "File handling"
   },
   "description": {
-    "de": "Web Componente für file sink und file source. Für mehrere verschiedenen Quellen.",
+    "de": "Web Komponenten für file sink und file source. Für mehrere verschiedenen Quellen.",
     "en": "Web components for file sink and file source. For several different sources."
   },
   "subscribe": "lang:lang,entry-point-url:entry-point-url,nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url,show-nextcloud-file-picker:show-nextcloud-file-picker"

@@ -3,12 +3,12 @@
   "module_src": "dbp-knowledge-base-web-page-element-view-demo-activity.js",
   "routing_name": "knowledge-base-web-page-element-view",
   "name": {
-    "de": "dbp-knowledge-base-web-page-element-view",
-    "en": "dbp-knowledge-base-web-page-element-view"
+    "de": "Knowledgebase webpage element view",
+    "en": "Knowledgebase webpage element view"
   },
   "short_name": {
-    "de": "dbp-knowledge-base-web-page-element-view",
-    "en": "dbp-knowledge-base-web-page-element-view"
+    "de": "Knowledgebase webpage element view",
+    "en": "Knowledgebase webpage element view"
   },
   "description": {
     "de": "Erlaubt das Einfügen von Webinhalten",
