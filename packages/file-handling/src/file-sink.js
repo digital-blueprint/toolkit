@@ -200,7 +200,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
 
         //check if default destination is set
-        if (this.defaultSink !== '' && this.firstOpen) {
+        if (this.defaultSink !== '' && typeof this.defaultSink !== 'undefined'  && this.firstOpen) {
             this.activeDestination = this.defaultSink;
             this.nextcloudDir = this.nextcloudDefaultDir;
             if (this._('#nextcloud-file-picker').webDavClient !== null) {

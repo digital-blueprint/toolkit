@@ -374,7 +374,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 console.error(error.message);
 
                 // on Error: try to reload with home directory
-                if ((path !== "/" || path !== "") && this.webDavClient !== null && error.message.search("401") === -1) {
+                if ((path !== "/" && path !== "") && this.webDavClient !== null && error.message.search("401") === -1) {
                     console.log("error in load directory");
                     this.directoryPath = "";
                     this.loadDirectory("");

@@ -368,12 +368,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
 
         //check if default source is set
-        if (this.defaultSink !== '' && this.firstOpen) {
-            this.activeDestination = this.defaultSink;
+        if (this.defaultSource !== '' && typeof this.defaultSource !== 'undefined' && this.firstOpen) {
+            this.activeDestination = this.defaultSource;
             this.nextcloudDir = this.nextcloudDefaultDir;
             if (this._('#nextcloud-file-picker').webDavClient !== null) {
                 this._('#nextcloud-file-picker').loadDirectory(this.nextcloudDefaultDir);
-                console.log("load default nextcloud source");
+                console.log("load default nextcloud source", this.defaultSource);
             }
             this.firstOpen = false;
         }
