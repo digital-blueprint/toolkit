@@ -10,6 +10,7 @@
   "scripts": {
     "test": "lerna run test",
     "build": "lerna run build",
+    "version-patch": "lerna version patch",
     "yarn-install": "for d in ./packages/*/ ; do (cd \"$d\" && yarn install); done;",
     "lint": "lerna run lint",
     "publish": "lerna publish from-package --yes"
