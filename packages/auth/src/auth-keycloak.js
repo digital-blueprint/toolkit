@@ -10,7 +10,7 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
  * Keycloak auth web component
  * https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
  *
- * Dispatches an event `dbp-auth-init` and sets some global variables:
+ * Sets some global variables:
  *   window.DBPAuthSubject: Keycloak username
  *   window.DBPAuthToken: Keycloak token to send with your requests
  *   window.DBPAuthTokenParsed: Keycloak token content
@@ -44,7 +44,6 @@ export class AuthKeycloak extends AdapterLitElement {
         this.idpHint = '';
 
         // Create the events
-        this.initEvent = new CustomEvent("dbp-auth-init", { "detail": "KeyCloak init event", bubbles: true, composed: true });
         this.personInitEvent = new CustomEvent("dbp-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true, composed: true });
         this.keycloakDataUpdateEvent = new CustomEvent("dbp-auth-keycloak-data-update", { "detail": "KeyCloak data was updated", bubbles: true, composed: true });
 
@@ -111,10 +110,6 @@ export class AuthKeycloak extends AdapterLitElement {
         }
 
         const that = this;
-
-        if (newPerson) {
-            this.dispatchEvent(this.initEvent);
-        }
 
         if (newPerson && this.loadPerson) {
             JSONLD.initialize(this.entryPointUrl, (jsonld) => {

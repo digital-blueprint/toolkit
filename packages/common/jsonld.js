@@ -3,6 +3,7 @@
 import {send as notify} from './notification';
 import * as utils from "./utils";
 import {i18n} from "./i18n";
+import {EventBus} from './';
 
 let instances = {};
 let successFunctions = {};
@@ -51,18 +52,19 @@ export default class JSONLD {
 
         initStarted[apiUrl] = true;
 
-        if (window.DBPAuthToken !== undefined) {
-            JSONLD.doInitialization(apiUrl);
-        } else {
-            // window.DBPAuthToken will be set by dbp-auth-init event
-            window.addEventListener("dbp-auth-init", () => JSONLD.doInitialization(apiUrl));
-        }
+        this._bus = new EventBus();
+        this._bus.subscribe('auth-update', (data) => {
+            if (data.token) {
+                this._bus.close();
+                JSONLD.doInitialization(apiUrl, data.token);
+            }
+        });
     }
 
-    static doInitialization(apiUrl) {
+    static doInitialization(apiUrl, token) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", apiUrl, true);
-        xhr.setRequestHeader('Authorization', 'Bearer ' + window.DBPAuthToken);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState !== 4) {

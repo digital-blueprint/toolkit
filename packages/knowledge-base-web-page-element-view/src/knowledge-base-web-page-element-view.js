@@ -49,21 +49,6 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElem
         };
     }
 
-    /*
-    connectedCallback() {
-        super.connectedCallback();
-        const that = this;
-
-        // JSONLD.initialize(this.entryPointUrl, function (jsonld) {
-        //     const apiUrl = jsonld.getApiUrlForEntityName("KnowledgeBaseWebPageElement") + '/' +
-        //         encodeURIComponent(commonUtils.base64EncodeUnicode(encodeURIComponent(that.value)));
-        // });
-
-        // disabled, load first on toggle to visible
-        window.addEventListener("dbp-auth-init", () => that.loadWebPageElement());
-    }
-    */
-
     /**
      * Loads the data from the web page element
      */

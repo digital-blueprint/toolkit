@@ -38,7 +38,6 @@ npm i @dbp-toolkit/auth
 
 ### Events to listen to
 
-- `dbp-auth-init`: Keycloak init event - happens once
 - `dbp-auth-person-init`: Keycloak person init event - the person entity was loaded from the server
 - `dbp-auth-keycloak-data-update`: Keycloak data was updated - happens for example every time after a token refresh
 
