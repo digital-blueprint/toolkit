@@ -1,11 +1,11 @@
 {
   "name": "@dbp-toolkit/font-source-sans-pro",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "",
   "license": "OFL-1.1",
   "repository": {
-    "type" : "git",
-    "url" : "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+    "type": "git",
+    "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
     "directory": "packages/font-source-sans-pro"
   },
   "publishConfig": {

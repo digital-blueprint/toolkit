@@ -1,7 +1,7 @@
 {
   "name": "@dbp-toolkit/app-shell",
   "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/app-shell",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "repository": {
@@ -34,12 +34,12 @@
     "rollup-plugin-serve": "^1.0.1"
   },
   "dependencies": {
-    "@dbp-toolkit/auth": "^0.1.0",
-    "@dbp-toolkit/common": "^0.1.0",
-    "@dbp-toolkit/language-select": "^0.1.0",
-    "@dbp-toolkit/matomo": "^0.1.0",
-    "@dbp-toolkit/notification": "^0.1.0",
-    "@dbp-toolkit/person-profile": "^0.1.0",
+    "@dbp-toolkit/auth": "^0.1.6",
+    "@dbp-toolkit/common": "^0.1.4",
+    "@dbp-toolkit/language-select": "^0.1.5",
+    "@dbp-toolkit/matomo": "^0.1.3",
+    "@dbp-toolkit/notification": "^0.1.4",
+    "@dbp-toolkit/person-profile": "^0.1.3",
     "@open-wc/scoped-elements": "^1.3.2",
     "i18next": "^19.8.4",
     "lit-element": "^2.3.1",
