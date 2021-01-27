@@ -16,8 +16,7 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
  *   window.DBPAuthTokenParsed: Keycloak token content
  *   window.DBPUserFullName: Full name of the user
  *   window.DBPPersonId: Person identifier of the user
- *   window.DBPPerson: Person json object of the user (optional, enable by setting the `load-person` attribute,
- *                     which will dispatch a `dbp-auth-person-init` event when loaded)
+ *   window.DBPPerson: Person json object of the user (optional, enable by setting the `load-person` attribute)
  */
 export class AuthKeycloak extends AdapterLitElement {
     constructor() {
@@ -42,9 +41,6 @@ export class AuthKeycloak extends AdapterLitElement {
         this.silentCheckSsoRedirectUri = null;
         this.scope = null;
         this.idpHint = '';
-
-        // Create the events
-        this.personInitEvent = new CustomEvent("dbp-auth-person-init", { "detail": "KeyCloak person init event", bubbles: true, composed: true });
 
         this._onKCChanged = this._onKCChanged.bind(this);
     }
@@ -127,7 +123,6 @@ export class AuthKeycloak extends AdapterLitElement {
                 .then((person) => {
                     that.person = person;
                     window.DBPPerson = person;
-                    that.dispatchEvent(that.personInitEvent);
                     this._setLoginStatus(this._loginStatus, true);
                 });
             }, {}, that.lang);

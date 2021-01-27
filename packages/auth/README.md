@@ -36,10 +36,6 @@ npm i @dbp-toolkit/auth
 - `silent-check-sso-redirect-uri` (optional): URI or path to a separate page for checking the login session in an iframe, see https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
 - `scope` (optional): Space separated list of scopes to request. These scopes get added in addition to the default ones, assuming the scope is in the optional scopes list of the Keycloak client in use.
 
-### Events to listen to
-
-- `dbp-auth-person-init`: Keycloak person init event - the person entity was loaded from the server
-
 ## Login Button
 
 ### Usage

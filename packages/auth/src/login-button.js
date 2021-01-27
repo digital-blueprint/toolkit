@@ -88,7 +88,6 @@ export class LoginButton extends ScopedElementsMixin(LitElement) {
 
         this._bus = new EventBus();
         this._bus.subscribe('auth-update', (data) => {
-            console.log(data);
             this._loginData = data;
         });
     }

@@ -8,6 +8,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import $ from 'jquery';
 import {PersonSelect} from '@dbp-toolkit/person-select';
+import {EventBus} from '@dbp-toolkit/common';
 
 export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -43,17 +44,25 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
         i18n.changeLanguage(this.lang);
         const that = this;
 
-        this.updateComplete.then(()=>{
-            window.addEventListener("dbp-auth-person-init", () => {
-                that.person = window.DBPPersonId;
-            });
+        this._bus = new EventBus();
+        this._bus.subscribe('auth-update', (data) => {
+            if (data.person) {
+                this.person = data.person.identifier;
+            }
+        });
 
+        this.updateComplete.then(()=>{
             const personSelect = that._(this.constructor.getScopedTagName('dbp-person-select'));
             personSelect.onchange = function () {
                 that.selectedPerson = $(this).data("object").identifier;
             };
 
         });
+    }
+
+    disconnectedCallback() {
+        this._bus.close();
+        super.disconnectedCallback();
     }
 
     static get styles() {
