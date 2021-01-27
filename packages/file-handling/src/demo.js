@@ -97,21 +97,27 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                         Open dialog
                     </button>
                     <dbp-file-source id="file-source2" lang="en" url="${this.url}" allowed-mime-types="image/*"
-                        text="Please select images"></dbp-file-source>
+                                     subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
+                                     enabled-sources="local,nextcloud"
+                                     text="Please select images"></dbp-file-source>
                     <p>This is for PDF only:</p>
                     <button @click="${() => { this._("#file-source3").setAttribute("dialog-open", ""); }}"
                             class="button is-primary">
                         Open dialog
                     </button>
                     <dbp-file-source id="file-source3" lang="en" url="${this.url}" allowed-mime-types="application/pdf"
-                        text="Einreichung als PDF" button-label="PDF auswählen"></dbp-file-source>
+                                     subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
+                                     enabled-sources="local,nextcloud"
+                                     text="Einreichung als PDF" button-label="PDF auswählen"></dbp-file-source>
                      <p>Text and images (JPG, PNG, GIF, TIF, ...) :</p>
                     <button @click="${() => { this._("#file-source4").setAttribute("dialog-open", ""); }}"
                             class="button is-primary">
                         Open dialog
                     </button>
                     <dbp-file-source id="file-source4" lang="en" url="${this.url}" allowed-mime-types="text/plain,image/*"
-                        text="Please select text or images"></dbp-file-source>
+                                     subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
+                                     enabled-sources="local,nextcloud"
+                                     text="Please select text or images"></dbp-file-source>
 
                     <dbp-file-sink lang="en"></dbp-file-sink>
                </div>
