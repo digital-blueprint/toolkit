@@ -3,12 +3,12 @@
   "module_src": "dbp-common-demo-activity.js",
   "routing_name": "common",
   "name": {
-    "de": "Common",
-    "en": "Common"
+    "de": "Allgemeine Komponenten",
+    "en": "Common components"
   },
   "short_name": {
-    "de": "Common",
-    "en": "Common"
+    "de": "Allgemeine Komponenten",
+    "en": "Common components"
   },
   "description": {
     "de": "Gemeinsame Web Components",
