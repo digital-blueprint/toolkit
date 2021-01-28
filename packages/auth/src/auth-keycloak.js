@@ -13,7 +13,6 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
  * Sets some global variables:
  *   window.DBPAuthSubject: Keycloak username
  *   window.DBPAuthToken: Keycloak token to send with your requests
- *   window.DBPAuthTokenParsed: Keycloak token content
  *   window.DBPUserFullName: Full name of the user
  *   window.DBPPersonId: Person identifier of the user
  *   window.DBPPerson: Person json object of the user (optional, enable by setting the `load-person` attribute)
@@ -25,7 +24,6 @@ export class AuthKeycloak extends AdapterLitElement {
         this.forceLogin = false;
         this.loadPerson = false;
         this.token = "";
-        this.tokenParsed = null;
         this.subject = "";
         this.name = "";
         this.personId = "";
@@ -61,7 +59,6 @@ export class AuthKeycloak extends AdapterLitElement {
 
         if (kc.authenticated) {
             let tokenChanged = (this.token !== kc.token);
-            this.tokenParsed = kc.tokenParsed;
             this.name = kc.idTokenParsed.name;
             this.token = kc.token;
 
@@ -75,7 +72,6 @@ export class AuthKeycloak extends AdapterLitElement {
 
             window.DBPAuthSubject = this.subject;
             window.DBPAuthToken = this.token;
-            window.DBPAuthTokenParsed = this.tokenParsed;
             window.DBPUserFullName = this.name;
             window.DBPPersonId = this.personId;
             window.DBPPerson = this.person;
@@ -88,14 +84,12 @@ export class AuthKeycloak extends AdapterLitElement {
             }
             this.name = "";
             this.token = "";
-            this.tokenParsed = null;
             this.subject = "";
             this.personId = "";
             this.person = null;
 
             window.DBPAuthSubject = this.subject;
             window.DBPAuthToken = this.token;
-            window.DBPAuthTokenParsed = this.tokenParsed;
             window.DBPUserFullName = this.name;
             window.DBPPersonId = this.personId;
             window.DBPPerson = this.person;
@@ -132,7 +126,6 @@ export class AuthKeycloak extends AdapterLitElement {
     sendSetPropertyEvents() {
         this.sendSetPropertyEvent('auth-subject', this.subject);
         this.sendSetPropertyEvent('auth-token', this.token);
-        this.sendSetPropertyEvent('auth-token-parsed', this.tokenParsed);
         this.sendSetPropertyEvent('user-full-name', this.name);
         this.sendSetPropertyEvent('person-id', this.personId);
         this.sendSetPropertyEvent('person', this.person);

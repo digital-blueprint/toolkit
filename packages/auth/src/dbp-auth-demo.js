@@ -63,7 +63,7 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
 
-        console.log(window.DBPAuthTokenParsed);
+        console.log(window.DBPAuthToken);
     }
 
     render() {
