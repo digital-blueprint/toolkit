@@ -312,6 +312,10 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 console.error("Loading of " + file.name + " failed: " + e.message);
             });
 
+        // no suitable files found
+        if (filesToHandle.length === 0) {
+            throw new Error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
+        }
         return filesToHandle;
     }
 
