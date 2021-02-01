@@ -117,6 +117,7 @@ export class AuthKeycloak extends AdapterLitElement {
                 .then((person) => {
                     that.person = person;
                     window.DBPPerson = person;
+                    this.sendSetPropertyEvents();
                     this._setLoginStatus(this._loginStatus, true);
                 });
             }, {}, that.lang);
@@ -124,11 +125,19 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     sendSetPropertyEvents() {
-        this.sendSetPropertyEvent('auth-subject', this.subject);
-        this.sendSetPropertyEvent('auth-token', this.token);
-        this.sendSetPropertyEvent('user-full-name', this.name);
-        this.sendSetPropertyEvent('person-id', this.personId);
-        this.sendSetPropertyEvent('person', this.person);
+        this.sendSetPropertyEvent('auth', {
+            'subject': this.subject,
+            'token': this.token,
+            'user-full-name': this.name,
+            'person-id': this.personId,
+            'person': this.person,
+        });
+
+        // this.sendSetPropertyEvent('auth-subject', this.subject);
+        // this.sendSetPropertyEvent('auth-token', this.token);
+        // this.sendSetPropertyEvent('user-full-name', this.name);
+        // this.sendSetPropertyEvent('person-id', this.personId);
+        // this.sendSetPropertyEvent('person', this.person);
     }
 
     _setLoginStatus(status, force) {

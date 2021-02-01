@@ -27,6 +27,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
+        this.auth = {};
         this.lang = 'de';
         this.entryPointUrl = '';
         this.jsonld = null;
@@ -65,6 +66,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
             showBirthDate: { type: Boolean, attribute: 'show-birth-date' },
+            auth: { type: Object },
         };
     }
 
@@ -221,7 +223,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             fetch(apiUrl, {
                 headers: {
                     'Content-Type': 'application/ld+json',
-                    'Authorization': 'Bearer ' + window.DBPAuthToken,
+                    'Authorization': 'Bearer ' + this.auth.token || window.DBPAuthToken,
                 },
             })
             .then(result => {
