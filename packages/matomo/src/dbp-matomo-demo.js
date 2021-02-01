@@ -28,13 +28,14 @@ export class MatomoDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             matomoUrl: { type: String, attribute: "matomo-url" },
             matomoSiteId: { type: Number, attribute: "matomo-site-id" },
             noAuth: { type: Boolean, attribute: 'no-auth' },
-        });
+        };
     }
 
     connectedCallback() {

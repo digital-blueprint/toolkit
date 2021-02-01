@@ -50,7 +50,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
      * See: https://lit-element.polymer-project.org/guide/properties#initialize
      */
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             context: {type: String, attribute: 'context'},
             lang: {type: String},
             filename: {type: String},
@@ -69,7 +70,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             firstOpen: {type: Boolean, attribute: false},
             nextcloudDefaultDir: {type: String, attribute: 'nextcloud-default'},
             nextcloudDir: {type: String, attribute: false},
-        });
+        };
     }
 
 

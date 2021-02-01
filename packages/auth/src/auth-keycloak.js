@@ -148,7 +148,8 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
             forceLogin: { type: Boolean, attribute: 'force-login' },
             tryLogin: { type: Boolean, attribute: 'try-login' },
@@ -166,7 +167,7 @@ export class AuthKeycloak extends AdapterLitElement {
             silentCheckSsoRedirectUri: { type: String, attribute: 'silent-check-sso-redirect-uri' },
             scope: { type: String },
             idpHint: { type: String, attribute: 'idp-hint' },
-        });
+        };
     }
 
     connectedCallback() {

@@ -144,7 +144,8 @@ class DemoConsumer extends DBPLitElement {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             foo: { type: String },
@@ -152,7 +153,7 @@ class DemoConsumer extends DBPLitElement {
             gong: { type: String },
             borderColor: { type: String, attribute: 'border-color' },
             ping: { type: String }
-        });
+        };
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

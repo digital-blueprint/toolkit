@@ -28,11 +28,12 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
             showImage: { type: Boolean, attribute: 'show-image' },
             _loginData: { type: Object, attribute: false },
-        });
+        };
     }
 
     onWindowResize() {

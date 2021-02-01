@@ -57,7 +57,8 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
             active: { type: Boolean, attribute: false },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
@@ -66,7 +67,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
             showCapacity: { type: Boolean, attribute: 'show-capacity' },
-        });
+        };
     }
 
     clear() {

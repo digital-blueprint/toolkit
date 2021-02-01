@@ -13,12 +13,13 @@ export class BuildInfo extends AdapterLitElement {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             env: { type: String },
             buildUrl: { type: String, attribute: "build-url" },
             buildTime: { type: String, attribute: "build-time" },
             gitInfo: { type: String, attribute: "git-info" }
-        });
+        };
     }
 
     static get styles() {

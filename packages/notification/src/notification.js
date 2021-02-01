@@ -17,9 +17,10 @@ export class Notification extends DBPLitElement {
      * See: https://lit-element.polymer-project.org/guide/properties#initialize
      */
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
-        });
+        };
     }
 
     connectedCallback() {

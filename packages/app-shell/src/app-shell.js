@@ -227,7 +227,8 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String, reflect: true },
             src: { type: String },
             basePath: { type: String, attribute: 'base-path' },
@@ -249,7 +250,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             buildUrl: { type: String, attribute: "build-url" },
             buildTime: { type: String, attribute: "build-time" },
             env: { type: String },
-        });
+        };
     }
 
     _updateAuth(login) {

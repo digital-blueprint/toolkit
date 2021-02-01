@@ -68,7 +68,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
      * See: https://lit-element.polymer-project.org/guide/properties#initialize
      */
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             context: { type: String, attribute: 'context'},
             lang: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
@@ -88,7 +89,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             firstOpen: { type: Boolean, attribute: false },
             nextcloudDefaultDir: { type: String, attribute: 'nextcloud-default' },
             nextcloudDir: { type: String, attribute: false },
-        });
+        };
     }
 
     update(changedProperties) {

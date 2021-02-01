@@ -30,13 +30,14 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
       }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             person: { type: String, attribute: false },
             selectedPerson: { type: String, attribute: false },
             noAuth: { type: Boolean, attribute: 'no-auth' },
-        });
+        };
     }
 
     connectedCallback() {

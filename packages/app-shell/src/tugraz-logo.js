@@ -14,9 +14,10 @@ export class TUGrazLogo extends AdapterLitElement {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String }
-        });
+        };
     }
 
     update(changedProperties) {

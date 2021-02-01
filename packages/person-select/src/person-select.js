@@ -55,7 +55,8 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
             active: { type: Boolean, attribute: false },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
@@ -64,7 +65,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
             showBirthDate: { type: Boolean, attribute: 'show-birth-date' },
-        });
+        };
     }
 
     clear() {

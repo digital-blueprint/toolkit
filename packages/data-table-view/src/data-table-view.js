@@ -49,7 +49,8 @@ export class DataTableView extends AdapterLitElement {
     }
 
     static get properties() {
-        return this.getProperties({
+        return {
+            ...super.properties,
             lang: { type: String },
             table: { type: Object, attribute: false },
             paging: { type: Boolean },
@@ -62,7 +63,7 @@ export class DataTableView extends AdapterLitElement {
             exportName: { type: String, attribute: 'export-name' },
             columnSearching: { type: Boolean, attribute: 'column-searching'},
             defaultOrder: { type: Array, attribute: 'default-order'}
-        });
+        };
     }
 
     set_columns(cols) {
