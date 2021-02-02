@@ -14,5 +14,5 @@
     "de": "Scannt Qr Codes",
     "en": "Scans Qr Codes"
   },
-  "subscribe": "lang:lang,entry-point-url:entry-point-url,auth:auth"
+  "subscribe": "lang:lang,entry-point-url:entry-point-url"
 }

@@ -56,7 +56,7 @@ export class PersonProfile extends DBPLitElement {
                         fetch(apiUrl, {
                             headers: {
                                 'Content-Type': 'application/ld+json',
-                                'Authorization': 'Bearer ' + this.auth.token,
+                                'Authorization': 'Bearer ' + window.DBPAuthToken,
                             },
                         })
                             .then(response => response.json())

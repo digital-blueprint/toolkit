@@ -86,23 +86,23 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBP
                 <div class="container">
                     <h2 class="subtitle">Deutsch</h2>
                     <p>Ein erster Schritt</p>
-                    <dbp-knowledge-base-web-page-element-view subscribe="auth:auth" lang="de" entry-point-url="${this.entryPointUrl}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="de" entry-point-url="${this.entryPointUrl}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <div class="container">
                     <h2 class="subtitle">Englisch</h2>
                     <p>A first step</p>
-                    <dbp-knowledge-base-web-page-element-view subscribe="auth:auth" lang="en" entry-point-url="${this.entryPointUrl}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="en" entry-point-url="${this.entryPointUrl}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
                 <div class="container">
                     <p>mit Text in der WebComponent:</p>
-                    <dbp-knowledge-base-web-page-element-view subscribe="auth:auth" lang="${this.lang}" value="abc/def/xyz" text="FAQ"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view lang="${this.lang}" value="abc/def/xyz" text="FAQ"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <hr>
                 <div class="container">
                     <p>ohne Text in der WebComponent:</p>
                     Kontaktieren Sie uns unter...
-                    <dbp-knowledge-base-web-page-element-view subscribe="auth:auth" class="opt" lang="${this.lang}" value="abc/def/klm"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view class="opt" lang="${this.lang}" value="abc/def/klm"></dbp-knowledge-base-web-page-element-view>
                 </div>
             </section>
         `;

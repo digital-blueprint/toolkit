@@ -14,5 +14,5 @@
     "de": "Erlaubt das Suchen von Personen",
     "en": "Allows searching for persons"
   },
-  "subscribe": "lang:lang,entry-point-url:entry-point-url,auth:auth"
+  "subscribe": "lang:lang,entry-point-url:entry-point-url"
 }

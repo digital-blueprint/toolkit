@@ -1,15 +1,14 @@
 import {i18n} from './i18n';
-import {html} from 'lit-element';
+import {html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {MiniSpinner} from '@dbp-toolkit/common';
 import * as commonUtils from "@dbp-toolkit/common/utils";
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 /**
  * KnowledgeBaseWebPageElementView web component
  */
-export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(AdapterLitElement) {
+export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -22,7 +21,6 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
         //this.css = 'kb.css';
         this.text = '';
         this.class = '';
-        this.auth = {};
     }
 
     static get scopedElements() {
@@ -48,7 +46,6 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
             error: { type: String, attribute: false},
             //css: { type: String },
             text: { type: String },
-            auth: { type: Object },
         };
     }
 
@@ -56,7 +53,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
      * Loads the data from the web page element
      */
     loadWebPageElement() {
-        if (this.auth.token === undefined || this.auth.token === "") {
+        if (window.DBPAuthToken === undefined || window.DBPAuthToken === "") {
             return;
         }
 
@@ -69,7 +66,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
         fetch(apiUrl, {
             headers: {
                 'Content-Type': 'application/ld+json',
-                'Authorization': 'Bearer ' + this.auth.token,
+                'Authorization': 'Bearer ' + window.DBPAuthToken,
             },
         })
         .then(function (res) {

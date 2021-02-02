@@ -23,8 +23,6 @@ npm i @dbp-toolkit/knowledge-base-web-page-element-view
     - example `<dbp-knowledge-base-web-page-element-view entry-point-url="http://127.0.0.1:8000"></dbp-knowledge-base-web-page-element-view>`
 - `text` (optional): text to click to show the information loaded from the webpage
     - example `<dbp-knowledge-base-web-page-element-view text="Click me to show more information"></dbp-knowledge-base-web-page-element-view>`
-- `auth` object: you need to set that object property for the auth token
-  - example auth property: `{token: "THE_BEARER_TOKEN"}`
 
 ## Local development
 
