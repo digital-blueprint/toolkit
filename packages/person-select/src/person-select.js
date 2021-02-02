@@ -156,7 +156,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                 url: apiUrl,
                 contentType: "application/ld+json",
                 beforeSend: function (jqXHR) {
-                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + window.DBPAuthToken);
+                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
                     that.isSearching = true;
                 },
                 data: function (params) {
@@ -223,7 +223,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             fetch(apiUrl, {
                 headers: {
                     'Content-Type': 'application/ld+json',
-                    'Authorization': 'Bearer ' + this.auth.token || window.DBPAuthToken,
+                    'Authorization': 'Bearer ' + this.auth.token,
                 },
             })
             .then(result => {
