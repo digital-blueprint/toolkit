@@ -33,6 +33,8 @@ npm i @dbp-toolkit/person-select
     - example `<dbp-person-select show-reload-button></dbp-person-select>`
 - `reload-button-title` (optional): sets a title text on the reload button
     - example `<dbp-person-select show-reload-button reload-button-text="Reload result list"></dbp-person-select>`
+- `auth` object: you need to set that object property for the auth token
+  - example auth property: `{token: "THE_BEARER_TOKEN"}`
 
 ## Local development
 
