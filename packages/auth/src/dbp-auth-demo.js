@@ -6,12 +6,14 @@ import {LoginButton} from './login-button.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {name as pkgName} from './../package.json';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
+import {Provider} from '@dbp-toolkit/provider';
 
 class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
         this.entryPointUrl = '';
+        this.auth = {};
     }
 
     static get scopedElements() {
@@ -26,6 +28,7 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: { type: String },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            auth: { type: Object },
         };
     }
 
@@ -40,7 +43,7 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async _onUserInfoClick() {
-        if (!window.DBPAuthToken) {
+        if (!this.auth.token) {
             console.error("not logged in");
             return;
         }
@@ -51,7 +54,7 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
             userInfoURL, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + window.DBPAuthToken
+                    'Authorization': 'Bearer ' + this.auth.token
                 }
             }
         );
@@ -59,12 +62,12 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async _onShowToken() {
-        if (!window.DBPAuthToken) {
+        if (!this.auth.token) {
             console.error("not logged in");
             return;
         }
 
-        console.log(window.DBPAuthToken);
+        console.log(this.auth.token);
     }
 
     render() {
@@ -107,4 +110,5 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 }
 
+commonUtils.defineCustomElement('dbp-provider', Provider);
 commonUtils.defineCustomElement('dbp-auth-demo', AuthDemo);

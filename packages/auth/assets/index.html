@@ -7,7 +7,9 @@
 
 <body>
 
-<dbp-auth-demo lang="de" entry-point-url="http://127.0.0.1:8000"></dbp-auth-demo>
+<dbp-provider auth>
+    <dbp-auth-demo lang="de" entry-point-url="http://127.0.0.1:8000" subscribe="auth:auth"></dbp-auth-demo>
+</dbp-provider>
 
 </body>
 </html>
