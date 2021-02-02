@@ -236,11 +236,6 @@ export class AdapterLitElement extends LitElement {
         };
     }
 
-    static getProperties(properties = {}) {
-        // TODO: super.properties doesn't seem to be defined here!
-        return Object.assign(properties, super.properties);
-    }
-
     findPropertyName(attributeName) {
         let resultName = attributeName;
         const properties = this.constructor.properties;
