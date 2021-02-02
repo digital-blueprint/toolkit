@@ -39,6 +39,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
         this.showCapacity = false;
+        this.auth = {};
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
     }
@@ -67,6 +68,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
             showCapacity: { type: Boolean, attribute: 'show-capacity' },
+            auth: { type: Object },
         };
     }
 
@@ -163,7 +165,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                 url: apiUrl,
                 contentType: "application/ld+json",
                 beforeSend: function (jqXHR) {
-                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + window.DBPAuthToken);
+                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
                     that.isSearching = true;
                 },
                 data: function (params) {
@@ -235,7 +237,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
             fetch(apiUrl, {
                 headers: {
                     'Content-Type': 'application/ld+json',
-                    'Authorization': 'Bearer ' + window.DBPAuthToken,
+                    'Authorization': 'Bearer ' + this.auth.token,
                 },
             })
             .then(result => {
