@@ -21,6 +21,8 @@ npm i @dbp-toolkit/person-profile
     - example `<dbp-person-profile entry-point-url="http://127.0.0.1:8000"></dbp-person-profile>`
 - `value` (optional): api path of person to preload the selector with
     - example `<dbp-person-profile value="/people/testuser"></dbp-person-profile>`
+- `auth` object: you need to set that object property for the auth token
+  - example auth property: `{token: "THE_BEARER_TOKEN"}`
 
 ## Local development
 

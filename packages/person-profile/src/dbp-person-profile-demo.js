@@ -97,7 +97,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Person-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-profile lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.person}"></dbp-person-profile>
+                    <dbp-person-profile subscribe="auth:auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.person}"></dbp-person-profile>
                 </div>
             </section>
             <section class="section">
@@ -105,10 +105,10 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Select-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+                    <dbp-person-select subscribe="auth:auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
                 </div>
                 <div class="container">
-                    <dbp-person-profile lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.selectedPerson}"></dbp-person-profile>
+                    <dbp-person-profile subscribe="auth:auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.selectedPerson}"></dbp-person-profile>
                 </div>
             </section>
         `;

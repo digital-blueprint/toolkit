@@ -15,6 +15,7 @@ export class PersonProfile extends DBPLitElement {
         this.jsonld = null;
         this.value = '';
         this.person = null;
+        this.auth = {};
     }
 
     static get properties() {
@@ -24,6 +25,7 @@ export class PersonProfile extends DBPLitElement {
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             value: { type: String },
             person: { type: Object, attribute: false },
+            auth: { type: Object },
         };
     }
 
@@ -56,7 +58,7 @@ export class PersonProfile extends DBPLitElement {
                         fetch(apiUrl, {
                             headers: {
                                 'Content-Type': 'application/ld+json',
-                                'Authorization': 'Bearer ' + window.DBPAuthToken,
+                                'Authorization': 'Bearer ' + this.auth.token,
                             },
                         })
                             .then(response => response.json())
