@@ -189,6 +189,10 @@ Dependencies:
                 {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
                 {src: await getPackagePath('tabulator-tables', 'dist/css'), dest: 'dist/' + await getDistPath('@dbp-toolkit/file-handling', 'tabulator-tables')},
                 {src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'), dest: 'dist/' + await getDistPath('@dbp-toolkit/qr-code-scanner')},
+                {src: await getPackagePath('datatables.net-dt', 'css'), dest: 'dist/' + await getDistPath('@dbp-toolkit/data-table-view')},
+                {src: await getPackagePath('datatables.net-dt', 'images'), dest: 'dist/' + await getDistPath('@dbp-toolkit/data-table-view')},
+                {src: await getPackagePath('datatables.net-responsive-dt', 'css'), dest: 'dist/' + await getDistPath('@dbp-toolkit/data-table-view')},
+                {src: await getPackagePath('datatables.net-buttons-dt', 'css'), dest: 'dist/' + await getDistPath('@dbp-toolkit/data-table-view')},
             ],
         }),
         useBabel && getBabelOutputPlugin({
