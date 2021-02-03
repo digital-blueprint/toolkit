@@ -10,7 +10,7 @@ export default {
         nextcloudName: 'TU Graz cloud',
     },
     development: {
-        basePath: '/apps/checkin/',
+        basePath: '/apps/demo/',
         entryPointURL: 'https://mw-dev.tugraz.at',
         keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
         keyCloakClientId: 'demo-dev_tugraz_at-DEMO',
