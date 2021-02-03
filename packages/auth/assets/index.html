@@ -3,11 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <script type="module" src="dbp-auth-demo.js"></script>
+    <script type="module" src="dbp-auth.js"></script>
 </head>
 
 <body>
 
 <dbp-provider auth>
+    <dbp-auth-keycloak lang="de" entry-point-url="http://127.0.0.1:8000"
+                       url="https://auth-dev.tugraz.at/auth"
+                       realm="tugraz"
+                       client-id="auth-dev-mw-frontend-local"
+                       silent-check-sso-redirect-uri="${silentCheckSsoUri}"
+                       scope="optional-test-scope"
+                       load-person
+                       try-login></dbp-auth-keycloak>
+    <dbp-login-button lang="de" show-image></dbp-login-button>
+
     <dbp-auth-demo lang="de" entry-point-url="http://127.0.0.1:8000" subscribe="auth:auth"></dbp-auth-demo>
 </dbp-provider>
 

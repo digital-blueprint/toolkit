@@ -1,0 +1,18 @@
+{
+  "element": "dbp-auth-demo-activity",
+  "module_src": "dbp-auth-demo-activity.js",
+  "routing_name": "auth",
+  "name": {
+    "de": "Authentifikation Komponente",
+    "en": "Authentication component"
+  },
+  "short_name": {
+    "de": "Auth Komponente",
+    "en": "Auth component"
+  },
+  "description": {
+    "de": "Web Komponente zur Authentifikation",
+    "en": "Auth web component"
+  },
+  "subscribe": "lang:lang,entry-point-url:entry-point-url"
+}

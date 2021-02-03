@@ -8,7 +8,7 @@ import {name as pkgName} from './../package.json';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 import {Provider} from '@dbp-toolkit/provider';
 
-class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
+export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = 'de';
@@ -43,8 +43,10 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async _onUserInfoClick() {
+        const div = this._('#person-info');
         if (!this.auth.token) {
             console.error("not logged in");
+            div.innerHTML = "You are not logged in!";
             return;
         }
         let userInfoURL = 'https://auth-dev.tugraz.at/auth/realms/tugraz/protocol/openid-connect/userinfo';
@@ -58,16 +60,21 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
                 }
             }
         );
-        console.log(await response.json());
+        const person = await response.json();
+        console.log(person);
+        div.innerHTML = JSON.stringify(person);
     }
 
     async _onShowToken() {
+        const div = this._('#token-info');
         if (!this.auth.token) {
             console.error("not logged in");
+            div.innerHTML = "You are not logged in!";
             return;
         }
 
         console.log(this.auth.token);
+        div.innerHTML = this.auth.token;
     }
 
     render() {
@@ -93,22 +100,39 @@ class AuthDemo extends ScopedElementsMixin(DBPLitElement) {
                     max-width: 100%;
                 }
             </style>
+            <slot></slot>
             <section class="section">
                 <div class="container">
                     <h1 class="title">Auth-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="https://auth-dev.tugraz.at/auth" realm="tugraz" client-id="auth-dev-mw-frontend-local" silent-check-sso-redirect-uri="${silentCheckSsoUri}" scope="optional-test-scope" load-person try-login></dbp-auth-keycloak>
-
-                    <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
+                    <p>In any App/page an <b>Auth component</b> will be used like:</p>
+<pre>
+&lt;dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}"
+    url="https://auth-dev.tugraz.at/auth" 
+    realm="tugraz"
+    client-id="auth-dev-mw-frontend-local"
+    silent-check-sso-redirect-uri="${silentCheckSsoUri}"
+    scope="optional-test-scope" 
+    load-person 
+    try-login&gt;&lt;/dbp-auth-keycloak&gt;
+&lt;dbp-login-button lang="${this.lang}" show-image&gt;&lt;/dbp-login-button&gt;
+</pre>
+                    <p>but in this demo we actually have already such a component at the top of this page.</p>
+                    <p>Please use the login button on the top of the page!</p>
+                </div>
+                <div class="container">
+                    <input type="button" value="Fetch userinfo" @click="${this._onUserInfoClick}">
+                    <input type="button" value="Show token" @click="${this._onShowToken}">
+                    <h4>Person info:</h4>
+                    <div id="person-info"></div>
+                    <h4>Token info:</h4>
+                    <div id="token-info"></div>
                 </div>
             </section>
-
-            <input type="button" value="Fetch userinfo (see console)" @click="${this._onUserInfoClick}">
-            <input type="button" value="Show token (see console)" @click="${this._onShowToken}">
         `;
     }
 }
 
 commonUtils.defineCustomElement('dbp-provider', Provider);
-commonUtils.defineCustomElement('dbp-auth-demo', AuthDemo);
+commonUtils.defineCustomElement('dbp-auth-demo', DbpAuthDemo);
