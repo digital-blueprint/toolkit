@@ -12,7 +12,7 @@ import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
 import md from 'rollup-plugin-md';
 import emitEJS from 'rollup-plugin-emit-ejs'
-import babel from '@rollup/plugin-babel'
+import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '../rollup.utils.js';
 
@@ -191,30 +191,19 @@ Dependencies:
                 {src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'), dest: 'dist/' + await getDistPath('@dbp-toolkit/qr-code-scanner')},
             ],
         }),
-        useBabel && babel({
-          include: [
-              'src/**',
-              'node_modules/pdfjs-dist/**', // uses Promise.allSettled
-          ],
-          babelHelpers: 'runtime',
-          babelrc: false,
-          presets: [[
-            '@babel/preset-env', {
-              loose: true,
-              bugfixes: true,
-              targets: {
-                esmodules: true
+        useBabel && getBabelOutputPlugin({
+            compact: false,
+            presets: [[
+              '@babel/preset-env', {
+                loose: true,
+                shippedProposals: true,
+                bugfixes: true,
+                modules: false,
+                targets: {
+                  esmodules: true
+                }
               }
-            }
-          ]],
-          plugins: [[
-            '@babel/plugin-transform-runtime', {
-              corejs: 3,
-              useESModules: true
-            }
-          ],
-          '@babel/plugin-syntax-dynamic-import',
-          '@babel/plugin-syntax-import-meta']
+            ]],
         }),
         watch ? serve({
           contentBase: '.',
