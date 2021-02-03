@@ -10,12 +10,12 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
  * Keycloak auth web component
  * https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
  *
- * Sets some global variables:
- *   window.DBPAuthSubject: Keycloak username
- *   window.DBPAuthToken: Keycloak token to send with your requests
- *   window.DBPUserFullName: Full name of the user
- *   window.DBPPersonId: Person identifier of the user
- *   window.DBPPerson: Person json object of the user (optional, enable by setting the `load-person` attribute)
+ * Emits a set-property event for the attribute "auth":
+ *   auth.subject: Keycloak username
+ *   auth.token: Keycloak token to send with your requests
+ *   auth.user-full-name: Full name of the user
+ *   auth.person-id: Person identifier of the user
+ *   auth.person: Person json object of the user (optional, enable by setting the `load-person` attribute)
  */
 export class AuthKeycloak extends AdapterLitElement {
     constructor() {
@@ -70,12 +70,6 @@ export class AuthKeycloak extends AdapterLitElement {
             }
             this.personId = personId;
 
-            window.DBPAuthSubject = this.subject;
-            window.DBPAuthToken = this.token;
-            window.DBPUserFullName = this.name;
-            window.DBPPersonId = this.personId;
-            window.DBPPerson = this.person;
-
             this.sendSetPropertyEvents();
             this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || newPerson);
         } else {
@@ -87,12 +81,6 @@ export class AuthKeycloak extends AdapterLitElement {
             this.subject = "";
             this.personId = "";
             this.person = null;
-
-            window.DBPAuthSubject = this.subject;
-            window.DBPAuthToken = this.token;
-            window.DBPUserFullName = this.name;
-            window.DBPPersonId = this.personId;
-            window.DBPPerson = this.person;
 
             this.sendSetPropertyEvents();
             this._setLoginStatus(LoginStatus.LOGGED_OUT);
@@ -116,7 +104,6 @@ export class AuthKeycloak extends AdapterLitElement {
                 .then(response => response.json())
                 .then((person) => {
                     that.person = person;
-                    window.DBPPerson = person;
                     this.sendSetPropertyEvents();
                     this._setLoginStatus(this._loginStatus, true);
                 });
