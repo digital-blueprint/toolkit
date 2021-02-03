@@ -172,6 +172,13 @@ export class AdapterLitElement extends LitElement {
         }
     }
 
+    disconnectedCallback() {
+        const attrs = this.subscribe.split(',');
+        attrs.forEach(element => this.unSubscribeProviderFor(element));
+
+        super.disconnectedCallback();
+    }
+
     subscribeProviderFor(element) {
         console.log('AdapterLitElement(' + this.tagName + ') subscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
