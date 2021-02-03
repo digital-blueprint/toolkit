@@ -176,7 +176,7 @@ export class AdapterLitElement extends LitElement {
         console.log('AdapterLitElement(' + this.tagName + ') subscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
         const local = pair[0];
-        const global = pair[1];
+        const global = pair[1] || local;
         const that = this;
         const event = new CustomEvent('subscribe',
             {
@@ -216,7 +216,7 @@ export class AdapterLitElement extends LitElement {
     unSubscribeProviderFor(element) {
         console.log('AdapterLitElement(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
-        const global = pair[1];
+        const global = pair[1] || pair[0];
         const event = new CustomEvent('unsubscribe',
             {
                 bubbles: true,

@@ -75,13 +75,13 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                         <div class="field">
                             <label class="label">Person 1</label>
                             <div class="control">
-                                <dbp-person-select subscribe="auth:auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+                                <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Person 2</label>
                             <div class="control">
-                                <dbp-person-select subscribe="auth:auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" show-reload-button reload-button-title="Click me"></dbp-person-select>
+                                <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" show-reload-button reload-button-title="Click me"></dbp-person-select>
                             </div>
                         </div>
                     </form>
