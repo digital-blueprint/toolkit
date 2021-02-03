@@ -20,7 +20,7 @@ npm i @dbp-toolkit/auth
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-auth-keycloak lang="de" </dbp-auth-keycloak>`
 - `load-person` (optional, default: off): if enabled the logged in user will also be loaded as `Person`
-   in the `window.DBPPerson` variable
+   in the `auth.person` attribute (see below)
     - example `<dbp-auth-keycloak load-person></dbp-auth-keycloak>`
 - `force-login` (optional, default: off): if enabled a login will be forced, there never will be a login button
     - example `<dbp-auth-keycloak force-login></dbp-auth-keycloak>`
