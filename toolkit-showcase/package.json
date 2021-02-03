@@ -5,7 +5,8 @@
   "license": "LGPL-2.1-or-later",
   "private": true,
   "workspaces": [
-    "../packages/*"
+    "../packages/*",
+    "."
   ],
   "devDependencies": {
     "@babel/core": "^7.10.3",
@@ -18,7 +19,6 @@
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
-    "@rollup/plugin-replace": "^2.3.3",
     "@rollup/plugin-url": "^6.0.0",
     "babel-eslint": "^10.0.3",
     "chai": "^4.2.0",
@@ -67,15 +67,14 @@
     "webdav": "^3.3.0"
   },
   "scripts": {
-    "build-dev": "rollup -c --environment BUILD:development",
-    "build-prod": "rollup -c --environment BUILD:production",
-    "build-demo": "rollup -c --environment BUILD:demo",
+    "build": "rollup -c",
     "i18next": "i18next-scanner",
     "watch": "rollup -c --watch",
     "watch-local": "yarn run watch",
     "watch-full": "rollup -c --watch --environment FORCE_FULL",
-    "test": "rollup -c --environment BUILD:test && karma start --singleRun",
-    "test-full": "rollup -c --environment FORCE_FULL,BUILD:test && karma start --singleRun",
+    "watch-bs": "rollup -c --watch --environment APP_ENV:bs",
+    "test": "rollup -c --environment APP_ENV:test && karma start --singleRun",
+    "test-full": "rollup -c --environment FORCE_FULL,APP_ENV:test && karma start --singleRun",
     "lint": "eslint ."
   }
 }

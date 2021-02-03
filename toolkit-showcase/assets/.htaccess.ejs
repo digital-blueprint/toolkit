@@ -1,10 +1,10 @@
-DirectoryIndex <%= getUrl(name + '.html') %>
+DirectoryIndex <%- getUrl(name + '.html') %>
 <FilesMatch "^(de|en|)$">
-    FallbackResource <%= getUrl(name + '.html') %>
+    FallbackResource <%- getUrl(name + '.html') %>
 </FilesMatch>
 
 Header set Cache-Control "must-revalidate, max-age=60"
-Header set Content-Security-Policy "default-src 'self' 'unsafe-eval' 'unsafe-inline' analytics.tugraz.at <%= keyCloakServer %> <%= entryPointURL %> httpbin.org <%= nextcloudBaseURL %> www.handy-signatur.at <%= pdfAsQualifiedlySigningServer %>; img-src * blob: data:"
+Header set Content-Security-Policy "<%- CSP %>"
 
 # Apache adds a "-gzip" suffix to the etag when it uses gzip but doesn't
 # take that into account when receiving requests.

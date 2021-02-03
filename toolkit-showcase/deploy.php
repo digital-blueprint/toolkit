@@ -37,24 +37,16 @@ host('development')
     ->hostname('mw@mw01-dev.tugraz.at')
     ->set('deploy_path', '/home/mw/dev/deploy/apps/demo');
 
-// Demo build task
-task('build-demo', function () {
+task('build', function () {
+    $stage = get('stage');
     runLocally("yarn install");
-    runLocally("yarn run build-demo");
-})->onStage('demo');
-
-// Demo dev task
-task('build-development', function () {
-    runLocally("yarn install");
-    runLocally("yarn run build-dev");
-})->onStage('development');
-
+    runLocally("APP_ENV=$stage yarn run build");
+});
 
 // Deploy task
 task('deploy', [
     'deploy:info',
-    'build-demo',
-    'build-development',
+    'build',
     'deploy:prepare',
     'deploy:lock',
     'deploy:release',
