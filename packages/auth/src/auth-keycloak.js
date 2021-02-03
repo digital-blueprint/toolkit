@@ -112,13 +112,20 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     sendSetPropertyEvents() {
-        this.sendSetPropertyEvent('auth', {
+        const auth = {
             'subject': this.subject,
             'token': this.token,
             'user-full-name': this.name,
             'person-id': this.personId,
             'person': this.person,
-        });
+        };
+
+        // inject a window.DBPAuth variable for cypress
+        if (window.Cypress) {
+            window.DBPAuth = auth;
+        }
+
+        this.sendSetPropertyEvent('auth', auth);
 
         // this.sendSetPropertyEvent('auth-subject', this.subject);
         // this.sendSetPropertyEvent('auth-token', this.token);
