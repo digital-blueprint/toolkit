@@ -286,7 +286,11 @@ export class AdapterLitElement extends LitElement {
                 }
                 break;
             default:
-                super.attributeChangedCallback(name, oldValue, newValue);
+                // The function should not be called if newValue is empty but name and oldValue are set
+                // This should prevent 'Uncaught SyntaxError: JSON.parse unexpected end of data at line 1 column 1 of the JSON data'
+                if (newValue || !oldValue || !name) {
+                    super.attributeChangedCallback(name, oldValue, newValue);
+                }
         }
 
         // console.log("this.lang", this.tagName, name, this.lang);
