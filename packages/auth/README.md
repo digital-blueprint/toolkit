@@ -38,7 +38,7 @@ npm i @dbp-toolkit/auth
 
 ### Emitted attribute
 
-The component emits a `set-property` event for the attribute `auth`:
+The component emits a `dbp-set-property` event for the attribute `auth`:
 
 - `auth.subject`: Keycloak username
 - `auth.token`: Keycloak token to send with your requests

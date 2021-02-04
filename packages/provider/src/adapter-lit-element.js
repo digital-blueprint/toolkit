@@ -80,10 +80,10 @@ export class AdapterLitElement extends LitElement {
 
         const that = this;
 
-        this.addEventListener('subscribe', function (e) {
+        this.addEventListener('dbp-subscribe', function (e) {
             const name = e.detail.name;
             if (that.hasProperty(name) || that.root) {
-                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("subscribe",..) name "' + name + '" found.');
+                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
                 e.detail.callback(that.getProperty(name));
@@ -91,11 +91,11 @@ export class AdapterLitElement extends LitElement {
             }
         }, false);
 
-        this.addEventListener('unsubscribe', function (e) {
+        this.addEventListener('dbp-unsubscribe', function (e) {
             const name = e.detail.name;
             const sender = e.detail.sender;
             if (that.hasProperty(name) || that.root) {
-                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("unsubscribe",..) name "' + name + '" found.');
+                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-unsubscribe",..) name "' + name + '" found.');
                 that.callbackStore.forEach(item => {
                     if (item.sender === sender && item.name === name) {
                         const index = that.callbackStore.indexOf(item);
@@ -185,7 +185,7 @@ export class AdapterLitElement extends LitElement {
         const local = pair[0];
         const global = pair[1] || local;
         const that = this;
-        const event = new CustomEvent('subscribe',
+        const event = new CustomEvent('dbp-subscribe',
             {
                 bubbles: true,
                 composed: true,
@@ -224,7 +224,7 @@ export class AdapterLitElement extends LitElement {
         console.log('AdapterLitElement(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
-        const event = new CustomEvent('unsubscribe',
+        const event = new CustomEvent('dbp-unsubscribe',
             {
                 bubbles: true,
                 composed: true,
@@ -302,7 +302,7 @@ export class AdapterLitElement extends LitElement {
      * @returns {boolean}
      */
     sendSetPropertyEvent(name, value) {
-        const event = new CustomEvent("set-property", {
+        const event = new CustomEvent('dbp-set-property', {
             bubbles: true,
             composed: true,
             detail: {'name': name, 'value': value}
