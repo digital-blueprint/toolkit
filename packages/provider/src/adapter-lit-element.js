@@ -109,12 +109,12 @@ export class AdapterLitElement extends LitElement {
         }, false);
 
         // listen to property changes
-        this.addEventListener('set-property', function (e) {
+        this.addEventListener('dbp-set-property', function (e) {
             const name = e.detail.name;
             const value = e.detail.value;
 
             if (that.hasProperty(name) || that.root) {
-                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("set-property",..) name "' + name + '" found.');
+                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-set-property",..) name "' + name + '" found.');
                 that.setProperty(name, value);
 
                 that.callbackStore.forEach(item => {
@@ -295,7 +295,7 @@ export class AdapterLitElement extends LitElement {
     }
 
     /**
-     * Send a set-property event to the provider components
+     * Send a dbp-set-property event to the provider components
      *
      * @param name
      * @param value
