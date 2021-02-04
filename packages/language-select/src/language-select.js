@@ -13,8 +13,6 @@ export class LanguageSelect extends AdapterLitElement {
         this._lang = 'de';
         this.languages = ['de', 'en'];
 
-        this.onExternalChange = this.onExternalChange.bind(this);
-
         // for the i18next scanner
         i18n.t('de');
         i18n.t('de-action');
@@ -54,13 +52,6 @@ export class LanguageSelect extends AdapterLitElement {
         this.requestUpdate('next', oldNext);
 
         if (oldValue !== value) {
-            let event = new CustomEvent("dbp-language-changed", {
-                bubbles: true,
-                composed: true,
-                detail: {'lang': value}
-            });
-            this.dispatchEvent(event);
-
             // tell a dbp-provider to update the "lang" property
             this.sendSetPropertyEvent('lang', value);
 
@@ -107,20 +98,6 @@ export class LanguageSelect extends AdapterLitElement {
             }
             `
         ];
-    }
-
-    onExternalChange(e) {
-        this.lang = e.detail.lang;
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        window.addEventListener('dbp-language-changed', this.onExternalChange);
-    }
-
-    disconnectedCallback() {
-        document.removeEventListener('dbp-language-changed', this.onExternalChange);
-        super.disconnectedCallback();
     }
 
     onClick(e) {

@@ -302,6 +302,8 @@ export class AdapterLitElement extends LitElement {
      * @returns {boolean}
      */
     sendSetPropertyEvent(name, value) {
+        // console.log("dbp-set-property", name, value);
+
         const event = new CustomEvent('dbp-set-property', {
             bubbles: true,
             composed: true,
