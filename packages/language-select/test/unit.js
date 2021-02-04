@@ -13,7 +13,7 @@ suite('dbp-language-select basics', () => {
 
   setup(async () => {
     events.length = 0;
-    window.addEventListener('dbp-language-changed', handler);
+    window.addEventListener('dbp-set-property', handler);
     node = document.createElement('dbp-language-select');
     document.body.appendChild(node);
     await node.updateComplete;
@@ -21,7 +21,7 @@ suite('dbp-language-select basics', () => {
 
   teardown(() => {
     node.remove();
-    window.removeEventListener('dbp-language-changed', handler);
+    window.removeEventListener('dbp-set-property', handler);
   });
 
   test('should render', () => {
