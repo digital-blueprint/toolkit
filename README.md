@@ -36,3 +36,11 @@ the version number in its `package.json` is higher than the version number on np
 | `auth`            | Authentication information, set by the authentication component     |
 | `lang`            | Currently selected language, set by the language selector           |
 | `entry-point-url` | Entry point url for all api requests                                |
+
+## Reserved events
+
+| Event              | Description                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| `dbp-subscribe`    | Event to tell a provider that the component wants to subscribe to an attribute     |
+| `dbp-unsubscribe`  | Event to tell a provider that the component wants to unsubscribe from an attribute |
+| `dbp-set-property` | Event to tell a provider that a property should be changed                         |
