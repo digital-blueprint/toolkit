@@ -40,7 +40,7 @@ function getBuildInfo() {
 
 export default (async () => {
     return {
-        input: (build != 'test') ? ['src/dbp-provider.js', 'src/dbp-provider-demo.js'] : glob.sync('test/**/*.js'),
+        input: (build != 'test') ? ['src/dbp-provider.js', 'src/dbp-adapter.js','src/dbp-provider-demo.js'] : glob.sync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',

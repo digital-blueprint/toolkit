@@ -5,6 +5,7 @@ import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Provider} from '@dbp-toolkit/provider';
+import {Adapter} from '@dbp-toolkit/provider';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
@@ -22,6 +23,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
             'dbp-login-button': LoginButton,
             'dbp-language-select': LanguageSelect,
             'dbp-provider': Provider,
+            'dbp-provider-adapter': Adapter,
             'dbp-consumer': DemoConsumer,
         };
     }
@@ -109,6 +111,23 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                             <dbp-consumer id="c4" subscribe="status:unknown-name" border-color="darkgray"></dbp-consumer>
                         </div>
                     </dbp-provider>
+                </dbp-provider>
+                
+                <h2> DBP Provider </h2>
+                <p> The dbp-provider is for third party webcomponents, which we want to configure with a provider.</p>
+                <pre>&lt;dbp-provider  id="demoadapter"  dbp-style-red="color:red;" dbp-style-green="color:green;" >&lt;/dbp-provider&gt;</pre>
+                <dbp-provider id="demoadapter"
+                              dbp-style-red="color:red;" dbp-style-green="color:green;">
+                    <pre>&lt;dbp-provider-adapter  id="a1"  subscribe="style:dbp-style-red" >&lt;/dbp-provider-adapter&gt;</pre>
+                    <dbp-provider-adapter id="a1" subscribe="style:dbp-style-red">
+                        <p> I'm a normal p tag without attributes and without style. </p>
+                        <p>  I'm a normal p tag without attributes and without style. </p>
+                        <p>  I'm a normal p tag without attributes and without style. </p>
+                    </dbp-provider-adapter>
+                    <pre>&lt;dbp-provider-adapter  id="a2"  subscribe="style:dbp-style-green" >&lt;/dbp-provider-adapter&gt;</pre>
+                    <dbp-provider-adapter id="a2" subscribe="style:dbp-style-green">
+                        <p style="background-color:green;"> I'm a normal p tag without attributes and without style. <span style="color:blue;"> I'm blue dabedidabedei...</span> </p>
+                    </dbp-provider-adapter>
                 </dbp-provider>
             </section>
         `;
