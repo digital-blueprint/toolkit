@@ -7,6 +7,10 @@ export class Adapter extends HTMLElement {
         // attributes (if they exist) will be updated if a property is changed by "subscribe"
         this.reflectAttribute = true;
 
+        // default values
+        this.subscribe = '';
+        this.unsubscribe = '';
+
         this.callbackStore = [];
 
         // Previously we used direct properties like this["lang"] (instead of this.propertyStore["lang"]) for storing the
@@ -28,6 +32,9 @@ export class Adapter extends HTMLElement {
         return this[this.findPropertyName(name)];
     }
 
+    setPropertyByAttributeName(name, value) {
+        this[this.findPropertyName(name)] = value;
+    }
 
     setProperty(name, value) {
         if (typeof value === 'object' && value !== null) {
@@ -69,6 +76,53 @@ export class Adapter extends HTMLElement {
 
         const that = this;
 
+        this.addEventListener('dbp-subscribe', function (e) {
+            const name = e.detail.name;
+            if (that.hasProperty(name) || that.root) {
+                console.log('AdapterProvider(' + that.tagName + ') eventListener("dbp-subscribe",..) name "' + name + '" found.');
+                that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
+
+                e.detail.callback(that.getProperty(name));
+                e.stopPropagation();
+            }
+        }, false);
+
+        this.addEventListener('dbp-unsubscribe', function (e) {
+            const name = e.detail.name;
+            const sender = e.detail.sender;
+            if (that.hasProperty(name) || that.root) {
+                console.log('AdapterProvider(' + that.tagName + ') eventListener("dbp-unsubscribe",..) name "' + name + '" found.');
+                that.callbackStore.forEach(item => {
+                    if (item.sender === sender && item.name === name) {
+                        const index = that.callbackStore.indexOf(item);
+                        that.callbackStore.splice(index, 1);
+                        console.log('AdapterProvider(' + that.tagName + ') eventListener for name "' + name + '" removed.');
+                    }
+                });
+
+                e.stopPropagation();
+            }
+        }, false);
+
+        // listen to property changes
+        this.addEventListener('set-property', function (e) {
+            const name = e.detail.name;
+            const value = e.detail.value;
+
+            if (that.hasProperty(name) || that.root) {
+                console.log('AdapterProvider(' + that.tagName + ') eventListener("set-property",..) name "' + name + '" found.');
+                that.setProperty(name, value);
+
+                that.callbackStore.forEach(item => {
+                    if (item.name === name) {
+                        item.callback(value);
+                    }
+                });
+
+                e.stopPropagation();
+            }
+        }, false);
+
         // Options for the observer (which mutations to observe)
         const config = { attributes: true, childList: false, subtree: false };
 
@@ -94,6 +148,8 @@ export class Adapter extends HTMLElement {
             }
         };
 
+        that.setPropertiesToChildNodes();
+
         // Create an observer instance linked to the callback function
         const observer = new MutationObserver(callback);
 
@@ -117,8 +173,6 @@ export class Adapter extends HTMLElement {
     disconnectedCallback() {
         const attrs = this.subscribe.split(',');
         attrs.forEach(element => this.unSubscribeProviderFor(element));
-
-        super.disconnectedCallback();
     }
 
     subscribeProviderFor(element) {
@@ -127,7 +181,7 @@ export class Adapter extends HTMLElement {
         const local = pair[0];
         const global = pair[1] || local;
         const that = this;
-        const event = new CustomEvent('subscribe',
+        const event = new CustomEvent('dbp-subscribe',
             {
                 bubbles: true,
                 composed: true,
@@ -167,7 +221,7 @@ export class Adapter extends HTMLElement {
         console.log('AdapterProvider(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
-        const event = new CustomEvent('unsubscribe',
+        const event = new CustomEvent('dbp-unsubscribe',
             {
                 bubbles: true,
                 composed: true,
@@ -258,7 +312,35 @@ export class Adapter extends HTMLElement {
     setPropertiesToChildNodes(local, value)
     {
         let children = this.children;
+        console.log("----------", children);
         Array.from(children).forEach(child => child.setAttribute(local, value));
     }
 
+    // update(changedProperties) {
+    //     changedProperties.forEach((oldValue, propName) => {
+    //         switch(propName) {
+    //             case 'subscribe':
+    //                 if (this.subscribe && this.subscribe.length > 0) {
+    //                     if (this.connected) {
+    //                         const attrs = this.subscribe.split(',');
+    //                         attrs.forEach(element => this.unSubscribeProviderFor(element));
+    //                     } else {
+    //                         this.deferUnSubscribe = this.subscribe.length > 0;
+    //                         this.unsubscribe = this.subscribe;
+    //                     }
+    //                 }
+    //                 if (this.subscribe !== null) {
+    //                     if (this.connected) {
+    //                         const attrs = this.subscribe.split(',');
+    //                         attrs.forEach(element => this.subscribeProviderFor(element));
+    //                     } else {
+    //                         this.deferSubscribe = this.subscribe && this.subscribe.length > 0;
+    //                     }
+    //                 }
+    //                 break;
+    //         }
+    //     });
+    //
+    //     super.update(changedProperties);
+    // }
 }
