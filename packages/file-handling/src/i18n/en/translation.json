@@ -13,7 +13,9 @@
   "file-source": {
     "modal-select-files": "Select files",
     "modal-close": "Close dialog",
-    "nav-local": "My device"
+    "nav-local": "My device",
+    "no-usable-files-in-zip": "ZIP file does not contain any usable files",
+    "no-usable-files-hint": "Upload a ZIP file with file type(s) of "
   },
   "file-sink": {
     "local-intro": "Download {{count}} file",

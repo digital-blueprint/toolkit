@@ -13,7 +13,9 @@
   "file-source": {
     "modal-select-files": "Dateien auswählen",
     "modal-close": "Dialog schließen",
-    "nav-local": "Lokaler Computer"
+    "nav-local": "Lokaler Computer",
+    "no-usable-files-in-zip": "ZIP Datei enthält keine verwendbaren Dateien",
+    "no-usable-files-hint": "Laden Sie eine ZIP Datei mit Dateien von folgendem Typ hoch: "
   },
   "file-sink": {
     "local-intro": "{{count}} Datei herunterladen",

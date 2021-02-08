@@ -4,6 +4,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonUtils from "@dbp-toolkit/common/utils";
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
+import {send as notify} from '@dbp-toolkit/common/notification';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
@@ -314,7 +315,14 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
         // no suitable files found
         if (filesToHandle.length === 0) {
-            throw new Error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
+            console.error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
+            //throw new Error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
+            notify({
+                "summary": i18n.t('file-source.no-usable-files-in-zip'),
+                "body": i18n.t('file-source.no-usable-files-hint') + this.allowedMimeTypes,
+                "type": 'danger',
+                "timeout": 0,
+            });
         }
         return filesToHandle;
     }
