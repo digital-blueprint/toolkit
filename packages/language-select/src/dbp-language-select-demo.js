@@ -1,15 +1,15 @@
-import {html, LitElement} from 'lit-element';
+import {html} from 'lit-element';
 import {LanguageSelect} from './language-select.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 
-class LanguageSelectDisplay extends LitElement {
+class LanguageSelectDisplay extends AdapterLitElement {
 
     constructor() {
         super();
         this.lang = 'de';
-        this.handleChange =  this.handleChange.bind(this);
     }
 
     static get properties() {
@@ -18,26 +18,12 @@ class LanguageSelectDisplay extends LitElement {
         };
     }
 
-    handleChange(e) {
-        this.lang = e.detail.lang;
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        window.addEventListener('dbp-language-changed', this.handleChange);
-    }
-
-    disconnectedCallback() {
-        window.removeEventListener('dbp-language-changed', this.handleChange);
-        super.disconnectedCallback();
-    }
-
     render() {
         return html`${this.lang}`;
     }
 }
 
-export class LanguageSelectDemo extends ScopedElementsMixin(LitElement) {
+export class LanguageSelectDemo extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
@@ -52,16 +38,16 @@ export class LanguageSelectDemo extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-            Select 1: <dbp-language-select></dbp-language-select>
+            Select 1: <dbp-language-select subscribe="lang"></dbp-language-select>
             <br>
             <br>
-            Select 2: <dbp-language-select></dbp-language-select>
+            Select 2: <dbp-language-select subscribe="lang"></dbp-language-select>
             <br>
             <br>
-            Current language 1: <dbp-language-select-display></dbp-language-select-display>
+            Current language 1: <dbp-language-select-display subscribe="lang"></dbp-language-select-display>
             <br>
             <br>
-            Current language 2: <dbp-language-select-display></dbp-language-select-display>
+            Current language 2: <dbp-language-select-display subscribe="lang"></dbp-language-select-display>
         `;
     }
 }

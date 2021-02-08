@@ -80,10 +80,10 @@ export class AdapterLitElement extends LitElement {
 
         const that = this;
 
-        this.addEventListener('subscribe', function (e) {
+        this.addEventListener('dbp-subscribe', function (e) {
             const name = e.detail.name;
             if (that.hasProperty(name) || that.root) {
-                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("subscribe",..) name "' + name + '" found.');
+                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
                 e.detail.callback(that.getProperty(name));
@@ -91,11 +91,11 @@ export class AdapterLitElement extends LitElement {
             }
         }, false);
 
-        this.addEventListener('unsubscribe', function (e) {
+        this.addEventListener('dbp-unsubscribe', function (e) {
             const name = e.detail.name;
             const sender = e.detail.sender;
             if (that.hasProperty(name) || that.root) {
-                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("unsubscribe",..) name "' + name + '" found.');
+                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-unsubscribe",..) name "' + name + '" found.');
                 that.callbackStore.forEach(item => {
                     if (item.sender === sender && item.name === name) {
                         const index = that.callbackStore.indexOf(item);
@@ -109,12 +109,12 @@ export class AdapterLitElement extends LitElement {
         }, false);
 
         // listen to property changes
-        this.addEventListener('set-property', function (e) {
+        this.addEventListener('dbp-set-property', function (e) {
             const name = e.detail.name;
             const value = e.detail.value;
 
             if (that.hasProperty(name) || that.root) {
-                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("set-property",..) name "' + name + '" found.');
+                console.log('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-set-property",..) name "' + name + '" found.');
                 that.setProperty(name, value);
 
                 that.callbackStore.forEach(item => {
@@ -185,7 +185,7 @@ export class AdapterLitElement extends LitElement {
         const local = pair[0];
         const global = pair[1] || local;
         const that = this;
-        const event = new CustomEvent('subscribe',
+        const event = new CustomEvent('dbp-subscribe',
             {
                 bubbles: true,
                 composed: true,
@@ -224,7 +224,7 @@ export class AdapterLitElement extends LitElement {
         console.log('AdapterLitElement(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
-        const event = new CustomEvent('unsubscribe',
+        const event = new CustomEvent('dbp-unsubscribe',
             {
                 bubbles: true,
                 composed: true,
@@ -286,7 +286,11 @@ export class AdapterLitElement extends LitElement {
                 }
                 break;
             default:
-                super.attributeChangedCallback(name, oldValue, newValue);
+                // The function should not be called if newValue is empty but name and oldValue are set
+                // This should prevent 'Uncaught SyntaxError: JSON.parse unexpected end of data at line 1 column 1 of the JSON data'
+                if (newValue || !oldValue || !name) {
+                    super.attributeChangedCallback(name, oldValue, newValue);
+                }
         }
 
         // console.log("this.lang", this.tagName, name, this.lang);
@@ -295,14 +299,16 @@ export class AdapterLitElement extends LitElement {
     }
 
     /**
-     * Send a set-property event to the provider components
+     * Send a dbp-set-property event to the provider components
      *
      * @param name
      * @param value
      * @returns {boolean}
      */
     sendSetPropertyEvent(name, value) {
-        const event = new CustomEvent("set-property", {
+        // console.log("dbp-set-property", name, value);
+
+        const event = new CustomEvent('dbp-set-property', {
             bubbles: true,
             composed: true,
             detail: {'name': name, 'value': value}

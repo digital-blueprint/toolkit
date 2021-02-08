@@ -54,7 +54,7 @@
 
 <body>
 <dbp-provider id="root"
-              lang="en" entry-point-url="<%= entryPointURL %>"
+              entry-point-url="<%= entryPointURL %>"
               nextcloud-auth-url="<%= nextcloudWebAppPasswordURL %>"
               nextcloud-web-dav-url="<%= nextcloudWebDavURL %>"
               nextcloud-name="<%= nextcloudName %>"
@@ -62,6 +62,7 @@
     <<%= name %>
         src="<%= getUrl(name + '.topic.metadata.json') %>"
         auth
+        lang="en"
         base-path="<%= getUrl('') %>"
         keycloak-config='{"url": "<%= keyCloakBaseURL %>", "realm": "tugraz", "clientId": "<%= keyCloakClientId %>", "silentCheckSsoRedirectUri": "<%= getUrl('silent-check-sso.html') %>"}'
         matomo-url="<%= matomoUrl %>" matomo-site-id="<%= matomoSiteId %>"

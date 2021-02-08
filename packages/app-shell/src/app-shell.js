@@ -297,12 +297,8 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             this.lang = lang;
             this.router.update();
 
-            const event = new CustomEvent("dbp-language-changed", {
-                bubbles: true,
-                detail: {'lang': lang}
-            });
-
-            this.dispatchEvent(event);
+            // tell a dbp-provider to update the "lang" property
+            this.sendSetPropertyEvent('lang', lang);
         }
     }
 
@@ -312,6 +308,10 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 // For screen readers
                 document.documentElement.setAttribute("lang", this.lang);
                 i18n.changeLanguage(this.lang);
+
+                this.router.update();
+                this.subtitle = this.activeMetaDataText("short_name");
+                this.description = this.activeMetaDataText("description");
             }
         });
 
@@ -822,7 +822,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 <dbp-notification lang="${this.lang}"></dbp-notification>
                 <header>
                     <div class="hd1-left">
-                        <dbp-language-select @dbp-language-changed=${this.onLanguageChanged.bind(this)}></dbp-language-select>
+                        <dbp-language-select subscribe="lang"></dbp-language-select>
                     </div>
                     <div class="hd1-middle">
                     </div>

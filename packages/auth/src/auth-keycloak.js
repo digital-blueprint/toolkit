@@ -10,7 +10,7 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
  * Keycloak auth web component
  * https://www.keycloak.org/docs/latest/securing_apps/index.html#_javascript_adapter
  *
- * Emits a set-property event for the attribute "auth":
+ * Emits a dbp-set-property event for the attribute "auth":
  *   auth.subject: Keycloak username
  *   auth.token: Keycloak token to send with your requests
  *   auth.user-full-name: Full name of the user

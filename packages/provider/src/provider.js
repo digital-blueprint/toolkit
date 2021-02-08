@@ -37,10 +37,10 @@ export class Provider extends HTMLElement {
 
         const that = this;
 
-        this.addEventListener('subscribe', function (e) {
+        this.addEventListener('dbp-subscribe', function (e) {
             const name = e.detail.name;
             if (that.hasProperty(name) || that.root) {
-                console.log('Provider(' + that.id + ') eventListener("subscribe",..) name "' + name + '" found.');
+                console.log('Provider(' + that.id + ') eventListener("dbp-subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
                 e.detail.callback(that.getProperty(name));
@@ -48,11 +48,11 @@ export class Provider extends HTMLElement {
             }
         }, false);
 
-        this.addEventListener('unsubscribe', function (e) {
+        this.addEventListener('dbp-unsubscribe', function (e) {
             const name = e.detail.name;
             const sender = e.detail.sender;
             if (that.hasProperty(name) || that.root) {
-                console.log('Provider(' + that.id + ') eventListener("unsubscribe",..) name "' + name + '" found.');
+                console.log('Provider(' + that.id + ') eventListener("dbp-unsubscribe",..) name "' + name + '" found.');
                 that.callbackStore.forEach(item => {
                     if (item.sender === sender && item.name === name) {
                         const index = that.callbackStore.indexOf(item);
@@ -66,12 +66,12 @@ export class Provider extends HTMLElement {
         }, false);
 
         // listen to property changes
-        this.addEventListener('set-property', function (e) {
+        this.addEventListener('dbp-set-property', function (e) {
             const name = e.detail.name;
             const value = e.detail.value;
 
             if (that.hasProperty(name) || that.root) {
-                console.log('Provider(' + that.id + ') eventListener("set-property",..) name "' + name + '" found.');
+                console.log('Provider(' + that.id + ') eventListener("dbp-set-property",..) name "' + name + '" found.');
                 that.setProperty(name, value);
 
                 that.callbackStore.forEach(item => {

@@ -27,3 +27,20 @@ There is an automatic publishing process initiated for each package if code is p
 to the `master` branch, if the package isn't set to private in its `package.json` and
 the version number in its `package.json` is higher than the version number on npmjs.com.
 
+## Reserved attributes
+
+| Attribute         | Description                                                         |
+| ----------------- | ------------------------------------------------------------------- |
+| `subscribe`       | Used in all components to subscribe to attributes set by a provider |
+| `unsubscribe`     | Reserved for future use                                             |
+| `auth`            | Authentication information, set by the authentication component     |
+| `lang`            | Currently selected language, set by the language selector           |
+| `entry-point-url` | Entry point url for all api requests                                |
+
+## Reserved events
+
+| Event              | Description                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| `dbp-subscribe`    | Event to tell a provider that the component wants to subscribe to an attribute     |
+| `dbp-unsubscribe`  | Event to tell a provider that the component wants to unsubscribe from an attribute |
+| `dbp-set-property` | Event to tell a provider that a property should be changed                         |
