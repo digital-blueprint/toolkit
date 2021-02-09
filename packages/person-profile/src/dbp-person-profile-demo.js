@@ -8,7 +8,6 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import $ from 'jquery';
 import {PersonSelect} from '@dbp-toolkit/person-select';
-import {EventBus} from '@dbp-toolkit/common';
 
 export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -18,6 +17,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
         this.person = '';
         this.selectedPerson = '';
         this.noAuth = false;
+        this.auth = {};
     }
 
     static get scopedElements() {
@@ -37,20 +37,32 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
             person: { type: String, attribute: false },
             selectedPerson: { type: String, attribute: false },
             noAuth: { type: Boolean, attribute: 'no-auth' },
+            auth: { type: Object },
         };
+    }
+
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case 'auth':
+                {
+                    const person = this.auth.person;
+
+                    if (person) {
+                        this.person = person.identifier;
+                    }
+                }
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
     }
 
     connectedCallback() {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
         const that = this;
-
-        this._bus = new EventBus();
-        this._bus.subscribe('auth-update', (data) => {
-            if (data.person) {
-                this.person = data.person.identifier;
-            }
-        });
 
         this.updateComplete.then(()=>{
             const personSelect = that._(this.constructor.getScopedTagName('dbp-person-select'));
@@ -59,11 +71,6 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
             };
 
         });
-    }
-
-    disconnectedCallback() {
-        this._bus.close();
-        super.disconnectedCallback();
     }
 
     static get styles() {
@@ -78,12 +85,12 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getAuthComponentHtml() {
-        return this.noAuth ? html`<dbp-login-button lang="${this.lang}" show-image></dbp-login-button>` : html`
+        return this.noAuth ? html`<dbp-login-button subscribe="auth" lang="${this.lang}" show-image></dbp-login-button>` : html`
             <div class="container">
-                <dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
                                    url="https://auth-dev.tugraz.at/auth" realm="tugraz"
                                    client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
-                <dbp-login-button lang="${this.lang}" show-image></dbp-login-button>
+                <dbp-login-button subscribe="auth" lang="${this.lang}" show-image></dbp-login-button>
             </div>
         `;
     }
@@ -97,7 +104,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Person-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-profile subscribe="auth:auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.person}"></dbp-person-profile>
+                    <dbp-person-profile subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.person}"></dbp-person-profile>
                 </div>
             </section>
             <section class="section">
@@ -105,10 +112,10 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Select-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-select subscribe="auth:auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+                    <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
                 </div>
                 <div class="container">
-                    <dbp-person-profile subscribe="auth:auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.selectedPerson}"></dbp-person-profile>
+                    <dbp-person-profile subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.selectedPerson}"></dbp-person-profile>
                 </div>
             </section>
         `;

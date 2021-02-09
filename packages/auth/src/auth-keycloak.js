@@ -1,6 +1,5 @@
 import {i18n} from './i18n.js';
 import JSONLD from '@dbp-toolkit/common/jsonld';
-import {EventBus} from '@dbp-toolkit/common';
 import  {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
@@ -12,6 +11,7 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
  *
  * Emits a dbp-set-property event for the attribute "auth":
  *   auth.subject: Keycloak username
+ *   auth.login-status: Login status (see object LoginStatus)
  *   auth.token: Keycloak token to send with your requests
  *   auth.user-full-name: Full name of the user
  *   auth.person-id: Person identifier of the user
@@ -31,6 +31,7 @@ export class AuthKeycloak extends AdapterLitElement {
         this.person = null;
         this.entryPointUrl = '';
         this._loginStatus = LoginStatus.UNKNOWN;
+        this.requestedLoginStatus = LoginStatus.UNKNOWN;
 
         // Keycloak config
         this.keycloakUrl = null;
@@ -44,9 +45,33 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     update(changedProperties) {
+        console.log("changedProperties", changedProperties);
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+            switch (propName) {
+                case 'lang':
+                    i18n.changeLanguage(this.lang);
+                break;
+                case 'requestedLoginStatus':
+                    console.log("requested-login-status changed", this.requestedLoginStatus);
+                    switch(this.requestedLoginStatus) {
+                        case LoginStatus.LOGGED_IN:
+                            this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
+                        break;
+                        case LoginStatus.LOGGED_OUT:
+                            // Keycloak will redirect right away without emitting events, so we have
+                            // to do this manually here
+                            if (this._loginStatus === LoginStatus.LOGGED_IN) {
+                                this._setLoginStatus(LoginStatus.LOGGING_OUT);
+                            }
+                            this._kcwrapper.logout();
+                            // In case logout was aborted, for example with beforeunload,
+                            // revert back to being logged in
+                            if (this._loginStatus === LoginStatus.LOGGING_OUT) {
+                                this._setLoginStatus(LoginStatus.LOGGED_IN);
+                            }
+                        break;
+                    }
+                break;
             }
         });
 
@@ -113,6 +138,7 @@ export class AuthKeycloak extends AdapterLitElement {
 
     sendSetPropertyEvents() {
         const auth = {
+            'login-status': this._loginStatus,
             'subject': this.subject,
             'token': this.token,
             'user-full-name': this.name,
@@ -126,6 +152,7 @@ export class AuthKeycloak extends AdapterLitElement {
         }
 
         this.sendSetPropertyEvent('auth', auth);
+        JSONLD.doInitializationOnce(this.entryPointUrl, this.token);
 
         // this.sendSetPropertyEvent('auth-subject', this.subject);
         // this.sendSetPropertyEvent('auth-token', this.token);
@@ -139,15 +166,7 @@ export class AuthKeycloak extends AdapterLitElement {
             return;
 
         this._loginStatus = status;
-
-        this._bus.publish('auth-update', {
-            status: this._loginStatus,
-            token: this.token,
-            name: this.name,
-            person: this.person,
-        }, {
-            retain: true,
-        });
+        this.sendSetPropertyEvents();
     }
 
     static get properties() {
@@ -170,6 +189,7 @@ export class AuthKeycloak extends AdapterLitElement {
             silentCheckSsoRedirectUri: { type: String, attribute: 'silent-check-sso-redirect-uri' },
             scope: { type: String },
             idpHint: { type: String, attribute: 'idp-hint' },
+            requestedLoginStatus: { type: String, attribute: 'requested-login-status' },
         };
     }
 
@@ -183,27 +203,8 @@ export class AuthKeycloak extends AdapterLitElement {
         if (!this.clientId)
             throw Error("client-id not set");
 
-        this._bus = new EventBus();
         this._kcwrapper = new KeycloakWrapper(this.keycloakUrl, this.realm, this.clientId, this.silentCheckSsoRedirectUri, this.idpHint);
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
-
-        this._bus.subscribe('auth-login', () => {
-            this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
-        });
-
-        this._bus.subscribe('auth-logout', () => {
-            // Keycloak will redirect right away without emitting events, so we have
-            // to do this manually here
-            if (this._loginStatus === LoginStatus.LOGGED_IN) {
-                this._setLoginStatus(LoginStatus.LOGGING_OUT);
-            }
-            this._kcwrapper.logout();
-            // In case logout was aborted, for example with beforeunload,
-            // revert back to being logged in
-            if (this._loginStatus === LoginStatus.LOGGING_OUT) {
-                this._setLoginStatus(LoginStatus.LOGGED_IN);
-            }
-        });
 
         const handleLogin = async () => {
             if (this.forceLogin || this._kcwrapper.isLoggingIn()) {
@@ -225,7 +226,6 @@ export class AuthKeycloak extends AdapterLitElement {
     disconnectedCallback() {
         this._kcwrapper.close();
         this._kcwrapper.removeEventListener('changed', this._onKCChanged);
-        this._bus.close();
 
         super.disconnectedCallback();
     }

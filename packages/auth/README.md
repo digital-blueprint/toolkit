@@ -27,6 +27,9 @@ npm i @dbp-toolkit/auth
 - `try-login` (optional, default: off): if enabled the a login will happen if the user is already logged in
   and finishing the login process would not result in a page location change (reload/redirect).
     - example `<dbp-auth-keycloak try-login></dbp-auth-keycloak>`
+- `requested-login-status` (optional, default: `unknown`): can be set to `logged-in` or `logged-out` to request a login or logout
+    - example `<dbp-auth-keycloak requested-login-status="logged-in"></dbp-auth-keycloak>`
+    - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 
 ### Keycloak Specific Attributes
 
@@ -41,6 +44,7 @@ npm i @dbp-toolkit/auth
 The component emits a `dbp-set-property` event for the attribute `auth`:
 
 - `auth.subject`: Keycloak username
+- `auth.login-status`: Login status (`unknown`, `logging-in`, `logging-out`, `logged-in`, `logged-out`)
 - `auth.token`: Keycloak token to send with your requests
 - `auth.user-full-name`: Full name of the user
 - `auth.person-id`: Person identifier of the user

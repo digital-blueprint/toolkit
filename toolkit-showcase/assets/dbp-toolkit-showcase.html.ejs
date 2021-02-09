@@ -62,6 +62,7 @@
     <<%= name %>
         src="<%= getUrl(name + '.topic.metadata.json') %>"
         auth
+        requested-login-status
         lang="en"
         base-path="<%= getUrl('') %>"
         keycloak-config='{"url": "<%= keyCloakBaseURL %>", "realm": "tugraz", "clientId": "<%= keyCloakClientId %>", "silentCheckSsoRedirectUri": "<%= getUrl('silent-check-sso.html') %>"}'

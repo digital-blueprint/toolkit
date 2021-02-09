@@ -2,7 +2,7 @@ import {createI18nInstance} from './i18n.js';
 import {html, css} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
-import {Icon, EventBus} from '@dbp-toolkit/common';
+import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from '@dbp-toolkit/notification';
@@ -60,8 +60,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         this.env = '';
         this.buildUrl = '';
         this.buildTime = '';
-
-        this._updateAuth = this._updateAuth.bind(this);
         this._loginStatus = 'unknown';
 
         this.matomoUrl = '';
@@ -73,6 +71,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         this.shellName = 'TU Graz';
         this.shellSubname= 'Graz University of Technology';
         this.noBrand = false;
+        this.auth = {};
     }
 
     static get scopedElements() {
@@ -250,41 +249,20 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             buildUrl: { type: String, attribute: "build-url" },
             buildTime: { type: String, attribute: "build-time" },
             env: { type: String },
+            auth: { type: Object },
         };
-    }
-
-    _updateAuth(login) {
-        if (login.status != this._loginStatus) {
-            console.log('Login status: ' + login.status);
-        }
-
-        this._loginStatus = login.status;
-
-        // Clear the session storage when the user logs out
-        if (this._loginStatus === 'logging-out') {
-            sessionStorage.clear();
-        }
     }
 
     connectedCallback() {
         super.connectedCallback();
 
-        this._bus = new EventBus();
-
         if (this.src)
             this.fetchMetadata(this.src);
         this.initRouter();
 
-        this._bus.subscribe('auth-update', this._updateAuth);
-
         this.updateComplete.then(()=> {
             this.matomo = this.shadowRoot.querySelector(this.constructor.getScopedTagName('dbp-matomo'));
         });
-    }
-
-    disconnectedCallback() {
-        this._bus.close();
-        super.disconnectedCallback();
     }
 
     /**
@@ -304,14 +282,32 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
-                // For screen readers
-                document.documentElement.setAttribute("lang", this.lang);
-                i18n.changeLanguage(this.lang);
+            switch (propName) {
+                case 'lang':
+                    i18n.changeLanguage(this.lang);
+                    // For screen readers
+                    document.documentElement.setAttribute("lang", this.lang);
+                    i18n.changeLanguage(this.lang);
 
-                this.router.update();
-                this.subtitle = this.activeMetaDataText("short_name");
-                this.description = this.activeMetaDataText("description");
+                    this.router.update();
+                    this.subtitle = this.activeMetaDataText("short_name");
+                    this.description = this.activeMetaDataText("description");
+                break;
+                case 'auth':
+                {
+                    const loginStatus = this.auth['login-status'];
+                    if (loginStatus !== this._loginStatus) {
+                        console.log('Login status: ' + loginStatus);
+                    }
+
+                    this._loginStatus = loginStatus;
+
+                    // Clear the session storage when the user logs out
+                    if (this._loginStatus === 'logging-out') {
+                        sessionStorage.clear();
+                    }
+                }
+                break;
             }
         });
 
@@ -815,8 +811,8 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         return html`
             <slot class="${slotClassMap}"></slot>
-            <dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
-            <dbp-matomo endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
+            <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
+            <dbp-matomo subscribe="auth" endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
             <div class="${mainClassMap}">
             <div id="main">
                 <dbp-notification lang="${this.lang}"></dbp-notification>
@@ -827,7 +823,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                     <div class="hd1-middle">
                     </div>
                     <div class="hd1-right">
-                        <dbp-auth-menu-button class="auth-button" lang="${this.lang}"></dbp-auth-menu-button>
+                        <dbp-auth-menu-button subscribe="auth" class="auth-button" lang="${this.lang}"></dbp-auth-menu-button>
                     </div>
                     <div class="hd2-left">
                         <div class="header">
