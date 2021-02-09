@@ -8,8 +8,8 @@
 
 <body>
 
-<dbp-provider auth>
-    <dbp-auth-keycloak lang="de" entry-point-url="http://127.0.0.1:8000"
+<dbp-provider auth requested-login-status>
+    <dbp-auth-keycloak subscribe="requested-login-status" lang="de" entry-point-url="http://127.0.0.1:8000"
                        url="https://auth-dev.tugraz.at/auth"
                        realm="tugraz"
                        client-id="auth-dev-mw-frontend-local"
@@ -17,7 +17,7 @@
                        scope="optional-test-scope"
                        load-person
                        try-login></dbp-auth-keycloak>
-    <dbp-login-button lang="de" show-image></dbp-login-button>
+    <dbp-login-button subscribe="auth" lang="de" show-image></dbp-login-button>
 
     <dbp-auth-demo lang="de" entry-point-url="http://127.0.0.1:8000" subscribe="auth:auth"></dbp-auth-demo>
 </dbp-provider>

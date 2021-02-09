@@ -290,6 +290,8 @@ export class AdapterLitElement extends LitElement {
                 // This should prevent 'Uncaught SyntaxError: JSON.parse unexpected end of data at line 1 column 1 of the JSON data'
                 if (newValue || !oldValue || !name) {
                     super.attributeChangedCallback(name, oldValue, newValue);
+                // } else {
+                //     console.log("attributeChangedCallback ignored", name, oldValue, newValue);
                 }
         }
 

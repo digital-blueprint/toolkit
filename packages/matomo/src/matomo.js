@@ -1,5 +1,5 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {EventBus} from '@dbp-toolkit/common';
+import {LoginStatus} from "@dbp-toolkit/auth/src/util";
 
 function pushEvent(event) {
     window._paq = window._paq || [];
@@ -15,6 +15,8 @@ export class MatomoElement extends DBPLitElement {
         this.isRunning = false;
         this.lastEvent = [];
         this.gitInfo = '';
+        this.auth = {};
+        this.loginStatus = '';
     }
 
 
@@ -23,21 +25,27 @@ export class MatomoElement extends DBPLitElement {
             endpoint: { type: String },
             siteId: { type: Number, attribute: 'site-id' },
             gitInfo: { type: Number, attribute: 'git-info' },
+            auth: { type: Object },
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case 'auth':
+                {
+                    const loginStatus = this.auth['login-status'];
 
-        this._bus = new EventBus();
-        this._bus.subscribe('auth-update', (data) => {
-            this.setupMatomo(data.status === 'logged-in');
+                    if (this.loginStatus !== loginStatus) {
+                        this.setupMatomo(loginStatus === LoginStatus.LOGGED_IN);
+                        this.loginStatus = loginStatus;
+                    }
+                }
+                break;
+            }
         });
-    }
 
-    disconnectedCallback() {
-        this._bus.close();
-        super.disconnectedCallback();
+        super.update(changedProperties);
     }
 
     render() {

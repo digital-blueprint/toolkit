@@ -3,8 +3,9 @@ import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Icon, EventBus} from '@dbp-toolkit/common';
+import {Icon} from '@dbp-toolkit/common';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import {LoginStatus} from "@dbp-toolkit/auth/src/util";
 
 
 const i18n = createI18nInstance();
@@ -15,7 +16,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
         super();
         this.lang = 'de';
         this.showImage = false;
-        this._loginData = {};
+        this.auth = {};
 
         this.closeDropdown = this.closeDropdown.bind(this);
         this.onWindowResize = this.onWindowResize.bind(this);
@@ -32,7 +33,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             ...super.properties,
             lang: { type: String },
             showImage: { type: Boolean, attribute: 'show-image' },
-            _loginData: { type: Object, attribute: false },
+            auth: { type: Object },
         };
     }
 
@@ -43,18 +44,12 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     connectedCallback() {
         super.connectedCallback();
 
-        this._bus = new EventBus();
-        this._bus.subscribe('auth-update', (data) => {
-            this._loginData = data;
-        });
-
         window.addEventListener('resize', this.onWindowResize);
         document.addEventListener('click', this.closeDropdown);
     }
 
     disconnectedCallback() {
         window.removeEventListener('resize', this.onWindowResize);
-        this._bus.close();
         document.removeEventListener('click', this.closeDropdown);
         super.disconnectedCallback();
     }
@@ -76,12 +71,12 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     onLoginClicked(e) {
-        this._bus.publish('auth-login');
+        this.sendSetPropertyEvent('requested-login-status', LoginStatus.LOGGED_IN);
         e.preventDefault();
     }
 
     onLogoutClicked(e) {
-        this._bus.publish('auth-logout');
+        this.sendSetPropertyEvent('requested-login-status', LoginStatus.LOGGED_OUT);
     }
 
     update(changedProperties) {
@@ -251,14 +246,14 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     renderLoggedIn() {
-        const person = this._loginData.person;
+        const person = this.auth.person;
         const imageURL = (this.showImage && person && person.image) ? person.image : null;
 
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
                 <a href="#">
                     <div class="dropdown-trigger login-button">
-                        <div class="name">${this._loginData.name}</div>
+                        <div class="name">${this.auth['user-full-name']}</div>
                         <dbp-icon class="menu-icon" name="chevron-down" id="menu-chevron-icon"></dbp-icon>
                     </div>
                 </a>
@@ -307,7 +302,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     render() {
-        const loggedIn = (this._loginData.status === 'logged-in');
+        const loggedIn = (this.auth['login-status'] === 'logged-in');
         return html`
             <div class="authbox">
                 ${loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}

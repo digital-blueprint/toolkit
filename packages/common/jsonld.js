@@ -3,7 +3,6 @@
 import {send as notify} from './notification';
 import * as utils from "./utils";
 import {i18n} from "./i18n";
-import {EventBus} from './';
 
 let instances = {};
 let successFunctions = {};
@@ -44,21 +43,25 @@ export default class JSONLD {
         // add success and failure functions
         if (typeof successFnc == 'function') successFunctions[apiUrl].push(successFnc);
         if (typeof failureFnc == 'function') failureFunctions[apiUrl].push(failureFnc);
+    }
 
-        // check if api call was already started
-        if (initStarted[apiUrl] !== undefined) {
+    /**
+     * This should be run as soon as an api token is available (can be run multiple times)
+     *
+     * @param apiUrl
+     * @param token
+     */
+    static doInitializationOnce(apiUrl, token) {
+        // console.log("doInitializationOnce", apiUrl, token);
+
+        // check if token is not set or api call was already started
+        if (!apiUrl || !token || initStarted[apiUrl] !== undefined) {
             return;
         }
 
         initStarted[apiUrl] = true;
-
-        this._bus = new EventBus();
-        this._bus.subscribe('auth-update', (data) => {
-            if (data.token) {
-                this._bus.close();
-                JSONLD.doInitialization(apiUrl, data.token);
-            }
-        });
+        JSONLD.doInitialization(apiUrl, token);
+        // console.log("doInitializationOnce Done", apiUrl, token);
     }
 
     static doInitialization(apiUrl, token) {
