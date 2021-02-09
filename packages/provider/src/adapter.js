@@ -22,23 +22,12 @@ export class Adapter extends HTMLElement {
         this[this.findPropertyName(name)] = value;
     }
 
-    setProperty(name, value) {
-        if (typeof value === 'object' && value !== null) {
-            // console.log("value is object", value);
-            this.setPropertyByAttributeName(name, value);
-        } else {
-            this.attributeChangedCallback(name, this.getPropertyByAttributeName(name), value);
-        }
-
-    }
-
     connectedCallback() {
 
         this.connected = true;
 
         const that = this;
 
-        that.setPropertiesToChildNodes();
 
         // get all *not observed* attributes
         if (this.hasAttributes()) {
@@ -47,8 +36,10 @@ export class Adapter extends HTMLElement {
                 if (['id', 'class', 'style', 'data-tag-name'].includes(attrs[i].name)) {
                     continue;
                 }
+                this.setPropertiesToChildNodes();
 
-                this.setProperty(attrs[i].name, attrs[i].value);
+                this.attributeChangedCallback(attrs[i].name, this.getPropertyByAttributeName(attrs[i].name), attrs[i].value);
+
                 console.log('AdapterProvider (' + that.tagName + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
             }
         }
@@ -168,12 +159,8 @@ export class Adapter extends HTMLElement {
                 break;
             default:
                 break;
-                //super.attributeChangedCallback(name, oldValue, newValue);
         }
 
-        // console.log("this.lang", this.tagName, name, this.lang);
-        // console.log("this.entryPointUrl", this.tagName, name, this.entryPointUrl);
-        // console.trace();
     }
 
     /**
@@ -196,7 +183,6 @@ export class Adapter extends HTMLElement {
     setPropertiesToChildNodes(local, value)
     {
         let children = this.children;
-        console.log("----------", children);
         Array.from(children).forEach(child => child.setAttribute(local, value));
     }
 

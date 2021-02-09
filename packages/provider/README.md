@@ -88,3 +88,23 @@ the bearer token via `this.auth.token`.
   <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
 </dbp-person-select-demo>
 ```
+
+## AdapterElement
+
+This is a wrapper for third party webcomponents. you can wrap this class around to support the provider functionality in third party webcomponents.
+
+You can locally "subscribe" to attributes (e.g. `local-name`) that can be provided by a `dbp-provider` (e.g. `global-name`). The `dbp-adapter` will set the attributes to his childnodes.
+
+### Example
+
+Multiple attributes can be subscribed when separated by a comma (`,`).
+
+```html
+<provider global-name="value" global-name2="value2">
+  <dbp-provider-adapter subscribe="local-name:global-name">
+    <third-party-webcomponent>  </third-party-webcomponent>
+  </dbp-provider-adapter>
+</provider>
+<script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
+<script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-adapter.js"></script>
+```
