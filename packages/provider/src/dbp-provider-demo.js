@@ -113,7 +113,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                     </dbp-provider>
                 </dbp-provider>
                 
-                <h2> DBP Provider </h2>
+                <h2> DBP Provider Adapter</h2>
                 <p> The dbp-provider is for third party webcomponents, which we want to configure with a provider.</p>
                 <pre>&lt;dbp-provider  id="demoadapter"  dbp-style-red="color:red;" dbp-style-green="color:green;" >&lt;/dbp-provider&gt;</pre>
                 <dbp-provider id="demoadapter"

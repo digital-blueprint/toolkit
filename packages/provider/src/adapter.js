@@ -11,21 +11,7 @@ export class Adapter extends HTMLElement {
         this.subscribe = '';
         this.unsubscribe = '';
 
-        this.callbackStore = [];
-
-        // Previously we used direct properties like this["lang"] (instead of this.propertyStore["lang"]) for storing the
-        // properties, but the "lang" property seems to be updated before the event from the MutationObserver, so we
-        // cannot observe a value change directly (as workaround we use another property (e.g. "langValue") instead of "lang")
-        this.propertyStore = {};
-
-        // We need to store our own "last values" because we cannot be sure what the MutationObserver detects
-        this.lastProperties = {};
-
         console.log('Adapter constructor()');
-    }
-
-    getProperty(name) {
-        return this.propertyStore[name];
     }
 
     getPropertyByAttributeName(name) {
@@ -44,117 +30,15 @@ export class Adapter extends HTMLElement {
             this.attributeChangedCallback(name, this.getPropertyByAttributeName(name), value);
         }
 
-        this.lastProperties[name] = value;
-        this.propertyStore[name] = value;
-    }
-
-    hasPropertyChanged(name, value) {
-        return this.lastProperties[name] !== value;
-    }
-
-    hasProperty(name) {
-        // return this.hasAttribute("name")
-        return Object.hasOwnProperty.call(this.propertyStore, name);
     }
 
     connectedCallback() {
-
-        if (this.deferUnSubscribe) {
-            const attrs = this.unsubscribe.split(',');
-            attrs.forEach(element => this.unSubscribeProviderFor(element));
-            this.deferSubscribe = false;
-            this.unsubscribe = '';
-        }
-
-        if (this.deferSubscribe) {
-            const attrs = this.subscribe.split(',');
-            attrs.forEach(element => this.subscribeProviderFor(element));
-            this.deferSubscribe = false;
-        }
 
         this.connected = true;
 
         const that = this;
 
-        this.addEventListener('dbp-subscribe', function (e) {
-            const name = e.detail.name;
-            if (that.hasProperty(name) || that.root) {
-                console.log('AdapterProvider(' + that.tagName + ') eventListener("dbp-subscribe",..) name "' + name + '" found.');
-                that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
-
-                e.detail.callback(that.getProperty(name));
-                e.stopPropagation();
-            }
-        }, false);
-
-        this.addEventListener('dbp-unsubscribe', function (e) {
-            const name = e.detail.name;
-            const sender = e.detail.sender;
-            if (that.hasProperty(name) || that.root) {
-                console.log('AdapterProvider(' + that.tagName + ') eventListener("dbp-unsubscribe",..) name "' + name + '" found.');
-                that.callbackStore.forEach(item => {
-                    if (item.sender === sender && item.name === name) {
-                        const index = that.callbackStore.indexOf(item);
-                        that.callbackStore.splice(index, 1);
-                        console.log('AdapterProvider(' + that.tagName + ') eventListener for name "' + name + '" removed.');
-                    }
-                });
-
-                e.stopPropagation();
-            }
-        }, false);
-
-        // listen to property changes
-        this.addEventListener('set-property', function (e) {
-            const name = e.detail.name;
-            const value = e.detail.value;
-
-            if (that.hasProperty(name) || that.root) {
-                console.log('AdapterProvider(' + that.tagName + ') eventListener("set-property",..) name "' + name + '" found.');
-                that.setProperty(name, value);
-
-                that.callbackStore.forEach(item => {
-                    if (item.name === name) {
-                        item.callback(value);
-                    }
-                });
-
-                e.stopPropagation();
-            }
-        }, false);
-
-        // Options for the observer (which mutations to observe)
-        const config = { attributes: true, childList: false, subtree: false };
-
-        // Callback function to execute when mutations are observed
-        const callback = function(mutationsList, observer) {
-            // Use traditional 'for loops' for IE 11
-            for(const mutation of mutationsList) {
-                if (mutation.type === 'attributes') {
-                    const name = mutation.attributeName;
-                    const value = that.getAttribute(name);
-
-                    if (that.hasPropertyChanged(name, value)) {
-                        console.log('AdapterProvider (' + that.tagName + ') observed attribute "' + name + '" changed');
-                        that.setProperty(name, value);
-
-                        that.callbackStore.forEach(item => {
-                            if (item.name === name) {
-                                item.callback(value);
-                            }
-                        });
-                    }
-                }
-            }
-        };
-
         that.setPropertiesToChildNodes();
-
-        // Create an observer instance linked to the callback function
-        const observer = new MutationObserver(callback);
-
-        // Start observing the target node for configured mutations
-        observer.observe(this, config);
 
         // get all *not observed* attributes
         if (this.hasAttributes()) {
@@ -316,31 +200,4 @@ export class Adapter extends HTMLElement {
         Array.from(children).forEach(child => child.setAttribute(local, value));
     }
 
-    // update(changedProperties) {
-    //     changedProperties.forEach((oldValue, propName) => {
-    //         switch(propName) {
-    //             case 'subscribe':
-    //                 if (this.subscribe && this.subscribe.length > 0) {
-    //                     if (this.connected) {
-    //                         const attrs = this.subscribe.split(',');
-    //                         attrs.forEach(element => this.unSubscribeProviderFor(element));
-    //                     } else {
-    //                         this.deferUnSubscribe = this.subscribe.length > 0;
-    //                         this.unsubscribe = this.subscribe;
-    //                     }
-    //                 }
-    //                 if (this.subscribe !== null) {
-    //                     if (this.connected) {
-    //                         const attrs = this.subscribe.split(',');
-    //                         attrs.forEach(element => this.subscribeProviderFor(element));
-    //                     } else {
-    //                         this.deferSubscribe = this.subscribe && this.subscribe.length > 0;
-    //                     }
-    //                 }
-    //                 break;
-    //         }
-    //     });
-    //
-    //     super.update(changedProperties);
-    // }
 }
