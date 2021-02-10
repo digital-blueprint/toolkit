@@ -79,6 +79,10 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
     - example `<dbp-file-source text="Please select some files"></dbp-file-source>`
 - `button-label` (optional): the text that is shown on the button to select files
     - example `<dbp-file-source button-label="Select files"></dbp-file-source>`
+- `initial-file-handling-state` (optional): An  object: `initial-file-handling-state' = {target: "", path: ""}` for initial opening behaviour.
+  This is supported by the provider! Use this object to sync file source and file sink on one page at first time open.
+    - example `<dbp-file-source initial-file-handling-state="{target: 'local', path:'nextcloudpath'}"></dbp-file-source>`
+    - example provider `<dbp-file-source subscribe="initial-file-handling-state:initial-file-handling-state"></dbp-file-source>`
 
 ### Outgoing Events
 
@@ -120,6 +124,11 @@ files to a [Nextcloud](https://nextcloud.com/) instance.
     - example `<dbp-file-sink text="Download files as ZIP-file"></dbp-file-sink>`
 - `button-label` (optional): the text that is shown on the button to download the zip file
     - example `<dbp-file-sink button-label="Download files"></dbp-file-sink>`
+- `initial-file-handling-state` (optional): An  object: `initial-file-handling-state' = {target: "", path: ""}` for initial opening behaviour.
+  This is supported by the provider! Use this object to sync file source and file sink on one page at first time open.
+  - example `<dbp-file-source initial-file-handling-state="{target: 'local', path:'nextcloudpath'}"></dbp-file-source>`
+  - example provider `<dbp-file-source subscribe="initial-file-handling-state:initial-file-handling-state"></dbp-file-source>`
+
 
 ### Properties
 

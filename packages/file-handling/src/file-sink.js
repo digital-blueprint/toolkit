@@ -178,8 +178,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             data = {"target": this.activeTarget};
         }
         this.sendSetPropertyEvent('initial-file-handling-state', data);
-        //const event = new CustomEvent("dbp-file-sink-switched", { "detail": data, bubbles: true, composed: true });
-        //this.dispatchEvent(event);
     }
 
 

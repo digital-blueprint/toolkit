@@ -241,8 +241,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         }
 
         this.sendSetPropertyEvent('initial-file-handling-state', data);
-        //const event = new CustomEvent("initial-file-handling-state", { "detail": data, bubbles: true, composed: true });
-        //this.dispatchEvent(event);
     }
 
     checkFileType(file) {

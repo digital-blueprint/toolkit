@@ -29,14 +29,15 @@ the version number in its `package.json` is higher than the version number on np
 
 ## Reserved attributes
 
-| Attribute                | Description                                                         |
-| ------------------------ | ------------------------------------------------------------------- |
-| `subscribe`              | Used in all components to subscribe to attributes set by a provider |
-| `unsubscribe`            | Reserved for future use                                             |
-| `auth`                   | Authentication information, set by the authentication component     |
-| `lang`                   | Currently selected language, set by the language selector           |
-| `entry-point-url`        | Entry point url for all api requests                                |
-| `requested-login-status` | Used by the login buttons to trigger a login in auth components     |
+| Attribute                     | Description                                                                       |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| `subscribe`                   | Used in all components to subscribe to attributes set by a provider               |
+| `unsubscribe`                 | Reserved for future use                                                           |
+| `auth`                        | Authentication information, set by the authentication component                   |
+| `lang`                        | Currently selected language, set by the language selector                         |
+| `entry-point-url`             | Entry point url for all api requests                                              |
+| `requested-login-status`      | Used by the login buttons to trigger a login in auth components                   |
+| `initial-file-handling-state` | Used by the file-handling component to sync file source/sink at first time open   |
 
 ## Reserved events
 
