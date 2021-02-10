@@ -24,18 +24,18 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
         this.nextcloudName ='Nextcloud';
-        this.nextcloudDefaultDir = '';
-        this.nextcloudDir = '';
+        this.nextcloudPath = '';
         this.nextcloudFileURL = '';
         this.text = '';
         this.buttonLabel = '';
         this.filename = "files.zip";
         this.files = [];
-        this.activeDestination = 'local';
+        this.activeTarget = 'local';
         this.isDialogOpen = false;
-        this.enabledDestinations = 'local';
-        this.defaultSink = 'a';
+        this.enabledTargets = 'local';
         this.firstOpen = true;
+
+        this.initialFileHandlingState = {target: '', path: ''};
     }
 
     static get scopedElements() {
@@ -56,7 +56,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             lang: {type: String},
             filename: {type: String},
             files: {type: Array, attribute: false},
-            enabledDestinations: {type: String, attribute: 'enabled-destinations'},
+            enabledTargets: {type: String, attribute: 'enabled-targets'},
             nextcloudAuthUrl: {type: String, attribute: 'nextcloud-auth-url'},
             nextcloudWebDavUrl: {type: String, attribute: 'nextcloud-web-dav-url'},
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
@@ -64,12 +64,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             text: {type: String},
             buttonLabel: {type: String, attribute: 'button-label'},
             isDialogOpen: {type: Boolean, attribute: false},
-
-            activeDestination: {type: String, attribute: 'active-destination'},
-            defaultSink: {type: String, attribute: 'default-sink'},
+            activeTarget: {type: String, attribute: 'active-target'},
             firstOpen: {type: Boolean, attribute: false},
-            nextcloudDefaultDir: {type: String, attribute: 'nextcloud-default'},
-            nextcloudDir: {type: String, attribute: false},
+            nextcloudPath: {type: String, attribute: false},
+
+            initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
+
         };
     }
 
@@ -79,6 +79,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
         this.updateComplete.then(() => {
 
+            console.log("initialFileHandlingState", this.initialFileHandlingState);
         });
     }
 
@@ -123,9 +124,9 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 case "lang":
                     i18n.changeLanguage(this.lang);
                     break;
-                case "enabledDestinations":
-                    if (!this.hasEnabledDestination(this.activeDestination)) {
-                        this.activeDestination = this.enabledDestinations.split(",")[0];
+                case "enabledTargets":
+                    if (!this.hasEnabledDestination(this.activeTargets)) {
+                        this.activeTargets = this.enabledTargets.split(",")[0];
                     }
                     break;
                 case "files":
@@ -133,10 +134,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                         this.openDialog();
                     }
                     break;
-                case "nextcloudDefaultDir":
+                case "initialFileHandlingState":
                     //check if default destination is set
                     if (this.firstOpen) {
-                        this.nextcloudDir = this.nextcloudDefaultDir;
+                        this.nextcloudPath = this.initialFileHandlingState.path;
                     }
                     break;
             }
@@ -146,7 +147,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     hasEnabledDestination(source) {
-        return this.enabledDestinations.split(',').includes(source);
+        return this.enabledTargets.split(',').includes(source);
     }
 
     async uploadToNextcloud(directory) {
@@ -170,14 +171,15 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
     sendDestination() {
         let data = {};
-        if (this.activeDestination == 'nextcloud') {
-            data = {"source": this.activeDestination, "nextcloud": this._("#nextcloud-file-picker").directoryPath};
+        if (this.activeTarget == 'nextcloud') {
+            data = {"target": this.activeTarget, "path": this._("#nextcloud-file-picker").directoryPath};
 
         } else {
-            data = {"source": this.activeDestination};
+            data = {"target": this.activeTarget};
         }
-        const event = new CustomEvent("dbp-file-sink-switched", { "detail": data, bubbles: true, composed: true });
-        this.dispatchEvent(event);
+        this.sendSetPropertyEvent('initial-file-handling-state', data);
+        //const event = new CustomEvent("dbp-file-sink-switched", { "detail": data, bubbles: true, composed: true });
+        //this.dispatchEvent(event);
     }
 
 
@@ -187,6 +189,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     loadWebdavDirectory() {
+
         if (this._('#nextcloud-file-picker').webDavClient !== null) {
             this._('#nextcloud-file-picker').loadDirectory(this._('#nextcloud-file-picker').directoryPath);
         }
@@ -199,14 +202,15 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             onClose: modal => { this.isDialogOpen = false; },
         });
 
+        console.log("initialFileHandlingState", this.initialFileHandlingState);
 
         //check if default destination is set
-        if (this.defaultSink !== '' && typeof this.defaultSink !== 'undefined'  && this.firstOpen) {
-            this.activeDestination = this.defaultSink;
-            this.nextcloudDir = this.nextcloudDefaultDir;
+        if (this.initialFileHandlingState.target !== '' && typeof this.initialFileHandlingState.target !== 'undefined'  && this.firstOpen) {
+            this.activeTarget = this.initialFileHandlingState.target;
+            this.nextcloudPath = this.initialFileHandlingState.path;
             if (this._('#nextcloud-file-picker').webDavClient !== null) {
-                this._('#nextcloud-file-picker').loadDirectory(this.nextcloudDefaultDir);
-                console.log("load default nextcloud sink", this.nextcloudDefaultDir);
+                this._('#nextcloud-file-picker').loadDirectory(this.initialFileHandlingState.path);
+                console.log("load default nextcloud sink", this.initialFileHandlingState.path);
             }
             this.firstOpen = false;
         }
@@ -249,14 +253,14 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
                         <nav class="modal-nav">
                             <div title="${i18n.t('file-sink.nav-local')}"
-                                 @click="${() => { this.activeDestination = "local"; }}"
-                                 class="${classMap({"active": this.activeDestination === "local", hidden: !this.hasEnabledDestination("local")})}">
+                                 @click="${() => { this.activeTarget = "local"; }}"
+                                 class="${classMap({"active": this.activeTarget === "local", hidden: !this.hasEnabledDestination("local")})}">
                                 <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
                                  <p>${i18n.t('file-source.nav-local')}</p>
                             </div>
                             <div title="${this.nextcloudName}"
-                                 @click="${() => { this.activeDestination = "nextcloud"; this.loadWebdavDirectory();}}"
-                                 class="${classMap({"active": this.activeDestination === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
+                                 @click="${() => { this.activeTarget = "nextcloud"; this.loadWebdavDirectory();}}"
+                                 class="${classMap({"active": this.activeTarget === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
@@ -270,7 +274,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             
                         
                         <main class="modal-content" id="modal-picker-content">
-                            <div class="source-main ${classMap({"hidden": this.activeDestination !== "local"})}">
+                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "local"})}">
                                 <div id="zip-download-block">
                                     <div class="block">
                                         ${this.text || i18n.t('file-sink.local-intro', {'count': this.files.length})}
@@ -282,7 +286,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                     </button>
                                 </div>
                             </div>
-                            <div class="source-main ${classMap({"hidden": this.activeDestination !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
+                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-nextcloud-file-picker id="nextcloud-file-picker"
                                                            class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
                                                            directories-only
@@ -293,7 +297,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                            auth-url="${this.nextcloudAuthUrl}"
                                                            web-dav-url="${this.nextcloudWebDavUrl}"
                                                            nextcloud-name="${this.nextcloudName}"
-                                                           directory-path="${this.nextcloudDir}"
+                                                           directory-path="${this.nextcloudPath}"
                                                            nextcloud-file-url="${this.nextcloudFileURL}"
                                                            @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
                                                                this.uploadToNextcloud(event.detail);

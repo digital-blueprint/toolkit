@@ -40,21 +40,21 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudAuthUrl = '';
         this.nextcloudName ='Nextcloud';
         this.nextcloudWebDavUrl = '';
-        this.nextcloudDefaultDir = '';
-        this.nextcloudDir = '';
+        this.nextcloudPath = '';
         this.nextcloudFileURL = '';
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
-        this.enabledSources = 'local';
+        this.enabledTargets = 'local';
         this.text = '';
         this.buttonLabel = '';
         this.disabled = false;
         this.decompressZip = false;
         this._queueKey = 0;
-        this.activeSource = 'local';
+        this.activeTarget = 'local';
         this.isDialogOpen = false;
-        this.defaultSource = '';
         this.firstOpen = true;
+
+        this.initialFileHandlingState = {target: '', path: ''};
     }
 
     static get scopedElements() {
@@ -74,7 +74,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             context: { type: String, attribute: 'context'},
             lang: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
-            enabledSources: { type: String, attribute: 'enabled-sources' },
+            enabledTargets: { type: String, attribute: 'enabled-targets' },
             nextcloudAuthUrl: { type: String, attribute: 'nextcloud-auth-url' },
             nextcloudWebDavUrl: { type: String, attribute: 'nextcloud-web-dav-url' },
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
@@ -83,13 +83,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             buttonLabel: { type: String, attribute: 'button-label' },
             disabled: { type: Boolean },
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
-            activeSource: { type: String, attribute: 'active-source' },
+            activeTarget: { type: String, attribute: 'active-target' },
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
-
-            defaultSource: { type: String, attribute: 'default-source' },
             firstOpen: { type: Boolean, attribute: false },
-            nextcloudDefaultDir: { type: String, attribute: 'nextcloud-default' },
-            nextcloudDir: { type: String, attribute: false },
+            nextcloudPath: { type: String, attribute: false },
+
+            initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
         };
     }
 
@@ -99,9 +98,9 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 case "lang":
                     i18n.changeLanguage(this.lang);
                     break;
-                case "enabledSources":
-                    if (!this.hasEnabledSource(this.activeSource)) {
-                        this.activeSource = this.enabledSources.split(",")[0];
+                case "enabledTargets":
+                    if (!this.hasEnabledSource(this.activeTarget)) {
+                        this.activeTarget = this.enabledTargets.split(",")[0];
                     }
                     break;
                 case "isDialogOpen":
@@ -113,10 +112,10 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                         // this.closeDialog();
                     }
                     break;
-            case "nextcloudDefaultDir":
+            case "initialFileHandlingState":
                 //check if default destination is set
                 if (this.firstOpen) {
-                    this.nextcloudDir = this.nextcloudDefaultDir;
+                    this.nextcloudPath = this.initialFileHandlingState.path;
                 }
                 break;
 
@@ -141,6 +140,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             });
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
             this._('#fileElem').addEventListener('change', this.handleChange.bind(this));
+
         });
     }
 
@@ -233,14 +233,16 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     sendSource() {
         let data = {};
-        if (this.activeSource == 'nextcloud') {
-            data = {"source": this.activeSource, "nextcloud": this._("#nextcloud-file-picker").directoryPath};
+        if (this.activeTarget == 'nextcloud') {
+            data = {"target": this.activeTarget, "path": this._("#nextcloud-file-picker").directoryPath};
 
         } else {
-            data = {"source": this.activeSource};
+            data = {"target": this.activeTarget};
         }
-        const event = new CustomEvent("dbp-file-source-switched", { "detail": data, bubbles: true, composed: true });
-        this.dispatchEvent(event);
+
+        this.sendSetPropertyEvent('initial-file-handling-state', data);
+        //const event = new CustomEvent("initial-file-handling-state", { "detail": data, bubbles: true, composed: true });
+        //this.dispatchEvent(event);
     }
 
     checkFileType(file) {
@@ -263,7 +265,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     hasEnabledSource(source) {
-        return this.enabledSources.split(',').includes(source);
+        return this.enabledTargets.split(',').includes(source);
     }
 
     /**
@@ -364,7 +366,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openDialog() {
-        if (this.enabledSources.includes('nextcloud')) {
+        if (this.enabledTargets.includes('nextcloud')) {
             this.loadWebdavDirectory();
         }
 
@@ -381,12 +383,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
 
         //check if default source is set
-        if (this.defaultSource !== '' && typeof this.defaultSource !== 'undefined' && this.firstOpen) {
-            this.activeDestination = this.defaultSource;
-            this.nextcloudDir = this.nextcloudDefaultDir;
+        if (this.initialFileHandlingState.target !== '' && typeof this.initialFileHandlingState.target !== 'undefined' && this.firstOpen) {
+            this.activeDestination = this.initialFileHandlingState.target;
+            this.nextcloudPath = this.initialFileHandlingState.path;
             if (this._('#nextcloud-file-picker').webDavClient !== null) {
-                this._('#nextcloud-file-picker').loadDirectory(this.nextcloudDefaultDir);
-                console.log("load default nextcloud source", this.defaultSource);
+                this._('#nextcloud-file-picker').loadDirectory(this.initialFileHandlingState.path);
+                console.log("load default nextcloud source", this.initialFileHandlingState.target);
             }
             this.firstOpen = false;
         }
@@ -466,14 +468,14 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
                         <nav class="modal-nav">
                             <div title="${i18n.t('file-source.nav-local')}"
-                                 @click="${() => { this.activeSource = "local"; }}"
-                                 class="${classMap({"active": this.activeSource === "local", hidden: !this.hasEnabledSource("local")})}">
+                                 @click="${() => { this.activeTarget = "local"; }}"
+                                 class="${classMap({"active": this.activeTarget === "local", hidden: !this.hasEnabledSource("local")})}">
                                 <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
                                 <p>${i18n.t('file-source.nav-local')}</p>
                             </div>
                             <div title="Nextcloud"
-                                 @click="${() => { this.activeSource = "nextcloud"; this.loadWebdavDirectory();}}"
-                                 class="${classMap({"active": this.activeSource === "nextcloud", hidden: !this.hasEnabledSource("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
+                                 @click="${() => { this.activeTarget = "nextcloud"; this.loadWebdavDirectory();}}"
+                                 class="${classMap({"active": this.activeTarget === "nextcloud", hidden: !this.hasEnabledSource("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
@@ -488,7 +490,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                         </div>
                         <main class="modal-content" id="modal-picker-content">
                             
-                            <div class="source-main ${classMap({"hidden": this.activeSource !== "local"})}">
+                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "local"})}">
                                 <div id="dropArea">
                                     <div class="block">
                                         <p>${this.text || i18n.t('intro')}</p>
@@ -504,7 +506,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                     </label>
                                 </div>
                             </div>
-                            <div class="source-main ${classMap({"hidden": this.activeSource !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
+                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-nextcloud-file-picker id="nextcloud-file-picker"
                                        class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
                                        ?disabled="${this.disabled}"

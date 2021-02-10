@@ -323,6 +323,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param path
      */
     loadDirectory(path) {
+        if ( typeof this.directoryPath === 'undefined' ) {
+           this.directoryPath = '';
+        }
         console.log("load nextcloud directory", path);
         this.selectAllButton = true;
         this.loading = true;
@@ -865,6 +868,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     addFolder() {
         if (this._('#new-folder').value !== "") {
             let folderName = this._('#new-folder').value;
+            if ( typeof this.directoryPath === 'undefined' ) {
+                this.directoryPath = '';
+            }
             let folderPath = this.directoryPath + "/" + folderName;
             this.webDavClient.createDirectory(folderPath).then(contents => {
                 // this.loadDirectory(this.directoryPath);
@@ -913,6 +919,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @returns {string} parent directory path
      */
     getParentDirectoryPath() {
+        if ( typeof this.directoryPath === 'undefined' ) {
+            this.directoryPath = '';
+        }
         let path = this.directoryPath.replace(/\/$/, "");
         path = path.replace(path.split("/").pop(), "").replace(/\/$/, "");
 
@@ -925,6 +934,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @returns {string} clickable breadcrumb path
      */
     getBreadcrumb() {
+        if ( typeof this.directoryPath === 'undefined' ) {
+            this.directoryPath = '';
+        }
         let htmlpath = [];
         htmlpath[0] =  html`<span class="breadcrumb"><a class="home-link" @click="${() => { this.loadDirectory(""); }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> </a></span>`;
         const directories = this.directoryPath.split('/');
