@@ -11,6 +11,7 @@
     "test": "lerna run test",
     "build": "lerna run build",
     "version-patch": "lerna version patch",
+    "version-minor": "lerna version minor",
     "version": "lerna version",
     "yarn-install": "for d in ./packages/*/ ; do (cd \"$d\" && yarn install); done;",
     "rm-dist": "for d in ./packages/*/ ; do (cd \"$d\" && rm dist -Rf); done;",
