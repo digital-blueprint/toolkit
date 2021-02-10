@@ -45,7 +45,7 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     update(changedProperties) {
-        console.log("changedProperties", changedProperties);
+        // console.log("changedProperties", changedProperties);
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
