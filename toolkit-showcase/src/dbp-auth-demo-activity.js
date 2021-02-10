@@ -59,7 +59,7 @@ class DbpAuthDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     render() {
         return html`
                 ${unsafeHTML(readme)}
-                <dbp-auth-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" subscribe="auth:auth"></dbp-auth-demo>
+                <dbp-auth-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" subscribe="auth"></dbp-auth-demo>
         `;
     }
 }

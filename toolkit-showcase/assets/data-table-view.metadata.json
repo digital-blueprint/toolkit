@@ -14,5 +14,5 @@
     "de": "DataTable: mit Daten, Paginierung, Such- und Exportfunktion",
     "en": "DataTable: with data, paging and searching AND exportable"
   },
-  "subscribe": "lang:lang,entry-point-url:entry-point-url"
+  "subscribe": "lang,entry-point-url"
 }

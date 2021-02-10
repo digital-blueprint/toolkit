@@ -97,14 +97,14 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                             <h2>${i18n.t('demo.consumer')}</h2>
                             <p>${i18n.t('demo.consumer_description', {id: "c1", subscriptions: "border-color"})}</p>
                             <pre>&lt;dbp-consumer  id="c1"  subscribe="border-color:bc" &gt;&lt;/dbp-consumer&gt;</pre>
-                            <dbp-consumer id="c1" subscribe="border-color:bc,lang:lang"></dbp-consumer>
+                            <dbp-consumer id="c1" subscribe="border-color:bc,lang"></dbp-consumer>
                             <p>${i18n.t('demo.consumer_description', {id: "c2", subscriptions: "foo"})}</p>
                             <pre>&lt;dbp-consumer  id="c2"  subscribe="foo:foo" &gt;&lt;/dbp-consumer&gt;</pre>
-                            <dbp-consumer id="c2" subscribe="foo:foo,lang:lang"></dbp-consumer>
+                            <dbp-consumer id="c2" subscribe="foo:foo,lang"></dbp-consumer>
                             <p>${i18n.t('demo.consumer_description', {id: "c3", subscriptions: "availability:status"})}</p>
                             <p>Local <em>status</em> is provided as <em>availability</em></p>
                             <pre>&lt;dbp-consumer  id="c3"  subscribe="status:availability"  border-color="orange" &gt;&lt;/dbp-consumer&gt;</pre>
-                            <dbp-consumer id="c3" subscribe="status:availability,lang:lang" border-color="orange"></dbp-consumer>
+                            <dbp-consumer id="c3" subscribe="status:availability,lang" border-color="orange"></dbp-consumer>
                             <p>${i18n.t('demo.consumer_description', {id: "c4", subscriptions: "unknown-name:status"})}</p>
                             <p>Remote <em>unknown-name</em> does not exist, the default value is overwritten by <em>undefined</em></i></p>
                             <pre>&lt;dbp-consumer  id="c4"  subscribe="status:unknown-name"  border-color="darkgray" &gt;&lt;/dbp-consumer&gt;</pre>

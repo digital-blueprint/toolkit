@@ -14,5 +14,5 @@
     "de": "Erlaubt das Einfügen von Webinhalten",
     "en": "Allows the inserting of web content"
   },
-  "subscribe": "lang:lang,entry-point-url:entry-point-url"
+  "subscribe": "lang,entry-point-url"
 }
