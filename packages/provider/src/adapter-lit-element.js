@@ -286,12 +286,12 @@ export class AdapterLitElement extends LitElement {
                 }
                 break;
             default:
-                // The function should not be called if newValue is empty but name and oldValue are set
+                // The function should not be called if newValue is empty but name is set
                 // This should prevent 'Uncaught SyntaxError: JSON.parse unexpected end of data at line 1 column 1 of the JSON data'
-                if (newValue || !oldValue || !name) {
+                if (newValue || !name) {
                     super.attributeChangedCallback(name, oldValue, newValue);
-                // } else {
-                //     console.log("attributeChangedCallback ignored", name, oldValue, newValue);
+                // } else { //!newValue && name
+                    //     console.log("attributeChangedCallback ignored", name, oldValue, newValue);
                 }
         }
 
