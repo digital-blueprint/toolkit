@@ -60,6 +60,14 @@ The component emits a `dbp-set-property` event for the attribute `auth`:
 <script type="module" src="node_modules/@dbp-toolkit/auth/dist/dbp-auth.js"></script>
 ```
 
+### Attributes
+
+- `lang` (optional, default: `de`): set to `de` or `en` for German or English
+  - example `<dbp-auth-keycloak lang="de" </dbp-auth-keycloak>`
+- `auth` object: you need to set that object property for the auth token
+  - example auth property: `{token: "THE_BEARER_TOKEN"}`
+  - note: most often this should be an attribute that is not set directly, but subscribed at a provider
+
 ## Local development
 
 ```bash

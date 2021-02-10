@@ -14,5 +14,5 @@
     "de": "Ort Web Component",
     "en": "Check-in place select web component"
   },
-  "subscribe": "lang:lang,entry-point-url:entry-point-url"
+  "subscribe": "lang,entry-point-url"
 }

@@ -1,3 +1,8 @@
+/**
+ * EventBus system
+ *
+ * DEPRECATED: Migrated to provider
+ */
 
 const OPERATION_FETCH_RETAINED = 'fetch-retained';
 

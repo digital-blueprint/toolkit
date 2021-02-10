@@ -14,5 +14,5 @@
     "de": "Zeigt eine Benachrichtigung an",
     "en": "Shows a message"
   },
-  "subscribe": "lang:lang,entry-point-url:entry-point-url"
+  "subscribe": "lang,entry-point-url"
 }

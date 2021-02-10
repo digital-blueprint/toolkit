@@ -75,13 +75,13 @@ export class CheckInPlaceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                         <div class="field">
                             <label class="label">Check-In-Place 1</label>
                             <div class="control">
-                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}" subscribe="auth:auth"></dbp-check-in-place-select>
+                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}" subscribe="auth"></dbp-check-in-place-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Check-In-Place 2</label>
                             <div class="control">
-                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}" subscribe="auth:auth" show-reload-button reload-button-title="Click me"></dbp-check-in-place-select>
+                                <dbp-check-in-place-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}" subscribe="auth" show-reload-button reload-button-title="Click me"></dbp-check-in-place-select>
                             </div>
                         </div>
                     </form>

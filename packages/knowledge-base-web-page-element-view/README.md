@@ -24,7 +24,8 @@ npm i @dbp-toolkit/knowledge-base-web-page-element-view
 - `text` (optional): text to click to show the information loaded from the webpage
     - example `<dbp-knowledge-base-web-page-element-view text="Click me to show more information"></dbp-knowledge-base-web-page-element-view>`
 - `auth` object: you need to set that object property for the auth token
-  - example auth property: `{token: "THE_BEARER_TOKEN"}`
+    - example auth property: `{token: "THE_BEARER_TOKEN"}`
+    - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 
 ## Local development
 
