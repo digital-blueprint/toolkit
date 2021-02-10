@@ -1,7 +1,7 @@
 {
   "name": "@dbp-toolkit/person-profile",
   "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/person-profile",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "repository": {
@@ -34,9 +34,9 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "@dbp-toolkit/auth": "^0.1.6",
-    "@dbp-toolkit/common": "^0.1.4",
-    "@dbp-toolkit/person-select": "^0.1.3",
+    "@dbp-toolkit/auth": "^0.2.0",
+    "@dbp-toolkit/common": "^0.2.0",
+    "@dbp-toolkit/person-select": "^0.2.0",
     "@open-wc/scoped-elements": "^1.3.2",
     "jquery": "^3.4.1",
     "lit-element": "^2.4.0"

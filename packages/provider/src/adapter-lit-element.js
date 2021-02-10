@@ -291,7 +291,7 @@ export class AdapterLitElement extends LitElement {
                 if (newValue || !oldValue || !name) {
                     super.attributeChangedCallback(name, oldValue, newValue);
                 // } else {
-                //     console.log("attributeChangedCallback ignored", name, oldValue, newValue);
+                    //     console.log("attributeChangedCallback ignored", name, oldValue, newValue);
                 }
         }
 

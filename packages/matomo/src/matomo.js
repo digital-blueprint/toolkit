@@ -22,6 +22,7 @@ export class MatomoElement extends DBPLitElement {
 
     static get properties() {
         return {
+            ...super.properties,
             endpoint: { type: String },
             siteId: { type: Number, attribute: 'site-id' },
             gitInfo: { type: Number, attribute: 'git-info' },
