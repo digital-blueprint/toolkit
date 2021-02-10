@@ -22,7 +22,8 @@ npm i @dbp-toolkit/person-profile
 - `value` (optional): api path of person to preload the selector with
     - example `<dbp-person-profile value="/people/testuser"></dbp-person-profile>`
 - `auth` object: you need to set that object property for the auth token
-  - example auth property: `{token: "THE_BEARER_TOKEN"}`
+    - example auth property: `{token: "THE_BEARER_TOKEN"}`
+    - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 
 ## Local development
 

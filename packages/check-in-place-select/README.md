@@ -34,6 +34,7 @@ npm i @dbp-toolkit/check-in-place-select
     - example `<dbp-check-in-place-select show-reload-button reload-button-text="Reload result list"></dbp-check-in-place-select>`
 - `auth` object: you need to set that object property for the auth token
     - example auth property: `{token: "THE_BEARER_TOKEN"}`
+    - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 
 ## Local development
 
