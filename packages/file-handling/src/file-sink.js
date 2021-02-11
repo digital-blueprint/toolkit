@@ -171,7 +171,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
     sendDestination() {
         let data = {};
-        if (this.activeTarget == 'nextcloud') {
+        if (this.activeTarget === 'nextcloud') {
             data = {"target": this.activeTarget, "path": this._("#nextcloud-file-picker").directoryPath};
 
         } else {
