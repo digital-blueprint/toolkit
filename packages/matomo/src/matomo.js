@@ -116,7 +116,7 @@ export class MatomoElement extends DBPLitElement {
             return;
         }
         if (! loggedIn && this.isRunning) {
-            // TODO: reomve those event listeners
+            // TODO: remove those event listeners
             console.log('remove matomo...');
             this.isRunning = false;
         }
