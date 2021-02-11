@@ -4,11 +4,6 @@ import {send as notify} from './notification';
 import * as utils from "./utils";
 import {i18n} from "./i18n";
 
-let instances = {};
-let successFunctions = {};
-let failureFunctions = {};
-let initStarted = {};
-
 // "module.exports = class JSONLD" doesn't work with rollup because of above "import"
 export default class JSONLD {
     constructor(baseApiUrl, entities) {
@@ -30,19 +25,19 @@ export default class JSONLD {
         }
 
         // if init api call was already successfully finished execute the success function
-        if (instances[apiUrl] !== undefined) {
-            if (typeof successFnc == 'function') successFnc(instances[apiUrl]);
+        if (JSONLD.instances[apiUrl] !== undefined) {
+            if (typeof successFnc == 'function') successFnc(JSONLD.instances[apiUrl]);
 
             return;
         }
 
         // init the arrays
-        if (successFunctions[apiUrl] === undefined) successFunctions[apiUrl] = [];
-        if (failureFunctions[apiUrl] === undefined) failureFunctions[apiUrl] = [];
+        if (JSONLD.successFunctions[apiUrl] === undefined) JSONLD.successFunctions[apiUrl] = [];
+        if (JSONLD.failureFunctions[apiUrl] === undefined) JSONLD.failureFunctions[apiUrl] = [];
 
         // add success and failure functions
-        if (typeof successFnc == 'function') successFunctions[apiUrl].push(successFnc);
-        if (typeof failureFnc == 'function') failureFunctions[apiUrl].push(failureFnc);
+        if (typeof successFnc == 'function') JSONLD.successFunctions[apiUrl].push(successFnc);
+        if (typeof failureFnc == 'function') JSONLD.failureFunctions[apiUrl].push(failureFnc);
     }
 
     /**
@@ -55,11 +50,11 @@ export default class JSONLD {
         // console.log("doInitializationOnce", apiUrl, token);
 
         // check if token is not set or api call was already started
-        if (!apiUrl || !token || initStarted[apiUrl] !== undefined) {
+        if (!apiUrl || !token || JSONLD.initStarted[apiUrl] !== undefined) {
             return;
         }
 
-        initStarted[apiUrl] = true;
+        JSONLD.initStarted[apiUrl] = true;
         JSONLD.doInitialization(apiUrl, token);
         // console.log("doInitializationOnce Done", apiUrl, token);
     }
@@ -145,11 +140,11 @@ export default class JSONLD {
         });
 
         const instance = new JSONLD(baseUrl, entities);
-        instances[apiUrl] = instance;
+        JSONLD.instances[apiUrl] = instance;
 
         // return the initialized JSONLD object
-        for (const fnc of successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
-        successFunctions[apiUrl] = [];
+        for (const fnc of JSONLD.successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
+        JSONLD.successFunctions[apiUrl] = [];
     }
 
     /**
@@ -159,8 +154,8 @@ export default class JSONLD {
      * @param message
      */
     static executeFailureFunctions(apiUrl, message = "") {
-        for (const fnc of failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
-        failureFunctions[apiUrl] = [];
+        for (const fnc of JSONLD.failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
+        JSONLD.failureFunctions[apiUrl] = [];
 
         if (message !== "") {
             notify({
@@ -172,7 +167,7 @@ export default class JSONLD {
     }
 
     static getInstance(apiUrl) {
-        return instances[apiUrl];
+        return JSONLD.instances[apiUrl];
     }
 
     getEntityForIdentifier(identifier) {
@@ -283,3 +278,8 @@ export default class JSONLD {
         return results;
     }
 }
+
+JSONLD.instances = {};
+JSONLD.successFunctions = {};
+JSONLD.failureFunctions = {};
+JSONLD.initStarted = {};
