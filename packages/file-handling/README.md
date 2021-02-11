@@ -57,9 +57,9 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
     - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all sub types) only
     - example `<dbp-file-source allowed-mime-types='image/png,text/plain'></dbp-file-source>` ... PNGs or TXTs only
     - example `<dbp-file-source allowed-mime-types='*/*'></dbp-file-source>` ... all file types (default)
-- `enabled-sources` (optional, default: `local`): sets which sources are enabled
+- `enabled-targets` (optional, default: `local`): sets which sources are enabled
     - you can use `local` and `nextcloud`
-    - example `<dbp-file-source enabled-sources="local,nextcloud"></dbp-file-source>`
+    - example `<dbp-file-source enabled-targets="local,nextcloud"></dbp-file-source>`
 - `disabled` (optional): disable input control
     - example `<dbp-file-source disabled></dbp-file-source>`
 - `decompress-zip` (optional): decompress zip file and send the contained files (including files in folders)
@@ -107,9 +107,9 @@ files to a [Nextcloud](https://nextcloud.com/) instance.
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-file-sink lang="de"></dbp-file-sink>`
-- `enabled-destinations` (optional, default: `local`): sets which destination are enabled
+- `enabled-targets` (optional, default: `local`): sets which destination are enabled
     - you can use `local` and `nextcloud`
-    - example `<dbp-file-sink enabled-destinations="local,nextcloud"></dbp-file-sink>`
+    - example `<dbp-file-sink enabled-targets="local,nextcloud"></dbp-file-sink>`
 - `filename` (optional, default: `files.zip`): sets a file name to use for downloading the zip file
     - example `<dbp-file-sink filename="signed-documents.zip"></dbp-file-sink>`
 - `nextcloud-auth-url` (optional): Nextcloud Auth Url to use with the Nextcloud file picker

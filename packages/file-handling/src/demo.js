@@ -91,7 +91,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                                      allowed-mime-types="*/*"
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                                      lang="en"
-                                     enabled-sources="local,nextcloud"></dbp-file-source>
+                                     enabled-targets="local,nextcloud"></dbp-file-source>
 
                     <p>Only images are allowed here (JPG, PNG, GIF, TIF, ...):</p>
                     <button @click="${() => { this._("#file-source2").setAttribute("dialog-open", ""); }}"
@@ -101,7 +101,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                     <dbp-file-source id="file-source2" lang="en" url="${this.url}"
                                      allowed-mime-types="image/*"
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                                     enabled-sources="local,nextcloud"
+                                     enabled-targets="local,nextcloud"
                                      text="Please select images"></dbp-file-source>
 
                     <p>This is for PDF only:</p>
@@ -112,7 +112,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                     <dbp-file-source id="file-source3" lang="en" url="${this.url}"
                                      allowed-mime-types="application/pdf"
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                                     enabled-sources="local,nextcloud"
+                                     enabled-targets="local,nextcloud"
                                      text="Submit only PDF files" button-label="PDF auswählen"></dbp-file-source>
 
                     <p>Text and images (JPG, PNG, GIF, TIF, ...) :</p>
@@ -123,7 +123,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                     <dbp-file-source id="file-source4" lang="en" url="${this.url}"
                                      allowed-mime-types="text/plain,image/*"
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                                     enabled-sources="local,nextcloud"
+                                     enabled-targets="local,nextcloud"
                                      text="Please select text or images"></dbp-file-source>
 
                     <p>PDFs also in ZIPS :</p>
@@ -135,7 +135,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                                      allowed-mime-types="application/pdf"
                                      decompress-zip
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                                     enabled-sources="local,nextcloud"
+                                     enabled-targets="local,nextcloud"
                                      text="Please select PDF(s) or ZIP(s) with PDF(s)"></dbp-file-source>
 
                     <dbp-file-sink lang="en"></dbp-file-sink>
