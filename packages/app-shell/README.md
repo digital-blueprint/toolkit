@@ -19,7 +19,7 @@ npm i @dbp-toolkit/app-shell
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<dbp-app-shell lang="de" </dbp-app-shell>`
+    - example `<dbp-app-shell lang="de"></dbp-app-shell>`
 - `src`: The path to a topic metadata file (json)
 - `base-path` (optional, default: `/`): An absolute base path for routing
 - `entry-point-url`: Entry point URL to access the API
@@ -28,6 +28,13 @@ npm i @dbp-toolkit/app-shell
     - example `<dbp-app-shell matomo-url="https://my-matomo.tld"></dbp-app-shell>`
 - `matomo-site-id` (optional): set to your site id (required only for tracking)
     - example `<dbp-app-shell matomo-site-id="456789"></dbp-app-shell>`
+
+### Emitted attributes
+
+The component emits `dbp-set-property` events for these attributes:
+
+- `lang` to propagate a language change (possible values `en`, `de`)
+- `requested-login-status` (possible values `logged-in`, `logged-out`)
 
 ## Topic Metadata
 

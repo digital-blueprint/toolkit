@@ -39,7 +39,7 @@ npm i @dbp-toolkit/auth
 - `silent-check-sso-redirect-uri` (optional): URI or path to a separate page for checking the login session in an iframe, see https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
 - `scope` (optional): Space separated list of scopes to request. These scopes get added in addition to the default ones, assuming the scope is in the optional scopes list of the Keycloak client in use.
 
-### Emitted attribute
+### Emitted attributes
 
 The component emits a `dbp-set-property` event for the attribute `auth`:
 
@@ -67,6 +67,10 @@ The component emits a `dbp-set-property` event for the attribute `auth`:
 - `auth` object: you need to set that object property for the auth token
   - example auth property: `{token: "THE_BEARER_TOKEN"}`
   - note: most often this should be an attribute that is not set directly, but subscribed at a provider
+
+### Emitted attributes
+
+The component emits a `dbp-set-property` event for the attribute `requested-login-status` (possible values `logged-in`, `logged-out`).
 
 ## Local development
 

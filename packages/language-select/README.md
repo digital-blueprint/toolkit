@@ -13,6 +13,18 @@ npm i @dbp-toolkit/language-select
 <script type="module" src="node_modules/@dbp-toolkit/language-select/dist/dbp-language-select.js"></script>
 ```
 
+## Attributes
+
+- `lang` (optional, default: `de`): set to `de` or `en` for German or English (note that it will be shown the
+  other way around to make it easier to switch to a different language)
+    - example `<dbp-language-select lang="de"></dbp-language-select>`
+
+### Emitted attributes
+
+The component emits `dbp-set-property` events for these attributes:
+
+- `lang` to propagate a language change (possible values `en`, `de`)
+
 ## Local development
 
 ```bash
