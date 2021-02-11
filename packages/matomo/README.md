@@ -19,6 +19,9 @@ npm i @dbp-toolkit/matomo
     - example `<dbp-matomo endpoint="https://my-matomo.tld"></dbp-matomo>`
 - `site-id` (required): set to your site id
     - example `<dbp-matomo site-id="456789"></dbp-matomo>`
+- `auth` object: you need to set that object property for the login-status
+  - example auth property: `{'login-status': 'logged-in'}`
+  - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 
 ## Tracking actions
 
