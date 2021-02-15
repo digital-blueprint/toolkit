@@ -23,6 +23,20 @@ npm i @dbp-toolkit/matomo
   - example auth property: `{'login-status': 'logged-in'}`
   - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 
+### Emitted attributes
+
+The component emits a `dbp-set-property` event for the `analytics-event` attribute.
+It looks like this:
+
+```json
+{
+  "category": "the category of the event",
+  "action": "the action of the event",
+  "name": "the name of the event",
+  "value": "the value of the event"
+}
+```
+
 ## Tracking actions
 
 ```html
