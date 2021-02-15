@@ -6,7 +6,6 @@ import {LoginButton} from './login-button.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {name as pkgName} from './../package.json';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
-import {Provider} from '@dbp-toolkit/provider';
 
 export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -14,6 +13,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
         this.lang = 'de';
         this.entryPointUrl = '';
         this.auth = {};
+        this.noAuth = false;
     }
 
     static get scopedElements() {
@@ -29,6 +29,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
             lang: { type: String },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             auth: { type: Object },
+            noAuth: { type: Boolean, attribute: 'no-auth' },
         };
     }
 
@@ -77,6 +78,18 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
         div.innerHTML = this.auth.token;
     }
 
+    getAuthComponentHtml() {
+        //const silentCheckSsoUri = commonUtils.getAssetURL(pkgName, 'silent-check-sso.html');
+        return this.noAuth ? html`<dbp-login-button subscribe="auth" lang="${this.lang}" show-image></dbp-login-button>` : html`
+            <div class="container">
+                <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                                   url="https://auth-dev.tugraz.at/auth" realm="tugraz"
+                                   client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
+                <dbp-login-button subscribe="auth" lang="${this.lang}" show-image></dbp-login-button>
+            </div>
+        `;
+    }
+
     render() {
         const silentCheckSsoUri = commonUtils.getAssetURL(pkgName, 'silent-check-sso.html');
         return html`
@@ -100,27 +113,11 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
                     max-width: 100%;
                 }
             </style>
-            <slot></slot>
             <section class="section">
                 <div class="container">
                     <h1 class="title">Auth-Demo</h1>
                 </div>
-                <div class="container">
-                    <p>In any App/page an <b>Auth component</b> will be used like:</p>
-<pre>
-&lt;dbp-auth-keycloak lang="${this.lang}" entry-point-url="${this.entryPointUrl}"
-    url="https://auth-dev.tugraz.at/auth" 
-    realm="tugraz"
-    client-id="auth-dev-mw-frontend-local"
-    silent-check-sso-redirect-uri="${silentCheckSsoUri}"
-    scope="optional-test-scope" 
-    load-person 
-    try-login&gt;&lt;/dbp-auth-keycloak&gt;
-&lt;dbp-login-button lang="${this.lang}" show-image&gt;&lt;/dbp-login-button&gt;
-</pre>
-                    <p>but in this demo we actually have already such a component at the top of this page.</p>
-                    <p>Please use the login button on the top of the page!</p>
-                </div>
+                ${this.getAuthComponentHtml()}
                 <div class="container">
                     <input type="button" value="Fetch userinfo" @click="${this._onUserInfoClick}">
                     <input type="button" value="Show token" @click="${this._onShowToken}">
@@ -134,5 +131,4 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-provider', Provider);
 commonUtils.defineCustomElement('dbp-auth-demo', DbpAuthDemo);

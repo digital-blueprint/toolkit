@@ -39,11 +39,11 @@ export default (async () => {
             (build !== 'local' && build !== 'test') ? terser() : false,
             copy({
                 targets: [
-                    {src: 'assets/index.html', dest:'dist'},
+                    {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/silent-check-sso.html', dest: 'dist/' + await getDistPath(pkg.name)},
-                    {src: 'assets/favicon.ico', dest:'dist'},
+                    {src: 'assets/favicon.ico', dest: 'dist'},
                     {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
-                ]
+                ],
             }),
             (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
         ]

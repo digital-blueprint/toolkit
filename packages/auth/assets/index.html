@@ -7,20 +7,6 @@
 </head>
 
 <body>
-
-<dbp-provider auth requested-login-status>
-    <dbp-auth-keycloak subscribe="requested-login-status" lang="de" entry-point-url="http://127.0.0.1:8000"
-                       url="https://auth-dev.tugraz.at/auth"
-                       realm="tugraz"
-                       client-id="auth-dev-mw-frontend-local"
-                       silent-check-sso-redirect-uri="${silentCheckSsoUri}"
-                       scope="optional-test-scope"
-                       load-person
-                       try-login></dbp-auth-keycloak>
-    <dbp-login-button subscribe="auth" lang="de" show-image></dbp-login-button>
-
-    <dbp-auth-demo lang="de" entry-point-url="http://127.0.0.1:8000" subscribe="auth"></dbp-auth-demo>
-</dbp-provider>
-
+<dbp-auth-demo auth requested-login-status lang="de" entry-point-url="http://127.0.0.1:8000" subscribe="auth"></dbp-auth-demo>
 </body>
 </html>
