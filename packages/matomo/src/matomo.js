@@ -16,6 +16,7 @@ export class MatomoElement extends DBPLitElement {
         this.lastEvent = [];
         this.gitInfo = '';
         this.auth = {};
+        this.analyticsEvent = {};
         this.loginStatus = '';
     }
 
@@ -27,6 +28,7 @@ export class MatomoElement extends DBPLitElement {
             siteId: { type: Number, attribute: 'site-id' },
             gitInfo: { type: Number, attribute: 'git-info' },
             auth: { type: Object },
+            analyticsEvent: { type: Object, attribute: 'analytics-event' },
         };
     }
 
@@ -40,6 +42,20 @@ export class MatomoElement extends DBPLitElement {
                     if (this.loginStatus !== loginStatus) {
                         this.setupMatomo(loginStatus === LoginStatus.LOGGED_IN);
                         this.loginStatus = loginStatus;
+                    }
+                }
+                break;
+                case 'analyticsEvent':
+                {
+                    console.log('MatomoElement(' + this.isRunning + ') analyticsEvent: ' +
+                        this.analyticsEvent.action + ', ' + this.analyticsEvent.message);
+                    const event = ['trackEvent', this.analyticsEvent.category, this.analyticsEvent.action,
+                        this.analyticsEvent.name, this.analyticsEvent.value];
+
+                    if (this.isRunning) {
+                        pushEvent(event);
+                    } else {
+                        this.lastEvent = event;
                     }
                 }
                 break;
@@ -119,16 +135,6 @@ export class MatomoElement extends DBPLitElement {
             // TODO: remove those event listeners
             console.log('remove matomo...');
             this.isRunning = false;
-        }
-    }
-
-    track (action, message) {
-        console.log('MatomoElement  (' + this.isRunning + '): ' + action + ', ' + message);
-        const event = ['trackEvent', action, message];
-        if (this.isRunning) {
-            pushEvent(event);
-        } else {
-            this.lastEvent = event;
         }
     }
 }

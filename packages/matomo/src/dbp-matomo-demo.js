@@ -44,10 +44,7 @@ export class MatomoDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     track(action, message) {
-        const matomo = this.shadowRoot.querySelector(this.constructor.getScopedTagName('dbp-matomo'));
-        if (matomo !== null) {
-            matomo.track(action, message);
-        }
+        this.sendSetPropertyEvent('analytics-event', {'category': action, 'action': message});
     }
 
     clickMe() {

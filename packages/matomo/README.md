@@ -25,21 +25,17 @@ npm i @dbp-toolkit/matomo
 
 ## Tracking actions
 
+```html
+<dbp-provider analytics-event>
+  <dbp-matomo subscribe="analytics-event"></dbp-matomo>
+  <your-dbp-adapter-limt-element-component></your-dbp-adapter-limt-element-component>
+</dbp-provider>
+```
+
+In your AdapterLitElement component:
+
 ```javascript
-class Demo {
-
-    track(action, message) {
-        const matomo = this.shadowRoot.querySelector(this.constructor.getScopedTagName('dbp-matomo'));
-        if (matomo !== null) {
-            matomo.track(action, message);
-        }
-    }
-
-    clickMe() {
-        this.track('button clicked', 'alert()');
-    }
-
-}
+this.sendSetPropertyEvent('analytics-event', {'category': 'my category', 'action': 'my action'});
 ``` 
 
 ## Local development
