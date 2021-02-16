@@ -210,7 +210,7 @@ export const errorMixin = {
         });
 
         if (this.sendSetPropertyEvent !== undefined) {
-            this.sendSetPropertyEvent('send-analytics-event', {
+            this.sendSetPropertyEvent('analytics-event', {
                 'category': 'FetchError',
                 'action': summary === "" ? body : summary + ": " + body
             });
