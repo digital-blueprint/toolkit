@@ -22,10 +22,11 @@ npm i @dbp-toolkit/matomo
 - `auth` object: you need to set that object property for the login-status
   - example auth property: `{'login-status': 'logged-in'}`
   - note: most often this should be an attribute that is not set directly, but subscribed at a provider
+- `analytics-event` object: for sending Matomo events
 
 ### Emitted attributes
 
-The component emits a `dbp-set-property` event for the `analytics-event` attribute.
+The component receives a `analytics-event` attribute to send Matomo events.
 It looks like this:
 
 ```json
