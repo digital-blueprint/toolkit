@@ -24,7 +24,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
-        Object.assign(CheckInPlaceSelect.prototype, errorUtils.backupMixin);
+        Object.assign(CheckInPlaceSelect.prototype, errorUtils.errorMixin);
         this.lang = 'de';
         this.entryPointUrl = '';
         this.jsonld = null;

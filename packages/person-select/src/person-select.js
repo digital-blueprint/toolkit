@@ -27,7 +27,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
-        Object.assign(PersonSelect.prototype, errorUtils.backupMixin);
+        Object.assign(PersonSelect.prototype, errorUtils.errorMixin);
         this.auth = {};
         this.lang = 'de';
         this.entryPointUrl = '';

@@ -116,7 +116,7 @@ export const stripHTML = (string) => {
 /**
  * We need this mixin so we can use this.sendSetPropertyEvent to post analytics events
  */
-export const backupMixin = {
+export const errorMixin = {
     /**
      * Error handling for XHR errors
      *
