@@ -39,10 +39,6 @@ export const handleXhrError = (jqXHR, textStatus, errorThrown, icon = "sad") => 
         "icon": icon,
         "type": "danger",
     });
-
-    if (window._paq !== undefined) {
-        window._paq.push(['trackEvent', 'XhrError', body]);
-    }
 };
 
 /**
@@ -88,10 +84,6 @@ export const handleFetchError = async (error, summary = "", icon = "sad") => {
         "icon": icon,
         "type": "danger",
     });
-
-    if (window._paq !== undefined) {
-        window._paq.push(['trackEvent', 'FetchError', summary === "" ? body : summary + ": " + body]);
-    }
 };
 
 /**
@@ -119,4 +111,109 @@ export const stripHTML = (string) => {
     div.innerHTML = string;
 
     return div.textContent || div.innerText || "";
+};
+
+/**
+ * We need this mixin so we can use this.sendSetPropertyEvent to post analytics events
+ */
+export const backupMixin = {
+    /**
+     * Error handling for XHR errors
+     *
+     * @param jqXHR
+     * @param textStatus
+     * @param errorThrown
+     * @param icon
+     */
+    handleXhrError(jqXHR, textStatus, errorThrown, icon = "sad") {
+        // return if user aborted the request
+        if (textStatus === "abort") {
+            return;
+        }
+
+        let body;
+
+        if (jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined) {
+            // response is a JSON-LD
+            body = jqXHR.responseJSON["hydra:description"];
+        } else if (jqXHR.responseJSON !== undefined && jqXHR.responseJSON['detail'] !== undefined) {
+            // response is a plain JSON
+            body = jqXHR.responseJSON['detail'];
+        } else {
+            // no description available
+            body = textStatus;
+
+            if (errorThrown) {
+                body += ' - ' + errorThrown;
+            }
+        }
+
+        // if the server is not reachable at all
+        if (jqXHR.status === 0) {
+            body = i18n.t('error.connection-to-server-refused');
+        }
+
+        notify({
+            "summary": i18n.t('error.summary'),
+            "body": escapeHTML(stripHTML(body)),
+            "icon": icon,
+            "type": "danger",
+        });
+
+        if (this.sendSetPropertyEvent !== undefined) {
+            this.sendSetPropertyEvent('analytics-event', {'category': 'XhrError', 'action': body});
+        }
+    },
+
+    /**
+     * Error handling for fetch errors
+     *
+     * @param error
+     * @param summary
+     * @param icon
+     */
+    handleFetchError: async function (error, summary = "", icon = "sad") {
+        // return if user aborted the request
+        if (error.name === "AbortError") {
+            return;
+        }
+
+        let body;
+
+        try {
+            await error.json().then((json) => {
+                if (json["hydra:description"] !== undefined) {
+                    // response is a JSON-LD and possibly also contains HTML!
+                    body = json["hydra:description"];
+                } else if (json['detail'] !== undefined) {
+                    // response is a plain JSON
+                    body = json['detail'];
+                } else {
+                    // no description available
+                    body = error.statusText;
+                }
+            }).catch(() => {
+                body = error.statusText !== undefined ? error.statusText : error;
+            });
+        } catch (e) {
+            // a TypeError means the connection to the server was refused most of the times
+            if (error.name === "TypeError") {
+                body = error.message !== "" ? error.message : i18n.t('error.connection-to-server-refused');
+            }
+        }
+
+        notify({
+            "summary": summary === "" ? i18n.t('error.summary') : summary,
+            "body": escapeHTML(stripHTML(body)),
+            "icon": icon,
+            "type": "danger",
+        });
+
+        if (this.sendSetPropertyEvent !== undefined) {
+            this.sendSetPropertyEvent('send-analytics-event', {
+                'category': 'FetchError',
+                'action': summary === "" ? body : summary + ": " + body
+            });
+        }
+    }
 };

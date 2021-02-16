@@ -24,6 +24,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
+        Object.assign(CheckInPlaceSelect.prototype, errorUtils.backupMixin);
         this.lang = 'de';
         this.entryPointUrl = '';
         this.jsonld = null;
@@ -187,7 +188,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                         results: results
                     };
                 },
-                error: errorUtils.handleXhrError,
+                error: (jqXHR, textStatus, errorThrown) => { this.handleXhrError(jqXHR, textStatus, errorThrown); },
                 complete: (jqXHR, textStatus) => {
                     that.isSearching = false;
                 }

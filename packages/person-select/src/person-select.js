@@ -27,6 +27,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
+        Object.assign(PersonSelect.prototype, errorUtils.backupMixin);
         this.auth = {};
         this.lang = 'de';
         this.entryPointUrl = '';
@@ -178,7 +179,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                         results: results
                     };
                 },
-                error: errorUtils.handleXhrError,
+                error: (jqXHR, textStatus, errorThrown) => { this.handleXhrError(jqXHR, textStatus, errorThrown); },
                 complete: (jqXHR, textStatus) => {
                     that.isSearching = false;
                 }
