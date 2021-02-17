@@ -11,7 +11,7 @@ export class Adapter extends HTMLElement {
         this.subscribe = '';
         this.unsubscribe = '';
 
-        console.log('Adapter constructor()');
+        console.debug('Adapter constructor()');
     }
 
     getPropertyByAttributeName(name) {
@@ -40,7 +40,7 @@ export class Adapter extends HTMLElement {
 
                 this.attributeChangedCallback(attrs[i].name, this.getPropertyByAttributeName(attrs[i].name), attrs[i].value);
 
-                console.log('AdapterProvider (' + that.tagName + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
+                console.debug('AdapterProvider (' + that.tagName + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
             }
         }
     }
@@ -51,7 +51,7 @@ export class Adapter extends HTMLElement {
     }
 
     subscribeProviderFor(element) {
-        console.log('AdapterProvider(' + this.tagName + ') subscribeProviderFor( ' + element + ' )');
+        console.debug('AdapterProvider(' + this.tagName + ') subscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
         const local = pair[0];
         const global = pair[1] || local;
@@ -63,15 +63,15 @@ export class Adapter extends HTMLElement {
                 detail: {
                     name: global,
                     callback: (value) => {
-                        console.log('AdapterProvider(' + that.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
+                        console.debug('AdapterProvider(' + that.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
                         that.setPropertiesToChildNodes(local, value);
 
                         // If value is an object set it directly as property
                         if (typeof value === 'object' && value !== null) {
-                            // console.log("value is object", value);
+                            // console.debug("value is object", value);
                             that.setPropertyByAttributeName(local, value);
                         } else {
-                            // console.log("local, that.getPropertyByAttributeName(local), value", local, that.getPropertyByAttributeName(local), value);
+                            // console.debug("local, that.getPropertyByAttributeName(local), value", local, that.getPropertyByAttributeName(local), value);
                             that.attributeChangedCallback(local, that.getPropertyByAttributeName(local), value);
 
                             // check if an attribute also exists in the tag
@@ -93,7 +93,7 @@ export class Adapter extends HTMLElement {
     }
 
     unSubscribeProviderFor(element) {
-        console.log('AdapterProvider(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
+        console.debug('AdapterProvider(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
         const event = new CustomEvent('dbp-unsubscribe',
@@ -118,10 +118,10 @@ export class Adapter extends HTMLElement {
     findPropertyName(attributeName) {
         let resultName = attributeName;
         const properties = this.constructor.properties;
-        // console.log("properties", properties);
+        // console.debug("properties", properties);
 
         for (const propertyName in properties) {
-            // console.log("findPropertyName", `${propertyName}: ${properties[propertyName]}`);
+            // console.debug("findPropertyName", `${propertyName}: ${properties[propertyName]}`);
             const attribute = properties[propertyName].attribute;
             if (attribute === attributeName) {
                 resultName = propertyName;
@@ -135,7 +135,7 @@ export class Adapter extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         switch(name) {
             case 'subscribe':
-                console.log('AdapterProvider() attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
+                console.debug('AdapterProvider() attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
 
                 if (this.subscribe && this.subscribe.length > 0) {
                     if (this.connected) {

@@ -42,7 +42,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        console.log('ProviderDemo (' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
+        console.debug('ProviderDemo (' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
         switch(name) {
             case 'lang':
                 this.lang = newValue;
@@ -152,13 +152,13 @@ class DemoConsumer extends DBPLitElement {
 
         this.status = 'local';
 
-        console.log('DemoConsumer constructor()');
+        console.debug('DemoConsumer constructor()');
     }
 
     connectedCallback() {
         super.connectedCallback();
         i18n.changeLanguage(this.lang);
-        console.log('DemoConsumer(' + this.id + ') connectedCallback()');
+        console.debug('DemoConsumer(' + this.id + ') connectedCallback()');
         this.render();
     }
 
@@ -180,7 +180,7 @@ class DemoConsumer extends DBPLitElement {
             return;
         }
 
-        console.log('DemoConsumer(' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
+        console.debug('DemoConsumer(' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
         switch(name) {
             case 'lang':
                 this.lang = newValue;
@@ -212,7 +212,7 @@ class DemoConsumer extends DBPLitElement {
         if (! this.connected) {
             return `not connected!`;
         }
-        console.log('DemoConsumer(' + this.id + ') render()');
+        console.debug('DemoConsumer(' + this.id + ') render()');
 
         const sum = this.foo + this.bar;
         return html`

@@ -386,7 +386,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             this.nextcloudPath = this.initialFileHandlingState.path;
             if (this._('#nextcloud-file-picker').webDavClient !== null) {
                 this._('#nextcloud-file-picker').loadDirectory(this.initialFileHandlingState.path);
-                console.log("load default nextcloud source", this.initialFileHandlingState.target);
+                //console.log("load default nextcloud source", this.initialFileHandlingState.target);
             }
             this.firstOpen = false;
         }
