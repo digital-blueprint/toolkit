@@ -95,7 +95,8 @@ export const appWelcomeMeta = {
       "de": "",
       "en": ""
     },
-    visible: true
+    visible: true,
+    required_roles: [],
 };
 
 commonUtils.defineCustomElement('dbp-app-shell-welcome', AppShellWelcome);
