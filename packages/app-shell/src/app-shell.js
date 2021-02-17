@@ -61,6 +61,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         this.buildUrl = '';
         this.buildTime = '';
         this._loginStatus = 'unknown';
+        this._roles = [];
 
         this.matomoUrl = '';
         this.matomoSiteId = -1;
@@ -138,6 +139,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 activity.visible = visible;
                 // Resolve module_src relative to the location of the json file
                 activity.module_src = new URL(activity.module_src, actURL).href;
+                activity.required_roles = activity.required_roles || [];
                 metadata[activity.routing_name] = activity;
                 routes.push(activity.routing_name);
             } catch (error) {
@@ -238,6 +240,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             subtitle: { type: String, attribute: false },
             description: { type: String, attribute: false },
             _loginStatus: { type: Boolean, attribute: false },
+            _roles: { type: Array, attribute: false },
             matomoUrl: { type: String, attribute: "matomo-url" },
             matomoSiteId: { type: Number, attribute: "matomo-site-id" },
             noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
@@ -290,6 +293,12 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 break;
                 case 'auth':
                 {
+                    if (this.auth.person) {
+                        this._roles = this.auth.person['roles'];
+                    } else {
+                        this._roles = [];
+                    }
+
                     const loginStatus = this.auth['login-status'];
                     if (loginStatus !== this._loginStatus) {
                         console.log('Login status: ' + loginStatus);
@@ -790,8 +799,18 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         let menuTemplates = [];
         for (let routingName of this.routes) {
             const data = this.metadata[routingName];
+            const requiredRoles = data['required_roles'];
+            let visible = data['visible'];
 
-            if (data['visible']) {
+            // Hide them until the user is logged in and we knwo the roles of the user
+            for (let role of requiredRoles) {
+                if (!this._roles.includes(role)) {
+                    visible = false;
+                    break;
+                }
+            }
+
+            if (visible) {
                 menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
             }
         }
