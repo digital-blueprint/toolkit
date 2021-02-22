@@ -42,6 +42,7 @@
   },
   "scripts": {
     "clean": "rm dist/*",
+    "build": "npm run build-local",
     "build-local": "rollup -c",
     "build-dev": "rollup -c --environment BUILD:development",
     "build-prod": "rollup -c --environment BUILD:production",
