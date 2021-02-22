@@ -286,13 +286,14 @@ export class AdapterLitElement extends LitElement {
                 }
                 break;
             default:
-                // The function should not be called if newValue is empty but name and oldValue are set
+                // The function should not be called if oldValue is an object, oldValue and newValue are empty
+                // or if newValue is empty but name and oldValue are set
                 // This should prevent 'Uncaught SyntaxError: JSON.parse unexpected end of data at line 1 column 1 of the JSON data'
-                if (newValue || !oldValue || !name) {
-                    super.attributeChangedCallback(name, oldValue, newValue);
-                // } else {
-                    //     console.debug("attributeChangedCallback ignored", name, oldValue, newValue);
+                if ((typeof oldValue === 'object' && !oldValue && !newValue) || (!newValue && oldValue && name)) {
+                    // console.debug("attributeChangedCallback ignored", name, oldValue, newValue);
+                    break;
                 }
+                super.attributeChangedCallback(name, oldValue, newValue);
         }
 
         // console.debug("this.lang", this.tagName, name, this.lang);
