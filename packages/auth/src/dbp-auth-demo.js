@@ -79,7 +79,6 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getAuthComponentHtml() {
-        //const silentCheckSsoUri = commonUtils.getAssetURL(pkgName, 'silent-check-sso.html');
         return this.noAuth ? html`<dbp-login-button subscribe="auth" lang="${this.lang}" show-image></dbp-login-button>` : html`
             <div class="container">
                 <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
@@ -91,7 +90,6 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        const silentCheckSsoUri = commonUtils.getAssetURL(pkgName, 'silent-check-sso.html');
         return html`
             <style>
                /* from BULMA.CSS */
