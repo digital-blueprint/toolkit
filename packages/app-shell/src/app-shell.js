@@ -592,7 +592,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 background-color: #000;
             }
 
-            /* We don't allown inline-svg */
+            /* We don't allow inline-svg */
             /*
             footer .int-link-external::after {
                 content: "\\00a0\\00a0\\00a0\\00a0";
