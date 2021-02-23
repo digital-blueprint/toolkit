@@ -54,6 +54,7 @@
 
 <body>
 <dbp-provider id="root"
+              lang="de"
               entry-point-url="<%= entryPointURL %>"
               nextcloud-auth-url="<%= nextcloudWebAppPasswordURL %>"
               nextcloud-web-dav-url="<%= nextcloudWebDavURL %>"
@@ -61,6 +62,7 @@
               nextcloud-file-url="<%= nextcloudFileURL %>">
     <<%= name %>
         src="<%= getUrl(name + '.topic.metadata.json') %>"
+        subscribe="lang,entry-point-url"
         auth
         requested-login-status
         analytics-event
