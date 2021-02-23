@@ -830,7 +830,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 <dbp-notification lang="${this.lang}"></dbp-notification>
                 <header>
                     <div class="hd1-left">
-                        <dbp-language-select subscribe="lang"></dbp-language-select>
+                        <dbp-language-select lang="${this.lang}"></dbp-language-select>
                     </div>
                     <div class="hd1-middle">
                     </div>
