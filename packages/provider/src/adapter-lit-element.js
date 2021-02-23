@@ -317,7 +317,11 @@ export class AdapterLitElement extends LitElement {
             detail: {'name': name, 'value': value}
         });
 
-        return this.dispatchEvent(event);
+        // dispatch the dbp-set-property event to the parent (if there is any) so that the current element
+        // doesn't terminate the event if it has the attribute set itself
+        const element = this.parentElement ? this.parentElement : this;
+
+        return element.dispatchEvent(event);
     }
 
     // update(changedProperties) {
