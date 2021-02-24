@@ -4,7 +4,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak} from './auth-keycloak.js';
 import {LoginButton} from './login-button.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import {name as pkgName} from './../package.json';
+//import {name as pkgName} from './../package.json';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
 export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
