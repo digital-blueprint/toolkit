@@ -44,7 +44,8 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
             .description {
                 padding-left: 2em;
                 font-style: italic;
-                margin-top: -5px;
+                margin-top: -1px;
+                line-height: initial;
             }
 
             h2 a:hover {
