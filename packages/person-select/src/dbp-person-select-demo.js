@@ -84,6 +84,13 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" show-reload-button reload-button-title="Click me"></dbp-person-select>
                             </div>
                         </div>
+                        <div class="field">
+                            <label class="label">Person 3 unsubscribed</label>
+                            <div class="control">
+                                <dbp-person-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}" show-reload-button reload-button-title="Click me"></dbp-person-select>
+                            </div>
+                            <p>This comonent doesn't get any notification about user's login and will become active.</p>
+                        </div>
                     </form>
                 </div>
             </section>

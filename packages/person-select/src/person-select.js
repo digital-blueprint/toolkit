@@ -110,7 +110,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
         JSONLD.initialize(this.entryPointUrl, function (jsonld) {
             that.jsonld = jsonld;
-            that.active = true;
+            that.active = that.authenticated();
 
             // we need to poll because maybe the user interface isn't loaded yet
             // Note: we need to call initSelect2() in a different function so we can access "this" inside initSelect2()
@@ -150,7 +150,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             width: '100%',
             language: this.lang === "de" ? select2LangDe() : select2LangEn(),
             minimumInputLength: 2,
-            placeholder: i18n.t('person-select.placeholder'),
+            placeholder: i18n.t(this.authenticated() ? 'person-select.placeholder' : 'person-select.login-required'),
             dropdownParent: this.$('#person-select-dropdown'),
             ajax: {
                 delay: 500,
@@ -293,6 +293,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                     break;
                 case "auth":
                     JSONLD.doInitializationOnce(this.entryPointUrl, this.auth.token);
+                    this.active = this.authenticated();
                     break;
             }
         });
@@ -316,6 +317,10 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             },
             bubbles: true
         }));
+    }
+
+    authenticated() {
+        return (this.auth.token || '') !== '';
     }
 
     static get styles() {
@@ -366,7 +371,10 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                 <div class="field has-addons">
                     <div class="select2-control control">
                         <!-- https://select2.org-->
-                        <select id="${this.selectId}" name="person" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}</select>
+                        <select id="${this.selectId}" name="person" class="select" 
+                                ?disabled=${!this.active}>
+                            ${!this.authenticated() ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}
+                        </select>
                     </div>
                     <a class="control button"
                        id="reload-button"
