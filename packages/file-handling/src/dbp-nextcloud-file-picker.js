@@ -1302,10 +1302,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             
             .inline-block{
                 position: absolute;
-                right: 52px;
+                right: 0px;
                 z-index: 1;
                 background-color: white;
-                bottom: 0px;
+                bottom: -45px;
             }
             
             .addRowAnimation{
@@ -1355,14 +1355,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             
             
             #select-all-wrapper{
-                text-align: center;
+                text-align: right;
             }
 
             .nextcloud-nav a{
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                max-width: 100px;
+                max-width: 130px;
             }
             
           
@@ -1376,7 +1376,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
                 .add-folder{
                     position: absolute;
-                    bottom: 5px;
                     right: 0px;
                 }
                 .nextcloud-nav{
@@ -1389,7 +1388,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 
                 .inline-block{    
                     width: inherit;
-                    
+                    position: absolute;
+                    right: 52px;
+                    z-index: 1;
+                    background-color: white;
+                    bottom: 0px;
                 }
                 
                 .add-folder-button{
