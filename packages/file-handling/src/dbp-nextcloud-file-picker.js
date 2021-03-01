@@ -31,7 +31,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.webDavClient = null;
         this.tabulatorTable = null;
         this.allowedMimeTypes = '*/*';
-        this.directoriesOnly = null;
+        this.directoriesOnly = false;
         this.maxSelectedItems = true;
         this.loading = false;
         this._onReceiveWindowMessage = this.onReceiveWindowMessage.bind(this);

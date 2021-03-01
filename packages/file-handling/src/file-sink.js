@@ -287,7 +287,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-nextcloud-file-picker id="nextcloud-file-picker"
                                                            class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
-                                                           directories-only="true"
+                                                           directories-only
                                                            max-selected-items="1"
                                                            select-button-text="${i18n.t('file-sink.select-directory')}"
                                                            ?disabled="${this.disabled}"
