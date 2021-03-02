@@ -398,6 +398,13 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         MicroModal.close(this._('#modal-picker'));
     }
 
+    getClipboardFiles() {
+        let htmlpath = [];
+        htmlpath[0] =  html`ein file und danach select button`;
+
+        return htmlpath;
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -477,6 +484,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
+                            <div title="Clipboard"
+                                 @click="${() => { this.activeTarget = "clipboard" }}"
+                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledSource("clipboard") })}">
+                                <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
+                                <p>Clipboard</p>
+                            </div>
                             
                         </nav>
                         <div class="modal-header">
@@ -517,6 +530,13 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                        @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
                                     this.sendFileEvent(event.detail.file);
                                 }}"></dbp-nextcloud-file-picker>
+                            </div>
+                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard"})}">
+                                <div class="block clipboard-container">
+                                    <h2>Von der Zwischenablage auswählen</h2>
+                                    <p>Hier können Sie aus der zuvor temporär abgelegte Dateien auswählen.<br><br></p>
+                                    <p>${this.getClipboardFiles()}</p>
+                                </div>
                             </div>
                         </main>
                     </div>

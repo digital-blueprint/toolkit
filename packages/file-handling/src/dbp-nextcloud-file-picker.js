@@ -1022,7 +1022,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 display: inline-grid;
                 width: 100%;
                 grid-template-columns: auto auto;          
-            }
+            } <table id="directory-content-table" class="force-no-select"></table>
 
             .nextcloud-header div button{
                 justify-self: start;

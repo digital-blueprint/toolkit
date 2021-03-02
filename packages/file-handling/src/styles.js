@@ -70,6 +70,15 @@ export function getFileHandlingCss() {
         }
 
 
+        .clipboard-container{
+            height: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            justify-content: center;
+        }
+
         /**************************\\
          Picker Styles
        \\**************************/

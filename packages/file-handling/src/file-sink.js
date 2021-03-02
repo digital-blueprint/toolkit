@@ -214,6 +214,11 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
+    saveFilesToClipboard()
+    {
+        //save it
+    }
+
     closeDialog(e) {
         this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
@@ -262,6 +267,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
+                            <div title="Clipboard"
+                                 @click="${() => { this.activeTarget = "clipboard" }}"
+                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledDestination("clipboard") })}">
+                                <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
+                                <p>Clipboard</p>
+                            </div>
                         </nav>
                             <div class="modal-header">
                                 <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => { this.closeDialog();}}">
@@ -303,6 +314,17 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                            @dbp-nextcloud-file-picker-file-uploaded-finished="${(event) => {
                                                                 this.finishedFileUpload(event);
                                                             }}"></dbp-nextcloud-file-picker>
+                            </div>
+                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard"})}">
+                                <div class="block clipboard-container">
+                                    <h2>In Zwischenablage speicher</h2>
+                                    <p>Hier können Sie Dateien temporär ablegen..<br><br></p>
+                                    <button class="button is-primary"
+                                            ?disabled="${this.disabled}"
+                                            @click="${() => { this.saveFilesToClipboard(); }}">
+                                        ${this.buttonLabel || "Ablegen"}
+                                    </button>
+                                </div>
                             </div>
                         </main>
                     </div>
