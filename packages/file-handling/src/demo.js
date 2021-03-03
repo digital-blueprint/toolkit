@@ -11,6 +11,8 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
         super();
         this.lang = 'de';
         this.url = '';
+        this.selectedFiles = [];
+        this.selectedFilesCount = 0;
     }
 
     static get scopedElements() {
@@ -24,6 +26,8 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
         return {
             lang: { type: String },
             url: { type: String },
+            selectedFiles: { type: Array, attribute: false },
+            selectedFilesCount: { type: Number, attribute: false },
         };
     }
 
@@ -31,9 +35,10 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
         super.connectedCallback();
 
         this.updateComplete.then(() => {
-            this.shadowRoot.querySelectorAll('dbp-file-source')
+            this.shadowRoot.querySelectorAll('.file-source')
                 .forEach(element => {
-                    element.addEventListener('dbp-file-source-file-finished', this.addLogEntry.bind(this));
+                    // TODO: remove orphaned event listeners
+                    element.addEventListener('dbp-file-source-file-selected', this.addLogEntry.bind(this));
                 });
         });
     }
@@ -48,12 +53,27 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
         super.update(changedProperties);
     }
 
-    addLogEntry(ev) {
-        const ul = this.shadowRoot.querySelector('#log');
-        const li = document.createElement('li');
-        li.innerHTML = `<li><b>${ev.detail.status}</b> <tt>${ev.detail.filename}</tt>`;
+    getSelectedFilesHtml() {
+        if (this.selectedFilesCount === 0) {
+            return `No files were selected`;
+        }
 
-        ul.appendChild(li);
+        let results = [];
+
+        this.selectedFiles.forEach((file) => {
+            results.push(html`
+                <div class="file-block">
+                    <strong>${file.name}</strong> (${file.type})</span>
+                </div>
+            `);
+        });
+
+        return results;
+    }
+
+    addLogEntry(ev) {
+        this.selectedFiles.push(ev.detail.file);
+        this.selectedFilesCount = this.selectedFiles.length;
     }
 
     render() {
@@ -80,6 +100,9 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                     <p>${unsafeHTML(i18n.t('required-server', { url: this.url}))}</p>
                 </div>
                 <div class="content">
+                    <h2 class="subtitle">Selected files</h2>
+                    ${this.getSelectedFilesHtml()}
+
                     <h2 class="subtitle">Send files via event</h2>
 
                     <p>There is no restriction for a specific file type:</p>
@@ -88,6 +111,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                         Open dialog
                     </button>
                     <dbp-file-source id="file-source1"
+                                     class="file-source"
                                      allowed-mime-types="*/*"
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                                      lang="en"
@@ -99,6 +123,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                         Open dialog
                     </button>
                     <dbp-file-source id="file-source2" lang="en" url="${this.url}"
+                                     class="file-source"
                                      allowed-mime-types="image/*"
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                                      enabled-targets="local,nextcloud"
@@ -110,6 +135,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                         Open dialog
                     </button>
                     <dbp-file-source id="file-source3" lang="en" url="${this.url}"
+                                     class="file-source"
                                      allowed-mime-types="application/pdf"
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                                      enabled-targets="local,nextcloud"
@@ -121,6 +147,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                         Open dialog
                     </button>
                     <dbp-file-source id="file-source4" lang="en" url="${this.url}"
+                                     class="file-source"
                                      allowed-mime-types="text/plain,image/*"
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                                      enabled-targets="local,nextcloud"
@@ -132,6 +159,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                         Open dialog
                     </button>
                     <dbp-file-source id="file-source5" lang="en" url="${this.url}"
+                                     class="file-source"
                                      allowed-mime-types="application/pdf"
                                      decompress-zip
                                      subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
