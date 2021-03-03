@@ -97,7 +97,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
             <section class="section">
                 <div class="content">
                     <h1 class="title">${i18n.t('demo-title')}</h1>
-                    <p>${unsafeHTML(i18n.t('required-server', { url: this.url}))}</p>
+                    <!-- <p>${unsafeHTML(i18n.t('required-server', { url: this.url}))}</p> -->
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Selected files</h2>
