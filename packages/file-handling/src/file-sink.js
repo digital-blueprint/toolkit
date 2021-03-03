@@ -268,7 +268,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                 <p> ${this.nextcloudName} </p>
                             </div>
                             <div title="Clipboard"
-                                 @click="${() => { this.activeTarget = "clipboard" }}"
+                                 @click="${() => { this.activeTarget = "clipboard"; }}"
                                  class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledDestination("clipboard") })}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
                                 <p>Clipboard</p>
