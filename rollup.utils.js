@@ -57,7 +57,7 @@ export async function generateTLSConfig() {
 
     if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
         const attrs = [{name: 'commonName', value: 'dbp-dev.localhost'}];
-        const pems = selfsigned.generate(attrs, {algorithm: 'sha256', days: 9999});
+        const pems = selfsigned.generate(attrs, {algorithm: 'sha256', days: 9999, keySize: 2048});
         await fs.promises.writeFile(keyPath, pems.private);
         await fs.promises.writeFile(certPath, pems.cert);
     }
