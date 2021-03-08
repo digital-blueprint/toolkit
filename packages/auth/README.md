@@ -72,10 +72,10 @@ The component emits a `dbp-set-property` event for the attribute `auth`:
 
 The component emits a `dbp-set-property` event for the attribute `requested-login-status` (possible values `logged-in`, `logged-out`).
 
-
 ## Alternative to &lt;dbp-auth&gt;
 
-If embedded in an external page (without `<dbp-provider>`) components can work also together with a different source for the auth token:
+If embedded in an external page (without `<dbp-provider>`) components can also work together with a different source for the auth token:
+
 ```html
 <dbp-person-select id="ps-1"></dbp-person-select>
 <script>
@@ -92,8 +92,8 @@ If embedded in an external page (without `<dbp-provider>`) components can work a
   }
 </script>
 ```
-PS: some components need information about the logged in person too!
 
+Note: Some components need information about the logged-in person too!
 
 ## Local development
 
