@@ -8,5 +8,8 @@
   "rangeStrategy": "update-lockfile",
   "composer": {
     "enabled": false
+  },
+  "poetry": {
+    "enabled": false
   }
 }
