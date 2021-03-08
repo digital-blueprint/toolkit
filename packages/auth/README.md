@@ -72,6 +72,29 @@ The component emits a `dbp-set-property` event for the attribute `auth`:
 
 The component emits a `dbp-set-property` event for the attribute `requested-login-status` (possible values `logged-in`, `logged-out`).
 
+
+## Alternative to &lt;dbp-auth&gt;
+
+If embedded in an external page (without `<dbp-provider>`) components can work also together with a different source for the auth token:
+```html
+<dbp-person-select id="ps-1"></dbp-person-select>
+<script>
+  function onAuthHasChanged(auth) {
+      /* fully featured auth object */
+    const ps = document.getElementById('ps-1');
+    ps.setProperty('auth', auth);
+  }
+  /* or */
+  function onTokenHasChanged(token) {
+      /* only token available */
+    const auth = { token: token };
+    onAuthHasChanged(auth);
+  }
+</script>
+```
+PS: some components need information about the logged in person too!
+
+
 ## Local development
 
 ```bash
