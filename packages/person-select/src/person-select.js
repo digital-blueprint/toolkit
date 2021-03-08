@@ -18,7 +18,7 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 const personContext = {
     "@id": "@id",
     "name": "http://schema.org/name",
-    "birthDate": "http://schema.org/Date"
+    "email": "http://schema.org/email"
 };
 
 select2(window, $);
@@ -43,7 +43,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         this.lastResult = {};
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
-        this.showBirthDate = false;
+        this.showDetails = false;
     }
 
     static get scopedElements() {
@@ -66,7 +66,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             object: { type: Object, attribute: false },
             showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
             reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
-            showBirthDate: { type: Boolean, attribute: 'show-birth-date' },
+            showDetails: { type: Boolean, attribute: 'show-details' },
             auth: { type: Object },
         };
     }
@@ -261,9 +261,8 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         let text = person["name"];
 
         // add birth date to name if present
-        if (this.showBirthDate && (person["birthDate"] !== undefined) && (person["birthDate"] !== null)) {
-            const date = new Date(person["birthDate"]);
-            text += ` (${date.toLocaleDateString("de-AT")})`;
+        if (this.showDetails && (person["email"] !== undefined) && (person["email"] !== null)) {
+            text += ` (${person["email"]})`;
         }
 
         return text;
