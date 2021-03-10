@@ -50,6 +50,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         this.subtitle = '';
         this.description = '';
         this.routes = [];
+        this.visibleRoutes = [];
         this.metadata = {};
         this.topic = {};
         this.basePath = '/';
@@ -236,6 +237,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             keycloakConfig: { type: Object, attribute: 'keycloak-config' },
             metadata: { type: Object, attribute: false },
+            visibleRoutes:  { type: Array, attribute: false },
             topic: { type: Object, attribute: false },
             subtitle: { type: String, attribute: false },
             description: { type: String, attribute: false },
@@ -291,6 +293,11 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                     this.subtitle = this.activeMetaDataText("short_name");
                     this.description = this.activeMetaDataText("description");
                 break;
+                case 'metadata':
+                {
+                    this._updateVisibleRoutes();
+                }
+                break;
                 case 'auth':
                 {
                     if (this.auth.person) {
@@ -298,6 +305,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                     } else {
                         this._roles = [];
                     }
+                    this._updateVisibleRoutes();
 
                     const loginStatus = this.auth['login-status'];
                     if (loginStatus !== this._loginStatus) {
@@ -770,6 +778,36 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         return elm;
     }
 
+    _updateVisibleRoutes() {
+        let visibleRoutes = [];
+
+        for (let routingName of this.routes) {
+            const data = this.metadata[routingName];
+            const requiredRoles = data['required_roles'];
+            let visible = data['visible'];
+
+            // Hide them until the user is logged in and we know the roles of the user
+            for (let role of requiredRoles) {
+                if (!this._roles.includes(role)) {
+                    visible = false;
+                    break;
+                }
+            }
+
+            if (visible) {
+                visibleRoutes.push(routingName);
+            }
+        }
+
+        this.visibleRoutes = visibleRoutes;
+
+        const event = new CustomEvent("visibility-changed", {
+            bubbles: false,
+            cancelable: true,
+        });
+        this.dispatchEvent(event);
+    }
+
     render() {
         const getSelectClasses = (name => {
             return classMap({selected: this.activeView === name});
@@ -797,22 +835,8 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         // build the menu
         let menuTemplates = [];
-        for (let routingName of this.routes) {
-            const data = this.metadata[routingName];
-            const requiredRoles = data['required_roles'];
-            let visible = data['visible'];
-
-            // Hide them until the user is logged in and we knwo the roles of the user
-            for (let role of requiredRoles) {
-                if (!this._roles.includes(role)) {
-                    visible = false;
-                    break;
-                }
-            }
-
-            if (visible) {
-                menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
-            }
+        for (let routingName of this.visibleRoutes) {
+            menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
         }
 
         const imprintUrl = this.lang === "en" ?

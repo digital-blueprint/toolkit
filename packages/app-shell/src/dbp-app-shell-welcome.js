@@ -11,6 +11,8 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.lang = i18n.language;
+
+        this._onVisibilityChanged = this._onVisibilityChanged.bind(this);
     }
 
     static get properties() {
@@ -54,9 +56,26 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
         `;
     }
 
+    _onVisibilityChanged() {
+        this.requestUpdate();
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+
+        const app = AppShellWelcome._app;
+        app.addEventListener('visibility-changed', this._onVisibilityChanged);
+    }
+
+    disconnectedCallback() {
+        const app = AppShellWelcome._app;
+        app.removeEventListener('visibility-changed', this._onVisibilityChanged);
+
+        super.disconnectedCallback();
+    }
+
     render() {
         const app = AppShellWelcome._app;
-        let metadata = app.metadata;
         let itemTemplates = [];
 
         const switchActivity = (e, data) => {
@@ -64,9 +83,10 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
             app.switchComponent(data.routing_name);
         };
 
-        for (let [key, data] of Object.entries(metadata)) {
+        for (let routeName of app.visibleRoutes) {
+            let data = app.metadata[routeName];
 
-            if (data['visible'] && (key !== "welcome")) {
+            if (routeName !== "welcome") {
                 itemTemplates.push(html`
                     <div class="item">
                         <h2><a href="#" @click=${(e) => {switchActivity(e, data);}}>${data.name[this.lang]}</a></h2>
