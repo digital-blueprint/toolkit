@@ -45,7 +45,7 @@ All other components are also inherent providers (see below), so you don't reall
 of other components. The use of `dbp-provider` is mainly suggested being used for namespacing (e.g. different languages
 or entry point urls on the same page) or to deliver attribute changes across different components.
 
-### Flow
+### Examples
 
 #### Example 1 - Simple communication
 
@@ -72,6 +72,8 @@ sequenceDiagram
     LS->>P: "lang" should be "en"
     P->>PS: "lang" was updated to "en"
 ```
+
+##### Flow
 
 1) The language selector propagates a change of `lang` (because the user clicked on it)
 2) The provider receives that event, because it has the attribute `lang` set
@@ -112,6 +114,8 @@ sequenceDiagram
     AK->>P1: "auth" should be "{...json...}"
     P1->>PS: "auth" was updated to "{...json...}"
 ```
+
+##### Flow
 
 1) The language selector propagates a change of `lang` (because the user clicked on it)
 2) The provider 2 receives that event, because it has the attribute `lang` set
