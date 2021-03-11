@@ -93,7 +93,7 @@ sequenceDiagram
 </dbp-provider>
 ```
 
-There is two cascaded providers around an auth component, a language selector and a person selector.
+There are two cascaded providers around an auth component, a language selector and a person selector.
 The flow looks like this:
 
 ```mermaid
