@@ -34,10 +34,10 @@ Jump to <http://localhost:8002> and you should get a demo page.
 You can provide attributes (e.g. `global-name`) for components inside the provider:
 
 ```html
-<provider global-name="value" global-name2="value2">
+<dbp-provider global-name="value" global-name2="value2">
   <dbp-person-select subscribe="local-name:global-name"></dbp-person-select>
   <dbp-person-profile subscribe="local-name:global-name,local-name2:global-name2"></dbp-person-profile>
-</provider>
+</dbp-provider>
 <script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
 ```
 
@@ -45,12 +45,39 @@ All other components are also inherent providers (see below), so you don't reall
 of other components. The use of `dbp-provider` is mainly suggested being used for namespacing (e.g. different languages
 or entry point urls on the same page) or to deliver attribute changes across different components.
 
+### Flow
+
+#### Example 1
+
+```html
+<dbp-provider lang>
+  <dbp-language-select></dbp-language-select>
+  <dbp-person-select subscribe="lang"></dbp-person-select>
+</dbp-provider>
+```
+
+There is a provider, a language selector and a person selector.
+The flow looks like this:
+
+```mermaid
+sequenceDiagram
+    participant P as Provider
+    participant LS as LanguageSelect
+    participant PS as PersonSelect
+    Note over P,PS: Initialization
+    P-->P: Has attribute "lang"
+    PS->>P: Subscribe to "lang"
+    Note over P,PS: Communication
+    LS->>P: "lang" should be "en"
+    P->>PS: "lang" was updated to "en"
+```
+
 ### Attributes
 
 - `init` (optional): set your vars to values
-  - example `<provider init="foo=bar"></provider>`
+  - example `<dbp-provider init="foo=bar"></dbp-provider>`
 - `id` (optional): set an id, useful for debugging
-  - example `<provider id="p-1"></provider>`
+  - example `<dbp-provider id="p-1"></dbp-provider>`
 
 ## AdapterLitElement
 
@@ -100,11 +127,11 @@ You can locally "subscribe" to attributes (e.g. `local-name`) that can be provid
 Multiple attributes can be subscribed when separated by a comma (`,`).
 
 ```html
-<provider global-name="value" global-name2="value2">
+<dbp-provider global-name="value" global-name2="value2">
   <dbp-provider-adapter subscribe="local-name:global-name">
     <third-party-webcomponent>  </third-party-webcomponent>
   </dbp-provider-adapter>
-</provider>
+</dbp-provider>
 <script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
 <script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-adapter.js"></script>
 ```
