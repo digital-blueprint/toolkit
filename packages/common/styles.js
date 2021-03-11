@@ -48,6 +48,12 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         h2 {
             font-weight: 300;
         }
+        
+        h3{
+            font-weight: 300;
+            margin-top: 0px;
+            margin-bottom: 0.75rem;
+        }
 
         code {
             background-color: var(--dbp-light);
