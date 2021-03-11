@@ -55,6 +55,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.firstOpen = true;
 
         this.initialFileHandlingState = {target: '', path: ''};
+        this.clipBoardFiles = {files: ''};
+
     }
 
     static get scopedElements() {
@@ -89,6 +91,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             nextcloudPath: { type: String, attribute: false },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
+            clipBoardFiles: {type: Object, attribute: 'clipboard-files'},
+
         };
     }
 
@@ -400,9 +404,28 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     getClipboardFiles() {
         let htmlpath = [];
-        htmlpath[0] =  html`ein file und danach select button`;
+        htmlpath[0] =  html`ein file und danach select button<br>`;
+        console.log("############################", this.clipBoardFiles );
+        for(let i = 0; i < this.clipBoardFiles.files.length; i ++)
+        {
+            console.log("--", this.clipBoardFiles.files[i].name);
+            console.log("++", i);
 
+            htmlpath[i+1] =  this.clipBoardFiles.files[i].name;
+            //htmlpath[i+1] +=  html`<br>`;
+        }
         return htmlpath;
+    }
+
+
+    async sendClipboardFiles() {
+        for(let i = 0; i < this.clipBoardFiles.files.length; i ++)
+        {
+            await this.sendFileEvent(this.clipBoardFiles.files[i]);
+        }
+
+        this.closeDialog();
+
     }
 
     static get styles() {
@@ -536,6 +559,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                     <h2>Von der Zwischenablage auswählen</h2>
                                     <p>Hier können Sie aus der zuvor temporär abgelegte Dateien auswählen.<br><br></p>
                                     <p>${this.getClipboardFiles()}</p>
+                                    <button class="button select-button is-primary"
+                                            @click="${() => {this.sendClipboardFiles(); }}">Auswählen</button>
                                 </div>
                             </div>
                         </main>

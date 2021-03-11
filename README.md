@@ -38,6 +38,7 @@ the version number in its `package.json` is higher than the version number on np
 | `entry-point-url`             | Entry point url for all api requests                                              |
 | `requested-login-status`      | Used by the login buttons to trigger a login in auth components                   |
 | `initial-file-handling-state` | Used by the file-handling component to sync file source/sink at first time open   |
+| `clipboard-files`             | Used by the file-handling component to use the clipboard source and sink          |
 | `analytics-event`             | Used to send analytics events to the Matomo component                             |
 
 ## Reserved events

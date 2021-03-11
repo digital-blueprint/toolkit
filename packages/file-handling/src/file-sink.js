@@ -217,6 +217,11 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     saveFilesToClipboard()
     {
         //save it
+        let data = {};
+        if (this.files.length !== 0) {
+            data = {"files": this.files};
+            this.sendSetPropertyEvent('clipboard-files', data);
+        }
     }
 
     closeDialog(e) {
