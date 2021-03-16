@@ -76,7 +76,7 @@ export function getFileHandlingCss() {
             align-items: center;
             flex-direction: column;
             width: 100%;
-            justify-content: center;
+            overflow-x: auto;
         }
 
         /**************************\\

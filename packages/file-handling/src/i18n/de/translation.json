@@ -26,7 +26,15 @@
     "nav-local": "Lokaler Computer",
     "upload-success-title": "Erfolgreich hochgeladen",
     "upload-success-body": "Sie haben {{count}} Datei erfolgreich in {{name}} hochgeladen.",
-    "upload-success-body_plural": "Sie haben {{count}} Dateien erfolgreich in {{name}} hochgeladen."
+    "upload-success-body_plural": "Sie haben {{count}} Dateien erfolgreich in {{name}} hochgeladen.",
+    "save-to-clipboard-title": "Erfolgreich abgelegt",
+    "save-to-clipboard-body": "Sie haben {{count}} Datei im Clipboard temporär abgelegt. Vergessen Sie nicht diese dauerhaft zu speichern.",
+    "save-to-clipboard-body_plural": "Sie haben {{count}} Dateien im Clipboard temporär abgelegt. Vergessen Sie nicht diese dauerhaft zu speichern.",
+    "save-to-clipboard-btn": "{{count}} Datei ablegen",
+    "save-to-clipboard-btn_plural": "{{count}} Dateien ablegen",
+    "save-to-clipboard-title": "Dateien im Clipboard ablegen",
+    "save-to-clipboard-text": "Hier können Sie Dateien temporär ablegen.",
+    "save-to-clipboard-warning": "Vorsicht! Wenn Sie den Browser schließen, die Seite neu laden oder neue Dateien hinzufügen, wird das Clipboard automatisch geleert!"
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",

@@ -11,6 +11,7 @@ import FileSaver from 'file-saver';
 import MicroModal from "./micromodal.es";
 import * as fileHandlingStyles from './styles';
 import { send } from '@dbp-toolkit/common/notification';
+import {humanFileSize} from '@dbp-toolkit/common/i18next';
 
 
 /**
@@ -36,6 +37,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.firstOpen = true;
 
         this.initialFileHandlingState = {target: '', path: ''};
+        this.clipBoardFiles = {files: ''};
     }
 
     static get scopedElements() {
@@ -69,6 +71,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             nextcloudPath: {type: String, attribute: false},
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
+            clipBoardFiles: {type: Object, attribute: 'clipboard-files'},
 
         };
     }
@@ -221,7 +224,25 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         if (this.files.length !== 0) {
             data = {"files": this.files};
             this.sendSetPropertyEvent('clipboard-files', data);
+            this.closeDialog();
+            send({
+                "summary": i18n.t('file-sink.save-to-clipboard-title'),
+                "body": i18n.t('file-sink.save-to-clipboard-body', {count: this.files.length}),
+                "type": "success",
+                "timeout": 5,
+            });
+            console.log("--------------", this.clipBoardFiles);
         }
+
+    }
+
+    getClipboardFiles() {
+        let files = [];
+        for(let i = 0; i < this.clipBoardFiles.files.length; i ++)
+        {
+            files[i] =  html`<div class="clipboard-list"><strong>${this.clipBoardFiles.files[i].name}</strong> ${humanFileSize(this.clipBoardFiles.files[i].size)}</div>`;
+        }
+        return files;
     }
 
     closeDialog(e) {
@@ -249,6 +270,50 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
             .block {
                 margin-bottom: 10px;
+            }
+            
+            .warning-icon{
+                font-size: 2rem;
+                padding: 0 1rem;
+            }
+            
+            .clipboard-btn{
+                margin-top: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .warning-container{
+                display: flex;
+                max-width: 400px;
+            }
+
+            .clipboard-data h4{
+                margin-top: 2rem;
+            }
+            
+            .clipboard-data p{
+                margin-bottom: 1rem;
+            }
+            
+            .clipboard-list{
+                padding: 1rem 0;
+                border-top: 1px solid #eee;
+            }
+            
+
+            @media only screen
+            and (orientation: portrait)
+            and (max-device-width: 765px) {
+                .clipboard-container p, .clipboard-container h3{
+                    text-align: center;
+                }
+                .warning-container{
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .warning-icon{
+                    margin-bottom: 1rem;
+                }
             }
         `;
     }
@@ -322,13 +387,22 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard"})}">
                                 <div class="block clipboard-container">
-                                    <h2>In Zwischenablage speicher</h2>
-                                    <p>Hier können Sie Dateien temporär ablegen..<br><br></p>
-                                    <button class="button is-primary"
+                                    <h3>${i18n.t('file-sink.save-to-clipboard-title')}</h3>
+                                    <p>${i18n.t('file-sink.save-to-clipboard-text')}</p>
+                                    <button class="button is-primary clipboard-btn"
                                             ?disabled="${this.disabled}"
                                             @click="${() => { this.saveFilesToClipboard(); }}">
-                                        ${this.buttonLabel || "Ablegen"}
+                                        ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.files.length})}
                                     </button>
+                                    <div class="warning-container">
+                                        <dbp-icon name="warning" class="warning-icon"></dbp-icon>
+                                        <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
+                                    </div>
+                                    <div class="clipboard-data ${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
+                                        <h4>Aktuell vorhandene Dateien im Clipboard</h4>
+                                        <p>Folgende Dateien werden überschrieben:</p>
+                                        ${this.getClipboardFiles()}
+                                    </div>
                                 </div>
                             </div>
                         </main>

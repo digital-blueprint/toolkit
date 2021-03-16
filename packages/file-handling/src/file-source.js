@@ -403,6 +403,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getClipboardFiles() {
+        console.log("+++++++++++++++", this.clipBoardFiles);
         let htmlpath = [];
         htmlpath[0] =  html`ein file und danach select button<br>`;
         //console.log("############################", this.clipBoardFiles );
