@@ -34,7 +34,9 @@
     "save-to-clipboard-btn_plural": "{{count}} cache files",
     "save-to-clipboard-title": "Cache files in the clipboard ",
     "save-to-clipboard-text": "Here you can cache files temporarily.",
-    "save-to-clipboard-warning": "Attention! When you close the browser, reload the page or add new files, the clipboard will automatically be emptied!"
+    "save-to-clipboard-warning": "Attention! When you close the browser, reload the page or add new files, the clipboard will automatically be emptied!",
+    "clipboard-files": "Files currently available in the clipboard",
+    "clipboard-files-overwrite": "The following files will be overwritten:"
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",

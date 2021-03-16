@@ -399,8 +399,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                         <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
                                     </div>
                                     <div class="clipboard-data ${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
-                                        <h4>Aktuell vorhandene Dateien im Clipboard</h4>
-                                        <p>Folgende Dateien werden überschrieben:</p>
+                                        <h4>${i18n.t('file-sink.clipboard-files')}</h4>
+                                        <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
                                         ${this.getClipboardFiles()}
                                     </div>
                                 </div>

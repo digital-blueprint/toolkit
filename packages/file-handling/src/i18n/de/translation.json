@@ -34,7 +34,9 @@
     "save-to-clipboard-btn_plural": "{{count}} Dateien ablegen",
     "save-to-clipboard-title": "Dateien im Clipboard ablegen",
     "save-to-clipboard-text": "Hier können Sie Dateien temporär ablegen.",
-    "save-to-clipboard-warning": "Vorsicht! Wenn Sie den Browser schließen, die Seite neu laden oder neue Dateien hinzufügen, wird das Clipboard automatisch geleert!"
+    "save-to-clipboard-warning": "Vorsicht! Wenn Sie den Browser schließen, die Seite neu laden oder neue Dateien hinzufügen, wird das Clipboard automatisch geleert!",
+    "clipboard-files": "Aktuell vorhandene Dateien im Clipboard",
+    "clipboard-files-overwrite": "Folgende Dateien werden überschrieben:"
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
