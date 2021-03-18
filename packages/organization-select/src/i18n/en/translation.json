@@ -1,0 +1,7 @@
+{
+  "select-organization": {
+    "placeholder": "Please select an organization",
+    "loading": "Loading...",
+    "load-error": "Error loading the organization"
+  }
+}
