@@ -89,7 +89,7 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                             <div class="control">
                                 <dbp-person-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}" show-reload-button reload-button-title="Click me"></dbp-person-select>
                             </div>
-                            <p>This comonent doesn't get any notification about user's login and will become active.</p>
+                            <p>This component doesn't get any notification about user's login and will become active.</p>
                         </div>
                     </form>
                 </div>
