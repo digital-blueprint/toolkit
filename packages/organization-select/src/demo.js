@@ -1,1 +1,1 @@
-import './dbp-knowledge-base-organization-select-demo.js';
+import './dbp-organization-select-demo.js';

@@ -9,21 +9,21 @@ npm i @dbp-toolkit/organization-select
 ## Usage
 
 ```html
-<dbp-knowledge-base-organization-select></dbp-knowledge-base-organization-select>
-<script type="module" src="node_modules/@dbp-toolkit/organization-select/dist/dbp-knowledge-base-organization-select.js"></script>
+<dbp-organization-select></dbp-organization-select>
+<script type="module" src="node_modules/@dbp-toolkit/organization-select/dist/dbp-organization-select.js"></script>
 ```
 
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<dbp-knowledge-base-organization-select lang="de"></dbp-knowledge-base-organization-select>`
+    - example `<dbp-organization-select lang="de"></dbp-organization-select>`
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
-    - example `<dbp-knowledge-base-organization-select entry-point-url="http://127.0.0.1:8000"></dbp-knowledge-base-organization-select>`
+    - example `<dbp-organization-select entry-point-url="http://127.0.0.1:8000"></dbp-organization-select>`
 - `value` (optional): api path of organization to preload the selector with
-    - example `<dbp-knowledge-base-organization-select value="/people/testuser"></dbp-knowledge-base-organization-select>`
+    - example `<dbp-organization-select value="/people/testuser"></dbp-organization-select>`
     - the `value` will also be set automatically when an organization is chosen in the selector
 - `data-object` (read-only): when an organization is selected the organization object will be set as json string
-    - example `<dbp-knowledge-base-organization-select data-object="{"@id":"/organizations/1190-F2050","@type":"http://schema.org/Organization","identifier":"1190-F2050","name":"Institut für Stahlbau","url":"https://online.tugraz.at/tug_online/wborg.display?pOrgNr=1190","alternateName":"F2050"}"></dbp-knowledge-base-organization-select>`
+    - example `<dbp-organization-select data-object="{"@id":"/organizations/1190-F2050","@type":"http://schema.org/Organization","identifier":"1190-F2050","name":"Institut für Stahlbau","url":"https://online.tugraz.at/tug_online/wborg.display?pOrgNr=1190","alternateName":"F2050"}"></dbp-organization-select>`
 - `auth` object: you need to set that object property for the auth token
     - example auth property: `{token: "THE_BEARER_TOKEN"}`
     - note: most often this should be an attribute that is not set directly, but subscribed at a provider

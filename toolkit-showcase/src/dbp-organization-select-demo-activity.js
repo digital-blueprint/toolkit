@@ -1,6 +1,6 @@
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {OrganizationSelectDemo} from '@dbp-toolkit/organization-select/src/dbp-knowledge-base-organization-select-demo';
+import {OrganizationSelectDemo} from '@dbp-toolkit/organization-select/src/dbp-organization-select-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
@@ -18,7 +18,7 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
 
     static get scopedElements() {
         return {
-          'dbp-knowledge-base-organization-select-demo': OrganizationSelectDemo,
+          'dbp-organization-select-demo': OrganizationSelectDemo,
         };
     }
 
@@ -59,9 +59,9 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-knowledge-base-organization-select-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" no-auth></dbp-knowledge-base-organization-select-demo>
+            <dbp-organization-select-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" no-auth></dbp-organization-select-demo>
         `;
     }
 }
 
-commonUtils.defineCustomElement('dbp-knowledge-base-organization-select-demo-activity', DbpOrganizationSelectDemoActivity);
+commonUtils.defineCustomElement('dbp-organization-select-demo-activity', DbpOrganizationSelectDemoActivity);

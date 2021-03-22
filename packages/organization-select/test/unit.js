@@ -1,13 +1,13 @@
 import {assert} from 'chai';
 
-import '../src/dbp-knowledge-base-organization-select.js';
+import '../src/dbp-organization-select.js';
 import '../src/demo.js';
 
-suite('dbp-knowledge-base-organization-select basics', () => {
+suite('dbp-organization-select basics', () => {
   let node;
 
   setup(async () => {
-    node = document.createElement('dbp-knowledge-base-organization-select');
+    node = document.createElement('dbp-organization-select');
     document.body.appendChild(node);
     await node.updateComplete;
   });
@@ -21,11 +21,11 @@ suite('dbp-knowledge-base-organization-select basics', () => {
   });
 });
 
-suite('dbp-knowledge-base-organization-select-demo basics', () => {
+suite('dbp-organization-select-demo basics', () => {
   let node;
 
   setup(async () => {
-    node = document.createElement('dbp-knowledge-base-organization-select-demo');
+    node = document.createElement('dbp-organization-select-demo');
     document.body.appendChild(node);
     await node.updateComplete;
   });

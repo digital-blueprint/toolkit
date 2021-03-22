@@ -1,5 +1,5 @@
 {
-  "element": "dbp-knowledge-base-organization-select-demo-activity",
+  "element": "dbp-organization-select-demo-activity",
   "module_src": "dbp-organization-select-demo-activity.js",
   "routing_name": "organization-select",
   "name": {

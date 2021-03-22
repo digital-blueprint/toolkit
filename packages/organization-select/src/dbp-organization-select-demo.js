@@ -19,7 +19,7 @@ export class OrganizationSelectDemo extends ScopedElementsMixin(DBPLitElement) {
         return {
           'dbp-auth-keycloak': AuthKeycloak,
           'dbp-login-button': LoginButton,
-          'dbp-knowledge-base-organization-select': OrganizationSelect,
+          'dbp-organization-select': OrganizationSelect,
         };
     }
 
@@ -75,13 +75,13 @@ export class OrganizationSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                         <div class="field">
                             <label class="label">Organization 1</label>
                             <div class="control">
-                                <dbp-knowledge-base-organization-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-knowledge-base-organization-select>
+                                <dbp-organization-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-organization-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Organization 2</label>
                             <div class="control">
-                                <dbp-knowledge-base-organization-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-knowledge-base-organization-select>
+                                <dbp-organization-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-organization-select>
                             </div>
                         </div>
                     </form>
@@ -91,4 +91,4 @@ export class OrganizationSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-knowledge-base-organization-select-demo', OrganizationSelectDemo);
+commonUtils.defineCustomElement('dbp-organization-select-demo', OrganizationSelectDemo);
