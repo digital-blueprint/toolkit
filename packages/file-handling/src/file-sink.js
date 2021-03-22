@@ -272,6 +272,19 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 margin-bottom: 10px;
             }
             
+            .clipboard-container{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: var(--FUPadding, 20px);
+            }
+            
+            .clipboard-container .inner{
+                overflow-y: auto;
+                text-align: center;
+                width: 100%;
+            }
+            
             .warning-icon{
                 font-size: 2rem;
                 padding: 0 1rem;
@@ -285,6 +298,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             .warning-container{
                 display: flex;
                 max-width: 400px;
+                text-align: left;
+                margin: auto;
             }
 
             .clipboard-data h4{
@@ -387,21 +402,23 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard"})}">
                                 <div class="block clipboard-container">
-                                    <h3>${i18n.t('file-sink.save-to-clipboard-title')}</h3>
-                                    <p>${i18n.t('file-sink.save-to-clipboard-text')}</p>
-                                    <button class="button is-primary clipboard-btn"
-                                            ?disabled="${this.disabled}"
-                                            @click="${() => { this.saveFilesToClipboard(); }}">
-                                        ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.files.length})}
-                                    </button>
-                                    <div class="warning-container">
-                                        <dbp-icon name="warning" class="warning-icon"></dbp-icon>
-                                        <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
-                                    </div>
-                                    <div class="clipboard-data ${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
-                                        <h4>${i18n.t('file-sink.clipboard-files')}</h4>
-                                        <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
-                                        ${this.getClipboardFiles()}
+                                    <div class="inner">
+                                        <h3>${i18n.t('file-sink.save-to-clipboard-title')}</h3>
+                                        <p>${i18n.t('file-sink.save-to-clipboard-text')}</p>
+                                        <button class="button is-primary clipboard-btn"
+                                                ?disabled="${this.disabled}"
+                                                @click="${() => { this.saveFilesToClipboard(); }}">
+                                            ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.files.length})}
+                                        </button>
+                                        <div class="warning-container">
+                                            <dbp-icon name="warning" class="warning-icon"></dbp-icon>
+                                            <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
+                                        </div>
+                                        <div class="clipboard-data ${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
+                                            <h4>${i18n.t('file-sink.clipboard-files')}</h4>
+                                            <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
+                                            ${this.getClipboardFiles()}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -15,7 +15,11 @@
     "modal-close": "Dialog schließen",
     "nav-local": "Lokaler Computer",
     "no-usable-files-in-zip": "ZIP Datei enthält keine verwendbaren Dateien",
-    "no-usable-files-hint": "Laden Sie eine ZIP Datei mit Dateien von folgendem Typ hoch: "
+    "no-usable-files-hint": "Laden Sie eine ZIP Datei mit Dateien von folgendem Typ hoch: ",
+    "clipboard-title": "Vom Clipboard auswählen",
+    "clipboard-body": "Hier können Sie aus der zuvor temporär abgelegte Dateien auswählen.",
+    "clipboard-select-btn": "Auswählen",
+    "clipboard-no-files": "Aktuell befinden sich keine Dateien im Clipboard."
   },
   "file-sink": {
     "local-intro": "{{count}} Datei herunterladen",
@@ -34,9 +38,9 @@
     "save-to-clipboard-btn_plural": "{{count}} Dateien ablegen",
     "save-to-clipboard-title": "Dateien im Clipboard ablegen",
     "save-to-clipboard-text": "Hier können Sie Dateien temporär ablegen.",
-    "save-to-clipboard-warning": "Vorsicht! Wenn Sie den Browser schließen, die Seite neu laden oder neue Dateien hinzufügen, wird das Clipboard automatisch geleert!",
+    "save-to-clipboard-warning": "Vorsicht! Wenn Sie den Browser schließen, die Seite neu laden oder neue Dateien hinzufügen, wird das bestehende Clipboard automatisch verworfen!",
     "clipboard-files": "Aktuell vorhandene Dateien im Clipboard",
-    "clipboard-files-overwrite": "Folgende Dateien werden überschrieben:"
+    "clipboard-files-overwrite": "Folgende Dateien werden verworfen:"
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",

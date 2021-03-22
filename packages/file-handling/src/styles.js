@@ -105,11 +105,127 @@ export function getFileHandlingCss() {
         #modal-picker-content{
             grid-area: main;
         }
+        
+        
+        
+        /**********************************\\
+            Tabulator table styles
+         \\*********************************/
 
 
-        /**************************\\
-         Mobile Landscape Styles
-       \\**************************/
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title{
+            padding-top: 4px;
+            padding-bottom: 4px;
+            font-weight: normal;
+            font-size: 1rem;
+        }
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow,
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow,
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
+            padding-bottom: 6px;
+        }
+
+        .tabulator .tabulator-header, .tabulator .tabulator-header, .tabulator .tabulator-header .tabulator-col, .tabulator, .tabulator-row .tabulator-cell, .tabulator-row.tabulator-row-even,
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover{
+            background-color: unset;
+            background: unset;
+            color: unset;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .tabulator-row, .tabulator-row.tabulator-row-even{
+            background-color: white;
+        }
+
+        .tabulator-row.tabulator-selectable.tabulator-selectable:hover{
+            background-color: white;
+            color: var(--dbp-dark);
+        }
+
+        .tabulator-row.tabulator-selectable.tabulator-selected:hover, .tabulator-row.tabulator-selected{
+            background-color: var(--dbp-dark);
+            color: var(--dbp-light);
+        }
+
+        .tabulator .tabulator-header .tabulator-col .tabulator-col-content{
+            display: inline-flex;
+        }
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
+            top: 16px;
+        }
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow{
+            border-top: none;
+            border-bottom: 4px solid #666;
+        }
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow{
+            border-top: none;
+            border-bottom: 4px solid #bbb;
+        }
+
+        .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow{
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+        }
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow,
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
+            border-top: 4px solid #666;
+            border-bottom: none;
+        }
+
+        .tabulator-row, .tabulator-row.tabulator-row-even{
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .tabulator-header{
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .tabulator .tabulator-tableHolder{
+            overflow: hidden;
+        }
+
+        .tabulator .tabulator-tableHolder .tabulator-placeholder span{
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+        }
+
+        .force-no-select{
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media only screen
+        and (orientation: portrait)
+        and (max-device-width: 765px) {
+
+            .tabulator .tabulator-tableHolder{
+                white-space: inherit;
+            }
+        }
+
+
+
+
+
+
+
+
+
+            /**************************\\
+             Mobile Landscape Styles
+           \\**************************/
         
         @media only screen
         and (orientation: landscape)

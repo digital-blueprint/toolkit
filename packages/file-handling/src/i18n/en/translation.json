@@ -15,7 +15,11 @@
     "modal-close": "Close dialog",
     "nav-local": "My device",
     "no-usable-files-in-zip": "ZIP file does not contain any usable files",
-    "no-usable-files-hint": "Upload a ZIP file with file type(s) of "
+    "no-usable-files-hint": "Upload a ZIP file with file type(s) of ",
+    "clipboard-title": "Select files from clipboard",
+    "clipboard-body": "Here you can choose from the previously temporarily cached files.",
+    "clipboard-select-btn": "Select",
+    "clipboard-no-files": "There are currently no files in the clipboard."
   },
   "file-sink": {
     "local-intro": "Download {{count}} file",

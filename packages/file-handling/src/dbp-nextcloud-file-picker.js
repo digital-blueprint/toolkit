@@ -11,6 +11,7 @@ import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import Tabulator from 'tabulator-tables';
 import MicroModal from './micromodal.es';
 import {name as pkgName} from './../package.json';
+import * as fileHandlingStyles from './styles';
 
 /**
  * NextcloudFilePicker web component
@@ -997,7 +998,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getTextUtilities()}
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
-            
+            ${fileHandlingStyles.getFileHandlingCss()}
+
             .visible {
                 display: unset;
             }
@@ -1010,19 +1012,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 color: var(--dbp-danger-bg-color);
             }
 
-            .force-no-select{
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
+            
 
             .nextcloud-header{
                 margin-bottom: 2rem;  
                 display: inline-grid;
                 width: 100%;
                 grid-template-columns: auto auto;          
-            } <table id="directory-content-table" class="force-no-select"></table>
+            }
 
             .nextcloud-header div button{
                 justify-self: start;
@@ -1079,82 +1076,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 -webkit-overflow-scrolling: touch;
             }
 
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title{
-                padding-top: 4px;
-                padding-bottom: 4px;
-                font-weight: normal;
-                font-size: 1rem;
-            }
-
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow, 
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow,
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
-                padding-bottom: 6px;
-            }
-
-            .tabulator .tabulator-header, .tabulator .tabulator-header, .tabulator .tabulator-header .tabulator-col, .tabulator, .tabulator-row .tabulator-cell, .tabulator-row.tabulator-row-even,
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover{
-                background-color: unset;
-                background: unset;
-                color: unset;
-                border: none;
-                font-size: 1rem;
-            }
-
-            .tabulator-row, .tabulator-row.tabulator-row-even{
-                background-color: white;
-            }
-                        
-            .tabulator-row.tabulator-selectable.tabulator-selectable:hover{
-                background-color: white;
-                color: var(--dbp-dark);
-            }
             
-            .tabulator-row.tabulator-selectable.tabulator-selected:hover, .tabulator-row.tabulator-selected{
-                background-color: var(--dbp-dark);
-                color: var(--dbp-light);
-            }
-            
-            .tabulator .tabulator-header .tabulator-col .tabulator-col-content{
-                display: inline-flex;
-            }
-
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
-                top: 16px;
-            }
-
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow{
-                border-top: none;
-                border-bottom: 4px solid #666;
-            }
-
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow{
-                border-top: none;
-                border-bottom: 4px solid #bbb;
-            }
-
-            .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow{
-                border-left: 4px solid transparent;
-                border-right: 4px solid transparent;
-            }
-
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow,
-            .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
-                border-top: 4px solid #666;
-                border-bottom: none;
-            }
-
-            .tabulator-row, .tabulator-row.tabulator-row-even{
-                padding-top: 10px;
-                padding-bottom: 10px;
-                border-top: 1px solid #eee;
-            }
-
-            .tabulator-header{
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-
             .nextcloud-nav{
                 display: flex;
                 justify-content: space-between;
@@ -1175,15 +1097,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 justify-content: space-between;
             }
 
-            .tabulator .tabulator-tableHolder{
-                overflow: hidden;
-            }
-
-            .tabulator .tabulator-tableHolder .tabulator-placeholder span{
-                font-size: inherit;
-                font-weight: inherit;
-                color: inherit;
-            }
+          
 
             .add-folder{
                 white-space: nowrap;
@@ -1424,9 +1338,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     margin: 0 auto;
                 }
 
-                .tabulator .tabulator-tableHolder{
-                    white-space: inherit;
-                }
+                
                 .button-wrapper{
                     justify-self: start;
                 }

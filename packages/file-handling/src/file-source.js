@@ -10,6 +10,9 @@ import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
+import Tabulator from "tabulator-tables";
+import {humanFileSize} from "@dbp-toolkit/common/i18next";
+import {name as pkgName} from "../package.json";
 
 function mimeTypesToAccept(mimeTypes) {
     // Some operating systems can't handle mime types and
@@ -53,9 +56,13 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.activeTarget = 'local';
         this.isDialogOpen = false;
         this.firstOpen = true;
+        this.tabulatorTable = null;
+        this.maxSelectedItems = 5;
+        this.selectAllButton = true;
 
         this.initialFileHandlingState = {target: '', path: ''};
         this.clipBoardFiles = {files: ''};
+        this.selectedClipBoardFiles = {files: []};
 
     }
 
@@ -89,9 +96,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
             firstOpen: { type: Boolean, attribute: false },
             nextcloudPath: { type: String, attribute: false },
+            maxSelectedItems: { type: Number, attribute: 'max-selected-items' },
+            selectAllButton: { type: Boolean, attribute: false },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
             clipBoardFiles: {type: Object, attribute: 'clipboard-files'},
+            selectedClipBoardFiles: {type: Object, attribute: false},
 
         };
     }
@@ -130,7 +140,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-
+        const that = this;
         this.updateComplete.then(() => {
             this.dropArea = this._('#dropArea');
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -145,7 +155,115 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
             this._('#fileElem').addEventListener('change', this.handleChange.bind(this));
 
+            // see: http://tabulator.info/docs/4.7
+            this.tabulatorTable = new Tabulator(this._("#clipboard-content-table"), {
+                layout: "fitColumns",
+                selectable: this.maxSelectedItems,
+                selectableRangeMode: "drag",
+                responsiveLayout: true,
+                placeholder: i18n.t('nextcloud-file-picker.no-data-type'),
+                resizableColumns:false,
+                columns: [
+                    {title: "", field: "type", align:"center", headerSort:false, width:50, responsive:1, formatter: (cell, formatterParams, onRendered) => {
+                            const icon_tag =  that.constructor.getScopedTagName("dbp-icon");
+                            let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
+                            return icon;
+                        }},
+                    {title: i18n.t('nextcloud-file-picker.filename'), responsive: 0, widthGrow:5,  minWidth: 150, field: "name", sorter: "alphanum",
+                        formatter: (cell) => {
+                            let data = cell.getRow().getData();
+                            if (data.edit) {
+                                cell.getElement().classList.add("fokus-edit");
+                            }
+                            return cell.getValue();
+                        }},
+                    {title: i18n.t('nextcloud-file-picker.size'), responsive: 4, widthGrow:1, minWidth: 50, field: "size", formatter: (cell, formatterParams, onRendered) => {
+                            return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());}},
+                    {title: i18n.t('nextcloud-file-picker.mime-type'), responsive: 2, widthGrow:1, minWidth: 20, field: "type", formatter: (cell, formatterParams, onRendered) => {
+                            if (typeof cell.getValue() === 'undefined') {
+                                return "";
+                            }
+                            const [, fileSubType] = cell.getValue().split('/');
+                            return fileSubType;
+                        }},
+                    {title: i18n.t('nextcloud-file-picker.last-modified'), responsive: 3, widthGrow:1, minWidth: 150, field: "lastModified",sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
+                            const a_timestamp = Date.parse(a);
+                            const b_timestamp = Date.parse(b);
+                            return a_timestamp - b_timestamp;
+                        }, formatter:function(cell, formatterParams, onRendered) {
+                            const timestamp = new Date(cell.getValue());
+
+                            const year = timestamp.getFullYear();
+                            const month = ("0" + (timestamp.getMonth() + 1)).slice(-2);
+                            const date = ("0" + timestamp.getDate()).slice(-2);
+                            const hours = ("0" + timestamp.getHours()).slice(-2);
+                            const minutes = ("0" + timestamp.getMinutes()).slice(-2);
+                            return date + "." + month + "." + year + " " + hours + ":" + minutes;
+                        }},
+                    {title: "file", field: "file", visible: false},
+                ],
+                initialSort:[
+                    {column:"name", dir:"asc"},
+                    {column:"type", dir:"asc"},
+
+                ],
+                rowFormatter: (row) => {
+                    let data = row.getData();
+                    if (!this.checkFileType(data)) {
+                        row.getElement().classList.add("no-select");
+                        row.getElement().classList.remove("tabulator-selectable");
+                    }
+                },
+                rowSelectionChanged: (data, rows) => {
+                    this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
+                },
+                selectableCheck:function(row){
+                    //row - row component
+                    return that.checkFileType(row.getData()); //allow selection of rows where the age is greater than 18
+                },
+                rowClick: (e, row) => {
+                    /*const data = row.getData();
+
+                    if (!row.getElement().classList.contains("no-select")) {
+
+                            if (this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData())).length) {
+                                        this.selectAllButton = false;
+                                    }
+                                    else {
+                                        this.selectAllButton = true;
+                                    }
+
+                    }
+                    else{
+                        row.deselect();
+                    }*/
+                }
+            });
         });
+    }
+
+
+    /**
+     * Select all files from tabulator table
+     *
+     */
+    selectAll() {
+        this.tabulatorTable.selectRow();
+
+        console.log(".....", this.tabulatorTable.getSelectedRows());
+        if (this.tabulatorTable.getSelectedRows().length > 0) {
+            this.selectAllButton = false;
+        }
+    }
+
+    /**
+     * Deselect files from tabulator table
+     *
+     */
+    deselectAll() {
+        this.selectAllButton = true;
+        //this.tabulatorTable.getSelectedRows().forEach(row => row.deselect());
+        this.tabulatorTable.deselectRow();
     }
 
     preventDefaults (e) {
@@ -262,7 +380,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             console.log(`mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`);
             return false;
         }
-
         return true;
     }
 
@@ -402,29 +519,42 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         MicroModal.close(this._('#modal-picker'));
     }
 
-    getClipboardFiles() {
-        console.log("+++++++++++++++", this.clipBoardFiles);
-        let htmlpath = [];
-        htmlpath[0] =  html`ein file und danach select button<br>`;
-        //console.log("############################", this.clipBoardFiles );
-        for(let i = 0; i < this.clipBoardFiles.files.length; i ++)
-        {
-            console.log("--", this.clipBoardFiles.files[i].name);
-            console.log("++", i);
 
-            htmlpath[i+1] =  this.clipBoardFiles.files[i].name;
-            //htmlpath[i+1] +=  html`<br>`;
+
+    getClipboardFiles() {
+
+        let data = [];
+        data[0] = {
+            name: "test",
+            size: 1234324432,
+            type: "application/pdf",
+            lastModified:  1616417323351,
+            file: null
+        };
+        for (let i = 0; i < this.clipBoardFiles.files.length; i++){
+            data[i] = {
+                name: this.clipBoardFiles.files[i].name,
+                size: this.clipBoardFiles.files[i].size,
+                type: this.clipBoardFiles.files[i].type,
+                lastModified: this.clipBoardFiles.files[i].lastModified,
+                file: this.clipBoardFiles.files[i]
+            };
         }
-        return htmlpath;
+
+        if (this.tabulatorTable !== null){
+            this.tabulatorTable.clearData();
+            this.tabulatorTable.setData(data);
+        }
     }
 
 
-    async sendClipboardFiles() {
-        for(let i = 0; i < this.clipBoardFiles.files.length; i ++)
-        {
-            await this.sendFileEvent(this.clipBoardFiles.files[i]);
-        }
+    async sendClipboardFiles(files) {
 
+        for(let i = 0; i < files.length; i ++)
+        {
+            await this.sendFileEvent(files[i].file);
+        }
+        this.tabulatorTable.deselectRow();
         this.closeDialog();
 
     }
@@ -465,6 +595,36 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             #dropArea.highlight {
                 border-color: var(--FUBorderColorHighlight, purple);
             }
+
+            .clipboard-container{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: var(--FUPadding, 20px);
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+
+            .clipboard-container .wrapper{
+                overflow-y: auto;
+                text-align: center;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            .clipboard-container .wrapper .inner{
+                overflow-y: auto;
+                text-align: center;
+                width: 100%;
+            }
+            
+            .clipboard-footer{
+                align-self: end;
+            }
             
             
              @media only screen
@@ -486,6 +646,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             allowedMimeTypes += ",application/zip,application/x-zip-compressed";
         }
 
+        const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
+
         return html`
 <!--
             <button class="button"
@@ -493,6 +655,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 @click="${() => { this.openDialog(); }}">${i18n.t('file-source.open-menu')}</button>
 -->
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
+                <link rel="stylesheet" href="${tabulatorCss}">
                 <div class="modal-overlay" tabindex="-1" data-micromodal-close>
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
                         <nav class="modal-nav">
@@ -557,11 +720,33 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard"})}">
                                 <div class="block clipboard-container">
-                                    <h2>Von der Zwischenablage auswählen</h2>
-                                    <p>Hier können Sie aus der zuvor temporär abgelegte Dateien auswählen.<br><br></p>
-                                    <p>${this.getClipboardFiles()}</p>
-                                    <button class="button select-button is-primary"
-                                            @click="${() => {this.sendClipboardFiles(); }}">Auswählen</button>
+                                    <div class="wrapper">
+                                        <div class="inner">
+                                            <h3>${i18n.t('file-source.clipboard-title')}</h3>
+                                            <p>${i18n.t('file-source.clipboard-body')}<br><br></p>
+                                            <p class="${classMap({"hidden": this.clipBoardFiles.files.length !== 0})}">${i18n.t('file-source.clipboard-no-files')}</p>
+                                            <div class="clipboard-table ">
+                                                ${this.getClipboardFiles()}
+                                                <div id="select-all-wrapper"">
+                                                    <button class="button ${classMap({hidden: !this.selectAllButton})}"
+                                                            title="${i18n.t('nextcloud-file-picker.select-all-title')}"
+                                                            @click="${() => { this.selectAll(); }}">
+                                                            ${i18n.t('nextcloud-file-picker.select-all')}
+                                                    </button>
+                                                    <button class="button ${classMap({hidden: this.selectAllButton})}"
+                                                            title="${i18n.t('nextcloud-file-picker.select-nothing-title')}"
+                                                            @click="${() => { this.deselectAll(); }}">
+                                                            ${i18n.t('nextcloud-file-picker.select-nothing')}
+                                                    </button>
+                                                </div>
+                                                <table id="clipboard-content-table" class="force-no-select"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clipboard-footer  ${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
+                                        <button class="button select-button is-primary" 
+                                                @click="${() => { this.sendClipboardFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
+                                    </div>
                                 </div>
                             </div>
                         </main>
