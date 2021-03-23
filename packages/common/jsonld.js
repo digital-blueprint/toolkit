@@ -2,7 +2,6 @@ import {send as notify} from './notification';
 import * as utils from "./utils";
 import {i18n} from "./i18n";
 
-// "module.exports = class JSONLD" doesn't work with rollup because of above "import"
 export default class JSONLD {
     constructor(baseApiUrl, entities) {
         this.entities = entities;
