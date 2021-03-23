@@ -16,6 +16,23 @@ export default class JSONLD {
         this.idToEntityNameMatchList = idToEntityNameMatchList;
     }
 
+    static async getInstance(apiUrl, lang = 'de') {
+        let promise = JSONLD.promises[apiUrl];
+        if (promise === undefined) {
+            JSONLD.doInitializationOnce(apiUrl);
+            promise = new Promise((resolve, reject) => {
+                JSONLD.initialize(
+                    apiUrl,
+                    (instance) => resolve(instance),
+                    (error) => reject(error),
+                    lang
+                );
+            });
+            JSONLD.promises[apiUrl] = promise;
+        }
+        return promise;
+    }
+
     static initialize(apiUrl, successFnc, failureFnc, lang = 'de') {
         if (lang !== 'de') {
             i18n.changeLanguage(lang);
@@ -51,11 +68,11 @@ export default class JSONLD {
         }
 
         JSONLD.initStarted[apiUrl] = true;
-        JSONLD.doInitialization(apiUrl);
+        JSONLD._doInitialization(apiUrl);
         // console.log("doInitializationOnce Done", apiUrl);
     }
 
-    static doInitialization(apiUrl) {
+    static _doInitialization(apiUrl) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", apiUrl, true);
 
@@ -156,7 +173,11 @@ export default class JSONLD {
      */
     static executeFailureFunctions(apiUrl, message = "") {
         if (JSONLD.failureFunctions[apiUrl] !== undefined) {
-            for (const fnc of JSONLD.failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
+            for (const fnc of JSONLD.failureFunctions[apiUrl]) {
+                if (typeof fnc == 'function') {
+                    fnc(new Error(message));
+                }
+            }
         }
         JSONLD.failureFunctions[apiUrl] = [];
 
@@ -167,10 +188,6 @@ export default class JSONLD {
                 "type": "danger",
             });
         }
-    }
-
-    static getInstance(apiUrl) {
-        return JSONLD.instances[apiUrl];
     }
 
     getEntityForIdentifier(identifier) {
@@ -286,3 +303,4 @@ JSONLD.instances = {};
 JSONLD.successFunctions = {};
 JSONLD.failureFunctions = {};
 JSONLD.initStarted = {};
+JSONLD.promises = {};
