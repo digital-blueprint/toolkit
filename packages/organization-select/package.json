@@ -1,7 +1,7 @@
 {
   "name": "@dbp-toolkit/organization-select",
   "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/organization-select",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "repository": {
