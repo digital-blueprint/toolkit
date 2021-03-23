@@ -1,5 +1,3 @@
-"use strict";
-
 import {send as notify} from './notification';
 import * as utils from "./utils";
 import {i18n} from "./i18n";
