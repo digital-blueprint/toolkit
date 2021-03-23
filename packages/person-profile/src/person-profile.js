@@ -45,7 +45,7 @@ export class PersonProfile extends DBPLitElement {
                 case "entryPointUrl": {
                     const that = this;
 
-                    JSONLD.initialize(this.entryPointUrl, function (jsonld) {
+                    JSONLD.getInstance(this.entryPointUrl).then(function (jsonld) {
                         that.jsonld = jsonld;
                     }, {}, that.lang);
                     break;

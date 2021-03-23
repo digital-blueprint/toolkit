@@ -117,7 +117,7 @@ export class AuthKeycloak extends AdapterLitElement {
         const that = this;
 
         if (newPerson && this.loadPerson) {
-            JSONLD.initialize(this.entryPointUrl, (jsonld) => {
+            JSONLD.getInstance(this.entryPointUrl).then((jsonld) => {
                 // find the correct api url for the current person
                 // we are fetching the logged-in person directly to respect the REST philosophy
                 // see: https://github.com/api-platform/api-platform/issues/337

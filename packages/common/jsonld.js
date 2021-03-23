@@ -20,7 +20,7 @@ export default class JSONLD {
         let promise = JSONLD.promises[apiUrl];
         if (promise === undefined) {
             promise = new Promise((resolve, reject) => {
-                JSONLD.initialize(
+                JSONLD._initialize(
                     apiUrl,
                     (instance) => resolve(instance),
                     (error) => reject(error),
@@ -33,6 +33,16 @@ export default class JSONLD {
     }
 
     static initialize(apiUrl, successFnc, failureFnc, lang = 'de') {
+        console.warn('DEPRECATED: JSONLD.initialize(), use JSONLD.getInstance() instead');
+        JSONLD._initialize(apiUrl, successFnc, failureFnc, lang);
+    }
+
+    static doInitializationOnce(apiUrl) {
+        // No longer needed, remove any calls
+        console.warn('DEPRECATED: JSONLD.doInitializationOnce() calls can be removed');
+    }
+
+    static _initialize(apiUrl, successFnc, failureFnc, lang = 'de') {
         if (lang !== 'de') {
             i18n.changeLanguage(lang);
         }
@@ -58,10 +68,6 @@ export default class JSONLD {
 
         JSONLD.initStarted[apiUrl] = true;
         JSONLD._doInitialization(apiUrl);
-    }
-
-    static doInitializationOnce(apiUrl) {
-        // No longer needed, remove any calls
     }
 
     static _doInitialization(apiUrl) {

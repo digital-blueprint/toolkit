@@ -194,7 +194,7 @@ export class OrganizationSelect extends AdapterLitElement {
                     break;
                 }
                 case "entryPointUrl":
-                    JSONLD.initialize(this.entryPointUrl, (jsonld) => {
+                    JSONLD.getInstance(this.entryPointUrl).then((jsonld) => {
                         this.jsonld = jsonld;
                     }, {}, this.lang);
                     break;

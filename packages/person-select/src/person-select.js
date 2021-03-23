@@ -108,7 +108,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     initJSONLD(ignorePreset = false) {
         const that = this;
 
-        JSONLD.initialize(this.entryPointUrl, function (jsonld) {
+        JSONLD.getInstance(this.entryPointUrl).then(function (jsonld) {
             that.jsonld = jsonld;
             that.active = that.authenticated();
 
