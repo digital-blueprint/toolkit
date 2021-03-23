@@ -4,7 +4,7 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {LoginStatus} from './util.js';
-import {AdapterLitElement} from "../../provider/src/adapter-lit-element";
+import {AdapterLitElement} from '@dbp-toolkit/common';
 
 let logoutSVG = `
 <svg

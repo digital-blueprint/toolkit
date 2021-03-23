@@ -1,4 +1,4 @@
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import {AdapterLitElement} from "./src/adapter-lit-element";
 
 export default class DBPLitElement extends AdapterLitElement {
     _(selector) {

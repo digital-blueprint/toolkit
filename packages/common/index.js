@@ -13,3 +13,4 @@ export {Button, LoadingButton};
 export {Spinner};
 export {InlineNotification};
 export * from './src/logger.js';
+export {AdapterLitElement} from './src/adapter-lit-element.js';
