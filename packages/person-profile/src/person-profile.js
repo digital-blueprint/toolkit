@@ -68,7 +68,7 @@ export class PersonProfile extends DBPLitElement {
                     }
                     break;
                 case "auth":
-                    JSONLD.doInitializationOnce(this.entryPointUrl, this.auth.token);
+                    JSONLD.doInitializationOnce(this.entryPointUrl);
                     break;
                 default:
             }

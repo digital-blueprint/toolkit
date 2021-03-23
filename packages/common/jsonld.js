@@ -41,28 +41,26 @@ export default class JSONLD {
     }
 
     /**
-     * This should be run as soon as an api token is available (can be run multiple times)
+     * This should be run as soon as possible (can be run multiple times)
      *
      * @param apiUrl
-     * @param token
      */
-    static doInitializationOnce(apiUrl, token) {
-        // console.log("doInitializationOnce", apiUrl, token);
+    static doInitializationOnce(apiUrl) {
+        // console.log("doInitializationOnce", apiUrl);
 
-        // check if token is not set or api call was already started
-        if (!apiUrl || !token || JSONLD.initStarted[apiUrl] !== undefined) {
+        // check if api call was already started
+        if (!apiUrl || JSONLD.initStarted[apiUrl] !== undefined) {
             return;
         }
 
         JSONLD.initStarted[apiUrl] = true;
-        JSONLD.doInitialization(apiUrl, token);
-        // console.log("doInitializationOnce Done", apiUrl, token);
+        JSONLD.doInitialization(apiUrl);
+        // console.log("doInitializationOnce Done", apiUrl);
     }
 
-    static doInitialization(apiUrl, token) {
+    static doInitialization(apiUrl) {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", apiUrl, true);
-        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState !== 4) {
@@ -143,7 +141,13 @@ export default class JSONLD {
         JSONLD.instances[apiUrl] = instance;
 
         // return the initialized JSONLD object
-        for (const fnc of JSONLD.successFunctions[apiUrl]) if (typeof fnc == 'function') fnc(instance);
+        if (JSONLD.successFunctions[apiUrl] !== undefined) {
+            for (const fnc of JSONLD.successFunctions[apiUrl]) {
+                if (typeof fnc == 'function') {
+                    fnc(instance);
+                }
+            }
+        }
         JSONLD.successFunctions[apiUrl] = [];
     }
 
@@ -154,7 +158,9 @@ export default class JSONLD {
      * @param message
      */
     static executeFailureFunctions(apiUrl, message = "") {
-        for (const fnc of JSONLD.failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
+        if (JSONLD.failureFunctions[apiUrl] !== undefined) {
+            for (const fnc of JSONLD.failureFunctions[apiUrl]) if (typeof fnc == 'function') fnc();
+        }
         JSONLD.failureFunctions[apiUrl] = [];
 
         if (message !== "") {
