@@ -106,18 +106,18 @@ export default class JSONLD {
                         }
 
                         if (docXhr.status === 200) {
-                            JSONLD.gatherEntities(docXhr, apiUrl, entryPoints);
+                            JSONLD._gatherEntities(docXhr, apiUrl, entryPoints);
                         } else {
-                            JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl}));
+                            JSONLD._executeFailureFunctions(apiUrl, i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl}));
                         }
                     };
 
                     docXhr.send();
                 } else {
-                    JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.error-hydra-documentation-url-not-set', {apiUrl: apiUrl}));
+                    JSONLD._executeFailureFunctions(apiUrl, i18n.t('jsonld.error-hydra-documentation-url-not-set', {apiUrl: apiUrl}));
                 }
             } else {
-                JSONLD.executeFailureFunctions(apiUrl, i18n.t('jsonld.error-api-server', {apiUrl: apiUrl}));
+                JSONLD._executeFailureFunctions(apiUrl, i18n.t('jsonld.error-api-server', {apiUrl: apiUrl}));
             }
         };
 
@@ -131,7 +131,7 @@ export default class JSONLD {
      * @param apiUrl
      * @param entryPoints
      */
-    static gatherEntities(docXhr, apiUrl, entryPoints) {
+    static _gatherEntities(docXhr, apiUrl, entryPoints) {
         const json = JSON.parse(docXhr.responseText);
         const supportedClasses = json["hydra:supportedClass"];
 
@@ -169,7 +169,7 @@ export default class JSONLD {
      * @param apiUrl
      * @param message
      */
-    static executeFailureFunctions(apiUrl, message = "") {
+    static _executeFailureFunctions(apiUrl, message = "") {
         if (JSONLD.failureFunctions[apiUrl] !== undefined) {
             for (const fnc of JSONLD.failureFunctions[apiUrl]) {
                 if (typeof fnc == 'function') {
