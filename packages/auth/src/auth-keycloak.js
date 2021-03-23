@@ -153,12 +153,6 @@ export class AuthKeycloak extends AdapterLitElement {
 
         this.sendSetPropertyEvent('auth', auth);
         JSONLD.doInitializationOnce(this.entryPointUrl, this.token);
-
-        // this.sendSetPropertyEvent('auth-subject', this.subject);
-        // this.sendSetPropertyEvent('auth-token', this.token);
-        // this.sendSetPropertyEvent('user-full-name', this.name);
-        // this.sendSetPropertyEvent('person-id', this.personId);
-        // this.sendSetPropertyEvent('person', this.person);
     }
 
     _setLoginStatus(status, force) {
