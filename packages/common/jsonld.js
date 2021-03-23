@@ -19,7 +19,6 @@ export default class JSONLD {
     static async getInstance(apiUrl, lang = 'de') {
         let promise = JSONLD.promises[apiUrl];
         if (promise === undefined) {
-            JSONLD.doInitializationOnce(apiUrl);
             promise = new Promise((resolve, reject) => {
                 JSONLD.initialize(
                     apiUrl,
@@ -52,24 +51,17 @@ export default class JSONLD {
         // add success and failure functions
         if (typeof successFnc == 'function') JSONLD.successFunctions[apiUrl].push(successFnc);
         if (typeof failureFnc == 'function') JSONLD.failureFunctions[apiUrl].push(failureFnc);
-    }
 
-    /**
-     * This should be run as soon as possible (can be run multiple times)
-     *
-     * @param apiUrl
-     */
-    static doInitializationOnce(apiUrl) {
-        // console.log("doInitializationOnce", apiUrl);
-
-        // check if api call was already started
         if (!apiUrl || JSONLD.initStarted[apiUrl] !== undefined) {
             return;
         }
 
         JSONLD.initStarted[apiUrl] = true;
         JSONLD._doInitialization(apiUrl);
-        // console.log("doInitializationOnce Done", apiUrl);
+    }
+
+    static doInitializationOnce(apiUrl) {
+        // No longer needed, remove any calls
     }
 
     static _doInitialization(apiUrl) {

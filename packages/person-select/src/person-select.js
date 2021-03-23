@@ -291,7 +291,6 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                     this.initJSONLD(true);
                     break;
                 case "auth":
-                    JSONLD.doInitializationOnce(this.entryPointUrl);
                     this.active = this.authenticated();
                     break;
             }

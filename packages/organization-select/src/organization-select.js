@@ -199,7 +199,6 @@ export class OrganizationSelect extends AdapterLitElement {
                     }, {}, this.lang);
                     break;
                 case "auth":
-                    JSONLD.doInitializationOnce(this.entryPointUrl);
                     this.initAuthPersonOnce().then();
                     break;
                 default:

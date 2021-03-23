@@ -309,9 +309,6 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                     // we don't need to preset the selector if the entry point url changes
                     this.initJSONLD(true);
                     break;
-                case "auth":
-                    JSONLD.doInitializationOnce(this.entryPointUrl);
-                    break;
             }
         });
 
