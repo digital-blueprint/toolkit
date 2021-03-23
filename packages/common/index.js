@@ -12,3 +12,4 @@ export {MiniSpinner};
 export {Button, LoadingButton};
 export {Spinner};
 export {InlineNotification};
+export * from './src/logger.js';
