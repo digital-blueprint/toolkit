@@ -22,6 +22,10 @@ npm i @dbp-toolkit/organization-select
 - `value` (optional): api path of organization to preload the selector with
     - example `<dbp-organization-select value="/people/testuser"></dbp-organization-select>`
     - the `value` will also be set automatically when an organization is chosen in the selector
+- `context` (optional): the context of the returned organizations
+    - example `<dbp-organization-select context="libray-manager"></dbp-organization-select>` returns all organizations
+      where the current user is library manager
+    - if no `context` is set all organizations are returned that are in a relation with the current user
 - `data-object` (read-only): when an organization is selected the organization object will be set as json string
     - example `<dbp-organization-select data-object="{"@id":"/organizations/1190-F2050","@type":"http://schema.org/Organization","identifier":"1190-F2050","name":"Institut für Stahlbau","url":"https://online.tugraz.at/tug_online/wborg.display?pOrgNr=1190","alternateName":"F2050"}"></dbp-organization-select>`
 - `auth` object: you need to set that object property for the auth token

@@ -24,6 +24,7 @@ export class OrganizationSelect extends AdapterLitElement {
         this.selectId = 'select-organization-' + commonUtils.makeId(24);
         this.cache = {};
         this.value = '';
+        this.context = '';
     }
 
     static get properties() {
@@ -32,6 +33,7 @@ export class OrganizationSelect extends AdapterLitElement {
             lang: {type: String},
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             value: {type: String, reflect: true},
+            context: {type: String},
             auth: { type: Object },
         };
     }
@@ -186,6 +188,11 @@ export class OrganizationSelect extends AdapterLitElement {
                     this.fireEvent();
                     break;
                 }
+                case "context": {
+                    delete this.cache[this.lang];
+                    this.updateSelect2();
+                    break;
+                }
                 case "entryPointUrl":
                     JSONLD.initialize(this.entryPointUrl, (jsonld) => {
                         this.jsonld = jsonld;
@@ -227,7 +234,7 @@ export class OrganizationSelect extends AdapterLitElement {
         let orgUrl = this.entryPointUrl + '/people/' +
             encodeURIComponent(this.auth.person.identifier) +
             '/organizations' +
-            '?context=' + encodeURIComponent('library-manager') +
+            '?context=' + encodeURIComponent(this.context) +
             '&lang=' + encodeURIComponent(this.lang);
 
         let response = await fetch(orgUrl, {
