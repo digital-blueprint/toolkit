@@ -815,7 +815,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         // We hide the app until we are either fully logged in or logged out
         // At the same time when we hide the main app we show the main slot (e.g. a loading spinner)
-        const appHidden = (this._loginStatus == 'unknown' || this._loginStatus == 'logging-in');
+        const appHidden = (this._loginStatus === 'unknown' || this._loginStatus === 'logging-in');
         const mainClassMap = classMap({hidden: appHidden});
         const slotClassMap = classMap({hidden: !appHidden});
 
@@ -885,6 +885,10 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 </aside>
 
                 <main>
+                    <div style="display: ${this.description === null ? 'none' : 'block'};">
+                        <h2>${i18n.t('page-not-found')}</h2>
+                        <p>${i18n.t('choose-from-menu')}</p>
+                    </div>
                     <p class="description">${this.description}</p>
                     ${ this._renderActivity() }
                 </main>

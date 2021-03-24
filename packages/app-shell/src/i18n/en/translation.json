@@ -15,5 +15,7 @@
       "headline": "Welcome to the '{{appname}}' application."
   },
   "login": "Login",
-  "logout": "Logout"
+  "logout": "Logout",
+  "page-not-found": "Requested Page Not Found",
+  "choose-from-menu": "Please choose an activity from the menu."
 }
