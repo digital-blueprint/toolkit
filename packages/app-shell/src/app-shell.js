@@ -885,7 +885,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 </aside>
 
                 <main>
-                    <div style="display: ${this.description === null ? 'none' : 'block'};">
+                    <div style="display: ${!  this.metadata[this.activeView] ? 'block' : 'none'};">
                         <h2>${i18n.t('page-not-found')}</h2>
                         <p>${i18n.t('choose-from-menu')}</p>
                     </div>
