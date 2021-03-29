@@ -575,10 +575,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                     return;
                 }
             }
-            else {
-
-
-            }
             // Cancel the event as stated by the standard
             event.preventDefault();
 
