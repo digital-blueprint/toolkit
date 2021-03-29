@@ -35,6 +35,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.isDialogOpen = false;
         this.enabledTargets = 'local';
         this.firstOpen = true;
+        this.showClipboard = false;
 
         this.initialFileHandlingState = {target: '', path: ''};
         this.clipBoardFiles = {files: ''};
@@ -69,6 +70,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             activeTarget: {type: String, attribute: 'active-target'},
             firstOpen: {type: Boolean, attribute: false},
             nextcloudPath: {type: String, attribute: false},
+            showClipboard: { type: Boolean, attribute: 'show-clipboard' },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
             clipBoardFiles: {type: Object, attribute: 'clipboard-files'},
@@ -334,6 +336,9 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        const isClipboardHidden = !this.showClipboard;
+
+
         return html`
             <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
@@ -354,7 +359,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div title="Clipboard"
                                  @click="${() => { this.activeTarget = "clipboard"; }}"
-                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledDestination("clipboard") })}">
+                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: (!this.hasEnabledDestination("clipboard") || isClipboardHidden) })}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
                                 <p>Clipboard</p>
                             </div>
@@ -400,7 +405,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                                 this.finishedFileUpload(event);
                                                             }}"></dbp-nextcloud-file-picker>
                             </div>
-                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard"})}">
+                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard" || isClipboardHidden})}">
                                 <div class="block clipboard-container">
                                     <div class="inner">
                                         <h3>${i18n.t('file-sink.save-to-clipboard-title')}</h3>
