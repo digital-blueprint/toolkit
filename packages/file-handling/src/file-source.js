@@ -64,6 +64,9 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
         this.initialFileHandlingState = {target: '', path: ''};
         this.clipboardFiles = {files: ''};
+
+        this._onReceiveBeforeUnload = this.onReceiveBeforeUnload.bind(this);
+
     }
 
     static get scopedElements() {
@@ -225,8 +228,16 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 }
             });
         });
+
+        window.addEventListener('beforeunload', this._onReceiveBeforeUnload);
     }
-    
+
+    disconnectedCallback() {
+        // remove event listeners
+        window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
+
+        super.disconnectedCallback();
+    }
 
     /**
      * Select all files from tabulator table
@@ -473,6 +484,10 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             this.loadWebdavDirectory();
         }
 
+        if (this.enabledTargets.includes('clipboard')) {
+            this.generateClipboardTable();
+        }
+
         const filePicker = this._('#modal-picker');
 
         // check if element is already^ in the dom (for example if "dialog-open" attribute is set)
@@ -532,6 +547,46 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         }
         this.tabulatorTable.deselectRow();
         this.closeDialog();
+
+    }
+
+    /**
+     * Decides if the "beforeunload" event needs to be canceled
+     *
+     * @param event
+     */
+    onReceiveBeforeUnload(event) {
+
+
+        // we don't need to stop if there are no signed files
+       if (!this.showClipboard || !this.hasEnabledSource("clipboard") || this.clipboardFiles.files.length === 0) {
+            return;
+       }
+
+        // we need to handle custom events ourselves
+       if(event.target && event.target.activeElement && event.target.activeElement.nodeName) {
+
+            if (!event.isTrusted) {
+                // note that this only works with custom event since calls of "confirm" are ignored
+                // in the non-custom event, see https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
+                const result = confirm(i18n.t('page-leaving-warn-dialogue'));
+                // don't stop the page leave if the user wants to leave
+                if (result) {
+                    return;
+                }
+            }
+            else {
+
+
+            }
+            // Cancel the event as stated by the standard
+            event.preventDefault();
+
+            // Chrome requires returnValue to be set
+            event.returnValue = '';
+        }
+
+
 
     }
 

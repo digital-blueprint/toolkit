@@ -10,6 +10,7 @@
   "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region.",
   "upload-label": "Select some files",
   "upload-disabled-title": "The file selection is disabled while uploading!",
+  "page-leaving-warn-dialogue": "Attention! There are still unused files in the clipboard. If you click on 'OK', the existing clipboard is automatically discarded!",
   "file-source": {
     "modal-select-files": "Select files",
     "modal-close": "Close dialog",

@@ -10,6 +10,7 @@
   "intro": "Laden Sie mehrere Dateien mit dem Auswahldialog oder durch Ziehen und Fallenlassen in diesem Bereich hoch.",
   "upload-label": "Dateiauswahl",
   "upload-disabled-title": "Die Dateiauswahl ist während dem Hochladvorgang gesperrt!",
+  "page-leaving-warn-dialogue": "Vorsicht! Es befinden sich noch ungenutzte Dateien im Clipboard. Wenn Sie auf 'OK' klicken, wird das bestehende Clipboard automatisch verworfen!",
   "file-source": {
     "modal-select-files": "Dateien auswählen",
     "modal-close": "Dialog schließen",
