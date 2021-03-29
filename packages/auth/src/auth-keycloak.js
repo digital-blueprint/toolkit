@@ -54,6 +54,7 @@ export class AuthKeycloak extends AdapterLitElement {
                 case 'entryPointUrl':
                     // for preloading the instance
                     JSONLD.getInstance(this.entryPointUrl, this.lang);
+                break;
                 case 'requestedLoginStatus':
                     console.log("requested-login-status changed", this.requestedLoginStatus);
                     switch(this.requestedLoginStatus) {
