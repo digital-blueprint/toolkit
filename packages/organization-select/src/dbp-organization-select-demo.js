@@ -75,13 +75,13 @@ export class OrganizationSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                         <div class="field">
                             <label class="label">All related organization of the current user</label>
                             <div class="control">
-                                <dbp-organization-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-organization-select>
+                                <dbp-organization-select id="organization-select-all" subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-organization-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Organization where the current user is library-manager</label>
                             <div class="control">
-                                <dbp-organization-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" context="library-manager"></dbp-organization-select>
+                                <dbp-organization-select id="organization-select-library-manager" subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" context="library-manager"></dbp-organization-select>
                             </div>
                         </div>
                     </form>
