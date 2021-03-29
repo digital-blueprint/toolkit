@@ -25,7 +25,6 @@ test:
 
 linting:
   stage: test
-  allow_failure: true
   script:
     - yarn install
     - yarn run lint
