@@ -1,11 +1,6 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {LoginStatus} from "@dbp-toolkit/auth/src/util";
 
-function pushEvent(event) {
-    window._paq = window._paq || [];
-    window._paq.push(event);
-}
-
 export class MatomoElement extends DBPLitElement {
 
     constructor() {
@@ -53,7 +48,7 @@ export class MatomoElement extends DBPLitElement {
                         this.analyticsEvent.name, this.analyticsEvent.value];
 
                     if (this.isRunning) {
-                        pushEvent(event);
+                        this.pushEvent(event);
                     } else {
                         this.lastEvent = event;
                     }
@@ -81,15 +76,17 @@ export class MatomoElement extends DBPLitElement {
             }
             console.log('add matomo...');
 
-            pushEvent(['setCustomVariable', 1, "GitCommit", this.gitInfo, "visit"]);
-            pushEvent(['enableHeartBeatTimer']);
-            pushEvent(['disableCookies']);
-            pushEvent(['trackPageView']);
-            pushEvent(['enableLinkTracking']);
+            this.pushEvent(['setCustomVariable', 1, "GitCommit", this.gitInfo, "visit"]);
+            this.pushEvent(['enableHeartBeatTimer']);
+            this.pushEvent(['disableCookies']);
+            this.pushEvent(['trackPageView']);
+            this.pushEvent(['enableLinkTracking']);
+
+            const that = this;
 
             (function (endpoint, siteId) {
-                pushEvent(['setTrackerUrl', endpoint+'matomo.php']);
-                pushEvent(['setSiteId', siteId]);
+                that.pushEvent(['setTrackerUrl', endpoint+'matomo.php']);
+                that.pushEvent(['setSiteId', siteId]);
 
                 var g = document.createElement('script');
                 var s = document.getElementsByTagName('script')[0];
@@ -102,31 +99,46 @@ export class MatomoElement extends DBPLitElement {
 
             // track changed locations
             window.addEventListener('locationchanged', function(e) {
-                pushEvent(['setReferrerUrl', e.detail.referrerUrl]);
-                pushEvent(['setCustomUrl', location.href]);
-                // pushEvent(['setDocumentTitle', '']);
-                pushEvent(['trackPageView']);
+                that.pushEvent(['setReferrerUrl', e.detail.referrerUrl]);
+                that.pushEvent(['setCustomUrl', location.href]);
+                // that.pushEvent(['setDocumentTitle', '']);
+                that.pushEvent(['trackPageView']);
 
                 // make Matomo aware of newly added content
                 var content = document.getElementById('content');
-                pushEvent(['MediaAnalytics::scanForMedia', content]);
-                pushEvent(['FormAnalytics::scanForForms', content]);
-                pushEvent(['trackContentImpressionsWithinNode', content]);
+                that.pushEvent(['MediaAnalytics::scanForMedia', content]);
+                that.pushEvent(['FormAnalytics::scanForForms', content]);
+                that.pushEvent(['trackContentImpressionsWithinNode', content]);
             });
 
             // track errors
             window.addEventListener('error', function(e) {
-                pushEvent(['trackEvent', 'Error', e.error.message + '\n' + e.error.stack]);
+                that.pushEvent(['trackEvent', 'Error', e.error.message + '\n' + e.error.stack]);
             });
 
             window.addEventListener('unhandledrejection', function(e) {
-                pushEvent(['trackEvent', 'UnhandledRejection', e.reason]);
+                let name = e.reason;
+
+                // TypeError objects have no toJSON() method, so we can't serialize them by themselves
+                if (e.reason instanceof TypeError) {
+                    const error = e.reason;
+                    name = {
+                        'message': error.message,
+                        'name': error.name,
+                        'fileName': error.fileName,
+                        'lineNumber': error.lineNumber,
+                        'columnNumber': error.columnNumber,
+                        'stack': error.stack,
+                    };
+                }
+
+                that.pushEvent(['trackEvent', 'UnhandledRejection', name]);
             });
 
             this.isRunning = true;
             if (this.lastEvent.length > 0) {
                 console.log('MatomoElement* (' + this.isRunning + '): ' + this.lastEvent[1] + ', ' + this.lastEvent[2]);
-                pushEvent(this.lastEvent);
+                that.pushEvent(this.lastEvent);
                 this.lastEvent = [];
             }
             return;
@@ -136,5 +148,29 @@ export class MatomoElement extends DBPLitElement {
             console.log('remove matomo...');
             this.isRunning = false;
         }
+    }
+
+    /**
+     * Pushes an event array to Matomo
+     * See: https://matomo.org/docs/event-tracking/
+     *
+     * event[0]: Event Category
+     * event[1]: Event Action
+     * event[2]: Event Name
+     * event[3]: Event Value
+     *
+     * @param event
+     */
+    pushEvent(event) {
+        window._paq = window._paq || [];
+
+        // make sure the event name is a non-empty string
+        if (event[2] === null || event[2] === '') {
+            event[2] = 'empty';
+        } else if (typeof event[2] === 'object') {
+            event[2] = JSON.stringify(event[2]);
+        }
+
+        window._paq.push(event);
     }
 }
