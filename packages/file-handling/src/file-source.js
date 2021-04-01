@@ -234,7 +234,9 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     disconnectedCallback() {
         // remove event listeners
-        window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
+
+        //We doesn't want to deregister this event, because we want to use this event over activities
+        //window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
 
         super.disconnectedCallback();
     }
