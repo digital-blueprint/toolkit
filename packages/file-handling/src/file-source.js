@@ -488,6 +488,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
         if (this.enabledTargets.includes('clipboard')) {
             this.generateClipboardTable();
+            this.showSelectAllButton = true;
         }
 
         const filePicker = this._('#modal-picker');
@@ -644,6 +645,10 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 flex-direction: column;
                 justify-content: center;
             }
+
+            .clipboard-container .wrapper.table{
+                justify-content: start;
+            }
             
             .clipboard-container .wrapper .inner{
                 overflow-y: auto;
@@ -754,7 +759,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div class="source-main ${classMap({"hidden": (this.activeTarget !== "clipboard" || isClipboardHidden)})}">
                                 <div class="block clipboard-container">
-                                    <div class="wrapper">
+                                    <div class="wrapper ${classMap({"table": this.clipboardFiles.files.length !== 0})}">
                                         <div class="inner">
                                             <h3>${i18n.t('file-source.clipboard-title')}</h3>
                                             <p>${i18n.t('file-source.clipboard-body')}<br><br></p>

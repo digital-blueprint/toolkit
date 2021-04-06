@@ -12,6 +12,7 @@ import MicroModal from "./micromodal.es";
 import * as fileHandlingStyles from './styles';
 import { send } from '@dbp-toolkit/common/notification';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
+import * as utils from "../../../../../src/utils";
 
 
 /**
@@ -252,6 +253,14 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         MicroModal.close(this._('#modal-picker'));
     }
 
+    /**
+     * Open Filesink for multiple files
+     */
+    async openClipboardFileSink() {
+        this._("#file-sink-clipboard").files = this.clipBoardFiles.files;
+        this._("#file-sink-clipboard").setAttribute("dialog-open", "");
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -279,6 +288,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 flex-direction: column;
                 justify-content: center;
                 padding: var(--FUPadding, 20px);
+            }
+            
+            .clipboard-container.table{
+                justify-content: start;
             }
             
             .clipboard-container .inner{
@@ -406,7 +419,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                                             }}"></dbp-nextcloud-file-picker>
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard" || isClipboardHidden})}">
-                                <div class="block clipboard-container">
+                                <div class="block clipboard-container ${classMap({"table": this.clipBoardFiles && this.clipBoardFiles.files.length !== 0})}">
                                     <div class="inner">
                                         <h3>${i18n.t('file-sink.save-to-clipboard-title')}</h3>
                                         <p>${i18n.t('file-sink.save-to-clipboard-text')}</p>
@@ -419,6 +432,29 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                             <dbp-icon name="warning" class="warning-icon"></dbp-icon>
                                             <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
                                         </div>
+                                        
+                                        <!-- filesink for clipboard TODO übersetzen-->
+
+                                        <div clHALLLOOOOass="${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
+                                        <button id="clipboard-download-button"
+                                                    class="button is-right clipboard-btn"
+                                                    @click="${this.openClipboardFileSink}"
+                                                    >Aktuellen Zwischenablageninhalt speichern</button>
+                                        </div>
+                                        
+                                        <dbp-file-sink id="file-sink-clipboard"
+                                        context="${i18n.t('qualified-pdf-upload.save-field-label', {count: this.clipBoardFiles ? this.clipBoardFiles.files.length : 0})}"
+                                        filename="signed-documents.zip"
+                                        subscribe="initial-file-handling-state:initial-file-handling-state"
+                                        enabled-targets="local${this.showNextcloudFilePicker ? ",nextcloud" : ""}"
+                                        nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
+                                        nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
+                                        nextcloud-name="${this.nextcloudName}"
+                                        nextcloud-file-url="${this.nextcloudFileURL}"
+                                        lang="${this.lang}"
+                                        ></dbp-file-sink>
+                                        
+                                        
                                         <div class="clipboard-data ${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
                                             <h4>${i18n.t('file-sink.clipboard-files')}</h4>
                                             <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
