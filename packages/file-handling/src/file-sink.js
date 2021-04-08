@@ -13,6 +13,7 @@ import * as fileHandlingStyles from './styles';
 import { send } from '@dbp-toolkit/common/notification';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import * as utils from "../../../../../src/utils";
+import {FileHandlingClipboard} from "./dbp-file-handling-clipboard";
 
 
 /**
@@ -39,7 +40,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.showClipboard = false;
 
         this.initialFileHandlingState = {target: '', path: ''};
-        this.clipBoardFiles = {files: ''};
     }
 
     static get scopedElements() {
@@ -47,6 +47,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
             'dbp-nextcloud-file-picker': NextcloudFilePicker,
+            'dbp-clipboard': FileHandlingClipboard,
         };
     }
 
@@ -74,7 +75,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             showClipboard: { type: Boolean, attribute: 'show-clipboard' },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
-            clipBoardFiles: {type: Object, attribute: 'clipboard-files'},
 
         };
     }
@@ -220,46 +220,54 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-    saveFilesToClipboard()
-    {
-        //save it
-        let data = {};
-        if (this.files.length !== 0) {
-            data = {"files": this.files};
-            this.sendSetPropertyEvent('clipboard-files', data);
-            this.closeDialog();
-            send({
-                "summary": i18n.t('file-sink.save-to-clipboard-title'),
-                "body": i18n.t('file-sink.save-to-clipboard-body', {count: this.files.length}),
-                "type": "success",
-                "timeout": 5,
-            });
-            console.log("--------------", this.clipBoardFiles);
-        }
-
-    }
-
-    getClipboardFiles() {
-        let files = [];
-        for(let i = 0; i < this.clipBoardFiles.files.length; i ++)
-        {
-            files[i] =  html`<div class="clipboard-list"><strong>${this.clipBoardFiles.files[i].name}</strong> ${humanFileSize(this.clipBoardFiles.files[i].size)}</div>`;
-        }
-        return files;
-    }
-
     closeDialog(e) {
         this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
     }
 
-    /**
-     * Open Filesink for multiple files
-     */
-    async openClipboardFileSink() {
-        this._("#file-sink-clipboard").files = this.clipBoardFiles.files;
-        this._("#file-sink-clipboard").setAttribute("dialog-open", "");
+    getClipboardHtml() {
+        if (this.enabledTargets.includes('clipboard') && this.showClipboard) {
+            return html`
+                <dbp-clipboard 
+                   id="clipboard-file-sink"
+                   subscribe="clipboard-files:clipboard-files"
+                   lang="${this.lang}"
+                   auth-url="${this.nextcloudAuthUrl}"
+                   allowed-mime-types="${this.allowedMimeTypes}"
+                   @dbp-clipboard-file-picker-file-downloaded="${(event) => {
+                this.sendFileEvent(event.detail.file);}}">
+                </dbp-clipboard>`;
+        }
+        return html``;
     }
+
+    getNextcloudHtml() {
+        if (this.enabledTargets.includes('nextcloud') && this.nextcloudWebDavUrl !== "" && this.nextcloudAuthUrl !== "") {
+            return html`
+                <dbp-nextcloud-file-picker id="nextcloud-file-picker"
+                   class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
+                   directories-only
+                   max-selected-items="1"
+                   select-button-text="${i18n.t('file-sink.select-directory')}"
+                   ?disabled="${this.disabled}"
+                   lang="${this.lang}"
+                   auth-url="${this.nextcloudAuthUrl}"
+                   web-dav-url="${this.nextcloudWebDavUrl}"
+                   nextcloud-name="${this.nextcloudName}"
+                   directory-path="${this.nextcloudPath}"
+                   nextcloud-file-url="${this.nextcloudFileURL}"
+                   @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
+                       this.uploadToNextcloud(event.detail);
+                   }}"
+                   @dbp-nextcloud-file-picker-file-uploaded-finished="${(event) => {
+                       this.finishedFileUpload(event);
+                   }}">
+                </dbp-nextcloud-file-picker>`;
+        }
+        return html``;
+    }
+
+
 
     static get styles() {
         // language=css
@@ -283,67 +291,9 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 margin-bottom: 10px;
             }
             
-            .clipboard-container{
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                padding: var(--FUPadding, 20px);
-            }
-            
-            .clipboard-container.table{
-                justify-content: start;
-            }
-            
-            .clipboard-container .inner{
-                overflow-y: auto;
-                text-align: center;
+            #clipboard-file-sink{
                 width: 100%;
-            }
-            
-            .warning-icon{
-                font-size: 2rem;
-                padding: 0 1rem;
-            }
-            
-            .clipboard-btn{
-                margin-top: 1.5rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .warning-container{
-                display: flex;
-                max-width: 400px;
-                text-align: left;
-                margin: auto;
-            }
-
-            .clipboard-data h4{
-                margin-top: 2rem;
-            }
-            
-            .clipboard-data p{
-                margin-bottom: 1rem;
-            }
-            
-            .clipboard-list{
-                padding: 1rem 0;
-                border-top: 1px solid #eee;
-            }
-            
-
-            @media only screen
-            and (orientation: portrait)
-            and (max-device-width: 765px) {
-                .clipboard-container p, .clipboard-container h3{
-                    text-align: center;
-                }
-                .warning-container{
-                    flex-direction: column;
-                    align-items: center;
-                }
-                .warning-icon{
-                    margin-bottom: 1rem;
-                }
+                height: 100%;
             }
         `;
     }
@@ -399,69 +349,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                 </div>
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
-                                <dbp-nextcloud-file-picker id="nextcloud-file-picker"
-                                                           class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
-                                                           directories-only
-                                                           max-selected-items="1"
-                                                           select-button-text="${i18n.t('file-sink.select-directory')}"
-                                                           ?disabled="${this.disabled}"
-                                                           lang="${this.lang}"
-                                                           auth-url="${this.nextcloudAuthUrl}"
-                                                           web-dav-url="${this.nextcloudWebDavUrl}"
-                                                           nextcloud-name="${this.nextcloudName}"
-                                                           directory-path="${this.nextcloudPath}"
-                                                           nextcloud-file-url="${this.nextcloudFileURL}"
-                                                           @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
-                                                               this.uploadToNextcloud(event.detail);
-                                                           }}"
-                                                           @dbp-nextcloud-file-picker-file-uploaded-finished="${(event) => {
-                                                                this.finishedFileUpload(event);
-                                                            }}"></dbp-nextcloud-file-picker>
+                                ${this.getNextcloudHtml()}
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard" || isClipboardHidden})}">
-                                <div class="block clipboard-container ${classMap({"table": this.clipBoardFiles && this.clipBoardFiles.files.length !== 0})}">
-                                    <div class="inner">
-                                        <h3>${i18n.t('file-sink.save-to-clipboard-title')}</h3>
-                                        <p>${i18n.t('file-sink.save-to-clipboard-text')}</p>
-                                        <button class="button is-primary clipboard-btn"
-                                                ?disabled="${this.disabled}"
-                                                @click="${() => { this.saveFilesToClipboard(); }}">
-                                            ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.files.length})}
-                                        </button>
-                                        <div class="warning-container">
-                                            <dbp-icon name="warning" class="warning-icon"></dbp-icon>
-                                            <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
-                                        </div>
-                                        
-                                        <!-- filesink for clipboard TODO übersetzen-->
-
-                                        <div clHALLLOOOOass="${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
-                                        <button id="clipboard-download-button"
-                                                    class="button is-right clipboard-btn"
-                                                    @click="${this.openClipboardFileSink}"
-                                                    >Aktuellen Zwischenablageninhalt speichern</button>
-                                        </div>
-                                        
-                                        <dbp-file-sink id="file-sink-clipboard"
-                                        context="${i18n.t('qualified-pdf-upload.save-field-label', {count: this.clipBoardFiles ? this.clipBoardFiles.files.length : 0})}"
-                                        filename="signed-documents.zip"
-                                        subscribe="initial-file-handling-state:initial-file-handling-state"
-                                        enabled-targets="local${this.showNextcloudFilePicker ? ",nextcloud" : ""}"
-                                        nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
-                                        nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
-                                        nextcloud-name="${this.nextcloudName}"
-                                        nextcloud-file-url="${this.nextcloudFileURL}"
-                                        lang="${this.lang}"
-                                        ></dbp-file-sink>
-                                        
-                                        
-                                        <div class="clipboard-data ${classMap({"hidden": this.clipBoardFiles.files.length === 0})}">
-                                            <h4>${i18n.t('file-sink.clipboard-files')}</h4>
-                                            <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
-                                            ${this.getClipboardFiles()}
-                                        </div>
-                                    </div>
-                                </div>
+                                ${this.getClipboardHtml()}
                             </div>
                         </main>
                     </div>

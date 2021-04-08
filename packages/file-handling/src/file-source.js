@@ -10,9 +10,8 @@ import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
-import Tabulator from "tabulator-tables";
-import {humanFileSize} from "@dbp-toolkit/common/i18next";
 import {name as pkgName} from "../package.json";
+import {FileHandlingClipboard} from "./dbp-file-handling-clipboard";
 
 function mimeTypesToAccept(mimeTypes) {
     // Some operating systems can't handle mime types and
@@ -56,16 +55,10 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.activeTarget = 'local';
         this.isDialogOpen = false;
         this.firstOpen = true;
-        this.tabulatorTable = null;
-        this.maxSelectedItems = true;
-        this.showSelectAllButton = true;
-        this.clipboardSelectBtnDisabled = true;
         this.showClipboard = false;
 
         this.initialFileHandlingState = {target: '', path: ''};
-        this.clipboardFiles = {files: ''};
 
-        this._onReceiveBeforeUnload = this.onReceiveBeforeUnload.bind(this);
 
     }
 
@@ -74,6 +67,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
             'dbp-nextcloud-file-picker': NextcloudFilePicker,
+            'dbp-clipboard': FileHandlingClipboard,
         };
     }
 
@@ -97,13 +91,9 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
             activeTarget: { type: String, attribute: 'active-target' },
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
-            showSelectAllButton: { type: Boolean, attribute: true },
-            clipboardSelectBtnDisabled: { type: Boolean, attribute: true },
             showClipboard: { type: Boolean, attribute: 'show-clipboard' },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
-            clipboardFiles: {type: Object, attribute: 'clipboard-files'},
-
         };
     }
 
@@ -133,10 +123,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                         this.nextcloudPath = this.initialFileHandlingState.path;
                     }
                   break;
-                case "clipboardFiles":
-                    this.generateClipboardTable();
-                    break;
-
             }
         });
         super.update(changedProperties);
@@ -145,7 +131,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        const that = this;
         this.updateComplete.then(() => {
             this.dropArea = this._('#dropArea');
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -159,109 +144,16 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             });
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
             this._('#fileElem').addEventListener('change', this.handleChange.bind(this));
-
-            // see: http://tabulator.info/docs/4.7
-            this.tabulatorTable = new Tabulator(this._("#clipboard-content-table"), {
-                layout: "fitColumns",
-                selectable: this.maxSelectedItems,
-                selectableRangeMode: "drag",
-                responsiveLayout: true,
-                placeholder: i18n.t('nextcloud-file-picker.no-data-type'),
-                resizableColumns:false,
-                columns: [
-                    {title: "", field: "type", align:"center", headerSort:false, width:50, responsive:1, formatter: (cell, formatterParams, onRendered) => {
-                            const icon_tag =  that.constructor.getScopedTagName("dbp-icon");
-                            let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
-                            return icon;
-                        }},
-                    {title: i18n.t('nextcloud-file-picker.filename'), responsive: 0, widthGrow:5,  minWidth: 150, field: "name", sorter: "alphanum",
-                        formatter: (cell) => {
-                            let data = cell.getRow().getData();
-                            if (data.edit) {
-                                cell.getElement().classList.add("fokus-edit");
-                            }
-                            return cell.getValue();
-                        }},
-                    {title: i18n.t('nextcloud-file-picker.size'), responsive: 4, widthGrow:1, minWidth: 50, field: "size", formatter: (cell, formatterParams, onRendered) => {
-                            return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());
-                        }},
-                    {title: i18n.t('nextcloud-file-picker.mime-type'), responsive: 2, widthGrow:1, minWidth: 20, field: "type", formatter: (cell, formatterParams, onRendered) => {
-                            if (typeof cell.getValue() === 'undefined') {
-                                return "";
-                            }
-                            const [, fileSubType] = cell.getValue().split('/');
-                            return fileSubType;
-                        }},
-                    {title: i18n.t('nextcloud-file-picker.last-modified'), responsive: 3, widthGrow:1, minWidth: 150, field: "lastModified",sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
-                            const a_timestamp = Date.parse(a);
-                            const b_timestamp = Date.parse(b);
-                            return a_timestamp - b_timestamp;
-                        }, formatter:function(cell, formatterParams, onRendered) {
-                            const timestamp = new Date(cell.getValue());
-                            const year = timestamp.getFullYear();
-                            const month = ("0" + (timestamp.getMonth() + 1)).slice(-2);
-                            const date = ("0" + timestamp.getDate()).slice(-2);
-                            const hours = ("0" + timestamp.getHours()).slice(-2);
-                            const minutes = ("0" + timestamp.getMinutes()).slice(-2);
-                            return date + "." + month + "." + year + " " + hours + ":" + minutes;
-                        }},
-                    {title: "file", field: "file", visible: false}
-                ],
-                initialSort:[
-                    {column:"name", dir:"asc"},
-                    {column:"type", dir:"asc"},
-                ],
-                rowClick: (e, row) => {
-                    if (this.tabulatorTable !== null
-                        && this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows().filter(row => this.checkFileType(row.getData())).length) {
-                        this.showSelectAllButton = false;
-                    } else {
-                        this.showSelectAllButton = true;
-                    }
-                },
-                rowSelectionChanged: (data, rows) => {
-                    if (this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0) {
-                        this.clipboardSelectBtnDisabled = false;
-                    } else {
-                        this.clipboardSelectBtnDisabled = true;
-                    }
-                }
-            });
         });
 
-        window.addEventListener('beforeunload', this._onReceiveBeforeUnload);
     }
 
     disconnectedCallback() {
-        // remove event listeners
-
-        //We doesn't want to deregister this event, because we want to use this event over activities
-        //window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
 
         super.disconnectedCallback();
     }
 
-    /**
-     * Select all files from tabulator table
-     *
-     */
-    selectAll() {
-        this.tabulatorTable.selectRow(this.tabulatorTable.getRows().filter(row => this.checkFileType(row.getData())));
-        if (this.tabulatorTable.getSelectedRows().length > 0) {
-            this.showSelectAllButton = false;
-            console.log("Show Select All Button:", this.showSelectAllButton);
-        }
-    }
 
-    /**
-     * Deselect files from tabulator table
-     *
-     */
-    deselectAll() {
-        this.tabulatorTable.deselectRow();
-        this.showSelectAllButton = true;
-        console.log("Show Select All Button:", this.showSelectAllButton);
-    }
 
     preventDefaults (e) {
         e.preventDefault();
@@ -487,8 +379,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         }
 
         if (this.enabledTargets.includes('clipboard')) {
-            this.generateClipboardTable();
-            this.showSelectAllButton = true;
+            this._("#clipboard-file-picker").generateClipboardTable();
+            this._("#clipboard-file-picker").showSelectAllButton = true;
         }
 
         const filePicker = this._('#modal-picker');
@@ -521,73 +413,44 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         MicroModal.close(this._('#modal-picker'));
     }
 
-
-
-    generateClipboardTable() {
-        let data = [];
-        for (let i = 0; i < this.clipboardFiles.files.length; i++){
-            data[i] = {
-                name: this.clipboardFiles.files[i].name,
-                size: this.clipboardFiles.files[i].size,
-                type: this.clipboardFiles.files[i].type,
-                lastModified: this.clipboardFiles.files[i].lastModified,
-                file: this.clipboardFiles.files[i]
-            };
+    getClipboardHtml() {
+        if (this.enabledTargets.includes('clipboard') && this.showClipboard) {
+            return html`
+                <dbp-clipboard 
+                   id="clipboard-file-picker"
+                   clipboard-source
+                   subscribe="clipboard-files:clipboard-files"
+                   lang="${this.lang}"
+                   auth-url="${this.nextcloudAuthUrl}"
+                   allowed-mime-types="${this.allowedMimeTypes}"
+                   @dbp-clipboard-file-picker-file-downloaded="${(event) => {
+                    this.sendFileEvent(event.detail.file);}}">
+                </dbp-clipboard>`;
         }
+        return html``;
+    }
 
-        if (this.tabulatorTable !== null){
-            this.tabulatorTable.clearData();
-            this.tabulatorTable.setData(data);
+    getNextcloudHtml() {
+        if (this.enabledTargets.includes('nextcloud') && this.nextcloudWebDavUrl !== "" && this.nextcloudAuthUrl !== "") {
+            return html`
+                <dbp-nextcloud-file-picker id="nextcloud-file-picker"
+                   class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
+                   ?disabled="${this.disabled}"
+                   lang="${this.lang}"
+                   auth-url="${this.nextcloudAuthUrl}"
+                   web-dav-url="${this.nextcloudWebDavUrl}"
+                   nextcloud-name="${this.nextcloudName}"
+                   nextcloud-file-url="${this.nextcloudFileURL}"
+                   allowed-mime-types="${this.allowedMimeTypes}"
+                   @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
+                    this.sendFileEvent(event.detail.file);}}">
+                </dbp-nextcloud-file-picker>`;
         }
+        return html``;
     }
 
 
-    async sendClipboardFiles(files) {
 
-        for(let i = 0; i < files.length; i ++)
-        {
-            await this.sendFileEvent(files[i].file);
-        }
-        this.tabulatorTable.deselectRow();
-        this.closeDialog();
-
-    }
-
-    /**
-     * Decides if the "beforeunload" event needs to be canceled
-     *
-     * @param event
-     */
-    onReceiveBeforeUnload(event) {
-
-
-        // we don't need to stop if there are no signed files
-       if (!this.showClipboard || !this.hasEnabledSource("clipboard") || this.clipboardFiles.files.length === 0) {
-            return;
-       }
-
-        // we need to handle custom events ourselves
-       if(event.target && event.target.activeElement && event.target.activeElement.nodeName) {
-
-            if (!event.isTrusted) {
-                // note that this only works with custom event since calls of "confirm" are ignored
-                // in the non-custom event, see https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
-                const result = confirm(i18n.t('page-leaving-warn-dialogue'));
-                // don't stop the page leave if the user wants to leave
-                if (result) {
-                    return;
-                }
-            }
-            // Cancel the event as stated by the standard
-            event.preventDefault();
-
-            // Chrome requires returnValue to be set
-            event.returnValue = '';
-        }
-
-
-
-    }
 
     static get styles() {
         // language=css
@@ -625,45 +488,11 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             #dropArea.highlight {
                 border-color: var(--FUBorderColorHighlight, purple);
             }
-
-            .clipboard-container{
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                padding: var(--FUPadding, 20px);
+            
+            #clipboard-file-picker{
                 width: 100%;
                 height: 100%;
-                position: relative;
             }
-
-            .clipboard-container .wrapper{
-                overflow-y: auto;
-                text-align: center;
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-
-            .clipboard-container .wrapper.table{
-                justify-content: start;
-            }
-            
-            .clipboard-container .wrapper .inner{
-                overflow-y: auto;
-                text-align: center;
-                width: 100%;
-            }
-            
-            .clipboard-footer{
-                align-self: end;
-            }
-            
-            #select-all-wrapper{
-                text-align: right;
-            }
-            
             
              @media only screen
             and (orientation: portrait)
@@ -673,7 +502,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 }
             
             }
-            
         `;
     }
 
@@ -685,7 +513,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             allowedMimeTypes += ",application/zip,application/x-zip-compressed";
         }
 
-        const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
 
         return html`
 <!--
@@ -694,7 +521,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 @click="${() => { this.openDialog(); }}">${i18n.t('file-source.open-menu')}</button>
 -->
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
-                <link rel="stylesheet" href="${tabulatorCss}">
                 <div class="modal-overlay" tabindex="-1" data-micromodal-close>
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
                         <nav class="modal-nav">
@@ -744,48 +570,10 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                 </div>
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
-                                <dbp-nextcloud-file-picker id="nextcloud-file-picker"
-                                       class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
-                                       ?disabled="${this.disabled}"
-                                       lang="${this.lang}"
-                                       auth-url="${this.nextcloudAuthUrl}"
-                                       web-dav-url="${this.nextcloudWebDavUrl}"
-                                       nextcloud-name="${this.nextcloudName}"
-                                       nextcloud-file-url="${this.nextcloudFileURL}"
-                                       allowed-mime-types="${this.allowedMimeTypes}"
-                                       @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
-                                    this.sendFileEvent(event.detail.file);
-                                }}"></dbp-nextcloud-file-picker>
+                                ${this.getNextcloudHtml()}
                             </div>
                             <div class="source-main ${classMap({"hidden": (this.activeTarget !== "clipboard" || isClipboardHidden)})}">
-                                <div class="block clipboard-container">
-                                    <div class="wrapper ${classMap({"table": this.clipboardFiles.files.length !== 0})}">
-                                        <div class="inner">
-                                            <h3>${i18n.t('file-source.clipboard-title')}</h3>
-                                            <p>${i18n.t('file-source.clipboard-body')}<br><br></p>
-                                            <p class="${classMap({"hidden": this.clipboardFiles.files.length !== 0})}">${i18n.t('file-source.clipboard-no-files')}</p>
-                                            <div class="clipboard-table ${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
-                                                <div id="select-all-wrapper">
-                                                    <button class="button ${classMap({"hidden": !this.showSelectAllButton})}"
-                                                            title="${i18n.t('nextcloud-file-picker.select-all-title')}"
-                                                            @click="${() => { this.selectAll(); }}">
-                                                            ${i18n.t('nextcloud-file-picker.select-all')}
-                                                    </button>
-                                                    <button class="button ${classMap({"hidden": this.showSelectAllButton})}"
-                                                            title="${i18n.t('nextcloud-file-picker.select-nothing-title')}"
-                                                            @click="${() => { this.deselectAll(); }}">
-                                                            ${i18n.t('nextcloud-file-picker.select-nothing')}
-                                                    </button>
-                                                </div>
-                                                <table id="clipboard-content-table" class="force-no-select"></table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clipboard-footer  ${classMap({"hidden": this.clipboardFiles.files.length === 0 })}">
-                                        <button class="button select-button is-primary" ?disabled="${ this.clipboardSelectBtnDisabled }"
-                                                @click="${() => { this.sendClipboardFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
-                                    </div>
-                                </div>
+                                ${this.getClipboardHtml()}
                             </div>
                         </main>
                     </div>

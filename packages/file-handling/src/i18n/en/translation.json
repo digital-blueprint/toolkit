@@ -96,5 +96,10 @@
     "select-nothing-title": "Select no files",
     "abort": "Cancel process",
     "abort-message": "The process was canceled."
+  },
+  "clipboard": {
+    "file-warning": "Attention!",
+    "file-warning-body": "There is still a file on the clipboard. The clipboard is automatically discarded when you exit the page.",
+    "file-warning-body_plural": "There are still {{count}} files on the clipboard. The clipboard is automatically discarded when you exit the page."
   }
 }

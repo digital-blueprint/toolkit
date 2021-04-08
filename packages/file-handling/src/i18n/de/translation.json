@@ -96,5 +96,10 @@
     "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren",
     "abort": "Vorgang abbrechen",
     "abort-message": "Vorgang wurde abgebrochen."
+  },
+  "clipboard": {
+    "file-warning": "Achtung!",
+    "file-warning-body": "Es befindet sich noch eine Datei in der Zwischenablage. Die Zwischenablage wird beim Verlassen der Seite automatisch verworfen.",
+    "file-warning-body_plural": "Es befinden sich noch {{count}} Dateien in der Zwischenablage. Die Zwischenablage wird beim Verlassen der Seite automatisch verworfen."
   }
 }
