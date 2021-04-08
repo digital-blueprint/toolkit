@@ -11,8 +11,6 @@ import FileSaver from 'file-saver';
 import MicroModal from "./micromodal.es";
 import * as fileHandlingStyles from './styles';
 import { send } from '@dbp-toolkit/common/notification';
-import {humanFileSize} from '@dbp-toolkit/common/i18next';
-import * as utils from "../../../../../src/utils";
 import {FileHandlingClipboard} from "./dbp-file-handling-clipboard";
 
 
@@ -169,6 +167,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     finishedFileUpload(event) {
+        console.log("finished!");
         this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
         if (event.detail > 0) {

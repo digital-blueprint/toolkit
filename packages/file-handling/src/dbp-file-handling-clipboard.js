@@ -552,7 +552,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                         <dbp-file-sink id="file-sink-clipboard"
                         context="${i18n.t('clipboard.save-files-from-clipboard', {count: this.clipboardFiles ? this.clipboardFiles.files.length : 0})}"
                         filename="clipboard-documents.zip"
-                        enabled-targets="local"
+                        enabled-targets="local,nextcloud"
                         nextcloud-auth-url="${this.nextcloudAuthUrl}"
                         nextcloud-web-dav-url="${this.nextcloudWebDavUrl}"
                         nextcloud-name="${this.nextcloudName}"

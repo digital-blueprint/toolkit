@@ -10,7 +10,6 @@ import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
-import {name as pkgName} from "../package.json";
 import {FileHandlingClipboard} from "./dbp-file-handling-clipboard";
 
 function mimeTypesToAccept(mimeTypes) {
