@@ -100,6 +100,8 @@
   "clipboard": {
     "file-warning": "Achtung!",
     "file-warning-body": "Es befindet sich noch eine Datei in der Zwischenablage. Die Zwischenablage wird beim Verlassen der Seite automatisch verworfen.",
-    "file-warning-body_plural": "Es befinden sich noch {{count}} Dateien in der Zwischenablage. Die Zwischenablage wird beim Verlassen der Seite automatisch verworfen."
+    "file-warning-body_plural": "Es befinden sich noch {{count}} Dateien in der Zwischenablage. Die Zwischenablage wird beim Verlassen der Seite automatisch verworfen.",
+    "save-files-from-clipboard": "Eine Datei aus der Zwischenablage speichern",
+    "save-files-from-clipboard_plural": "{{count}} Dateien aus der Zwischenablage speichern"
   }
 }

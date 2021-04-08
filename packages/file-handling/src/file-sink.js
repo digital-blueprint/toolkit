@@ -38,6 +38,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.enabledTargets = 'local';
         this.firstOpen = true;
         this.showClipboard = false;
+        this.fullsizeModal = false;
 
         this.initialFileHandlingState = {target: '', path: ''};
     }
@@ -73,6 +74,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             firstOpen: {type: Boolean, attribute: false},
             nextcloudPath: {type: String, attribute: false},
             showClipboard: { type: Boolean, attribute: 'show-clipboard' },
+            fullsizeModal: { type: Boolean, attribute: 'fullsize-modal' },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
 
@@ -137,7 +139,11 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                     break;
                 case "files":
                     if (this.files.length !== 0 && !this.isDialogOpen) {
+                        console.log("--------------", this.files);
                         this.openDialog();
+                        if (this.enabledTargets.includes("clipboard")) {
+                            this._("#clipboard-file-sink").filesToSave = this.files;
+                        }
                     }
                     break;
                 case "initialFileHandlingState":
@@ -194,7 +200,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
     loadWebdavDirectory() {
 
-        if (this._('#nextcloud-file-picker').webDavClient !== null) {
+        if (this._('#nextcloud-file-picker') && this._('#nextcloud-file-picker').webDavClient !== null) {
             this._('#nextcloud-file-picker').loadDirectory(this._('#nextcloud-file-picker').directoryPath);
         }
     }
@@ -221,8 +227,11 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     closeDialog(e) {
+        console.log("close start");
         this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
+        console.log("close end");
+
     }
 
     getClipboardHtml() {
@@ -234,8 +243,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                    lang="${this.lang}"
                    auth-url="${this.nextcloudAuthUrl}"
                    allowed-mime-types="${this.allowedMimeTypes}"
-                   @dbp-clipboard-file-picker-file-downloaded="${(event) => {
-                this.sendFileEvent(event.detail.file);}}">
+                   nextcloud-auth-url="${this.nextcloudAuthUrl}"
+                   nextcloud-web-dav-url="${this.nextcloudWebDavUrl}"
+                   nextcloud-name="${this.nextcloudName}"
+                   nextcloud-file-url="${this.nextcloudFileURL}"
+                   @dbp-clipboard-file-picker-file-uploaded="${(event) => {
+                this.closeDialog(event);}}">
                 </dbp-clipboard>`;
         }
         return html``;
@@ -270,6 +283,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
 
     static get styles() {
+
+
         // language=css
         return css`
             ${commonStyles.getThemeCSS()}
@@ -278,6 +293,11 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
+            .modal-container-full-size{
+                min-width: 100%;
+                min-height: 100%;
+            }
+            
             #zip-download-block {
                 height: 100%;
                 width: 100%;
@@ -295,18 +315,19 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 width: 100%;
                 height: 100%;
             }
+            
+            
         `;
     }
 
     render() {
         const isClipboardHidden = !this.showClipboard;
 
-
         return html`
             <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-1">
-                    <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
+                    <div class="modal-container ${classMap({"modal-container-full-size": this.fullsizeModal})}" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
                         <nav class="modal-nav">
                             <div title="${i18n.t('file-sink.nav-local')}"
                                  @click="${() => { this.activeTarget = "local"; }}"

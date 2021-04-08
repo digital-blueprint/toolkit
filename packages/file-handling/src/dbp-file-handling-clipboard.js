@@ -11,6 +11,7 @@ import {classMap} from 'lit-html/directives/class-map.js';
 import * as commonUtils from "@dbp-toolkit/common/utils";
 import {name as pkgName} from "../package.json";
 import {send} from "@dbp-toolkit/common/notification";
+import {FileSink} from "./file-sink";
 
 
 /**
@@ -30,6 +31,13 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable = null;
         this.maxSelectedItems = true;
         this._onReceiveBeforeUnload = this.onReceiveBeforeUnload.bind(this);
+        this.filesToSave = null;
+
+        this.nextcloudAuthUrl = '';
+        this.nextcloudWebDavUrl = '';
+        this.nextcloudName ='Nextcloud';
+        this.nextcloudPath = '';
+        this.nextcloudFileURL = '';
 
     }
 
@@ -37,6 +45,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
         return {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
+            'dbp-file-sink': FileSink,
         };
     }
 
@@ -53,7 +62,12 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             clipboardSelectBtnDisabled: { type: Boolean, attribute: true },
             clipboardFiles: {type: Object, attribute: 'clipboard-files'},
             clipboardSource: {type: Boolean, attribute: 'clipboard-source'},
+            filesToSave: {type: Object, attribute: 'files-to-save'},
 
+            nextcloudAuthUrl: {type: String, attribute: 'nextcloud-auth-url'},
+            nextcloudWebDavUrl: {type: String, attribute: 'nextcloud-web-dav-url'},
+            nextcloudName: {type: String, attribute: 'nextcloud-name'},
+            nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
         };
 
     }
@@ -68,7 +82,6 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                     this.generateClipboardTable();
                     break;
             }
-            console.log("source", this.clipboardSource);
         });
 
         super.update(changedProperties);
@@ -86,113 +99,116 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
         super.connectedCallback();
         const that = this;
         this.updateComplete.then(() => {
-
-            // see: http://tabulator.info/docs/4.7
-            this.tabulatorTable = new Tabulator(this._("#clipboard-content-table"), {
-                layout: "fitColumns",
-                selectable: this.maxSelectedItems,
-                selectableRangeMode: "drag",
-                responsiveLayout: true,
-                placeholder: i18n.t('nextcloud-file-picker.no-data-type'),
-                resizableColumns: false,
-                columns: [
-                    {
-                        title: "",
-                        field: "type",
-                        align: "center",
-                        headerSort: false,
-                        width: 50,
-                        responsive: 1,
-                        formatter: (cell, formatterParams, onRendered) => {
-                            const icon_tag = that.constructor.getScopedTagName("dbp-icon");
-                            let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
-                            return icon;
-                        }
-                    },
-                    {
-                        title: i18n.t('nextcloud-file-picker.filename'),
-                        responsive: 0,
-                        widthGrow: 5,
-                        minWidth: 150,
-                        field: "name",
-                        sorter: "alphanum",
-                        formatter: (cell) => {
-                            let data = cell.getRow().getData();
-                            if (data.edit) {
-                                cell.getElement().classList.add("fokus-edit");
+            if (this.clipboardSource) {
+                // see: http://tabulator.info/docs/4.7
+                this.tabulatorTable = new Tabulator(this._("#clipboard-content-table"), {
+                    layout: "fitColumns",
+                    selectable: this.maxSelectedItems,
+                    selectableRangeMode: "drag",
+                    responsiveLayout: true,
+                    placeholder: i18n.t('nextcloud-file-picker.no-data-type'),
+                    resizableColumns: false,
+                    columns: [
+                        {
+                            title: "",
+                            field: "type",
+                            align: "center",
+                            headerSort: false,
+                            width: 50,
+                            responsive: 1,
+                            formatter: (cell, formatterParams, onRendered) => {
+                                const icon_tag = that.constructor.getScopedTagName("dbp-icon");
+                                let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
+                                return icon;
                             }
-                            return cell.getValue();
-                        }
-                    },
-                    {
-                        title: i18n.t('nextcloud-file-picker.size'),
-                        responsive: 4,
-                        widthGrow: 1,
-                        minWidth: 50,
-                        field: "size",
-                        formatter: (cell, formatterParams, onRendered) => {
-                            return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());
-                        }
-                    },
-                    {
-                        title: i18n.t('nextcloud-file-picker.mime-type'),
-                        responsive: 2,
-                        widthGrow: 1,
-                        minWidth: 20,
-                        field: "type",
-                        formatter: (cell, formatterParams, onRendered) => {
-                            if (typeof cell.getValue() === 'undefined') {
-                                return "";
-                            }
-                            const [, fileSubType] = cell.getValue().split('/');
-                            return fileSubType;
-                        }
-                    },
-                    {
-                        title: i18n.t('nextcloud-file-picker.last-modified'),
-                        responsive: 3,
-                        widthGrow: 1,
-                        minWidth: 150,
-                        field: "lastModified",
-                        sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
-                            const a_timestamp = Date.parse(a);
-                            const b_timestamp = Date.parse(b);
-                            return a_timestamp - b_timestamp;
                         },
-                        formatter: function (cell, formatterParams, onRendered) {
-                            const timestamp = new Date(cell.getValue());
-                            const year = timestamp.getFullYear();
-                            const month = ("0" + (timestamp.getMonth() + 1)).slice(-2);
-                            const date = ("0" + timestamp.getDate()).slice(-2);
-                            const hours = ("0" + timestamp.getHours()).slice(-2);
-                            const minutes = ("0" + timestamp.getMinutes()).slice(-2);
-                            return date + "." + month + "." + year + " " + hours + ":" + minutes;
+                        {
+                            title: i18n.t('nextcloud-file-picker.filename'),
+                            responsive: 0,
+                            widthGrow: 5,
+                            minWidth: 150,
+                            field: "name",
+                            sorter: "alphanum",
+                            formatter: (cell) => {
+                                let data = cell.getRow().getData();
+                                if (data.edit) {
+                                    cell.getElement().classList.add("fokus-edit");
+                                }
+                                return cell.getValue();
+                            }
+                        },
+                        {
+                            title: i18n.t('nextcloud-file-picker.size'),
+                            responsive: 4,
+                            widthGrow: 1,
+                            minWidth: 50,
+                            field: "size",
+                            formatter: (cell, formatterParams, onRendered) => {
+                                return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());
+                            }
+                        },
+                        {
+                            title: i18n.t('nextcloud-file-picker.mime-type'),
+                            responsive: 2,
+                            widthGrow: 1,
+                            minWidth: 20,
+                            field: "type",
+                            formatter: (cell, formatterParams, onRendered) => {
+                                if (typeof cell.getValue() === 'undefined') {
+                                    return "";
+                                }
+                                const [, fileSubType] = cell.getValue().split('/');
+                                return fileSubType;
+                            }
+                        },
+                        {
+                            title: i18n.t('nextcloud-file-picker.last-modified'),
+                            responsive: 3,
+                            widthGrow: 1,
+                            minWidth: 150,
+                            field: "lastModified",
+                            sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
+                                const a_timestamp = Date.parse(a);
+                                const b_timestamp = Date.parse(b);
+                                return a_timestamp - b_timestamp;
+                            },
+                            formatter: function (cell, formatterParams, onRendered) {
+                                const timestamp = new Date(cell.getValue());
+                                const year = timestamp.getFullYear();
+                                const month = ("0" + (timestamp.getMonth() + 1)).slice(-2);
+                                const date = ("0" + timestamp.getDate()).slice(-2);
+                                const hours = ("0" + timestamp.getHours()).slice(-2);
+                                const minutes = ("0" + timestamp.getMinutes()).slice(-2);
+                                return date + "." + month + "." + year + " " + hours + ":" + minutes;
+                            }
+                        },
+                        {title: "file", field: "file", visible: false}
+                    ],
+                    initialSort: [
+                        {column: "name", dir: "asc"},
+                        {column: "type", dir: "asc"},
+                    ],
+                    rowClick: (e, row) => {
+                        if (this.tabulatorTable !== null
+                            && this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows().filter(row => this.checkFileType(row.getData())).length) {
+                            this.showSelectAllButton = false;
+                        } else {
+                            this.showSelectAllButton = true;
                         }
                     },
-                    {title: "file", field: "file", visible: false}
-                ],
-                initialSort: [
-                    {column: "name", dir: "asc"},
-                    {column: "type", dir: "asc"},
-                ],
-                rowClick: (e, row) => {
-                    if (this.tabulatorTable !== null
-                        && this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows().filter(row => this.checkFileType(row.getData())).length) {
-                        this.showSelectAllButton = false;
-                    } else {
-                        this.showSelectAllButton = true;
+                    rowSelectionChanged: (data, rows) => {
+                        if (this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0) {
+                            this.clipboardSelectBtnDisabled = false;
+                        } else {
+                            this.clipboardSelectBtnDisabled = true;
+                        }
                     }
-                },
-                rowSelectionChanged: (data, rows) => {
-                    if (this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0) {
-                        this.clipboardSelectBtnDisabled = false;
-                    } else {
-                        this.clipboardSelectBtnDisabled = true;
-                    }
-                }
-            });
+                });
+            }
         });
-        window.addEventListener('beforeunload', this._onReceiveBeforeUnload);
+        if (!this.clipboardSource) {
+            window.addEventListener('beforeunload', this._onReceiveBeforeUnload);
+        }
 
     }
 
@@ -204,7 +220,6 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.selectRow(this.tabulatorTable.getRows().filter(row => this.checkFileType(row.getData())));
         if (this.tabulatorTable.getSelectedRows().length > 0) {
             this.showSelectAllButton = false;
-            console.log("Show Select All Button:", this.showSelectAllButton);
         }
     }
 
@@ -215,7 +230,6 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
     deselectAll() {
         this.tabulatorTable.deselectRow();
         this.showSelectAllButton = true;
-        console.log("Show Select All Button:", this.showSelectAllButton);
     }
 
     checkFileType(file) {
@@ -237,20 +251,22 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
     }
 
     generateClipboardTable() {
-        let data = [];
-        for (let i = 0; i < this.clipboardFiles.files.length; i++){
-            data[i] = {
-                name: this.clipboardFiles.files[i].name,
-                size: this.clipboardFiles.files[i].size,
-                type: this.clipboardFiles.files[i].type,
-                lastModified: this.clipboardFiles.files[i].lastModified,
-                file: this.clipboardFiles.files[i]
-            };
-        }
+        if (this.clipboardFiles.files) {
+            let data = [];
+            for (let i = 0; i < this.clipboardFiles.files.length; i++){
+                data[i] = {
+                    name: this.clipboardFiles.files[i].name,
+                    size: this.clipboardFiles.files[i].size,
+                    type: this.clipboardFiles.files[i].type,
+                    lastModified: this.clipboardFiles.files[i].lastModified,
+                    file: this.clipboardFiles.files[i]
+                };
+            }
 
-        if (this.tabulatorTable !== null){
-            this.tabulatorTable.clearData();
-            this.tabulatorTable.setData(data);
+            if (this.tabulatorTable !== null){
+                this.tabulatorTable.clearData();
+                this.tabulatorTable.setData(data);
+            }
         }
     }
 
@@ -261,7 +277,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             await this.sendFileEvent(files[i].file);
         }
         this.tabulatorTable.deselectRow();
-        this.closeDialog();
+        //this.closeDialog();
 
     }
 
@@ -315,17 +331,18 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
     {
         //save it
         let data = {};
-        if (this.files.length !== 0) {
-            data = {"files": this.files};
+        if (this.filesToSave && this.filesToSave.length !== 0) {
+            data = {"files": this.filesToSave};
             this.sendSetPropertyEvent('clipboard-files', data);
-            this.closeDialog();
+            const event = new CustomEvent("dbp-clipboard-file-picker-file-uploaded",
+                {  bubbles: true, composed: true });
+            this.dispatchEvent(event);
             send({
                 "summary": i18n.t('file-sink.save-to-clipboard-title'),
-                "body": i18n.t('file-sink.save-to-clipboard-body', {count: this.files.length}),
+                "body": i18n.t('file-sink.save-to-clipboard-body', {count: this.filesToSave.length}),
                 "type": "success",
                 "timeout": 5,
             });
-            console.log("--------------", this.clipboardFiles);
         }
 
     }
@@ -346,7 +363,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
      */
     async openClipboardFileSink() {
         this._("#file-sink-clipboard").files = this.clipboardFiles.files;
-        this._("#file-sink-clipboard").setAttribute("dialog-open", "");
+        this._("#file-sink-clipboard").openDialog();
     }
 
     static get styles() {
@@ -516,7 +533,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                         <button class="button is-primary clipboard-btn"
                                 ?disabled="${this.disabled}"
                                 @click="${() => { this.saveFilesToClipboard(); }}">
-                            ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.clipboardFiles.files.length})}
+                            ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.filesToSave ? this.filesToSave.length : 0})}
                         </button>
                         <div class="warning-container">
                             <dbp-icon name="warning" class="warning-icon"></dbp-icon>
@@ -533,14 +550,14 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                         </div>
                         
                         <dbp-file-sink id="file-sink-clipboard"
-                        context="${i18n.t('qualified-pdf-upload.save-field-label', {count: this.clipboardFiles ? this.clipboardFiles.files.length : 0})}"
-                        filename="signed-documents.zip"
-                        subscribe="initial-file-handling-state:initial-file-handling-state"
-                        enabled-targets="local${this.showNextcloudFilePicker ? ",nextcloud" : ""}"
-                        nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
-                        nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
+                        context="${i18n.t('clipboard.save-files-from-clipboard', {count: this.clipboardFiles ? this.clipboardFiles.files.length : 0})}"
+                        filename="clipboard-documents.zip"
+                        enabled-targets="local"
+                        nextcloud-auth-url="${this.nextcloudAuthUrl}"
+                        nextcloud-web-dav-url="${this.nextcloudWebDavUrl}"
                         nextcloud-name="${this.nextcloudName}"
                         nextcloud-file-url="${this.nextcloudFileURL}"
+                        fullsize-modal="true"
                         lang="${this.lang}"
                         ></dbp-file-sink>
                         
