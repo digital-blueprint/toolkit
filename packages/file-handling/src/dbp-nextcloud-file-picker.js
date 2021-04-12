@@ -324,9 +324,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param path
      */
     loadDirectory(path) {
-        if ( typeof this.directoryPath === 'undefined' ) {
+        if ( typeof this.directoryPath === 'undefined' || this.directoryPath === undefined) {
            this.directoryPath = '';
         }
+        if(path === undefined) {
+            path = '';
+        }
+
         console.log("load nextcloud directory", path);
         this.selectAllButton = true;
         this.loading = true;
@@ -1150,6 +1154,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             #replace-modal-box .modal-content label {
                 display: block;
                 width: 100%;
+                text-align: left;
             }
             
             #replace-modal-box #replace-filename {
@@ -1277,6 +1282,19 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 max-width: 130px;
+            }
+            
+            #replace-modal-box .modal-header{
+                padding: 0px;
+            }
+            
+            #replace-modal-content{
+                padding: 0px;
+                align-items: baseline;
+            }
+            
+            #replace-modal-box .modal-header h2{
+                text-align: left;
             }
             
           
@@ -1498,14 +1516,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <div class="modal-overlay" tabindex="-2" data-micromodal-close>
                     <div class="modal-container" id="replace-modal-box" role="dialog" aria-modal="true" aria-labelledby="replace-modal-title" >
                         <header class="modal-header">
+                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => {this.closeDialog();}}">
+                                <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
+                            </button>
                             <h2 id="replace-modal-title">
                                 ${i18n.t('nextcloud-file-picker.replace-title-1')}
                                 <span style="word-break: break-all;">${this.replaceFilename}</span>
                                 ${i18n.t('nextcloud-file-picker.replace-title-2')}.
                             </h2>
-                            <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => {this.closeDialog();}}">
-                                <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>
-                            </button> 
                         </header>
                         <main class="modal-content" id="replace-modal-content">
                             <h3>

@@ -362,7 +362,8 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
      * Open Filesink for multiple files
      */
     async openClipboardFileSink() {
-        this._("#file-sink-clipboard").files = this.clipboardFiles.files;
+        this._("#file-sink-clipboard").files = Object.create(this.clipboardFiles.files);
+        console.log("------ this.clipboardFiles.files;", this.clipboardFiles.files);
         this._("#file-sink-clipboard").openDialog();
     }
 

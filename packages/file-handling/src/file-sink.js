@@ -164,6 +164,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         let that = this;
         const element = that._('#nextcloud-file-picker');
         await element.uploadFiles(that.files, directory);
+        console.log("--------- f", that.files);
+        console.log("--------- d", directory);
     }
 
     finishedFileUpload(event) {
@@ -178,6 +180,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 "timeout": 5,
             });
         }
+        console.log("--------- finishedFileUpload", this.files);
+
     }
 
     sendDestination() {
@@ -189,6 +193,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             data = {"target": this.activeTarget};
         }
         this.sendSetPropertyEvent('initial-file-handling-state', data);
+        console.log("--------- finishedFileUpload", this.files);
+
     }
 
 
