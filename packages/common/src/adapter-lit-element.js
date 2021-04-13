@@ -1,5 +1,5 @@
 import {LitElement} from "lit-element";
-import {Logger} from "@dbp-toolkit/common";
+import {Logger} from "./logger";
 
 export class AdapterLitElement extends LitElement {
     constructor() {
