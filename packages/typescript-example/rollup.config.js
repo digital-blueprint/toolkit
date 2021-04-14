@@ -22,7 +22,7 @@ export default {
     },
     onwarn: function (warning, warn) {
         // ignore chai warnings
-        if (warning.code === 'CIRCULAR_DEPENDENCY') {
+        if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.message.includes('/chai/')) {
             return;
         }
         warn(warning);
