@@ -300,16 +300,17 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
 
-        send({
-            "summary": i18n.t('clipboard.file-warning'),
-            "body": i18n.t('clipboard.file-warning-body', {count: this.clipboardFiles.files.length}),
-            "type": "warning",
-            "timeout": 5,
-        });
+
 
         // we need to handle custom events ourselves
         if(event.target && event.target.activeElement && event.target.activeElement.nodeName) {
 
+            send({
+                "summary": i18n.t('clipboard.file-warning'),
+                "body": i18n.t('clipboard.file-warning-body', {count: this.clipboardFiles.files.length}),
+                "type": "warning",
+                "timeout": 5,
+            });
             if (!event.isTrusted) {
                 // note that this only works with custom event since calls of "confirm" are ignored
                 // in the non-custom event, see https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
@@ -540,14 +541,12 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                             <dbp-icon name="warning" class="warning-icon"></dbp-icon>
                             <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
                         </div>
-                        
-                        <!-- filesink for clipboard TODO übersetzen-->
 
                         <div class="${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
                         <button id="clipboard-download-button"
                                     class="button is-right clipboard-btn"
                                     @click="${this.openClipboardFileSink}"
-                                    >Aktuellen Zwischenablageninhalt speichern</button>
+                                    >${i18n.t('clipboard.save-from-clipboard-btn')}</button>
                         </div>
                         
                         <dbp-file-sink id="file-sink-clipboard"
