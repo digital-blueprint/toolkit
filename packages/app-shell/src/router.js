@@ -102,6 +102,12 @@ export class Router {
         if (partialState === undefined)
             partialState = {};
         let combined = {...currentState, ...partialState};
+
+        // prevent: Uncaught TypeError: Expected "component" to match "[^\/#\?]+?", but got ""
+        if (combined.component === '') {
+            combined.component = 'root';
+        }
+
         return generateUrls(this.router)(this.routeName, combined);
     }
 
