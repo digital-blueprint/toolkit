@@ -164,8 +164,14 @@ export class MatomoElement extends DBPLitElement {
     pushEvent(event) {
         window._paq = window._paq || [];
 
+        // make sure the event action is a non-empty string
+        // prevents: "Error while logging event: Parameters `category` and `action` must not be empty or filled with whitespaces"
+        if (event[1] === null || event[1] === '' || event[1] === undefined) {
+            event[1] = 'empty';
+        }
+
         // make sure the event name is a non-empty string
-        if (event[2] === null || event[2] === '') {
+        if (event[2] === null || event[2] === '' || event[2] === undefined) {
             event[2] = 'empty';
         } else if (typeof event[2] === 'object') {
             event[2] = JSON.stringify(event[2]);
