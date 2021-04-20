@@ -39,8 +39,14 @@ export async function getPackagePath(packageName, assetPath) {
         const packageInfo = r.getPackageInfoForId(id);
         packageRoot = packageInfo.root;
     } else {
-        // Non JS packages
-        packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
+        let current = require.resolve('./package.json');
+        if (require(current).name === packageName) {
+            // current package
+            packageRoot = path.dirname(current);
+        } else {
+            // Non JS packages
+            packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
+        }
     }
     return path.relative(process.cwd(), path.join(packageRoot, assetPath));
 }
