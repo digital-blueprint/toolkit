@@ -97,6 +97,12 @@ The component emits a `dbp-set-property` event for the attribute `initial-file-h
 
 This event is sent if a file was selected.
 
+#### `dbp-file-source-file-upload-finished`
+
+This event is sent if multiple files are selected.
+
+
+
 **Payload**: `{'file': File}` where [File](https://developer.mozilla.org/en-US/docs/Web/API/File) is the binary file that was selected
 
 ## FileSink
