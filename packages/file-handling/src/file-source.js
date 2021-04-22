@@ -510,7 +510,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         let allowedMimeTypes = this.allowedMimeTypes;
         const isClipboardHidden = !this.showClipboard;
 
-        if (this.decompressZip) {
+        if (this.decompressZip && this.allowedMimeTypes !== "*/*") {
             allowedMimeTypes += ",application/zip,application/x-zip-compressed";
         }
 
