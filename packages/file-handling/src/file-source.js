@@ -379,7 +379,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             this.loadWebdavDirectory();
         }
 
-        if (this.enabledTargets.includes('clipboard')) {
+        if (this.enabledTargets.includes('clipboard') && this.showClipboard) {
             this._("#clipboard-file-picker").generateClipboardTable();
             this._("#clipboard-file-picker").showSelectAllButton = true;
         }
