@@ -101,6 +101,9 @@ This event is sent if a file was selected.
 
 This event is sent if multiple files are selected.
 
+#### `dbp-nextcloud-file-picker-number-files`
+This event is sent from nextcloudfilepicker and is send when files are picked and sends the number of selected files
+
 
 
 **Payload**: `{'file': File}` where [File](https://developer.mozilla.org/en-US/docs/Web/API/File) is the binary file that was selected

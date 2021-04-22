@@ -435,6 +435,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     downloadFiles(files) {
         files.forEach((fileData) => this.downloadFile(fileData));
         this.tabulatorTable.deselectRow();
+        const data = {"count": files.length};
+        const event = new CustomEvent("dbp-nextcloud-file-picker-number-files",
+            { "detail": data, bubbles: true, composed: true });
+        this.dispatchEvent(event);
     }
 
     /**
