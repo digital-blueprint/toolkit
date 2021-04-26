@@ -207,6 +207,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             }
         });
         if (!this.clipboardSource) {
+            window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
             window.addEventListener('beforeunload', this._onReceiveBeforeUnload);
         }
 
@@ -542,28 +543,29 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                             <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
                         </div>
 
-                        <div class="${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
-                        <button id="clipboard-download-button"
-                                    class="button is-right clipboard-btn"
-                                    @click="${this.openClipboardFileSink}"
-                                    >${i18n.t('clipboard.save-from-clipboard-btn')}</button>
-                        </div>
-                        
-                        <dbp-file-sink id="file-sink-clipboard"
-                        context="${i18n.t('clipboard.save-files-from-clipboard', {count: this.clipboardFiles ? this.clipboardFiles.files.length : 0})}"
-                        filename="clipboard-documents.zip"
-                        enabled-targets="local,nextcloud"
-                        nextcloud-auth-url="${this.nextcloudAuthUrl}"
-                        nextcloud-web-dav-url="${this.nextcloudWebDavUrl}"
-                        nextcloud-name="${this.nextcloudName}"
-                        nextcloud-file-url="${this.nextcloudFileURL}"
-                        fullsize-modal="true"
-                        lang="${this.lang}"
-                        ></dbp-file-sink>
                         
                         
                         <div class="clipboard-data ${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
                             <h4>${i18n.t('file-sink.clipboard-files')}</h4>
+                            <div class="${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
+                                <button id="clipboard-download-button"
+                                    class="button is-right clipboard-btn"
+                                    @click="${this.openClipboardFileSink}"
+                                    >${i18n.t('clipboard.save-from-clipboard-btn')}</button>
+                            </div>
+                        
+                            <dbp-file-sink id="file-sink-clipboard"
+                            context="${i18n.t('clipboard.save-files-from-clipboard', {count: this.clipboardFiles ? this.clipboardFiles.files.length : 0})}"
+                            filename="clipboard-documents.zip"
+                            enabled-targets="local,nextcloud"
+                            nextcloud-auth-url="${this.nextcloudAuthUrl}"
+                            nextcloud-web-dav-url="${this.nextcloudWebDavUrl}"
+                            nextcloud-name="${this.nextcloudName}"
+                            nextcloud-file-url="${this.nextcloudFileURL}"
+                            fullsize-modal="true"
+                            lang="${this.lang}"
+                            ></dbp-file-sink>
+                        
                             <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
                             ${this.getClipboardFileList()}
                         </div>

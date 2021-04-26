@@ -41,7 +41,7 @@
     "save-to-clipboard-text": "Hier können Sie Dateien temporär ablegen.",
     "save-to-clipboard-warning": "Vorsicht! Wenn Sie den Browser schließen, die Seite neu laden oder neue Dateien hinzufügen, wird die bestehende Zwischenablage automatisch verworfen!",
     "clipboard-files": "Aktuell vorhandene Dateien in der Zwischenablage",
-    "clipboard-files-overwrite": "Folgende Dateien werden verworfen:"
+    "clipboard-files-overwrite": "Folgende Dateien werden verworfen, wenn Sie neue Dateien ins Clipboard legen:"
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
