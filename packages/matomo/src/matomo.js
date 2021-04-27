@@ -42,6 +42,10 @@ export class MatomoElement extends DBPLitElement {
                 break;
                 case 'analyticsEvent':
                 {
+                    // ignore analyticsEvent without data
+                    if (this.analyticsEvent.category === undefined && this.analyticsEvent.message === undefined) {
+                        break;
+                    }
                     console.log('MatomoElement(' + this.isRunning + ') analyticsEvent: ' +
                         this.analyticsEvent.action + ', ' + this.analyticsEvent.message);
                     const event = ['trackEvent', this.analyticsEvent.category, this.analyticsEvent.action,
@@ -105,7 +109,7 @@ export class MatomoElement extends DBPLitElement {
                 that.pushEvent(['trackPageView']);
 
                 // make Matomo aware of newly added content
-                var content = document.getElementById('content');
+                const content = document.getElementById('content');
                 that.pushEvent(['MediaAnalytics::scanForMedia', content]);
                 that.pushEvent(['FormAnalytics::scanForForms', content]);
                 that.pushEvent(['trackContentImpressionsWithinNode', content]);
@@ -164,17 +168,20 @@ export class MatomoElement extends DBPLitElement {
     pushEvent(event) {
         window._paq = window._paq || [];
 
-        // make sure the event action is a non-empty string
-        // prevents: "Error while logging event: Parameters `category` and `action` must not be empty or filled with whitespaces"
-        if (event[1] === null || event[1] === '' || event[1] === undefined) {
-            event[1] = 'empty';
-        }
+        // add some special checks for "trackEvent"
+        if (event[0] === 'trackEvent') {
+            // make sure the event action is a non-empty string
+            // prevents: "Error while logging event: Parameters `category` and `action` must not be empty or filled with whitespaces"
+            if (event[1] === null || event[1] === '' || event[1] === undefined) {
+                event[1] = 'empty';
+            }
 
-        // make sure the event name is a non-empty string
-        if (event[2] === null || event[2] === '' || event[2] === undefined) {
-            event[2] = 'empty';
-        } else if (typeof event[2] === 'object') {
-            event[2] = JSON.stringify(event[2]);
+            // make sure the event name is a non-empty string
+            if (event[2] === null || event[2] === '' || event[2] === undefined) {
+                event[2] = 'empty';
+            } else if (typeof event[2] === 'object') {
+                event[2] = JSON.stringify(event[2]);
+            }
         }
 
         window._paq.push(event);
