@@ -139,7 +139,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                     if (this.files.length !== 0 && !this.isDialogOpen) {
                         console.log("--------------", this.files);
                         this.openDialog();
-                        if (this.enabledTargets.includes("clipboard")) {
+                        if (this.showClipboard && this.enabledTargets.includes("clipboard")) {
                             this._("#clipboard-file-sink").filesToSave = this.files;
                         }
                     }
