@@ -1,15 +1,13 @@
-import {css, html, LitElement} from 'lit-element';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 //import {ClassName} from '@dbp-toolkit/package-name/src/dbp-demo-activity-name'; TODO
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 // import readme from '@dbp-toolkit/class-name/README.md'; TODO
-import highlightCSSPath from 'highlight.js/styles/default.css';
 import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
-class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement) { //TODO
+export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement) { //TODO
     constructor() {
         super();
         this.lang = 'en';
@@ -61,7 +59,7 @@ class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement)
         return html`
              <!--
                 TODO
-                ${unsafeHTML(readme)}
+                ${unsafeHTML('readme')}
                 <dbp-class-name-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-class-name-demo>
             -->
         `;

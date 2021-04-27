@@ -1,4 +1,4 @@
-import {css, unsafeCSS, CSSResult} from 'lit-element';
+import {css, CSSResult} from 'lit-element';
 
 /**
  * We want to have "neutral" colors here

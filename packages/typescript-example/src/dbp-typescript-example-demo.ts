@@ -1,17 +1,17 @@
-import {html, LitElement} from 'lit-element';
+import {html, LitElement, TemplateResult} from 'lit-element';
 import {TypeScriptExample} from './typescript-example';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin, ScopedElementsMap } from '@open-wc/scoped-elements';
 
 export class TypeScriptExampleDemo extends ScopedElementsMixin(LitElement) {
 
-    static get scopedElements() {
+    static get scopedElements(): ScopedElementsMap {
         return {
           'dbp-typescript-example': TypeScriptExample,
         };
     }
 
-    render() {
+    render(): TemplateResult {
         return html`
             <dbp-typescript-example lang="de"></dbp-typescript-example>
         `;
