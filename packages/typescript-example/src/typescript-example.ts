@@ -3,7 +3,7 @@ import {i18n} from './i18n';
 
 export class TypeScriptExample extends LitElement {
 
-    private _i18n: any;
+    private _i18n;
 
     constructor() {
         super();

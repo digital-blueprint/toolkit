@@ -1,0 +1,15 @@
+{
+    "root": true,
+    "env": {
+        "browser": true,
+        "es6": true,
+        "mocha": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "extends": [
+        "eslint:recommended"
+    ]
+}
