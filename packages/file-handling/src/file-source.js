@@ -226,8 +226,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
         // this.dispatchEvent(new CustomEvent("dbp-file-source-selection-finished",
         //     { "detail": {}, bubbles: true, composed: true }));
-        const count = files.length;
-        const event = new CustomEvent("dbp-file-source-file-upload-finished", { "detail": count, bubbles: true, composed: true });
+        const event = new CustomEvent("dbp-file-source-file-upload-finished", { "detail": {count: files.length}, bubbles: true, composed: true });
         this.dispatchEvent(event);
         this.closeDialog();
     }
