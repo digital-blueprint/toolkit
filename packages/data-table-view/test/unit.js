@@ -1,4 +1,4 @@
-import {assert} from 'chai';
+import {assert} from '@esm-bundle/chai';
 
 import '../src/dbp-data-table-view';
 import '../src/dbp-data-table-view-demo';

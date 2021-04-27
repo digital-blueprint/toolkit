@@ -1,4 +1,4 @@
-import {assert} from 'chai';
+import {assert} from '@esm-bundle/chai';
 
 import '../src/dbp-check-in-place-select.js';
 import '../src/demo.js';

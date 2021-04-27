@@ -1,4 +1,4 @@
-import {expect, assert} from 'chai';
+import {expect, assert} from '@esm-bundle/chai';
 import * as utils from '../utils';
 import * as styles from '../styles';
 import '../jsonld.js';

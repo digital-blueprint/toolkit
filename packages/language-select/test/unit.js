@@ -1,4 +1,4 @@
-import {assert, expect} from 'chai';
+import {assert, expect} from '@esm-bundle/chai';
 
 import '../src/dbp-language-select.js';
 import '../src/demo.js';

@@ -1,4 +1,4 @@
-import {assert} from 'chai';
+import {assert} from '@esm-bundle/chai';
 
 import '../src/dbp-knowledge-base-web-page-element-view.js';
 import '../src/dbp-knowledge-base-web-page-element-view-demo.js';

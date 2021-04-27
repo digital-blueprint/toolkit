@@ -80,18 +80,6 @@ export default (async () => {
       sourcemap: true
     },
     preserveEntrySignatures: false,
-    // external: ['zlib', 'http', 'fs', 'https', 'url'],
-    onwarn: function (warning, warn) {
-        // ignore "suggestions" warning re "use strict"
-        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
-            return;
-        }
-        // ignore chai warnings
-        if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.message.includes('/chai/')) {
-          return;
-        }
-        warn(warning);
-    },
     plugins: [
         del({
           targets: 'dist/*'
