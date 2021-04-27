@@ -11,7 +11,6 @@ import {classMap} from 'lit-html/directives/class-map.js';
 import * as commonUtils from "@dbp-toolkit/common/utils";
 import {name as pkgName} from "../package.json";
 import {send} from "@dbp-toolkit/common/notification";
-import {FileSink} from "./file-sink";
 
 
 /**
@@ -39,13 +38,14 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudPath = '';
         this.nextcloudFileURL = '';
 
+        // To avoid a cyclic dependency
+        import('./file-sink').then(({ FileSink }) => this.defineScopedElement('dbp-file-sink', FileSink));
     }
 
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
-            'dbp-file-sink': FileSink,
         };
     }
 
