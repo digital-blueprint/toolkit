@@ -207,8 +207,10 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             }
         });
         if (!this.clipboardSource) {
-            window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
-            window.addEventListener('beforeunload', this._onReceiveBeforeUnload);
+            if(!window.clipboardWarning)  {
+                window.addEventListener('beforeunload', this._onReceiveBeforeUnload, false);
+                window.clipboardWarning = true;
+            }
         }
 
     }

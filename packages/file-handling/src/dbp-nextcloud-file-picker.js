@@ -52,6 +52,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.selectAllButton = true;
         this.abortUploadButton = false;
         this.abortUpload = false;
+        this.isSelected = false;
     }
 
     static get scopedElements() {
@@ -87,6 +88,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             activeDirectoryACL: { type: String, attribute: false },
             selectAllButton: { type: Boolean, attribute: false },
             abortUploadButton: { type: Boolean, attribute: false },
+            isSelected: { type: Boolean, attribute: false },
         };
 
     }
@@ -205,10 +207,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                     this.directoryClicked(e, data);
                                     break;
                                 case "file":
+                                    this.isSelected = this.tabulatorTable.getSelectedRows().length > 0;
                                     if (this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)).length) {
                                         this.selectAllButton = false;
-                                    }
-                                    else {
+                                    } else {
                                         this.selectAllButton = true;
                                     }
                                     break;
@@ -1501,9 +1503,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <div class="nextcloud-footer ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-footer-grid">
                         <button id="download-button" class="button select-button is-primary ${classMap({hidden: ((!this.directoriesOnly)  || (this.directoriesOnly && this.abortUploadButton && this.forAll))})}"
-                                @click="${() => { this.sendDirectory(this.tabulatorTable.getSelectedData()); }}">${this.folderIsSelected}</button>
+                                @click="${() => { this.sendDirectory(this.tabulatorTable.getSelectedData()); }}" 
+                                ?disabled="${!this.isSelected}">
+                            ${this.folderIsSelected}</button>
                         <button class="button select-button is-primary ${classMap({hidden: this.directoriesOnly})}"
-                                @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}">${i18n.t('nextcloud-file-picker.select-files')}</button>
+                                @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}"
+                                ?disabled="${!this.isSelected}">
+                            ${i18n.t('nextcloud-file-picker.select-files')}</button>
                        <button id="abortButton" class="button select-button hidden ${classMap({"visible": (this.directoriesOnly && this.forAll && this.abortUploadButton)})}"
                                     title="${i18n.t('nextcloud-file-picker.abort')}"  @click="${() => { this.abortUpload = true; }}">${i18n.t('nextcloud-file-picker.abort')}</button>
                                 
