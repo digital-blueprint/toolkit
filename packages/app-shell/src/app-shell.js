@@ -276,7 +276,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             this.router.update();
 
             // tell a dbp-provider to update the "lang" property
-            this.sendSetPropertyEvent('lang', lang);
+            this.sendSetPropertyEvent('lang', lang, true);
         }
     }
 
@@ -750,7 +750,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     track(action, message) {
-        this.sendSetPropertyEvent('analytics-event', {'category': action, 'action': message});
+        this.sendSetPropertyEvent('analytics-event', {'category': action, 'action': message}, true);
     }
 
     _renderActivity() {

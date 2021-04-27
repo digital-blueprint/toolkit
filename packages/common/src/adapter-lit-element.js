@@ -307,9 +307,10 @@ export class AdapterLitElement extends LitElement {
      *
      * @param name
      * @param value
+     * @param sendToSelf Set this to "true" if the event should  be sent to oneself instead of the parent (e.g. in the app shell if there isn't a provider around it)
      * @returns {boolean}
      */
-    sendSetPropertyEvent(name, value) {
+    sendSetPropertyEvent(name, value, sendToSelf = false) {
         // Logger.debug("dbp-set-property", name, value);
 
         const event = new CustomEvent('dbp-set-property', {
@@ -320,7 +321,7 @@ export class AdapterLitElement extends LitElement {
 
         // dispatch the dbp-set-property event to the parent (if there is any) so that the current element
         // doesn't terminate the event if it has the attribute set itself
-        const element = this.parentElement ? this.parentElement : this;
+        const element = this.parentElement && !sendToSelf ? this.parentElement : this;
 
         return element.dispatchEvent(event);
     }
