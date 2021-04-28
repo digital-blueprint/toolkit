@@ -21,7 +21,7 @@
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-url": "^6.0.0",
     "babel-eslint": "^10.0.3",
-    "chai": "^4.2.0",
+    "@esm-bundle/chai": "^4.2.0",
     "chokidar": "^3.4.0",
     "eslint": "^7.3.1",
     "eslint-plugin-jsdoc": "^32.0.0",

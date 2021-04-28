@@ -19,13 +19,6 @@ export default {
         format: 'esm',
         sourcemap: true
     },
-    onwarn: function (warning, warn) {
-        // ignore chai warnings
-        if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.message.includes('/chai/')) {
-            return;
-        }
-        warn(warning);
-    },
     plugins: [
         del({
             targets: 'dist/*'

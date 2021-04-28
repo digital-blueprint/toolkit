@@ -1,4 +1,4 @@
-import {assert} from 'chai';
+import {assert} from '@esm-bundle/chai';
 import {EventBus, createEventName, checkIndentifier} from '../src/eventbus.js';
 
 suite('helpers', () => {
