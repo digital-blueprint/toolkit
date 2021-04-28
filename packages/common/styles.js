@@ -55,15 +55,6 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             margin-bottom: 0.75rem;
         }
 
-        code {
-            background-color: var(--dbp-light);
-            color: var(--dbp-danger-bg-color);
-            font-size: 1em;
-            line-height: 1.5em;
-            font-weight: normal;
-            padding: 0.25em 0.5em 0.25em;
-        }
-
         .field:not(:last-child) {
             margin-bottom: 0.75rem;
         }
