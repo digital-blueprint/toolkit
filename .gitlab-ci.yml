@@ -28,9 +28,6 @@ linting:
   script:
     - yarn install
     - yarn run lint
-    - cd toolkit-showcase
-    - yarn install
-    - yarn run lint
 
 publish:
   stage: deploy
