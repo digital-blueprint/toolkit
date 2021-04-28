@@ -1,4 +1,6 @@
-import {css, CSSResult} from 'lit-element';
+import {css, CSSResult, unsafeCSS} from 'lit-element';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import highlightCSSPath from 'highlight.js/styles/github.css';
 
 /**
  * We want to have "neutral" colors here
@@ -8,6 +10,8 @@ import {css, CSSResult} from 'lit-element';
 export function getDemoCSS() {
     // language=css
     return css`
+        @import url("${unsafeCSS(commonUtils.getAssetURL(highlightCSSPath))}");
+
         h1.title {margin-bottom: 1em;}
         div.container {margin-bottom: 1.5em;}
         h1, h2, h3, h4 {
@@ -70,6 +74,20 @@ export function getDemoCSS() {
                 filter: invert(0%);
                 -webkit-filter: invert(0%);
             }
+        }
+
+        pre {
+            background-color: var(--dbp-light);
+            padding: 0.4em;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+
+        code {
+            background-color: var(--dbp-light);
+            line-height: 1.5em;
+            font-weight: normal;
+            padding: 0.25em 0.5em 0.25em;
         }
     `;
 }
