@@ -198,9 +198,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     loadWebdavDirectory() {
+        const filePicker = this._('#nextcloud-file-picker');
 
-        if (this._('#nextcloud-file-picker') && this._('#nextcloud-file-picker').webDavClient !== null) {
-            this._('#nextcloud-file-picker').loadDirectory(this._('#nextcloud-file-picker').directoryPath);
+        if (filePicker && filePicker.webDavClient !== null) {
+            filePicker.loadDirectory(filePicker.directoryPath);
         }
     }
 
@@ -217,8 +218,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         if (this.initialFileHandlingState.target !== '' && typeof this.initialFileHandlingState.target !== 'undefined'  && this.firstOpen) {
             this.activeTarget = this.initialFileHandlingState.target;
             this.nextcloudPath = this.initialFileHandlingState.path;
-            if (this._('#nextcloud-file-picker').webDavClient !== null) {
-                this._('#nextcloud-file-picker').loadDirectory(this.initialFileHandlingState.path);
+            const filePicker = this._('#nextcloud-file-picker');
+
+            if (filePicker && filePicker.webDavClient !== null) {
+                filePicker.loadDirectory(this.initialFileHandlingState.path);
                 console.log("load default nextcloud sink", this.initialFileHandlingState.path);
             }
             this.firstOpen = false;
