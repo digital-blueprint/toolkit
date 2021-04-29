@@ -458,6 +458,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .clipboard-data p{
+                margin-top: 1rem;
                 margin-bottom: 1rem;
             }
 
@@ -549,9 +550,10 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                         
                         <div class="clipboard-data ${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
                             <h4>${i18n.t('file-sink.clipboard-files')}</h4>
-                            <div class="${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
+                            <div>
+                                <p>${i18n.t('clipboard.save-from-clipboard')}</p>
                                 <button id="clipboard-download-button"
-                                    class="button is-right clipboard-btn"
+                                    class="button is-right"
                                     @click="${this.openClipboardFileSink}"
                                     >${i18n.t('clipboard.save-from-clipboard-btn')}</button>
                             </div>

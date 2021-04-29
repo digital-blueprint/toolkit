@@ -103,6 +103,7 @@
     "file-warning-body_plural": "There are still {{count}} files on the clipboard. The clipboard is automatically discarded when you exit the page.",
     "save-files-from-clipboard": "Save a file from the clipboard",
     "save-files-from-clipboard_plural": "Save {{count}} files from the clipboard",
-    "save-from-clipboard-btn": "Save the current content from the clipboard"
+    "save-from-clipboard": "Save the current content from the clipboard:",
+    "save-from-clipboard-btn": "Save the clipboard"
   }
 }

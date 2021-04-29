@@ -103,6 +103,7 @@
     "file-warning-body_plural": "Es befinden sich noch {{count}} Dateien in der Zwischenablage. Die Zwischenablage wird beim Verlassen der Seite automatisch verworfen.",
     "save-files-from-clipboard": "Eine Datei aus der Zwischenablage speichern",
     "save-files-from-clipboard_plurafile-sinkl": "{{count}} Dateien aus der Zwischenablage speichern",
-    "save-from-clipboard-btn": "Aktuellen Inhalt aus der Zwischenablage speichern"
+    "save-from-clipboard": "Aktuellen Inhalt aus der Zwischenablage speichern:",
+    "save-from-clipboard-btn": "Zwischenablage speichern"
   }
 }
