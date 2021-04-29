@@ -117,7 +117,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                             width: 50,
                             responsive: 1,
                             formatter: (cell, formatterParams, onRendered) => {
-                                const icon_tag = that.constructor.getScopedTagName("dbp-icon");
+                                const icon_tag = that.getScopedTagName("dbp-icon");
                                 let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
                                 return icon;
                             }

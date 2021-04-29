@@ -65,7 +65,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
         const that = this;
 
         this.updateComplete.then(()=>{
-            const personSelect = that._(this.constructor.getScopedTagName('dbp-person-select'));
+            const personSelect = that._(this.getScopedTagName('dbp-person-select'));
             personSelect.onchange = function () {
                 that.selectedPerson = $(this).data("object").identifier;
             };

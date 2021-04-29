@@ -127,7 +127,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 resizableColumns:false,
                 columns: [
                     {title: "", field: "type", align:"center", headerSort:false, width:50, responsive:1, formatter: (cell, formatterParams, onRendered) => {
-                            const icon_tag =  that.constructor.getScopedTagName("dbp-icon");
+                            const icon_tag =  that.getScopedTagName("dbp-icon");
                             let disabled = this.directoriesOnly ? "nextcloud-picker-icon-disabled" : "";
                             let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon ` + disabled + `"></${icon_tag}>`;
                             return (cell.getValue() === "directory") ? `<${icon_tag} name="folder" class="nextcloud-picker-icon"></${icon_tag}>` : icon;
