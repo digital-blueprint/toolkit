@@ -6,6 +6,9 @@
   ],
   "ignorePresets": [":prHourlyLimit2"],
   "rangeStrategy": "update-lockfile",
+  "lockFileMaintenance": {
+      "enabled": true
+  },
   "composer": {
     "enabled": false
   },
