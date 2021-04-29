@@ -35,7 +35,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.isDialogOpen = false;
         this.enabledTargets = 'local';
         this.firstOpen = true;
-        this.showClipboard = false;
         this.fullsizeModal = false;
 
         this.initialFileHandlingState = {target: '', path: ''};
@@ -71,7 +70,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             activeTarget: {type: String, attribute: 'active-target'},
             firstOpen: {type: Boolean, attribute: false},
             nextcloudPath: {type: String, attribute: false},
-            showClipboard: { type: Boolean, attribute: 'show-clipboard' },
             fullsizeModal: { type: Boolean, attribute: 'fullsize-modal' },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
@@ -84,8 +82,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         super.connectedCallback();
 
         this.updateComplete.then(() => {
-
-            console.log("initialFileHandlingState", this.initialFileHandlingState);
         });
     }
 
@@ -137,10 +133,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                     break;
                 case "files":
                     if (this.files.length !== 0 && !this.isDialogOpen) {
-                        console.log("--------------", this.files);
                         this.openDialog();
-                        if (this.showClipboard && this.enabledTargets.includes("clipboard")) {
-                            this._("#clipboard-file-sink").filesToSave = this.files;
+                        if (this.enabledTargets.includes("clipboard")) {
+                            const clipboardSink = this._("#clipboard-file-sink");
+                            if (clipboardSink) {
+                                this._("#clipboard-file-sink").filesToSave = this.files;
+                            }
                         }
                     }
                     break;
@@ -198,6 +196,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     loadWebdavDirectory() {
+
         const filePicker = this._('#nextcloud-file-picker');
 
         if (filePicker && filePicker.webDavClient !== null) {
@@ -207,37 +206,35 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
     openDialog() {
         this.loadWebdavDirectory();
-        MicroModal.show(this._('#modal-picker'), {
-            disableScroll: true,
-            onClose: modal => { this.isDialogOpen = false; },
-        });
-
-        console.log("initialFileHandlingState", this.initialFileHandlingState);
+        const filePicker = this._('#modal-picker');
+        if (filePicker) {
+            MicroModal.show(filePicker, {
+                disableScroll: true,
+                onClose: modal => { this.isDialogOpen = false; },
+            });
+        }
 
         //check if default destination is set
         if (this.initialFileHandlingState.target !== '' && typeof this.initialFileHandlingState.target !== 'undefined'  && this.firstOpen) {
             this.activeTarget = this.initialFileHandlingState.target;
             this.nextcloudPath = this.initialFileHandlingState.path;
+
             const filePicker = this._('#nextcloud-file-picker');
 
             if (filePicker && filePicker.webDavClient !== null) {
                 filePicker.loadDirectory(this.initialFileHandlingState.path);
-                console.log("load default nextcloud sink", this.initialFileHandlingState.path);
             }
             this.firstOpen = false;
         }
     }
 
     closeDialog(e) {
-        console.log("close start");
         this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
-        console.log("close end");
-
     }
 
     getClipboardHtml() {
-        if (this.enabledTargets.includes('clipboard') && this.showClipboard) {
+        if (this.enabledTargets.includes('clipboard')) {
             return html`
                 <dbp-clipboard 
                    id="clipboard-file-sink"
@@ -323,7 +320,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        const isClipboardHidden = !this.showClipboard;
 
         return html`
             <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
@@ -345,7 +341,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div title="Clipboard"
                                  @click="${() => { this.activeTarget = "clipboard"; }}"
-                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: (!this.hasEnabledDestination("clipboard") || isClipboardHidden) })}">
+                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: (!this.hasEnabledDestination("clipboard")) })}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
                                 <p>Clipboard</p>
                             </div>
@@ -374,7 +370,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 ${this.getNextcloudHtml()}
                             </div>
-                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard" || isClipboardHidden})}">
+                            <div class="source-main ${classMap({"hidden": this.activeTarget !== "clipboard"})}">
                                 ${this.getClipboardHtml()}
                             </div>
                         </main>

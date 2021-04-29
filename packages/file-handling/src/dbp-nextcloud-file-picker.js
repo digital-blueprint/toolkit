@@ -326,10 +326,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param path
      */
     loadDirectory(path) {
-        if ( typeof this.directoryPath === 'undefined' || this.directoryPath === undefined) {
+        if (typeof this.directoryPath === 'undefined' || this.directoryPath === undefined) {
            this.directoryPath = '';
         }
-        if(path === undefined) {
+        if (path === undefined) {
             path = '';
         }
 

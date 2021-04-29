@@ -54,7 +54,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.activeTarget = 'local';
         this.isDialogOpen = false;
         this.firstOpen = true;
-        this.showClipboard = false;
 
         this.initialFileHandlingState = {target: '', path: ''};
 
@@ -90,7 +89,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
             activeTarget: { type: String, attribute: 'active-target' },
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
-            showClipboard: { type: Boolean, attribute: 'show-clipboard' },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
         };
@@ -366,7 +364,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     loadWebdavDirectory() {
         const filePicker = this._('#nextcloud-file-picker');
-
         // check if element is already in the dom (for example if "dialog-open" attribute is set)
         if (filePicker && filePicker.webDavClient !== null) {
             filePicker.loadDirectory(filePicker.directoryPath);
@@ -378,7 +375,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             this.loadWebdavDirectory();
         }
 
-        if (this.enabledTargets.includes('clipboard') && this.showClipboard) {
+        if (this.enabledTargets.includes('clipboard') && this._("#clipboard-file-picker")) {
             this._("#clipboard-file-picker").generateClipboardTable();
             this._("#clipboard-file-picker").showSelectAllButton = true;
         }
@@ -391,6 +388,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 disableScroll: true,
                 onClose: modal => {
                     this.isDialogOpen = false;
+
                     const filePicker = this._('#nextcloud-file-picker');
 
                     if (filePicker) {
@@ -426,7 +424,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getClipboardHtml() {
-        if (this.enabledTargets.includes('clipboard') && this.showClipboard) {
+        if (this.enabledTargets.includes('clipboard')) {
             return html`
                 <dbp-clipboard 
                    id="clipboard-file-picker"
@@ -519,7 +517,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         let allowedMimeTypes = this.allowedMimeTypes;
-        const isClipboardHidden = !this.showClipboard;
 
         if (this.decompressZip && this.allowedMimeTypes !== "*/*") {
             allowedMimeTypes += ",application/zip,application/x-zip-compressed";
@@ -550,7 +547,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div title="Clipboard"
                                  @click="${() => { this.activeTarget = "clipboard"; }}"
-                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledSource("clipboard") || isClipboardHidden })}">
+                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledSource("clipboard") })}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
                                 <p>Clipboard</p>
                             </div>
@@ -584,7 +581,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 ${this.getNextcloudHtml()}
                             </div>
-                            <div class="source-main ${classMap({"hidden": (this.activeTarget !== "clipboard" || isClipboardHidden)})}">
+                            <div class="source-main ${classMap({"hidden": (this.activeTarget !== "clipboard")})}">
                                 ${this.getClipboardHtml()}
                             </div>
                         </main>
