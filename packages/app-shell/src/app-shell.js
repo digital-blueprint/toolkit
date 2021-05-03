@@ -729,7 +729,19 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         this.track('renderActivity', activity.element);
 
-        const elm = document.createElement(activity.element);
+        // After it is loaded and registered globally, we get it and register it locally
+        customElements.whenDefined(activity.element).then(() => {
+            this.defineScopedElement(activity.element, customElements.get(activity.element));
+        });
+
+        // In case of "Scoped Custom Element Registries" polyfill we create a scoped element
+        let elm;
+        if (this.shadowRoot.createElement !== undefined) {
+            elm = this.shadowRoot.createElement(activity.element);
+        } else {
+            elm = document.createElement(activity.element);
+        }
+
         this._onActivityAdded(elm);
         this._lastElm = elm;
         return elm;
