@@ -357,7 +357,11 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
         let files = [];
         for(let i = 0; i < this.clipboardFiles.files.length; i ++)
         {
-            files[i] =  html`<div class="clipboard-list"><strong>${this.clipboardFiles.files[i].name}</strong> ${humanFileSize(this.clipboardFiles.files[i].size)}</div>`;
+            files[i] =  html`
+                <div class="clipboard-list">
+                    <div class="clipboard-list-name"><strong>${this.clipboardFiles.files[i].name}</strong></div>
+                    <div class="clipboard-list-size">${humanFileSize(this.clipboardFiles.files[i].size)}</div>
+                </div>`;
         }
         return files;
     }
@@ -430,7 +434,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .clipboard-container .inner{
-                overflow-y: auto;
+                overflow-y: scroll;
                 text-align: center;
                 width: 100%;
             }
@@ -469,7 +473,9 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
 
             .clipboard-list{
                 padding: 1rem 0;
-                border-top: 1px solid #888;
+                border-top: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
             }
             
             .button-wrapper{
@@ -479,6 +485,17 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             
             .border{
                 border-top:solid 1px #888;
+            }
+            
+            .clipboard-list-name{
+                width: 80%;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+            
+            .clipboard-list-size{
+
             }
 
 
@@ -504,6 +521,10 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 
                 .button-wrapper{
                     flex-direction: column;
+                }
+
+                .clipboard-container .inner{
+                    overflow-y: auto;
                 }
             }
         `;
