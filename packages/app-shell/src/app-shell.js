@@ -650,6 +650,10 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 margin-bottom: 1rem;
                 display: none;
             }
+            
+            #dbp-notification{
+                z-index: 99999;
+            }
 
             @media (max-width: 680px) {
                 #main {
@@ -863,7 +867,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             <dbp-matomo subscribe="auth,analytics-event" endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
             <div class="${mainClassMap}">
             <div id="main">
-                <dbp-notification lang="${this.lang}"></dbp-notification>
+                <dbp-notification id="dbp-notification" lang="${this.lang}"></dbp-notification>
                 <header>
                     <div class="hd1-left">
                         <dbp-language-select lang="${this.lang}"></dbp-language-select>
