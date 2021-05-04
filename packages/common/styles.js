@@ -416,7 +416,7 @@ export function getButtonCSS() {
             background: none;
         }
 
-        button.button:hover, .button:hover, button.dt-button:hover, button.dt-button:hover:not(.disabled) {
+        button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled) {
             color: white;
             background: none;
             background-color: black;
