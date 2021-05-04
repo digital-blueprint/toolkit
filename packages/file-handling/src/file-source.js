@@ -545,11 +545,11 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
-                            <div title="Clipboard"
+                            <div title="${i18n.t('file-source.clipboard')}"
                                  @click="${() => { this.activeTarget = "clipboard"; }}"
                                  class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledSource("clipboard") })}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                                <p>Clipboard</p>
+                                <p>${i18n.t('file-source.clipboard')}</p>
                             </div>
                             
                         </nav>

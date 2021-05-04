@@ -20,7 +20,8 @@
     "clipboard-title": "Select files from clipboard",
     "clipboard-body": "Here you can choose from the previously temporarily cached files.",
     "clipboard-select-btn": "Select",
-    "clipboard-no-files": "There are currently no files in the clipboard."
+    "clipboard-no-files": "There are currently no files in the clipboard.",
+    "clipboard": "Clipboard"
   },
   "file-sink": {
     "local-intro": "Download {{count}} file",
@@ -37,11 +38,12 @@
     "save-to-clipboard-body_plural": "You have temporarily saved {{count}} files in the clipboard. Don't forget to save them permanently.",
     "save-to-clipboard-btn": "{{count}} cache file",
     "save-to-clipboard-btn_plural": "{{count}} cache files",
-    "save-to-clipboard-title": "Cache files in the clipboard ",
     "save-to-clipboard-text": "Here you can cache files temporarily.",
     "save-to-clipboard-warning": "Attention! When you close the browser, reload the page or add new files, the clipboard will automatically be emptied!",
-    "clipboard-files": "Files currently available in the clipboard",
-    "clipboard-files-overwrite": "The following files will be overwritten:"
+    "clipboard-files": "One file is currently available in the clipboard",
+    "clipboard-files_plural": "{{count}} files are currently available in the clipboard",
+    "clipboard-files-overwrite": "The following files will be overwritten:",
+    "clipboard": "Clipboard"
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
@@ -104,6 +106,7 @@
     "save-files-from-clipboard": "Save a file from the clipboard",
     "save-files-from-clipboard_plural": "Save {{count}} files from the clipboard",
     "save-from-clipboard": "Save the current content from the clipboard:",
-    "save-from-clipboard-btn": "Save the clipboard"
+    "save-from-clipboard-btn": "Save the clipboard",
+    "save-to-clipboard-title": "Cached files in the clipboard "
   }
 }

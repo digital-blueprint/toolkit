@@ -423,7 +423,6 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                padding: var(--FUPadding, 20px);
             }
 
             .clipboard-container.table{
@@ -439,24 +438,30 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             .warning-icon{
                 font-size: 2rem;
                 padding: 0 1rem;
+                padding-left: 0px;
             }
 
             .clipboard-btn{
-                margin-top: 1.5rem;
-                margin-bottom: 1.5rem;
-            }
+                margin-bottom: 2rem;
+            }           
 
             .warning-container{
                 display: flex;
-                max-width: 400px;
                 text-align: left;
                 margin: auto;
+                margin-top: 2rem;
+                margin-bottom: 2rem;
             }
 
+            .clipboard-data{
+                text-align: left;
+            }
+            
             .clipboard-data h4{
                 margin-top: 2rem;
+                margin-bottom: 1rem;
             }
-
+            
             .clipboard-data p{
                 margin-top: 1rem;
                 margin-bottom: 1rem;
@@ -464,7 +469,16 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
 
             .clipboard-list{
                 padding: 1rem 0;
-                border-top: 1px solid #eee;
+                border-top: 1px solid #888;
+            }
+            
+            .button-wrapper{
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            .border{
+                border-top:solid 1px #888;
             }
 
 
@@ -480,6 +494,16 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 }
                 .warning-icon{
                     margin-bottom: 1rem;
+                    padding: 0px;
+                }
+                
+                .clipboard-footer{
+                    padding-top: 10px;
+                    align-self: center;
+                }
+                
+                .button-wrapper{
+                    flex-direction: column;
                 }
             }
         `;
@@ -534,29 +558,34 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             return html`                
                 <div class="block clipboard-container ${classMap({"table": this.clipboardFiles && this.clipboardFiles.files.length !== 0})}">
                     <div class="inner">
-                        <h3>${i18n.t('file-sink.save-to-clipboard-title')}</h3>
+                        <h3>${i18n.t('clipboard.save-to-clipboard-title')}</h3>
                         <p>${i18n.t('file-sink.save-to-clipboard-text')}</p>
-                        <button class="button is-primary clipboard-btn"
-                                ?disabled="${this.disabled}"
-                                @click="${() => { this.saveFilesToClipboard(); }}">
-                            ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.filesToSave ? this.filesToSave.length : 0})}
-                        </button>
-                        <div class="warning-container">
+                         <div class="warning-container">
                             <dbp-icon name="warning" class="warning-icon"></dbp-icon>
                             <p>${i18n.t('file-sink.save-to-clipboard-warning')}</p>
                         </div>
+                        <div class="${classMap({"button-wrapper": this.clipboardFiles.files.length !== 0})}">
+                            <button id="clipboard-download-button"
+                                    class="button is-right clipboard-btn ${classMap({"hidden": this.clipboardFiles.files.length === 0})}"
+                                    @click="${this.openClipboardFileSink}">
+                                ${i18n.t('clipboard.save-from-clipboard-btn')}
+                            </button>
+                            <button class="button is-primary clipboard-btn"
+                                    ?disabled="${this.disabled}"
+                                    @click="${() => { this.saveFilesToClipboard(); }}">
+                                ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.filesToSave ? this.filesToSave.length : 0})}
+                            </button>
+    
+                            
+                        </div>
+                        <div class="border ${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
+                 
 
                         
                         
                         <div class="clipboard-data ${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
-                            <h4>${i18n.t('file-sink.clipboard-files')}</h4>
-                            <div>
-                                <p>${i18n.t('clipboard.save-from-clipboard')}</p>
-                                <button id="clipboard-download-button"
-                                    class="button is-right"
-                                    @click="${this.openClipboardFileSink}"
-                                    >${i18n.t('clipboard.save-from-clipboard-btn')}</button>
-                            </div>
+                            <h4>${i18n.t('file-sink.clipboard-files', {count: this.clipboardFiles.files.length})}</h4>
+                            
                         
                             <dbp-file-sink id="file-sink-clipboard"
                             context="${i18n.t('clipboard.save-files-from-clipboard', {count: this.clipboardFiles ? this.clipboardFiles.files.length : 0})}"
@@ -570,8 +599,11 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                             lang="${this.lang}"
                             ></dbp-file-sink>
                         
-                            <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
-                            ${this.getClipboardFileList()}
+                            <details>   
+                                <summary>Dateien anzeigen</summary>
+                                <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
+                                ${this.getClipboardFileList()}
+                            </details>
                         </div>
                     </div>
                 </div>

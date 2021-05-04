@@ -339,11 +339,11 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
                             </div>
-                            <div title="Clipboard"
+                            <div title="${i18n.t('file-sink.clipboard')}"
                                  @click="${() => { this.activeTarget = "clipboard"; }}"
                                  class="${classMap({"active": this.activeTarget === "clipboard", hidden: (!this.hasEnabledDestination("clipboard")) })}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                                <p>Clipboard</p>
+                                <p>${i18n.t('file-sink.clipboard')}</p>
                             </div>
                         </nav>
                             <div class="modal-header">

@@ -20,7 +20,8 @@
     "clipboard-title": "Von der Zwischenablage auswählen",
     "clipboard-body": "Hier können Sie zuvor temporär abgelegte Dateien auswählen.",
     "clipboard-select-btn": "Auswählen",
-    "clipboard-no-files": "Aktuell befinden sich keine Dateien in der Zwischenablage."
+    "clipboard-no-files": "Aktuell befinden sich keine Dateien in der Zwischenablage.",
+    "clipboard": "Zwischenablage"
   },
   "file-sink": {
     "local-intro": "{{count}} Datei herunterladen",
@@ -37,11 +38,12 @@
     "save-to-clipboard-body_plural": "Sie haben {{count}} Dateien in der Zwischenablage temporär abgelegt. Vergessen Sie nicht diese dauerhaft zu speichern.",
     "save-to-clipboard-btn": "{{count}} Datei ablegen",
     "save-to-clipboard-btn_plural": "{{count}} Dateien ablegen",
-    "save-to-clipboard-title": "Dateien in der Zwischenablage ablegen",
     "save-to-clipboard-text": "Hier können Sie Dateien temporär ablegen.",
     "save-to-clipboard-warning": "Vorsicht! Wenn Sie den Browser schließen, die Seite neu laden oder neue Dateien hinzufügen, wird die bestehende Zwischenablage automatisch verworfen!",
-    "clipboard-files": "Aktuell vorhandene Dateien in der Zwischenablage",
-    "clipboard-files-overwrite": "Folgende Dateien werden verworfen, wenn Sie neue Dateien ins Clipboard legen:"
+    "clipboard-files": "Aktuell ist eine Datei in der Zwischenablage vorhanden",
+    "clipboard-files_plural": "Aktuell sind {{count}} Dateien in der Zwischenablage vorhanden",
+    "clipboard-files-overwrite": "Folgende Dateien werden verworfen, wenn Sie neue Dateien ins Zwischenablage legen:",
+    "clipboard": "Zwischenablage"
   },
   "nextcloud-file-picker": {
     "open": "Nextcloud",
@@ -104,6 +106,7 @@
     "save-files-from-clipboard": "Eine Datei aus der Zwischenablage speichern",
     "save-files-from-clipboard_plurafile-sinkl": "{{count}} Dateien aus der Zwischenablage speichern",
     "save-from-clipboard": "Aktuellen Inhalt aus der Zwischenablage speichern:",
-    "save-from-clipboard-btn": "Zwischenablage speichern"
+    "save-from-clipboard-btn": "Zwischenablage speichern",
+    "save-to-clipboard-title": "Dateien in der Zwischenablage ablegen"
   }
 }
