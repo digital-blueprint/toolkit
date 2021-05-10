@@ -32,6 +32,8 @@ export async function getDistPath(packageName, assetPath) {
 
 export async function getPackagePath(packageName, assetPath) {
     const r = resolve();
+    // XXX: https://gitlab.tugraz.at/dbp/web-components/toolkit/-/issues/57
+    r.resolve = () => { return null; };
     const resolved = await r.resolveId(packageName);
     let packageRoot;
     if (resolved !== null) {
