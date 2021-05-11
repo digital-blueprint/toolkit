@@ -75,6 +75,10 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         this.object = null;
         $(this).attr("data-object", "");
         $(this).data("object", null);
+        this.value = "";
+        // Reset value attribute to really make sure it is empty and will trigger a change event
+        // when it is set again with the previous value
+        $(this).attr("value", "");
         this.$select.val(null).trigger('change').trigger('select2:unselect');
     }
 
