@@ -2,7 +2,6 @@ import path from 'path';
 import url from 'url';
 import fs from 'fs';
 import child_process from 'child_process';
-import resolve from '@rollup/plugin-node-resolve';
 import selfsigned from 'selfsigned';
 import findCacheDir from 'find-cache-dir';
 
@@ -31,24 +30,14 @@ export async function getDistPath(packageName, assetPath) {
 }
 
 export async function getPackagePath(packageName, assetPath) {
-    const r = resolve();
-    // XXX: https://gitlab.tugraz.at/dbp/web-components/toolkit/-/issues/57
-    r.resolve = () => { return null; };
-    const resolved = await r.resolveId(packageName);
     let packageRoot;
-    if (resolved !== null) {
-        const id = (await r.resolveId(packageName)).id;
-        const packageInfo = r.getPackageInfoForId(id);
-        packageRoot = packageInfo.root;
+    let current = require.resolve('./package.json');
+    if (require(current).name === packageName) {
+        // current package
+        packageRoot = path.dirname(current);
     } else {
-        let current = require.resolve('./package.json');
-        if (require(current).name === packageName) {
-            // current package
-            packageRoot = path.dirname(current);
-        } else {
-            // Non JS packages
-            packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
-        }
+        // Other packages from nodes_modules etc.
+        packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
     }
     return path.relative(process.cwd(), path.join(packageRoot, assetPath));
 }
