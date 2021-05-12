@@ -33,7 +33,7 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
-                    {src: 'assets/silent-check-sso.html', dest: 'dist/' + await getDistPath(pkg.name)},
+                    {src: 'assets/silent-check-sso.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
                     {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
                 ],

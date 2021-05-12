@@ -81,7 +81,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     getAuthComponentHtml() {
         return this.noAuth ? html`<dbp-login-button subscribe="auth" lang="${this.lang}" show-image></dbp-login-button>` : html`
             <div class="container">
-                <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/silent-check-sso.html"
                                    url="https://auth-dev.tugraz.at/auth" realm="tugraz"
                                    client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
                 <dbp-login-button subscribe="auth" lang="${this.lang}" show-image></dbp-login-button>
