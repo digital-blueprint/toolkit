@@ -88,7 +88,6 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
     }
 
     disconnectedCallback() {
-
         //We doesn't want to deregister this event, because we want to use this event over activities
         //window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
 
@@ -118,8 +117,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                             responsive: 1,
                             formatter: (cell, formatterParams, onRendered) => {
                                 const icon_tag = that.getScopedTagName("dbp-icon");
-                                let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
-                                return icon;
+                                return `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
                             }
                         },
                         {
@@ -189,30 +187,21 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                         {column: "type", dir: "asc"},
                     ],
                     rowClick: (e, row) => {
-                        if (this.tabulatorTable !== null
-                            && this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows().filter(row => this.checkFileType(row.getData())).length) {
-                            this.showSelectAllButton = false;
-                        } else {
-                            this.showSelectAllButton = true;
-                        }
+                        this.showSelectAllButton = !(this.tabulatorTable !== null
+                            && this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows().filter(row => this.checkFileType(row.getData())).length);
                     },
                     rowSelectionChanged: (data, rows) => {
-                        if (this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0) {
-                            this.clipboardSelectBtnDisabled = false;
-                        } else {
-                            this.clipboardSelectBtnDisabled = true;
-                        }
+                        this.clipboardSelectBtnDisabled = !(this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0);
                     }
                 });
             }
         });
         if (!this.clipboardSource) {
-            if(!window.clipboardWarning)  {
+            if (!window.clipboardWarning)  {
                 window.addEventListener('beforeunload', this._onReceiveBeforeUnload, false);
                 window.clipboardWarning = true;
             }
         }
-
     }
 
     /**
@@ -256,7 +245,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
     generateClipboardTable() {
         if (this.clipboardFiles.files) {
             let data = [];
-            for (let i = 0; i < this.clipboardFiles.files.length; i++){
+            for (let i = 0; i < this.clipboardFiles.files.length; i++) {
                 data[i] = {
                     name: this.clipboardFiles.files[i].name,
                     size: this.clipboardFiles.files[i].size,
@@ -266,7 +255,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 };
             }
 
-            if (this.tabulatorTable !== null){
+            if (this.tabulatorTable !== null) {
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
             }
@@ -274,14 +263,12 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async sendClipboardFiles(files) {
-
-        for(let i = 0; i < files.length; i ++)
-        {
+        for (let i = 0; i < files.length; i ++) {
             await this.sendFileEvent(files[i].file);
         }
+
         this.tabulatorTable.deselectRow();
         //this.closeDialog();
-
     }
 
     async sendFileEvent(file) {
@@ -297,17 +284,14 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
      *
      * @param event
      */
-    onReceiveBeforeUnload(event){
+    onReceiveBeforeUnload(event) {
         // we don't need to stop if there are no signed files
         if (this.clipboardFiles.files.length === 0) {
             return;
         }
 
-
-
         // we need to handle custom events ourselves
-        if(event.target && event.target.activeElement && event.target.activeElement.nodeName) {
-
+        if (event.target && event.target.activeElement && event.target.activeElement.nodeName) {
             send({
                 "summary": i18n.t('clipboard.file-warning'),
                 "body": i18n.t('clipboard.file-warning-body', {count: this.clipboardFiles.files.length}),
@@ -331,9 +315,8 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-    saveFilesToClipboard()
-    {
-        //save it
+    saveFilesToClipboard() {
+        // save it
         let data = {};
         if (this.filesToSave && this.filesToSave.length !== 0) {
             data = {"files": this.filesToSave};
@@ -348,10 +331,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 "timeout": 5,
             });
         }
-
     }
-
-
 
     getClipboardFileList() {
         let files = [];
@@ -384,8 +364,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
-
-            .clipboard-container{
+            .clipboard-container {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -395,7 +374,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 position: relative;
             }
 
-            .clipboard-container .wrapper{
+            .clipboard-container .wrapper {
                 overflow-y: auto;
                 text-align: center;
                 width: 100%;
@@ -405,51 +384,51 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 justify-content: center;
             }
 
-            .clipboard-container .wrapper.table{
+            .clipboard-container .wrapper.table {
                 justify-content: start;
             }
 
-            .clipboard-container .wrapper .inner{
+            .clipboard-container .wrapper .inner {
                 overflow-y: auto;
                 text-align: center;
                 width: 100%;
             }
 
-            .clipboard-footer{
+            .clipboard-footer {
                 align-self: end;
             }
 
-            #select-all-wrapper{
+            #select-all-wrapper {
                 text-align: right;
             }
 
-            .clipboard-container{
+            .clipboard-container {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
             }
 
-            .clipboard-container.table{
+            .clipboard-container.table {
                 justify-content: start;
             }
 
-            .clipboard-container .inner{
+            .clipboard-container .inner {
                 overflow-y: scroll;
                 text-align: center;
                 width: 100%;
             }
 
-            .warning-icon{
+            .warning-icon {
                 font-size: 2rem;
                 padding: 0 1rem;
-                padding-left: 0px;
+                padding-left: 0;
             }
 
-            .clipboard-btn{
+            .clipboard-btn {
                 margin-bottom: 2rem;
-            }           
+            }
 
-            .warning-container{
+            .warning-container {
                 display: flex;
                 text-align: left;
                 margin: auto;
@@ -457,73 +436,74 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 margin-bottom: 2rem;
             }
 
-            .clipboard-data{
+            .clipboard-data {
                 text-align: left;
             }
-            
-            .clipboard-data h4{
+
+            .clipboard-data h4 {
                 margin-top: 2rem;
                 margin-bottom: 1rem;
             }
-            
-            .clipboard-data p{
+
+            .clipboard-data p {
                 margin-top: 1rem;
                 margin-bottom: 1rem;
             }
 
-            .clipboard-list{
+            .clipboard-list {
                 padding: 1rem 0;
                 border-top: 1px solid #eee;
                 display: flex;
                 justify-content: space-between;
             }
-            
-            .button-wrapper{
+
+            .button-wrapper {
                 display: flex;
                 justify-content: space-between;
             }
-            
-            .border{
-                border-top:solid 1px #888;
+
+            .border {
+                border-top: solid 1px #888;
             }
-            
-            .clipboard-list-name{
+
+            .clipboard-list-name {
                 width: 80%;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
-            
-            .clipboard-list-size{
+
+            .clipboard-list-size {
 
             }
-
 
             @media only screen
             and (orientation: portrait)
             and (max-device-width: 765px) {
-                .clipboard-container p, .clipboard-container h3{
+                .clipboard-container p, .clipboard-container h3 {
                     text-align: center;
                 }
-                .warning-container{
+
+                .warning-container {
                     flex-direction: column;
                     align-items: center;
                 }
-                .warning-icon{
+
+                .warning-icon {
                     margin-bottom: 1rem;
-                    padding: 0px;
+                    padding: 0;
                 }
-                
-                .clipboard-footer{
+
+                .clipboard-footer {
                     padding-top: 10px;
                     align-self: center;
                 }
-                
-                .button-wrapper{
+
+                .button-wrapper {
                     flex-direction: column;
                 }
 
-                .clipboard-container .inner{
+                .clipboard-container .inner {
                     overflow-y: auto;
                 }
             }
@@ -534,7 +514,6 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
 
         if (this.clipboardSource) {
-
             return html`
                 <link rel="stylesheet" href="${tabulatorCss}">
                 <div class="block clipboard-container">
@@ -596,18 +575,11 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                                     @click="${() => { this.saveFilesToClipboard(); }}">
                                 ${this.buttonLabel || i18n.t('file-sink.save-to-clipboard-btn', {count:this.filesToSave ? this.filesToSave.length : 0})}
                             </button>
-    
-                            
                         </div>
                         <div class="border ${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
-                 
-
-                        
-                        
                         <div class="clipboard-data ${classMap({"hidden": this.clipboardFiles.files.length === 0})}">
                             <h4>${i18n.t('file-sink.clipboard-files', {count: this.clipboardFiles.files.length})}</h4>
-                            
-                        
+
                             <dbp-file-sink id="file-sink-clipboard"
                             context="${i18n.t('clipboard.save-files-from-clipboard', {count: this.clipboardFiles ? this.clipboardFiles.files.length : 0})}"
                             filename="clipboard-documents.zip"
@@ -619,7 +591,7 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                             fullsize-modal="true"
                             lang="${this.lang}"
                             ></dbp-file-sink>
-                        
+
                             <details>   
                                 <summary>Dateien anzeigen</summary>
                                 <p>${i18n.t('file-sink.clipboard-files-overwrite')}</p>
