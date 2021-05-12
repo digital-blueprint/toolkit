@@ -263,8 +263,14 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async sendClipboardFiles(files) {
-        for (let i = 0; i < files.length; i ++) {
-            await this.sendFileEvent(files[i].file);
+        if (files.length > 0) {
+            for (let i = 0; i < files.length; i ++) {
+                await this.sendFileEvent(files[i].file);
+            }
+
+            this.sendSetPropertyEvent(
+                'analytics-event',
+                {category: 'FileHandlingClipboard', action: 'LoadFilesFromClipboard', name: files.length});
         }
 
         this.tabulatorTable.deselectRow();
@@ -330,6 +336,10 @@ export class FileHandlingClipboard extends ScopedElementsMixin(DBPLitElement) {
                 "type": "success",
                 "timeout": 5,
             });
+
+            this.sendSetPropertyEvent(
+                'analytics-event',
+                {category: 'FileHandlingClipboard', action: 'SaveFilesToClipboard', name: this.filesToSave.length});
         }
     }
 
