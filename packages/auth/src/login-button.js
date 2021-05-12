@@ -4,7 +4,7 @@ import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {LoginStatus} from './util.js';
-import {AdapterLitElement} from '@dbp-toolkit/common';
+import {AdapterLitElement, MiniSpinner} from '@dbp-toolkit/common';
 
 let logoutSVG = `
 <svg
@@ -51,17 +51,6 @@ let loginSVG = `
 </svg>
 `;
 
-let loggingInSVG = `
-<svg
-   viewBox="0 0 100 100"
-   y="0px"
-   x="0px"
-   id="icon"
-   role="img"
-   version="1.1">
-</svg>
-`;
-
 export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
@@ -72,6 +61,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
 
     static get scopedElements() {
         return {
+            'dbp-mini-spinner': MiniSpinner,
         };
     }
 
@@ -132,9 +122,12 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
                 transition: background-color 0.15s, color 0.15s;
             }
 
-            .login-box svg {
+            .login-box svg, .icon {
                 width: 1.1em;
                 height: 1.1em;
+            }
+
+            .login-box svg, .spinner {
                 display: flex;
             }
 
@@ -162,7 +155,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
             return html`
                 <a href="#">
                     <div class="login-box login-button">
-                        <div class="icon">${unsafeHTML(loggingInSVG)}</div>
+                        <div class="icon"><dbp-mini-spinner class="spinner"></dbp-mini-spinner></div>
                         <div class="label">&#8203;</div>
                     </div>
                 </a>
