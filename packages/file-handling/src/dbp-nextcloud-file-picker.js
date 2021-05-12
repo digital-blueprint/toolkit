@@ -441,6 +441,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         const event = new CustomEvent("dbp-nextcloud-file-picker-number-files",
             { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
+
+        if (files.length > 0) {
+            this.sendSetPropertyEvent(
+                'analytics-event',
+                {category: 'FileHandlingNextcloud', action: 'DownloadFiles', name: files.length});
+        }
     }
 
     /**
@@ -509,6 +515,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.forAll = false;
         this.setRepeatForAllConflicts();
         this.uploadFile(directory);
+
+        if (files.length > 0) {
+            this.sendSetPropertyEvent(
+                'analytics-event',
+                {category: 'FileHandlingNextcloud', action: 'UploadFiles', name: files.length});
+        }
     }
 
     /**
