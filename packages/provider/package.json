@@ -20,7 +20,7 @@
     "@rollup/plugin-url": "^6.0.0",
     "@esm-bundle/chai": "^4.2.0",
     "eslint": "^7.3.1",
-    "eslint-plugin-jsdoc": "^33.0.0",
+    "eslint-plugin-jsdoc": "^34.0.0",
     "glob": "^7.1.6",
     "i18next-scanner": "^3.0.0",
     "karma": "^6.0.0",
