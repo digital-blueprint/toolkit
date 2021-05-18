@@ -271,6 +271,10 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
      * @param {string} lang
      */
     updateLangIfChanged(lang) {
+        // in case the language is unknown, fall back to the default
+        if (!i18n.languages.includes(lang)) {
+            lang = this.lang;
+        }
         if (this.lang !== lang) {
             this.lang = lang;
             this.router.update();
