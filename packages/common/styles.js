@@ -29,7 +29,8 @@ export function getThemeCSS() {
             --dbp-border-radius: var(--dbp-override-border-radius, 0px);
             --dbp-border-width: var(--dbp-override-border-width, 1px);
             --dbp-border-color: var(--dbp-override-border-color, #000);
-            --dbp-placeholder-color: #777; 
+            --dbp-placeholder-color: #777;
+            --dbp-downloaded-bg-color: var(--dbp-override-downloaded-bg-color, #c8dcc8);
         }
     `;
 }
