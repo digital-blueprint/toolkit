@@ -926,6 +926,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.selectRow(this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)));
         if (this.tabulatorTable.getSelectedRows().length > 0) {
             this.selectAllButton = false;
+            this.isSelected = true;
         }
     }
 
