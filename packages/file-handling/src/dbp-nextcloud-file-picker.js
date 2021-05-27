@@ -1468,11 +1468,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 @click="${async () => { this.openFilePicker(); } }">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}</button>
                     </div>
                     <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
-                    <p class="m-inherit"><br>
-                         ${i18n.t('nextcloud-file-picker.auth-info')}<br>${i18n.t('nextcloud-file-picker.auth-info-2')}  
-                    </p>
+                        <p class="m-inherit"><br>
+                             ${i18n.t('nextcloud-file-picker.auth-info')}<br>${i18n.t('nextcloud-file-picker.auth-info-2')}  
+                        </p>
+                    </div>
                 </div>
-               </div>
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-nav">
                         <p>${this.getBreadcrumb()}</p>
