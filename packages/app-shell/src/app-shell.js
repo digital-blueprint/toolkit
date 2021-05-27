@@ -296,6 +296,14 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                     this.router.update();
                     this.subtitle = this.activeMetaDataText("short_name");
                     this.description = this.activeMetaDataText("description");
+
+                    // send a dbp-lang event with the language
+                    const event = new CustomEvent('dbp-lang', {
+                        bubbles: true,
+                        composed: true,
+                        detail: this.lang
+                    });
+                    this.dispatchEvent(event);
                 break;
                 case 'metadata':
                 {

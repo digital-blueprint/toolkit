@@ -36,6 +36,13 @@ The component emits `dbp-set-property` events for these attributes:
 - `lang` to propagate a language change (possible values `en`, `de`)
 - `requested-login-status` (possible values `logged-in`, `logged-out`)
 
+### Emitted events
+
+#### dbp-lang
+
+The component emits a `dbp-lang` event when the language is changed (for example in the language picker).
+The `details` attribute of the event is the language (possible values `en`, `de`).
+
 ## Topic Metadata
 
 ```json
