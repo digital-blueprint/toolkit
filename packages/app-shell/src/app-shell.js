@@ -298,12 +298,13 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                     this.description = this.activeMetaDataText("description");
 
                     // send a dbp-lang event with the language
-                    const event = new CustomEvent('dbp-lang', {
-                        bubbles: true,
-                        composed: true,
-                        detail: this.lang
-                    });
-                    this.dispatchEvent(event);
+                    this.dispatchEvent(
+                        new CustomEvent('dbp-lang', {
+                            bubbles: true,
+                            composed: true,
+                            detail: this.lang
+                        })
+                    );
                 break;
                 case 'metadata':
                 {
