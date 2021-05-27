@@ -53,6 +53,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.abortUploadButton = false;
         this.abortUpload = false;
         this.isSelected = false;
+        this.authInfo = '';
     }
 
     static get scopedElements() {
@@ -76,6 +77,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             isPickerActive: { type: Boolean, attribute: false },
             statusText: { type: String, attribute: false },
             folderIsSelected: { type: String, attribute: false },
+            authInfo: { type: String, attribute: 'auth-info' },
             directoryPath: { type: String, attribute: 'directory-path' },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             directoriesOnly: { type: Boolean, attribute: 'directories-only' },
@@ -1469,7 +1471,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     </div>
                     <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
                         <p class="m-inherit"><br>
-                             ${i18n.t('nextcloud-file-picker.auth-info')}<br>${i18n.t('nextcloud-file-picker.auth-info-2')}  
+                            ${i18n.t('nextcloud-file-picker.auth-info')}<br>${this.authInfo}  
                         </p>
                     </div>
                 </div>

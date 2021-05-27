@@ -36,6 +36,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.enabledTargets = 'local';
         this.firstOpen = true;
         this.fullsizeModal = false;
+        this.nextcloudAuthInfo = '';
 
         this.initialFileHandlingState = {target: '', path: ''};
     }
@@ -64,6 +65,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             nextcloudWebDavUrl: {type: String, attribute: 'nextcloud-web-dav-url'},
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
+            nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
             text: {type: String},
             buttonLabel: {type: String, attribute: 'button-label'},
             isDialogOpen: {type: Boolean, attribute: false},
@@ -71,9 +73,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             firstOpen: {type: Boolean, attribute: false},
             nextcloudPath: {type: String, attribute: false},
             fullsizeModal: { type: Boolean, attribute: 'fullsize-modal' },
-
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
-
         };
     }
 
@@ -266,6 +266,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                    auth-url="${this.nextcloudAuthUrl}"
                    web-dav-url="${this.nextcloudWebDavUrl}"
                    nextcloud-name="${this.nextcloudName}"
+                   auth-info="${this.nextcloudAuthInfo}"
                    directory-path="${this.nextcloudPath}"
                    nextcloud-file-url="${this.nextcloudFileURL}"
                    @dbp-nextcloud-file-picker-file-uploaded="${(event) => {

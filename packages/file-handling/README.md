@@ -73,6 +73,8 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
     - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
 - `nextcloud-file-url` (optional): Nextcloud File Url to use with the Nextcloud file picker
     - example `<dbp-file-source nextcloud-file-url="http://localhost:8081/apps/files/?dir="></dbp-file-source>`
+- `nextcloud-auth-info` (optional): Additional authentication information text that is shown in the Nextcloud file picker
+    - example `<dbp-file-source nextcloud-auth-info="You need special permissions for this function"></dbp-file-source>`
 - `dialog-open` (optional): if this attribute is set at runtime the dialog for selecting local or Nextcloud files will open
     - example `document.querySelector("dbp-file-source").setAttribute("dialog-open", "")`
 - `text` (optional): the text that is shown above the button to select files
@@ -135,7 +137,9 @@ files to a [Nextcloud](https://nextcloud.com/) instance.
     - example `<dbp-file-sink nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></dbp-file-sink>`
     - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
 - `nextcloud-file-url` (optional): Nextcloud File Url to use with the Nextcloud file picker
-  - example `<dbp-file-sink nextcloud-file-url="http://localhost:8081/apps/files/?dir="></dbp-file-sink>`
+    - example `<dbp-file-sink nextcloud-file-url="http://localhost:8081/apps/files/?dir="></dbp-file-sink>`
+- `nextcloud-auth-info` (optional): Additional authentication information text that is shown in the Nextcloud file picker
+    - example `<dbp-file-sink nextcloud-auth-info="You need special permissions for this function"></dbp-file-sink>`
 - `text` (optional): the text that is shown above the button to download the zip file
     - example `<dbp-file-sink text="Download files as ZIP-file"></dbp-file-sink>`
 - `button-label` (optional): the text that is shown on the button to download the zip file
