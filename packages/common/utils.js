@@ -57,7 +57,6 @@ export const stringListToSelect2DataArray = (list) => {
  * Does generic Base64 Encoding with support for 16-bit encoded strings
  *
  * @see https://www.base64encoder.io/javascript/
- *
  * @param str
  * @returns {string}
  */
