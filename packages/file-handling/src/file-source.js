@@ -10,7 +10,7 @@ import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
-import {FileHandlingClipboard} from "./dbp-file-handling-clipboard";
+import {Clipboard} from "@dbp-toolkit/file-handling/src/clipboard";
 
 function mimeTypesToAccept(mimeTypes) {
     // Some operating systems can't handle mime types and
@@ -64,7 +64,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
             'dbp-nextcloud-file-picker': NextcloudFilePicker,
-            'dbp-clipboard': FileHandlingClipboard,
+            'dbp-clipboard': Clipboard,
         };
     }
 
@@ -428,7 +428,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             return html`
                 <dbp-clipboard 
                    id="clipboard-file-picker"
-                   clipboard-source
+                   file-source
                    subscribe="clipboard-files:clipboard-files"
                    lang="${this.lang}"
                    auth-url="${this.nextcloudAuthUrl}"

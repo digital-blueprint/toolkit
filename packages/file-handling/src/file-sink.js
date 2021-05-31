@@ -11,7 +11,7 @@ import FileSaver from 'file-saver';
 import MicroModal from "./micromodal.es";
 import * as fileHandlingStyles from './styles';
 import { send } from '@dbp-toolkit/common/notification';
-import {FileHandlingClipboard} from "./dbp-file-handling-clipboard";
+import {Clipboard} from "@dbp-toolkit/file-handling/src/clipboard";
 
 
 /**
@@ -46,7 +46,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
             'dbp-nextcloud-file-picker': NextcloudFilePicker,
-            'dbp-clipboard': FileHandlingClipboard,
+            'dbp-clipboard': Clipboard,
         };
     }
 
@@ -239,6 +239,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 <dbp-clipboard 
                    id="clipboard-file-sink"
                    subscribe="clipboard-files:clipboard-files"
+                   file-sink
                    lang="${this.lang}"
                    auth-url="${this.nextcloudAuthUrl}"
                    allowed-mime-types="${this.allowedMimeTypes}"
