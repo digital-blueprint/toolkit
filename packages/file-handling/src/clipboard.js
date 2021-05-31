@@ -676,7 +676,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         if (this.isFileSink)
             return this.getClipboardSink();
         if (this.isFileSource)
-            return this.getClipboardSource()
+            return this.getClipboardSource();
 
         return html`
             <div class="container">
