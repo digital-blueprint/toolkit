@@ -135,9 +135,9 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                     if (this.files.length !== 0 && !this.isDialogOpen) {
                         this.openDialog();
                         if (this.enabledTargets.includes("clipboard")) {
-                            const clipboardSink = this._("#clipboard-file-sink");
+                            const clipboardSink = this._("#clipboard-file-picker");
                             if (clipboardSink) {
-                                this._("#clipboard-file-sink").filesToSave = this.files;
+                                this._("#clipboard-file-picker").filesToSave = [...this.files];
                             }
                         }
                     }
@@ -237,12 +237,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         if (this.enabledTargets.includes('clipboard')) {
             return html`
                 <dbp-clipboard 
-                   id="clipboard-file-sink"
+                   id="clipboard-file-picker"
                    subscribe="clipboard-files:clipboard-files"
+                   show-additional-buttons
                    file-sink
                    lang="${this.lang}"
                    auth-url="${this.nextcloudAuthUrl}"
-                   allowed-mime-types="${this.allowedMimeTypes}"
                    nextcloud-auth-url="${this.nextcloudAuthUrl}"
                    nextcloud-web-dav-url="${this.nextcloudWebDavUrl}"
                    nextcloud-name="${this.nextcloudName}"

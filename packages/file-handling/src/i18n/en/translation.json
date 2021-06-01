@@ -98,7 +98,7 @@
     "abort": "Cancel process",
     "abort-message": "The process was canceled."
   },
-  "clipboard": {
+  "clipboard2": {
     "file-warning": "Attention!",
     "file-warning-body": "There is still a file on the clipboard. The clipboard is discarded when you exit the page.",
     "file-warning-body_plural": "There are still {{count}} files on the clipboard. The clipboard is discarded when you exit the page.",

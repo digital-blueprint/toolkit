@@ -803,7 +803,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         if (act.subscribe === undefined || !act.subscribe.includes("lang:")) {
             elm.setAttribute("lang", this.lang);
         }
-
         return elm;
     }
 

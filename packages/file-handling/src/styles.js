@@ -83,7 +83,7 @@ export function getFileHandlingCss() {
          Picker Styles
        \\**************************/
 
-        #nextcloud-file-picker {
+        #nextcloud-file-picker, #clipboard-file-picker {
             width: 100%;
             height: 100%;
             margin: var(--FUMargin, 0px);
@@ -278,7 +278,7 @@ export function getFileHandlingCss() {
                 height: 20px;
             }
 
-            #nextcloud-file-picker{
+            #nextcloud-file-picker, #clipboard-file-picker{
                 padding: 0px;
             }
         }
