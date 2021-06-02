@@ -344,6 +344,10 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         // if not the current page was clicked we need to check if the page can be left
         if (!e.currentTarget.className.includes("selected")) {
+            this.shadowRoot.querySelectorAll('li > a').forEach(
+                (a) => a.setAttribute("part", "side-menu-item")
+            );
+            e.currentTarget.setAttribute("part", "side-menu-item-selected");
             // simulate a "beforeunload" event
             const event = new CustomEvent("beforeunload", {
                 bubbles: true,
@@ -864,7 +868,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         // build the menu
         let menuTemplates = [];
         for (let routingName of this.visibleRoutes) {
-            menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
+            menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}" part="side-menu-item${this.activeView === routingName ? '-selected' : ''}">${this.metaDataText(routingName, "short_name")}</a></li>`);
         }
 
         const imprintUrl = this.lang === "en" ?
@@ -908,7 +912,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                     </h2>
                     <ul class="menu hidden">
                         ${menuTemplates}
-                        <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: red"></dbp-icon></li>
+                        <li class="close" @click="${this.hideMenu}" part="side-menu-item"><dbp-icon name="close" style="color: red"></dbp-icon></li>
                     </ul>
                 </aside>
 
