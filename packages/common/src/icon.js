@@ -18,14 +18,6 @@ const errorIcon = `
 </svg>
 `;
 
-// // This variable holds overrides for icons
-// // Example: {"cloud": "/new/path/to/icon.svg"}
-// let iconOverride = null;
-
-// This variable holds the base path
-// Example: "/dist"
-// let basePath = null;
-
 function getCSSVariable(name) {
     let value = window.getComputedStyle(document.documentElement).getPropertyValue(name);
 
@@ -57,17 +49,6 @@ export function getIconSVGURL(name) {
 
         return path;
     }
-
-    // if (iconOverride && iconOverride[name]) {
-    //     let path = iconOverride[name];
-    //
-    //     // try to take care of relative paths
-    //     if (!path.startsWith('/') && !path.startsWith('http://') && !path.startsWith('https://') && basePath) {
-    //         path = basePath + path;
-    //     }
-    //
-    //     return path;
-    // }
 
     return commonUtils.getAssetURL(pkgName, 'icons/' + encodeURI(name) + '.svg');
 }
@@ -105,31 +86,6 @@ async function getSVGTextElement(name) {
     text = text.slice(text.indexOf('<svg'));
     return unsafeHTML(text);
 }
-
-// /**
-//  * Fetch and interpret the icon override data
-//  *
-//  * @param path
-//  * @returns {Promise<{}|any>} json object
-//  */
-// async function fetchIconOverrideData(path) {
-//     // try to take care of relative paths
-//     if (!path.startsWith('/') && !path.startsWith('http://') && !path.startsWith('https://') && basePath) {
-//         path = basePath + path;
-//     }
-//
-//     const response = await fetch(path);
-//
-//     if (!response.ok) {
-//         return {};
-//     }
-//
-//     try {
-//         return JSON.parse(await response.text());
-//     } catch(e) {
-//         return {};
-//     }
-// }
 
 const iconCache =  {};
 
