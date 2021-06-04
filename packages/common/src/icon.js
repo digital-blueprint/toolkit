@@ -138,23 +138,33 @@ export class Icon extends LitElement {
                 #content: url(/dist/icons/nextcloud.svg);
             }
 
-            #svg {
-                #content: url(/dist/icons/nextcloud.svg);
-                #content: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24px' height='24px' fill='black'><path d='M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z' /></svg>");
-                #content: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3Csvg id='Layer_1' data-name='Layer 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 97.6 81.74'%3E%3Cg%3E%3Cpath d='M89.8,22.7a28.51,28.51,0,0,0-16.9-9.1,27.84,27.84,0,0,0-14.8-12A24,24,0,0,0,48.9,0,28.36,28.36,0,0,0,20.6,27.4,22.42,22.42,0,0,0,13,70.11v-6.3A16.7,16.7,0,0,1,5.5,50a17,17,0,0,1,17-17h3.6V28.5A23,23,0,0,1,49,5.6a19.75,19.75,0,0,1,7.2,1.2h.1A22.48,22.48,0,0,1,68.9,17.5l.6,1.3,1.4.2a23.07,23.07,0,0,1,14.9,7.5,23.85,23.85,0,0,1-1.23,33.74v7A29.56,29.56,0,0,0,89.8,22.7Z'/%3E%3Cg%3E%3Cpath d='M16.39,71.61H36.65V51.36H16.39Z' style='fill: %23e4154b'/%3E%3Cpath d='M38.67,71.61H58.93V51.36H38.67Z' style='fill: %23e4154b'/%3E%3Cpath d='M61,71.61H81.21V51.36H61Z' style='fill: %23e4154b'/%3E%3Cpath d='M26.52,81.74H46.78V61.49H26.52Z' style='fill: %23e4154b'/%3E%3Cpath d='M50.83,61.49H71.08V41.23H50.83Z' style='fill: %23e4154b'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            }
-
             svg * {
                 fill: currentColor;
             }
         `;
     } 
 
+//     render() {
+//         let svg = getSVGTextElementCached(this.name);
+//         return html`
+//             ${until(svg)}
+// <!--            <div id="svg"></div> -->
+//         `;
+//     }
+
     render() {
-        let svg = getSVGTextElementCached(this.name);
         return html`
-            ${until(svg)}
-<!--            <div id="svg"></div> -->
+            <style>
+                #svg {
+                    background-image: url(/dist/local/@dbp-toolkit/common/icons/${this.name}.svg);
+                    display: inline-block;
+                    height: 1em;
+                    top: .125em;
+                    width: 1em;
+                    position: relative;
+                }
+            </style>
+            <div id="svg" part="dbp-icon-${this.name}"></div>
         `;
     }
 }

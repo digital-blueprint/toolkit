@@ -797,6 +797,9 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         if (act.subscribe !== undefined) {
             elm.setAttribute("subscribe", act.subscribe);
         }
+        if (act.exportparts !== undefined) {
+            elm.setAttribute("exportparts", act.exportparts);
+        }
 
         // only add the entry-point-url attribute if it isn't subscribed
         if (act.subscribe === undefined || !act.subscribe.includes("entry-point-url:")) {
