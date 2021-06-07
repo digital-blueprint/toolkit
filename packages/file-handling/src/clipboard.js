@@ -7,8 +7,7 @@ import * as fileHandlingStyles from '@dbp-toolkit/file-handling/src/styles';
 import {Icon} from '@dbp-toolkit/common';
 import Tabulator from "tabulator-tables";
 import {humanFileSize} from "@dbp-toolkit/common/i18next";
-import {FileSink} from "@dbp-toolkit/file-handling/src/file-sink";
-import {FileSource} from "@dbp-toolkit/file-handling/src/file-source";
+
 import {name as pkgName} from "@dbp-toolkit/file-handling/package.json";
 import {send} from "@dbp-toolkit/common/notification";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
@@ -35,13 +34,16 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
         this.isFileSource = false;
         this.isFileSink = false;
+
+        // To avoid a cyclic dependency
+        import('./file-sink').then(({ FileSink }) => this.defineScopedElement('dbp-file-sink', FileSink));
+        import('./file-source').then(({ FileSource }) => this.defineScopedElement('dbp-file-source', FileSource));
+
     }
 
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
-            'dbp-file-sink': FileSink,
-            'dbp-file-source': FileSource,
         };
     }
 
