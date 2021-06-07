@@ -1433,7 +1433,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <link rel="stylesheet" href="${tabulatorCss}">
                 <div class="nextcloud-intro ${classMap({hidden: this.isPickerActive})}">
                     <div class="nextcloud-logo ${classMap({"nextcloud-logo-sm": this.isPickerActive})}">
-                        <dbp-icon name="nextcloudX" class="nextcloud-logo-icon"></dbp-icon>
+                        <dbp-icon name="nextcloud" class="nextcloud-logo-icon"></dbp-icon>
                     </div>
                     <div class="block text-center ${classMap({hidden: this.isPickerActive})}">
                         <h2 class="m-inherit">
