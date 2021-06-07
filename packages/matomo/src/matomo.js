@@ -117,7 +117,8 @@ export class MatomoElement extends DBPLitElement {
 
             // track errors
             window.addEventListener('error', function(e) {
-                that.pushEvent(['trackEvent', 'Error', e.error.message + '\n' + e.error.stack]);
+                that.pushEvent(['trackEvent', 'Error', e.error ?
+                    e.error.message + '\n' + e.error.stack : e.message]);
             });
 
             window.addEventListener('unhandledrejection', function(e) {
