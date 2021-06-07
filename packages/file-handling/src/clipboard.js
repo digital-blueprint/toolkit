@@ -74,6 +74,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     update(changedProperties) {
+        console.log("update");
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
@@ -89,6 +90,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     connectedCallback() {
+        console.log("callback");
+
         super.connectedCallback();
         const that = this;
         this.updateComplete.then(() => {
@@ -201,16 +204,23 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 }
             });
             that.generateClipboardTable();
+            console.log("table generation end");
 
         });
         if(!window.clipboardWarning)  {
             window.addEventListener('beforeunload', this._onReceiveBeforeUnload, false);
             window.clipboardWarning = true;
+            console.log("clipboardwarning inner");
         }
+        console.log("clipboardwarning");
+
 
     }
 
     disconnectedCallback() {
+
+        console.log("disconnected callback");
+
 
         //We doesn't want to deregister this event, because we want to use this event over activities
         //window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
@@ -223,6 +233,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      *
      */
     selectAllFiles() {
+        console.log("select all files");
+
         let maxSelected = this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)).length;
         let selected = this.tabulatorTable.getSelectedRows().length;
 
@@ -237,6 +249,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
 
     checkFileType(file) {
+        console.log("check type");
+
         // check if file is allowed
         const [fileMainType, fileSubType] = file.type.split('/');
         const mimeTypes = this.allowedMimeTypes.split(',');
@@ -255,6 +269,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     generateClipboardTable() {
+        console.log("generate before");
+
         if (this.clipboardFiles.files) {
             let data = [];
             for (let i = 0; i < this.clipboardFiles.files.length; i++){
@@ -267,6 +283,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 };
             }
 
+            console.log("generate");
             if (this.tabulatorTable !== null){
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
@@ -275,6 +292,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     async sendClipboardFiles(files) {
+        console.log("send files");
 
         for(let i = 0; i < files.length; i ++)
         {
@@ -285,6 +303,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     async sendFileEvent(file) {
+        console.log("send files event");
+
         const data = {"file": file, "data": file};
 
         const event = new CustomEvent("dbp-clipboard-file-picker-file-downloaded",
@@ -299,6 +319,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * @param event
      */
     onReceiveBeforeUnload(event){
+        console.log("onreceive beforeunload");
+
         // we don't need to stop if there are no signed files
         if (this.clipboardFiles.files.length === 0) {
             return;
@@ -331,6 +353,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
     saveFilesToClipboardEvent(ev)
     {
+        console.log("save files to clipboard event");
+
         //save it
         let data = {};
         let files = [];
@@ -352,6 +376,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
     saveFilesToClipboard()
     {
+        console.log("save files to clipboard");
+
         //save it
         console.log("clipboard", this.clipboardFiles);
         console.log("filesToSave", this.filesToSave);
@@ -375,6 +401,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
 
     finishedSaveFilesToClipboard(ev) {
+        console.log("finishedSaveFilesToClipboard");
+
         send({
             "summary": i18n.t('clipboard.saved-files-title', {count: ev.detail.count}),
             "body": i18n.t('clipboard.saved-files-body', {count: ev.detail.count}),
@@ -384,6 +412,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     saveFilesFromClipboard() {
+        console.log("saveFilesFromClipboard");
+
         const fileSink = this._("#file-sink-clipboard");
         if ( fileSink ) {
             this._("#file-sink-clipboard").files = Object.create(this.tabulatorTable.getSelectedData().length > 0 ? this.tabulatorTable.getSelectedData() : this.clipboardFiles.files);
@@ -392,6 +422,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     getClipboardFileList() {
+        console.log("getClipboardFileList");
+
         let files = [];
         for (let i = 0; i < this.clipboardFiles.files.length; i ++)
         {
@@ -404,6 +436,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * Open Filesink for multiple files
      */
     async openClipboardFileSink() {
+        console.log("openClipboardFileSink");
+
         const fileSink = this._("#file-sink-clipboard");
         if (fileSink) {
             this._("#file-sink-clipboard").files = Object.create(this.clipboardFiles.files);
@@ -412,37 +446,26 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     clearClipboard() {
-       /* this.tabulatorTable.deleteRow(this.tabulatorTable.getSelectedRows());
-        let data = [];
-        this.tabulatorTable.getRows().forEach(row =>
-            console.log("row.file", row.file) &&
-            data.push(row.file)
-        );
-        console.log("data", data);
+        console.log("clearClipboard");
 
-        //TODO Check if file is set then push data to clipboard and send notification
-        //TODO unterscheide zwischen alle files löschen und nur selected files löschen
-        //TODO find matomo error !!!!
-        //TODO filesink filesink error
-*/
-
-        if(this.tabulatorTable && this.tabulatorTable.getSelectedData().length > 0) {
-            let data = {"files": this.clipboardFiles.files};
-            this.tabulatorTable.getSelectedData().forEach(toRemove =>
-                data.files = data.files.filter(file => toRemove.name !== file.name)
+        if (this.tabulatorTable && this.tabulatorTable.getSelectedData().length > 0) {
+            let count = this.tabulatorTable.getSelectedData().length;
+            this.tabulatorTable.deleteRow(this.tabulatorTable.getSelectedRows());
+            let data = {"files": []};
+            this.tabulatorTable.getRows().forEach(row =>
+                data.files.push( row.getData().file )
             );
             this.sendSetPropertyEvent('clipboard-files', data);
             const event = new CustomEvent("dbp-clipboard-file-picker-file-uploaded",
                 {  bubbles: true, composed: true });
             this.dispatchEvent(event);
             send({
-                "summary": i18n.t('clipboard.clear-count-clipboard-title', {count: this.tabulatorTable.getSelectedData().length}),
-                "body": i18n.t('clipboard.clear-count-clipboard-body', {count: this.tabulatorTable.getSelectedData().length}),
+                "summary": i18n.t('clipboard.clear-count-clipboard-title', {count: count}),
+                "body": i18n.t('clipboard.clear-count-clipboard-body', {count: count}),
                 "type": "success",
                 "timeout": 5,
             });
             this.numberOfSelectedFiles = 0;
-
         } else {
             let data = {"files": []};
             this.sendSetPropertyEvent('clipboard-files', data);
@@ -458,7 +481,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-    openFilesink() {
+    openFilesource() { //TODO
+        console.log("openFileSource");
+
         const fileSink = this._("#file-source");
         if (fileSink) {
             this._("#file-source").setAttribute("dialog-open", "");
@@ -466,12 +491,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     getAdditionalButtons() {
-
+        console.log("getAdditionalButtons");
         return html`
             <div class="flex-container">
                        
                         <div class="btn-flex-container-mobile">
-                            <button @click="${() => { this.openFilesink(); }}"
+                            <button @click="${() => { this.openFilesource(); }}"
                                     class="button" title="${i18n.t('clipboard.add-files')}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon> ${i18n.t('clipboard.add-files-btn')}
                             </button>
@@ -525,8 +550,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     getClipboardSink() {
+        console.log("getClipboardSink");
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
-
         let additionalButtons = this.showAdditionalButtons ? this.getAdditionalButtons() : "";
         return html`
             <div class="wrapper">
@@ -561,6 +586,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
 
     getClipboardSource() {
+        console.log("getClipboardSource");
+
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
 
         let additionalButtons = this.showAdditionalButtons ? this.getAdditionalButtons() : "";
