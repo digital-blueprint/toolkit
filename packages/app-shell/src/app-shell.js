@@ -69,8 +69,8 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
 
-        this.shellName = 'TU Graz';
-        this.shellSubname= 'Graz University of Technology';
+        this.shellName = '';
+        this.shellSubname= '';
         this.noBrand = false;
         this.auth = {};
     }
