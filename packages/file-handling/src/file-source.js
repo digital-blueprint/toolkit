@@ -377,7 +377,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
         if (this.enabledTargets.includes('clipboard') && this._("#clipboard-file-picker")) {
             this._("#clipboard-file-picker").generateClipboardTable();
-            this._("#clipboard-file-picker").showSelectAllButton = true;
         }
 
         const filePicker = this._('#modal-picker');
@@ -431,6 +430,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                    file-source
                    subscribe="clipboard-files:clipboard-files"
                    lang="${this.lang}"
+                   enabled-targets="${this.enabledTargets}"
                    auth-url="${this.nextcloudAuthUrl}"
                    allowed-mime-types="${this.allowedMimeTypes}"
                    @dbp-clipboard-file-picker-file-downloaded="${(event) => {

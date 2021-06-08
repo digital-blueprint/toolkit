@@ -1503,7 +1503,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         <button id="download-button" class="button select-button is-primary ${classMap({hidden: ((!this.directoriesOnly)  || (this.directoriesOnly && this.abortUploadButton && this.forAll))})}"
                                 @click="${() => { this.sendDirectory(this.tabulatorTable.getSelectedData()); }}" 
                                 ?disabled="${!this.isSelected}">
-                            ${this.folderIsSelected}</button>
+                            <dbp-icon class="nav-icon" name="cloud-upload"></dbp-icon> ${this.folderIsSelected}</button>
                         <button class="button select-button is-primary ${classMap({hidden: this.directoriesOnly})}"
                                 @click="${() => { this.downloadFiles(this.tabulatorTable.getSelectedData()); }}"
                                 ?disabled="${!this.isSelected}">

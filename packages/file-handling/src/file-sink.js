@@ -243,6 +243,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                    file-sink
                    lang="${this.lang}"
                    auth-url="${this.nextcloudAuthUrl}"
+                   enabled-targets="${this.enabledTargets}"
                    nextcloud-auth-url="${this.nextcloudAuthUrl}"
                    nextcloud-web-dav-url="${this.nextcloudWebDavUrl}"
                    nextcloud-name="${this.nextcloudName}"

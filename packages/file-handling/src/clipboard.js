@@ -35,6 +35,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this.isFileSource = false;
         this.isFileSink = false;
 
+        this.demo = false;
+
         // To avoid a cyclic dependency
         import('./file-sink').then(({ FileSink }) => this.defineScopedElement('dbp-file-sink', FileSink));
         import('./file-source').then(({ FileSource }) => this.defineScopedElement('dbp-file-source', FileSource));
@@ -66,6 +68,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
             isFileSource: {type: Boolean, attribute: 'file-source' },
             isFileSink: {type: Boolean, attribute: 'file-sink' },
+
+            demo: {type: Boolean, attribute: 'demo-clipboard' },
         };
     }
 
@@ -434,9 +438,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 data.files.push( row.getData().file )
             );
             this.sendSetPropertyEvent('clipboard-files', data);
-            const event = new CustomEvent("dbp-clipboard-file-picker-file-uploaded",
-                {  bubbles: true, composed: true });
-            this.dispatchEvent(event);
             send({
                 "summary": i18n.t('clipboard.clear-count-clipboard-title', {count: count}),
                 "body": i18n.t('clipboard.clear-count-clipboard-body', {count: count}),
@@ -447,9 +448,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         } else {
             let data = {"files": []};
             this.sendSetPropertyEvent('clipboard-files', data);
-            const event = new CustomEvent("dbp-clipboard-file-picker-file-uploaded",
-                {  bubbles: true, composed: true });
-            this.dispatchEvent(event);
             send({
                 "summary": i18n.t('clipboard.clear-clipboard-title'),
                 "body": i18n.t('clipboard.clear-clipboard-body'),
@@ -502,7 +500,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                 nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
                                 nextcloud-name="${this.nextcloudName}"
                                 nextcloud-file-url="${this.nextcloudFileURL}"
-                                enabled-targets="${this.enabledTargets}"
+                                enabled-targets="${this.demo ? this.enabledTargets : this.enabledTargets.replace('clipboard', '')}"
                                 decompress-zip
                                 lang="${this.lang}"
                                 text="${i18n.t('clipboard.upload-area-text')}"
@@ -516,14 +514,13 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                    context="${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.save-all')}"
                                    filename="clipboard-documents.zip"
                                    allowed-mime-types="${this.allowedMimeTypes}"
-                                   enabled-targets="${this.enabledTargets}"
+                                   enabled-targets="${this.demo ? this.enabledTargets : this.enabledTargets.replace('clipboard', '')}"
                                    show-clipboard
                                    nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
                                    nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
                                    nextcloud-name="${this.nextcloudName}"
                                    nextcloud-file-url="${this.nextcloudFileURL}"
                                    lang="${this.lang}"
-                                   subscribe="nextcloud-file-url:nextcloud-file-url"
                     ></dbp-file-sink>
         `;
     }
