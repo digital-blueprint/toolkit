@@ -104,11 +104,15 @@ This event is sent if a file was selected.
 This event is sent if multiple files are selected.
 
 #### `dbp-nextcloud-file-picker-number-files`
+
 This event is sent from nextcloudfilepicker and is send when files are picked and sends the number of selected files
 
-
-
 **Payload**: `{'file': File}` where [File](https://developer.mozilla.org/en-US/docs/Web/API/File) is the binary file that was selected
+
+### Exposed CSS variables
+
+- `--dbp-override-image-nextcloud` is used to override the cloud image on the connection screen
+  - example CSS: `html { --dbp-override-image-nextcloud: url(/icons/nextcloud.svg); }`
 
 ## FileSink
 
@@ -161,6 +165,11 @@ The component emits a `dbp-set-property` event for the attribute `initial-file-h
 - `files`: an array of [File](https://developer.mozilla.org/en-US/docs/Web/API/File) objects which should be downloaded in the dialog
     - if the property is set the dialog opens
     - example: `document.querySelector("dbp-file-sink").files = [file]` where `file` is your File object
+
+### Exposed CSS variables
+
+- `--dbp-override-image-nextcloud` is used to override the cloud image on the connection screen
+  - example CSS: `html { --dbp-override-image-nextcloud: url(/icons/nextcloud.svg); }`
 
 ## Local development
 
