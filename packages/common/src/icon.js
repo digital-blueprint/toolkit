@@ -67,7 +67,7 @@ export class Icon extends LitElement {
 
     render() {
         const iconURL = getIconSVGURL(this.name);
-        const iconPart = this.name.trim().replaceAll(" ", "");
+        const iconPart = this.name.trim().split(' ').join('');
 
         return html`
             <style>
