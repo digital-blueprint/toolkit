@@ -139,6 +139,8 @@ export class Icon extends LitElement {
                 background-color: currentColor;
                 mask-repeat: no-repeat;
                 mask-position: center;
+                -webkit-mask-repeat: no-repeat;
+                -webkit-mask-position: center;
             }
         `;
     } 
