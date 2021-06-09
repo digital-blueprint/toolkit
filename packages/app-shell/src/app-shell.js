@@ -882,22 +882,24 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             <div id="main">
                 <dbp-notification id="dbp-notification" lang="${this.lang}"></dbp-notification>
                 <header>
-                    <div class="hd1-left">
-                        <dbp-language-select lang="${this.lang}"></dbp-language-select>
-                    </div>
-                    <div class="hd1-middle">
-                    </div>
-                    <div class="hd1-right">
-                        <dbp-auth-menu-button subscribe="auth" class="auth-button" lang="${this.lang}"></dbp-auth-menu-button>
-                    </div>
-                    <div class="hd2-left">
-                        <div class="header">
-                            ${this.shellName}<br>${this.shellSubname}
+                    <slot name="header">
+                        <div class="hd1-left">
+                            <dbp-language-select lang="${this.lang}"></dbp-language-select>
                         </div>
-                    </div>
-                    <div class="hd2-right">
-                        <dbp-tugraz-logo id="main-logo" lang="${this.lang}" class="${classMap({hidden: this.noBrand})}"></dbp-tugraz-logo>
-                    </div>
+                        <div class="hd1-middle">
+                        </div>
+                        <div class="hd1-right">
+                            <dbp-auth-menu-button subscribe="auth" class="auth-button" lang="${this.lang}"></dbp-auth-menu-button>
+                        </div>
+                        <div class="hd2-left">
+                            <div class="header">
+                                <slot name="name">${this.shellName}<br>${this.shellSubname}</slot>
+                            </div>
+                        </div>
+                        <div class="hd2-right">
+                            <slot name="logo"><dbp-tugraz-logo id="main-logo" lang="${this.lang}" class="${classMap({hidden: this.noBrand})}"></dbp-tugraz-logo></slot>
+                        </div>
+                    </slot>
                 </header>
                 <div id="headline">
                     <h1 class="title">${this.topicMetaDataText('name')}</h1>
@@ -923,10 +925,12 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 </main>
 
                 <footer>
-                    <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
-                    <a target="_blank" rel="noopener" class="int-link-external" href="${imprintUrl}">${i18n.t('imprint')}</a>
-                    <a rel="noopener" class="int-link-external" href="mailto:it-support@tugraz.at">${i18n.t('contact')}</a>
-                    <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
+                    <slot name="footer">
+                        <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
+                        <a target="_blank" rel="noopener" class="int-link-external" href="${imprintUrl}">${i18n.t('imprint')}</a>
+                        <a rel="noopener" class="int-link-external" href="mailto:it-support@tugraz.at">${i18n.t('contact')}</a>
+                        <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
+                    </slot>
                 </footer>
             </div>
             </div>

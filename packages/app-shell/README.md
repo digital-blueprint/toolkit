@@ -52,6 +52,39 @@ The component emits `dbp-set-property` events for these attributes:
 The component emits a `dbp-lang` event when the language is changed (for example in the language picker).
 The `details` attribute of the event is the language (possible values `en`, `de`).
 
+### Slots
+
+#### Unnamed slot
+
+The unnamed slot will be removed when the application is loaded and can be filled with a loading-spinner.
+
+Example: `<app-shell><dbp-loading-spinner></dbp-loading-spinner></app-shell>`
+
+#### name
+
+The content of this slot will be shown left in the header and can be used to set a name (e.g. the name of the institution).
+
+Example: `<app-shell><div slot="name">TU Graz<br />Graz University of Technology</div></app-shell>`
+
+#### logo
+
+The content of this slot will be shown right in the header and can be used to override the logo image.
+
+Example: `<app-shell><div slot="logo"><img alt="logo" src="/path/to/logo.png" /></div></app-shell>`
+
+#### header
+
+The content of this slot will override the whole content of the header.
+You will need to provide your own language selector and auth component.
+
+Example: `<app-shell><div slot="header">My custom header</div></app-shell>`
+
+#### footer
+
+The content of this slot will override the whole content of the footer, for example to set custom links.
+
+Example: `<app-shell><div slot="footer"><a target="_blank" rel="noopener" class="int-link-external" href="https://my-webpage.com">Link text</a></div></app-shell>`
+
 ## Topic Metadata
 
 ```json
