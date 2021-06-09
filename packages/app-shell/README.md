@@ -79,9 +79,16 @@ You will need to provide your own language selector and auth component.
 
 Example: `<app-shell><div slot="header">My custom header</div></app-shell>`
 
+#### footer-links
+
+The content of this slot will override the whole content of the footer link section, for example to set custom links.
+
+Example: `<app-shell><div slot="footer-links"><a target="_blank" rel="noopener" class="int-link-external" href="https://my-webpage.com">Link text</a></div></app-shell>`
+
 #### footer
 
-The content of this slot will override the whole content of the footer, for example to set custom links.
+The content of this slot will override the whole content of the footer, for example to set custom links
+and also overwrite the `dbp-build-info` tag.
 
 Example: `<app-shell><div slot="footer"><a target="_blank" rel="noopener" class="int-link-external" href="https://my-webpage.com">Link text</a></div></app-shell>`
 
