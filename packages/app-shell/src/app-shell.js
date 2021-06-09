@@ -847,11 +847,12 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         const mainClassMap = classMap({hidden: appHidden});
         const slotClassMap = classMap({hidden: !appHidden});
 
-        // XXX: Safari doesn't like CSS being applied to slots or via HTML,
-        // so we have to remove the slow instead of hiding it
+        // XXX: Safari 11 doesn't like CSS being applied to slots or via HTML,
+        // so we have to remove the slot instead of hiding it
         if (!appHidden) {
             this.updateComplete.then(() => {
-                const slot = this.shadowRoot.querySelector("slot");
+                // select slots with no name attribute
+                const slot = this.shadowRoot.querySelector("slot:not([name])");
                 if (slot)
                     slot.remove();
             });
