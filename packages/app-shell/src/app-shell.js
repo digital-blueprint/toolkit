@@ -599,7 +599,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 flex-wrap: wrap;
             }
 
-            footer > * {
+            footer > *, footer slot > * {
                 margin: 0.5em 0 0 1em;
             }
 
