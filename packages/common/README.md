@@ -20,3 +20,19 @@ Variables like `--dbp-override-icon-<icon-name>` can be used to override the ico
 
 Example CSS: `html { --dbp-override-icon-cloud: url(/icons/cloud.svg); }`
 
+## Translated Web Component
+
+You can use this web component to show translated html.
+
+```html
+<dbp-translated subscribe="lang">
+    <div slot="de">
+        Dieser Text is Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.
+    </div>
+    <div slot="en">
+        This text is English and will be German if the language is changed to German.
+    </div>
+</dbp-translated>
+```
+
+The English or German text will be shown according to the `lang` attribute. 

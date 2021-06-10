@@ -3,7 +3,7 @@ import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
-import {getIconCSS, Icon, MiniSpinner, Button, LoadingButton, Spinner, InlineNotification} from './index.js';
+import {getIconCSS, Icon, MiniSpinner, Button, LoadingButton, Spinner, InlineNotification, Translated} from './index.js';
 
 export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -21,6 +21,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
             'dbp-loading-button': LoadingButton,
             'dbp-auth': customElements.get('dbp-auth'),
             'dbp-inline-notification': InlineNotification,
+            'dbp-translated': Translated,
         };
     }
 
@@ -195,6 +196,19 @@ html {
                         <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="success"></dbp-inline-notification><br>
                         <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="danger"></dbp-inline-notification><br>
                         <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="warning"></dbp-inline-notification>
+                    </div>
+                </div>
+                <div class="content">
+                    <h2>Translated text</h2>
+                    <div class="control" id="dbp-translated-demo">
+                        <dbp-translated subscribe="lang">
+                            <div slot="de">
+                                Dieser Text is Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.
+                            </div>
+                            <div slot="en">
+                                This text is English and will be German if the language is changed to German.
+                            </div>
+                        </dbp-translated>
                     </div>
                 </div>
             </section>
