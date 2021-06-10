@@ -228,16 +228,25 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      *
      */
     selectAllFiles() {
-        let maxSelected = this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)).length;
-        let selected = this.tabulatorTable.getSelectedRows().length;
-
-        if (selected === maxSelected) {
+        let allSelected = this.checkAllSelected();
+        if (allSelected) {
             this.tabulatorTable.getSelectedRows().forEach(row => row.deselect());
             this.numberOfSelectedFiles = 0;
         } else {
             this.tabulatorTable.selectRow(this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)));
             this.numberOfSelectedFiles = maxSelected;
         }
+    }
+
+    checkAllSelected() {
+        if (this.tabulatorTable) {
+            let maxSelected = this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)).length;
+            let selected = this.tabulatorTable.getSelectedRows().length;
+            if (selected === maxSelected) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -464,14 +473,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-    //TODO
-    // FIX closing modal dialog when deleting or adding files in modal dialogue
-    // FIX missing nextcloud in second hierarchy
-
-
     getAdditionalButtons() {
         return html`
-            <div class="flex-container">
+            <div class="flex-container additional-button-container">
                         <div class="btn-flex-container-mobile">
                             <button @click="${() => { this.openFilesource(); }}"
                                     class="button" title="${i18n.t('clipboard.add-files')}">
@@ -532,18 +536,17 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             <div class="wrapper">
                 <div class="content">
                     <h3>${i18n.t('clipboard.sink-title')}</h3>
-                    <p>${i18n.t('clipboard.sink-body')}<br><br></p>
                     <div class="warning-container">
                         <dbp-icon name="warning" class="warning-icon"></dbp-icon>
                         <p>${i18n.t('clipboard.warning')}</p>
                     </div>
-                    <div class="container">
+                    <div>
                         ${additionalButtons}
                         <link rel="stylesheet" href="${tabulatorCss}">
                         <div class="table-wrapper">
                             <label class="button-container select-all-icon">
                                 <input type="checkbox" id="select_all" name="select_all" value="select_all" @click="${() => {this.selectAllFiles();}}">
-                                <span class="checkmark"></span>
+                                <span class="checkmark" title="${this.checkAllSelected() ? i18n.t("clipboard.select-nothing") : i18n.t("clipboard.select-all")}"></span>
                             </label>
                             <table id="clipboard-content-table" class="force-no-select"></table>
                         </div>
@@ -567,18 +570,17 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             <div class="wrapper">
                 <div class="content">
                     <h3>${i18n.t('clipboard.source-title')}</h3>
-                    <p>${i18n.t('clipboard.source-body')}</p>
                     <div class="warning-container">
                         <dbp-icon name="warning" class="warning-icon"></dbp-icon>
                         <p>${i18n.t('clipboard.warning')}</p>
                     </div>
-                    <div class="container">
+                    <div>
                         ${additionalButtons}
                         <link rel="stylesheet" href="${tabulatorCss}">
                         <div class="table-wrapper">
                             <label class="button-container select-all-icon">
                                 <input type="checkbox" id="select_all" name="select_all" value="select_all" @click="${() => {this.selectAllFiles();}}">
-                                <span class="checkmark"></span>
+                                <span class="checkmark" title="${this.checkAllSelected() ? i18n.t("clipboard.select-nothing") : i18n.t("clipboard.select-all")}"></span>
                             </label>
                             <table id="clipboard-content-table" class="force-no-select"></table>
                         </div>
@@ -586,7 +588,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 </div>
                 <div class="clipboard-footer">
                     <button class="button select-button is-primary" ?disabled="${this.clipboardSelectBtnDisabled}"
-                            @click="${() => {this.sendClipboardFiles(this.tabulatorTable.getSelectedData());}}"> ${i18n.t('clipboard.source-btn')}
+                            @click="${() => {this.sendClipboardFiles(this.tabulatorTable.getSelectedData());}}"> ${i18n.t('clipboard.source-btn', {count: this.tabulatorTable ? this.tabulatorTable.getSelectedRows().length : 0})}
                     </button>
                 </div>
             </div>
@@ -631,7 +633,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 display: flex;
                 flex-direction: inherit;
                 align-items: center;
-                margin-bottom: 1.5rem;
             }
             
             .warning-icon{
@@ -667,6 +668,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             .checkmark{
                 height: 20px;
                 width:20px;
+                left: 5px;
             }
             
             .button-container .checkmark::after{
@@ -703,7 +705,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                position: relative;
+                /* position: relative; */
             }
             
             .content{
@@ -711,6 +713,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 height: 100%;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
+            }
+            
+            .additional-button-container{
+                margin-top: 0.5rem;
             }
 
             @media only screen
@@ -781,7 +787,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             return this.getClipboardSource();
 
         return html`
-            <div class="container">
+            <div>
                 
                 ${additionalButtons}
                 
@@ -790,7 +796,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 <div class="table-wrapper">
                     <label class="button-container select-all-icon">
                         <input type="checkbox" id="select_all" name="select_all" value="select_all" @click="${() => {this.selectAllFiles();}}">
-                        <span class="checkmark"></span>
+                        <span class="checkmark" title="${this.checkAllSelected() ? i18n.t("clipboard.select-nothing") : i18n.t("clipboard.select-all")}"></span>
                     </label>
                     <table id="clipboard-content-table" class="force-no-select"></table>
                 </div>

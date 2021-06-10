@@ -87,16 +87,16 @@
   "clipboard": {
     "add-files": "Dateien der Zwischenablage hinzufügen",
     "add-files-btn": "Dateien hinzufügen",
-    "remove-all": "Alle Dateien aus der Zwischenablage entfernen.",
+    "remove-all": "Alle Dateien aus der Zwischenablage entfernen",
     "remove-all-btn": "Alle entfernen",
-    "remove-count": "Eine Datei aus der Zwischenablage entfernen.",
-    "remove-count_plural": "{{count}} Dateien aus der Zwischenablage entfernen.",
+    "remove-count": "Eine Datei aus der Zwischenablage entfernen",
+    "remove-count_plural": "{{count}} Dateien aus der Zwischenablage entfernen",
     "remove-count-btn": "Datei entfernen",
     "remove-count-btn_plural": "{{count}} Dateien entfernen",
     "save-all": "Alle Dateien aus der Zwischenablage speichern",
     "save-all-btn": "Alle sichern",
-    "save-count-btn": "Datei speichern",
-    "save-count-btn_plural": "{{count}} Dateien speichern",
+    "save-count-btn": "Datei sichern",
+    "save-count-btn_plural": "{{count}} Dateien sichern",
     "save-count": "Eine Datei aus der Zwischenablage speichern",
     "save-count_plural": "{{count}} Dateien aus der Zwischenablage speichern",
     "file-name": "Name",
@@ -104,7 +104,6 @@
     "file-type": "Art",
     "file-mod": "Geändert",
     "no-data":  "Aktuell befinden sich keine Dateien in der Zwischenablage.",
-
     "saved-files-title": "Datei erfolgreich abgelegt",
     "saved-files-title_plural": "Dateien erfolgreich abgelegt",
     "saved-files-body": "Eine Datei wurde erfolgreich temporär in der Zwischenablage abgelegt und kann jetzt innerhalb dieser Applikation verwendet werden.",
@@ -118,50 +117,18 @@
     "file-warning": "Achtung!",
     "file-warning-body": "Es befindet sich noch eine Datei in der Zwischenablage. Die Zwischenablage wird beim Verlassen der Seite verworfen.",
     "file-warning-body_plural": "Es befinden sich noch {{count}} Dateien in der Zwischenablage. Die Zwischenablage wird beim Verlassen der Seite verworfen.",
-
     "upload-area-text": "Sie können in diesem Bereich Dokumente per Drag & Drop oder per Direktauswahl hochladen.",
     "upload-button-label": "Dateien auswählen",
-
-    "warning": "Vorsicht! Wenn Sie den Browser schließen, die Seite neu laden oder neue Dateien hinzufügen, wird die bestehende Zwischenablage automatisch verworfen!",
-
+    "warning": "Vorsicht! Wenn Sie den Browser schließen oder die Seite neu laden wird die bestehende Zwischenablage automatisch verworfen!",
     "source-title": "Von der Zwischenablage auswählen",
     "source-body": "Hier können Sie zuvor temporär abgelegte Dateien auswählen.",
-    "source-btn": "Dateien auswählen",
+    "source-btn": "Datei auswählen",
+    "source-btn_plural": "{{count}} Dateien auswählen",
     "sink-title": "Dateien in der Zwischenablage ablegen",
     "sink-body": "Hier können Sie Dateien temporär in der Zwischenablage ablegen.",
     "sink-btn": "{{count}} Datei ablegen",
-    "sink-btn_plural": "{{count}} Dateien ablegen"
-  },
-  "clipboard2": {
-
-    "save-files-from-clipboard": "Eine Datei aus der Zwischenablage speichern",
-    "save-files-from-clipboard_plurafile-sinkl": "{{count}} Dateien aus der Zwischenablage speichern",
-    "save-from-clipboard": "Aktuellen Inhalt aus der Zwischenablage speichern:",
-    "save-from-clipboard-btn": "Zwischenablage sichern",
-
-
-    "upload-area-text": "Sie können in diesem Bereich Dokumente mit einer Maximalgröße von bis zu 32MB pro Dokument per Drag & Drop oder per Direktauswahl hochladen.",
-    "upload-button-label": "Dateien auswählen",
-
-
-
-
+    "sink-btn_plural": "{{count}} Dateien ablegen",
     "select-all": "Alle auswählen",
-    "select-all-title": "Alle verfügbaren Dateien in diesem Ordner auswählen",
-    "select-nothing": "Nichts auswählen",
-    "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren",
-
-
-    "success-save-to-clipboard-title": "Erfolgreich abgelegt",
-    "success-save-to-clipboard-body": "Sie haben {{count}} Datei in der Zwischenablage temporär abgelegt. Vergessen Sie nicht diese dauerhaft zu speichern.",
-    "success-save-to-clipboard-body_plural": "Sie haben {{count}} Dateien in der Zwischenablage temporär abgelegt. Vergessen Sie nicht diese dauerhaft zu speichern.",
-
-
-    "clipboard-files": "Aktuell ist eine Datei in der Zwischenablage vorhanden",
-    "clipboard-files_plural": "Aktuell sind {{count}} Dateien in der Zwischenablage vorhanden",
-    "clipboard-files-overwrite": "Folgende Dateien werden verworfen, wenn Sie neue Dateien ins Zwischenablage legen:",
-    "clipboard": "Zwischenablage",
-    "clipboard-no-files": "Aktuell befinden sich keine Dateien in der Zwischenablage."
+    "select-nothing": "Nichts auswählen"
   }
-
 }
