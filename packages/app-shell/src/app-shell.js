@@ -68,8 +68,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
 
-        this.shellName = '';
-        this.shellSubname= '';
         this.noBrand = false;
         this.auth = {};
     }
@@ -244,8 +242,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             matomoUrl: { type: String, attribute: "matomo-url" },
             matomoSiteId: { type: Number, attribute: "matomo-site-id" },
             noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
-            shellName: { type: String, attribute: "shell-name" },
-            shellSubname: { type: String, attribute: "shell-subname" },
             noBrand: { type: Boolean, attribute: "no-brand" },
             gitInfo: { type: String, attribute: "git-info" },
             buildUrl: { type: String, attribute: "build-url" },
@@ -891,7 +887,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                         </div>
                         <div class="hd2-left">
                             <div class="header">
-                                <slot name="name">${this.shellName}<br>${this.shellSubname}</slot>
+                                <slot name="name">Digital Blueprint</slot>
                             </div>
                         </div>
                         <div class="hd2-right">
