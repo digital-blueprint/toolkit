@@ -2,5 +2,6 @@
   "de": "German",
   "en": "English",
   "de-action": "Switch to German",
-  "en-action": "Switch to English"
+  "en-action": "Switch to English",
+  "demo": "Hello World"
 }

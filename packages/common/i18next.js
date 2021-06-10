@@ -50,19 +50,26 @@ export function humanFileSize(bytes, si = false) {
  * @param {object} languages - Mapping from languages to translation objects
  * @param {string} lng - The default language
  * @param {string} fallback - The fallback language to use for unknown languages or untranslated keys
+ * @param {string} [namespace] - The i18next namespace to load, defaults to 'translation'
  * @returns {i18next.i18n} A new independent i18next instance
  */
-export function createInstance(languages, lng, fallback) {
+export function createInstance(languages, lng, fallback, namespace) {
+    if (namespace === undefined)
+        namespace = 'translation';
+
     var options = {
         lng: lng,
         fallbackLng: fallback,
         debug: false,
+        ns: [namespace + '-override'],
+        defaultNS: namespace + '-override',
+        fallbackNS: [namespace],
         initImmediate: false, // Don't init async
         resources: {},
     };
 
     Object.keys(languages).forEach(function(key) {
-        options['resources'][key] = {translation: languages[key]};
+        options['resources'][key] = {[namespace]: languages[key]};
     });
 
     var i18n = i18next.createInstance();
