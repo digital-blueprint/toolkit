@@ -79,6 +79,10 @@ export function getFileHandlingCss() {
             overflow-x: auto;
         }
 
+        .micromodal-slide .modal-container, .micromodal-slide .modal-overlay{
+            will-change: auto;
+        }
+
         /**************************\\
          Picker Styles
        \\**************************/
