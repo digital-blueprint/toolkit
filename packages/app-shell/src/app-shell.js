@@ -862,10 +862,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
         }
 
-        const imprintUrl = this.lang === "en" ?
-            "https://www.tugraz.at/en/about-this-page/legal-notice/" :
-            "https://www.tugraz.at/ueber-diese-seite/impressum/";
-
         const kc = this.keycloakConfig;
 
         return html`
@@ -925,9 +921,9 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                 <footer>
                     <slot name="footer">
                         <slot name="footer-links">
-                            <a target="_blank" rel="noopener" class="int-link-external" href="https://datenschutz.tugraz.at/erklaerung/">${i18n.t('privacy-policy')}</a>
-                            <a target="_blank" rel="noopener" class="int-link-external" href="${imprintUrl}">${i18n.t('imprint')}</a>
-                            <a rel="noopener" class="int-link-external" href="mailto:it-support@tugraz.at">${i18n.t('contact')}</a>
+                            <a rel="noopener" class="int-link-external" href="#use-your-privacy-policy-link">${i18n.t('privacy-policy')}</a>
+                            <a rel="noopener" class="int-link-external" href="#use-your-imprint-link">${i18n.t('imprint')}</a>
+                            <a rel="noopener" class="int-link-external" href="#use-your-imprint-link">${i18n.t('contact')}</a>
                         </slot>
                         <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
                     </slot>
