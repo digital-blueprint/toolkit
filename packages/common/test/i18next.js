@@ -47,4 +47,25 @@ suite('i18next', () => {
         assert.equal(i18next.numberFormat(inst, 1.25), '1.25');
         assert.equal(i18next.numberFormat(inst, 1234), '1,234');
     });
+
+    test('overrides', () => {
+        let namespace = 'ns';
+        var inst = i18next.createInstance({en:  {foo: 'bar'}}, 'en', 'en', namespace);
+        assert.equal(inst.t('foo'), 'bar');
+        assert.equal(inst.t('quux'), 'quux');
+        i18next.setOverrides(inst, {en: {[namespace]: {quux: 'bla'}}});
+        assert.equal(inst.t('quux'), 'bla');
+        assert.equal(inst.t('foo'), 'bar');
+        i18next.setOverrides(inst, {en: {[namespace]: {}}});
+        assert.equal(inst.t('quux'), 'quux');
+        assert.equal(inst.t('foo'), 'bar');
+        i18next.setOverrides(inst, {en: {[namespace]: {foo: 'hmm'}}});
+        assert.equal(inst.t('foo'), 'hmm');
+        i18next.setOverrides(inst, {en: {[namespace]: {quux: 'bla'}}});
+        assert.equal(inst.t('foo'), 'bar');
+        assert.equal(inst.t('quux'), 'bla');
+        i18next.setOverrides(inst, {});
+        assert.equal(inst.t('foo'), 'bar');
+        assert.equal(inst.t('quux'), 'quux');
+    });
 });

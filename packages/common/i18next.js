@@ -43,6 +43,17 @@ export function humanFileSize(bytes, si = false) {
 }
 
 /**
+ * @param {string} namespace The namespace to override
+ * @returns {string} The new namespace name
+ */
+function getOverrideNamespace(namespace) {
+    // This just needs to be different to the namespace, make it special
+    // so it's clear what it is used for in case it ends up in some error
+    // message or something
+    return '--' + namespace + '-override';
+}
+
+/**
  * Creates a new i18next instance that is fully initialized.
  *
  * Call changeLanguage() on the returned object to change the language.
@@ -54,16 +65,18 @@ export function humanFileSize(bytes, si = false) {
  * @returns {i18next.i18n} A new independent i18next instance
  */
 export function createInstance(languages, lng, fallback, namespace) {
-    if (namespace === undefined)
+    if (namespace === undefined) {
         namespace = 'translation';
+    }
+    let overrideNamespace = getOverrideNamespace(namespace);
 
     var options = {
         lng: lng,
         fallbackLng: fallback,
         debug: false,
-        ns: [namespace + '-override'],
-        defaultNS: namespace + '-override',
-        fallbackNS: [namespace],
+        ns: [overrideNamespace, namespace],
+        defaultNS: namespace,
+        fallbackNS: namespace,
         initImmediate: false, // Don't init async
         resources: {},
     };
@@ -77,4 +90,30 @@ export function createInstance(languages, lng, fallback, namespace) {
     console.assert(i18n.isInitialized);
 
     return i18n;
+}
+
+/**
+ * Sets translation overrides for the given i18next instance. Any previously
+ * applied overrides will be removed first. So calling this with an empty overrides
+ * object is equal to removing all overrides.
+ *
+ * @param {i18next.i18n} i18n - The i18next instance
+ * @param {object} overrides - The override data in the following format: "{language: {namespace: {key: value}}}"
+ */
+export function setOverrides(i18n, overrides) {
+    // We add a special namespace which gets used with priority and falls back
+    // to the original one. This way we an change the overrides at runtime
+    // and can even remove them.
+    let namespace = i18n.options.fallbackNS;
+    let overrideNamespace = getOverrideNamespace(namespace);
+    let hasOverrides = false;
+    for(let lng of i18n.languages) {
+        i18n.removeResourceBundle(lng, overrideNamespace);
+        if (overrides[lng] === undefined || overrides[lng][namespace] === undefined)
+            continue;
+        let resources = overrides[lng][namespace];
+        hasOverrides = true;
+        i18n.addResourceBundle(lng, overrideNamespace, resources);
+    }
+    i18n.setDefaultNamespace(hasOverrides ? overrideNamespace : namespace);
 }
