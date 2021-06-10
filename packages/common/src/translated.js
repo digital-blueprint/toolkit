@@ -1,9 +1,9 @@
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 import {classMap} from "lit-html/directives/class-map";
+import DBPLitElement from "../dbp-lit-element";
 
-export class Translated extends ScopedElementsMixin(AdapterLitElement) {
+export class Translated extends DBPLitElement {
     constructor() {
         super();
         this.lang = 'de';
