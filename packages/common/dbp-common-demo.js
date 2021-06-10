@@ -203,7 +203,7 @@ html {
                     <div class="control" id="dbp-translated-demo">
                         <dbp-translated subscribe="lang">
                             <div slot="de">
-                                Dieser Text is Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.
+                                Dieser Text ist Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.
                             </div>
                             <div slot="en">
                                 This text is English and will be German if the language is changed to German.
