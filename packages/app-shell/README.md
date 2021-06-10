@@ -30,9 +30,6 @@ npm i @dbp-toolkit/app-shell
     - example `<dbp-app-shell matomo-site-id="456789"></dbp-app-shell>`
 - `no-welcome-page` (optional): skips the welcome page and welcome page isn't visible in menu
     - example `<dbp-app-shell no-welcome-page></dbp-app-shell>`
-- `no-brand` (optional): disables the logo in the right upper corner of the header
-  - example `<dbp-app-shell no-brand></dbp-app-shell>`
-  
 
 ### Emitted attributes
 

@@ -68,7 +68,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
 
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
 
-        this.noBrand = false;
         this.auth = {};
     }
 
@@ -242,7 +241,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
             matomoUrl: { type: String, attribute: "matomo-url" },
             matomoSiteId: { type: Number, attribute: "matomo-site-id" },
             noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
-            noBrand: { type: Boolean, attribute: "no-brand" },
             gitInfo: { type: String, attribute: "git-info" },
             buildUrl: { type: String, attribute: "build-url" },
             buildTime: { type: String, attribute: "build-time" },
