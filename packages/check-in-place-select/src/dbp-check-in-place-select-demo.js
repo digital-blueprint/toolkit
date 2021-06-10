@@ -1,4 +1,3 @@
-import {i18n} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {CheckInPlaceSelect} from './check-in-place-select.js';
@@ -34,10 +33,6 @@ export class CheckInPlaceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
-
-        this.updateComplete.then(()=>{
-        });
     }
 
     static get styles() {

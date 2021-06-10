@@ -4,7 +4,7 @@ import select2LangEn from './i18n/en/select2';
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -41,6 +41,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
         this.reloadButtonTitle = '';
         this.showCapacity = false;
         this.auth = {};
+        this._i18n = createInstance();
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
     }
@@ -159,7 +160,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
             width: '100%',
             language: this.lang === "de" ? select2LangDe() : select2LangEn(),
             minimumInputLength: 2,
-            placeholder: i18n.t('check-in-place-select.placeholder'),
+            placeholder: this._i18n.t('check-in-place-select.placeholder'),
             dropdownParent: this.$('#check-in-place-select-dropdown'),
             ajax: {
                 delay: 500,
@@ -291,7 +292,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
 
                     if (this.select2IsInitialized()) {
                         // no other way to set an other language at runtime did work
@@ -377,6 +378,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         const select2CSS = commonUtils.getAssetURL(select2CSSPath);
+        const i18n = this._i18n;
         return html`
             <link rel="stylesheet" href="${select2CSS}">
             <style>

@@ -1,7 +1,6 @@
 {
   "check-in-place-select": {
     "placeholder": "E.g. \"P1\", \"Rechbauerstraße\", \"PZ2EG048\"",
-    "error-summary": "An error occurred",
     "login-required": "Login required"
   }
 }
