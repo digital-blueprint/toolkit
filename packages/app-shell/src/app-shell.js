@@ -10,7 +10,6 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
-import {TUGrazLogo} from './tugraz-logo.js';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
@@ -78,7 +77,6 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
     static get scopedElements() {
         return {
           'dbp-language-select': LanguageSelect,
-          'dbp-tugraz-logo': TUGrazLogo,
           'dbp-build-info': BuildInfo,
           'dbp-auth-keycloak': AuthKeycloak,
           'dbp-auth-menu-button': AuthMenuButton,
@@ -897,7 +895,11 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                             </div>
                         </div>
                         <div class="hd2-right">
-                            <slot name="logo"><dbp-tugraz-logo id="main-logo" lang="${this.lang}" class="${classMap({hidden: this.noBrand})}"></dbp-tugraz-logo></slot>
+                            <slot name="logo">
+                                <div id="main-logo">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="80" viewBox="0 0 13.197 11.828" xmlns:v="https://vecta.io/nano"><style><![CDATA[.B{fill:#c8c7c7}.C{fill:#231f20}]]></style><path d="M0 4.942v.313l5.866 3.295 5.927-3.295v-.313L5.896 8.237z" class="B"/><path d="M5.865 8.549l5.927-3.295v-.313L5.896 8.237z" class="C"/><path d="M0 6.581v.312l5.866 3.295 5.927-3.295v-.312L5.896 9.876z" class="B"/><path d="M5.865 10.188l5.927-3.295v-.312L5.896 9.876z" class="C"/><path d="M0 8.22v.313l5.866 3.295 5.927-3.295V8.22l-5.896 3.295z" class="B"/><path d="M5.865 11.827l5.927-3.295V8.22l-5.897 3.295z" class="C"/><path d="M8.844 4.991L7.37 4.167l1.474-.824 1.474.824z" class="B"/><use xlink:href="#B" class="C"/><path d="M8.774 3.295L7.3 2.471l1.474-.824 1.474.824z" fill="#656263"/><use xlink:href="#B" x="-1.474" y="0.823" class="C"/><use xlink:href="#B" x="-2.948" class="B"/><g fill="#7b7979"><use xlink:href="#B" x="-1.474" y="-0.824"/><use xlink:href="#B" x="-1.474" y="-2.471"/><path d="M4.422 2.471l-1.474-.824L4.422.823l1.474.824z"/></g><use xlink:href="#B" x="-4.422" y="-0.824" class="B"/><path d="M11.722 1.647L10.249.823 11.722 0l1.474.824z" class="C"/><g class="B"><path d="M8.844 6.589L7.37 5.766l1.474-.824 1.474.824z"/><use xlink:href="#B" y="1.647"/></g><use xlink:href="#B" x="-4.422" y="0.823" class="C"/><defs ><path id="B" d="M7.37 5.766l-1.474-.824 1.474-.824 1.474.824z"/></defs></svg>
+                                </div>
+                            </slot>
                         </div>
                     </slot>
                 </header>
