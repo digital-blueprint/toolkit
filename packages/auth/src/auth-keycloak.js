@@ -1,4 +1,4 @@
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import  {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
@@ -32,6 +32,7 @@ export class AuthKeycloak extends AdapterLitElement {
         this.entryPointUrl = '';
         this._loginStatus = LoginStatus.UNKNOWN;
         this.requestedLoginStatus = LoginStatus.UNKNOWN;
+        this._i18n = createInstance();
 
         // Keycloak config
         this.keycloakUrl = null;
@@ -49,7 +50,7 @@ export class AuthKeycloak extends AdapterLitElement {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                 break;
                 case 'entryPointUrl':
                     // for preloading the instance

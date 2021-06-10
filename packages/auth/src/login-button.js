@@ -1,4 +1,4 @@
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -56,6 +56,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
         this.lang = 'de';
+        this._i18n = createInstance();
         this.auth = {};
     }
 
@@ -93,7 +94,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
         });
 
@@ -150,6 +151,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     render() {
+        let i18n = this._i18n;
         if (this.auth['login-status'] === LoginStatus.LOGGING_IN) {
             // try to keep the layout the same to avoid layout shifts
             return html`

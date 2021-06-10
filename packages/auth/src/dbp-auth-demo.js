@@ -1,4 +1,4 @@
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak} from './auth-keycloak.js';
@@ -14,6 +14,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
         this.entryPointUrl = '';
         this.auth = {};
         this.noAuth = false;
+        this._i18n = createInstance();
     }
 
     static get scopedElements() {
@@ -36,7 +37,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
         });
 
