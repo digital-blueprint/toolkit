@@ -883,7 +883,7 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
                         </div>
                         <div class="hd2-left">
                             <div class="header">
-                                <slot name="name">Digital Blueprint</slot>
+                                <slot name="name">DBP<br />Digital Blueprint</slot>
                             </div>
                         </div>
                         <div class="hd2-right">
