@@ -1,5 +1,4 @@
 import {css, html} from 'lit-element';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {classMap} from "lit-html/directives/class-map";
 import DBPLitElement from "../dbp-lit-element";
 
