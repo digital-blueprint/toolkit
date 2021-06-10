@@ -1,7 +1,8 @@
 import {html, css} from 'lit-element';
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+
 
 /**
  * Emits a dbp-language-changed event where event.detail.lang is the new selected language
@@ -13,11 +14,12 @@ export class LanguageSelect extends AdapterLitElement {
         this._lang = 'de';
         this.languages = ['de', 'en'];
 
+        this._i18n = createInstance();
         // for the i18next scanner
-        i18n.t('de');
-        i18n.t('de-action');
-        i18n.t('en');
-        i18n.t('en-action');
+        this._i18n.t('de');
+        this._i18n.t('de-action');
+        this._i18n.t('en');
+        this._i18n.t('en-action');
     }
 
     _getNextLanguage(lang) {
@@ -58,7 +60,7 @@ export class LanguageSelect extends AdapterLitElement {
             // Unlike other cases we use the next language for the translations so that
             // users not knowing the current language can understand it.
             // In case of more than two this doesn't make that much sense, but for now..
-            i18n.changeLanguage(this.next);
+            this._i18n.changeLanguage(this.next);
         }
     }
 
@@ -106,7 +108,7 @@ export class LanguageSelect extends AdapterLitElement {
     }
 
     render() {
-        var linkTitle = i18n.t(this.next + '-action');
+        var linkTitle = this._i18n.t(this.next + '-action');
         return html`
             <a href="#" title="${linkTitle}" @click=${this.onClick}>${this.next.toUpperCase()}</a>
         `;

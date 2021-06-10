@@ -4,7 +4,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 import {Provider} from "@dbp-toolkit/provider";
-import {i18n} from './i18n.js';
+import {createInstance, setOverrides} from './i18n.js';
 
 // This is an example on how to override translations at runtime
 let OVERRIDES = {
@@ -20,23 +20,13 @@ let OVERRIDES = {
     }
 };
 
-function applyOverrides(i18n, namespace, overrides) {
-    for(let lang of Object.keys(overrides)) {
-        let data = overrides[lang][namespace];
-        if (data !== undefined) {
-            i18n.addResourceBundle(lang, namespace + '-override', data);
-        }
-    }
-}
-
 class LanguageSelectDisplay extends AdapterLitElement {
 
     constructor() {
         super();
         this.lang = 'de';
-        this._i18n = i18n.cloneInstance();
-        // FIXME: this overrides the translations for all clones
-        applyOverrides(this._i18n, 'translation', OVERRIDES);
+        this._i18n = createInstance();
+        setOverrides(this._i18n, OVERRIDES);
     }
 
     static get properties() {
