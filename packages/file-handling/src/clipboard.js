@@ -234,7 +234,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             this.numberOfSelectedFiles = 0;
         } else {
             this.tabulatorTable.selectRow(this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)));
-            this.numberOfSelectedFiles = maxSelected;
+            this.numberOfSelectedFiles = this.tabulatorTable.getSelectedRows().length;
         }
     }
 
