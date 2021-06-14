@@ -7,13 +7,17 @@ import * as fileHandlingStyles from '@dbp-toolkit/file-handling/src/styles';
 import {Icon} from '@dbp-toolkit/common';
 import Tabulator from "tabulator-tables";
 import {humanFileSize} from "@dbp-toolkit/common/i18next";
-
 import {name as pkgName} from "@dbp-toolkit/file-handling/package.json";
 import {send} from "@dbp-toolkit/common/notification";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import {classMap} from 'lit-html/directives/class-map.js';
 
+const MODE_TABLE_ONLY = "table-only";
+const MODE_FILE_SINK = "file-sink";
+const MODE_FILE_SOURCE = "file-source";
 
 export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
+
     constructor() {
         super();
         this.lang = 'de';
@@ -24,7 +28,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this._onReceiveBeforeUnload = this.onReceiveBeforeUnload.bind(this);
         this.filesToSave = [];
         this.numberOfSelectedFiles = 0;
-        this.showAdditionalButtons = false;
         this.enabledTargets = 'local';
 
         this.nextcloudWebAppPasswordURL = "";
@@ -32,15 +35,13 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this.nextcloudName = "";
         this.nextcloudFileURL = "";
 
-        this.isFileSource = false;
-        this.isFileSink = false;
-
         this.demo = false;
 
         // To avoid a cyclic dependency
         import('./file-sink').then(({ FileSink }) => this.defineScopedElement('dbp-file-sink', FileSink));
         import('./file-source').then(({ FileSource }) => this.defineScopedElement('dbp-file-source', FileSource));
 
+        this.mode = MODE_TABLE_ONLY;
     }
 
     static get scopedElements() {
@@ -58,7 +59,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             clipboardFiles: {type: Object, attribute: 'clipboard-files'},
             filesToSave: {type: Array, attribute: 'files-to-save'},
             numberOfSelectedFiles: {type: Number, attribute: false },
-            showAdditionalButtons: {type: Boolean, attribute: 'show-additional-buttons' },
             enabledTargets: {type: String, attribute: 'enabled-targets'},
 
             nextcloudWebAppPasswordURL: { type: String, attribute: 'nextcloud-auth-url' },
@@ -66,8 +66,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
             nextcloudFileURL: { type: String, attribute: 'nextcloud-file-url' },
 
-            isFileSource: {type: Boolean, attribute: 'file-source' },
-            isFileSink: {type: Boolean, attribute: 'file-sink' },
+            mode: {type: String, attribute: 'mode'},
 
             demo: {type: Boolean, attribute: 'demo-clipboard' },
         };
@@ -478,7 +477,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             <div class="flex-container additional-button-container">
                         <div class="btn-flex-container-mobile">
                             <button @click="${() => { this.openFilesource(); }}"
-                                    class="button" title="${i18n.t('clipboard.add-files')}">
+                                    class="button ${classMap({hidden: this.mode === MODE_FILE_SINK || this.mode === MODE_FILE_SOURCE})}" title="${i18n.t('clipboard.add-files')}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon> ${i18n.t('clipboard.add-files-btn')}
                             </button>
                             <button @click="${() => { this.clearClipboard(); }}"
@@ -531,7 +530,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
     getClipboardSink() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
-        let additionalButtons = this.showAdditionalButtons ? this.getAdditionalButtons() : "";
         return html`
             <div class="wrapper">
                 <div class="content">
@@ -541,7 +539,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         <p>${i18n.t('clipboard.warning')}</p>
                     </div>
                     <div>
-                        ${additionalButtons}
+                        ${this.getAdditionalButtons()}
                         <link rel="stylesheet" href="${tabulatorCss}">
                         <div class="table-wrapper">
                             <label class="button-container select-all-icon">
@@ -565,7 +563,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
     getClipboardSource() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
-        let additionalButtons = this.showAdditionalButtons ? this.getAdditionalButtons() : "";
         return html`
             <div class="wrapper">
                 <div class="content">
@@ -575,7 +572,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         <p>${i18n.t('clipboard.warning')}</p>
                     </div>
                     <div>
-                        ${additionalButtons}
+                        ${this.getAdditionalButtons()}
                         <link rel="stylesheet" href="${tabulatorCss}">
                         <div class="table-wrapper">
                             <label class="button-container select-all-icon">
@@ -756,7 +753,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     width: 8px;
                     height: 15px;
                 }
-                
 
                 .select-all-icon{
                     top: 10px;
@@ -779,17 +775,19 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     render() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
 
-        let additionalButtons = this.showAdditionalButtons ? this.getAdditionalButtons() : "";
-
-        if (this.isFileSink)
+        if (this.mode === MODE_FILE_SINK)
+        {
             return this.getClipboardSink();
-        if (this.isFileSource)
+        }
+        if (this.mode === MODE_FILE_SOURCE)
+        {
             return this.getClipboardSource();
+        }
 
         return html`
             <div>
                 
-                ${additionalButtons}
+                ${this.getAdditionalButtons()}
                 
                 <link rel="stylesheet" href="${tabulatorCss}">
                

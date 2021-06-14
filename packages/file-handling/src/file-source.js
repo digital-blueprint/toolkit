@@ -427,7 +427,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             return html`
                 <dbp-clipboard 
                    id="clipboard-file-picker"
-                   file-source
+                   mode="file-source"
                    subscribe="clipboard-files:clipboard-files"
                    lang="${this.lang}"
                    enabled-targets="${this.enabledTargets}"

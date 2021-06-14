@@ -240,7 +240,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                    id="clipboard-file-picker"
                    subscribe="clipboard-files:clipboard-files"
                    show-additional-buttons
-                   file-sink
+                   mode="file-sink"
                    lang="${this.lang}"
                    auth-url="${this.nextcloudAuthUrl}"
                    enabled-targets="${this.enabledTargets}"
