@@ -492,6 +492,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
+                text-align: center;
             }
     
             #dropArea.highlight {
