@@ -1322,6 +1322,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 height: 20px;
                 width:20px;
                 left: 5px;
+                top: 1px;
             }
           
          
