@@ -77,8 +77,6 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
     - example `<dbp-file-source nextcloud-auth-info="You need special permissions for this function"></dbp-file-source>`
 - `dialog-open` (optional): if this attribute is set at runtime the dialog for selecting local or Nextcloud files will open
     - example `document.querySelector("dbp-file-source").setAttribute("dialog-open", "")`
-- `text` (optional): the text that is shown above the button to select files
-    - example `<dbp-file-source text="Please select some files"></dbp-file-source>`
 - `button-label` (optional): the text that is shown on the button to select files
     - example `<dbp-file-source button-label="Select files"></dbp-file-source>`
 - `initial-file-handling-state` (optional): An  object: `initial-file-handling-state' = {target: "", path: ""}` for initial opening behaviour.
@@ -144,8 +142,6 @@ files to a [Nextcloud](https://nextcloud.com/) instance.
     - example `<dbp-file-sink nextcloud-file-url="http://localhost:8081/apps/files/?dir="></dbp-file-sink>`
 - `nextcloud-auth-info` (optional): Additional authentication information text that is shown in the Nextcloud file picker
     - example `<dbp-file-sink nextcloud-auth-info="You need special permissions for this function"></dbp-file-sink>`
-- `text` (optional): the text that is shown above the button to download the zip file
-    - example `<dbp-file-sink text="Download files as ZIP-file"></dbp-file-sink>`
 - `button-label` (optional): the text that is shown on the button to download the zip file
     - example `<dbp-file-sink button-label="Download files"></dbp-file-sink>`
 - `initial-file-handling-state` (optional): An  object: `initial-file-handling-state' = {target: "", path: ""}` for initial opening behaviour.

@@ -46,7 +46,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
         this.dropArea = null;
         this.allowedMimeTypes = '*/*';
         this.enabledTargets = 'local';
-        this.text = '';
         this.buttonLabel = '';
         this.disabled = false;
         this.decompressZip = false;
@@ -83,7 +82,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
             nextcloudFileURL: { type: String, attribute: 'nextcloud-file-url' },
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
-            text: { type: String },
             buttonLabel: { type: String, attribute: 'button-label' },
             disabled: { type: Boolean },
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
@@ -566,7 +564,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "local"})}">
                                 <div id="dropArea">
                                     <div class="block">
-                                        <p>${this.text || i18n.t('intro')}</p>
+                                        <p>${i18n.t('intro')}</p>
                                     </div>
                                     <input ?disabled="${this.disabled}"
                                            type="file"

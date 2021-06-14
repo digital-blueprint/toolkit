@@ -27,7 +27,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         this.nextcloudName ='Nextcloud';
         this.nextcloudPath = '';
         this.nextcloudFileURL = '';
-        this.text = '';
         this.buttonLabel = '';
         this.filename = "files.zip";
         this.files = [];
@@ -66,7 +65,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
-            text: {type: String},
             buttonLabel: {type: String, attribute: 'button-label'},
             isDialogOpen: {type: Boolean, attribute: false},
             activeTarget: {type: String, attribute: 'active-target'},
@@ -361,12 +359,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "local"})}">
                                 <div id="zip-download-block">
                                     <div class="block">
-                                        ${this.text || i18n.t('file-sink.local-intro', {'count': this.files.length})}
+                                        ${i18n.t('file-sink.local-intro', {'count': this.files.length})}
                                     </div>
                                     <button class="button is-primary"
                                             ?disabled="${this.disabled}"
                                             @click="${() => { this.downloadCompressedFiles(); }}">
-                                        ${this.buttonLabel || i18n.t('file-sink.local-button', {'count': this.files.length})}
+                                        ${i18n.t('file-sink.local-button', {'count': this.files.length})}
                                     </button>
                                 </div>
                             </div>

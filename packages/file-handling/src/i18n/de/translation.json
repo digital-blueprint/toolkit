@@ -7,7 +7,7 @@
 
   "demo-title": "Datei Abgabe Demo",
   "server-required": "Es wird unter der URL <a href=\"{{- url}}\"><tt>{{- url}}</tt></a> ein Server benötigt um die Dateien zu empfangen.",
-  "intro": "Laden Sie mehrere Dateien mit dem Auswahldialog oder durch Ziehen und Fallenlassen in diesem Bereich hoch.",
+  "intro": "Sie können in diesem Bereich Dateien per Drag & Drop oder per Direktauswahl hochladen. Die Dateien dürfen sich auch in ZIP-Archiven befinden.",
   "upload-label": "Dateiauswahl",
   "upload-disabled-title": "Die Dateiauswahl ist während dem Hochladvorgang gesperrt!",
   "page-leaving-warn-dialogue": "Vorsicht! Es befinden sich noch ungenutzte Dateien in der Zwischenablage. Wenn Sie auf 'OK' klicken, wird die bestehende Zwischenablage automatisch verworfen!",
