@@ -47,6 +47,9 @@ The `details` attribute of the event is the language (possible values `en`, `de`
 
 ### Slots
 
+You can give your slots a css class `slot-hidden` (which you have to define with `.slot-hidden { display: none; }`) to
+hide the slots while the app shell is loading. This css class will then be removed from the slots by the app shell.
+
 #### Unnamed slot
 
 The unnamed slot will be removed when the application is loaded and can be filled with a loading-spinner.
