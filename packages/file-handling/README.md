@@ -40,7 +40,7 @@ and the file sink dialog will open, so you are able to store the file again.
 ## FileSource
 
 This web component allows the selection of local files via file dialog or drag and drop and to select and download
-files from a [Nextcloud](https://nextcloud.com/) instance.
+files from a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
 
 ### Usage
 
@@ -58,7 +58,7 @@ files from a [Nextcloud](https://nextcloud.com/) instance.
     - example `<dbp-file-source allowed-mime-types='image/png,text/plain'></dbp-file-source>` ... PNGs or TXTs only
     - example `<dbp-file-source allowed-mime-types='*/*'></dbp-file-source>` ... all file types (default)
 - `enabled-targets` (optional, default: `local`): sets which sources are enabled
-    - you can use `local` and `nextcloud`
+    - you can use `local`, `nextcloud` and `clipboard`
     - example `<dbp-file-source enabled-targets="local,nextcloud"></dbp-file-source>`
 - `disabled` (optional): disable input control
     - example `<dbp-file-source disabled></dbp-file-source>`
@@ -115,7 +115,7 @@ This event is sent from nextcloudfilepicker and is send when files are picked an
 ## FileSink
 
 This web component is able to receive files and present as them as ZIP file download or upload
-files to a [Nextcloud](https://nextcloud.com/) instance. 
+files to a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard. 
 
 ### Usage
 
@@ -128,7 +128,7 @@ files to a [Nextcloud](https://nextcloud.com/) instance.
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-file-sink lang="de"></dbp-file-sink>`
 - `enabled-targets` (optional, default: `local`): sets which destination are enabled
-    - you can use `local` and `nextcloud`
+    - you can use `local`, `nextcloud` and `clipboard`
     - example `<dbp-file-sink enabled-targets="local,nextcloud"></dbp-file-sink>`
 - `filename` (optional, default: `files.zip`): sets a file name to use for downloading the zip file
     - example `<dbp-file-sink filename="signed-documents.zip"></dbp-file-sink>`
@@ -166,6 +166,67 @@ The component emits a `dbp-set-property` event for the attribute `initial-file-h
 
 - `--dbp-override-image-nextcloud` is used to override the cloud image on the connection screen
   - example CSS: `html { --dbp-override-image-nextcloud: url(/icons/nextcloud.svg); }`
+
+## Clipboard
+
+This web component is for a clipboard which saves the files to a provider. These files are available till the page is reload or the browser is closed.
+
+### Depencencies
+This web component can only used if a `dbp-provider` is around it.<br>
+This web component depends on:
+- `dbp-file-sink`
+- `dbp-file-source`
+
+### Usage
+
+```html
+ <dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name">
+ </dbp-clipboard>
+```
+
+### Attributes
+
+- `clipboardFiles` is the object which should be subscribed to the provider to recieve and send the clipboard files
+  to the provider.
+  - exmaple `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name"></dbp-clipboard>`
+- `lang` (optional, default: `de`): set to `de` or `en` for German or English
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" lang="de"></dbp-clipboard>`
+- `enabled-targets` (optional, default: `local`): sets which destination are enabled
+  - you can use `local` and `nextcloud`
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" enabled-targets="local,nextcloud"></dbp-clipboard>`
+- `allowed-mime-types` (optional): if set accepts only files matching mime types
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" allowed-mime-types='application/pdf'></dbp-clipboard>` ... PDFs only
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" allowed-mime-types='image/*'></dbp-clipboard>` ... images (of all sub types) only
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name"e allowed-mime-types='image/png,text/plain'></dbp-clipboard>` ... PNGs or TXTs only
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" allowed-mime-types='*/*'></dbp-clipboard>` ... all file types (default)
+- `mode` (optional, default: `MODE_TABLE_ONLY`): the clipboard can used in three different contexts:
+  only showing the clipboard content, in the file-source context and in the file-sink context.
+  - you can use `MODE_TABLE_ONLY`, `MODE_FILE_SINK` or `MODE_FILE_SOURCE`
+  - example `<dbp-clipboard mode="MODE_TABLE_ONLY></dbp-clipboard>` ... only the table will shown
+  - example `<dbp-clipboard mode="MODE_FILE_SINK></dbp-clipboard>` ... the file-sink text and functionality is turned on
+  - example `<dbp-clipboard mode="MODE_FILE_SOURCE></dbp-clipboard>` ... the file-source text and functionality is turned on
+- `filesToSave` this attribute is used by the `dbp-file-sink` to set the files in an array, 
+  which should be saved to the clipboard to the `dbp-clipboard` web component
+- `allow-nesting` (optional): is an boolean for demo purposes or special use cases. 
+  It availables the clipboard in the file-source and file-sink in the clipboard itself.
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" allow-nesting></dbp-clipboard>` ... all file types (default)
+- `nextcloud-auth-url` (optional): Nextcloud Auth Url to use with the Nextcloud file picker
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" nextcloud-auth-url="http://localhost:8081/index.php/apps/webapppassword"></dbp-clipboard>`
+  - `nextcloud-web-dav-url` also needs to be set for the Nextcloud file picker to be active
+- `nextcloud-web-dav-url` (optional): Nextcloud WebDav Url to use with the Nextcloud file picker
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></dbp-clipboard>`
+  - `nextcloud-auth-url` also needs to be set for the Nextcloud file picker to be active
+- `nextcloud-file-url` (optional): Nextcloud File Url to use with the Nextcloud file picker
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" nextcloud-file-url="http://localhost:8081/apps/files/?dir="></dbp-clipboard>`
+- `nextcloud-auth-info` (optional): Additional authentication information text that is shown in the Nextcloud file picker
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" nextcloud-auth-info="You need special permissions for this function"></dbp-clipboard>`
+  
+  
+### Exposed CSS variables
+
+- `--dbp-override-image-nextcloud` is used to override the cloud image on the connection screen
+  - example CSS: `html { --dbp-override-image-nextcloud: url(/icons/nextcloud.svg); }`
+
 
 ## Local development
 

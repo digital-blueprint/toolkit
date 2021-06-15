@@ -34,8 +34,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this.nextcloudWebDavURL = "";
         this.nextcloudName = "";
         this.nextcloudFileURL = "";
+        this.authInfo = '';
 
-        this.demo = false;
+        this.allowNesting = false;
 
         // To avoid a cyclic dependency
         import('./file-sink').then(({ FileSink }) => this.defineScopedElement('dbp-file-sink', FileSink));
@@ -56,8 +57,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             lang: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
             clipboardSelectBtnDisabled: { type: Boolean, attribute: true },
-            clipboardFiles: {type: Object, attribute: 'clipboard-files'},
-            filesToSave: {type: Array, attribute: 'files-to-save'},
+            clipboardFiles: {type: Object, attribute: 'clipboard-files' },
+            filesToSave: {type: Array, attribute: 'files-to-save' },
             numberOfSelectedFiles: {type: Number, attribute: false },
             enabledTargets: {type: String, attribute: 'enabled-targets'},
 
@@ -65,10 +66,11 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             nextcloudWebDavURL: { type: String, attribute: 'nextcloud-web-dav-url' },
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
             nextcloudFileURL: { type: String, attribute: 'nextcloud-file-url' },
+            nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
 
             mode: {type: String, attribute: 'mode'},
 
-            demo: {type: Boolean, attribute: 'demo-clipboard' },
+            allowNesting: {type: Boolean, attribute: 'allow-nesting' },
         };
     }
 
@@ -206,7 +208,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             that.generateClipboardTable();
 
         });
-        if(!window.clipboardWarning)  {
+
+        //Register only one beforeunload Event for the clipboard warning
+        if (!window.clipboardWarning) {
             window.addEventListener('beforeunload', this._onReceiveBeforeUnload, false);
             window.clipboardWarning = true;
         }
@@ -218,7 +222,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
         //We doesn't want to deregister this event, because we want to use this event over activities
         //window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
-
         super.disconnectedCallback();
     }
 
@@ -237,6 +240,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
+    /**
+     * Checks if all files are already selected
+     * Returns true if all files are selected
+     *
+     * @return Boolean
+     */
     checkAllSelected() {
         if (this.tabulatorTable) {
             let maxSelected = this.tabulatorTable.getRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)).length;
@@ -249,8 +258,13 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
 
+    /**
+     * Check mime type of a file, returns true if this.allowedMimeTypes contains the mime type of the file
+     *
+     * @param file
+     * @return Boolean
+     */
     checkFileType(file) {
-
         // check if file is allowed
         const [fileMainType, fileSubType] = file.type.split('/');
         const mimeTypes = this.allowedMimeTypes.split(',');
@@ -268,11 +282,14 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         return true;
     }
 
+    /**
+     * If clipboard files and the tabulator table exists, then clear the table and sets the new data
+     *
+     */
     generateClipboardTable() {
-
         if (this.clipboardFiles.files) {
             let data = [];
-            for (let i = 0; i < this.clipboardFiles.files.length; i++){
+            for (let i = 0; i < this.clipboardFiles.files.length; i++) {
                 data[i] = {
                     name: this.clipboardFiles.files[i].name,
                     size: this.clipboardFiles.files[i].size,
@@ -282,17 +299,20 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 };
             }
 
-            if (this.tabulatorTable !== null){
+            if (this.tabulatorTable !== null) {
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
             }
         }
     }
 
+    /**
+     * Sends the files to a provider and throws a notification
+     *
+     * @param files
+     */
     async sendClipboardFiles(files) {
-
-        for(let i = 0; i < files.length; i ++)
-        {
+        for (let i = 0; i < files.length; i ++) {
             await this.sendFileEvent(files[i].file);
         }
         this.tabulatorTable.deselectRow();
@@ -305,13 +325,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     async sendFileEvent(file) {
-
         const data = {"file": file, "data": file};
-
         const event = new CustomEvent("dbp-clipboard-file-picker-file-downloaded",
             { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
-
     }
 
 
@@ -320,7 +337,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      *
      * @param event
      */
-    onReceiveBeforeUnload(event){
+    onReceiveBeforeUnload(event) {
 
         // we don't need to stop if there are no signed files
         if (this.clipboardFiles.files.length === 0) {
@@ -328,8 +345,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
 
         // we need to handle custom events ourselves
-        if(event.target && event.target.activeElement && event.target.activeElement.nodeName) {
-
+        if (event.target && event.target.activeElement && event.target.activeElement.nodeName) {
             send({
                 "summary": i18n.t('clipboard.file-warning'),
                 "body": i18n.t('clipboard.file-warning-body', {count: this.clipboardFiles.files.length}),
@@ -352,16 +368,21 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-    saveFilesToClipboardEvent(ev)
+    /**
+     * Saves files from an event to the clipboard
+     *
+     * @param event
+     */
+    saveFilesToClipboardEvent(event)
     {
         //save it
         let data = {};
         let files = [];
         if (this.clipboardFiles && this.clipboardFiles.files.length !== 0) {
             files = files.concat(this.clipboardFiles.files);
-            files = files.concat(ev.detail.file);
+            files = files.concat(event.detail.file);
         } else {
-            files = files.concat(ev.detail.file);
+            files = files.concat(event.detail.file);
         }
         this.filesToSave = files;
         if (files && files.length !== 0) {
@@ -373,6 +394,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
+    /**
+     * Saves all files from this.filesToSave in clipboard and throws a notification
+     *
+     */
     saveFilesToClipboard()
     {
         //save it
@@ -399,17 +424,25 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-
-    finishedSaveFilesToClipboard(ev) {
+    /**
+     * Throws a finish notification with the count from the event.detail
+     *
+     * @param event
+     */
+    finishedSaveFilesToClipboard(event) {
         send({
-            "summary": i18n.t('clipboard.saved-files-title', {count: ev.detail.count}),
-            "body": i18n.t('clipboard.saved-files-body', {count: ev.detail.count}),
+            "summary": i18n.t('clipboard.saved-files-title', {count: event.detail.count}),
+            "body": i18n.t('clipboard.saved-files-body', {count: event.detail.count}),
             "type": "success",
             "timeout": 5,
         });
     }
 
-    saveFilesFromClipboard() {
+    /**
+     * Open the file sink with clipboardfiles
+     *
+     */
+    openFileSink() {
         const fileSink = this._("#file-sink-clipboard");
         if ( fileSink ) {
             this._("#file-sink-clipboard").files = Object.create(this.tabulatorTable.getSelectedData().length > 0 ? this.tabulatorTable.getSelectedData() : this.clipboardFiles.files);
@@ -417,26 +450,21 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-    getClipboardFileList() {
-        let files = [];
-        for (let i = 0; i < this.clipboardFiles.files.length; i ++)
-        {
-            files[i] =  html`<div class="clipboard-list"><strong>${this.clipboardFiles.files[i].name}</strong> ${humanFileSize(this.clipboardFiles.files[i].size)}</div>`;
+    /**
+     * Open the file source with clipboardfiles
+     *
+     */
+    openFileSource() {
+        const fileSource = this._("#file-source-clipboard");
+        if (fileSource) {
+            this._("#file-source-clipboard").openDialog();
         }
-        return files;
     }
 
     /**
-     * Open Filesink for multiple files
+     * Delete all or only selected files from clipboard and throws a notification
+     *
      */
-    async openClipboardFileSink() {
-        const fileSink = this._("#file-sink-clipboard");
-        if (fileSink) {
-            this._("#file-sink-clipboard").files = Object.create(this.clipboardFiles.files);
-            this._("#file-sink-clipboard").openDialog();
-        }
-    }
-
     clearClipboard() {
         if (this.tabulatorTable && this.tabulatorTable.getSelectedData().length > 0) {
             let count = this.tabulatorTable.getSelectedData().length;
@@ -465,18 +493,18 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-    openFilesource() {
-        const fileSource = this._("#file-source-clipboard");
-        if (fileSource) {
-            this._("#file-source-clipboard").openDialog();
-        }
-    }
-
+    /**
+     * Get the additional clipboard buttons
+     * If this.mode === MODE_FILE_SINK or MODE_FILE_SOURCE then there are only delete and save files buttons available
+     * Else there are the add, delete and save files buttons available
+     *
+     * @return html
+     */
     getAdditionalButtons() {
         return html`
             <div class="flex-container additional-button-container">
                         <div class="btn-flex-container-mobile">
-                            <button @click="${() => { this.openFilesource(); }}"
+                            <button @click="${() => { this.openFileSource(); }}"
                                     class="button ${classMap({hidden: this.mode === MODE_FILE_SINK || this.mode === MODE_FILE_SOURCE})}" title="${i18n.t('clipboard.add-files')}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon> ${i18n.t('clipboard.add-files-btn')}
                             </button>
@@ -487,7 +515,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             </button>
                         </div>
                         <div class="btn-flex-container-mobile">
-                            <button @click="${() => { this.saveFilesFromClipboard(); }}"
+                            <button @click="${() => { this.openFileSink(); }}"
                                     ?disabled="${this.clipboardFiles.files.length === 0}"
                                     class="button" title="${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.save-all')}">
                                 ${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.save-count-btn', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.save-all-btn')}
@@ -503,7 +531,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                 nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
                                 nextcloud-name="${this.nextcloudName}"
                                 nextcloud-file-url="${this.nextcloudFileURL}"
-                                enabled-targets="${this.demo ? this.enabledTargets : this.enabledTargets.replace('clipboard', '')}"
+                                nexcloud-auth-info="${this.nextcloudAuthInfo}"
+                                enabled-targets="${this.allowNesting ? this.enabledTargets : this.enabledTargets.replace('clipboard', '')}"
                                 decompress-zip
                                 lang="${this.lang}"
                                 text="${i18n.t('clipboard.upload-area-text')}"
@@ -512,22 +541,28 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                 @dbp-file-source-file-selected="${this.saveFilesToClipboardEvent}"
                                 @dbp-nextcloud-file-picker-number-files="${this.finishedSaveFilesToClipboard}"
                                 @dbp-file-source-file-upload-finished="${this.finishedSaveFilesToClipboard}"
-                        ></dbp-file-source>
+                    ></dbp-file-source>
                     <dbp-file-sink id="file-sink-clipboard"
                                    context="${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.save-all')}"
                                    filename="clipboard-documents.zip"
                                    allowed-mime-types="${this.allowedMimeTypes}"
-                                   enabled-targets="${this.demo ? this.enabledTargets : this.enabledTargets.replace('clipboard', '')}"
+                                   enabled-targets="${this.allowNesting ? this.enabledTargets : this.enabledTargets.replace('clipboard', '')}"
                                    show-clipboard
                                    nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
                                    nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
                                    nextcloud-name="${this.nextcloudName}"
                                    nextcloud-file-url="${this.nextcloudFileURL}"
+                                   nexcloud-auth-info="${this.nextcloudAuthInfo}"
                                    lang="${this.lang}"
                     ></dbp-file-sink>
         `;
     }
 
+    /**
+     * Get the clipboard sink html
+     *
+     * @return html
+     */
     getClipboardSink() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
         return html`
@@ -560,7 +595,11 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
     }
 
-
+    /**
+     * Get the clipboard source html
+     *
+     * @return html
+     */
     getClipboardSource() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
         return html`
@@ -622,7 +661,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 font-style: italic;
                 padding-left: 2em;
                 margin-top: -1px;
-                /*line-height: 1.8;*/
                 margin-bottom: 1.2em;
             }
             
@@ -789,30 +827,27 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     render() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
 
-        if (this.mode === MODE_FILE_SINK)
-        {
+        if (this.mode === MODE_FILE_SINK) {
             return this.getClipboardSink();
         }
-        if (this.mode === MODE_FILE_SOURCE)
-        {
+        else if (this.mode === MODE_FILE_SOURCE) {
             return this.getClipboardSource();
+        } else {
+            return html`
+                <div>
+                    
+                    ${this.getAdditionalButtons()}
+                    <link rel="stylesheet" href="${tabulatorCss}">
+                    <div class="table-wrapper">
+                        <label class="button-container select-all-icon">
+                            <input type="checkbox" id="select_all" name="select_all" value="select_all" @click="${() => {this.selectAllFiles();}}">
+                            <span class="checkmark" title="${this.checkAllSelected() ? i18n.t("clipboard.select-nothing") : i18n.t("clipboard.select-all")}"></span>
+                        </label>
+                        <table id="clipboard-content-table" class="force-no-select"></table>
+                    </div>
+                </div>
+        `   ;
         }
 
-        return html`
-            <div>
-                
-                ${this.getAdditionalButtons()}
-                
-                <link rel="stylesheet" href="${tabulatorCss}">
-               
-                <div class="table-wrapper">
-                    <label class="button-container select-all-icon">
-                        <input type="checkbox" id="select_all" name="select_all" value="select_all" @click="${() => {this.selectAllFiles();}}">
-                        <span class="checkmark" title="${this.checkAllSelected() ? i18n.t("clipboard.select-nothing") : i18n.t("clipboard.select-all")}"></span>
-                    </label>
-                    <table id="clipboard-content-table" class="force-no-select"></table>
-                </div>
-            </div>
-        `;
     }
 }
