@@ -203,7 +203,10 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openDialog() {
-        this.loadWebdavDirectory();
+        console.log("open sink");
+        if (this.enabledTargets.includes('nextcloud')) {
+            this.loadWebdavDirectory();
+        }
         const filePicker = this._('#modal-picker');
         if (filePicker) {
             MicroModal.show(filePicker, {
@@ -225,6 +228,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             this.firstOpen = false;
         }
     }
+
+    //TODO find open error!!
 
     closeDialog(e) {
         this.sendDestination();

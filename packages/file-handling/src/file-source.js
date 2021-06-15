@@ -369,6 +369,8 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openDialog() {
+        console.log("open source");
+
         if (this.enabledTargets.includes('nextcloud')) {
             this.loadWebdavDirectory();
         }
@@ -428,8 +430,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                    mode="file-source"
                    subscribe="clipboard-files:clipboard-files"
                    lang="${this.lang}"
-                   enabled-targets="${this.enabledTargets}"
                    auth-url="${this.nextcloudAuthUrl}"
+                   enabled-targets="${this.enabledTargets}"
+                   nextcloud-auth-url="${this.nextcloudAuthUrl}"
+                   nextcloud-web-dav-url="${this.nextcloudWebDavUrl}"
+                   nextcloud-name="${this.nextcloudName}"
+                   nextcloud-file-url="${this.nextcloudFileURL}"
                    allowed-mime-types="${this.allowedMimeTypes}"
                    @dbp-clipboard-file-picker-file-downloaded="${(event) => {
                     this.sendFileEvent(event.detail.file);}}">

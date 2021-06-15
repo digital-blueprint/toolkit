@@ -466,9 +466,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     openFilesource() {
-        const fileSource = this._("#file-source");
+        const fileSource = this._("#file-source-clipboard");
         if (fileSource) {
-            this._("#file-source").setAttribute("dialog-open", "");
+            this._("#file-source-clipboard").setAttribute("dialog-open", "");
         }
     }
 
@@ -496,7 +496,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         
                     </div>
                     <dbp-file-source
-                                id="file-source"
+                                id="file-source-clipboard"
                                 context="${i18n.t('clipboard.add-files')}"
                                 allowed-mime-types="${this.allowedMimeTypes}"
                                 nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
@@ -633,8 +633,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             }
             
             .warning-icon{
-                margin-right: 20px;
+                margin-right: 10px;
                 font-size: 1.5rem;
+                margin-top: -23px;
             }
             
             .container{
@@ -716,6 +717,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             .additional-button-container{
                 margin-top: 0.5rem;
             }
+            
+            .warning-container p{
+                margin-top: 0px;
+            }
 
             @media only screen
             and (orientation: portrait)
@@ -746,6 +751,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 .checkmark{
                     height: 30px;
                     width:30px;
+                    left: 0px;
+                    top: 2px;
                 }
 
                 .button-container .checkmark::after{
@@ -766,6 +773,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 
                 .btn-flex-container-mobile button:nth-child(2){
                     margin-top: 5px;
+                }
+                
+                .warning-icon{
+                    margin-right: 10px;
+                    font-size: 85px;
+                    margin-top: -43px;
                 }
                 
             }
