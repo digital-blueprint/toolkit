@@ -11,7 +11,8 @@ npm i @dbp-toolkit/common
 For valid icon names see: [LineIcons](https://lineicons.com/icons/)
 
 ```html
- <dbp-icon color="orange" name="menu-down"></dbp-icon>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/common@0.2.8/dist/components.js"></script>
+<dbp-icon style="color: red" name="menu-down"></dbp-icon>
 ```
 
 ### Exposed CSS variables
@@ -25,6 +26,7 @@ Example CSS: `html { --dbp-override-icon-cloud: url(/icons/cloud.svg); }`
 You can use this web component to show translated html.
 
 ```html
+<script type="module" src="https://unpkg.com/@dbp-toolkit/common@0.2.8/dist/components.js"></script>
 <dbp-translated subscribe="lang">
     <div slot="de">
         Dieser Text ist Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.
