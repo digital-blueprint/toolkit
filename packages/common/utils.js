@@ -335,3 +335,23 @@ export const getBaseName = (str) => {
 export const getFileExtension = (str) => {
     return str.split('.').pop();
 };
+
+/**
+ * Queries for "selector" in "root" in the slot html
+ *
+ * @param root
+ * @param selector
+ * @returns {*[]}
+ */
+export const querySlotted = (root, selector) => {
+    let slots = root.querySelectorAll('slot');
+    let matched = [];
+
+    slots.forEach((slot) => {
+        matched = matched.concat(slot.assignedElements().filter((el) => {
+            return el.matches(selector);
+        }));
+    });
+
+    return matched;
+};
