@@ -13,16 +13,21 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     }
 
     static get scopedElements() {
-        return {
+        let elements = {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
             'dbp-spinner': Spinner,
             'dbp-button': Button,
             'dbp-loading-button': LoadingButton,
-            'dbp-auth': customElements.get('dbp-auth'),
             'dbp-inline-notification': InlineNotification,
             'dbp-translated': Translated,
         };
+
+        if (customElements.get('dbp-auth')) {
+            elements['dbp-auth'] = customElements.get('dbp-auth');
+        }
+
+        return elements;
     }
 
     static get properties() {
