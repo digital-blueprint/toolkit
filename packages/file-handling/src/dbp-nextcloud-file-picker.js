@@ -295,10 +295,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             const authUrl = this.authUrl + "?target-origin=" + encodeURIComponent(window.location.href);
             this.loginWindow = window.open(authUrl, "Nextcloud Login",
                 "width=400,height=400,menubar=no,scrollbars=no,status=no,titlebar=no,toolbar=no");
-            console.log("open nextcloud filepicker, no webdavclient");
+            //console.log("open nextcloud filepicker, no webdavclient");
         } else {
             this.loadDirectory(this.directoryPath, this.webDavClient);
-            console.log("load in nextcloud webcomponent");
+            //console.log("load in nextcloud webcomponent");
         }
     }
 
@@ -476,6 +476,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.dispatchEvent(event);
                 this.loading = false;
                 this.statusText = "";
+                this.numberOfSelectedFiles = 0;
             }).catch(error => {
                 console.error(error.message);
                 this.loading = false;
@@ -490,6 +491,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      */
     sendDirectory(directory) {
         this.tabulatorTable.deselectRow();
+        this.numberOfSelectedFiles = 0;
         let path;
 
         if (!directory[0]) {
@@ -792,6 +794,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     closeDialog(e) {
+        this.numberOfSelectedFiles = 0;
         MicroModal.close(this._('#modal-picker'));
     }
 

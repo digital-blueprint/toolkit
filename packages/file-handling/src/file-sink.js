@@ -130,7 +130,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                     }
                     break;
                 case "files":
-                    if (this.files.length !== 0 && !this.isDialogOpen) {
+                    if (this.files.length !== 0) {
                         this.openDialog();
                         if (this.enabledTargets.includes("clipboard")) {
                             const clipboardSink = this._("#clipboard-file-picker");
@@ -203,7 +203,6 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openDialog() {
-        console.log("open sink");
         if (this.enabledTargets.includes('nextcloud')) {
             this.loadWebdavDirectory();
         }
@@ -227,13 +226,14 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             }
             this.firstOpen = false;
         }
-    }
 
-    //TODO find open error!!
+        this.isDialogOpen = true;
+    }
 
     closeDialog(e) {
         this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
+        this.isDialogOpen = false;
     }
 
     getClipboardHtml() {

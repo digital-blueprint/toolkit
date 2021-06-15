@@ -468,7 +468,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     openFilesource() {
         const fileSource = this._("#file-source-clipboard");
         if (fileSource) {
-            this._("#file-source-clipboard").setAttribute("dialog-open", "");
+            this._("#file-source-clipboard").openDialog();
         }
     }
 

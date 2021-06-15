@@ -369,7 +369,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openDialog() {
-        console.log("open source");
 
         if (this.enabledTargets.includes('nextcloud')) {
             this.loadWebdavDirectory();
@@ -413,12 +412,6 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     closeDialog() {
         this.sendSource();
-        const filePicker = this._('#nextcloud-file-picker');
-
-        if (filePicker) {
-            filePicker.selectAllButton = true;
-        }
-
         MicroModal.close(this._('#modal-picker'));
     }
 
