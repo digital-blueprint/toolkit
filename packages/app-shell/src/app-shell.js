@@ -3,6 +3,7 @@ import {html, css} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
+import {querySlotted} from '@dbp-toolkit/common/utils';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from '@dbp-toolkit/notification';
@@ -839,14 +840,17 @@ export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
         const mainClassMap = classMap({hidden: appHidden});
         const slotClassMap = classMap({hidden: !appHidden});
 
-        // XXX: Safari 11 doesn't like CSS being applied to slots or via HTML,
-        // so we have to remove the slot instead of hiding it
         if (!appHidden) {
             this.updateComplete.then(() => {
+                // XXX: Safari 11 doesn't like CSS being applied to slots or via HTML,
+                // so we have to remove the slot instead of hiding it
                 // select slots with no name attribute
                 const slot = this.shadowRoot.querySelector("slot:not([name])");
                 if (slot)
                     slot.remove();
+
+                // remove the "slot-hidden" class of elements in the html of injected slots to show them after the page was loaded
+                querySlotted(this.shadowRoot, '.slot-hidden').forEach((slot) => { slot.classList.remove("slot-hidden"); });
             });
         }
 
