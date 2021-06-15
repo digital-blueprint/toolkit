@@ -13,7 +13,7 @@ console.log("build: " + build);
 
 export default (async () => {
     return {
-        input: (build !='test') ? ['demo.js'] : glob.sync('test/**/*.js'),
+        input: (build !='test') ? ['demo.js', 'icon.js'] : glob.sync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
