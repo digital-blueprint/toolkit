@@ -15,6 +15,17 @@ npm i @dbp-toolkit/auth
 <script type="module" src="node_modules/@dbp-toolkit/auth/dist/dbp-auth.js"></script>
 ```
 
+Or directly via CDN:
+
+```html
+<dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz" client-id="some-id"></dbp-auth-keycloak>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/auth@0.2.2/dist/dbp-auth.js"></script>
+```
+
+You need Keycloak to be in place to make use of the auth component.
+Best take a look on examples like [index.html](https://gitlab.tugraz.at/dbp/esign/signature/-/blob/master/examples/dbp-signature/index.html)
+for more explanation.
+
 ### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
