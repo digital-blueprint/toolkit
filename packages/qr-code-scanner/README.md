@@ -7,7 +7,8 @@ npm i @dbp-toolkit/qr-code-scanner
 ```
 
 ## Requirements
-- Https
+
+For some browsers it might be necessary to host the html using this component via https.
 
 ## Usage
 
@@ -16,17 +17,23 @@ npm i @dbp-toolkit/qr-code-scanner
 <script type="module" src="node_modules/@dbp-toolkit/qr-code-scanner/dist/dbp-qr-code-scanner.js"></script>
 ```
 
-The QR code Scanner Web Component uses a camera device, which you can select(if you have more than one).
-With this camera device you can scan a QR code. If a QR code is detected a event will be fired named: 
-`'dbp-qr-code-scanner-data'`.
- In this event you can read the data of the qr code with: `'event.detail'`.
+Or directly via CDN:
+
+```html
+<dbp-qr-code-scanner></dbp-qr-code-scanner>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/qr-code-scanner@0.2.2/dist/dbp-qr-code-scanner.js"></script>
+```
+
+The QR code Scanner Web Component uses a camera device, which you can select (if you have more than one).
+With this camera device you can scan a QR code. If a QR code is detected an event named `dbp-qr-code-scanner-data` will be fired.
+In this event you can read the data of the qr code with `event.detail`.
 
 
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-qr-code-scanner lang="de"></dbp-qr-code-scanner>`
-- `match-regex` (optional, default: `'.*'`): a regular expression that when matching the QR code will result in the user getting feedback
+- `match-regex` (optional, default: `.*`): a regular expression that when matching the QR code will result in the user getting feedback
 - `show-output` (optional, default: `false`): set to `true` for showing 
 a box under the video canvas with the read QR code data
     - example `<dbp-qr-code-scanner show-output></dbp-qr-code-scanner>`
@@ -85,4 +92,5 @@ You can try the webcomponent with this example QR Code.
 ### Hint
 
 Add the attribute `show-output` for debugging propose.
-- example: `<dbp-qr-code-scanner show-output></dbp-qr-code-scanner>`
+
+Example: `<dbp-qr-code-scanner show-output></dbp-qr-code-scanner>`
