@@ -1,12 +1,21 @@
 # DataTableView Web Component
 
-# Usage
+## Usage
 
 ```html
 <dbp-data-table-view></dbp-data-table-view>
+<script type="module" src="node_modules/@dbp-toolkit/data-table-view/dist/dbp-data-table-view.js"></script>
 ```
 
-# Attributes
+Or directly via CDN:
+
+```html
+<dbp-data-table-view></dbp-data-table-view>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/data-table-view@0.2.2/dist/dbp-data-table-view.js"></script>
+```
+
+## Attributes
+
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-data-table-view lang="de"></dbp-data-table-view>`
 - `paging` (optional, required to let datatable do the paging of loaded rows)
@@ -23,7 +32,8 @@
     - example `<dbp-data-table-view default-order='[1,"asc"]'></pu-data-table-view>` 
     - example `<dbp-data-table-view default-order='[[0,"desc"],[2,"asc"]]'></pu-data-table-view>` 
 
-# Local development
+## Local development
+
 ```bash
 # get the source
 git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
