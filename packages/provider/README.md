@@ -41,6 +41,12 @@ You can provide attributes (e.g. `global-name`) for components inside the provid
 <script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
 ```
 
+Or you can also use the CDN to include the component:
+
+```html
+<script type="module" src="https://unpkg.com/@dbp-toolkit/provider@0.2.2/dist/dbp-provider.js"></script>
+```
+
 All other components are also inherent providers (see below), so you don't really need `dbp-provider` in the shadow dom
 of other components. The use of `dbp-provider` is mainly suggested being used for namespacing (e.g. different languages
 or entry point urls on the same page) or to deliver attribute changes across different components.
