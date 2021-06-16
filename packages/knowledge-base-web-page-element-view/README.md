@@ -13,6 +13,13 @@ npm i @dbp-toolkit/knowledge-base-web-page-element-view
 <script type="module" src="node_modules/@dbp-toolkit/knowledge-base-web-page-element-view/dist/dbp-knowledge-base-web-page-element-view.js"></script>
 ```
 
+Or directly via CDN:
+
+```html
+<dbp-knowledge-base-web-page-element-view></dbp-knowledge-base-web-page-element-view>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/knowledge-base-web-page-element-view@0.2.2/dist/dbp-knowledge-base-web-page-element-view.js"></script>
+```
+
 ## Attributes
 
 - `value`: path to the web page element
