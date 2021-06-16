@@ -13,6 +13,13 @@ npm i @dbp-toolkit/language-select
 <script type="module" src="node_modules/@dbp-toolkit/language-select/dist/dbp-language-select.js"></script>
 ```
 
+Or directly via CDN:
+
+```html
+<dbp-language-select></dbp-language-select>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/language-select@0.2.2/dist/dbp-language-select.js"></script>
+```
+
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English (note that it will be shown the
