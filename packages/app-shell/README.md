@@ -12,9 +12,20 @@ npm i @dbp-toolkit/app-shell
 ## Usage
 
 ```html
-<dbp-app-shell src="/example.topic.metadata.json"></dbp-app-shell>
 <script type="module" src="node_modules/@dbp-toolkit/app-shell/dist/dbp-app-shell.js"></script>
+<dbp-app-shell src="/example.topic.metadata.json"></dbp-app-shell>
 ```
+
+Or directly via CDN:
+
+```html
+<script type="module" src="https://unpkg.com/@dbp-toolkit/app-shell@0.2.3/dist/dbp-app-shell.js"></script>
+<dbp-app-shell src="/example.topic.metadata.json"></dbp-app-shell>
+```
+
+You need Keycloak and other parts to be in place to really make full use of the AppShell.
+Best take a look on examples like [index.html](https://gitlab.tugraz.at/dbp/esign/signature/-/blob/master/examples/dbp-signature/index.html)
+for more explanation.
 
 ## Attributes
 
