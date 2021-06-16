@@ -6,6 +6,8 @@ You can install this component via npm:
 npm i @dbp-toolkit/font-source-sans-pro
 ```
 
+You can also use the files directly from the [CDN](https://unpkg.com/browse/@dbp-toolkit/font-source-sans-pro/files/).
+
 ## FAQ
 
 * Why?
