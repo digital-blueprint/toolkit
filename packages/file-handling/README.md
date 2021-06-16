@@ -37,6 +37,14 @@ and the file sink dialog will open, so you are able to store the file again.
 <script type="module" src="node_modules/@dbp-toolkit/file-handling/dist/dbp-file-sink.js"></script>
 ```
 
+Or you can include the JS files directly via CDN:
+
+```html
+<script type="module" src="https://unpkg.com/@dbp-toolkit/file-handling@0.2.5/dist/dbp-file-source.js"></script>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/file-handling@0.2.5/dist/dbp-file-sink.js"></script>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/file-handling@0.2.5/dist/dbp-clipboard.js"></script>
+```
+
 ## FileSource
 
 This web component allows the selection of local files via file dialog or drag and drop and to select and download
@@ -180,8 +188,8 @@ This web component depends on:
 ### Usage
 
 ```html
- <dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name">
- </dbp-clipboard>
+<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name">
+</dbp-clipboard>
 ```
 
 ### Attributes
