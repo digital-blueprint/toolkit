@@ -13,6 +13,13 @@ npm i @dbp-toolkit/person-select
 <script type="module" src="node_modules/@dbp-toolkit/person-select/dist/dbp-person-select.js"></script>
 ```
 
+Or directly via CDN:
+
+```html
+<dbp-person-select></dbp-person-select>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/person-select@0.2.2/dist/dbp-person-select.js"></script>
+```
+
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
