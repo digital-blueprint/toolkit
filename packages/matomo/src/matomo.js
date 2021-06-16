@@ -6,7 +6,7 @@ export class MatomoElement extends DBPLitElement {
     constructor() {
         super();
         this.endpoint = '';
-        this.siteId = -1;
+        this.siteId = '';
         this.isRunning = false;
         this.lastEvent = [];
         this.gitInfo = '';
@@ -20,8 +20,8 @@ export class MatomoElement extends DBPLitElement {
         return {
             ...super.properties,
             endpoint: { type: String },
-            siteId: { type: Number, attribute: 'site-id' },
-            gitInfo: { type: Number, attribute: 'git-info' },
+            siteId: { type: String, attribute: 'site-id' },
+            gitInfo: { type: String, attribute: 'git-info' },
             auth: { type: Object },
             analyticsEvent: { type: Object, attribute: 'analytics-event' },
         };
@@ -70,7 +70,7 @@ export class MatomoElement extends DBPLitElement {
 
     setupMatomo(loggedIn) {
         if (loggedIn && ! this.isRunning) {
-            if (this.siteId === -1) {
+            if (this.siteId === '') {
                 console.log('site id missing, skipping matomo...');
                 return;
             }
