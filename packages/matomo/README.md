@@ -13,6 +13,13 @@ npm i @dbp-toolkit/matomo
 <script type="module" src="node_modules/@dbp-toolkit/matomo/dist/dbp-matomo.js"></script>
 ```
 
+Or directly via CDN:
+
+```html
+<dbp-matomo></dbp-matomo>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/matomo@0.2.4/dist/dbp-matomo.js"></script>
+```
+
 ## Attributes
 
 - `endpoint` (required): set to your *Matomo* server
