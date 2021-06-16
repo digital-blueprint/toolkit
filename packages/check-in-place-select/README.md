@@ -13,6 +13,13 @@ npm i @dbp-toolkit/check-in-place-select
 <script type="module" src="node_modules/@dbp-toolkit/check-in-place-select/dist/dbp-check-in-place-select.js"></script>
 ```
 
+Or directly via CDN:
+
+```html
+<dbp-check-in-place-select></dbp-check-in-place-select>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/check-in-place-select@0.2.2/dist/dbp-check-in-place-select.js"></script>
+```
+
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
