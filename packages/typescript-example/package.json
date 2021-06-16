@@ -1,6 +1,6 @@
 {
   "name": "@dbp-toolkit/typescript-example",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "repository": {

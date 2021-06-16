@@ -9,3 +9,10 @@ You can install this component via npm:
 ```bash
 npm i @dbp-toolkit/typescript-example
 ```
+
+Or use it directly via CDN:
+
+```html
+<dbp-typescript-example></dbp-typescript-example>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/typescript-example@0.2.2/dist/dbp-typescript-example.js"></script>
+```
