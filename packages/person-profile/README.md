@@ -13,6 +13,13 @@ npm i @dbp-toolkit/person-profile
 <script type="module" src="node_modules/@dbp-toolkit/person-profile/dist/dbp-person-profile.js"></script>
 ```
 
+Or directly via CDN:
+
+```html
+<dbp-person-profile></dbp-person-profile>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/person-profile@0.2.2/dist/dbp-person-profile.js"></script>
+```
+
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
