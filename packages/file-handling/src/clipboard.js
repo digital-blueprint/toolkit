@@ -624,7 +624,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 </div>
                 <div class="clipboard-footer">
                     <button class="button select-button is-primary" ?disabled="${this.clipboardSelectBtnDisabled}"
-                            @click="${() => {this.sendClipboardFiles(this.tabulatorTable.getSelectedData());}}"> ${i18n.t('clipboard.source-btn', {count: this.tabulatorTable ? this.tabulatorTable.getSelectedRows().length : 0})}
+                            @click="${() => {this.sendClipboardFiles(this.tabulatorTable.getSelectedData());}}"> ${this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0 ? i18n.t('clipboard.source-btn', {count: this.tabulatorTable ? this.tabulatorTable.getSelectedRows().length : 0}) : i18n.t('clipboard.source-btn-none')}
                     </button>
                 </div>
             </div>

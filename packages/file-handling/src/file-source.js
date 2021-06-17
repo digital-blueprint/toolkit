@@ -412,6 +412,26 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
 
     closeDialog() {
         this.sendSource();
+        if (this.enabledTargets.includes('nextcloud')) {
+            const filePicker = this._('#nextcloud-file-picker');
+            if (filePicker && filePicker.tabulatorTable) {
+
+                filePicker.tabulatorTable.deselectRow();
+                if (filePicker._('#select_all')) {
+                    filePicker._("#select_all").checked = false;
+                }
+            }
+        }
+
+        if (this.enabledTargets.includes('clipboard')) {
+            const filePicker = this._('#clipboard-file-picker');
+            if (filePicker && filePicker.tabulatorTable) {
+                filePicker.tabulatorTable.deselectRow();
+                if (filePicker._('#select_all')) {
+                    filePicker._("#select_all").checked = false;
+                }
+            }
+        }
         MicroModal.close(this._('#modal-picker'));
     }
 
@@ -539,7 +559,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                                 <p>${i18n.t('file-source.nav-local')}</p>
                             </div>
                             <div title="Nextcloud"
-                                 @click="${() => { this.activeTarget = "nextcloud"; this.loadWebdavDirectory();}}"
+                                 @click="${() => { this.activeTarget = "nextcloud";}}"
                                  class="${classMap({"active": this.activeTarget === "nextcloud", hidden: !this.hasEnabledSource("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p> ${this.nextcloudName} </p>
