@@ -3,7 +3,6 @@ import {html, css} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
-import {querySlotted} from '@dbp-toolkit/common/utils';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from '@dbp-toolkit/notification';
