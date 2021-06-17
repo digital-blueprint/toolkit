@@ -848,9 +848,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 const slot = this.shadowRoot.querySelector("slot:not([name])");
                 if (slot)
                     slot.remove();
-
-                // remove the "slot-hidden" class of elements in the html of injected slots to show them after the page was loaded
-                querySlotted(this.shadowRoot, '.slot-hidden').forEach((slot) => { slot.classList.remove("slot-hidden"); });
             });
         }
 
