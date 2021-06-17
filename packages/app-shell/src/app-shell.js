@@ -14,7 +14,7 @@ import {BuildInfo} from './build-info.js';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
 
 const i18n = createI18nInstance();
@@ -41,7 +41,7 @@ const importNotify = async (promise) => {
     }
 };
 
-export class AppShell extends ScopedElementsMixin(AdapterLitElement) {
+export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = i18n.language;
