@@ -80,7 +80,15 @@ export const base64EncodeUnicode = (str) => {
  */
 
 /**
- * 
+ * Same as customElements.define() but with some additional error handling.
+ *
+ * In case the same component (with the exact same implementation) is already
+ * defined then this will do nothing instead of erroring out.
+ *
+ * In case the browser doesn't support custom elements it will fill all those
+ * custom tags with an error message so the user gets some feedback instead of
+ * just an empty page.
+ *
  * @param {string} name 
  * @param {Function} constructor 
  * @param {object} options 
