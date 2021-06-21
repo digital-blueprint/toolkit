@@ -44,7 +44,9 @@ export class Router {
             // In case of a router redirect, set the new location
             if (newPathname !== oldPathName) {
                 const referrerUrl = location.href;
-                window.history.replaceState({}, '', newPathname);
+                if (!newPathname.endsWith('/root')) {
+                    window.history.replaceState({}, '', newPathname);
+                }
                 this.dispatchLocationChanged(referrerUrl);
             }
             this.setState(page);
@@ -66,7 +68,9 @@ export class Router {
             if (newPathname === oldPathname)
                 return;
             const referrerUrl = location.href;
-            window.history.pushState({}, '', newPathname);
+            if (!newPathname.endsWith('/root')) {
+                window.history.pushState({}, '', newPathname);
+            }
             this.dispatchLocationChanged(referrerUrl);
         });
     }
