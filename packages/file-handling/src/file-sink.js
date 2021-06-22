@@ -268,6 +268,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                    select-button-text="${i18n.t('file-sink.select-directory')}"
                    ?disabled="${this.disabled}"
                    lang="${this.lang}"
+                   subscribe="html-overrides"
                    auth-url="${this.nextcloudAuthUrl}"
                    web-dav-url="${this.nextcloudWebDavUrl}"
                    nextcloud-name="${this.nextcloudName}"

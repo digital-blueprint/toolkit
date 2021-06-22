@@ -464,6 +464,7 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                    class="${classMap({hidden: this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}"
                    ?disabled="${this.disabled}"
                    lang="${this.lang}"
+                   subscribe="html-overrides"
                    auth-url="${this.nextcloudAuthUrl}"
                    web-dav-url="${this.nextcloudWebDavUrl}"
                    nextcloud-name="${this.nextcloudName}"

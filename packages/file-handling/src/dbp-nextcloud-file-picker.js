@@ -1508,7 +1508,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     </div>
                     <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
                         <p class="m-inherit"><br>
-                            ${i18n.t('nextcloud-file-picker.auth-info')}<br>${this.authInfo}  
+                            ${i18n.t('nextcloud-file-picker.auth-info')}
+                            <slot name="auth-info"><br />${this.authInfo}</slot>
                         </p>
                     </div>
                 </div>
