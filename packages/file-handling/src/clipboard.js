@@ -571,7 +571,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 <div class="content">
                     <h3>${i18n.t('clipboard.sink-title')}</h3>
                     <div class="warning-container">
-                        <dbp-icon name="warning" class="warning-icon"></dbp-icon>
+                        <dbp-icon name="warning-high" class="warning-icon"></dbp-icon>
                         <p>${i18n.t('clipboard.warning')}</p>
                     </div>
                     <div>
@@ -608,7 +608,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 <div class="content">
                     <h3>${i18n.t('clipboard.source-title')}</h3>
                     <div class="warning-container">
-                        <dbp-icon name="warning" class="warning-icon"></dbp-icon>
+                        <dbp-icon name="warning-high" class="warning-icon"></dbp-icon>
                         <p>${i18n.t('clipboard.warning')}</p>
                     </div>
                     <div>
