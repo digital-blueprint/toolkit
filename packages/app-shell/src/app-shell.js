@@ -14,6 +14,7 @@ import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
+import {Provider} from "@dbp-toolkit/provider";
 
 
 const i18n = createI18nInstance();
@@ -80,6 +81,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
           'dbp-notification': Notification,
           'dbp-icon': Icon,
           'dbp-matomo': MatomoElement,
+          'dbp-provider': Provider,
         };
     }
 
@@ -864,70 +866,72 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <slot class="${slotClassMap}"></slot>
-            <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
-            <dbp-matomo subscribe="auth,analytics-event" endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
-            <div class="${mainClassMap}">
-            <div id="main">
-                <dbp-notification id="dbp-notification" lang="${this.lang}"></dbp-notification>
-                <header>
-                    <slot name="header">
-                        <div class="hd1-left">
-                            <dbp-language-select lang="${this.lang}"></dbp-language-select>
-                        </div>
-                        <div class="hd1-middle">
-                        </div>
-                        <div class="hd1-right">
-                            <dbp-auth-menu-button subscribe="auth" class="auth-button" lang="${this.lang}"></dbp-auth-menu-button>
-                        </div>
-                        <div class="hd2-left">
-                            <div class="header">
-                                <slot name="name">DBP<br />Digital Blueprint</slot>
-                            </div>
-                        </div>
-                        <div class="hd2-right">
-                            <slot name="logo">
-                                <div id="main-logo">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="70" viewBox="0 0 13.197 11.828" xmlns:v="https://vecta.io/nano"><style><![CDATA[.B{fill:#c8c7c7}.C{fill:#231f20}]]></style><path d="M0 4.942v.313l5.866 3.295 5.927-3.295v-.313L5.896 8.237z" class="B"/><path d="M5.865 8.549l5.927-3.295v-.313L5.896 8.237z" class="C"/><path d="M0 6.581v.312l5.866 3.295 5.927-3.295v-.312L5.896 9.876z" class="B"/><path d="M5.865 10.188l5.927-3.295v-.312L5.896 9.876z" class="C"/><path d="M0 8.22v.313l5.866 3.295 5.927-3.295V8.22l-5.896 3.295z" class="B"/><path d="M5.865 11.827l5.927-3.295V8.22l-5.897 3.295z" class="C"/><path d="M8.844 4.991L7.37 4.167l1.474-.824 1.474.824z" class="B"/><use xlink:href="#B" class="C"/><path d="M8.774 3.295L7.3 2.471l1.474-.824 1.474.824z" fill="#656263"/><use xlink:href="#B" x="-1.474" y="0.823" class="C"/><use xlink:href="#B" x="-2.948" class="B"/><g fill="#7b7979"><use xlink:href="#B" x="-1.474" y="-0.824"/><use xlink:href="#B" x="-1.474" y="-2.471"/><path d="M4.422 2.471l-1.474-.824L4.422.823l1.474.824z"/></g><use xlink:href="#B" x="-4.422" y="-0.824" class="B"/><path d="M11.722 1.647L10.249.823 11.722 0l1.474.824z" class="C"/><g class="B"><path d="M8.844 6.589L7.37 5.766l1.474-.824 1.474.824z"/><use xlink:href="#B" y="1.647"/></g><use xlink:href="#B" x="-4.422" y="0.823" class="C"/><defs ><path id="B" d="M7.37 5.766l-1.474-.824 1.474-.824 1.474.824z"/></defs></svg>
+            <dbp-provider auth requested-login-status analytics-event>
+                <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" load-person ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
+                <dbp-matomo subscribe="auth,analytics-event" endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
+                <div class="${mainClassMap}">
+                    <div id="main">
+                        <dbp-notification id="dbp-notification" lang="${this.lang}"></dbp-notification>
+                        <header>
+                            <slot name="header">
+                                <div class="hd1-left">
+                                    <dbp-language-select lang="${this.lang}"></dbp-language-select>
+                                </div>
+                                <div class="hd1-middle">
+                                </div>
+                                <div class="hd1-right">
+                                    <dbp-auth-menu-button subscribe="auth" class="auth-button" lang="${this.lang}"></dbp-auth-menu-button>
+                                </div>
+                                <div class="hd2-left">
+                                    <div class="header">
+                                        <slot name="name">DBP<br />Digital Blueprint</slot>
+                                    </div>
+                                </div>
+                                <div class="hd2-right">
+                                    <slot name="logo">
+                                        <div id="main-logo">
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="70" viewBox="0 0 13.197 11.828" xmlns:v="https://vecta.io/nano"><style><![CDATA[.B{fill:#c8c7c7}.C{fill:#231f20}]]></style><path d="M0 4.942v.313l5.866 3.295 5.927-3.295v-.313L5.896 8.237z" class="B"/><path d="M5.865 8.549l5.927-3.295v-.313L5.896 8.237z" class="C"/><path d="M0 6.581v.312l5.866 3.295 5.927-3.295v-.312L5.896 9.876z" class="B"/><path d="M5.865 10.188l5.927-3.295v-.312L5.896 9.876z" class="C"/><path d="M0 8.22v.313l5.866 3.295 5.927-3.295V8.22l-5.896 3.295z" class="B"/><path d="M5.865 11.827l5.927-3.295V8.22l-5.897 3.295z" class="C"/><path d="M8.844 4.991L7.37 4.167l1.474-.824 1.474.824z" class="B"/><use xlink:href="#B" class="C"/><path d="M8.774 3.295L7.3 2.471l1.474-.824 1.474.824z" fill="#656263"/><use xlink:href="#B" x="-1.474" y="0.823" class="C"/><use xlink:href="#B" x="-2.948" class="B"/><g fill="#7b7979"><use xlink:href="#B" x="-1.474" y="-0.824"/><use xlink:href="#B" x="-1.474" y="-2.471"/><path d="M4.422 2.471l-1.474-.824L4.422.823l1.474.824z"/></g><use xlink:href="#B" x="-4.422" y="-0.824" class="B"/><path d="M11.722 1.647L10.249.823 11.722 0l1.474.824z" class="C"/><g class="B"><path d="M8.844 6.589L7.37 5.766l1.474-.824 1.474.824z"/><use xlink:href="#B" y="1.647"/></g><use xlink:href="#B" x="-4.422" y="0.823" class="C"/><defs ><path id="B" d="M7.37 5.766l-1.474-.824 1.474-.824 1.474.824z"/></defs></svg>
+                                        </div>
+                                    </slot>
                                 </div>
                             </slot>
+                        </header>
+                        <div id="headline">
+                            <h1 class="title">${this.topicMetaDataText('name')}</h1>
                         </div>
-                    </slot>
-                </header>
-                <div id="headline">
-                    <h1 class="title">${this.topicMetaDataText('name')}</h1>
-                </div>
-                <aside>
-                    <h2 class="subtitle" @click="${this.toggleMenu}">
-                        ${this.subtitle}
-                        <dbp-icon name="chevron-down" style="color: red" id="menu-chevron-icon"></dbp-icon>
-                    </h2>
-                    <ul class="menu hidden">
-                        ${menuTemplates}
-                        <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: red"></dbp-icon></li>
-                    </ul>
-                </aside>
+                        <aside>
+                            <h2 class="subtitle" @click="${this.toggleMenu}">
+                                ${this.subtitle}
+                                <dbp-icon name="chevron-down" style="color: red" id="menu-chevron-icon"></dbp-icon>
+                            </h2>
+                            <ul class="menu hidden">
+                                ${menuTemplates}
+                                <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: red"></dbp-icon></li>
+                            </ul>
+                        </aside>
 
-                <main>
-                    <div style="display: ${!  this.metadata[this.activeView] ? 'block' : 'none'};">
-                        <h2>${i18n.t('page-not-found')}</h2>
-                        <p>${i18n.t('choose-from-menu')}</p>
+                        <main>
+                            <div style="display: ${!  this.metadata[this.activeView] ? 'block' : 'none'};">
+                                <h2>${i18n.t('page-not-found')}</h2>
+                                <p>${i18n.t('choose-from-menu')}</p>
+                            </div>
+                            <p class="description">${this.description}</p>
+                            ${ this._renderActivity() }
+                        </main>
+
+                        <footer>
+                            <slot name="footer">
+                                <slot name="footer-links">
+                                    <a rel="noopener" class="int-link-external" href="#use-your-privacy-policy-link">${i18n.t('privacy-policy')}</a>
+                                    <a rel="noopener" class="int-link-external" href="#use-your-imprint-link">${i18n.t('imprint')}</a>
+                                    <a rel="noopener" class="int-link-external" href="#use-your-imprint-link">${i18n.t('contact')}</a>
+                                </slot>
+                                <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
+                            </slot>
+                        </footer>
                     </div>
-                    <p class="description">${this.description}</p>
-                    ${ this._renderActivity() }
-                </main>
-
-                <footer>
-                    <slot name="footer">
-                        <slot name="footer-links">
-                            <a rel="noopener" class="int-link-external" href="#use-your-privacy-policy-link">${i18n.t('privacy-policy')}</a>
-                            <a rel="noopener" class="int-link-external" href="#use-your-imprint-link">${i18n.t('imprint')}</a>
-                            <a rel="noopener" class="int-link-external" href="#use-your-imprint-link">${i18n.t('contact')}</a>
-                        </slot>
-                        <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
-                    </slot>
-                </footer>
-            </div>
-            </div>
+                </div>
+            </dbp-provider>
         `;
     }
 }
