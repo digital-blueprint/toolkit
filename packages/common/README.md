@@ -41,7 +41,8 @@ The English or German text will be shown according to the `lang` attribute.
 
 ## Overriding slots in nested web components
 
-If slots are used in web components then it is best to derive your component class from `DBPLitElement`
+If slots are used in web components then it is best to derive your component class from
+[DBPLitElement](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/blob/master/packages/common/dbp-lit-element.js)
 and subscribe to the attribute `html-overrides` everywhere you use it with `subscribe="html-overrides"`.
 
 This way integrators who are using topics or activities are able to globally override these slots
