@@ -501,6 +501,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * @return html
      */
     getAdditionalButtons() {
+        let buttonsAreDisabled = this.clipboardFiles.files.length === 0 ? true : this.clipboardSelectBtnDisabled;
         return html`
             <div class="flex-container additional-button-container">
                         <div class="btn-flex-container-mobile">
@@ -510,13 +511,13 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             </button>
                             <button @click="${() => { this.clearClipboard(); }}"
                                     class="button" title="${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.remove-count', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.remove-all')}"
-                                    ?disabled="${this.clipboardFiles.files.length === 0}">
+                                    ?disabled="${buttonsAreDisabled}">
                                 ${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.remove-count-btn', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.remove-all-btn')}
                             </button>
                         </div>
                         <div class="btn-flex-container-mobile">
                             <button @click="${() => { this.openFileSink(); }}"
-                                    ?disabled="${this.clipboardFiles.files.length === 0}"
+                                    ?disabled="${buttonsAreDisabled}"
                                     class="button" title="${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.save-all')}">
                                 ${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.save-count-btn', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.save-all-btn')}
                             </button>

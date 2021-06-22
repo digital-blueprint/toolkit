@@ -346,6 +346,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {name: this.nextcloudName});
         this.lastDirectoryPath = this.directoryPath;
         this.directoryPath = path;
+        if (this._("#select_all"))
+            this._("#select_all").checked = false;
 
         // see https://github.com/perry-mitchell/webdav-client#getdirectorycontents
         if (this.webDavClient === null) {
