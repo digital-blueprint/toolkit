@@ -59,10 +59,10 @@ file pickers of the signature topic:
         <div slot="auth-info">
             <dbp-translated subscribe="lang">
                 <div slot="de">
-                    Deutscher Text
+                    Deutscher Text mit <a href="#ein-link">einem Link</a>
                 </div>
                 <div slot="en">
-                    English Text
+                    English Text with <a href="#a-link">a link</a>
                 </div>
             </dbp-translated>
         </div>
