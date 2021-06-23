@@ -62,7 +62,7 @@ file pickers of the signature topic:
                     Deutscher Text mit <a href="#ein-link">einem Link</a>
                 </div>
                 <div slot="en">
-                    English Text with <a href="#a-link">a link</a>
+                    English text with <a href="#a-link">a link</a>
                 </div>
             </dbp-translated>
         </div>
