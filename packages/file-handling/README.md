@@ -256,7 +256,7 @@ Example:
   <template slot="auth-info">
     <dbp-translated subscribe="lang">
       <div slot="de">
-        Für diese Funktion ist ein Bediensteten Account nötig!
+        FÃ¼r diese Funktion ist ein Bediensteten Account nÃ¶tig!
       </div>
       <div slot="en">
         An employee account is required for this function!
@@ -278,7 +278,7 @@ Example for `dbp-file-sink`:
     <div slot="auth-info">
       <dbp-translated subscribe="lang">
         <div slot="de">
-            Für diese Funktion ist ein Bediensteten Account nötig!
+            FÃ¼r diese Funktion ist ein Bediensteten Account nÃ¶tig!
         </div>
         <div slot="en">
             An employee account is required for this function!
