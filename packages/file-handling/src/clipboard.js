@@ -103,10 +103,11 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 layout: "fitColumns",
                 selectable: true,
                 selectableRangeMode: "drag",
-                responsiveLayout: true,
+                responsiveLayout:"collapse",
                 resizableColumns: false,
                 placeholder: i18n.t("clipboard.no-data"),
                 columns: [
+                    {formatter:"responsiveCollapse", width:30, minWidth:30, align:"center", resizable:false, headerSort:false},
                     {
                         title: "",
                         field: "type",
@@ -761,6 +762,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 margin-top: 0px;
             }
 
+            .tabulator-row .tabulator-responsive-collapse{
+                border: none;
+            }
+
             @media only screen
             and (orientation: portrait)
             and (max-device-width: 765px) {
@@ -788,15 +793,15 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 }
 
                 .checkmark{
-                    height: 30px;
-                    width:30px;
-                    left: 0px;
-                    top: 2px;
+                    height: 25px;
+                    width:25px;
+                    left: 2px;
+                    top: 6px;
                 }
 
                 .button-container .checkmark::after{
-                    left: 11px;
-                    top: 4px;
+                    left: 8px;
+                    top: 2px;
                     width: 8px;
                     height: 15px;
                 }
