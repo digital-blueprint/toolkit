@@ -19,6 +19,7 @@ suite('router', () => {
       routeName: 'foo',
       getState: () => { return {}; },
       setState: (state) => { },
+      getDefaultState: () => { return {}; },
     });
 
     router.setStateFromCurrentLocation();

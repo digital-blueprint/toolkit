@@ -228,6 +228,12 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             setState: (state) => {
                 this.updateLangIfChanged(state.lang);
                 this.switchComponent(state.component);
+            },
+            getDefaultState: () => {
+                return {
+                    lang: 'de',
+                    component: this.routes[0],
+                };
             }
         }, {
             baseUrl: new URL(this.basePath, window.location).pathname.replace(/\/$/, ''),
