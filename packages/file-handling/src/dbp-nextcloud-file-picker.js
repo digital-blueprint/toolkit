@@ -1461,8 +1461,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 .button-container .checkmark::after{
-                    left: 11px;
-                    top: 4px;
+                    left: 8px;
+                    top: 2px;
                     width: 8px;
                     height: 15px;
                 }
@@ -1473,10 +1473,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 .checkmark{
-                    height: 30px;
-                    width:30px;
-                    left: 0px;
-                    top: 2px;
+                    height: 25px;
+                    width:25px;
+                    left: 2px;
+                    top: 6px;
                 }
                 
             }
