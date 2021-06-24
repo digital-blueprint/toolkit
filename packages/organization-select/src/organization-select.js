@@ -25,6 +25,8 @@ export class OrganizationSelect extends AdapterLitElement {
         this.cache = {};
         this.value = '';
         this.context = '';
+
+        this._onDocumentClicked = this._onDocumentClicked.bind(this);
     }
 
     static get properties() {
@@ -48,16 +50,13 @@ export class OrganizationSelect extends AdapterLitElement {
 
     connectedCallback() {
         super.connectedCallback();
+        document.addEventListener('click', this._onDocumentClicked);
         this.updateSelect2();
+    }
 
-        this.updateComplete.then(()=> {
-            // Close the popup when clicking outside of select2
-            document.addEventListener('click', (ev) => {
-                if (!ev.composedPath().includes(this)) {
-                    this._closeSelect2();
-                }
-            });
-        });
+    disconnectedCallback() {
+        document.removeEventListener('click', this._onDocumentClicked);
+        super.disconnectedCallback();
     }
 
     async load_organizations() {
@@ -71,11 +70,13 @@ export class OrganizationSelect extends AdapterLitElement {
         return this.cache[this.lang] === undefined;
     }
 
-    _closeSelect2() {
-        const $select = this.$('#' + this.selectId);
-        console.assert($select.length, "select2 missing");
-        if (this.select2IsInitialized($select)) {
-            $select.select2('close');
+    _onDocumentClicked(ev) {
+        // Close the popup when clicking outside of select2
+        if (!ev.composedPath().includes(this)) {
+            const $select = this.$('#' + this.selectId);
+            if ($select.length && this.select2IsInitialized($select)) {
+                $select.select2('close');
+            }
         }
     }
 
