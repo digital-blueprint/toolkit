@@ -58,8 +58,8 @@ The `details` attribute of the event is the language (possible values `en`, `de`
 
 ### Slots
 
-You can give your slots a css class `slot-hidden` (which you have to define with `.slot-hidden { display: none; }`) to
-hide the slots while the app shell is loading. This css class will then be removed from the slots by the app shell.
+You use the template tag to inject slots into the web component.
+These templates will be converted to div containers when the page is loaded and will not show up before that.
 
 #### Unnamed slot
 
@@ -71,33 +71,33 @@ Example: `<app-shell><dbp-loading-spinner></dbp-loading-spinner></app-shell>`
 
 The content of this slot will be shown left in the header and can be used to set a name (e.g. the name of the institution).
 
-Example: `<app-shell><div slot="name">TU Graz<br />Graz University of Technology</div></app-shell>`
+Example: `<app-shell><template slot="name">TU Graz<br />Graz University of Technology</template></app-shell>`
 
 #### logo
 
 The content of this slot will be shown right in the header and can be used to override the logo image.
 
-Example: `<app-shell><div slot="logo"><img alt="logo" src="/path/to/logo.png" /></div></app-shell>`
+Example: `<app-shell><template slot="logo"><img alt="logo" src="/path/to/logo.png" /></template></app-shell>`
 
 #### header
 
 The content of this slot will override the whole content of the header.
 You will need to provide your own language selector and auth component.
 
-Example: `<app-shell><div slot="header">My custom header</div></app-shell>`
+Example: `<app-shell><template slot="header">My custom header</template></app-shell>`
 
 #### footer-links
 
 The content of this slot will override the whole content of the footer link section, for example to set custom links.
 
-Example: `<app-shell><div slot="footer-links"><a target="_blank" rel="noopener" class="int-link-external" href="https://my-webpage.com">Link text</a></div></app-shell>`
+Example: `<app-shell><template slot="footer-links"><a target="_blank" rel="noopener" class="int-link-external" href="https://my-webpage.com">Link text</a></template></app-shell>`
 
 #### footer
 
 The content of this slot will override the whole content of the footer, for example to set custom links
 and also overwrite the `dbp-build-info` tag.
 
-Example: `<app-shell><div slot="footer"><a target="_blank" rel="noopener" class="int-link-external" href="https://my-webpage.com">Link text</a></div></app-shell>`
+Example: `<app-shell><template slot="footer"><a target="_blank" rel="noopener" class="int-link-external" href="https://my-webpage.com">Link text</a></template></app-shell>`
 
 ## Topic Metadata
 
