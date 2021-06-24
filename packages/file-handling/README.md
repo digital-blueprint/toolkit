@@ -235,6 +235,59 @@ This web component depends on:
 - `--dbp-override-image-nextcloud` is used to override the cloud image on the connection screen
   - example CSS: `html { --dbp-override-image-nextcloud: url(/icons/nextcloud.svg); }`
 
+## Nextcloud file picker
+
+The `dbp-nextcloud-file-picker` component is currently used by the file sink, file source and
+clipboard components. There is a slot you can use to override to provide additional information.
+
+### Slots
+
+You use template tags to inject slots into the web component.
+These templates will be converted to div containers when the page is loaded and will not show up before that.
+
+#### auth-info
+
+The content of this slot will be shown below the other text on the Nextcloud file picker connection page.
+
+Example:
+
+```html
+<dbp-nextcloud-file-picker lang="de">
+  <template slot="auth-info">
+    <dbp-translated subscribe="lang">
+      <div slot="de">
+        Für diese Funktion ist ein Bediensteten Account nötig!
+      </div>
+      <div slot="en">
+        An employee account is required for this function!
+      </div>
+    </dbp-translated>
+  </template>
+</dbp-nextcloud-file-picker>
+```
+
+Most likely you will override this slot across more webcomponents.
+
+Example for `dbp-file-sink`:
+
+```html
+<dbp-file-sink lang="de" html-overrides="global-override"></dbp-file-sink>
+
+<template id="global-override">
+  <template id="dbp-nextcloud-file-picker">
+    <div slot="auth-info">
+      <dbp-translated subscribe="lang">
+        <div slot="de">
+            Für diese Funktion ist ein Bediensteten Account nötig!
+        </div>
+        <div slot="en">
+            An employee account is required for this function!
+        </div>
+      </dbp-translated>
+    </div>
+  </template>
+</template>
+```
 
 ## Local development
 
