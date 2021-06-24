@@ -252,11 +252,19 @@ export function getFileHandlingCss() {
 
             .modal-nav{
                 display: flex;
-                justify-content: space-around;
+                /*justify-content: space-around;*/
                 grid-area: nav;
                 border: none;
                 border-bottom: 1px solid black;
                 border-top: 1px solid black;
+                white-space: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+            }
+
+            .modal-nav::-webkit-scrollbar {
+                display: none;
             }
 
             .modal-content{
