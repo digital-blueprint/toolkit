@@ -104,7 +104,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 selectable: true,
                 selectableRangeMode: "drag",
                 responsiveLayout:"collapse",
-                /*responsiveLayoutCollapseStartOpen:false,*/
+                responsiveLayoutCollapseStartOpen:false,
                 resizableColumns: false,
                 placeholder: i18n.t("clipboard.no-data"),
                 columns: [
@@ -210,15 +210,14 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             that.generateClipboardTable();
 
         });
-
         //Register only one beforeunload Event for the clipboard warning
         if (!window.clipboardWarning) {
             window.addEventListener('beforeunload', this._onReceiveBeforeUnload, false);
             window.clipboardWarning = true;
         }
-
-
     }
+
+
 
     disconnectedCallback() {
 
@@ -305,6 +304,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
             }
+
+            this.redrawTableWhenCollapsing(this.tabulatorTable);
         }
     }
 
@@ -774,6 +775,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 color: black;
                 font-size: 1.3em;
                 margin-top: -8px;
+            }
+            
+            .tabulator .tabulator-tableHolder {
+                height: unset !important; //TODO find a better way to do this
             }
 
             @media only screen
