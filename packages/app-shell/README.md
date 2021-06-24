@@ -58,7 +58,7 @@ The `details` attribute of the event is the language (possible values `en`, `de`
 
 ### Slots
 
-You use the template tag to inject slots into the web component.
+You use template tags to inject slots into the web component.
 These templates will be converted to div containers when the page is loaded and will not show up before that.
 
 #### Unnamed slot
