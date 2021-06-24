@@ -44,9 +44,7 @@ export class Router {
             // In case of a router redirect, set the new location
             if (newPathname !== oldPathName) {
                 const referrerUrl = location.href;
-                if (!newPathname.endsWith('/root')) {
-                    window.history.replaceState({}, '', newPathname);
-                }
+                window.history.replaceState({}, '', newPathname);
                 this.dispatchLocationChanged(referrerUrl);
             }
             this.setState(page);
@@ -68,9 +66,7 @@ export class Router {
             if (newPathname === oldPathname)
                 return;
             const referrerUrl = location.href;
-            if (!newPathname.endsWith('/root')) {
-                window.history.pushState({}, '', newPathname);
-            }
+            window.history.pushState({}, '', newPathname);
             this.dispatchLocationChanged(referrerUrl);
         });
     }
@@ -107,12 +103,12 @@ export class Router {
             partialState = {};
         let combined = {...currentState, ...partialState};
 
-        // prevent: Uncaught TypeError: Expected "component" to match "[^\/#\?]+?", but got ""
-        if (combined.component === '') {
-            combined.component = 'root';
+        try {
+            return generateUrls(this.router)(this.routeName, combined);
+        } catch {
+            // XXX: In case we have partial state this will fail, just return the old path
+            return location.pathname;
         }
-
-        return generateUrls(this.router)(this.routeName, combined);
     }
 
     dispatchLocationChanged(referrerUrl = "") {
