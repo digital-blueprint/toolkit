@@ -104,10 +104,11 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 selectable: true,
                 selectableRangeMode: "drag",
                 responsiveLayout:"collapse",
+                /*responsiveLayoutCollapseStartOpen:false,*/
                 resizableColumns: false,
                 placeholder: i18n.t("clipboard.no-data"),
                 columns: [
-                    {formatter:"responsiveCollapse", width:30, minWidth:30, align:"center", resizable:false, headerSort:false},
+                    {formatter:"responsiveCollapse", width:32, minWidth:32, align:"center", resizable:false, headerSort:false},
                     {
                         title: "",
                         field: "type",
@@ -764,6 +765,15 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
             .tabulator-row .tabulator-responsive-collapse{
                 border: none;
+            }
+
+            .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle{
+                height: 32px;
+                width: 32px;
+                background-color: unset;
+                color: black;
+                font-size: 1.3em;
+                margin-top: -8px;
             }
 
             @media only screen
