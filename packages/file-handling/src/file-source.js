@@ -524,9 +524,9 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 height: 100%;
             }
             
-             @media only screen
+            @media only screen
             and (orientation: portrait)
-            and (max-device-width: 800px) {
+            and (max-width: 768px) {
                 #dropArea{
                     height: 100%;
                 }

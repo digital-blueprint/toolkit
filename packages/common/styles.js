@@ -968,17 +968,13 @@ export function getModalDialogCSS() {
         
         @media only screen
         and (orientation: landscape)
-        and (max-device-width: 896px) {
+        and (max-width: 768px) {
              .modal-container {
                  width: 100%;
                  height: 100%;
                  max-width: 100%;
              }
-         }
-        
-        @media only screen
-        and (orientation: portrait)
-        and (max-device-width: 800px) {
+            
             .micromodal-slide .modal-container{
                 height: 100%;
                 width: 100%;

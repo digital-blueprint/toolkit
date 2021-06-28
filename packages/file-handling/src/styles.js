@@ -34,8 +34,8 @@ export function getFileHandlingCss() {
         }
 
         .modal-nav .active{
-            background-color: var(--dbp-dark);;
-            color: var(--dbp-light);;
+            background-color: var(--dbp-dark);
+            color: var(--dbp-light);
         }
 
         .modal-content {
@@ -210,36 +210,39 @@ export function getFileHandlingCss() {
             user-select: none;
         }
 
+        .tabulator .tabulator-tableHolder {
+            height: unset !important; //TODO find a better way to do this
+        }
+
+        .tabulator-row .tabulator-responsive-collapse{
+            border: none;
+        }
+
+        .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle{
+            height: 32px;
+            width: 32px;
+            background-color: unset;
+            color: black;
+            font-size: 1.3em;
+            margin-top: -8px;
+        }
+
         @media only screen
         and (orientation: portrait)
-        and (max-device-width: 765px) {
+        and (max-width: 768px) {
 
             .tabulator .tabulator-tableHolder{
                 white-space: inherit;
             }
-        }
 
-
-
-
-
-
-
-
-
-            /**************************\\
-             Mobile Landscape Styles
-           \\**************************/
-        
-        @media only screen
-        and (orientation: landscape)
-        and (max-device-width: 896px) {
             .modal-container {
                 width: 100%;
                 height: 100%;
                 max-width: 100%;
             }
         }
+
+        
 
 
         /**************************\\
@@ -248,7 +251,7 @@ export function getFileHandlingCss() {
         
         @media only screen
         and (orientation: portrait)
-        and (max-device-width: 800px) {
+        and (max-width: 768px) {
 
             .modal-nav{
                 display: flex;
@@ -301,7 +304,7 @@ export function getFileHandlingCss() {
         
         @media only screen
         and (orientation: portrait)
-        and (max-device-width: 765px) {
+        and (max-width: 768px) {
             
 
             

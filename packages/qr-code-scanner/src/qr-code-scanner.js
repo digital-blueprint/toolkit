@@ -478,7 +478,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             
             @media only screen
             and (orientation: portrait)
-            and (max-device-width: 765px) {   
+            and (max-width: 768px) {   
                 .button-wrapper{    
                     display: flex;
                    justify-content: space-between;

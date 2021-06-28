@@ -1392,7 +1392,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             @media only screen
             and (orientation: portrait)
-            and (max-device-width: 768px) {
+            and (max-width: 768px) {
                 .add-folder button {
                     float: right;
                 }

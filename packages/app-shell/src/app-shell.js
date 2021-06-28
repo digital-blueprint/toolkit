@@ -680,7 +680,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 z-index: 99999;
             }
 
-            @media (max-width: 680px) {
+            @media (max-width: 768px) {
                 #main {
                     grid-template-columns: minmax(0, auto);
                     grid-template-rows: min-content min-content min-content 1fr min-content;

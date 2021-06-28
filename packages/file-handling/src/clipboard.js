@@ -772,7 +772,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
             @media only screen
             and (orientation: portrait)
-            and (max-device-width: 768px) {
+            and (max-width: 768px) {
                 .flex-container{
                     justify-content: space-between;
                     display: flex;
