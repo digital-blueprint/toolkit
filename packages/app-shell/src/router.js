@@ -17,12 +17,14 @@ export class Router {
     constructor(routes, options, unioptions) {
         this.getState = options.getState;
         this.setState = options.setState;
+        this.getDefaultState = options.getDefaultState;
         // XXX: We only have one route atm
         // If we need more we need to pass the route name to each function
         this.routeName = options.routeName;
 
         console.assert(this.getState);
         console.assert(this.setState);
+        console.assert(this.getDefaultState);
         console.assert(this.routeName);
 
         // https://github.com/kriasoft/universal-router
@@ -39,21 +41,26 @@ export class Router {
      */
     setStateFromCurrentLocation() {
         const oldPathName = location.pathname;
+
         this.router.resolve({pathname: oldPathName}).then(page => {
             const newPathname = this.getPathname(page);
             // In case of a router redirect, set the new location
             if (newPathname !== oldPathName) {
                 const referrerUrl = location.href;
-                if (!newPathname.endsWith('/root')) {
-                    window.history.replaceState({}, '', newPathname);
-                }
+                window.history.replaceState({}, '', newPathname);
                 this.dispatchLocationChanged(referrerUrl);
+            } else if (this.isBasePath(oldPathName)) {
+                page = this.getDefaultState();
             }
             this.setState(page);
         }).catch((e) => {
             // In case we can't resolve the location, just leave things as is.
             // This happens when a user enters a wrong URL or when testing with karma.
         });
+    }
+
+    isBasePath(pathname) {
+        return pathname.replace(/\/$/, '') === this.router.baseUrl.replace(/\/$/, '');
     }
 
     /**
@@ -67,10 +74,14 @@ export class Router {
             const oldPathname = location.pathname;
             if (newPathname === oldPathname)
                 return;
-            const referrerUrl = location.href;
-            if (!newPathname.endsWith('/root')) {
-                window.history.pushState({}, '', newPathname);
+
+            const defaultPathname = this.getPathname(this.getDefaultState());
+            if (newPathname === defaultPathname && this.isBasePath(oldPathname)) {
+                return;
             }
+
+            const referrerUrl = location.href;
+            window.history.pushState({}, '', newPathname);
             this.dispatchLocationChanged(referrerUrl);
         });
     }
@@ -107,12 +118,12 @@ export class Router {
             partialState = {};
         let combined = {...currentState, ...partialState};
 
-        // prevent: Uncaught TypeError: Expected "component" to match "[^\/#\?]+?", but got ""
-        if (combined.component === '') {
-            combined.component = 'root';
+        try {
+            return generateUrls(this.router)(this.routeName, combined);
+        } catch {
+            // XXX: In case we have partial state this will fail, just return the old path
+            return location.pathname;
         }
-
-        return generateUrls(this.router)(this.routeName, combined);
     }
 
     dispatchLocationChanged(referrerUrl = "") {

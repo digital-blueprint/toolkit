@@ -219,14 +219,21 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.router = new Router(routes, {
             routeName: 'mainRoute',
             getState: () => {
-                return {
+                let state = {
                     component: this.activeView,
                     lang: this.lang,
                 };
+                return state;
             },
             setState: (state) => {
                 this.updateLangIfChanged(state.lang);
                 this.switchComponent(state.component);
+            },
+            getDefaultState: () => {
+                return {
+                    lang: 'de',
+                    component: this.routes[0],
+                };
             }
         }, {
             baseUrl: new URL(this.basePath, window.location).pathname.replace(/\/$/, ''),
