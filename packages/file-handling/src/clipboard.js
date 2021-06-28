@@ -93,6 +93,16 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         super.update(changedProperties);
     }
 
+    async firstUpdated() {
+        // Give the browser a chance to paint
+        await new Promise((r) => setTimeout(r, 0));
+        if (this._("#select_all")) {
+            let boundSelectHandler = this.selectAllFiles.bind(this);
+            this._("#select_all").addEventListener('click', boundSelectHandler);
+        }
+    }
+
+
     connectedCallback() {
         super.connectedCallback();
         const that = this;
@@ -108,9 +118,13 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 resizableColumns: false,
                 placeholder: i18n.t("clipboard.no-data"),
                 columns: [
-                    {formatter:"responsiveCollapse", width:32, minWidth:32, align:"center", resizable:false, headerSort:false},
                     {
-                        title: "",
+                        formatter:"responsiveCollapse", width:32, minWidth:32, align:"center", resizable:false, headerSort:false},
+                    {
+                        title: '<label class="button-container select-all-icon">' +
+                            '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
+                            '<span class="checkmark" id="select_all_checkmark"></span>' +
+                            '</label>',
                         field: "type",
                         align: "center",
                         headerSort: false,
@@ -141,7 +155,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         title: i18n.t("clipboard.file-size"),
                         responsive: 4,
                         widthGrow: 1,
-                        minWidth: 50,
+                        minWidth: 65,
                         field: "size",
                         formatter: (cell, formatterParams, onRendered) => {
                             return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());
@@ -151,7 +165,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         title: i18n.t("clipboard.file-type"),
                         responsive: 2,
                         widthGrow: 1,
-                        minWidth: 20,
+                        minWidth: 35,
                         field: "type",
                         formatter: (cell, formatterParams, onRendered) => {
                             if (typeof cell.getValue() === 'undefined') {
@@ -204,6 +218,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         this.clipboardSelectBtnDisabled = false;
                     } else {
                         this.clipboardSelectBtnDisabled = true;
+                    }
+
+                    if (this._("#select_all_checkmark")) {
+                        this._("#select_all_checkmark").title = this.checkAllSelected() ? i18n.t('clipboard.select-nothing') : i18n.t('clipboard.select-all');
                     }
                 }
             });
@@ -304,8 +322,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
             }
-
-            this.redrawTableWhenCollapsing(this.tabulatorTable);
         }
     }
 
@@ -581,10 +597,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         ${this.getAdditionalButtons()}
                         <link rel="stylesheet" href="${tabulatorCss}">
                         <div class="table-wrapper">
-                            <label class="button-container select-all-icon">
-                                <input type="checkbox" id="select_all" name="select_all" value="select_all" @click="${() => {this.selectAllFiles();}}">
-                                <span class="checkmark" title="${this.checkAllSelected() ? i18n.t("clipboard.select-nothing") : i18n.t("clipboard.select-all")}"></span>
-                            </label>
                             <table id="clipboard-content-table" class="force-no-select"></table>
                         </div>
                     </div>
@@ -618,10 +630,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         ${this.getAdditionalButtons()}
                         <link rel="stylesheet" href="${tabulatorCss}">
                         <div class="table-wrapper">
-                            <label class="button-container select-all-icon">
-                                <input type="checkbox" id="select_all" name="select_all" value="select_all" @click="${() => {this.selectAllFiles();}}">
-                                <span class="checkmark" title="${this.checkAllSelected() ? i18n.t("clipboard.select-nothing") : i18n.t("clipboard.select-all")}"></span>
-                            </label>
                             <table id="clipboard-content-table" class="force-no-select"></table>
                         </div>
                     </div>
@@ -708,8 +716,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             .checkmark{
                 height: 20px;
                 width:20px;
-                left: 5px;
-                top: 1px;
+                left: 11px;
+                top: 4px;
             }
             
             .button-container .checkmark::after{
@@ -724,11 +732,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             }
             
             .select-all-icon{
-                position: absolute;
-                top: 17px;
-                left: 10px;
-                z-index: 100;
-                height: 40px;
+                height: 30px;
             }
 
             .clipboard-footer {
@@ -764,26 +768,11 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 margin-top: 0px;
             }
 
-            .tabulator-row .tabulator-responsive-collapse{
-                border: none;
-            }
 
-            .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle{
-                height: 32px;
-                width: 32px;
-                background-color: unset;
-                color: black;
-                font-size: 1.3em;
-                margin-top: -8px;
-            }
-            
-            .tabulator .tabulator-tableHolder {
-                height: unset !important; //TODO find a better way to do this
-            }
 
             @media only screen
             and (orientation: portrait)
-            and (max-device-width: 765px) {
+            and (max-device-width: 768px) {
                 .flex-container{
                     justify-content: space-between;
                     display: flex;
@@ -810,8 +799,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 .checkmark{
                     height: 25px;
                     width:25px;
-                    left: 2px;
-                    top: 6px;
+                    left: 9px;
+                    top: 2px;
                 }
 
                 .button-container .checkmark::after{
@@ -822,8 +811,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 }
 
                 .select-all-icon{
-                    top: 10px;
-                    left: 10px;
+                    height: 32px;
                 }
                 
                 .btn-flex-container-mobile{
@@ -860,10 +848,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     ${this.getAdditionalButtons()}
                     <link rel="stylesheet" href="${tabulatorCss}">
                     <div class="table-wrapper">
-                        <label class="button-container select-all-icon">
-                            <input type="checkbox" id="select_all" name="select_all" value="select_all" @click="${() => {this.selectAllFiles();}}">
-                            <span class="checkmark" title="${this.checkAllSelected() ? i18n.t("clipboard.select-nothing") : i18n.t("clipboard.select-all")}"></span>
-                        </label>
                         <table id="clipboard-content-table" class="force-no-select"></table>
                     </div>
                 </div>
