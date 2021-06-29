@@ -99,6 +99,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 case "lang":
                     i18n.changeLanguage(this.lang);
                     break;
+                case "directoriesOnly":
+                    if (this.directoriesOnly && this._("#select_all_wrapper")) {
+                        this._("#select_all_wrapper").classList.remove("button-container");
+                        this._("#select_all_wrapper").classList.add("hidden");
+                    }
+                    if (!this.directoriesOnly && this._("#select_all_wrapper")) {
+                        this._("#select_all_wrapper").classList.add("button-container");
+                        this._("#select_all_wrapper").classList.remove("hidden");
+                    }
             }
         });
 
@@ -117,6 +126,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             let boundSelectHandler = this.selectAllFiles.bind(this);
             this._("#select_all").addEventListener('click', boundSelectHandler);
         }
+        if (this.directoriesOnly && this._("#select_all_wrapper")) {
+            this._("#select_all_wrapper").classList.remove("button-container");
+            this._("#select_all_wrapper").classList.add("hidden");
+        }
+
     }
 
     connectedCallback() {
@@ -138,8 +152,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 columns: [
                     {
                         formatter:"responsiveCollapse", width:32, minWidth:32, align:"center", resizable:false, headerSort:false},
-                    { //TODO add  class="${classMap({hidden: this.directoriesOnly,'button-container': !this.directoriesOnly, 'select-all-icon': !this.directoriesOnly})}"
-                        title: '<label class="button-container select-all-icon">' +
+                    {
+                        title: '<label id="select_all_wrapper" class="button-container select-all-icon">' +
                             '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
                             '<span class="checkmark" id="select_all_checkmark"></span>' +
                             '</label>',
