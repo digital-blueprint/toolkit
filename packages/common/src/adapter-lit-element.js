@@ -83,7 +83,7 @@ export class AdapterLitElement extends LitElement {
 
         this.addEventListener('dbp-subscribe', function (e) {
             const name = e.detail.name;
-            if (that.hasProperty(name) || that.root) {
+            if (that.hasProperty(name) || that.providerRoot) {
                 Logger.debug('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-subscribe",..) name "' + name + '" found.');
                 that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
 
@@ -95,7 +95,7 @@ export class AdapterLitElement extends LitElement {
         this.addEventListener('dbp-unsubscribe', function (e) {
             const name = e.detail.name;
             const sender = e.detail.sender;
-            if (that.hasProperty(name) || that.root) {
+            if (that.hasProperty(name) || that.providerRoot) {
                 Logger.debug('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-unsubscribe",..) name "' + name + '" found.');
                 that.callbackStore.forEach(item => {
                     if (item.sender === sender && item.name === name) {
@@ -114,7 +114,7 @@ export class AdapterLitElement extends LitElement {
             const name = e.detail.name;
             const value = e.detail.value;
 
-            if (that.hasProperty(name) || that.root) {
+            if (that.hasProperty(name) || that.providerRoot) {
                 Logger.debug('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-set-property",..) name "' + name + '" found.');
                 that.setProperty(name, value);
 
@@ -239,8 +239,10 @@ export class AdapterLitElement extends LitElement {
 
     static get properties() {
         return {
+            ...super.properties,
             subscribe: { type: String },
             unsubscribe: { type: String },
+            providerRoot: { type: Boolean, attribute: 'provider-root' },
         };
     }
 

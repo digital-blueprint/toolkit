@@ -69,19 +69,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
 
         this.auth = {};
-
-        // We need to "provider-terminate" these two attributes in the app-shell, but we
-        // don't want to force system integrators to add those attributes to the app-shell tag.
-        // Unfortunately we also need to be able to react to those properties outside the render() function,
-        // so we can't use a dbp-provider to terminate these attributes in the render() function.
-        this.setProperty('auth', {});
-        this.setProperty('analytics-event', {});
-
-        // We need to "provider-terminate" this attribute in the app-shell as well, and we also
-        // don't want to force system integrators to add this attribute to the app-shell tag.
-        // But for this attribute we could use a dbp-provider, because we only need it in the render() function,
-        // but we can also handle it like the two attributes above and spare us the use of a dbp-provider.
-        this.setProperty('requested-login-status', {});
     }
 
     static get scopedElements() {
