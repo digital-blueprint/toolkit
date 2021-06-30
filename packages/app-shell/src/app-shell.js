@@ -44,7 +44,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.lang = i18n.language;
-        this.languages = [];
         this.activeView = '';
         this.entryPointUrl = '';
         this.subtitle = '';
@@ -271,12 +270,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
      * @param {string} lang
      */
     updateLangIfChanged(lang) {
-        // if the language is switched to English then i18n.languages is ['en'], instead of ['en', 'de']
-        // so we are now only adding new ones to this.languages
-        this.languages = Array.from(new Set(this.languages.concat(i18n.languages)));
-
         // in case the language is unknown, fall back to the default
-        if (!this.languages.includes(lang)) {
+        if (!i18n.languages.includes(lang)) {
             lang = this.lang;
         }
         if (this.lang !== lang) {
