@@ -15,11 +15,11 @@ suite('i18next', () => {
         assert.equal( inst.t('nope'), 'nope');
         assert.equal( inst.t('extra'), 'quux');
         inst.changeLanguage('en');
-        assert.deepEqual(inst.languages, ['en']);
+        assert.deepEqual(inst.languages, ['en', 'de']);
         assert.equal( inst.t('foo'), 'baz');
         assert.equal( inst.t('nope'), 'nope');
         inst.changeLanguage('nope');
-        assert.deepEqual(inst.languages, ['nope', 'en']);
+        assert.deepEqual(inst.languages, ['nope', 'en', 'de']);
         assert.equal( inst.t('foo'), 'baz');
         assert.equal( inst.t('nope'), 'nope');
     });
