@@ -330,7 +330,28 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     that.addFolder();
                 }
             });
+
+            //this.checkSessionStorage();
         });
+    }
+
+    /**
+     *
+     */
+    async checkSessionStorage() {
+        if (sessionStorage.getItem("nextcloud-webdav-username") && sessionStorage.getItem("nextcloud-webdav-password")) {
+            this.webDavClient = createClient(
+                this.webDavUrl + "/" + sessionStorage.getItem("nextcloud-webdav-username"),
+                {
+                    username: sessionStorage.getItem("nextcloud-webdav-username"),
+                    password: sessionStorage.getItem("nextcloud-webdav-password")
+                }
+            );
+            console.log("check");
+
+            this.loadDirectory(this.directoryPath);
+
+        }
     }
 
     /**
@@ -370,6 +391,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     onReceiveWindowMessage(event) {
+        console.log("hui");
         if (this.webDavClient === null) {
             const data = event.data;
 
@@ -377,6 +399,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 if (this.loginWindow !== null) {
                     this.loginWindow.close();
                 }
+                console.log("lala");
 
                 // see https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
                 this.webDavClient = createClient(
@@ -386,6 +409,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         password: data.token
                     }
                 );
+                console.log("tada");
+
+                if (this._("#remember-checkbox") && this._("#remember-checkbox").checked) {
+                    sessionStorage.setItem('nextcloud-webdav-username', data.loginName);
+                    sessionStorage.setItem('nextcloud-webdav-password', data.token);
+                    console.log("saved");
+
+                }
                 this.loadDirectory(this.directoryPath);
             }
         }
@@ -1402,6 +1433,19 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 left: 11px;
                 top: 4px;
             }
+            
+            #replace-modal .checkmark {
+                height: 20px;
+                width: 20px;
+                left: 1px;
+                top: 0px;
+            }
+            
+            .remember-container{
+                display: inline-block;
+                line-height: 28px;
+                padding-left: 44px;
+            }
 
 
             @media only screen
@@ -1577,10 +1621,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         </button>
                     </div>
                     <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
+                        <label class="button-container remember-container">
+                            Remember me
+                            <input type="checkbox" id="remember-checkbox" name="remember">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
                         <p class="m-inherit"><br>
                             ${i18n.t('nextcloud-file-picker.auth-info')}
                             <slot name="auth-info"><br/>${this.authInfo}</slot>
                         </p>
+                        
                     </div>
                 </div>
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
