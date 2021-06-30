@@ -197,14 +197,23 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
         const filePicker = this._('#nextcloud-file-picker');
 
-        if (filePicker && filePicker.webDavClient !== null) {
-            filePicker.loadDirectory(filePicker.directoryPath);
+        if (filePicker) {
+            filePicker.checkSessionStorage().then(contents => {
+                if (filePicker.webDavClient !== null) {
+                    filePicker.loadDirectory(filePicker.directoryPath);
+                }
+            });
         }
     }
 
     openDialog() {
         if (this.enabledTargets.includes('nextcloud')) {
             this.loadWebdavDirectory();
+        }
+        if (this.enabledTargets.includes('clipboard')) {
+            if (this._('#clipboard-file-picker')._("#select_all")) {
+                this._('#clipboard-file-picker')._("#select_all").checked = false;
+            }
         }
         const filePicker = this._('#modal-picker');
         if (filePicker) {
