@@ -211,7 +211,7 @@ export function getFileHandlingCss() {
         }
 
         .tabulator .tabulator-tableHolder {
-            height: unset !important; //TODO find a better way to do this
+            height: unset !important; /*//TODO find a better way to do this*/
         }
 
         .tabulator-row .tabulator-responsive-collapse{
