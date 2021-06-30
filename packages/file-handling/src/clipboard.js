@@ -103,13 +103,16 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     }
 
 
+
     connectedCallback() {
         super.connectedCallback();
         const that = this;
         this.updateComplete.then(() => {
 
             // see: http://tabulator.info/docs/4.7
-            this.tabulatorTable = new Tabulator(this._("#clipboard-content-table"), {
+            this.tabulatorTable = new Tabulator(this._("#clipboard-content-table"), {//if you delete the wrapper around the table you need to set a heigh here
+                maxHeight:"100%",
+                height:"100%",
                 layout: "fitColumns",
                 selectable: true,
                 selectableRangeMode: "drag",
@@ -322,6 +325,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
             }
+        }
+        if (this._("#select_all")) {
+            this._("#select_all").checked = false;
         }
     }
 
