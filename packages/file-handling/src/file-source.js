@@ -6,7 +6,7 @@ import * as commonUtils from "@dbp-toolkit/common/utils";
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {NextcloudFilePicker} from "./dbp-nextcloud-file-picker";
+import {NextcloudFilePicker} from "./nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
