@@ -70,9 +70,11 @@ export function createInstance(languages, lng, fallback, namespace) {
     }
     let overrideNamespace = getOverrideNamespace(namespace);
 
+    var fallbackLng = [fallback, lng, ...Object.keys(languages)];
+
     var options = {
         lng: lng,
-        fallbackLng: fallback,
+        fallbackLng: fallbackLng,
         debug: false,
         ns: [overrideNamespace, namespace],
         defaultNS: namespace,
