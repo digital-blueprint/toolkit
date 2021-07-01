@@ -11,6 +11,7 @@
   "scripts": {
     "test": "lerna run test",
     "build": "lerna run build",
+    "i18next": "lerna run i18next",
     "version-patch": "lerna version patch",
     "version-minor": "lerna version minor",
     "version": "lerna version",
