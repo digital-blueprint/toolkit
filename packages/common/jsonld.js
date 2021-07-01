@@ -1,6 +1,6 @@
 import {send as notify} from './notification';
 import * as utils from "./utils";
-import {createInstance} from "./i18n";
+import {createInstance} from "./src/i18n";
 
 export default class JSONLD {
     constructor(baseApiUrl, entities) {
