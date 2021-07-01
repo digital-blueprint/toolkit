@@ -1,7 +1,6 @@
 {
   "select-organization": {
     "placeholder": "Bitte wählen Sie ein Institut aus",
-    "loading": "Wird geladen...",
-    "load-error": "Fehler beim Laden der Organisation"
+    "loading": "Wird geladen..."
   }
 }
