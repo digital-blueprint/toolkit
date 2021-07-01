@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -21,7 +21,8 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.context = '';
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
         this.nextcloudName ='Nextcloud';
@@ -122,7 +123,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                     break;
                 case "enabledTargets":
                     if (!this.hasEnabledDestination(this.activeTargets)) {
@@ -163,6 +164,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     finishedFileUpload(event) {
+        const i18n = this._i18n;
         this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
         if (event.detail > 0) {
@@ -268,6 +270,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getNextcloudHtml() {
+        const i18n = this._i18n;
         if (this.enabledTargets.includes('nextcloud') && this.nextcloudWebDavUrl !== "" && this.nextcloudAuthUrl !== "") {
             return html`
                 <dbp-nextcloud-file-picker id="nextcloud-file-picker"
@@ -336,7 +339,7 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-
+        const i18n = this._i18n;
         return html`
             <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">

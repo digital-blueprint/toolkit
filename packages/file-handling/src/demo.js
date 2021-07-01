@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {html, LitElement} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -9,7 +9,8 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.url = '';
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
@@ -46,7 +47,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
         });
 
@@ -77,6 +78,8 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
+        const i18n = this._i18n;
+
         return html`
             <style>
                 dbp-file-source.clean {

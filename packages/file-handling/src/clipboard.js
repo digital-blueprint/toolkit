@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -20,7 +20,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.allowedMimeTypes = '*/*';
         this.clipboardFiles = {files: ''};
         this.clipboardSelectBtnDisabled = true;
@@ -82,7 +83,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                     break;
                 case "clipboardFiles":
                     this.generateClipboardTable();
@@ -105,6 +106,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
 
     connectedCallback() {
+        const i18n = this._i18n;
         super.connectedCallback();
         const that = this;
         this.updateComplete.then(() => {
@@ -337,6 +339,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * @param files
      */
     async sendClipboardFiles(files) {
+        const i18n = this._i18n;
         for (let i = 0; i < files.length; i ++) {
             await this.sendFileEvent(files[i].file);
         }
@@ -363,6 +366,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * @param event
      */
     onReceiveBeforeUnload(event) {
+        const i18n = this._i18n;
 
         // we don't need to stop if there are no signed files
         if (this.clipboardFiles.files.length === 0) {
@@ -425,6 +429,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      */
     saveFilesToClipboard()
     {
+        const i18n = this._i18n;
+
         //save it
         let data = {};
         let files = [];
@@ -455,6 +461,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * @param event
      */
     finishedSaveFilesToClipboard(event) {
+        const i18n = this._i18n;
+
         send({
             "summary": i18n.t('clipboard.saved-files-title', {count: event.detail.count}),
             "body": i18n.t('clipboard.saved-files-body', {count: event.detail.count}),
@@ -491,6 +499,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      *
      */
     clearClipboard() {
+        const i18n = this._i18n;
+
         if (this.tabulatorTable && this.tabulatorTable.getSelectedData().length > 0) {
             let count = this.tabulatorTable.getSelectedData().length;
             this.tabulatorTable.deleteRow(this.tabulatorTable.getSelectedRows());
@@ -526,6 +536,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * @returns {html}
      */
     getAdditionalButtons() {
+        const i18n = this._i18n;
         let buttonsAreDisabled = this.clipboardFiles.files.length === 0 ? true : this.clipboardSelectBtnDisabled;
         return html`
             <div class="flex-container additional-button-container">
@@ -590,6 +601,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * @returns {html}
      */
     getClipboardSink() {
+        const i18n = this._i18n;
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
         return html`
             <div class="wrapper">
@@ -624,6 +636,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      */
     getClipboardSource() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
+        const i18n = this._i18n;
         return html`
             <div class="wrapper">
                 <div class="content">
