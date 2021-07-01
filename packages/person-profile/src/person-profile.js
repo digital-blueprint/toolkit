@@ -1,7 +1,7 @@
 
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html} from 'lit-element';
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
@@ -10,7 +10,8 @@ export class PersonProfile extends DBPLitElement {
 
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.jsonld = null;
         this.value = '';
@@ -29,18 +30,11 @@ export class PersonProfile extends DBPLitElement {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(()=>{
-        });
-    }
-
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                     break;
                 case "entryPointUrl": {
                     const that = this;
@@ -83,6 +77,7 @@ export class PersonProfile extends DBPLitElement {
     }
 
     render() {
+        const i18n = this._i18n;
         let role = i18n.t('person-profile.unknown');
         if (this.person !== null && this.person.roles !== undefined) {
             // roles are only defined for self-disclosure
