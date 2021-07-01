@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {createUUID} from './utils';
 import {css, html} from 'lit-element';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -10,7 +10,8 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 export class Notification extends DBPLitElement {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
     }
 
     /**
@@ -25,7 +26,6 @@ export class Notification extends DBPLitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
         const that = this;
 
         window.addEventListener("dbp-notification-send", (e) => {
@@ -62,9 +62,6 @@ export class Notification extends DBPLitElement {
 
             // mark the event as handled
             e.preventDefault();
-        });
-
-        this.updateComplete.then(()=>{
         });
     }
 
