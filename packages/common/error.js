@@ -1,5 +1,5 @@
 import {send as notify} from './notification';
-import {createInstance} from "./i18n";
+import {createInstance} from "./src/i18n";
 
 /**
  * Escapes html
