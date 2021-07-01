@@ -49,22 +49,23 @@ suite('i18next', () => {
     });
 
     test('overrides', () => {
-        let namespace = 'ns';
+        let namespace = 'some-ns';
+        let element = document.createElement(namespace);
         var inst = i18next.createInstance({en:  {foo: 'bar'}}, 'en', 'en', namespace);
         assert.equal(inst.t('foo'), 'bar');
         assert.equal(inst.t('quux'), 'quux');
-        i18next.setOverrides(inst, {en: {[namespace]: {quux: 'bla'}}});
+        i18next.setOverrides(inst, element, {en: {[namespace]: {quux: 'bla'}}});
         assert.equal(inst.t('quux'), 'bla');
         assert.equal(inst.t('foo'), 'bar');
-        i18next.setOverrides(inst, {en: {[namespace]: {}}});
+        i18next.setOverrides(inst, element, {en: {[namespace]: {}}});
         assert.equal(inst.t('quux'), 'quux');
         assert.equal(inst.t('foo'), 'bar');
-        i18next.setOverrides(inst, {en: {[namespace]: {foo: 'hmm'}}});
+        i18next.setOverrides(inst, element, {en: {[namespace]: {foo: 'hmm'}}});
         assert.equal(inst.t('foo'), 'hmm');
-        i18next.setOverrides(inst, {en: {[namespace]: {quux: 'bla'}}});
+        i18next.setOverrides(inst, element, {en: {[namespace]: {quux: 'bla'}}});
         assert.equal(inst.t('foo'), 'bar');
         assert.equal(inst.t('quux'), 'bla');
-        i18next.setOverrides(inst, {});
+        i18next.setOverrides(inst, element, {});
         assert.equal(inst.t('foo'), 'bar');
         assert.equal(inst.t('quux'), 'quux');
     });

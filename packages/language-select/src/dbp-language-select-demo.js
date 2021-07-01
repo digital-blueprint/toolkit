@@ -9,12 +9,12 @@ import {createInstance, setOverrides} from './i18n.js';
 // This is an example on how to override translations at runtime
 let OVERRIDES = {
     'de': {
-        'translation': {
+        'dbp-language-select-display': {
             'demo': 'Überschrieben'
         }
     },
     'en': {
-        'translation': {
+        'dbp-language-select-display': {
             'demo': 'Overridden'
         }
     }
@@ -26,7 +26,7 @@ class LanguageSelectDisplay extends AdapterLitElement {
         super();
         this.lang = 'de';
         this._i18n = createInstance();
-        setOverrides(this._i18n, OVERRIDES);
+        setOverrides(this._i18n, this, OVERRIDES);
     }
 
     static get properties() {
