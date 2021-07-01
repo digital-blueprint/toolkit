@@ -1,6 +1,6 @@
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {DataTableView} from './data-table-view.js';
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -10,7 +10,8 @@ import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 export class DataTableViewDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.noAuth = false;
     }
@@ -100,7 +101,7 @@ export class DataTableViewDemo extends ScopedElementsMixin(DBPLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
         });
 
