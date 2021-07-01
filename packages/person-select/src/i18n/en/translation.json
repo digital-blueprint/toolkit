@@ -1,7 +1,6 @@
 {
   "person-select": {
     "placeholder": "Please select a person",
-    "error-summary": "An error occurred",
     "login-required": "Login required"
   }
 }

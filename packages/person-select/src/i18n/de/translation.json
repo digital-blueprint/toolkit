@@ -1,7 +1,6 @@
 {
   "person-select": {
     "placeholder": "Bitte wählen Sie eine Person aus",
-    "error-summary": "Ein Fehler ist aufgetreten",
     "login-required": "Anmeldung erforderlich"
   }
 }

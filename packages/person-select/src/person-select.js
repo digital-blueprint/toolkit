@@ -157,7 +157,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             width: '100%',
             language: this.lang === "de" ? select2LangDe() : select2LangEn(),
             minimumInputLength: 2,
-            placeholder: i18n.t(this.authenticated() ? 'person-select.placeholder' : 'person-select.login-required'),
+            placeholder: this.authenticated() ? i18n.t('person-select.placeholder') : i18n.t('person-select.login-required'),
             dropdownParent: this.$('#person-select-dropdown'),
             ajax: {
                 delay: 500,
