@@ -266,7 +266,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * Checks if all files are already selected
      * Returns true if all files are selected
      *
-     * @return Boolean
+     * @returns {boolean}
      */
     checkAllSelected() {
         if (this.tabulatorTable) {
@@ -284,7 +284,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * Check mime type of a file, returns true if this.allowedMimeTypes contains the mime type of the file
      *
      * @param file
-     * @return Boolean
+     * @returns {boolean}
      */
     checkFileType(file) {
         // check if file is allowed
@@ -523,7 +523,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * If this.mode === MODE_FILE_SINK or MODE_FILE_SOURCE then there are only delete and save files buttons available
      * Else there are the add, delete and save files buttons available
      *
-     * @return html
+     * @returns {html}
      */
     getAdditionalButtons() {
         let buttonsAreDisabled = this.clipboardFiles.files.length === 0 ? true : this.clipboardSelectBtnDisabled;
@@ -587,7 +587,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     /**
      * Get the clipboard sink html
      *
-     * @return html
+     * @returns {html}
      */
     getClipboardSink() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
@@ -620,7 +620,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     /**
      * Get the clipboard source html
      *
-     * @return html
+     * @returns {html}
      */
     getClipboardSource() {
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
