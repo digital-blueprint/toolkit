@@ -686,6 +686,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         } else {
                             this.replaceModalDialog(file, directory);
                         }
+                    } else {
+                        throw error;
                     }
                 });
         } else {
@@ -771,6 +773,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     } else {
                         this.replaceModalDialog(file, directory);
                     }
+                } else {
+                    throw error;
                 }
             });
 
