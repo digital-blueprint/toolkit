@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
@@ -10,7 +10,8 @@ import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.noAuth = false;
     }
@@ -35,7 +36,7 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBP
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
         });
 
