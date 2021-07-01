@@ -12,7 +12,7 @@
     "hello-world": "Hallo Welt"
   },
   "welcome": {
-      "headline": "Willkommen bei der Applikation '{{appname}}'."
+    "headline": "Willkommen bei der Applikation '{{appname}}'."
   },
   "login": "Einloggen",
   "logout": "Ausloggen",
