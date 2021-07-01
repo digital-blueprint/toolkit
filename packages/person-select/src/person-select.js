@@ -6,7 +6,7 @@ import select2LangEn from './i18n/en/select2';
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -29,7 +29,8 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         super();
         Object.assign(PersonSelect.prototype, errorUtils.errorMixin);
         this.auth = {};
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.jsonld = null;
         this.$select = null;
@@ -129,6 +130,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
      * @param ignorePreset
      */
     initSelect2(ignorePreset = false) {
+        const i18n = this._i18n;
         const that = this;
         const $this = $(this);
 
@@ -277,7 +279,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
 
                     if (this.select2IsInitialized()) {
                         // no other way to set an other language at runtime did work
@@ -361,6 +363,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     render() {
+        const i18n = this._i18n;
         const select2CSS = commonUtils.getAssetURL(select2CSSPath);
         return html`
             <link rel="stylesheet" href="${select2CSS}">
