@@ -1,16 +1,15 @@
-import {createI18nInstance} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-const i18n = createI18nInstance();
-
 class AppShellWelcome extends ScopedElementsMixin(LitElement) {
 
     constructor() {
         super();
-        this.lang = i18n.language;
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
 
         this._onVisibilityChanged = this._onVisibilityChanged.bind(this);
     }
@@ -28,7 +27,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
         });
 
@@ -75,6 +74,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
+        const i18n = this._i18n;
         const app = AppShellWelcome._app;
         let itemTemplates = [];
 
