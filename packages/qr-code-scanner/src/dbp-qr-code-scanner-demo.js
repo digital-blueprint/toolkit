@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -8,7 +8,8 @@ import {QrCodeScanner} from './qr-code-scanner.js';
 export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
     }
 
     static get scopedElements() {
@@ -23,12 +24,11 @@ export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
-
-        this.updateComplete.then(()=>{
-        });
+    update(changedProperties) {
+        if (changedProperties.has("lang")) {
+            this._i18n.changeLanguage(this.lang);
+        }
+        super.update(changedProperties);
     }
 
     static get styles() {
