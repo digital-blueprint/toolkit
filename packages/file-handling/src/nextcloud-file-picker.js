@@ -663,8 +663,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             let that = this;
             this.loading = true;
             this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
+            // contentLength: https://github.com/perry-mitchell/webdav-client/issues/266
             await this.webDavClient
                 .putFileContents(path, file, {
+                    contentLength: file.size,
                     overwrite: false, onUploadProgress: progress => {
                         /* console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);*/
                     }
@@ -744,8 +746,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         let that = this;
         // https://github.com/perry-mitchell/webdav-client#putfilecontents
+        // contentLength: https://github.com/perry-mitchell/webdav-client/issues/266
         await this.webDavClient
             .putFileContents(path, file, {
+                contentLength: file.size,
                 overwrite: overwrite, onUploadProgress: progress => {
                     /*console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);*/
                 }
