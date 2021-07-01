@@ -70,7 +70,7 @@ export default class JSONLD {
 
     static _doInitialization(apiUrl) {
         const xhr = new XMLHttpRequest();
-        const i18n = JSON._i18n;
+        const i18n = JSONLD._i18n;
         xhr.open("GET", apiUrl, true);
 
         xhr.onreadystatechange = function () {
@@ -169,7 +169,7 @@ export default class JSONLD {
      * @param message
      */
     static _executeFailureFunctions(apiUrl, message = "") {
-        const i18n = JSON._i18n;
+        const i18n = JSONLD._i18n;
         if (JSONLD.failureFunctions[apiUrl] !== undefined) {
             for (const fnc of JSONLD.failureFunctions[apiUrl]) {
                 if (typeof fnc == 'function') {
