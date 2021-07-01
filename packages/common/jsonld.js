@@ -1,6 +1,6 @@
 import {send as notify} from './notification';
 import * as utils from "./utils";
-import {i18n} from "./i18n";
+import {createInstance} from "./i18n";
 
 export default class JSONLD {
     constructor(baseApiUrl, entities) {
@@ -43,9 +43,7 @@ export default class JSONLD {
     }
 
     static _initialize(apiUrl, successFnc, failureFnc, lang = 'de') {
-        if (lang !== 'de') {
-            i18n.changeLanguage(lang);
-        }
+        JSONLD._i18n.changeLanguage(lang);
 
         // if init api call was already successfully finished execute the success function
         if (JSONLD.instances[apiUrl] !== undefined) {
@@ -72,6 +70,7 @@ export default class JSONLD {
 
     static _doInitialization(apiUrl) {
         const xhr = new XMLHttpRequest();
+        const i18n = JSON._i18n;
         xhr.open("GET", apiUrl, true);
 
         xhr.onreadystatechange = function () {
@@ -170,6 +169,7 @@ export default class JSONLD {
      * @param message
      */
     static _executeFailureFunctions(apiUrl, message = "") {
+        const i18n = JSON._i18n;
         if (JSONLD.failureFunctions[apiUrl] !== undefined) {
             for (const fnc of JSONLD.failureFunctions[apiUrl]) {
                 if (typeof fnc == 'function') {
@@ -297,6 +297,7 @@ export default class JSONLD {
     }
 }
 
+JSONLD._i18n = createInstance();
 JSONLD.instances = {};
 JSONLD.successFunctions = {};
 JSONLD.failureFunctions = {};

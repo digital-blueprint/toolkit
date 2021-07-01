@@ -1,5 +1,5 @@
 import {send as notify} from './notification';
-import {i18n} from "./i18n";
+import {createInstance} from "./i18n";
 
 /**
  * Escapes html
@@ -39,14 +39,17 @@ export const errorMixin = {
      * @param textStatus
      * @param errorThrown
      * @param icon
+     * @param lang
      */
-    handleXhrError(jqXHR, textStatus, errorThrown, icon = "sad") {
+    handleXhrError(jqXHR, textStatus, errorThrown, icon = "sad", lang = "de") {
         // return if user aborted the request
         if (textStatus === "abort") {
             return;
         }
 
         let body;
+        const i18n = createInstance();
+        i18n.changeLanguage(lang);
 
         if (jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined) {
             // response is a JSON-LD
@@ -86,14 +89,17 @@ export const errorMixin = {
      * @param error
      * @param summary
      * @param icon
+     * @param lang
      */
-    handleFetchError: async function (error, summary = "", icon = "sad") {
+    handleFetchError: async function (error, summary = "", icon = "sad", lang = "de") {
         // return if user aborted the request
         if (error.name === "AbortError") {
             return;
         }
 
         let body;
+        const i18n = createInstance();
+        i18n.changeLanguage(lang);
 
         try {
             await error.json().then((json) => {
