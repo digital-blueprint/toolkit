@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import select2 from 'select2';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {css, html} from 'lit-element';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -16,7 +16,8 @@ export class OrganizationSelect extends AdapterLitElement {
     constructor() {
         super();
         this.auth = {};
-        this.lang = i18n.language;
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.jsonld = null;
         this.organizations = [];
@@ -93,6 +94,7 @@ export class OrganizationSelect extends AdapterLitElement {
     }
 
     async updateSelect2() {
+        const i18n = this._i18n;
         await this.updateComplete;
 
         const $select = this.$('#' + this.selectId);
@@ -181,7 +183,7 @@ export class OrganizationSelect extends AdapterLitElement {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                     this.updateSelect2();
                     break;
                 case "value": {

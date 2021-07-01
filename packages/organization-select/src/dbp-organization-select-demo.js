@@ -1,4 +1,4 @@
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {OrganizationSelect} from './organization-select.js';
@@ -10,7 +10,8 @@ import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 export class OrganizationSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.noAuth = false;
     }
@@ -32,12 +33,11 @@ export class OrganizationSelectDemo extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
-
-        this.updateComplete.then(()=>{
-        });
+    update(changedProperties) {
+        if (changedProperties.has("lang")) {
+            this._i18n.changeLanguage(this.lang);
+        }
+        super.update(changedProperties);
     }
 
     static get styles() {
