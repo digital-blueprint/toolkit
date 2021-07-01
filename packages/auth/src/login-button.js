@@ -55,8 +55,8 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
-        this.lang = 'de';
         this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.auth = {};
     }
 

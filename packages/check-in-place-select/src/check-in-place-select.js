@@ -25,7 +25,6 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
         Object.assign(CheckInPlaceSelect.prototype, errorUtils.errorMixin);
-        this.lang = 'de';
         this.entryPointUrl = '';
         this.jsonld = null;
         this.$select = null;
@@ -42,6 +41,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
         this.showCapacity = false;
         this.auth = {};
         this._i18n = createInstance();
+        this.lang = this._i18n.language;
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
     }

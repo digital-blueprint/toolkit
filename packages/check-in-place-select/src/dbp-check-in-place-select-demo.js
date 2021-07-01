@@ -5,11 +5,14 @@ import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
+import {createInstance} from './i18n.js';
+
 
 export class CheckInPlaceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.noAuth = false;
     }
