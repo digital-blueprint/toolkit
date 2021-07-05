@@ -265,9 +265,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.showAdvertisment();
     }
 
-    async showAdvertisment() {
+    showAdvertisment() {
         const url = this.basePath + 'exit-vim.json';
-        await fetch(url, { headers: {'Content-Type': 'application/json'} })
+        fetch(url, { headers: {'Content-Type': 'application/json'} })
             .then(response => response.json())
             .then(data => data['hi'].forEach(item => console.log(item)));
     }
