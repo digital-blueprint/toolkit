@@ -78,6 +78,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         return this.shadowRoot === null ? this.querySelector(selector) : this.shadowRoot.querySelector(selector);
     }
 
+    _a(selector) {
+        return this.shadowRoot === null ? this.querySelectorAll(selector) : this.shadowRoot.querySelectorAll(selector);
+    }
+
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
@@ -100,8 +104,18 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             let boundSelectHandler = this.selectAllFiles.bind(this);
             this._("#select_all").addEventListener('click', boundSelectHandler);
         }
+
+
+
+
     }
 
+    toggleCollapse(e) {
+        const table = this.tabulatorTable;
+        setTimeout(function() {
+            table.redraw();
+        }, 0);
+    }
 
 
     connectedCallback() {
@@ -111,8 +125,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
             // see: http://tabulator.info/docs/4.7
             this.tabulatorTable = new Tabulator(this._("#clipboard-content-table"), {//if you delete the wrapper around the table you need to set a heigh here
-                maxHeight:"100%",
-                height:"100%",
                 layout: "fitColumns",
                 selectable: true,
                 selectableRangeMode: "drag",
@@ -324,6 +336,15 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             if (this.tabulatorTable !== null) {
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
+
+                console.log("add");
+                if (this._('.tabulator-responsive-collapse-toggle-open')) {
+                    this._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", this.toggleCollapse.bind(this)));
+                }
+
+                if (this._('.tabulator-responsive-collapse-toggle-close')) {
+                    this._a('.tabulator-responsive-collapse-toggle-close').forEach(element => element.addEventListener("click", this.toggleCollapse.bind(this)));
+                }
             }
         }
         if (this._("#select_all")) {

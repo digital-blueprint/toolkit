@@ -84,7 +84,8 @@
     "select-nothing": "Nichts auswählen",
     "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren",
     "abort": "Vorgang abbrechen",
-    "abort-message": "Vorgang wurde abgebrochen."
+    "abort-message": "Vorgang wurde abgebrochen.",
+    "remember-me": "Angemeldet bleiben"
   },
   "clipboard": {
     "add-files": "Dateien der Zwischenablage hinzufügen",

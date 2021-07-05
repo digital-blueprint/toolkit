@@ -347,8 +347,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     password: sessionStorage.getItem("nextcloud-webdav-password")
                 }
             );
-            console.log("check");
-
             this.loadDirectory(this.directoryPath);
 
         }
@@ -391,7 +389,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     onReceiveWindowMessage(event) {
-        console.log("hui");
         if (this.webDavClient === null) {
             const data = event.data;
 
@@ -399,7 +396,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 if (this.loginWindow !== null) {
                     this.loginWindow.close();
                 }
-                console.log("lala");
 
                 // see https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
                 this.webDavClient = createClient(
@@ -409,7 +405,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         password: data.token
                     }
                 );
-                console.log("tada");
 
                 if (this._("#remember-checkbox") && this._("#remember-checkbox").checked) {
                     sessionStorage.setItem('nextcloud-webdav-username', data.loginName);
@@ -1630,7 +1625,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     </div>
                     <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
                         <label class="button-container remember-container">
-                            Remember me
+                            ${i18n.t('nextcloud-file-picker.remember-me')}
                             <input type="checkbox" id="remember-checkbox" name="remember">
                             <span class="checkmark"></span>
                         </label>

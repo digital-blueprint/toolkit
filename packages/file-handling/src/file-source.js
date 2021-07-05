@@ -11,6 +11,7 @@ import {classMap} from 'lit-html/directives/class-map.js';
 import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
 import {Clipboard} from "@dbp-toolkit/file-handling/src/clipboard";
+import DbpFileHandlingLitElement from "./dbp-file-handling-lit-element";
 
 function mimeTypesToAccept(mimeTypes) {
     // Some operating systems can't handle mime types and
@@ -33,7 +34,7 @@ function mimeTypesToAccept(mimeTypes) {
 /**
  * FileSource web component
  */
-export class FileSource extends ScopedElementsMixin(DBPLitElement) {
+export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     constructor() {
         super();
         this.context = '';
@@ -139,6 +140,12 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             });
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
             this._('#fileElem').addEventListener('change', this.handleChange.bind(this));
+
+            this._('nav.modal-nav').addEventListener("scroll", this.handleScroll.bind(this));
+
+            this._('.right-paddle').addEventListener("click", this.handleScrollRight.bind(this, this._('nav.modal-nav')));
+
+            this._('.left-paddle').addEventListener("click", this.handleScrollLeft.bind(this, this._('nav.modal-nav')));
         });
 
     }
@@ -529,11 +536,48 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
                 height: 100%;
             }
             
+            .paddle {
+                position: absolute;
+                background-color: #ffffffd1;
+                top: 0px;
+                padding: 0px 5px;
+                box-sizing: content-box;
+                height: 100%;
+            }
+            
+            .right-paddle{
+                right: 0px;
+            }
+
+            .left-paddle{
+                left: 0px;
+            }
+            
+            .nav-wrapper{
+                position: relative;
+                display: block;
+                overflow-x: auto;
+                border:none;
+            }
+            
+            .paddles{
+                display: none;
+            }
+            
+            .modal-nav{
+                height: 100%;
+            }
+
+
             @media only screen
             and (orientation: portrait)
             and (max-width: 768px) {
                 #dropArea{
                     height: 100%;
+                }
+                
+                .paddles{
+                    display: inherit;
                 }
             
             }
@@ -557,27 +601,32 @@ export class FileSource extends ScopedElementsMixin(DBPLitElement) {
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-1" data-micromodal-close>
                     <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
-                        <nav class="modal-nav">
-                            <div title="${i18n.t('file-source.nav-local')}"
-                                 @click="${() => { this.activeTarget = "local"; }}"
-                                 class="${classMap({"active": this.activeTarget === "local", hidden: !this.hasEnabledSource("local")})}">
-                                <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
-                                <p>${i18n.t('file-source.nav-local')}</p>
+                        <div class="nav-wrapper modal-nav">
+                            <nav class="modal-nav">
+                                <div title="${i18n.t('file-source.nav-local')}"
+                                     @click="${() => { this.activeTarget = "local"; }}"
+                                     class="${classMap({"active": this.activeTarget === "local", hidden: !this.hasEnabledSource("local")})}">
+                                    <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
+                                    <p>${i18n.t('file-source.nav-local')}</p>
+                                </div>
+                                <div title="Nextcloud"
+                                     @click="${() => { this.activeTarget = "nextcloud";}}"
+                                     class="${classMap({"active": this.activeTarget === "nextcloud", hidden: !this.hasEnabledSource("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
+                                    <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
+                                    <p> ${this.nextcloudName} </p>
+                                </div>
+                                <div title="${i18n.t('file-source.clipboard')}"
+                                     @click="${() => { this.activeTarget = "clipboard"; }}"
+                                     class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledSource("clipboard") })}">
+                                    <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
+                                    <p>${i18n.t('file-source.clipboard')}</p>
+                                </div>
+                            </nav>
+                            <div class="paddles">
+                                <dbp-icon class="left-paddle paddle hidden" name="chevron-left" class="close-icon"></dbp-icon>
+                                <dbp-icon class="right-paddle paddle" name="chevron-right" class="close-icon"></dbp-icon>
                             </div>
-                            <div title="Nextcloud"
-                                 @click="${() => { this.activeTarget = "nextcloud";}}"
-                                 class="${classMap({"active": this.activeTarget === "nextcloud", hidden: !this.hasEnabledSource("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
-                                <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
-                                <p> ${this.nextcloudName} </p>
-                            </div>
-                            <div title="${i18n.t('file-source.clipboard')}"
-                                 @click="${() => { this.activeTarget = "clipboard"; }}"
-                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: !this.hasEnabledSource("clipboard") })}">
-                                <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                                <p>${i18n.t('file-source.clipboard')}</p>
-                            </div>
-                            
-                        </nav>
+                        </div>
                         <div class="modal-header">
                             <button title="${i18n.t('file-source.modal-close')}" class="modal-close"  aria-label="Close modal"  @click="${() => {this.closeDialog();}}">
                                     <dbp-icon name="close" class="close-icon"></dbp-icon>

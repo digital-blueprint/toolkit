@@ -12,12 +12,13 @@ import MicroModal from "./micromodal.es";
 import * as fileHandlingStyles from './styles';
 import { send } from '@dbp-toolkit/common/notification';
 import {Clipboard} from "@dbp-toolkit/file-handling/src/clipboard";
+import DbpFileHandlingLitElement from "./dbp-file-handling-lit-element";
 
 
 /**
  * FileSink web component
  */
-export class FileSink extends ScopedElementsMixin(DBPLitElement) {
+export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     constructor() {
         super();
         this.context = '';
@@ -78,8 +79,12 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-
         this.updateComplete.then(() => {
+            this._('nav.modal-nav').addEventListener("scroll", this.handleScroll.bind(this));
+
+            this._('.right-paddle').addEventListener("click", this.handleScrollRight.bind(this, this._('nav.modal-nav')));
+
+            this._('.left-paddle').addEventListener("click", this.handleScrollLeft.bind(this, this._('nav.modal-nav')));
         });
     }
 
@@ -330,6 +335,48 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
                 width: 100%;
                 height: 100%;
             }
+
+            .paddle {
+                position: absolute;
+                background-color: #ffffffd1;
+                top: 0px;
+                padding: 0px 5px;
+                box-sizing: content-box;
+                height: 100%;
+            }
+
+            .right-paddle{
+                right: 0px;
+            }
+
+            .left-paddle{
+                left: 0px;
+            }
+
+            .nav-wrapper{
+                position: relative;
+                display: block;
+                overflow-x: auto;
+                border:none;
+            }
+
+            .paddles{
+                display: none;
+            }
+
+            .modal-nav{
+                height: 100%;
+            }
+
+            @media only screen
+            and (orientation: portrait)
+            and (max-width: 768px) {
+
+                .paddles{
+                    display: inherit;
+                }
+
+            }
             
             
         `;
@@ -342,26 +389,33 @@ export class FileSink extends ScopedElementsMixin(DBPLitElement) {
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-1">
                     <div class="modal-container ${classMap({"modal-container-full-size": this.fullsizeModal})}" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
-                        <nav class="modal-nav">
-                            <div title="${i18n.t('file-sink.nav-local')}"
-                                 @click="${() => { this.activeTarget = "local"; }}"
-                                 class="${classMap({"active": this.activeTarget === "local", hidden: !this.hasEnabledDestination("local")})}">
-                                <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
-                                 <p>${i18n.t('file-source.nav-local')}</p>
+                        <div class="nav-wrapper modal-nav">
+                            <nav class="modal-nav">
+                                <div title="${i18n.t('file-sink.nav-local')}"
+                                     @click="${() => { this.activeTarget = "local"; }}"
+                                     class="${classMap({"active": this.activeTarget === "local", hidden: !this.hasEnabledDestination("local")})}">
+                                    <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
+                                    <p>${i18n.t('file-source.nav-local')}</p>
+                                </div>
+                                <div title="${this.nextcloudName}"
+                                     @click="${() => { this.activeTarget = "nextcloud"; this.loadWebdavDirectory();}}"
+                                     class="${classMap({"active": this.activeTarget === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
+                                    <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
+                                    <p> ${this.nextcloudName} </p>
+                                </div>
+                                <div title="${i18n.t('file-sink.clipboard')}"
+                                     @click="${() => { this.activeTarget = "clipboard"; }}"
+                                     class="${classMap({"active": this.activeTarget === "clipboard", hidden: (!this.hasEnabledDestination("clipboard")) })}">
+                                    <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
+                                    <p>${i18n.t('file-sink.clipboard')}</p>
+                                </div>
+                            </nav>
+                            <div class="paddles">
+                                <dbp-icon class="left-paddle paddle hidden" name="chevron-left" class="close-icon"></dbp-icon>
+                                <dbp-icon class="right-paddle paddle" name="chevron-right" class="close-icon"></dbp-icon>
                             </div>
-                            <div title="${this.nextcloudName}"
-                                 @click="${() => { this.activeTarget = "nextcloud"; this.loadWebdavDirectory();}}"
-                                 class="${classMap({"active": this.activeTarget === "nextcloud", hidden: !this.hasEnabledDestination("nextcloud") || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
-                                <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
-                                <p> ${this.nextcloudName} </p>
-                            </div>
-                            <div title="${i18n.t('file-sink.clipboard')}"
-                                 @click="${() => { this.activeTarget = "clipboard"; }}"
-                                 class="${classMap({"active": this.activeTarget === "clipboard", hidden: (!this.hasEnabledDestination("clipboard")) })}">
-                                <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                                <p>${i18n.t('file-sink.clipboard')}</p>
-                            </div>
-                        </nav>
+                        </div>
+                       
                             <div class="modal-header">
                                 <button title="${i18n.t('file-sink.modal-close')}" class="modal-close"  aria-label="Close modal" @click="${() => { this.closeDialog();}}">
                                         <dbp-icon title="${i18n.t('file-sink.modal-close')}" name="close" class="close-icon"></dbp-icon>

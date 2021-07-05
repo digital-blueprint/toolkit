@@ -211,7 +211,7 @@ export function getFileHandlingCss() {
         }
 
         .tabulator .tabulator-tableHolder {
-            height: unset !important; /*TODO find a better way to do this*/
+           /* height: unset !important; /*TODO find a better way to do this*/
         }
 
         .tabulator-row .tabulator-responsive-collapse{
@@ -225,6 +225,15 @@ export function getFileHandlingCss() {
             color: black;
             font-size: 1.3em;
             margin-top: -8px;
+        }
+        
+        .tabulator-responsive-collapse-toggle-open, .tabulator-responsive-collapse-toggle-close{
+            width: 100%;
+            height: 100%;
+        }
+        
+        .tabulator-row-handle{
+            padding: 0px !important;
         }
 
         @media only screen
