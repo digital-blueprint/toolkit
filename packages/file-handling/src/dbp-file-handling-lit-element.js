@@ -66,7 +66,7 @@ export default class DbpFileHandlingLitElement extends ScopedElementsMixin(DBPLi
     handleScrollLeft(element) {
         const minwidth = 0;
         let container = element;
-        let scrollAmount = element.scrollWidth - element.clientWidth;;
+        let scrollAmount = element.scrollWidth - element.clientWidth;
         let slideTimer = setInterval(function(){
             container.scrollLeft -= 10;
             scrollAmount -= 10;

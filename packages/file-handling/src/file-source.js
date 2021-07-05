@@ -1,7 +1,6 @@
 import {createInstance} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonUtils from "@dbp-toolkit/common/utils";
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {send as notify} from '@dbp-toolkit/common/notification';
