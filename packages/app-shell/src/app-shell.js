@@ -1,4 +1,4 @@
-import {createI18nInstance} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {html, css} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
@@ -15,18 +15,16 @@ import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
-
-const i18n = createI18nInstance();
-
 /**
  * In case the application gets updated future dynamic imports might fail.
  * This sends a notification suggesting the user to reload the page.
  *
- * uage: importNotify(import('<path>'));
+ * usage: importNotify(import('<path>'));
  *
+ * @param i18n
  * @param {Promise} promise
  */
-const importNotify = async (promise) => {
+const importNotify = async (i18n, promise) => {
     try {
         return await promise;
     } catch (error) {
@@ -43,7 +41,6 @@ const importNotify = async (promise) => {
 export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = i18n.language;
         this.activeView = '';
         this.entryPointUrl = '';
         this.subtitle = '';
@@ -62,6 +59,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.buildTime = '';
         this._loginStatus = 'unknown';
         this._roles = [];
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
 
         this.matomoUrl = '';
         this.matomoSiteId = -1;
@@ -271,7 +270,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
      */
     updateLangIfChanged(lang) {
         // in case the language is unknown, fall back to the default
-        if (!i18n.languages.includes(lang)) {
+        if (!this._i18n.languages.includes(lang)) {
             lang = this.lang;
         }
         if (this.lang !== lang) {
@@ -287,10 +286,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                     // For screen readers
                     document.documentElement.setAttribute("lang", this.lang);
-                    i18n.changeLanguage(this.lang);
 
                     this.router.update();
                     this.subtitle = this.activeMetaDataText("short_name");
@@ -420,7 +418,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
 
-        importNotify(import(metadata.module_src)).then(() => {
+        importNotify(this._i18n, import(metadata.module_src)).then(() => {
             updateFunc();
         }).catch((e) => {
             console.error(`Error loading ${ metadata.element }`);
@@ -836,6 +834,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        let i18n = this._i18n;
+
         const getSelectClasses = (name => {
             return classMap({selected: this.activeView === name});
         });

@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -38,7 +38,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     constructor() {
         super();
         this.context = '';
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.nextcloudAuthUrl = '';
         this.nextcloudName ='Nextcloud';
         this.nextcloudWebDavUrl = '';
@@ -97,7 +98,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                     break;
                 case "enabledTargets":
                     if (!this.hasEnabledSource(this.activeTarget)) {
@@ -328,6 +329,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
         // no suitable files found
         if (filesToHandle.length === 0) {
+            const i18n = this._i18n;
             console.error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
             //throw new Error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
             notify({
@@ -585,6 +587,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     }
 
     render() {
+        const i18n = this._i18n;
         let allowedMimeTypes = this.allowedMimeTypes;
 
         if (this.decompressZip && this.allowedMimeTypes !== "*/*") {

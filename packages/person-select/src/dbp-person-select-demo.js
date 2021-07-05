@@ -1,4 +1,4 @@
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {PersonSelect} from './person-select.js';
@@ -10,7 +10,8 @@ import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.noAuth = false;
     }
@@ -32,14 +33,6 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
-
-        this.updateComplete.then(()=>{
-        });
-    }
-
     static get styles() {
         // language=css
         return [
@@ -50,6 +43,13 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
             div.container {margin-bottom: 1.5em;}
             `
         ];
+    }
+
+    update(changedProperties) {
+        if (changedProperties.has("lang")) {
+            this._i18n.changeLanguage(this.lang);
+        }
+        super.update(changedProperties);
     }
 
     getAuthComponentHtml() {

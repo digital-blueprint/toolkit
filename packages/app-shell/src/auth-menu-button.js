@@ -1,4 +1,4 @@
-import {createI18nInstance} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {html, css} from 'lit-element';
 import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -7,14 +7,12 @@ import {Icon} from '@dbp-toolkit/common';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 import {LoginStatus} from "@dbp-toolkit/auth/src/util";
 
-
-const i18n = createI18nInstance();
-
 export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.showImage = false;
         this.auth = {};
 
@@ -82,7 +80,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
         });
 
@@ -246,6 +244,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     renderLoggedIn() {
+        const i18n = this._i18n;
         const person = this.auth.person;
         const imageURL = (this.showImage && person && person.image) ? person.image : null;
 
@@ -270,6 +269,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     renderLoggedOut() {
+        const i18n = this._i18n;
         let loginSVG = `
         <svg
            viewBox="0 0 100 100"

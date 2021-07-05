@@ -1,4 +1,4 @@
-import {i18n} from './i18n.js';
+import {createInstance} from './src/i18n.js';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
@@ -8,7 +8,8 @@ import {getIconCSS, Icon, MiniSpinner, Button, LoadingButton, Spinner, InlineNot
 export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.noAuth = false;
     }
 
@@ -39,7 +40,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
+        this._i18n.changeLanguage(this.lang);
 
         this.updateComplete.then(()=>{
         });

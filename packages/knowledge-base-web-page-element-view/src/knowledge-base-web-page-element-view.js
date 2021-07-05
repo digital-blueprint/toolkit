@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {MiniSpinner} from '@dbp-toolkit/common';
@@ -12,7 +12,8 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.value = '';
         this.html = '';
         this.entryPointUrl = '';
@@ -56,6 +57,8 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
      * Loads the data from the web page element
      */
     loadWebPageElement() {
+        const i18n = this._i18n;
+
         if (this.auth.token === undefined || this.auth.token === "") {
             return;
         }
@@ -107,7 +110,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
 
             switch(propName) {

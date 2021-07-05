@@ -10,11 +10,11 @@ import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
         this.entryPointUrl = '';
         this.auth = {};
         this.noAuth = false;
         this._i18n = createInstance();
+        this.lang = this._i18n.language;
     }
 
     static get scopedElements() {

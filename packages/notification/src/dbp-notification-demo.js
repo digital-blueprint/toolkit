@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {css, html, LitElement} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -9,7 +9,8 @@ import * as commonStyles from "@dbp-toolkit/common/styles";
 export class NotificationDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
     }
 
     static get scopedElements() {
@@ -24,13 +25,15 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+           if (propName === "lang") {
+               this._i18n.changeLanguage(this.lang);
+           }
+       });
 
-        this.updateComplete.then(()=>{
-        });
-    }
+       super.update(changedProperties);
+   }
 
     static get styles() {
         // language=css
@@ -42,6 +45,8 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
+        const i18n = this._i18n;
+
         return html`
             <section class="section">
                 <div class="container">

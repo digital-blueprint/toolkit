@@ -7,7 +7,7 @@ import bttn from 'datatables.net-buttons-dt';
 import bttn2 from 'datatables.net-buttons';
 import bttnHtml5 from 'datatables.net-buttons/js/buttons.html5.js';
 import bttnPrint from 'datatables.net-buttons/js/buttons.print.js';
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html, unsafeCSS} from 'lit-element';
 import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
@@ -28,7 +28,8 @@ bttnPrint(window, $);
 export class DataTableView extends AdapterLitElement {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         // datatable properties
         this.table = null;
         this.responsive = null;
@@ -100,6 +101,7 @@ export class DataTableView extends AdapterLitElement {
 
     set_datatable(data, languageChange = false) {
         const lang_obj = this.lang === 'de' ? de : en;
+        const i18n = this._i18n;
 
         if (typeof this.columns === 'undefined' || !this.columns.length) {
             if (data.length)
@@ -229,7 +231,7 @@ export class DataTableView extends AdapterLitElement {
 
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang).catch(e => { console.log(e);});
+                this._i18n.changeLanguage(this.lang).catch(e => { console.log(e);});
                 languageChange = true;
             }
         });

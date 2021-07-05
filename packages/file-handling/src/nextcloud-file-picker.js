@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -19,7 +19,9 @@ import * as fileHandlingStyles from './styles';
 export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
+        
         this.authUrl = '';
         this.webDavUrl = '';
         this.nextcloudName = 'Nextcloud';
@@ -37,7 +39,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.loading = false;
         this._onReceiveWindowMessage = this.onReceiveWindowMessage.bind(this);
 
-        this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
+        this.folderIsSelected = this._i18n.t('nextcloud-file-picker.load-in-folder');
         this.generatedFilename = '';
         this.replaceFilename = '';
         this.customFilename = '';
@@ -97,7 +99,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                     break;
                 case "directoriesOnly":
                     if (this.directoriesOnly && this._("#select_all_wrapper")) {
@@ -136,6 +138,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     connectedCallback() {
         super.connectedCallback();
         const that = this;
+        const i18n = this._i18n;
         this.updateComplete.then(() => {
             // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
             window.addEventListener('message', this._onReceiveWindowMessage);
@@ -375,6 +378,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     openFilePicker() {
+        const i18n = this._i18n;
         if (this.webDavClient === null) {
             this.loading = true;
             this.statusText = i18n.t('nextcloud-file-picker.auth-progress');
@@ -423,6 +427,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param path
      */
     loadDirectory(path) {
+        const i18n = this._i18n;
         if (typeof this.directoryPath === 'undefined' || this.directoryPath === undefined) {
             this.directoryPath = '';
         }
@@ -567,6 +572,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param fileData
      */
     downloadFile(fileData) {
+        const i18n = this._i18n;
         this.loading = true;
         this.statusText = "Loading " + fileData.filename + "...";
 
@@ -597,6 +603,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param directory
      */
     sendDirectory(directory) {
+        const i18n = this._i18n;
         this.tabulatorTable.deselectRow();
         let path;
 
@@ -621,6 +628,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param directory
      */
     uploadFiles(files, directory) {
+        const i18n = this._i18n;
         this.loading = true;
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
         this.fileList = files;
@@ -641,6 +649,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param directory
      */
     async uploadFile(directory) {
+        const i18n = this._i18n;
         if (this.abortUpload) {
             this.abortUpload = false;
             this.abortUploadButton = false;
@@ -707,6 +716,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async uploadFileAfterConflict() {
+        const i18n = this._i18n;
         if (this.abortUpload) {
             this.abortUpload = false;
             this.abortUploadButton = false;
@@ -856,6 +866,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param directory
      */
     replaceModalDialog(file, directory) {
+        const i18n = this._i18n;
         this.uploadFileObject = file;
         this.uploadFileDirectory = directory;
         let rights = this.checkRights(file);
@@ -964,6 +975,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @returns {string} correct cancel text
      */
     getCancelText() {
+        const i18n = this._i18n;
         if (this.fileList.length > 1) {
             return i18n.t('nextcloud-file-picker.replace-cancel-all');
         }
@@ -991,6 +1003,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     openAddFolderDialogue() {
+        const i18n = this._i18n;
         if (this._('.addRowAnimation')) {
             this._('.addRowAnimation').classList.remove('addRowAnimation');
         }
@@ -1010,6 +1023,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     addFolder() {
+        const i18n = this._i18n;
         if (this._('#new-folder').value !== "") {
             let folderName = this._('#new-folder').value;
             if (typeof this.directoryPath === 'undefined') {
@@ -1090,6 +1104,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @returns {string} clickable breadcrumb path
      */
     getBreadcrumb() {
+        const i18n = this._i18n;
         if (typeof this.directoryPath === 'undefined') {
             this.directoryPath = '';
         }
@@ -1596,6 +1611,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        const i18n = this._i18n;
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
 
         return html`

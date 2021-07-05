@@ -1,6 +1,7 @@
 module.exports = {
     input: [
         'src/*.js',
+        './*.js',
     ],
     output: './',
     options: {

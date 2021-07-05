@@ -25,9 +25,11 @@
     "rollup": "^2.33.3",
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-serve": "^1.0.1"
+    "rollup-plugin-serve": "^1.0.1",
+    "i18next-scanner": "^3.0.0"
   },
   "scripts": {
+    "i18next": "i18next-scanner",
     "clean": "rm dist/*",
     "build": "rollup -c",
     "build-test": "rollup -c --environment BUILD:test",

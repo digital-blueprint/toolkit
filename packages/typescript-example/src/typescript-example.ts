@@ -1,5 +1,5 @@
-import {html,LitElement,property} from 'lit-element';
-import {i18n} from './i18n';
+import {html,LitElement} from 'lit-element';
+import {createInstance} from './i18n';
 
 export class TypeScriptExample extends LitElement {
 
@@ -8,20 +8,20 @@ export class TypeScriptExample extends LitElement {
     constructor() {
         super();
 
-        this._i18n = i18n.cloneInstance();
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
     }
 
-    @property({type: String})
-    lang = '';
+    static get properties() {
+        return {
+          lang: {type: String}
+        };
+    }
 
     update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case "lang":
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
+        if (changedProperties.has("lang")) {
+            this._i18n.changeLanguage(this.lang);
+        }
         super.update(changedProperties);
     }
 

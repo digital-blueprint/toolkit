@@ -1,5 +1,5 @@
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -12,7 +12,8 @@ import {PersonSelect} from '@dbp-toolkit/person-select';
 export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.person = '';
         this.selectedPerson = '';
@@ -42,6 +43,10 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     update(changedProperties) {
+        if (changedProperties.has("lang")) {
+            this._i18n.changeLanguage(this.lang);
+        }
+
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'auth':
@@ -61,7 +66,6 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
         const that = this;
 
         this.updateComplete.then(()=>{

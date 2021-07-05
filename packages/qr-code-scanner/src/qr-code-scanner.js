@@ -1,4 +1,4 @@
-import {i18n} from './i18n';
+import {createInstance} from './i18n';
 import {css, html, unsafeCSS} from 'lit-element';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -33,9 +33,10 @@ function getPrimaryDevice(devices) {
  *
  * Moreimportant devices first.
  *
+ * @param i18n
  * @returns {Map<string,string>} the map of devices
  */
-async function getVideoDevices() {
+async function getVideoDevices(i18n) {
     let devices_map = new Map();
     if (navigator.mediaDevices
         && navigator.mediaDevices.enumerateDevices
@@ -135,7 +136,8 @@ class QRScanner {
 export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
 
         this._askPermission = false;
         this._loading = false;
@@ -181,9 +183,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
     async connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
 
-        let devices = await getVideoDevices();
+        let devices = await getVideoDevices(this._i18n);
         this._activeCamera = getPrimaryDevice(devices) || '';
         this._devices = devices;
 
@@ -209,7 +210,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case "lang":
-                    i18n.changeLanguage(this.lang);
+                    this._i18n.changeLanguage(this.lang);
                     break;
             }
         });
@@ -232,6 +233,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async _startScanning() {
+        const i18n = this._i18n;
         console.assert(this._lock.isLocked());
         await this.updateComplete;
 
@@ -488,6 +490,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        const i18n = this._i18n;
         let hasDevices = this._devices.size > 0;
         let showCanvas = this._videoRunning && !this._askPermission && !this._loading;
         let noSupportString = checkIosMobileSupport(this._devices) ? i18n.t('no-ios-support') : i18n.t('no-support');

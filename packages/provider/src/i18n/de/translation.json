@@ -1,7 +1,4 @@
 {
-  "de": "Deutsch",
-  "en": "Englisch",
-
   "demo": {
     "provider": "Anbieter",
     "consumer": "Verbraucher",

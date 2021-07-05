@@ -1,4 +1,4 @@
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
@@ -14,7 +14,8 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
 
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
     }
 
     static get scopedElements() {
@@ -35,18 +36,12 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
-
-    }
-
     attributeChangedCallback(name, oldValue, newValue) {
         console.debug('ProviderDemo (' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
         switch(name) {
             case 'lang':
                 this.lang = newValue;
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
                 break;
             default:
                 super.attributeChangedCallback(name, oldValue, newValue);
@@ -71,6 +66,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        const i18n = this._i18n;
         return html`
             <section class="section">
                 <p>${i18n.t('demo.provider_description', {id: "root", description: "is the top most in hierarchy"})}</p>
@@ -142,7 +138,8 @@ class DemoConsumer extends DBPLitElement {
     constructor() {
         super();
 
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         // default values
         this.foo = 100;
@@ -157,7 +154,6 @@ class DemoConsumer extends DBPLitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        i18n.changeLanguage(this.lang);
         console.debug('DemoConsumer(' + this.id + ') connectedCallback()');
         this.render();
     }
@@ -184,7 +180,7 @@ class DemoConsumer extends DBPLitElement {
         switch(name) {
             case 'lang':
                 this.lang = newValue;
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
                 break;
             case 'foo':
                 this.foo = parseInt(newValue);
@@ -209,6 +205,7 @@ class DemoConsumer extends DBPLitElement {
     }
 
     render() {
+        const i18n = this._i18n;
         if (! this.connected) {
             return `not connected!`;
         }

@@ -31,7 +31,8 @@
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-emit-ejs": "^3.1.0",
-    "rollup-plugin-serve": "^1.0.1"
+    "rollup-plugin-serve": "^1.0.1",
+    "i18next-scanner": "^3.0.0"
   },
   "dependencies": {
     "@dbp-toolkit/auth": "^0.2.2",
@@ -47,6 +48,7 @@
     "universal-router": "^9.0.1"
   },
   "scripts": {
+    "i18next": "i18next-scanner",
     "build": "npm run build-local",
     "build-local": "rollup -c",
     "build-test": "rollup -c --environment BUILD:test",

@@ -1,4 +1,4 @@
-import {i18n} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
@@ -12,7 +12,8 @@ export class MatomoDemo extends ScopedElementsMixin(DBPLitElement) {
 
     constructor() {
         super();
-        this.lang = 'de';
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.matomoUrl = '';
         this.matomoSiteId = -1;
@@ -38,9 +39,14 @@ export class MatomoDemo extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        i18n.changeLanguage(this.lang);
+    update(changedProperties) {
+         changedProperties.forEach((oldValue, propName) => {
+            if (propName === "lang") {
+                this._i18n.changeLanguage(this.lang);
+            }
+        });
+
+        super.update(changedProperties);
     }
 
     track(action, message) {

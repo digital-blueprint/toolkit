@@ -20,7 +20,6 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 export class AuthKeycloak extends AdapterLitElement {
     constructor() {
         super();
-        this.lang = 'de';
         this.forceLogin = false;
         this.loadPerson = false;
         this.token = "";
@@ -33,6 +32,7 @@ export class AuthKeycloak extends AdapterLitElement {
         this._loginStatus = LoginStatus.UNKNOWN;
         this.requestedLoginStatus = LoginStatus.UNKNOWN;
         this._i18n = createInstance();
+        this.lang = this._i18n.language;
 
         // Keycloak config
         this.keycloakUrl = null;
