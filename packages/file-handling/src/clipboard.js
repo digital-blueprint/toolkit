@@ -91,10 +91,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     break;
                 case "clipboardFiles":
                     this.generateClipboardTable();
+
                     break;
             }
         });
-
         super.update(changedProperties);
     }
 
@@ -105,10 +105,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             let boundSelectHandler = this.selectAllFiles.bind(this);
             this._("#select_all").addEventListener('click', boundSelectHandler);
         }
-
-
-
-
     }
 
     toggleCollapse(e) {
@@ -339,18 +335,34 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
 
-                console.log("add");
-                if (this._('.tabulator-responsive-collapse-toggle-open')) {
-                    this._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", this.toggleCollapse.bind(this)));
-                }
+                const that = this;
+                setTimeout(function(){
+                    if (that._('.tabulator-responsive-collapse-toggle-open')) {
+                        that._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
+                    }
 
-                if (this._('.tabulator-responsive-collapse-toggle-close')) {
-                    this._a('.tabulator-responsive-collapse-toggle-close').forEach(element => element.addEventListener("click", this.toggleCollapse.bind(this)));
-                }
+                    if (that._('.tabulator-responsive-collapse-toggle-close')) {
+                        that._a('.tabulator-responsive-collapse-toggle-close').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
+                    }
+                }, 0);
             }
         }
         if (this._("#select_all")) {
             this._("#select_all").checked = false;
+        }
+    }
+
+    async addClickEventToggleCollapse() {
+        console.log("add event");
+        if (this.tabulatorTable !== null) {
+
+            if (this._('.tabulator-responsive-collapse-toggle-open')) {
+                this._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", this.toggleCollapse.bind(this)));
+            }
+
+            if (this._('.tabulator-responsive-collapse-toggle-close')) {
+                this._a('.tabulator-responsive-collapse-toggle-close').forEach(element => element.addEventListener("click", this.toggleCollapse.bind(this)));
+            }
         }
     }
 
@@ -483,7 +495,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      */
     finishedSaveFilesToClipboard(event) {
         const i18n = this._i18n;
-
         send({
             "summary": i18n.t('clipboard.saved-files-title', {count: event.detail.count}),
             "body": i18n.t('clipboard.saved-files-body', {count: event.detail.count}),
