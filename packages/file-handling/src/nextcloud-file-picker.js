@@ -549,7 +549,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param files
      */
     downloadFiles(files) {
-        files.forEach((fileData) => this.downloadFile(fileData));
+        files.forEach((fileData) => this.downloadFile(fileData, files.length));
+
         this.tabulatorTable.deselectRow();
         if (this._("#select_all")) {
             this._("#select_all").checked = false;
@@ -569,9 +570,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      * Download a single file
      *
-     * @param fileData
+     * @param fileData, maxUpload
      */
-    downloadFile(fileData) {
+    downloadFile(fileData, maxUpload) {
+
         const i18n = this._i18n;
         this.loading = true;
         this.statusText = "Loading " + fileData.filename + "...";
@@ -583,7 +585,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 // create file to send via event
                 const file = new File([contents], fileData.basename, {type: fileData.mime});
                 // send event
-                const data = {"file": file, "data": fileData};
+                const data = {"file": file, "data": fileData, "maxUpload": maxUpload};
                 const event = new CustomEvent("dbp-nextcloud-file-picker-file-downloaded",
                     {"detail": data, bubbles: true, composed: true});
                 this.dispatchEvent(event);

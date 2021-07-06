@@ -30,6 +30,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this.filesToSave = [];
         this.numberOfSelectedFiles = 0;
         this.enabledTargets = 'local';
+        this.countUploadFiles = 0;
+        this.buttonsDisabled = false;
 
         this.nextcloudWebAppPasswordURL = "";
         this.nextcloudWebDavURL = "";
@@ -57,11 +59,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             ...super.properties,
             lang: { type: String },
             allowedMimeTypes: { type: String, attribute: 'allowed-mime-types' },
-            clipboardSelectBtnDisabled: { type: Boolean, attribute: true },
+            clipboardSelectBtnDisabled: { type: Boolean },
             clipboardFiles: {type: Object, attribute: 'clipboard-files' },
             filesToSave: {type: Array, attribute: 'files-to-save' },
             numberOfSelectedFiles: {type: Number, attribute: false },
             enabledTargets: {type: String, attribute: 'enabled-targets'},
+            buttonsDisabled: {type: Boolean },
 
             nextcloudWebAppPasswordURL: { type: String, attribute: 'nextcloud-auth-url' },
             nextcloudWebDavURL: { type: String, attribute: 'nextcloud-web-dav-url' },
@@ -352,20 +355,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-    async addClickEventToggleCollapse() {
-        console.log("add event");
-        if (this.tabulatorTable !== null) {
-
-            if (this._('.tabulator-responsive-collapse-toggle-open')) {
-                this._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", this.toggleCollapse.bind(this)));
-            }
-
-            if (this._('.tabulator-responsive-collapse-toggle-close')) {
-                this._a('.tabulator-responsive-collapse-toggle-close').forEach(element => element.addEventListener("click", this.toggleCollapse.bind(this)));
-            }
-        }
-    }
-
     /**
      * Sends the files to a provider and throws a notification
      *
@@ -453,6 +442,14 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             const event = new CustomEvent("dbp-clipboard-file-picker-file-uploaded",
                 {  bubbles: true, composed: true });
             this.dispatchEvent(event);
+        }
+
+        this.countUploadFiles += 1;
+        if (this.countUploadFiles === event.detail.maxUpload) {
+            this.buttonsDisabled = false;
+            this.countUploadFiles = 0;
+        } else {
+            this.buttonsDisabled = true;
         }
     }
 
@@ -570,11 +567,13 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     getAdditionalButtons() {
         const i18n = this._i18n;
         let buttonsAreDisabled = this.clipboardFiles.files.length === 0 ? true : this.clipboardSelectBtnDisabled;
+        buttonsAreDisabled = this.buttonsDisabled ? true : buttonsAreDisabled;
         return html`
             <div class="flex-container additional-button-container">
                         <div class="btn-flex-container-mobile">
                             <button @click="${() => { this.openFileSource(); }}"
-                                    class="button ${classMap({hidden: this.mode === MODE_FILE_SINK || this.mode === MODE_FILE_SOURCE})}" title="${i18n.t('clipboard.add-files')}">
+                                    class="button ${classMap({hidden: this.mode === MODE_FILE_SINK || this.mode === MODE_FILE_SOURCE})}" title="${i18n.t('clipboard.add-files')}"
+                                    ?disabled="${this.buttonsDisabled}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon> ${i18n.t('clipboard.add-files-btn')}
                             </button>
                             <button @click="${() => { this.clearClipboard(); }}"

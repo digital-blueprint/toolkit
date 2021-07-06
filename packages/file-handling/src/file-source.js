@@ -155,8 +155,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         super.disconnectedCallback();
     }
 
-
-
     preventDefaults (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -205,42 +203,44 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         // console.log('handleFiles: files.length = ' + files.length);
         // this.dispatchEvent(new CustomEvent("dbp-file-source-selection-start",
         //     { "detail": {}, bubbles: true, composed: true }));
-
-        await commonUtils.asyncArrayForEach(files, async (file) => {
+        let fileCount = files.length;
+        await commonUtils.asyncArrayForEach(files, async (file, index) => {
             if (file.size === 0) {
                 console.log('file \'' + file.name + '\' has size=0 and is denied!');
                 return;
             }
-
             // check if we want to decompress the zip and queue the contained files
             if (this.decompressZip
                 && (file.type === "application/zip" || file.type === "application/x-zip-compressed")) {
                 // add decompressed files to tempFilesToHandle
                 await commonUtils.asyncArrayForEach(
-                    await this.decompressZIP(file), (file) => this.sendFileEvent(file));
+                    await this.decompressZIP(file), (file, index, array) => {
+                        fileCount = index === array.length - 1 ? fileCount : fileCount + 1;
+                        this.sendFileEvent(file,fileCount);
+                     });
 
                 return;
             } else if (this.allowedMimeTypes && !this.checkFileType(file)) {
                 return;
             }
 
-            await this.sendFileEvent(file);
+            await this.sendFileEvent(file, fileCount);
         });
 
         // this.dispatchEvent(new CustomEvent("dbp-file-source-selection-finished",
         //     { "detail": {}, bubbles: true, composed: true }));
-        const event = new CustomEvent("dbp-file-source-file-upload-finished", { "detail": {count: files.length}, bubbles: true, composed: true });
+        const event = new CustomEvent("dbp-file-source-file-upload-finished", { "detail": {count: fileCount}, bubbles: true, composed: true });
         this.dispatchEvent(event);
         this.closeDialog();
     }
 
     /**
-     * @param file
+     * @param file, last
      */
-    sendFileEvent(file) {
+    sendFileEvent(file, maxUpload) {
         this.sendSource();
         MicroModal.close(this._('#modal-picker'));
-        const data = {"file": file};
+        const data = {"file": file, "maxUpload": maxUpload};
         const event = new CustomEvent("dbp-file-source-file-selected", { "detail": data, bubbles: true, composed: true });
         this.dispatchEvent(event);
     }
@@ -249,7 +249,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         let data = {};
         if (this.activeTarget == 'nextcloud') {
             data = {"target": this.activeTarget, "path": this._("#nextcloud-file-picker").directoryPath};
-
         } else {
             data = {"target": this.activeTarget};
         }
@@ -485,7 +484,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                    auth-info="${this.nextcloudAuthInfo}"
                    allowed-mime-types="${this.allowedMimeTypes}"
                    @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
-                    this.sendFileEvent(event.detail.file);}}">
+                    this.sendFileEvent(event.detail.file, event.detail.maxUpload);}}">
                 </dbp-nextcloud-file-picker>`;
         }
         return html``;
@@ -576,11 +575,17 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 #dropArea{
                     height: 100%;
                 }
-                
+             
+            
+            }
+
+            @media only screen
+            and (orientation: portrait)
+            and (max-width: 340px) {
+
                 .paddles{
                     display: inherit;
                 }
-            
             }
         `;
     }
@@ -592,7 +597,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         if (this.decompressZip && this.allowedMimeTypes !== "*/*") {
             allowedMimeTypes += ",application/zip,application/x-zip-compressed";
         }
-
 
         return html`
 <!--

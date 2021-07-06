@@ -14,7 +14,7 @@ export default class DbpFileHandlingLitElement extends ScopedElementsMixin(DBPLi
     }
 
     /**
-     * handles the scroll of the current element and displays the right and/or the left paddle
+     * Handles the scroll of the current element and displays the right and/or the left paddle
      * to match the scrolling position
      *
      * @param e
