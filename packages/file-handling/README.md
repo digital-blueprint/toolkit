@@ -240,6 +240,75 @@ This web component depends on:
 The `dbp-nextcloud-file-picker` component is currently used by the file sink, file source and
 clipboard components. There is a slot you can use to override to provide additional information.
 
+### Usage
+
+```html
+<dbp-nextcloud-file-picker></dbp-nextcloud-file-picker>
+```
+
+### Attributes
+lang: {type: String},
+authUrl: {type: String, attribute: 'auth-url'},
+webDavUrl: {type: String, attribute: 'web-dav-url'},
+nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
+nextcloudName: {type: String, attribute: 'nextcloud-name'},
+authInfo: {type: String, attribute: 'auth-info'},
+directoryPath: {type: String, attribute: 'directory-path'},
+allowedMimeTypes: {type: String, attribute: 'allowed-mime-types'},
+directoriesOnly: {type: Boolean, attribute: 'directories-only'},
+maxSelectedItems: {type: Number, attribute: 'max-selected-items'}
+
+- `lang` (optional, default: `de`): set to `de` or `en` for German or English
+  - example `<dbp-file-source lang="de"></dbp-file-source>`
+- `allowed-mime-types` (optional): if set accepts only files matching mime types
+  - example `<dbp-file-source allowed-mime-types='application/pdf'></dbp-file-source>` ... PDFs only
+  - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all sub types) only
+  - example `<dbp-file-source allowed-mime-types='image/png,text/plain'></dbp-file-source>` ... PNGs or TXTs only
+  - example `<dbp-file-source allowed-mime-types='*/*'></dbp-file-source>` ... all file types (default)
+
+- `auth-url` (optional): Nextcloud Auth Url to use with the Nextcloud file picker
+  - example `<dbp-file-source auth-url="http://localhost:8081/index.php/apps/webapppassword"></dbp-file-source>`
+  - `web-dav-url` also needs to be set for the Nextcloud file picker to be active
+- `web-dav-url` (optional): Nextcloud WebDav Url to use with the Nextcloud file picker
+  - example `<dbp-file-source nextcloud-web-dav-url="http://localhost:8081/remote.php/dav/files"></dbp-file-source>`
+  - `auth-url` also needs to be set for the Nextcloud file picker to be active
+- `nextcloud-file-url` (optional): Nextcloud File Url to use with the Nextcloud file picker
+  - example `<dbp-file-source nextcloud-file-url="http://localhost:8081/apps/files/?dir="></dbp-file-source>`
+- `auth-info` (optional): Additional authentication information text that is shown in the Nextcloud file picker
+  - example `<dbp-file-source auth-info="You need special permissions for this function"></dbp-file-source>`
+- `diectory-path` (optional): Allows you to set an specific initial path for your nextcloud, 
+  if this path isn't found the path is set to default `\`
+  - example `<dbp-nextcloud-file-picker directory-path="\your-folder\your-subfolder"></dbp-nextcloud-file-picker>`
+- `directories-only` (optional): A Boolean to specify if you want to select an directory or files
+  Use `directories-only` for fileupload, and without for file selecting
+  - example `<dbp-nextcloud-file-picker directories-only></dbp-nextcloud-file-picker>`
+- `max-selected-items` (optional, default: `true`): A number to specify how many files can be selected, 
+  set to true if you don't want to specify a number
+  - example `<dbp-nextcloud-file-picker max-selected-items="5"></dbp-nextcloud-file-picker>`
+
+### Outgoing Events
+
+#### `dbp-nextcloud-file-picker-number-files`
+
+This event is sent if one or more files are downloaded, the payload has the number of uploaded files.
+**Payload**: `{"count": files.length}`
+
+#### `dbp-nextcloud-file-picker-file-downloaded` 
+
+This event is sent if one file is downloaded, the payload has the file, filedata and the max number of uploaded files.
+**Payload**: `{"file": file, "data": fileData, "maxUpload": maxUpload}`
+
+#### `dbp-nextcloud-file-picker-file-uploaded`
+
+Send the directory to filesink
+**Payload**: `{path: path}` 
+
+#### `dbp-nextcloud-file-picker-file-uploaded-finished`
+
+This event is sent if the file upload is finished
+**Payload**: `{this.uploadCount}`
+
+
 ### Slots
 
 You use template tags to inject slots into the web component.
