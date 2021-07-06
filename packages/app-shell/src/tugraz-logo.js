@@ -1,16 +1,15 @@
 import {html, css} from 'lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {createI18nInstance} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
-
-const i18n = createI18nInstance();
 
 export class TUGrazLogo extends AdapterLitElement {
 
     constructor() {
         super();
 
-        this.lang = i18n.language;
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
     }
 
     static get properties() {
@@ -23,7 +22,7 @@ export class TUGrazLogo extends AdapterLitElement {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === "lang") {
-                i18n.changeLanguage(this.lang);
+                this._i18n.changeLanguage(this.lang);
             }
         });
         super.update(changedProperties);
@@ -67,6 +66,7 @@ export class TUGrazLogo extends AdapterLitElement {
     } 
 
     render() {
+        const i18n = this._i18n;
         return html`
             <a href="https://www.tugraz.at" title="TU Graz Home" target="_blank" rel="noopener">
                 <div id="claim">
