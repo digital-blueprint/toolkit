@@ -120,23 +120,30 @@ export class AuthKeycloak extends AdapterLitElement {
 
         if (newPerson && this.loadPerson) {
             JSONLD.getInstance(this.entryPointUrl).then((jsonld) => {
-                // find the correct api url for the current person
-                // we are fetching the logged-in person directly to respect the REST philosophy
-                // see: https://github.com/api-platform/api-platform/issues/337
-                const apiUrl = jsonld.getApiUrlForEntityName("Person") + '/' + that.personId;
+                try {
+                    // find the correct api url for the current person
+                    // we are fetching the logged-in person directly to respect the REST philosophy
+                    // see: https://github.com/api-platform/api-platform/issues/337
+                    const apiUrl = jsonld.getApiUrlForEntityName("Person") + '/' + that.personId;
 
-                fetch(apiUrl, {
-                    headers: {
-                        'Content-Type': 'application/ld+json',
-                        'Authorization': 'Bearer ' + that.token,
-                    },
-                })
-                .then(response => response.json())
-                .then((person) => {
-                    that.person = person;
+                    fetch(apiUrl, {
+                        headers: {
+                            'Content-Type': 'application/ld+json',
+                            'Authorization': 'Bearer ' + that.token,
+                        },
+                    })
+                        .then(response => response.json())
+                        .then((person) => {
+                            that.person = person;
+                            this.sendSetPropertyEvents();
+                            this._setLoginStatus(this._loginStatus, true);
+                        });
+                } catch (error) {
+                    console.warn(error);
+                    that.person = null;
                     this.sendSetPropertyEvents();
                     this._setLoginStatus(this._loginStatus, true);
-                });
+                }
             }, {}, that.lang);
         }
     }
