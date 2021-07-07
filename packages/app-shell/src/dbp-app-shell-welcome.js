@@ -117,8 +117,8 @@ export const appWelcomeMeta = {
       "en": "Welcome"
     },
     "description": {
-      "de": "",
-      "en": ""
+      "de": "Willkommen",
+      "en": "Welcome"
     },
     visible: true,
     required_roles: [],
