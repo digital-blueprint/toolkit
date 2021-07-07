@@ -236,6 +236,11 @@ export function getFileHandlingCss() {
         .tabulator-row-handle{
             padding: 0px !important;
         }
+        
+        .tabulator-selected .tabulator-responsive-collapse-toggle-open, 
+        .tabulator-selected .tabulator-responsive-collapse-toggle-close{
+            color: white;
+        }
 
         @media only screen
         and (orientation: portrait)

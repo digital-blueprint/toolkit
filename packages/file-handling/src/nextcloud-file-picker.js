@@ -215,7 +215,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         title: i18n.t('nextcloud-file-picker.last-modified'),
                         responsive: 3,
                         widthGrow: 1,
-                        minWidth: 100,
+                        minWidth: 150,
                         field: "lastmod",
                         sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
                             const a_timestamp = Date.parse(a);
@@ -307,11 +307,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 rowAdded: (row) => {
                     row.getElement().classList.toggle("addRowAnimation");
                 },
-                renderComplete: () => {
+                dataLoaded: () => {
                     if (this.tabulatorTable !== null) {
                         const that = this;
                         setTimeout(function(){
+                            console.log("start2");
                             if (that._('.tabulator-responsive-collapse-toggle-open')) {
+                                console.log("yes2");
+
                                 that._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
                             }
 
@@ -320,8 +323,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             }
                         }, 0);
                     }
-
-                },
+                }
             });
 
 
@@ -1489,7 +1491,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .remember-container{
                 display: inline-block;
                 line-height: 28px;
-                padding-left: 44px;
+                padding-left: 34px;
+            }
+
+            .remember-container .checkmark{
+                left: 0px;
             }
 
 

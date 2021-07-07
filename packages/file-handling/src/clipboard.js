@@ -240,7 +240,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         this._("#select_all_checkmark").title = this.checkAllSelected() ? i18n.t('clipboard.select-nothing') : i18n.t('clipboard.select-all');
                     }
                 },
-                renderComplete: () => {
+                dataLoaded: () => {
                     if (this.tabulatorTable !== null) {
                         const that = this;
                         setTimeout(function(){
@@ -337,6 +337,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      *
      */
     generateClipboardTable() {
+        this.numberOfSelectedFiles = 0;
         if (this.clipboardFiles.files) {
             let data = [];
             for (let i = 0; i < this.clipboardFiles.files.length; i++) {

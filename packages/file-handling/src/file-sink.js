@@ -247,6 +247,15 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
     closeDialog(e) {
         this.sendDestination();
+        if (this.enabledTargets.includes('clipboard')) {
+            const filePicker = this._('#clipboard-file-picker');
+            if (filePicker && filePicker.tabulatorTable) {
+                filePicker.tabulatorTable.deselectRow();
+                if (filePicker._('#select_all')) {
+                    filePicker._("#select_all").checked = false;
+                }
+            }
+        }
         MicroModal.close(this._('#modal-picker'));
         this.isDialogOpen = false;
     }
