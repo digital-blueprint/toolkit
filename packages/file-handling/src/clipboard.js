@@ -575,19 +575,19 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         return html`
             <div class="flex-container additional-button-container">
                         <div class="btn-flex-container-mobile">
-                            <button @click="${() => { this.openFileSource(); }}"
+                            <button id="clipboard-add-files-button" @click="${() => { this.openFileSource(); }}"
                                     class="button ${classMap({hidden: this.mode === MODE_FILE_SINK || this.mode === MODE_FILE_SOURCE})}" title="${i18n.t('clipboard.add-files')}"
                                     ?disabled="${this.buttonsDisabled}">
                                 <dbp-icon class="nav-icon" name="clipboard"></dbp-icon> ${i18n.t('clipboard.add-files-btn')}
                             </button>
-                            <button @click="${() => { this.clearClipboard(); }}"
+                            <button id="clipboard-remove-files-button" @click="${() => { this.clearClipboard(); }}"
                                     class="button" title="${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.remove-count', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.remove-all')}"
                                     ?disabled="${buttonsAreDisabled}">
                                 ${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.remove-count-btn', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.remove-all-btn')}
                             </button>
                         </div>
                         <div class="btn-flex-container-mobile">
-                            <button @click="${() => { this.openFileSink(); }}"
+                            <button id="clipboard-save-files-button" @click="${() => { this.openFileSink(); }}"
                                     ?disabled="${buttonsAreDisabled}"
                                     class="button" title="${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.save-all')}">
                                 ${(this.numberOfSelectedFiles > 0) ? i18n.t('clipboard.save-count-btn', {count: this.numberOfSelectedFiles}) : i18n.t('clipboard.save-all-btn')}
