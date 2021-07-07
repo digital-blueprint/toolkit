@@ -239,7 +239,22 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     if (this._("#select_all_checkmark")) {
                         this._("#select_all_checkmark").title = this.checkAllSelected() ? i18n.t('clipboard.select-nothing') : i18n.t('clipboard.select-all');
                     }
-                }
+                },
+                renderComplete: () => {
+                    if (this.tabulatorTable !== null) {
+                        const that = this;
+                        setTimeout(function(){
+                            if (that._('.tabulator-responsive-collapse-toggle-open')) {
+                                that._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
+                            }
+
+                            if (that._('.tabulator-responsive-collapse-toggle-close')) {
+                                that._a('.tabulator-responsive-collapse-toggle-close').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
+                            }
+                        }, 0);
+                    }
+
+                },
             });
             that.generateClipboardTable();
 
@@ -337,17 +352,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             if (this.tabulatorTable !== null) {
                 this.tabulatorTable.clearData();
                 this.tabulatorTable.setData(data);
-
-                const that = this;
-                setTimeout(function(){
-                    if (that._('.tabulator-responsive-collapse-toggle-open')) {
-                        that._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
-                    }
-
-                    if (that._('.tabulator-responsive-collapse-toggle-close')) {
-                        that._a('.tabulator-responsive-collapse-toggle-close').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
-                    }
-                }, 0);
             }
         }
         if (this._("#select_all")) {

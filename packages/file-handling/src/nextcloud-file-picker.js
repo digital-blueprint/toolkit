@@ -306,7 +306,22 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 },
                 rowAdded: (row) => {
                     row.getElement().classList.toggle("addRowAnimation");
-                }
+                },
+                renderComplete: () => {
+                    if (this.tabulatorTable !== null) {
+                        const that = this;
+                        setTimeout(function(){
+                            if (that._('.tabulator-responsive-collapse-toggle-open')) {
+                                that._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
+                            }
+
+                            if (that._('.tabulator-responsive-collapse-toggle-close')) {
+                                that._a('.tabulator-responsive-collapse-toggle-close').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
+                            }
+                        }, 0);
+                    }
+
+                },
             });
 
 
@@ -392,6 +407,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
+    _a(selector) {
+        return this.shadowRoot === null ? this.querySelectorAll(selector) : this.shadowRoot.querySelectorAll(selector);
+    }
+
     onReceiveWindowMessage(event) {
         if (this.webDavClient === null) {
             const data = event.data;
@@ -413,12 +432,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 if (this._("#remember-checkbox") && this._("#remember-checkbox").checked) {
                     sessionStorage.setItem('nextcloud-webdav-username', data.loginName);
                     sessionStorage.setItem('nextcloud-webdav-password', data.token);
-                    console.log("saved");
-
                 }
                 this.loadDirectory(this.directoryPath);
             }
         }
+    }
+
+    toggleCollapse(e) {
+        const table = this.tabulatorTable;
+        setTimeout(function() {
+            table.redraw();
+        }, 0);
     }
 
     /**
@@ -479,7 +503,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     "</d:propfind>"
             })
             .then(contents => {
-                //console.log("------", contents);
+
                 this.loading = false;
                 this.statusText = "";
                 this.tabulatorTable.setData(contents.data);
@@ -490,6 +514,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 } else {
                     this._("#download-button").removeAttribute("disabled");
                 }
+
             }).catch(error => {
             console.error(error.message);
 

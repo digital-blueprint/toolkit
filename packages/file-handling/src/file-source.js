@@ -118,7 +118,12 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                     if (this.firstOpen) {
                         this.nextcloudPath = this.initialFileHandlingState.path;
                     }
-                  break;
+                    break;
+                case "activeTarget":
+                    if (this.activeTarget === "nextcloud") {
+                        this.loadWebdavDirectory();
+                    }
+                    break;
             }
         });
         super.update(changedProperties);
