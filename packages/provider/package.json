@@ -1,7 +1,7 @@
 {
   "name": "@dbp-toolkit/provider",
   "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/provider",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "repository": {
