@@ -311,10 +311,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     if (this.tabulatorTable !== null) {
                         const that = this;
                         setTimeout(function(){
-                            console.log("start2");
                             if (that._('.tabulator-responsive-collapse-toggle-open')) {
-                                console.log("yes2");
-
                                 that._a('.tabulator-responsive-collapse-toggle-open').forEach(element => element.addEventListener("click", that.toggleCollapse.bind(that)));
                             }
 
