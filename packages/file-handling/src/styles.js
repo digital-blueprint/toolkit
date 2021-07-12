@@ -241,6 +241,10 @@ export function getFileHandlingCss() {
         .tabulator-selected .tabulator-responsive-collapse-toggle-close{
             color: white;
         }
+        
+        .tabulator .tabulator-header .tabulator-col{
+            min-height: 37px !important;
+        }
 
         @media only screen
         and (orientation: portrait)
