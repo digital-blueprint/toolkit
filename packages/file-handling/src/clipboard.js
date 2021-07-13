@@ -618,7 +618,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                 lang="${this.lang}"
                                 text="${i18n.t('clipboard.upload-area-text')}"
                                 button-label="${i18n.t('clipboard.upload-button-label')}"
-                                show-clipboard
                                 @dbp-file-source-file-selected="${this.saveFilesToClipboardEvent}"
                                 @dbp-nextcloud-file-picker-number-files="${this.finishedSaveFilesToClipboard}"
                                 @dbp-file-source-file-upload-finished="${this.finishedSaveFilesToClipboard}"
@@ -628,7 +627,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                    filename="clipboard-documents.zip"
                                    allowed-mime-types="${this.allowedMimeTypes}"
                                    enabled-targets="${this.allowNesting ? this.enabledTargets : this.enabledTargets.replace('clipboard', '')}"
-                                   show-clipboard
                                    nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
                                    nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
                                    nextcloud-name="${this.nextcloudName}"

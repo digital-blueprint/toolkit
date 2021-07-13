@@ -14,5 +14,5 @@
     "de": "Web Komponenten für file sink und file source. Für mehrere verschiedenen Quellen.",
     "en": "Web components for file sink and file source. For several different sources."
   },
-  "subscribe": "lang,entry-point-url,nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url,show-nextcloud-file-picker:show-nextcloud-file-picker"
+  "subscribe": "lang,entry-point-url,nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url,file-handling-enabled-targets"
 }
