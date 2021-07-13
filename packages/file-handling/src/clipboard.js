@@ -518,7 +518,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     files.push(fileObject.file);
                 });
             } else {
-                files = this.clipboardFiles.files
+                files = this.clipboardFiles.files;
             }
             this._("#file-sink-clipboard").files = Object.create(files);
             this._("#file-sink-clipboard").openDialog();
