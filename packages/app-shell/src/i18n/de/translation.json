@@ -14,8 +14,8 @@
   "welcome": {
     "headline": "Willkommen bei der Applikation '{{appname}}'."
   },
-  "login": "Einloggen",
-  "logout": "Ausloggen",
+  "login": "Anmelden",
+  "logout": "Abmelden",
   "page-not-found": "Die gewünschte Seite wurde nicht gefunden",
   "choose-from-menu": "Bitte wählen Sie eine Aktivität aus dem Menu."
 }
