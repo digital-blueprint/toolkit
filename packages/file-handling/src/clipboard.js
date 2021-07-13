@@ -512,7 +512,15 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     openFileSink() {
         const fileSink = this._("#file-sink-clipboard");
         if ( fileSink ) {
-            this._("#file-sink-clipboard").files = Object.create(this.tabulatorTable.getSelectedData().length > 0 ? this.tabulatorTable.getSelectedData() : this.clipboardFiles.files);
+            let files = Array();
+            if (this.tabulatorTable.getSelectedData().length > 0) {
+                this.tabulatorTable.getSelectedData().forEach(fileObject => {
+                    files.push(fileObject.file);
+                });
+            } else {
+                files = this.clipboardFiles.files
+            }
+            this._("#file-sink-clipboard").files = Object.create(files);
             this._("#file-sink-clipboard").openDialog();
         }
     }
