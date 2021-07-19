@@ -214,6 +214,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
 
             $this.attr("data-object", JSON.stringify(that.object));
             $this.data("object", that.object);
+            const roomName = that.object.name;
 
             if ($this.attr("value") !== identifier) {
                 that.ignoreValueUpdate = true;
@@ -225,6 +226,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                         value: identifier,
                         capacity: maxCapacity,
                         room: room,
+                        name: roomName,
                     },
                     bubbles: true
                 }));
@@ -259,6 +261,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                 const transformed = that.jsonld.compactMember(that.jsonld.expandMember(place), checkInPlaceContext);
                 const identifier = transformed["@id"];
                 const maxCapacity = transformed["maximumPhysicalAttendeeCapacity"];
+                const roomName = transformed["name"];
                 const room = place.identifier;
 
                 const option = new Option(that.generateOptionText(transformed), identifier, true, true);
@@ -272,6 +275,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                         value: identifier,
                         capacity: maxCapacity,
                         room: room,
+                        name: roomName,
                     },
                     bubbles: true
                 }));
