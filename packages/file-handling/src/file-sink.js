@@ -251,6 +251,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             const filePicker = this._('#clipboard-file-picker');
             if (filePicker && filePicker.tabulatorTable) {
                 filePicker.tabulatorTable.deselectRow();
+                filePicker.numberOfSelectedFiles = 0;
                 if (filePicker._('#select_all')) {
                     filePicker._("#select_all").checked = false;
                 }

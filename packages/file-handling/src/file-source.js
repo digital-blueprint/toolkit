@@ -443,6 +443,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         if (this.enabledTargets.includes('clipboard')) {
             const filePicker = this._('#clipboard-file-picker');
             if (filePicker && filePicker.tabulatorTable) {
+                filePicker.numberOfSelectedFiles = 0;
                 filePicker.tabulatorTable.deselectRow();
                 if (filePicker._('#select_all')) {
                     filePicker._("#select_all").checked = false;

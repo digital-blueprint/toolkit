@@ -258,7 +258,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     } else {
                         this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
                     }
-                    if (this.tabulatorTable && this.tabulatorTable.getSelectedRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)).length > 0) {
+                    if (!this.directoriesOnly && this.tabulatorTable && this.tabulatorTable.getSelectedRows().filter(row => row.getData().type != 'directory' && this.checkFileType(row.getData(), this.allowedMimeTypes)).length > 0) {
                         this.selectBtnDisabled = false;
                     } else {
                         this.selectBtnDisabled = true;
