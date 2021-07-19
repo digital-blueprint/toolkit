@@ -194,9 +194,17 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                     that.isSearching = false;
                 }
             }
+        }).on("select2:open", function (e) {
+            const selectId = e.target.id;
+
+            that.$(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function (
+                key,
+                value,
+            ) {
+                value.focus();
+            });
         }).on("select2:select", function (e) {
             that.$('#check-in-place-select-dropdown').removeClass('select2-bug');
-
             // set custom element attributes
             const identifier = e.params.data.id;
             const maxCapacity = e.params.data.maximumPhysicalAttendeeCapacity;
