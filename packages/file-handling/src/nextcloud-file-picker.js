@@ -354,8 +354,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async checkSessionStorage() {
-        return; //remove this line for remember me functionality
-        if (sessionStorage.getItem("nextcloud-webdav-username") && sessionStorage.getItem("nextcloud-webdav-password")) {
+        //comment in for remember me functionality
+        /*if (sessionStorage.getItem("nextcloud-webdav-username") && sessionStorage.getItem("nextcloud-webdav-password")) {
             this.webDavClient = createClient(
                 this.webDavUrl + "/" + sessionStorage.getItem("nextcloud-webdav-username"),
                 {
@@ -365,7 +365,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             );
             this.loadDirectory(this.directoryPath);
 
-        }
+        }*/
     }
 
     /**
