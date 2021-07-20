@@ -347,8 +347,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     that.addFolder();
                 }
             });
-
-            //this.checkSessionStorage();
         });
     }
 
@@ -356,6 +354,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async checkSessionStorage() {
+        return; //remove this line for remember me functionality
         if (sessionStorage.getItem("nextcloud-webdav-username") && sessionStorage.getItem("nextcloud-webdav-password")) {
             this.webDavClient = createClient(
                 this.webDavUrl + "/" + sessionStorage.getItem("nextcloud-webdav-username"),
@@ -428,10 +427,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     }
                 );
 
+                /* Comment this in for remember me functionality
                 if (this._("#remember-checkbox") && this._("#remember-checkbox").checked) {
                     sessionStorage.setItem('nextcloud-webdav-username', data.loginName);
                     sessionStorage.setItem('nextcloud-webdav-password', data.token);
                 }
+                */
                 this.loadDirectory(this.directoryPath);
             }
         }
@@ -1669,7 +1670,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 }}">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}
                         </button>
                     </div>
-                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})}">
+                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})} hidden"> <!-- remove hidden to enable remember me -->
                         <label class="button-container remember-container">
                             ${i18n.t('nextcloud-file-picker.remember-me')}
                             <input type="checkbox" id="remember-checkbox" name="remember">
