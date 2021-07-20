@@ -201,7 +201,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         title: i18n.t('nextcloud-file-picker.mime-type'),
                         responsive: 2,
                         widthGrow: 1,
-                        minWidth: 35,
+                        minWidth: 58,
                         field: "mime",
                         formatter: (cell, formatterParams, onRendered) => {
                             if (typeof cell.getValue() === 'undefined') {

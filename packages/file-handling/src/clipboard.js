@@ -181,7 +181,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         title: i18n.t("clipboard.file-type"),
                         responsive: 2,
                         widthGrow: 1,
-                        minWidth: 35,
+                        minWidth: 58,
                         field: "type",
                         formatter: (cell, formatterParams, onRendered) => {
                             if (typeof cell.getValue() === 'undefined') {
