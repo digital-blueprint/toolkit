@@ -17,7 +17,9 @@
     "nav-local": "Lokaler Computer",
     "no-usable-files-in-zip": "ZIP Datei enthält keine verwendbaren Dateien",
     "no-usable-files-hint": "Laden Sie eine ZIP Datei mit Dateien von folgendem Typ hoch: ",
-    "clipboard": "Zwischenablage"
+    "clipboard": "Zwischenablage",
+    "mime-type-title": "Nicht unterstützes Dateiformat",
+    "mime-type-body": "Das Dateiformat wird von dieser Applikation nicht unterstützt."
   },
   "file-sink": {
     "local-intro": "{{count}} Datei herunterladen",

@@ -3,7 +3,7 @@ import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from "@dbp-toolkit/common/utils";
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
-import {send as notify} from '@dbp-toolkit/common/notification';
+import {send} from "@dbp-toolkit/common/notification";
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from "./nextcloud-file-picker";
 import {classMap} from 'lit-html/directives/class-map.js';
@@ -262,6 +262,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     }
 
     checkFileType(file) {
+        const i18n = this._i18n;
         // check if file is allowed
         const [fileMainType, fileSubType] = file.type.split('/');
         const mimeTypes = this.allowedMimeTypes.split(',');
@@ -274,6 +275,12 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
         if (deny) {
             console.log(`mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`);
+            send({
+                "summary": i18n.t('file-source.mime-type-title'),
+                "body": i18n.t('file-source.mime-type-body'),
+                "type": "danger",
+                "timeout": 5,
+            });
             return false;
         }
         return true;
@@ -335,7 +342,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             const i18n = this._i18n;
             console.error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
             //throw new Error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
-            notify({
+            send({
                 "summary": i18n.t('file-source.no-usable-files-in-zip'),
                 "body": i18n.t('file-source.no-usable-files-hint') + this.allowedMimeTypes,
                 "type": 'danger',

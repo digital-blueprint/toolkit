@@ -21,7 +21,9 @@
     "clipboard-body": "Here you can choose from the previously temporarily cached files.",
     "clipboard-select-btn": "Select",
     "clipboard-no-files": "There are currently no files in the clipboard.",
-    "clipboard": "Clipboard"
+    "clipboard": "Clipboard",
+    "mime-type-title": "Unsupported file format",
+    "mime-type-body": "The file format is not supported by this application."
   },
   "file-sink": {
     "local-intro": "Download {{count}} file",
