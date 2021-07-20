@@ -397,7 +397,6 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     render() {
         const i18n = this._i18n;
         return html`
-            <vpu-notification lang="de" client-id="my-client-id"></vpu-notification>
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-1">
                     <div class="modal-container ${classMap({"modal-container-full-size": this.fullsizeModal})}" role="dialog" aria-modal="true" aria-labelledby="modal-picker-title">
