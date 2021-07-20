@@ -354,7 +354,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async checkSessionStorage() {
-        //comment in for remember me functionality
+        // Comment in for remember me functionality
         /*if (sessionStorage.getItem("nextcloud-webdav-username") && sessionStorage.getItem("nextcloud-webdav-password")) {
             this.webDavClient = createClient(
                 this.webDavUrl + "/" + sessionStorage.getItem("nextcloud-webdav-username"),
@@ -398,10 +398,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             const authUrl = this.authUrl + "?target-origin=" + encodeURIComponent(window.location.href);
             this.loginWindow = window.open(authUrl, "Nextcloud Login",
                 "width=400,height=400,menubar=no,scrollbars=no,status=no,titlebar=no,toolbar=no");
-            //console.log("open nextcloud filepicker, no webdavclient");
         } else {
             this.loadDirectory(this.directoryPath, this.webDavClient);
-            //console.log("load in nextcloud webcomponent");
         }
     }
 
@@ -418,7 +416,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.loginWindow.close();
                 }
 
-                // see https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
+                // See https://github.com/perry-mitchell/webdav-client/blob/master/API.md#module_WebDAV.createClient
                 this.webDavClient = createClient(
                     data.webdavUrl || this.webDavUrl + "/" + data.loginName,
                     {
@@ -459,7 +457,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             path = '';
         }
 
-        // console.log("load nextcloud directory", path);
         this.loading = true;
         this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {name: this.nextcloudName});
         this.lastDirectoryPath = this.directoryPath;
