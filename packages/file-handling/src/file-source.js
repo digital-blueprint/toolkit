@@ -11,6 +11,7 @@ import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
 import {Clipboard} from "@dbp-toolkit/file-handling/src/clipboard";
 import DbpFileHandlingLitElement from "./dbp-file-handling-lit-element";
+import {humanFileSize} from "@dbp-toolkit/common/i18next";
 
 function mimeTypesToAccept(mimeTypes) {
     // Some operating systems can't handle mime types and
@@ -55,6 +56,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.isDialogOpen = false;
         this.firstOpen = true;
         this.nextcloudAuthInfo = '';
+        this.maxFileSize = '';
 
         this.initialFileHandlingState = {target: '', path: ''};
     }
@@ -88,6 +90,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
             activeTarget: { type: String, attribute: 'active-target' },
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
+            maxFileSize: { type: Number, attribute: 'max-file-size'},
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
         };
@@ -214,6 +217,10 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 console.log('file \'' + file.name + '\' has size=0 and is denied!');
                 return;
             }
+
+            if(!this.checkSize(file)) {
+                return;
+            }
             // check if we want to decompress the zip and queue the contained files
             if (this.decompressZip
                 && (file.type === "application/zip" || file.type === "application/x-zip-compressed")) {
@@ -225,10 +232,10 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                      });
 
                 return;
-            } else if (this.allowedMimeTypes && !this.checkFileType(file)) {
+            } else if (this.allowedMimeTypes && !this.checkFileType(file) ) {
                 return;
             }
-
+console.log("huiiii");
             await this.sendFileEvent(file, fileCount);
         });
 
@@ -284,6 +291,23 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             return false;
         }
         return true;
+    }
+
+    checkSize(file) {
+        const i18n = this._i18n;
+        //TODO
+        console.log("file size", file.size);
+       if ( this.maxFileSize !== '' && (this.maxFileSize * 1000) <= file.size ) {
+           console.log(!"tooooo big file", humanFileSize(this.maxFileSize * 1000, true));
+           send({
+               "summary": i18n.t('file-source.too-big-file-title'),
+               "body": i18n.t('file-source.too-big-file-body', {size: humanFileSize(this.maxFileSize * 1000, true)}),
+               "type": "danger",
+               "timeout": 5,
+           });
+           return false;
+       }
+       return true;
     }
 
     hasEnabledSource(source) {

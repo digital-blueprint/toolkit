@@ -23,7 +23,9 @@
     "clipboard-no-files": "There are currently no files in the clipboard.",
     "clipboard": "Clipboard",
     "mime-type-title": "Unsupported file format",
-    "mime-type-body": "The file format is not supported by this application."
+    "mime-type-body": "The file format is not supported by this application.",
+    "too-big-file-title": "The file is too big!",
+    "too-big-file-body": "The file can have a maximum of {{size}}."
   },
   "file-sink": {
     "local-intro": "Download {{count}} file",

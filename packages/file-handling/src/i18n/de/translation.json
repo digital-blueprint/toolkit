@@ -19,7 +19,9 @@
     "no-usable-files-hint": "Laden Sie eine ZIP Datei mit Dateien von folgendem Typ hoch: ",
     "clipboard": "Zwischenablage",
     "mime-type-title": "Nicht unterstützes Dateiformat",
-    "mime-type-body": "Das Dateiformat wird von dieser Applikation nicht unterstützt."
+    "mime-type-body": "Das Dateiformat wird von dieser Applikation nicht unterstützt.",
+    "too-big-file-title": "Datei ist zu groß!",
+    "too-big-file-body": "Die Datei darf maximal {{size}} haben."
   },
   "file-sink": {
     "local-intro": "{{count}} Datei herunterladen",

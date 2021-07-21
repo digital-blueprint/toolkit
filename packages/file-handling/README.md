@@ -65,6 +65,10 @@ files from a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
     - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all sub types) only
     - example `<dbp-file-source allowed-mime-types='image/png,text/plain'></dbp-file-source>` ... PNGs or TXTs only
     - example `<dbp-file-source allowed-mime-types='*/*'></dbp-file-source>` ... all file types (default)
+- `max-file-size"` (optional): if set accepts only files with maximum of this size (in KB)
+    - example `<dbp-file-source max-file-size="32000"></dbp-file-source>` ... only files with a max size of
+      32 MB are allowed
+      
 - `enabled-targets` (optional, default: `local`): sets which sources are enabled
     - you can use `local`, `nextcloud` and `clipboard`
     - example `<dbp-file-source enabled-targets="local,nextcloud"></dbp-file-source>`
