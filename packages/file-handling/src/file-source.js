@@ -295,10 +295,7 @@ console.log("huiiii");
 
     checkSize(file) {
         const i18n = this._i18n;
-        //TODO
-        console.log("file size", file.size);
        if ( this.maxFileSize !== '' && (this.maxFileSize * 1000) <= file.size ) {
-           console.log(!"tooooo big file", humanFileSize(this.maxFileSize * 1000, true));
            send({
                "summary": i18n.t('file-source.too-big-file-title'),
                "body": i18n.t('file-source.too-big-file-body', {size: humanFileSize(this.maxFileSize * 1000, true)}),
