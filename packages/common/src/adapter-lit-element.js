@@ -193,6 +193,13 @@ export class AdapterLitElement extends LitElement {
                 detail: {
                     name: global,
                     callback: (value) => {
+                        // Don't send back "undefined" if the attribute wasn't found (for example if the providerRoot
+                        // is used and the attribute was subscribed but not set anywhere), because that will be
+                        // interpreted as "true" for Boolean lit-element attributes!
+                        if (value === undefined) {
+                            return;
+                        }
+
                         Logger.debug('AdapterLitElement(' + that.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
 
                         // If value is an object set it directly as property
