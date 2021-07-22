@@ -235,7 +235,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             } else if (this.allowedMimeTypes && !this.checkFileType(file) ) {
                 return;
             }
-console.log("huiiii");
+
             await this.sendFileEvent(file, fileCount);
         });
 
@@ -247,7 +247,8 @@ console.log("huiiii");
     }
 
     /**
-     * @param file, last
+     * @param file
+     * @param maxUpload
      */
     sendFileEvent(file, maxUpload) {
         this.sendSource();
@@ -259,7 +260,7 @@ console.log("huiiii");
 
     sendSource() {
         let data = {};
-        if (this.activeTarget == 'nextcloud') {
+        if (this.activeTarget === 'nextcloud') {
             data = {"target": this.activeTarget, "path": this._("#nextcloud-file-picker").directoryPath};
         } else {
             data = {"target": this.activeTarget};
