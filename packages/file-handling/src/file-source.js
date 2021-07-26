@@ -691,6 +691,16 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
                                         ${this.buttonLabel || i18n.t('upload-label')}
                                     </label>
+                                    <input ?disabled="${this.disabled}"
+                                           type="file"
+                                           id="imageElem"
+                                           single
+                                           accept="image/*"
+                                           name='image'
+                                           class="hidden">
+                                    <label class="button is-primary ${classMap({"hidden": !this.hasEnabledSource("image")})}" for="imageElem" ?disabled="${this.disabled}">
+                                        Bild upload
+                                    </label>
                                 </div>
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">
