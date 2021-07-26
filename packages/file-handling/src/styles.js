@@ -230,7 +230,12 @@ export function getFileHandlingCss() {
         .tabulator-responsive-collapse-toggle-open, .tabulator-responsive-collapse-toggle-close{
             width: 100%;
             height: 100%;
-            line-height: 37px;
+            line-height: 55px;
+        }
+
+        .tabulator-responsive-collapse-toggle-open .icon, .tabulator-responsive-collapse-toggle-close .icon {
+            font-size: 1rem;
+            top: -0.4em;
         }
         
         .tabulator-row-handle{

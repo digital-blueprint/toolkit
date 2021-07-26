@@ -135,7 +135,55 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 placeholder: i18n.t("clipboard.no-data"),
                 columns: [
                     {
-                        formatter:"responsiveCollapse", width:32, minWidth:32, align:"center", resizable:false, headerSort:false},
+                        width: 32,
+                        minWidth: 32,
+                        align: "center",
+                        resizable: false,
+                        headerSort: false,
+                        formatter: (cell, formatterParams, onRendered) => {
+                            let self = that,
+                                open = false,
+                                el = document.createElement("div");
+
+                            function toggleList(isOpen){
+                                let collapse = cell.getRow().getElement().getElementsByClassName("tabulator-responsive-collapse")[0];
+
+                                open = isOpen;
+
+                                if(open){
+                                    el.classList.add("open");
+                                    if(collapse){
+                                        collapse.style.display = '';
+                                    }
+                                }else{
+                                    el.classList.remove("open");
+                                    if(collapse){
+                                        collapse.style.display = 'none';
+                                    }
+                                }
+                            }
+
+                            el.classList.add("tabulator-responsive-collapse-toggle");
+                            const icon_tag = that.getScopedTagName("dbp-icon");
+                            el.innerHTML = "<span class='tabulator-responsive-collapse-toggle-open'><" + icon_tag + " class='icon' name='chevron-right'></" + icon_tag + "></span><span class='tabulator-responsive-collapse-toggle-close'><" + icon_tag + " class='icon' name='chevron-down'></" + icon_tag + "></span>";
+
+                            cell.getElement().classList.add("tabulator-row-handle");
+
+                            if(self.tabulatorTable.options.responsiveLayoutCollapseStartOpen){
+                                open = true;
+                            }
+
+                            el.addEventListener("click", function(event){
+                                toggleList(!open);
+                                event.preventDefault();
+                                event.stopImmediatePropagation();
+                            });
+
+                            toggleList(open);
+
+                            return el;
+                        }
+                    },
                     {
                         title: '<label class="button-container select-all-icon">' +
                             '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
