@@ -177,7 +177,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         title: i18n.t("clipboard.file-size"),
                         responsive: 4,
                         widthGrow: 1,
-                        minWidth: 65,
+                        minWidth: 84,
                         field: "size",
                         formatter: (cell, formatterParams, onRendered) => {
                             return cell.getRow().getData().type === "directory" ? "" : humanFileSize(cell.getValue());
