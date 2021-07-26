@@ -154,7 +154,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 resizableColumns: false,
                 columns: [
                     {
-                        formatter:"responsiveCollapse", width:32, minWidth:32, align:"center", resizable:false, headerSort:false},
+                        width: 32,
+                        minWidth: 32,
+                        align: "center",
+                        resizable: false,
+                        headerSort: false,
+                        formatter: "responsiveCollapse"
+                    },
                     {
                         title: '<label id="select_all_wrapper" class="button-container select-all-icon">' +
                             '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
