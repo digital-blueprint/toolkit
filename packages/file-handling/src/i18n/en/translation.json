@@ -9,6 +9,7 @@
   "required-server": "You need an upload server listening at <a href=\"{{- url}}\"><tt>{{- url}}</tt></a> to receive the files...",
   "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region.",
   "upload-label": "Select some files",
+  "image-upload-label": "Select an image",
   "upload-disabled-title": "The file selection is disabled while uploading!",
   "page-leaving-warn-dialogue": "Attention! There are still unused files in the clipboard. If you click on 'OK', the existing clipboard is automatically discarded!",
   "file-source": {

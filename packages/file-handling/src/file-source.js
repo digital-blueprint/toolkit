@@ -46,7 +46,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.nextcloudPath = '';
         this.nextcloudFileURL = '';
         this.dropArea = null;
-        this.allowedMimeTypes = '*/*';
+        this.allowedMimeTypes = '';
         this.enabledTargets = 'local';
         this.buttonLabel = '';
         this.disabled = false;
@@ -147,7 +147,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 this.dropArea.addEventListener(eventName, this.unhighlight.bind(this), false);
             });
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
-            this._('#fileElem').addEventListener('change', this.handleChange.bind(this));
+            this._('#fileElem').addEventListener('change', this.handleChange.bind(this, this._('#fileElem')));
+            this._('#imageElem').addEventListener('change', this.handleChange.bind(this, this._('#imageElem')));
 
             this._('nav.modal-nav').addEventListener("scroll", this.handleScroll.bind(this));
 
@@ -188,18 +189,20 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.handleFiles(files);
     }
 
-    async handleChange(e) {
-        let fileElem = this._('#fileElem');
+    async handleChange(element) {
+        let fileElem = element;
 
         if (fileElem.files.length === 0) {
             return;
         }
+
 
         await this.handleFiles(fileElem.files);
 
         // reset the element's value so the user can upload the same file(s) again
         fileElem.value = '';
     }
+
 
     /**
      * Handles files that were dropped to or selected in the component
@@ -602,6 +605,15 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             .modal-nav{
                 height: 100%;
             }
+            
+            .file-upload{
+                display: flex;
+            }
+            
+            .file-upload label{
+                margin-left: 10px;
+                margin-right: 10px;
+            }
 
 
             @media only screen
@@ -629,7 +641,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         const i18n = this._i18n;
         let allowedMimeTypes = this.allowedMimeTypes;
 
-        if (this.decompressZip && this.allowedMimeTypes !== "*/*") {
+        if (this.decompressZip && this.allowedMimeTypes !== "") {
             allowedMimeTypes += ",application/zip,application/x-zip-compressed";
         }
 
@@ -682,15 +694,21 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <div class="block">
                                         <p>${i18n.t('intro')}</p>
                                     </div>
+                                    <div class="file-upload">
+                                        <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
+                                            ${this.buttonLabel || i18n.t('upload-label')}
+                                        </label>
+                                        <label class="button is-primary ${classMap({"hidden": !this.hasEnabledSource("image")})}" for="imageElem" ?disabled="${this.disabled}">
+                                            ${i18n.t('image-upload-label')}
+                                        </label>
+                                    </div>
                                     <input ?disabled="${this.disabled}"
                                            type="file"
                                            id="fileElem"
                                            multiple
                                            accept="${mimeTypesToAccept(allowedMimeTypes)}"
                                            name='file'>
-                                    <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
-                                        ${this.buttonLabel || i18n.t('upload-label')}
-                                    </label>
+                                    
                                     <input ?disabled="${this.disabled}"
                                            type="file"
                                            id="imageElem"
@@ -698,9 +716,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                            accept="image/*"
                                            name='image'
                                            class="hidden">
-                                    <label class="button is-primary ${classMap({"hidden": !this.hasEnabledSource("image")})}" for="imageElem" ?disabled="${this.disabled}">
-                                        Bild upload
-                                    </label>
+                                    
                                 </div>
                             </div>
                             <div class="source-main ${classMap({"hidden": this.activeTarget !== "nextcloud" || this.nextcloudWebDavUrl === "" || this.nextcloudAuthUrl === ""})}">

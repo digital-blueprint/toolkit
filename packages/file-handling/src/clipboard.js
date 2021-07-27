@@ -22,7 +22,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.allowedMimeTypes = '*/*';
+        this.allowedMimeTypes = '';
         this.clipboardFiles = {files: ''};
         this.clipboardSelectBtnDisabled = true;
         this.tabulatorTable = null;
