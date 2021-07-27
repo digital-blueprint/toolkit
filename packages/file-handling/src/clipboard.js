@@ -321,6 +321,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      * @returns {boolean}
      */
     checkFileType(file) {
+        if (this.allowedMimeTypes === '')
+            return true;
         // check if file is allowed
         const [fileMainType, fileSubType] = file.type.split('/');
         const mimeTypes = this.allowedMimeTypes.split(',');

@@ -33,7 +33,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.directoryPath = '';
         this.webDavClient = null;
         this.tabulatorTable = null;
-        this.allowedMimeTypes = '*/*';
+        this.allowedMimeTypes = '';
         this.directoriesOnly = false;
         this.maxSelectedItems = true;
         this.loading = false;
@@ -335,7 +335,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.tabulatorTable.options.selectableRangeMode = "click";
             }*/
 
-            if (typeof this.allowedMimeTypes !== 'undefined' && !this.directoriesOnly) {
+            if (typeof this.allowedMimeTypes !== 'undefined' && this.allowedMimeTypes !== '' && !this.directoriesOnly) {
                 this.tabulatorTable.setFilter(this.checkFileType, this.allowedMimeTypes);
             }
             // comment this in to show only directories in filesink
@@ -381,6 +381,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param filterParams
      */
     checkFileType(data, filterParams) {
+        if (filterParams === '')
+            return true;
         if (typeof data.mime === 'undefined') {
             return true;
         }
