@@ -57,6 +57,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.firstOpen = true;
         this.nextcloudAuthInfo = '';
         this.maxFileSize = '';
+        this.multipleFiles = true;
 
         this.initialFileHandlingState = {target: '', path: ''};
     }
@@ -91,6 +92,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             activeTarget: { type: String, attribute: 'active-target' },
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
             maxFileSize: { type: Number, attribute: 'max-file-size'},
+            multipleFiles: { type: Number, attribute: 'number-of-files'},
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
         };
@@ -520,6 +522,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                    nextcloud-file-url="${this.nextcloudFileURL}"
                    auth-info="${this.nextcloudAuthInfo}"
                    allowed-mime-types="${this.allowedMimeTypes}"
+                   max-selected-items="${this.multipleFiles}"
                    @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
                     this.sendFileEvent(event.detail.file, event.detail.maxUpload);}}">
                 </dbp-nextcloud-file-picker>`;
@@ -636,6 +639,22 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             allowedMimeTypes += ",application/zip,application/x-zip-compressed";
         }
 
+        let inputFile = html``;
+        if (this.multipleFiles > 1 || this.multipleFiles === true ) {
+            inputFile = html `<input ?disabled="${this.disabled}"
+                                     type="file"
+                                     id="fileElem"
+                                     multiple
+                                     accept="${mimeTypesToAccept(allowedMimeTypes)}"
+                                     name='file'>`;
+        } else {
+            inputFile = html `<input ?disabled="${this.disabled}"
+                                     type="file"
+                                     id="fileElem"
+                                     accept="${mimeTypesToAccept(allowedMimeTypes)}"
+                                     name='file'>`;
+        }
+
         return html`
 <!--
             <button class="button"
@@ -687,12 +706,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     </div>
                                         
                                        
-                                    <input ?disabled="${this.disabled}"
-                                           type="file"
-                                           id="fileElem"
-                                           multiple
-                                           accept="${mimeTypesToAccept(allowedMimeTypes)}"
-                                           name='file'>
+                                    ${inputFile}
                                     <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
                                         ${this.buttonLabel || i18n.t('upload-label')}
                                     </label>
