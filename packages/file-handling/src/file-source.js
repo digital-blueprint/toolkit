@@ -148,7 +148,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             });
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
             this._('#fileElem').addEventListener('change', this.handleChange.bind(this, this._('#fileElem')));
-            this._('#imageElem').addEventListener('change', this.handleChange.bind(this, this._('#imageElem')));
 
             this._('nav.modal-nav').addEventListener("scroll", this.handleScroll.bind(this));
 
@@ -541,7 +540,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             ${fileHandlingStyles.getFileHandlingCss()}
 
            
-
+            
             p {
                 margin-top: 0;
             }
@@ -606,14 +605,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 height: 100%;
             }
             
-            .file-upload{
-                display: flex;
-            }
-            
-            .file-upload label{
-                margin-left: 10px;
-                margin-right: 10px;
-            }
 
 
             @media only screen
@@ -694,28 +685,17 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <div class="block">
                                         <p>${i18n.t('intro')}</p>
                                     </div>
-                                    <div class="file-upload">
-                                        <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
-                                            ${this.buttonLabel || i18n.t('upload-label')}
-                                        </label>
-                                        <label class="button is-primary ${classMap({"hidden": !this.hasEnabledSource("image")})}" for="imageElem" ?disabled="${this.disabled}">
-                                            ${i18n.t('image-upload-label')}
-                                        </label>
-                                    </div>
+                                        
+                                       
                                     <input ?disabled="${this.disabled}"
                                            type="file"
                                            id="fileElem"
                                            multiple
                                            accept="${mimeTypesToAccept(allowedMimeTypes)}"
                                            name='file'>
-                                    
-                                    <input ?disabled="${this.disabled}"
-                                           type="file"
-                                           id="imageElem"
-                                           single
-                                           accept="image/*"
-                                           name='image'
-                                           class="hidden">
+                                    <label class="button is-primary" for="fileElem" ?disabled="${this.disabled}">
+                                        ${this.buttonLabel || i18n.t('upload-label')}
+                                    </label>
                                     
                                 </div>
                             </div>
