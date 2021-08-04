@@ -65,7 +65,7 @@ deploy_demo:
     name: demo
     url: https://dbp-demo.tugraz.at/apps/demo
   variables:
-    DEPLOY_HOST: mw01-dev.tugraz.at
+    DEPLOY_HOST: vpu01-demo.tugraz.at
     DEPLOY_KEY: "$DEPLOY_SSH_KEY"
   <<: *deploy_defaults
 
