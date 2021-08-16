@@ -51,7 +51,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
             div.innerHTML = "You are not logged in!";
             return;
         }
-        let userInfoURL = 'https://auth-dev.tugraz.at/auth/realms/tugraz/protocol/openid-connect/userinfo';
+        let userInfoURL = 'https://auth-dev.tugraz.at/auth/realms/tugraz-vpu/protocol/openid-connect/userinfo';
 
         // NOTE: the URL and realm need to match the keycloak config above
         const response = await fetch(
