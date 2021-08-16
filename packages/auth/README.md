@@ -11,14 +11,14 @@ npm i @dbp-toolkit/auth
 ### Usage
 
 ```html
-<dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz" client-id="some-id"></dbp-auth-keycloak>
+<dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz-vpu" client-id="some-id"></dbp-auth-keycloak>
 <script type="module" src="node_modules/@dbp-toolkit/auth/dist/dbp-auth.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
-<dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz" client-id="some-id"></dbp-auth-keycloak>
+<dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz-vpu" client-id="some-id"></dbp-auth-keycloak>
 <script type="module" src="https://unpkg.com/@dbp-toolkit/auth@0.2.2/dist/dbp-auth.js"></script>
 ```
 
