@@ -1016,4 +1016,21 @@ export function getTextUtilities() {
     `;
 }
 
+export function getActivityCSS() {
+    // language=css
+    return css`
+        h2:first-child {
+            margin-top: 0;
+            margin-bottom: 0px;
+        }
 
+
+        .subheadline{
+            font-style: italic;
+            padding-left: 2em;
+            margin-top: -1px;
+            /*line-height: 1.8;*/
+            margin-bottom: 1.2em;
+        }
+    `;
+}
