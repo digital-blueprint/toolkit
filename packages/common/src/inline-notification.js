@@ -57,7 +57,7 @@ export class InlineNotification extends DBPLitElement {
     }
 
     createBodyHtml() {
-        return document.createRange().createContextualFragment(`${ this.body }`);
+        return document.createRange().createContextualFragment(`<slot name="body">${ this.body }</slot>`);
     }
 
     render() {
