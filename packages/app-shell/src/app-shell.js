@@ -901,7 +901,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                         </slot>
                     </header>
                     <div id="headline">
-                        <h1 class="title">${this.topicMetaDataText('name')}</h1>
+                        <h1 class="title">
+                            <slot name="title">
+                                ${this.topicMetaDataText('name')}
+                            </slot>
+                        </h1>
                     </div>
                     <aside>
                         <h2 class="subtitle" @click="${this.toggleMenu}">

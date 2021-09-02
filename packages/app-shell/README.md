@@ -77,6 +77,12 @@ The content of this slot will be shown left in the header and can be used to set
 
 Example: `<app-shell><template slot="name">TU Graz<br />Graz University of Technology</template></app-shell>`
 
+#### title
+
+The content of this slot will be shown as big h1 headline instead of the `name` in the topic manifest file.
+
+Example: `<app-shell><template slot="title">TU Graz Greenlight</template></app-shell>`
+
 #### logo
 
 The content of this slot will be shown right in the header and can be used to override the logo image.
