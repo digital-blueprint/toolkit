@@ -74,6 +74,7 @@ export default (async () => {
                 limit: 0,
                 include: [
                     await getPackagePath('select2', '**/*.css'),
+                    await getPackagePath('tippy.js', '**/*.css'),
                 ],
                 emitFiles: true,
                 fileName: 'shared/[name].[hash][extname]'
