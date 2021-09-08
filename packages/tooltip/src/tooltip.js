@@ -33,6 +33,7 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
 
         tippy(this._('#tooltip-icon'), {
             content: this.textContent,
+            appendTo: this.shadowRoot,
         });
     }
 
