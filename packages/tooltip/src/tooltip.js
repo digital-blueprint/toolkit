@@ -46,7 +46,8 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
 
             .info-icon {
                 /* color: red; TODO: css-var ? */
-                padding: 0 4px;
+                display: inline;
+                opacity: 0.7;
             }
 
         `;

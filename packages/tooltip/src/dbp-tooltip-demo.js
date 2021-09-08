@@ -5,7 +5,6 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TooltipElement} from './tooltip';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
-import tippy2CSSPath from 'tippy.js/dist/tippy.css';
 
 
 export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
@@ -53,18 +52,15 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
 
-        const tippy2CSS = commonUtils.getAssetURL(tippy2CSSPath);
-
         return html`
-
-            <link rel="stylesheet" href="${tippy2CSS}">
-
             <section class="section">
                 <div class="container">
                     <h1 class="title">Tooltip-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-tooltip text-content="tippy tooltip demo text"></dbp-tooltip>
+                    <p>Mind the gap!
+                        <dbp-tooltip text-content="tippy tooltip demo text"></dbp-tooltip>
+                    </p>
                 </div>
             </section>
         `;
