@@ -4,6 +4,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TooltipElement} from './tooltip';
+import {InfoTooltip} from './info-tooltip';
 import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
 
 
@@ -18,6 +19,7 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
     static get scopedElements() {
         return {
             'dbp-tooltip': TooltipElement,
+            'dbp-info-tooltip': InfoTooltip,
         };
     }
 
@@ -59,7 +61,11 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
                 <div class="container">
                     <p>Mind the gap!
-                        <dbp-tooltip text-content="tippy tooltip demo text"></dbp-tooltip>
+                        <dbp-info-tooltip text-content="tippy info tooltip demo text"></dbp-info-tooltip>
+                    </p>
+
+                    <p>Mind the gap!
+                        <dbp-tooltip text-content="tippy tooltip demo text" icon-name="information"></dbp-tooltip>
                     </p>
                 </div>
             </section>
