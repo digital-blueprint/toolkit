@@ -1,3 +1,3 @@
-import {Tooltip} from './tooltip.js';
+import {TooltipElement} from './tooltip.js';
 
-export {Tooltip};
+export {TooltipElement};
