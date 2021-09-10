@@ -11,7 +11,7 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this.tippy = '';
-        this.textContent = '';
+        this.textContent = 'missing text.';
     }
 
     static get properties() {
