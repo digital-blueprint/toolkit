@@ -61,7 +61,7 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
                 <div class="container">
                     <p>Mind the gap!
-                        <dbp-info-tooltip text-content="tippy info tooltip demo text"></dbp-info-tooltip>
+                        <dbp-info-tooltip text-content="tippy info tooltip demo text" interactive></dbp-info-tooltip>
                     </p>
 
                     <p>Mind the gap!

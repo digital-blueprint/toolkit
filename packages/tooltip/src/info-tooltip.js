@@ -12,6 +12,7 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
         super();
         this.tippy = '';
         this.textContent = 'missing text.';
+        this.interactive = false;
     }
 
     static get properties() {
@@ -19,6 +20,7 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             tippy: { type: Object, attribute: false },
             textContent: { type: String, attribute: 'text-content' },
+            interactive: { type: Boolean, attribute: true },
         };
     }
 
@@ -27,6 +29,9 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
         tippy(this._('#info-tooltip-icon'), {
             content: this.textContent,
             appendTo: this.shadowRoot,
+            interactive: this.interactive,
+            allowHTML: this.interactive ? true : false,
+            hideOnClick: this.interactive ? false : true,
         });
     }
 
