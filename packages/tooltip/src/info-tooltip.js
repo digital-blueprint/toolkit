@@ -49,6 +49,10 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
                 position: relative;
             }
 
+            a {
+                text-decoration-line: underline;
+                text-decoration-style: dotted;
+            }
         `;
     }
 
