@@ -32,3 +32,6 @@ Or directly via CDN:
 
 - `text-content`: Text to show as tooltip (default is 'text missing.' as a reminder!)
 - `icon-name`: (`<dbp-tooltip>` only, default is a skull) Name of the bundled icon (SVG) for `<dbp-icon>` 
+- `button-text`: (`<dbp-button-tooltip>` only, default is 'submit') Text on the button
+- `type`: (`<dbp-button-tooltip>` only, default is 'submit') Options are 'submit', 'reset', or any string
+- `form-id`: (`<dbp-button-tooltip>` only) Id of the from to submit, if omitted the next form in DOM hirachy will be used.

@@ -45,6 +45,8 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
             .info-icon {
                 display: inline;
                 opacity: 0.7;
+                top: 2px;
+                position: relative;
             }
 
         `;
