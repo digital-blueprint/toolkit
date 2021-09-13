@@ -31,7 +31,7 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
 
     firstUpdated() {
 
-        tippy(this._('#info-tooltip-icon'), {
+        tippy(this._('#info-tooltip-button'), {
             content: this.textContent,
             appendTo: this.shadowRoot,
         });

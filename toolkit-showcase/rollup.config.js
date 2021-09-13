@@ -15,6 +15,7 @@ import emitEJS from 'rollup-plugin-emit-ejs'
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '../rollup.utils.js';
+import replace from 'rollup-plugin-replace';
 
 const pkg = require('./package.json');
 const appEnv = (typeof process.env.APP_ENV !== 'undefined') ? process.env.APP_ENV : 'local';
@@ -147,6 +148,7 @@ Dependencies:
           include: [
             await getPackagePath('select2', '**/*.css'),
             await getPackagePath('highlight.js', '**/*.css'),
+            await getPackagePath('tippy.js', '**/*.css'),
           ],
           emitFiles: true,
           fileName: 'shared/[name].[hash][extname]'
@@ -175,6 +177,9 @@ Dependencies:
                 {src: await getPackagePath('datatables.net-responsive-dt', 'css'), dest: 'dist/' + await getDistPath('@dbp-toolkit/data-table-view')},
                 {src: await getPackagePath('datatables.net-buttons-dt', 'css'), dest: 'dist/' + await getDistPath('@dbp-toolkit/data-table-view')},
             ],
+        }),
+        replace({
+            'process.env.NODE_ENV': JSON.stringify('production')
         }),
         useBabel && getBabelOutputPlugin({
             compact: false,
