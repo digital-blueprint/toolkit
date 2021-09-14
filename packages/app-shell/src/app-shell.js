@@ -66,6 +66,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.matomoSiteId = -1;
 
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
+        this._onShowActivityEvent = this._onShowActivityEvent.bind(this);
 
         this.auth = {};
     }
@@ -761,6 +762,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         return elm;
     }
 
+    _onShowActivityEvent(e) {
+        this.switchComponent(e.detail.name);
+    }
+
     _onActivityAdded(element) {
         for(const key of this.topic.attributes || []) {
             let value = sessionStorage.getItem('dbp-attr-' + key);
@@ -769,10 +774,12 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
         }
         this._attrObserver.observe(element, {attributes: true, attributeFilter: this.topic.attributes});
+        element.addEventListener('dbp-show-activity', this._onShowActivityEvent);
     }
 
     _onActivityRemoved(element) {
         this._attrObserver.disconnect();
+        element.removeEventListener('dbp-show-activity', this._onShowActivityEvent);
     }
 
     track(action, message) {
