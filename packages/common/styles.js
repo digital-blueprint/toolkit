@@ -1069,6 +1069,17 @@ export function getLinkCss() {
             animation: 0s linkIconIn;
             font-size: 103%;
         }
+
+        .int-link-internal{
+            transition: background-color 0.15s, color 0.15s;
+            border-bottom: 1px solid rgba(0,0,0,0.3);
+        }
+
+        .int-link-internal:hover{
+            background-color: black;
+            color: white;
+            text-decoration: underline;
+        }
     `;
 }
 
