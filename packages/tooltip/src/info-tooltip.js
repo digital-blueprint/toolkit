@@ -68,7 +68,13 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
         const tippy2CSS = commonUtils.getAssetURL(tippy2CSSPath);
        
         if (this._('#info-tooltip-icon')) {
-            this.tippy = tippy(this._('#info-tooltip-icon'), { content: this.textContent });
+            this.tippy = tippy(this._('#info-tooltip-icon'), { 
+                content: this.textContent,
+                appendTo: this.shadowRoot,
+                interactive: this.interactive,
+                allowHTML: this.interactive ? true : false,
+                hideOnClick: this.interactive ? false : true,
+            });
         }
 
         return html`
