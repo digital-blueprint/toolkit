@@ -51,6 +51,9 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
 
             .info-icon {
                 display: inline;
+                opacity: 0.7;
+                font-size: 18px;
+                padding: 4.5px 7px;
             }
 
             a {
@@ -70,8 +73,8 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <link rel="stylesheet" href="${tippy2CSS}">
-            <div class="info-icon">
-                <dbp-icon name="information-circle" id="info-tooltip-icon"></dbp-icon>
+            <div class="info-icon" id="info-tooltip-icon">
+                <dbp-icon name="information-circle"></dbp-icon>
             </div>
             
         `;
