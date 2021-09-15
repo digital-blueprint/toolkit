@@ -52,7 +52,7 @@ publish:
     - ssh-keyscan -t rsa "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
     # Deploy
     - cd toolkit-showcase
-    - dep deploy "${CI_ENVIRONMENT_NAME}"
+    - dep deploy --file ./../.gitlab-ci/deploy.php "${CI_ENVIRONMENT_NAME}"
     - echo "Deployed to ${CI_ENVIRONMENT_URL}"
     # Simple health check
     - curl --max-time 10 --retry 3 --output /dev/null --silent --show-error --fail --location "${CI_ENVIRONMENT_URL}"

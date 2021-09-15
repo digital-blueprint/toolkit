@@ -23,7 +23,7 @@ set('rsync',[
     'timeout'      => 60,
 ]);
 
-set('rsync_src', __DIR__ . '/dist');
+set('rsync_src', __DIR__ . '/../toolkit-showcase/dist');
 set('rsync_dest','{{release_path}}');
 
 // Hosts
