@@ -10,7 +10,6 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
 
     constructor() {
         super();
-        this.tippy = '';
         this.textContent = 'missing text.';
         this.buttonText = 'submit';
         this.addEventListener('click', this._handleClick);
@@ -21,7 +20,6 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            tippy: { type: Object, attribute: false },
             textContent: { type: String, attribute: 'text-content' },
             buttonText: { type: String, attribute: 'button-text' },
             type: { type: String },
@@ -30,11 +28,23 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
     }
 
     firstUpdated() {
+        this.setOrUpdateTippy();
+    }
 
-        tippy(this._('#info-tooltip-button'), {
-            content: this.textContent,
-            appendTo: this.shadowRoot,
-        });
+    setOrUpdateTippy() {
+        if (this._('#info-tooltip-button')) {
+            if (this._('#info-tooltip-button')._tippy) {
+                this._('#info-tooltip-button')._tippy.setProps({
+                    content: this.textContent,
+                    appendTo: this.shadowRoot,
+                });
+            } else {
+                tippy(this._('#info-tooltip-button'), {
+                    content: this.textContent,
+                    appendTo: this.shadowRoot,
+                });
+            }
+        }
     }
 
     _handleClick(event) {
@@ -74,9 +84,7 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
 
         const tippy2CSS = commonUtils.getAssetURL(tippy2CSSPath);
        
-        if (this._('#info-tooltip-button')) {
-            this.tippy = tippy(this._('#info-tooltip-button'), { content: this.textContent });
-        }
+        this.setOrUpdateTippy();
 
         return html`
             <link rel="stylesheet" href="${tippy2CSS}">

@@ -11,7 +11,6 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
 
     constructor() {
         super();
-        this.tippy = '';
         this.textContent = 'missing text.';
         this.iconName = '';
     }
@@ -25,18 +24,29 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            tippy: { type: Object, attribute: false },
             textContent: { type: String, attribute: 'text-content' },
             iconName: { type: String, attribute: 'icon-name' },
         };
     }
 
     firstUpdated() {
+        this.setOrUpdateTippy();
+    }
 
-        tippy(this._('#tooltip-icon'), {
-            content: this.textContent,
-            appendTo: this.shadowRoot,
-        });
+    setOrUpdateTippy() {
+        if (this._('#tooltip-icon')) {
+            if (this._('#tooltip-icon')._tippy) {
+                this._('#tooltip-icon')._tippy.setProps({
+                    content: this.textContent,
+                    appendTo: this.shadowRoot,
+                });
+            } else {
+                tippy(this._('#tooltip-icon'), {
+                    content: this.textContent,
+                    appendTo: this.shadowRoot,
+                });
+            }
+        }
     }
 
     static get styles() {
@@ -59,9 +69,7 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
 
         const tippy2CSS = commonUtils.getAssetURL(tippy2CSSPath);
        
-        if (this._('#tooltip-icon')) {
-            this.tippy = tippy(this._('#tooltip-icon'), { content: this.textContent });
-        }
+        this.setOrUpdateTippy();
 
         return html`
             <link rel="stylesheet" href="${tippy2CSS}">

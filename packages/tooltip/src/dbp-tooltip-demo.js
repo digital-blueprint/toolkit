@@ -50,6 +50,7 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
             css`
             h1.title {margin-bottom: 1em;}
             div.container {margin-bottom: 1.5em; padding-left:20px;}
+            .group { display: flex; flex-direction: auto; column-gap: 3px; }
             `
         ];
     }
@@ -83,12 +84,12 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
                 <div class="container">
                     <h2>Button with Tooltip</h2>
                     <p>Add a tooltip info to your submit/reset button.</p>
-                    <form action="/">
+                    <form action="/" class="group">
                         <label for="text">Text</label>
                         <input type="text" id="text" name="text" value="" placeholder="text">
-                        <dbp-button-tooltip button-text="save" text-content="submit to server"></dbp-button-tooltip>
-                        <dbp-button-tooltip button-text="reset" text-content="clear all inputs" type="reset"></dbp-button-tooltip>
-                        <dbp-button-tooltip button-text="silent" text-content="does nothing" type="btn"></dbp-button-tooltip>
+                        <div><dbp-button-tooltip button-text="save" text-content="submit to server"></dbp-button-tooltip></div>
+                        <div><dbp-button-tooltip button-text="reset" text-content="clear all inputs" type="reset"></dbp-button-tooltip></div>
+                        <div><dbp-button-tooltip button-text="silent" text-content="does nothing" type="btn"></dbp-button-tooltip></div>
                     </form>
                 </div>
             </section>
