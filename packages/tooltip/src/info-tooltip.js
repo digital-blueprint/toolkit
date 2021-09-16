@@ -11,7 +11,6 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
 
     constructor() {
         super();
-        this.tippy = '';
         this.textContent = 'missing text.';
         this.interactive = false;
     }
@@ -25,21 +24,35 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            tippy: { type: Object, attribute: false },
             textContent: { type: String, attribute: 'text-content' },
             interactive: { type: Boolean, attribute: true },
         };
     }
 
     firstUpdated() {
+        this.setOrUpdateTippy();
+    }
 
-        tippy(this._('#info-tooltip-icon'), {
-            content: this.textContent,
-            appendTo: this.shadowRoot,
-            interactive: this.interactive,
-            allowHTML: this.interactive ? true : false,
-            hideOnClick: this.interactive ? false : true,
-        });
+    setOrUpdateTippy() {
+        if (this._('#info-tooltip-icon')) {
+            if (this._('#info-tooltip-icon')._tippy) {
+                this._('#info-tooltip-icon')._tippy.setProps({
+                    content: this.textContent,
+                    appendTo: this.shadowRoot,
+                    interactive: this.interactive,
+                    allowHTML: this.interactive ? true : false,
+                    hideOnClick: this.interactive ? false : true,
+                });
+            } else {
+                tippy(this._('#info-tooltip-icon'), {
+                    content: this.textContent,
+                    appendTo: this.shadowRoot,
+                    interactive: this.interactive,
+                    allowHTML: this.interactive ? true : false,
+                    hideOnClick: this.interactive ? false : true,
+                });
+            }
+        }
     }
 
     static get styles() {
@@ -67,22 +80,13 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
 
         const tippy2CSS = commonUtils.getAssetURL(tippy2CSSPath);
        
-        if (this._('#info-tooltip-icon')) {
-            this.tippy = tippy(this._('#info-tooltip-icon'), { 
-                content: this.textContent,
-                appendTo: this.shadowRoot,
-                interactive: this.interactive,
-                allowHTML: this.interactive ? true : false,
-                hideOnClick: this.interactive ? false : true,
-            });
-        }
+        this.setOrUpdateTippy();
 
         return html`
             <link rel="stylesheet" href="${tippy2CSS}">
             <div class="info-icon" id="info-tooltip-icon">
                 <dbp-icon name="information-circle"></dbp-icon>
             </div>
-            
         `;
     }
 
