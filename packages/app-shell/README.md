@@ -27,12 +27,12 @@ You need Keycloak and other parts to be in place to really make full use of the 
 Best take a look on examples like [index.html](https://gitlab.tugraz.at/dbp/esign/signature/-/blob/master/examples/dbp-signature/index.html)
 for more explanation.
 
-You need to set the `provider-root` attribute for the app-shell to "terminate" all provider events.
-If you don't want to set the app-shell as `provider-root` then you need to set the attributes `auth`,
-`requested-login-status` and `analytics-event` as attribute for the app-shell or in a `dbp-provider` above it.
-
 ## Attributes
 
+- `provider-root` (optional): You need to set the `provider-root` attribute for the app-shell to "terminate" all provider events
+  - If you don't want to set the app-shell as `provider-root` then you need to set the attributes `auth`,
+    `requested-login-status` and `analytics-event` as attribute for the app-shell or in a `dbp-provider` above it 
+  - example `<dbp-app-shell provider-root></dbp-app-shell>`
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-app-shell lang="de"></dbp-app-shell>`
 - `src`: The path to a topic metadata file (json)
