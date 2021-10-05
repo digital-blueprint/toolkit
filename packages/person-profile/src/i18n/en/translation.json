@@ -4,11 +4,6 @@
     "given-name": "Given name",
     "family-name": "Family name",
     "email": "Email",
-    "telephone": "Telephone",
-    "role": "Role",
-    "none-selected": "No person selected",
-    "staff": "staff",
-    "alumni": "alumni",
-    "unknown": "unknown"
+    "none-selected": "No person selected"
   }
 }
