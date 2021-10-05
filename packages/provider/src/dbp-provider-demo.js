@@ -76,7 +76,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
                 <div class="container">
                     <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu" client-id="auth-dev-mw-frontend-local" load-person try-login></dbp-auth-keycloak>
-                    <dbp-login-button subscribe="auth" lang="${this.lang}" show-image></dbp-login-button>
+                    <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
                     <dbp-language-select></dbp-language-select>
                 </div>
                 <dbp-provider id="demo"

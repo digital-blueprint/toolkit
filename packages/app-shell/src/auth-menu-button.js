@@ -13,7 +13,6 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.showImage = false;
         this.auth = {};
 
         this.closeDropdown = this.closeDropdown.bind(this);
@@ -30,7 +29,6 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
         return {
             ...super.properties,
             lang: { type: String },
-            showImage: { type: Boolean, attribute: 'show-image' },
             auth: { type: Object },
         };
     }
@@ -102,12 +100,6 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 text-decoration: none;
             }
 
-            img {
-                border-width: var(--dbp-border-width);
-                border-color: var(--dbp-dark);
-                border-style: solid;
-            }
-
             .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
                 display: block;
             }
@@ -128,10 +120,6 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 background-color: white;
                 padding-bottom: 0.5rem;
                 padding-top: 0.5rem;
-            }
-
-            .dropdown-content img {
-                max-width: 120px;
             }
 
             .menu a {
@@ -157,7 +145,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 position: relative;
             }
 
-              .dropdown, img.login {
+            .dropdown {
                 cursor: pointer;
             }
 
@@ -245,9 +233,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
     renderLoggedIn() {
         const i18n = this._i18n;
-        const person = this.auth.person;
-        const imageURL = (this.showImage && person && person.image) ? person.image : null;
-
+ 
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
                 <a href="#">
@@ -258,7 +244,6 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 </a>
                 <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                     <div class="dropdown-content" @blur="${this.closeDropdown}">
-                        ${imageURL ? html`<div class="dropdown-item"><img alt="" src="${imageURL}"></div>` : ''}
                         <div class="menu">
                             <a href="#" @click="${this.onLogoutClicked}" class="dropdown-item">${i18n.t('logout')}</a>
                         </div>
