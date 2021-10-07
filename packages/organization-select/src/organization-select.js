@@ -234,7 +234,7 @@ export class OrganizationSelect extends AdapterLitElement {
         }
 
         let orgUrl = this.entryPointUrl + '/people/' +
-            encodeURIComponent(this.auth.person.identifier) +
+            encodeURIComponent(this.auth['person-id']) +
             '/organizations' +
             '?context=' + encodeURIComponent(this.context) +
             '&lang=' + encodeURIComponent(this.lang);
