@@ -89,7 +89,14 @@ export class AuthKeycloak extends AdapterLitElement {
             baseUrl = jsonld.getApiUrlForEntityName("FrontendUser");
         } catch(error) {
             // backwards compat
-            baseUrl = jsonld.getApiUrlForEntityName("Person");
+            try {
+                baseUrl = jsonld.getApiUrlForEntityName("Person");
+            } catch(error) {
+                // There are no entities, just give up.
+                return {
+                    roles: [],
+                };
+            }
         }
         const apiUrl = baseUrl + '/' + encodeURIComponent(userId);
 
