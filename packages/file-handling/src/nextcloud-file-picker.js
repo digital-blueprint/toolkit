@@ -483,7 +483,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     @click="${async () => {
                         this.openFilePicker();
                     }}">
-                <dbp-icon name="reload">
+                <dbp-icon name="reload"></dbp-icon>
             </button>`;
             this.loading = false;
             this.statusText = reloadButton;
@@ -542,7 +542,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         @click="${async () => {
                             this.openFilePicker();
                         }}">
-                    <dbp-icon name="reload">
+                    <dbp-icon name="reload"></dbp-icon>
                 </button>`;
                 this.loading = false;
                 this.statusText = reloadButton;
@@ -600,7 +600,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      * Download a single file
      *
-     * @param fileData, maxUpload
+     * @param fileData
+     * @param maxUpload
      */
     downloadFile(fileData, maxUpload) {
 
