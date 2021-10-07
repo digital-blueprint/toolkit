@@ -27,6 +27,7 @@ export class AuthKeycloak extends AdapterLitElement {
         this.entryPointUrl = '';
         this._user = null;
         this._userId = "";
+        this._authenticated = false;
         this._loginStatus = LoginStatus.UNKNOWN;
         this.requestedLoginStatus = LoginStatus.UNKNOWN;
         this._i18n = createInstance();
@@ -110,6 +111,7 @@ export class AuthKeycloak extends AdapterLitElement {
     async _onKCChanged(event) {
         const kc = event.detail;
 
+        this._authenticated = kc.authenticated;
         if (kc.authenticated) {
             let tokenChanged = (this.token !== kc.token);
             this.name = kc.idTokenParsed.name;
@@ -125,7 +127,9 @@ export class AuthKeycloak extends AdapterLitElement {
                     this._user = user;
                 }
             }
-            this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || userChanged);
+            if (this._user !== null) {
+                this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || userChanged);
+            }
         } else {
             if (this._loginStatus === LoginStatus.LOGGED_IN) {
                 this._setLoginStatus(LoginStatus.LOGGING_OUT);
@@ -211,8 +215,9 @@ export class AuthKeycloak extends AdapterLitElement {
             } else if (this.tryLogin) {
                 this._setLoginStatus(LoginStatus.LOGGING_IN);
                 await this._kcwrapper.tryLogin();
-                if (this._loginStatus === LoginStatus.LOGGING_IN)
+                if (!this._authenticated) {
                     this._setLoginStatus(LoginStatus.LOGGED_OUT);
+                }
             } else {
                 this._setLoginStatus(LoginStatus.LOGGED_OUT);
             }
