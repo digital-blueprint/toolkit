@@ -89,7 +89,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     getAuthComponentHtml() {
         return this.noAuth ? html`` : html`
             <div class="container">
-                <dbp-auth lang="${this.lang}" load-person></dbp-auth>
+                <dbp-auth lang="${this.lang}"></dbp-auth>
             </div>
         `;
     }

@@ -15,13 +15,12 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
  *   auth.token: Keycloak token to send with your requests
  *   auth.user-full-name: Full name of the user
  *   auth.person-id: Person identifier of the user
- *   auth.person: Person json object of the user (optional, enable by setting the `load-person` attribute)
+ *   auth.person: Person json object of the user
  */
 export class AuthKeycloak extends AdapterLitElement {
     constructor() {
         super();
         this.forceLogin = false;
-        this.loadPerson = false;
         this.token = "";
         this.subject = "";
         this.name = "";
@@ -117,8 +116,7 @@ export class AuthKeycloak extends AdapterLitElement {
         }
 
         const that = this;
-
-        if (newPerson && this.loadPerson) {
+        if (newPerson) {
             JSONLD.getInstance(this.entryPointUrl).then((jsonld) => {
                 try {
                     // find the correct api url for the current person
@@ -180,7 +178,6 @@ export class AuthKeycloak extends AdapterLitElement {
             lang: { type: String },
             forceLogin: { type: Boolean, attribute: 'force-login' },
             tryLogin: { type: Boolean, attribute: 'try-login' },
-            loadPerson: { type: Boolean, attribute: 'load-person' },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             name: { type: String, attribute: false },
             token: { type: String, attribute: false },

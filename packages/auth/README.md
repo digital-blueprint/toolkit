@@ -30,9 +30,6 @@ for more explanation.
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-auth-keycloak lang="de" </dbp-auth-keycloak>`
-- `load-person` (optional, default: off): if enabled the logged in user will also be loaded as `Person`
-   in the `auth.person` attribute (see below)
-    - example `<dbp-auth-keycloak load-person></dbp-auth-keycloak>`
 - `force-login` (optional, default: off): if enabled a login will be forced, there never will be a login button
     - example `<dbp-auth-keycloak force-login></dbp-auth-keycloak>`
 - `try-login` (optional, default: off): if enabled the a login will happen if the user is already logged in
@@ -59,7 +56,7 @@ The component emits a `dbp-set-property` event for the attribute `auth`:
 - `auth.token`: Keycloak token to send with your requests
 - `auth.user-full-name`: Full name of the user
 - `auth.person-id`: Person identifier of the user
-- `auth.person`: Person json object of the user (optional, enable by setting the `load-person` attribute)
+- `auth.person`: Person json object of the user
 
 
 ## Login Button
