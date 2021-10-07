@@ -99,7 +99,6 @@ export class AuthKeycloak extends AdapterLitElement {
             }
             this.personId = personId;
 
-            this.sendSetPropertyEvents();
             this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || newPerson);
         } else {
             if (this._loginStatus === LoginStatus.LOGGED_IN) {
@@ -111,7 +110,6 @@ export class AuthKeycloak extends AdapterLitElement {
             this.personId = "";
             this.person = null;
 
-            this.sendSetPropertyEvents();
             this._setLoginStatus(LoginStatus.LOGGED_OUT);
         }
 
@@ -133,13 +131,11 @@ export class AuthKeycloak extends AdapterLitElement {
                         .then(response => response.json())
                         .then((person) => {
                             that.person = person;
-                            this.sendSetPropertyEvents();
                             this._setLoginStatus(this._loginStatus, true);
                         });
                 } catch (error) {
                     console.warn(error);
                     that.person = null;
-                    this.sendSetPropertyEvents();
                     this._setLoginStatus(this._loginStatus, true);
                 }
             }, {}, that.lang);
