@@ -55,8 +55,7 @@ The component emits a `dbp-set-property` event for the attribute `auth`:
 - `auth.login-status`: Login status (`unknown`, `logging-in`, `logging-out`, `logged-in`, `logged-out`)
 - `auth.token`: Keycloak token to send with your requests
 - `auth.user-full-name`: Full name of the user
-- `auth.person-id`: Person identifier of the user
-- `auth.person`: Person json object of the user
+- `auth.user-id`: Identifier of the user
 
 
 ## Login Button

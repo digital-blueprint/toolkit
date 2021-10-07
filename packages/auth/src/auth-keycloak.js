@@ -14,8 +14,7 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
  *   auth.login-status: Login status (see object LoginStatus)
  *   auth.token: Keycloak token to send with your requests
  *   auth.user-full-name: Full name of the user
- *   auth.person-id: Person identifier of the user
- *   auth.person: Person json object of the user
+ *   auth.user-id: Identifier of the user
  */
 export class AuthKeycloak extends AdapterLitElement {
     constructor() {
@@ -24,10 +23,10 @@ export class AuthKeycloak extends AdapterLitElement {
         this.token = "";
         this.subject = "";
         this.name = "";
-        this.personId = "";
         this.tryLogin = false;
-        this.person = null;
         this.entryPointUrl = '';
+        this._user = null;
+        this._userId = "";
         this._loginStatus = LoginStatus.UNKNOWN;
         this.requestedLoginStatus = LoginStatus.UNKNOWN;
         this._i18n = createInstance();
@@ -82,9 +81,34 @@ export class AuthKeycloak extends AdapterLitElement {
         super.update(changedProperties);
     }
 
-    _onKCChanged(event) {
+    async _fetchUser(userId) {
+        let jsonld = await JSONLD.getInstance(this.entryPointUrl, this.lang);
+        let baseUrl = '';
+        try {
+            baseUrl = jsonld.getApiUrlForEntityName("FrontendUser");
+        } catch(error) {
+            // backwards compat
+            baseUrl = jsonld.getApiUrlForEntityName("Person");
+        }
+        const apiUrl = baseUrl + '/' + encodeURIComponent(userId);
+
+        let response = await fetch(apiUrl, {
+            headers: {
+                'Authorization': 'Bearer ' + this.token,
+            },
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        let user = await response.json();
+        let dummyUser = {
+            roles: user['roles'] ?? [],
+        };
+        return dummyUser;
+    }
+
+    async _onKCChanged(event) {
         const kc = event.detail;
-        let newPerson = false;
 
         if (kc.authenticated) {
             let tokenChanged = (this.token !== kc.token);
@@ -92,14 +116,16 @@ export class AuthKeycloak extends AdapterLitElement {
             this.token = kc.token;
 
             this.subject = kc.subject;
-            const personId = kc.idTokenParsed.preferred_username;
-            if (personId !== this.personId) {
-                this.person = null;
-                newPerson = true;
+            const userId = kc.idTokenParsed.preferred_username;
+            let userChanged = (userId !== this._userId);
+            if (userChanged) {
+                this._userId = userId;
+                let user = await this._fetchUser(userId);
+                if (userId === this._userId) {
+                    this._user = user;
+                }
             }
-            this.personId = personId;
-
-            this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || newPerson);
+            this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || userChanged);
         } else {
             if (this._loginStatus === LoginStatus.LOGGED_IN) {
                 this._setLoginStatus(LoginStatus.LOGGING_OUT);
@@ -107,38 +133,10 @@ export class AuthKeycloak extends AdapterLitElement {
             this.name = "";
             this.token = "";
             this.subject = "";
-            this.personId = "";
-            this.person = null;
+            this._userId = "";
+            this._user = null;
 
             this._setLoginStatus(LoginStatus.LOGGED_OUT);
-        }
-
-        const that = this;
-        if (newPerson) {
-            JSONLD.getInstance(this.entryPointUrl).then((jsonld) => {
-                try {
-                    // find the correct api url for the current person
-                    // we are fetching the logged-in person directly to respect the REST philosophy
-                    // see: https://github.com/api-platform/api-platform/issues/337
-                    const apiUrl = jsonld.getApiUrlForEntityName("Person") + '/' + that.personId;
-
-                    fetch(apiUrl, {
-                        headers: {
-                            'Content-Type': 'application/ld+json',
-                            'Authorization': 'Bearer ' + that.token,
-                        },
-                    })
-                        .then(response => response.json())
-                        .then((person) => {
-                            that.person = person;
-                            this._setLoginStatus(this._loginStatus, true);
-                        });
-                } catch (error) {
-                    console.warn(error);
-                    that.person = null;
-                    this._setLoginStatus(this._loginStatus, true);
-                }
-            }, {}, that.lang);
         }
     }
 
@@ -148,8 +146,10 @@ export class AuthKeycloak extends AdapterLitElement {
             'subject': this.subject,
             'token': this.token,
             'user-full-name': this.name,
-            'person-id': this.personId,
-            'person': this.person,
+            'user-id': this._userId,
+            // Deprecated
+            'person-id': this._userId,
+            'person': this._user,
         };
 
         // inject a window.DBPAuth variable for cypress
@@ -178,8 +178,8 @@ export class AuthKeycloak extends AdapterLitElement {
             name: { type: String, attribute: false },
             token: { type: String, attribute: false },
             subject: { type: String, attribute: false },
-            personId: { type: String, attribute: false },
-            person: { type: Object, attribute: false },
+            _userId: { type: String, attribute: false },
+            _user: { type: Object, attribute: false },
             _loginStatus: { type: String, attribute: false },
             keycloakUrl: { type: String, attribute: 'url' },
             realm: { type: String },
