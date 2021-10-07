@@ -89,7 +89,7 @@ export class PersonProfile extends DBPLitElement {
             }
             </style>
 
-            ${this.person !== null && this.person.name !== '' ? html`<h3>${i18n.t('person-profile.profile-caption')} ${this.person.name}</h3>
+            ${this.person !== null ? html`<h3>${i18n.t('person-profile.profile-caption')} ${this.person.givenName} ${this.person.familyName}</h3>
             <table class="profile">
             <thead></thead>
             <tbody>
