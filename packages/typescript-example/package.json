@@ -13,13 +13,14 @@
     "access": "public"
   },
   "devDependencies": {
+    "@esm-bundle/chai": "^4.2.0",
     "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@types/mocha": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
-    "@esm-bundle/chai": "^4.2.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0-alpha.42",
+    "@typescript-eslint/parser": "^5.0.0-alpha.42",
     "karma": "^6.0.0",
     "karma-chrome-launcher": "^3.0.0",
     "karma-firefox-launcher": "^2.1.0",
