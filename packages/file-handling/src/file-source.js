@@ -57,7 +57,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.firstOpen = true;
         this.nextcloudAuthInfo = '';
         this.maxFileSize = '';
-        this.multipleFiles = true;
+        this.multipleFiles = Number.MAX_VALUE;
 
         this.initialFileHandlingState = {target: '', path: ''};
     }

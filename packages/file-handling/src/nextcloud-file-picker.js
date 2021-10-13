@@ -35,7 +35,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable = null;
         this.allowedMimeTypes = '';
         this.directoriesOnly = false;
-        this.maxSelectedItems = true;
+        this.maxSelectedItems = Number.MAX_VALUE;
         this.loading = false;
         this._onReceiveWindowMessage = this.onReceiveWindowMessage.bind(this);
 
@@ -276,7 +276,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 },
                 rowClick: (e, row) => {
                     const data = row.getData();
-
                     if (!row.getElement().classList.contains("no-select")) {
                         if (this.directoriesOnly) {
                             // comment out if you want to navigate through folders with double click
