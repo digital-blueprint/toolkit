@@ -83,7 +83,15 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     async _fetchUser(userId) {
-        let jsonld = await JSONLD.getInstance(this.entryPointUrl, this.lang);
+        let jsonld;
+        try {
+            jsonld = await JSONLD.getInstance(this.entryPointUrl, this.lang);
+        } catch(error) {
+            // Server is down, just give up.
+            return {
+                roles: [],
+            };
+        }
         let baseUrl = '';
         try {
             baseUrl = jsonld.getApiUrlForEntityName("FrontendUser");
