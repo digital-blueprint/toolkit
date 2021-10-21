@@ -17,7 +17,8 @@ import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 const personContext = {
     "@id": "@id",
-    "name": "http://schema.org/name",
+    "givenName": "http://schema.org/givenName",
+    "familyName": "http://schema.org/familyName",
     "email": "http://schema.org/email"
 };
 
@@ -265,7 +266,10 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     generateOptionText(person) {
-        let text = person["name"];
+        let text = person["givenName"] ?? '';
+        if (person["familyName"]) {
+            text += ` ${person["familyName"]}`;
+        }
 
         // add birth date to name if present
         if (this.showDetails && (person["email"] !== undefined) && (person["email"] !== null)) {
