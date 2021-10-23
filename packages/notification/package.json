@@ -20,7 +20,7 @@
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-url": "^6.0.0",
     "eslint": "^8.0.0",
-    "eslint-plugin-jsdoc": "^36.0.0",
+    "eslint-plugin-jsdoc": "^37.0.0",
     "i18next-scanner": "^3.0.0",
     "karma": "^6.0.0",
     "karma-chrome-launcher": "^3.0.0",
