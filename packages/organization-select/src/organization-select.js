@@ -233,7 +233,7 @@ export class OrganizationSelect extends AdapterLitElement {
             return [];
         }
 
-        let orgUrl = this.entryPointUrl + '/people/' +
+        let orgUrl = this.entryPointUrl + '/base/people/' +
             encodeURIComponent(this.auth['person-id']) +
             '/organizations' +
             '?context=' + encodeURIComponent(this.context) +
