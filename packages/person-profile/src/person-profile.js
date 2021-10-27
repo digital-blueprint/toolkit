@@ -46,7 +46,7 @@ export class PersonProfile extends DBPLitElement {
                 }
                 case 'value':
                     if (this.value !== '') {
-                        const apiUrl = this.entryPointUrl + '/people/' + this.value;
+                        const apiUrl = this.entryPointUrl + '/base/people/' + this.value;
 
                         // load person
                         fetch(apiUrl, {

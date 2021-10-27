@@ -27,10 +27,10 @@ Or directly via CDN:
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
     - example `<dbp-person-select entry-point-url="http://127.0.0.1:8000"></dbp-person-select>`
 - `value` (optional): api path of person to preload the selector with
-    - example `<dbp-person-select value="/people/testuser"></dbp-person-select>`
+    - example `<dbp-person-select value="/base/people/testuser"></dbp-person-select>`
     - the `value` will also be set automatically when a person is chosen in the selector
 - `data-object` (read-only): when a person is selected the person object will be set as json string
-    - example `<dbp-person-select data-object="{"@id":"/people/testuser", "@type":"http://schema.org/Person", "identifier":"testuser", "givenName":"Hans", "familyName":"Tester", "honorificSuffix":"Ing.", "telephone":"+43 (876) 123-4567", "phoneExtension":"4567", "email":"hans.tester@email.com", "name":"Hans Tester"}"></dbp-person-select>`
+    - example `<dbp-person-select data-object="{"@id":"/base/people/testuser", "@type":"http://schema.org/Person", "identifier":"testuser", "givenName":"Hans", "familyName":"Tester", "honorificSuffix":"Ing.", "telephone":"+43 (876) 123-4567", "phoneExtension":"4567", "email":"hans.tester@email.com", "name":"Hans Tester"}"></dbp-person-select>`
 - `show-details` (optional): also shows the email address of the persons to distinguish people with the same name
     - the currently logged in user needs to have permissions to show the email address of people
     - example `<dbp-person-select show-details></dbp-person-select>`

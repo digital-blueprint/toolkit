@@ -27,7 +27,7 @@ Or directly via CDN:
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
     - example `<dbp-person-profile entry-point-url="http://127.0.0.1:8000"></dbp-person-profile>`
 - `value` (optional): api path of person to preload the selector with
-    - example `<dbp-person-profile value="/people/testuser"></dbp-person-profile>`
+    - example `<dbp-person-profile value="/base/people/testuser"></dbp-person-profile>`
 - `auth` object: you need to set that object property for the auth token
     - example auth property: `{token: "THE_BEARER_TOKEN"}`
     - note: most often this should be an attribute that is not set directly, but subscribed at a provider
