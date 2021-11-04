@@ -301,6 +301,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                    auth-info="${this.nextcloudAuthInfo}"
                    directory-path="${this.nextcloudPath}"
                    nextcloud-file-url="${this.nextcloudFileURL}"
+                   store-nextcloud-session="true"
                    @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
                        this.uploadToNextcloud(event.detail);
                    }}"
