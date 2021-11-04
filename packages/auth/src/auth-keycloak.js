@@ -219,7 +219,6 @@ export class AuthKeycloak extends AdapterLitElement {
             throw Error("realm not set");
         if (!this.clientId)
             throw Error("client-id not set");
-
         this._kcwrapper = new KeycloakWrapper(this.keycloakUrl, this.realm, this.clientId, this.silentCheckSsoRedirectUri, this.idpHint);
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 

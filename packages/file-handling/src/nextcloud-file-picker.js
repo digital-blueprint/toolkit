@@ -12,6 +12,7 @@ import Tabulator from 'tabulator-tables';
 import MicroModal from './micromodal.es';
 import {name as pkgName} from './../package.json';
 import * as fileHandlingStyles from './styles';
+import {encrypt, decrypt, parseJwt} from './crypto';
 
 
 /**
@@ -22,7 +23,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        
+
+        this.auth = {};
         this.authUrl = '';
         this.webDavUrl = '';
         this.nextcloudName = 'Nextcloud';
@@ -60,6 +62,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isInFavorites = false;
         this.isInRecent = false;
         this.userName = '';
+        this.storeSession = false;
+        this.showSubmenu = false;
+        this.bounCloseSubmenuHandler = this.closeSubmenu.bind(this);
+        this.initateOpensubmenu = false;
     }
 
     static get scopedElements() {
@@ -76,6 +82,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            auth: {type: Object},
             authUrl: {type: String, attribute: 'auth-url'},
             webDavUrl: {type: String, attribute: 'web-dav-url'},
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
@@ -98,6 +105,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             selectBtnDisabled: {type: Boolean, attribute: true},
             showAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
             userName: { type: Boolean, attribute: false },
+            storeSession: {type: Boolean, attribute: 'store-nextcloud-session'},
+            showSubmenu: {type: Boolean, attribute: false}
         };
 
     }
@@ -107,6 +116,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             switch (propName) {
                 case "lang":
                     this._i18n.changeLanguage(this.lang);
+                    break;
+                case "auth":
+                    this._updateAuth();
                     break;
                 case "directoriesOnly":
                     if (this.directoriesOnly && this._("#select_all_wrapper")) {
@@ -146,10 +158,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         super.connectedCallback();
         const that = this;
         const i18n = this._i18n;
+        this._loginStatus = '';
+        this._loginState = [];
+        this._loginCalled = false;
+
         this.updateComplete.then(() => {
             // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
             window.addEventListener('message', this._onReceiveWindowMessage);
-
             // see: http://tabulator.info/docs/4.7
             this.tabulatorTable = new Tabulator(this._("#directory-content-table"), {
                 layout: "fitColumns",
@@ -363,20 +378,75 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     /**
+     *  Request a re-render every time isLoggedIn()/isLoading() changes
+     */
+    _updateAuth() {
+        this._loginStatus = this.auth['login-status'];
+
+        let newLoginState = [this.isLoggedIn(), this.isLoading()];
+
+        if (this._loginState.toString() !== newLoginState.toString()) {
+            this.requestUpdate();
+        }
+
+        this._loginState = newLoginState;
+
+        if (this.isLoggedIn() && !this._loginCalled ) {
+            this._loginCalled = true;
+            this.loginCallback();
+        }
+    }
+
+    loginCallback() {
+        this.checkSessionStorage()
+    }
+
+    /**
+     * Returns if a person is set in or not
+     *
+     * @returns {boolean} true or false
+     */
+    isLoggedIn() {
+        return (this.auth.person !== undefined && this.auth.person !== null);
+    }
+
+    /**
+     * Returns true if a person has successfully logged in
+     *
+     * @returns {boolean} true or false
+     */
+    isLoading() {
+        if (this._loginStatus === "logged-out")
+            return false;
+
+        return (!this.isLoggedIn() && this.auth.token !== undefined);
+    }
+
+
+
+    /**
      *
      */
     async checkSessionStorage() {
-        // Comment in for remember me functionality
-        /*if (sessionStorage.getItem("nextcloud-webdav-username") && sessionStorage.getItem("nextcloud-webdav-password")) {
-            this.webDavClient = createClient(
-                this.webDavUrl + "/" + sessionStorage.getItem("nextcloud-webdav-username"),
-                {
-                    username: sessionStorage.getItem("nextcloud-webdav-username"),
-                    password: sessionStorage.getItem("nextcloud-webdav-password")
-                }
-            );
-            this.loadDirectory(this.directoryPath);
-        }*/
+        const publicId = this.auth['person-id'];
+        const token = parseJwt(this.auth.token);
+        const sessionId = token ? token.sid : "";
+        if (this.isLoggedIn() && this.storeSession && sessionId
+            && sessionStorage.getItem("nextcloud-webdav-username" + publicId)
+            && sessionStorage.getItem("nextcloud-webdav-password" + publicId) ){
+            console.log("----------",  sessionStorage.getItem("nextcloud-webdav-username" + publicId));
+            const sessionStorageName = await sessionStorage.getItem("nextcloud-webdav-username" + publicId);
+            console.log("decrypt:", await decrypt(sessionId, sessionStorageName));
+               /* this.webDavClient = createClient(
+                    this.webDavUrl + "/" + sessionStorage.getItem("nextcloud-webdav-username"),
+                    {
+                        username: decrypt(sessionId, sessionStorage.getItem("nextcloud-webdav-username" + publicId)),
+                        password: decrypt(sessionId, sessionStorage.getItem("nextcloud-webdav-password" + publicId))
+                    }
+                );
+                this.isPickerActive = true;
+                this.loadDirectory(this.directoryPath);*/
+        }
     }
 
     /**
@@ -403,7 +473,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return !deny;
     }
 
-    openFilePicker() {
+    async openFilePicker() {
         const i18n = this._i18n;
         if (this.webDavClient === null) {
             this.loading = true;
@@ -420,7 +490,16 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return this.shadowRoot === null ? this.querySelectorAll(selector) : this.shadowRoot.querySelectorAll(selector);
     }
 
-    onReceiveWindowMessage(event) {
+    async persistStorageMaybe() {
+        if (navigator.storage && navigator.storage.persist) {
+            if (await navigator.storage.persist())
+                console.log("Storage will not be cleared except by explicit user action");
+            else
+                console.log("Storage may be cleared by the UA under storage pressure.");
+        }
+    }
+
+    async onReceiveWindowMessage(event) {
         if (this.webDavClient === null) {
             const data = event.data;
 
@@ -438,12 +517,21 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     }
                 );
 
-                /* Comment this in for remember me functionality
-                if (this._("#remember-checkbox") && this._("#remember-checkbox").checked) {
-                    sessionStorage.setItem('nextcloud-webdav-username', data.loginName);
-                    sessionStorage.setItem('nextcloud-webdav-password', data.token);
+
+                if (this.storeSession && this.isLoggedIn() && this._("#remember-checkbox") && this._("#remember-checkbox").checked) {
+                    this.persistStorageMaybe();
+                    const publicId = this.auth['person-id'];
+                    const token = parseJwt(this.auth.token);
+                    const sessionId = token ? token.sid : "";
+                    if (sessionId) {
+                        const encrytedName = await encrypt(sessionId, data.loginName);
+                        const encrytedToken = await encrypt(sessionId, data.token);
+                        sessionStorage.setItem('nextcloud-webdav-username' + publicId, encrytedName);
+                        sessionStorage.setItem('nextcloud-webdav-password' + publicId, encrytedToken);
+
+                    }
                 }
-                */
+
                 this.loadDirectory(this.directoryPath);
                 this.userName = data.loginName;
             }
@@ -1433,6 +1521,34 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return false;
     }
 
+    closeSubmenu() {
+        if (this.initateOpensubmenu && this.showSubmenu) {
+            this.initateOpensubmenu = false;
+            return;
+        }
+        if (this.showSubmenu){
+            document.removeEventListener('click', this.bounCloseSubmenuHandler);
+            this.showSubmenu = false;
+        }
+    }
+
+    toggleSubmenu() {
+        if (!this.showSubmenu) {
+            this.initateOpensubmenu = true;
+            this.showSubmenu = true;
+            document.addEventListener('click', this.bounCloseSubmenuHandler);
+        }
+    }
+
+    logOut() {
+        this.webDavClient = null;
+        this.isPickerActive = false;
+        sessionStorage.removeItem('nextcloud-webdav-username');
+        sessionStorage.removeItem('nextcloud-webdav-password');
+
+        console.log("log out!");
+    }
+
     /**
      * Returns the parent directory path
      *
@@ -1816,6 +1932,31 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             #abortButton:hover {
                 color: white;
             }
+            
+            #submenu {
+                height: 33px;
+                width: 33px;
+                justify-content: center;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            }
+            
+            .submenu-icon {
+                margin-top: -5px;
+            }
+            
+            #submenu-content {
+                position: absolute;
+                right: 0px;
+                top: 33px;
+                z-index: 1;
+            }
+            
+            .menu-buttons {
+                display: flex;
+                gap: 1em;
+            }
 
             @keyframes added {
                 0% {
@@ -2062,7 +2203,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     render() {
         const i18n = this._i18n;
         const tabulatorCss = commonUtils.getAssetURL(pkgName, 'tabulator-tables/css/tabulator.min.css');
-
         return html`
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}">
@@ -2088,7 +2228,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 }}">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}
                         </button>
                     </div>
-                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive})} hidden"> <!-- remove hidden to enable remember me -->
+                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive && !this.storeSession})}"> <!-- remove hidden to enable remember me -->
                         <label class="button-container remember-container">
                             ${i18n.t('nextcloud-file-picker.remember-me')}
                             <input type="checkbox" id="remember-checkbox" name="remember">
@@ -2106,7 +2246,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-nav">
                         <p>${this.getBreadcrumb()}</p>
-
+<!-- TODO -->
                         <div class="additional-menu ${classMap({hidden: !this.showAdditionalMenu})}">
                             
                             <a class="extended-menu-link" @click="${() => { this.toggleMoreMenu(); }}" title="${i18n.t('nextcloud-file-picker.more-menu')}">
@@ -2142,7 +2282,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                             <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
                                         </button>
                                     </div>
-                                </div>
+                        <!-- <div class="menu-buttons">
+                            <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
+                            <div class="inline-block">
+                                <div id="new-folder-wrapper" class="hidden">
+                                    <input type="text"
+                                           placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
+                                           name="new-folder" class="input" id="new-folder"/>
+                                    <button class="button add-folder-button"
+                                            title="${i18n.t('nextcloud-file-picker.add-folder')}"
+                                            @click="${() => {
+                                                this.addFolder();
+                                            }}">
+                                        <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
+                                    </button>
+                                </div> -->
+
+<!-- TODO end -->
                             <!-- <button class="button ${classMap({hidden: this.showAdditionalMenu})}"
                                     title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
                                     @click="${() => {
@@ -2154,7 +2310,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             </ul>
                         
                         </div>
-
+                            <div id="submenu" class="${classMap({hidden: !this.storeSession})}"
+                                title="${i18n.t('nextcloud-file-picker.open-submenu')}"
+                                @click="${() => {
+                                    this.toggleSubmenu();
+                                }}">
+                                <dbp-icon name="menu-dots" class="submenu-icon"></dbp-icon>
+                                <div id="submenu-content" class="${classMap({hidden: !this.showSubmenu})}">
+                                    <button class="button"
+                                            title="${i18n.t('nextcloud-file-picker.log-out')}"
+                                            @click="${() => {
+                                                this.logOut();
+                                            }}">
+                                        Abmelden
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="filter-options-wrapper ${classMap({hidden: !this.isInRecent})}">
                         <label id="user_files_only_wrapper" class="button-container">
