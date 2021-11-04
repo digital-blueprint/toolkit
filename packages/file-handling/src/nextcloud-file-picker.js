@@ -422,24 +422,32 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     async checkSessionStorage() {
+        if (!this.isLoggedIn() || !this.auth)
+            return;
         const publicId = this.auth['person-id'];
         const token = parseJwt(this.auth.token);
         const sessionId = token ? token.sid : "";
-        if (this.isLoggedIn() && this.storeSession && sessionId
+        if (this.storeSession && sessionId
             && sessionStorage.getItem("nextcloud-webdav-username" + publicId)
             && sessionStorage.getItem("nextcloud-webdav-password" + publicId) ){
-            console.log("----------",  sessionStorage.getItem("nextcloud-webdav-username" + publicId));
-            const sessionStorageName = await sessionStorage.getItem("nextcloud-webdav-username" + publicId);
-            console.log("decrypt:", await decrypt(sessionId, sessionStorageName));
-               /* this.webDavClient = createClient(
-                    this.webDavUrl + "/" + sessionStorage.getItem("nextcloud-webdav-username"),
-                    {
-                        username: decrypt(sessionId, sessionStorage.getItem("nextcloud-webdav-username" + publicId)),
-                        password: decrypt(sessionId, sessionStorage.getItem("nextcloud-webdav-password" + publicId))
-                    }
-                );
-                this.isPickerActive = true;
-                this.loadDirectory(this.directoryPath);*/
+                try {
+                    const userName = await decrypt(sessionId, sessionStorage.getItem("nextcloud-webdav-username" + publicId));
+                    const password = await decrypt(sessionId, sessionStorage.getItem("nextcloud-webdav-password" + publicId));
+                    this.webDavClient = createClient(
+                        this.webDavUrl + "/" + userName,
+                        {
+                            username: userName,
+                            password: password
+                        }
+                    );
+
+                    this.isPickerActive = true;
+                    this.loadDirectory(this.directoryPath);
+                } catch (e) {
+                    sessionStorage.removeItem('nextcloud-webdav-username' + publicId);
+                    sessionStorage.removeItem('nextcloud-webdav-password' + publicId);
+                    return;
+                }
         }
     }
 
@@ -1225,10 +1233,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     logOut() {
         this.webDavClient = null;
         this.isPickerActive = false;
-        sessionStorage.removeItem('nextcloud-webdav-username');
-        sessionStorage.removeItem('nextcloud-webdav-password');
-
-        console.log("log out!");
+        if (this.auth) {
+            const publicId = this.auth['person-id'];
+            sessionStorage.removeItem('nextcloud-webdav-username' + publicId);
+            sessionStorage.removeItem('nextcloud-webdav-password' + publicId);
+        }
     }
 
     /**
@@ -1815,7 +1824,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 }}">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}
                         </button>
                     </div>
-                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive && !this.storeSession})}"> <!-- remove hidden to enable remember me -->
+                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive && !this.storeSession || !this.isLoggedIn()})}"> <!-- remove hidden to enable remember me -->
                         <label class="button-container remember-container">
                             ${i18n.t('nextcloud-file-picker.remember-me')}
                             <input type="checkbox" id="remember-checkbox" name="remember">
