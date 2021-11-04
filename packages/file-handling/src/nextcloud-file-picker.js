@@ -66,6 +66,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isInFavorites = false;
         this.isInRecent = false;
         this.userName = '';
+        this.storeSession = false;
+        this.showSubmenu = false;
+        this.bounCloseSubmenuHandler = this.closeSubmenu.bind(this);
+        this.initateOpensubmenu = false;
     }
 
     static get scopedElements() {
@@ -107,6 +111,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             showSubmenu: {type: Boolean, attribute: false},
             showAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
             userName: { type: Boolean, attribute: false },
+            storeSession: {type: Boolean, attribute: 'store-nextcloud-session'},
+            showSubmenu: {type: Boolean, attribute: false}
         };
 
     }
@@ -165,7 +171,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.updateComplete.then(() => {
             // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
             window.addEventListener('message', this._onReceiveWindowMessage);
-
             // see: http://tabulator.info/docs/4.7
             this.tabulatorTable = new Tabulator(this._("#directory-content-table"), {
                 layout: "fitColumns",
@@ -1551,11 +1556,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     logOut() {
         this.webDavClient = null;
         this.isPickerActive = false;
+<<<<<<< HEAD
         if (this.auth) {
             const publicId = this.auth['person-id'];
             localStorage.removeItem('nextcloud-webdav-username' + publicId);
             localStorage.removeItem('nextcloud-webdav-password' + publicId);
         }
+=======
+        sessionStorage.removeItem('nextcloud-webdav-username');
+        sessionStorage.removeItem('nextcloud-webdav-password');
+
+        console.log("log out!");
+>>>>>>> Add sessionsaving in session storage to nextcloud filepicker, add encrypt and decrypt functionality
     }
 
     /**
@@ -1973,6 +1985,31 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 display: flex;
                 gap: 1em;
             }
+            
+            #submenu {
+                height: 33px;
+                width: 33px;
+                justify-content: center;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            }
+            
+            .submenu-icon {
+                margin-top: -5px;
+            }
+            
+            #submenu-content {
+                position: absolute;
+                right: 0px;
+                top: 33px;
+                z-index: 1;
+            }
+            
+            .menu-buttons {
+                display: flex;
+                gap: 1em;
+            }
 
             @keyframes added {
                 0% {
@@ -2243,7 +2280,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 }}">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}
                         </button>
                     </div>
+<<<<<<< HEAD
                     <div class="block text-center m-inherit ${classMap({hidden: !this.storeSession || !this.isLoggedIn()})}">
+=======
+                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive && !this.storeSession})}"> <!-- remove hidden to enable remember me -->
+>>>>>>> Add sessionsaving in session storage to nextcloud filepicker, add encrypt and decrypt functionality
                         <label class="button-container remember-container">
                             ${i18n.t('nextcloud-file-picker.remember-me', {name: this.nextcloudName})}
                             <input type="checkbox" id="remember-checkbox" name="remember">
@@ -2261,7 +2302,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-nav">
                         <p>${this.getBreadcrumb()}</p>
-
+<!-- TODO -->
                         <div class="additional-menu ${classMap({hidden: !this.showAdditionalMenu})}">
                             
                             <a class="extended-menu-link" @click="${() => { this.toggleMoreMenu(); }}" title="${i18n.t('nextcloud-file-picker.more-menu')}">
@@ -2297,7 +2338,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                             <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
                                         </button>
                                     </div>
-                                </div>
+                        <!-- <div class="menu-buttons">
+                            <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
+                            <div class="inline-block">
+                                <div id="new-folder-wrapper" class="hidden">
+                                    <input type="text"
+                                           placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
+                                           name="new-folder" class="input" id="new-folder"/>
+                                    <button class="button add-folder-button"
+                                            title="${i18n.t('nextcloud-file-picker.add-folder')}"
+                                            @click="${() => {
+                                                this.addFolder();
+                                            }}">
+                                        <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
+                                    </button>
+                                </div> -->
+
+<!-- TODO end -->
                             <!-- <button class="button ${classMap({hidden: this.showAdditionalMenu})}"
                                     title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
                                     @click="${() => {
@@ -2321,7 +2378,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                             @click="${() => {
                                                 this.logOut();
                                             }}">
+<<<<<<< HEAD
                                             ${i18n.t('nextcloud-file-picker.log-out')}
+=======
+                                        Abmelden
+>>>>>>> Add sessionsaving in session storage to nextcloud filepicker, add encrypt and decrypt functionality
                                     </button>
                                 </div>
                             </div>
