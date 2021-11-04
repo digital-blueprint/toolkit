@@ -1,4 +1,5 @@
 import { CompactEncrypt } from 'jose/jwe/compact/encrypt';
+import { compactDecrypt } from 'jose/jwe/compact/decrypt';
 import { parseJwk } from 'jose/jwk/parse';
 import {encode} from 'jose/util/base64url';
 
@@ -26,7 +27,6 @@ export async function encrypt(token, payload) {
     const jwe = await new CompactEncrypt(encoder.encode(payload))
         .setProtectedHeader({alg: 'PBES2-HS256+A128KW', enc: 'A256GCM'})
         .encrypt(key);
-    console.log("+++++++++++", jwe);
     return jwe;
 }
 
@@ -50,15 +50,11 @@ export async function encrypt(token, payload) {
  * @returns {string}
  */
 export async function decrypt(token, payload) {
-    console.log("payload", payload);
-    const encoder = new TextEncoder();
     const key = await parseJwk({kty: 'oct', k: encode(token)}, 'PBES2-HS256+A128KW');
-    const jwe = await new CompactEncrypt(encoder.encode(payload))
-        .setProtectedHeader({alg: 'PBES2-HS256+A128KW', enc: 'A256GCM'})
-        .decrypt(key);
-    console.log("jwe", jwe);
+    const decryption = await compactDecrypt(payload, key, {alg: 'PBES2-HS256+A128KW', enc: 'A256GCM'});
+    const secret = new TextDecoder().decode(decryption.plaintext);
 
-    return jwe;
+    return secret;
 }
 
 export function parseJwt (token) {
