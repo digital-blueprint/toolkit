@@ -103,7 +103,11 @@
     "select-nothing-title": "Select no files",
     "abort": "Cancel process",
     "abort-message": "The process was canceled.",
-    "remember-me": "Remember me"
+    "remember-me": "Remember me",
+    "error-save-to-favorites": "Saving to Favorites not possible! Please select a folder within the Favorites.",
+    "error-save-to-recent": "Saving to Recent Files not possible! Please select a folder within the Recent Files.",
+    "recent-files-link-text": "Recent Files",
+    "favorites-link-text": "My Favorites"
   },
   "clipboard": {
     "add-files": "Add files to clipboard",

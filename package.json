@@ -24,5 +24,8 @@
   "license": "LGPL-2.1-or-later",
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "dependencies": {
+    "webdav": "4.6.0"
   }
 }

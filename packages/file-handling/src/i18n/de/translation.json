@@ -89,7 +89,11 @@
     "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren",
     "abort": "Vorgang abbrechen",
     "abort-message": "Vorgang wurde abgebrochen.",
-    "remember-me": "Angemeldet bleiben"
+    "remember-me": "Angemeldet bleiben",
+    "error-save-to-favorites": "Speichern in Favoriten nicht möglich! Bitte wählen Sie einen Ordner innerhalb der Favoriten aus.",
+    "error-save-to-recent": "Speichern in den neuesten Dateien nicht möglich! Bitte wählen Sie einen Ordner innerhalb der neuesten Dateien aus.",
+    "recent-files-link-text": "Neueste Dateien",
+    "favorites-link-text": "Meine Favoriten"
   },
   "clipboard": {
     "add-files": "Dateien der Zwischenablage hinzufügen",

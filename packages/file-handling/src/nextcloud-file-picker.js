@@ -5,13 +5,14 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {createClient} from 'webdav/web';
+import {createClient, parseXML, parseStat} from 'webdav/web';
 import {classMap} from 'lit-html/directives/class-map.js';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import Tabulator from 'tabulator-tables';
 import MicroModal from './micromodal.es';
 import {name as pkgName} from './../package.json';
 import * as fileHandlingStyles from './styles';
+
 
 /**
  * NextcloudFilePicker web component
@@ -55,6 +56,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.abortUpload = false;
         this.authInfo = '';
         this.selectBtnDisabled = true;
+        this.showAdditionalMenu = false;
+        this.isInFavorites = false;
+        this.isInRecent = false;
+        this.userName = '';
     }
 
     static get scopedElements() {
@@ -91,6 +96,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             activeDirectoryACL: {type: String, attribute: false},
             abortUploadButton: {type: Boolean, attribute: false},
             selectBtnDisabled: {type: Boolean, attribute: true},
+            showAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
+            userName: { type: Boolean, attribute: false },
         };
 
     }
@@ -369,7 +376,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
             );
             this.loadDirectory(this.directoryPath);
-
         }*/
     }
 
@@ -439,8 +445,311 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
                 */
                 this.loadDirectory(this.directoryPath);
+                this.userName = data.loginName;
             }
         }
+    }
+
+    /**
+     * 
+     * @param {*} data 
+     * @returns reduced list of objects, including users files
+     */
+    filterUserFilesOnly(data) { //TODO verify
+        // R = Share, S = Shared Folder, M = Group folder or external source, G = Read, D = Delete, NV / NVW = Write, CK = Create
+        let result = [];
+
+        for (let i = 0; i < data.length; i++) {
+            if (data) {
+                let file_perm = data[i].props.permissions;
+                if (!file_perm.includes('M') && !file_perm.includes('S')) {
+                    result.push(data[i]);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @param {*} path 
+     * @returns array including file path and base name
+     */
+    parseFileAndBaseName(path) {
+        if (path[0] !== "/") { //TODO verify
+            path = "/" + path;
+        }
+        while (/^.+\/$/.test(path)) {
+            path = path.substr(0, path.length - 1);
+        }
+        path = decodeURIComponent(path);
+
+        let array1 = this.webDavUrl.split('/');
+        let array2 = path.split('/');
+        for (let i = 0; i < array2.length; i++) {
+            let item2 = array2[i];
+            array1.forEach(item1 => {
+                if (item1 === item2) {
+                    array2.shift();
+                    i--;
+                }
+            });
+        }
+        array2.shift();
+
+        let basename = array2[array2.length - 1];
+        let filename = '/' + array2.join('/');
+        
+        return [ filename, basename ];
+    }
+
+    /**
+     * 
+     * @param {*} response 
+     * @returns list of file objects containing corresponding information
+     */
+    mapResponseToObject(response) {
+        let results = [];
+
+        response.forEach(item => {
+            const [ filePath, baseName ] = this.parseFileAndBaseName(item.href);
+
+            const prop = item.propstat.prop;
+            let etag = typeof prop.getetag === 'string' ? prop.getetag.replace(/"/g, '') : null;
+            let sizeVal = prop.getcontentlength ? prop.getcontentlength : '0';
+            let fileType = prop.resourcetype && typeof prop.resourcetype === 'object' && typeof prop.resourcetype.collection !== 'undefined' ? 'directory' : 'file';
+            
+            let mimeType;
+            if (fileType === 'file') {
+                mimeType = prop.getcontenttype && typeof prop.getcontenttype === 'string' ? prop.getcontenttype.split(';')[0] : '';
+            }
+
+            let propsObject =  { getetag: etag, getlastmodified: prop.getlastmodified, getcontentlength: sizeVal, 
+                                permissions: prop.permissions, resourcetype: fileType, getcontenttype: prop.getcontenttype };
+
+            let statObject = { basename: baseName, etag: etag, filename: filePath, lastmod: prop.getlastmodified, 
+                mime: mimeType, props: propsObject, size: parseInt(sizeVal, 10), type: fileType };
+
+            results.push(statObject);
+        });
+
+        return results;
+    }
+    
+    /**
+     * Loads the favorites from WebDAV
+     *
+     */
+    loadFavorites() {
+        this.hideMoreMenu();
+        const i18n = this._i18n;
+
+        if (typeof this.directoryPath === 'undefined' || this.directoryPath === undefined) {
+            this.directoryPath = '';
+        }
+
+        console.log("load nextcloud favorites");
+        this.selectAllButton = true;
+        this.loading = true;
+        this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {name: this.nextcloudName});
+        this.lastDirectoryPath = this.directoryPath;
+        this.directoryPath = '';
+        this.isInRecent = false;
+        this.isInFavorites = true;
+
+        if (this.webDavClient === null) {
+            // client is broken reload try to reset & reconnect
+            this.tabulatorTable.clearData();
+            this.webDavClient = null;
+            let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
+                            title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                            @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
+            this.loading = false;
+            this.statusText = reloadButton;
+        }
+
+        //see https://github.com/perry-mitchell/webdav-client#customRequest
+        this.webDavClient
+            .customRequest('/', {method: 'REPORT', responseType: "text/xml", details: true, data: "<?xml version=\"1.0\"?>" +
+                    "   <oc:filter-files  xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\" xmlns:nc=\"http://nextcloud.org/ns\">" +
+                    "       <oc:filter-rules>" +
+                    "           <oc:favorite>1</oc:favorite>" +
+                    "       </oc:filter-rules>" +
+                    "       <d:prop>" +
+                    "           <d:getlastmodified />" +
+                    "           <d:resourcetype />" +
+                    "           <d:getcontenttype />" +
+                    "           <d:getcontentlength />" +
+                    "           <d:getetag />" +
+                    "           <oc:permissions />" +
+                    "        </d:prop>" +
+                    "   </oc:filter-files>"
+                })
+            .then(contents => {
+                parseXML(contents.data).then(davResp => {
+                    // console.log("-contents.data-----", davResp);
+                    let dataObject = this.mapResponseToObject(davResp.multistatus.response);
+
+                    this.loading = false;
+                    this.statusText = "";
+                    this.tabulatorTable.setData(dataObject);
+                    this.isPickerActive = true;
+                    this._(".nextcloud-content").scrollTop = 0;
+                    this._("#download-button").setAttribute("disabled", "true");
+                });
+            }).catch(error => { //TODO verify error catching
+                console.error(error.message);
+
+                // on Error: try to reload with home directory
+                if (this.webDavClient !== null && error.message.search("401") === -1) {
+                    console.log("error in load directory");
+                    this.directoryPath = "";
+                    this.loadDirectory("");
+                }
+                else {
+                    this.loading = false;
+                    this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;
+                    this.isPickerActive = false;
+                    this.tabulatorTable.clearData();
+                    this.webDavClient = null;
+                    let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
+                                title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                                @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
+                    this.loading = false;
+                    this.statusText = reloadButton;
+                }
+                this.isInFavorites = false;
+        });
+    }
+
+    /**
+     * Loads recent files and folders from WebDAV
+     *
+     */
+    loadRecent() {
+        this.hideMoreMenu();
+        const i18n = this._i18n;
+
+        if (typeof this.directoryPath === 'undefined' || this.directoryPath === undefined) {
+            this.directoryPath = '';
+        }
+
+        console.log("load recent files");
+        this.selectAllButton = true;
+        this.loading = true;
+        this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {name: this.nextcloudName});
+        this.lastDirectoryPath = this.directoryPath;
+        this.directoryPath = '';
+        this.isInFavorites = false;
+        this.isInRecent = true;
+
+        let date = new Date();
+        date.setMonth(date.getMonth() - 3);
+        let searchDate = date.toISOString().split('.')[0] + 'Z';
+
+        if (this.webDavClient === null) {
+            // client is broken reload try to reset & reconnect
+            this.tabulatorTable.clearData();
+            this.webDavClient = null;
+            let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
+                            title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                            @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
+            this.loading = false;
+            this.statusText = reloadButton;
+        }
+
+        //see https://github.com/perry-mitchell/webdav-client#customRequest
+        this.webDavClient
+            .customRequest('../..', { method: 'SEARCH', responseType: "text/xml", headers: { 'Content-Type': "text/xml" }, details: true, data: "<?xml version=\"1.0\" encoding='UTF-8'?>" +
+                "   <d:searchrequest xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\" xmlns:nc=\"http://nextcloud.org/ns\">" +
+                "       <d:basicsearch>" +
+                "           <d:select>" +
+                "               <d:prop>" +
+                "                   <d:getlastmodified />" +
+                "                   <d:resourcetype />" +
+                "                   <d:getcontenttype />" +
+                "                   <d:getcontentlength />" +
+                "                   <d:getetag />" +
+                "                   <oc:permissions />" +
+                "                   <oc:size/>"+
+                "                   <oc:owner-id/>" +
+                "                   <oc:owner-display-name/>" +
+                "               </d:prop>" +
+                "           </d:select>" +
+                "           <d:from>" +
+                "               <d:scope>" +
+                "                   <d:href>/files/" + this.userName + "/</d:href>" +
+                "                   <d:depth>infinity</d:depth>" +
+                "               </d:scope>" + 
+                "           </d:from>" +
+                "           <d:where> " +
+                "               <d:gte>" +
+                "                   <d:prop>" +
+                "                      <d:getlastmodified/>" +
+                "                   </d:prop>" +
+                "                   <d:literal>" + searchDate + "</d:literal>" +
+                "               </d:gte>" +
+                "           </d:where>" +
+                "           <d:orderby>" +
+                "               <d:order>" +
+                "                   <d:prop>" +
+                "                       <d:getlastmodified/>" +
+                "                   </d:prop>" +
+                "                   <d:descending/>" +
+                "               </d:order>" +
+                "           </d:orderby>" +
+                "           <d:limit>"+
+                "               <d:nresults>100</d:nresults>" +
+                "           </d:limit>"+
+                "       </d:basicsearch>" +
+                "   </d:searchrequest>"
+            })
+            .then(contents => {
+                parseXML(contents.data).then(davResp => {
+                    console.log('davResp', davResp);
+
+                    let dataObject = this.mapResponseToObject(davResp.multistatus.response);
+                    console.log("-contents.data-----", dataObject);
+
+                    if (this._("#user_files_only") && this._("#user_files_only").checked) {
+                        dataObject = this.filterUserFilesOnly(dataObject);
+                        // console.log('show only my files');
+                    }
+
+                    this.loading = false;
+                    this.statusText = "";
+                    this.tabulatorTable.setData(dataObject);
+                    this.tabulatorTable.setSort([
+                        {column: "lastmod", dir: "desc"}
+                    ]);
+                    this.isPickerActive = true;
+                    this._(".nextcloud-content").scrollTop = 0;
+                    this._("#download-button").setAttribute("disabled", "true");
+                });
+            }).catch(error => {
+                console.error(error.message);
+
+                // on Error: try to reload with home directory
+                if (this.webDavClient !== null && error.message.search("401") === -1) {
+                    console.log("error in load directory");
+                    this.directoryPath = "";
+                    this.loadDirectory("");
+                }
+                else {
+                    this.loading = false;
+                    this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;
+                    this.isPickerActive = false;
+                    this.tabulatorTable.clearData();
+                    this.webDavClient = null;
+                    let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
+                                title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                                @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
+                    this.loading = false;
+                    this.statusText = reloadButton;
+                }
+
+                this.isInRecent = false;
+        });
     }
 
     toggleCollapse(e) {
@@ -507,11 +816,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     "</d:propfind>"
             })
             .then(contents => {
-
                 this.loading = false;
                 this.statusText = "";
                 this.tabulatorTable.setData(contents.data);
                 this.isPickerActive = true;
+                this.isInFavorites = false;
+                this.isInRecent = false;
                 this._(".nextcloud-content").scrollTop = 0;
                 if (!this.activeDirectoryRights.includes("CK") && !this.activeDirectoryRights.includes("NV")) {
                     this._("#download-button").setAttribute("disabled", "true");
@@ -635,6 +945,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      * @param directory
      */
     sendDirectory(directory) {
+        if (this.isInFavorites) {
+            this.statusText = html`<span class="error"> ${ i18n.t('nextcloud-file-picker.error-save-to-favorites') } </span>`;
+            return;
+        } else if (this.isInRecent) { //TODO verify
+            this.statusText = html`<span class="error"> ${ i18n.t('nextcloud-file-picker.error-save-to-recent') } </span>`;
+            return;
+        }
+        
         const i18n = this._i18n;
         this.tabulatorTable.deselectRow();
         let path;
@@ -1172,6 +1490,39 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return this.nextcloudFileURL + this.directoryPath;
     }
 
+    toggleMoreMenu() {
+        const menu = this.shadowRoot.querySelector("ul.extended-menu");
+        const menuStart = this.shadowRoot.querySelector("a.extended-menu-link");
+
+        if (menu === null || menuStart === null) {
+            return;
+        }
+
+        menu.classList.toggle('hidden');
+
+        if (this.menuHeight === -1) {
+            this.menuHeight = menu.clientHeight;
+        }
+
+        let topValue = menuStart.getBoundingClientRect().bottom;
+        let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
+        
+        if (isMenuOverflow && !menu.classList.contains('hidden')) {
+            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
+            menu.scrollTop = 0;
+            document.body.setAttribute('style', 'overflow:hidden;');
+        } else if (isMenuOverflow && menu.classList.contains('hidden')) {
+            document.body.removeAttribute('style', 'overflow:hidden;');
+            menu.removeAttribute('style');
+        }
+    }
+
+    hideMoreMenu() {
+        const menu = this.shadowRoot.querySelector("ul.extended-menu");
+        if (menu && !menu.classList.contains('hidden'))
+            this.toggleMoreMenu();
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -1181,6 +1532,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
+
             .visible {
                 display: unset;
             }
@@ -1193,6 +1545,56 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 color: var(--dbp-danger-bg-color);
             }
 
+            .filter-options-wrapper {
+                padding-right: 0px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                padding-left: 0px;
+            }
+
+            .extended-menu li {
+                padding: 7px;
+                padding-right: 46px;
+                border-bottom: 1px solid #f3f3f3;
+            }
+
+            .extended-menu li.active {
+                background-color: var(--dbp-dark);
+                color: var(--dbp-light);
+            }
+            .extended-menu li.active a:hover {
+                color: var(--dbp-light);
+            }
+
+            .extended-menu a.inactive {
+                color: var(--dbp-muted-text);
+                pointer-events: none;
+                cursor: default;
+            }
+
+            .extended-menu a {
+                padding: 8px;
+            }
+
+            .extended-menu {
+                list-style: none;
+                border: black 1px solid;
+                position: absolute;
+                background-color: white;
+                z-index: 1000;
+                right: 0px;
+            }
+
+            .extended-menu a:hover {
+                color: #E4154B;
+            }
+
+            ul.extended-menu li.close {
+                display: block;
+                padding: 7px 15px 7px 15px;
+                text-align: right;
+                cursor: pointer;
+            }
 
             .nextcloud-header {
                 margin-bottom: 2rem;
@@ -1283,10 +1685,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
 
-            .add-folder {
+            .additional-menu {
                 white-space: nowrap;
                 align-self: end;
                 height: 33px;
+                margin-right: 5px;
             }
 
             .nextcloud-nav p {
@@ -1501,24 +1904,34 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 left: 0px;
             }
 
+            .more-menu {
+                height: 22.4px;
+                width: 22.4px;
+                top: 8px;
+            }
+
+            .nextcloud-nav a.home-link {
+                font-size: 1.4em;
+            }
 
             @media only screen
             and (orientation: portrait)
             and (max-width: 768px) {
-                .add-folder button {
+                .additional-menu button {
                     float: right;
                 }
 
-                .add-folder {
+                .additional-menu {
                     position: absolute;
                     right: 0px;
+                    margin-right: 10px;
                 }
 
-                .nextcloud-nav {
-                    display: block;
-                }
+                /* .nextcloud-nav {
+                    display: block; TODO verify if this is enough
+                } */
 
-                .add-folder {
+                .additional-menu {
                     position: inherit;
                 }
 
@@ -1693,30 +2106,62 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-nav">
                         <p>${this.getBreadcrumb()}</p>
-                        <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
-                            <div class="inline-block">
-                                <div id="new-folder-wrapper" class="hidden">
-                                    <input type="text"
-                                           placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
-                                           name="new-folder" class="input" id="new-folder"/>
-                                    <button class="button add-folder-button"
-                                            title="${i18n.t('nextcloud-file-picker.add-folder')}"
-                                            @click="${() => {
-                                                this.addFolder();
-                                            }}">
-                                        <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
-                                    </button>
+
+                        <div class="additional-menu ${classMap({hidden: !this.showAdditionalMenu})}">
+                            
+                            <a class="extended-menu-link" @click="${() => { this.toggleMoreMenu(); }}" title="${i18n.t('nextcloud-file-picker.more-menu')}">
+                                <dbp-icon name="more-filled" class="more-menu"></dbp-icon>
+                            </a>
+                            <ul class='extended-menu hidden'>
+                                <li class="${classMap({active: this.isInFavorites})}" id="favorites-item">
+                                    <a class="" @click="${this.loadFavorites}">
+                                        ${i18n.t('nextcloud-file-picker.favorites-link-text')}
+                                    </a>
+                                </li>
+                                <li class="${classMap({active: this.isInRecent})}" id="recent-item">
+                                    <a class="" @click="${this.loadRecent}">
+                                        ${i18n.t('nextcloud-file-picker.recent-files-link-text')}
+                                    </a>
+                                </li>
+                                <li class="${classMap({hidden: !this.directoriesOnly})}">
+                                    <a class="${classMap({inactive: this.isInRecent || this.isInFavorites})}" @click="${() => { this.openAddFolderDialogue(); }}">
+                                        ${i18n.t('nextcloud-file-picker.add-folder')}
+                                    </a>
+                                </li>
+                            
+                                <div class="inline-block">
+                                    <div id="new-folder-wrapper" class="hidden">
+                                        <input type="text"
+                                            placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
+                                            name="new-folder" class="input" id="new-folder"/>
+                                        <button class="button add-folder-button"
+                                                title="${i18n.t('nextcloud-file-picker.add-folder')}"
+                                                @click="${() => {
+                                                    this.addFolder();
+                                                }}">
+                                            <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <button class="button"
+                            <!-- <button class="button ${classMap({hidden: this.showAdditionalMenu})}"
                                     title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
                                     @click="${() => {
                                         this.openAddFolderDialogue();
                                     }}">
                                 <dbp-icon name="plus" class="nextcloud-add-folder" id="add-folder-button"></dbp-icon>
-                            </button>
+                            </button> -->
+                                <li class="close" @click="${this.hideMoreMenu}"><dbp-icon name="close" style="color: red"></dbp-icon></li>
+                            </ul>
+                        
                         </div>
 
+                    </div>
+                    <div class="filter-options-wrapper ${classMap({hidden: !this.isInRecent})}">
+                        <label id="user_files_only_wrapper" class="button-container">
+                        <!-- ${i18n.t('nextcloud-file-picker.replace-mode-all')} --> Show only my files <!--TODO-->
+                            <input type="checkbox" id="user_files_only" name="user_files_only" value="user_files_only" > <!--@click="${() => { this.filterUserFilesOnly(); }}"-->
+                            <span class="checkmark" id="user_files_only_checkmark"></span>
+                        </label>
                     </div>
                     <div class="table-wrapper">
                         <table id="directory-content-table" class="force-no-select"></table>
