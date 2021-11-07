@@ -66,10 +66,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isInFavorites = false;
         this.isInRecent = false;
         this.userName = '';
-        this.storeSession = false;
-        this.showSubmenu = false;
-        this.bounCloseSubmenuHandler = this.closeSubmenu.bind(this);
-        this.initateOpensubmenu = false;
     }
 
     static get scopedElements() {
@@ -112,7 +108,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             showAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
             userName: { type: Boolean, attribute: false },
             storeSession: {type: Boolean, attribute: 'store-nextcloud-session'},
-            showSubmenu: {type: Boolean, attribute: false}
+            showSubmenu: {type: Boolean, attribute: false},
+            showAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
+            userName: { type: Boolean, attribute: false },
         };
 
     }
@@ -570,6 +568,74 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
         return result;
     }
+
+    /**
+     * 
+     * @param {*} path 
+     * @returns array including file path and base name
+     */
+    parseFileAndBaseName(path) {
+        if (path[0] !== "/") { //TODO verify
+            path = "/" + path;
+        }
+        while (/^.+\/$/.test(path)) {
+            path = path.substr(0, path.length - 1);
+        }
+        path = decodeURIComponent(path);
+
+        let array1 = this.webDavUrl.split('/');
+        let array2 = path.split('/');
+        for (let i = 0; i < array2.length; i++) {
+            let item2 = array2[i];
+            array1.forEach(item1 => {
+                if (item1 === item2) {
+                    array2.shift();
+                    i--;
+                }
+            });
+        }
+        array2.shift();
+
+        let basename = array2[array2.length - 1];
+        let filename = '/' + array2.join('/');
+        
+        return [ filename, basename ];
+    }
+
+    /**
+     * 
+     * @param {*} response 
+     * @returns list of file objects containing corresponding information
+     */
+    mapResponseToObject(response) {
+        let results = [];
+
+        response.forEach(item => {
+            const [ filePath, baseName ] = this.parseFileAndBaseName(item.href);
+
+            const prop = item.propstat.prop;
+            let etag = typeof prop.getetag === 'string' ? prop.getetag.replace(/"/g, '') : null;
+            let sizeVal = prop.getcontentlength ? prop.getcontentlength : '0';
+            let fileType = prop.resourcetype && typeof prop.resourcetype === 'object' && typeof prop.resourcetype.collection !== 'undefined' ? 'directory' : 'file';
+            
+            let mimeType;
+            if (fileType === 'file') {
+                mimeType = prop.getcontenttype && typeof prop.getcontenttype === 'string' ? prop.getcontenttype.split(';')[0] : '';
+            }
+
+            let propsObject =  { getetag: etag, getlastmodified: prop.getlastmodified, getcontentlength: sizeVal, 
+                                permissions: prop.permissions, resourcetype: fileType, getcontenttype: prop.getcontenttype };
+
+            let statObject = { basename: baseName, etag: etag, filename: filePath, lastmod: prop.getlastmodified, 
+                mime: mimeType, props: propsObject, size: parseInt(sizeVal, 10), type: fileType };
+
+            results.push(statObject);
+        });
+
+        return results;
+    }
+    
+
 
     /**
      * 
@@ -2327,6 +2393,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                             <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
                                         </button>
                                     </div>
+
+                    <!-- TODO begin -->
+
                         <!-- <div class="menu-buttons">
                             <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
                             <div class="inline-block">
@@ -2340,10 +2409,52 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                                 this.addFolder();
                                             }}">
                                         <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
+
                                     </button>
                                 </div> -->
 
 <!-- TODO end -->
+<!-- 
+                        <div class="additional-menu ${classMap({hidden: !this.showAdditionalMenu})}">
+                            
+                            <a class="extended-menu-link" @click="${() => { this.toggleMoreMenu(); }}" title="${i18n.t('nextcloud-file-picker.more-menu')}">
+                                <dbp-icon name="more-filled" class="more-menu"></dbp-icon>
+                            </a>
+                            <ul class='extended-menu hidden'>
+                                <li class="${classMap({active: this.isInFavorites})}" id="favorites-item">
+                                    <a class="" @click="${this.loadFavorites}">
+                                        ${i18n.t('nextcloud-file-picker.favorites-link-text')}
+                                    </a>
+                                </li>
+                                <li class="${classMap({active: this.isInRecent})}" id="recent-item">
+                                    <a class="" @click="${this.loadRecent}">
+                                        ${i18n.t('nextcloud-file-picker.recent-files-link-text')}
+                                    </a>
+                                </li>
+                                <li class="${classMap({hidden: !this.directoriesOnly})}">
+                                    <a class="${classMap({inactive: this.isInRecent || this.isInFavorites})}" @click="${() => { this.openAddFolderDialogue(); }}">
+                                        ${i18n.t('nextcloud-file-picker.add-folder')}
+                                    </a>
+                                </li>
+                            
+                                <div class="inline-block">
+                                    <div id="new-folder-wrapper" class="hidden">
+                                        <input type="text"
+                                            placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
+                                            name="new-folder" class="input" id="new-folder"/>
+                                        <button class="button add-folder-button"
+                                                title="${i18n.t('nextcloud-file-picker.add-folder')}"
+                                                @click="${() => {
+                                                    this.addFolder();
+                                                }}">
+                                            <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
+                                        </button>
+                                    </div>
+-->
+                                    <!-- TODO end -->
+<!-- 
+                                </div>
+-->
                             <!-- <button class="button ${classMap({hidden: this.showAdditionalMenu})}"
                                     title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
                                     @click="${() => {
@@ -2351,6 +2462,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                     }}">
                                 <dbp-icon name="plus" class="nextcloud-add-folder" id="add-folder-button"></dbp-icon>
                             </button> -->
+<!--
                                 <li class="close" @click="${this.hideMoreMenu}"><dbp-icon name="close" style="color: red"></dbp-icon></li>
                             </ul>
                         
@@ -2380,7 +2492,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
+-->
                     <div class="filter-options-wrapper ${classMap({hidden: !this.isInRecent})}">
                         <label id="user_files_only_wrapper" class="button-container">
                         <!-- ${i18n.t('nextcloud-file-picker.replace-mode-all')} --> Show only my files <!--TODO-->
