@@ -392,7 +392,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     loginCallback() {
-        this.checkSessionStorage()
+        this.checkLocalStorage()
     }
 
     /**
@@ -421,18 +421,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      *
      */
-    async checkSessionStorage() {
+    async checkLocalStorage() {
         if (!this.isLoggedIn() || !this.auth)
             return;
         const publicId = this.auth['person-id'];
         const token = parseJwt(this.auth.token);
         const sessionId = token ? token.sid : "";
         if (this.storeSession && sessionId
-            && sessionStorage.getItem("nextcloud-webdav-username" + publicId)
-            && sessionStorage.getItem("nextcloud-webdav-password" + publicId) ){
+            && localStorage.getItem("nextcloud-webdav-username" + publicId)
+            && localStorage.getItem("nextcloud-webdav-password" + publicId) ){
                 try {
-                    const userName = await decrypt(sessionId, sessionStorage.getItem("nextcloud-webdav-username" + publicId));
-                    const password = await decrypt(sessionId, sessionStorage.getItem("nextcloud-webdav-password" + publicId));
+                    const userName = await decrypt(sessionId, localStorage.getItem("nextcloud-webdav-username" + publicId));
+                    const password = await decrypt(sessionId, localStorage.getItem("nextcloud-webdav-password" + publicId));
                     this.webDavClient = createClient(
                         this.webDavUrl + "/" + userName,
                         {
@@ -444,8 +444,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.isPickerActive = true;
                     this.loadDirectory(this.directoryPath);
                 } catch (e) {
-                    sessionStorage.removeItem('nextcloud-webdav-username' + publicId);
-                    sessionStorage.removeItem('nextcloud-webdav-password' + publicId);
+                    localStorage.removeItem('nextcloud-webdav-username' + publicId);
+                    localStorage.removeItem('nextcloud-webdav-password' + publicId);
                     return;
                 }
         }
@@ -528,8 +528,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     if (sessionId) {
                         const encrytedName = await encrypt(sessionId, data.loginName);
                         const encrytedToken = await encrypt(sessionId, data.token);
-                        sessionStorage.setItem('nextcloud-webdav-username' + publicId, encrytedName);
-                        sessionStorage.setItem('nextcloud-webdav-password' + publicId, encrytedToken);
+                        localStorage.setItem('nextcloud-webdav-username' + publicId, encrytedName);
+                        localStorage.setItem('nextcloud-webdav-password' + publicId, encrytedToken);
 
                     }
                 }
@@ -1235,8 +1235,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isPickerActive = false;
         if (this.auth) {
             const publicId = this.auth['person-id'];
-            sessionStorage.removeItem('nextcloud-webdav-username' + publicId);
-            sessionStorage.removeItem('nextcloud-webdav-password' + publicId);
+            localStorage.removeItem('nextcloud-webdav-username' + publicId);
+            localStorage.removeItem('nextcloud-webdav-password' + publicId);
         }
     }
 

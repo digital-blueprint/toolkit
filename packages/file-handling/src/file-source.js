@@ -409,7 +409,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         const filePicker = this._('#nextcloud-file-picker');
         // check if element is already in the dom (for example if "dialog-open" attribute is set)
         if (filePicker) {
-            filePicker.checkSessionStorage().then(contents => {
+            filePicker.checkLocalStorage().then(contents => {
                 if (filePicker.webDavClient !== null) {
                     filePicker.loadDirectory(filePicker.directoryPath);
                 }
