@@ -206,7 +206,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         const filePicker = this._('#nextcloud-file-picker');
 
         if (filePicker) {
-            filePicker.checkSessionStorage().then(contents => {
+            filePicker.checkLocalStorage().then(contents => {
                 if (filePicker.webDavClient !== null) {
                     filePicker.loadDirectory(filePicker.directoryPath);
                 }
