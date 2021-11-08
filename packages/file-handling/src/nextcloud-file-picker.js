@@ -1556,18 +1556,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     logOut() {
         this.webDavClient = null;
         this.isPickerActive = false;
-<<<<<<< HEAD
         if (this.auth) {
             const publicId = this.auth['person-id'];
             localStorage.removeItem('nextcloud-webdav-username' + publicId);
             localStorage.removeItem('nextcloud-webdav-password' + publicId);
         }
-=======
-        sessionStorage.removeItem('nextcloud-webdav-username');
-        sessionStorage.removeItem('nextcloud-webdav-password');
-
-        console.log("log out!");
->>>>>>> Add sessionsaving in session storage to nextcloud filepicker, add encrypt and decrypt functionality
     }
 
     /**
@@ -2280,11 +2273,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 }}">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}
                         </button>
                     </div>
-<<<<<<< HEAD
                     <div class="block text-center m-inherit ${classMap({hidden: !this.storeSession || !this.isLoggedIn()})}">
-=======
-                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive && !this.storeSession})}"> <!-- remove hidden to enable remember me -->
->>>>>>> Add sessionsaving in session storage to nextcloud filepicker, add encrypt and decrypt functionality
                         <label class="button-container remember-container">
                             ${i18n.t('nextcloud-file-picker.remember-me', {name: this.nextcloudName})}
                             <input type="checkbox" id="remember-checkbox" name="remember">
@@ -2379,10 +2368,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                                 this.logOut();
                                             }}">
 <<<<<<< HEAD
+<<<<<<< HEAD
                                             ${i18n.t('nextcloud-file-picker.log-out')}
 =======
                                         Abmelden
 >>>>>>> Add sessionsaving in session storage to nextcloud filepicker, add encrypt and decrypt functionality
+=======
+                                            ${i18n.t('nextcloud-file-picker.log-out')}
+>>>>>>> Change log out to disconnect in nextcloud filepicker
                                     </button>
                                 </div>
                             </div>

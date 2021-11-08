@@ -76,7 +76,10 @@
     "error-save-to-favorites": "Speichern in Favoriten nicht möglich! Bitte wählen Sie einen Ordner innerhalb der Favoriten aus.",
     "error-save-to-recent": "Speichern in den neuesten Dateien nicht möglich! Bitte wählen Sie einen Ordner innerhalb der neuesten Dateien aus.",
     "recent-files-link-text": "Neueste Dateien",
-    "favorites-link-text": "Meine Favoriten"
+    "favorites-link-text": "Meine Favoriten",
+    "remember-me": "Mit {{name}} verbunden bleiben",
+    "log-out": "Verbindung trennen",
+    "open-submenu": "Untermenü öffnen"
   },
   "clipboard": {
     "add-files": "Dateien der Zwischenablage hinzufügen",
