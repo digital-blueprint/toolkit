@@ -12,7 +12,7 @@ import Tabulator from 'tabulator-tables';
 import MicroModal from './micromodal.es';
 import {name as pkgName} from './../package.json';
 import * as fileHandlingStyles from './styles';
-import {encrypt, decrypt, parseJwt} from './crypto';
+import {encrypt, decrypt, parseJwt} from './crypto.js';
 
 
 /**
