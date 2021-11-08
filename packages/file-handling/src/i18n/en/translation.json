@@ -107,7 +107,10 @@
     "error-save-to-favorites": "Saving to Favorites not possible! Please select a folder within the Favorites.",
     "error-save-to-recent": "Saving to Recent Files not possible! Please select a folder within the Recent Files.",
     "recent-files-link-text": "Recent Files",
-    "favorites-link-text": "My Favorites"
+    "favorites-link-text": "My Favorites",
+    "remember-me": "Stay connected with {{name}}",
+    "log-out": "Disconnect",
+    "open-submenu": "Open submenu"
   },
   "clipboard": {
     "add-files": "Add files to clipboard",

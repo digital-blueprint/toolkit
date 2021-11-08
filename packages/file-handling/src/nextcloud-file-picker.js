@@ -2239,7 +2239,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     </div>
                     <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive && !this.storeSession || !this.isLoggedIn()})}"> <!-- remove hidden to enable remember me -->
                         <label class="button-container remember-container">
-                            ${i18n.t('nextcloud-file-picker.remember-me')}
+                            ${i18n.t('nextcloud-file-picker.remember-me', {name: this.nextcloudName})}
                             <input type="checkbox" id="remember-checkbox" name="remember">
                             <span class="checkmark"></span>
                         </label>
@@ -2331,7 +2331,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                             @click="${() => {
                                                 this.logOut();
                                             }}">
-                                        Abmelden
+                                            ${i18n.t('nextcloud-file-picker.log-out')}
                                     </button>
                                 </div>
                             </div>
