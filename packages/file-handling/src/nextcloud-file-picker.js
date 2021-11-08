@@ -392,7 +392,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     loginCallback() {
-        this.checkLocalStorage()
+        this.checkLocalStorage();
     }
 
     /**
