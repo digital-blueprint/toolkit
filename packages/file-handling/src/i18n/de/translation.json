@@ -89,7 +89,9 @@
     "select-nothing-title": "Alle gewählten Dateien nicht mehr selektieren",
     "abort": "Vorgang abbrechen",
     "abort-message": "Vorgang wurde abgebrochen.",
-    "remember-me": "Angemeldet bleiben"
+    "remember-me": "Mit {{name}} verbunden bleiben",
+    "log-out": "Verbindung trennen",
+    "open-submenu": "Untermenü öffnen"
   },
   "clipboard": {
     "add-files": "Dateien der Zwischenablage hinzufügen",
