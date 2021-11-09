@@ -169,7 +169,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 layout: "fitColumns",
                 selectable: this.maxSelectedItems,
                 selectableRangeMode: "drag",
-                placeholder: this.isInFavorites ? i18n.t('nextcloud-file-picker.no-favorites') : this.directoriesOnly ? i18n.t('nextcloud-file-picker.no-data') : i18n.t('nextcloud-file-picker.no-data-type'),
+                placeholder: this.isInFavorites ? i18n.t('nextcloud-file-picker.no-favorites') : this.directoriesOnly ? i18n.t('nextcloud-file-picker.no-data') : i18n.t('nextcloud-file-picker.no-data-type'), //TODO check why it is not working
                 responsiveLayout: "collapse",
                 responsiveLayoutCollapseStartOpen: false,
                 resizableColumns: false,
@@ -2053,8 +2053,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .more-menu {
                 // height: 22.4px; //deleted in JF 08.11.2021
-                width: 22.4px;
-                top: 8px;
+                // width: 22.4px;
+                // top: 8px;
+                height: 22.4px;
+                top: 4px;
             }
 
             .nextcloud-nav a.home-link {
