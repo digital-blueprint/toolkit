@@ -2291,7 +2291,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                         </button>
                                     </div>
                                 </div>
-                        <!-- TODO begin -->
+                        <!-- old new folder code - begin -->
                         <!-- <div class="menu-buttons">
                             <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
                             <div class="inline-block">
@@ -2308,7 +2308,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                                     </button>
                                 </div> -->
-                        <!-- TODO end -->
+                        <!-- old new folder code - end -->
 
                             <!-- <button class="button ${classMap({hidden: this.showAdditionalMenu})}"
                                     title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
@@ -2320,6 +2320,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                             <!-- deleted in JF 08.11.2021s -->
                                 <!-- <li class="close" @click="${this.hideMoreMenu}"><dbp-icon name="close" style="color: red"></dbp-icon></li> -->
+                            
+                                <li class="${classMap({hidden: !this.storeSession})}" title="${i18n.t('nextcloud-file-picker.log-out')}">
+                                    <a class="" @click="${() => { this.logOut(); this.hideMoreMenu(); }}">
+                                        ${i18n.t('nextcloud-file-picker.log-out')}
+                                    </a>
+                                </li>
+                            
                             </ul>
 <!-- TODO integrate submenu in additional menu
                             <div id="submenu" class="${classMap({hidden: !this.storeSession})}"
