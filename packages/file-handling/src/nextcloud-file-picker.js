@@ -109,10 +109,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             userName: { type: Boolean, attribute: false },
             storeSession: {type: Boolean, attribute: 'store-nextcloud-session'},
             showSubmenu: {type: Boolean, attribute: false},
-            showAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
-            userName: { type: Boolean, attribute: false },
         };
-
     }
 
     update(changedProperties) {
@@ -429,7 +426,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return (!this.isLoggedIn() && this.auth.token !== undefined);
     }
 
-
     /**
      *
      */
@@ -568,74 +564,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
         return result;
     }
-
-    /**
-     * 
-     * @param {*} path 
-     * @returns array including file path and base name
-     */
-    parseFileAndBaseName(path) {
-        if (path[0] !== "/") { //TODO verify
-            path = "/" + path;
-        }
-        while (/^.+\/$/.test(path)) {
-            path = path.substr(0, path.length - 1);
-        }
-        path = decodeURIComponent(path);
-
-        let array1 = this.webDavUrl.split('/');
-        let array2 = path.split('/');
-        for (let i = 0; i < array2.length; i++) {
-            let item2 = array2[i];
-            array1.forEach(item1 => {
-                if (item1 === item2) {
-                    array2.shift();
-                    i--;
-                }
-            });
-        }
-        array2.shift();
-
-        let basename = array2[array2.length - 1];
-        let filename = '/' + array2.join('/');
-        
-        return [ filename, basename ];
-    }
-
-    /**
-     * 
-     * @param {*} response 
-     * @returns list of file objects containing corresponding information
-     */
-    mapResponseToObject(response) {
-        let results = [];
-
-        response.forEach(item => {
-            const [ filePath, baseName ] = this.parseFileAndBaseName(item.href);
-
-            const prop = item.propstat.prop;
-            let etag = typeof prop.getetag === 'string' ? prop.getetag.replace(/"/g, '') : null;
-            let sizeVal = prop.getcontentlength ? prop.getcontentlength : '0';
-            let fileType = prop.resourcetype && typeof prop.resourcetype === 'object' && typeof prop.resourcetype.collection !== 'undefined' ? 'directory' : 'file';
-            
-            let mimeType;
-            if (fileType === 'file') {
-                mimeType = prop.getcontenttype && typeof prop.getcontenttype === 'string' ? prop.getcontenttype.split(';')[0] : '';
-            }
-
-            let propsObject =  { getetag: etag, getlastmodified: prop.getlastmodified, getcontentlength: sizeVal, 
-                                permissions: prop.permissions, resourcetype: fileType, getcontenttype: prop.getcontenttype };
-
-            let statObject = { basename: baseName, etag: etag, filename: filePath, lastmod: prop.getlastmodified, 
-                mime: mimeType, props: propsObject, size: parseInt(sizeVal, 10), type: fileType };
-
-            results.push(statObject);
-        });
-
-        return results;
-    }
-    
-
 
     /**
      * 
