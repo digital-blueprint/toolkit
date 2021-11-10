@@ -59,7 +59,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.authInfo = '';
         this.selectBtnDisabled = true;
         this.storeSession = false;
-        this.boundCloseAdditionalMenuHandler = this.closeAdditionalMenu.bind(this);
+        this.boundCloseAdditionalMenuHandler = this.hideMoreMenu.bind(this);//this.closeAdditionalMenu.bind(this);
         this.initateOpenAdditionalMenu = false;
         this.showAdditionalMenu = false;
         this.isInFavorites = false;
@@ -1595,17 +1595,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return this.nextcloudFileURL + this.directoryPath;
     }
 
-    closeAdditionalMenu() { //TODO integrate this
-        if (this.initateOpenAdditionalMenu && this.showAdditionalMenu) {
-            this.initateOpenAdditionalMenu = false;
-            return;
-        }
-        if (this.showAdditionalMenu){
-            document.removeEventListener('click', this.boundCloseAdditionalMenuHandler);
-            this.showAdditionalMenu = false;
-        }
-    }
-
     toggleMoreMenu() {
         const menu = this.shadowRoot.querySelector("ul.extended-menu");
         const menuStart = this.shadowRoot.querySelector("a.extended-menu-link");
@@ -1614,8 +1603,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
 
-        menu.classList.toggle('hidden');
+        menu.classList.toggle('hidden'); //sets hidden or removes it
 
+        // computations for overflow - begin
         if (this.menuHeight === -1) {
             this.menuHeight = menu.clientHeight;
         }
@@ -1631,15 +1621,24 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             document.body.removeAttribute('style', 'overflow:hidden;');
             menu.removeAttribute('style');
         }
+        // computations for overflow - end
 
-        if (!this.showAdditionalMenu) {
-            this.initateOpenAdditionalMenu = true;
-            this.showAdditionalMenu = true;
+        if (!menu.classList.contains('hidden')) { // add event listener for clicking outside of menu
             document.addEventListener('click', this.boundCloseAdditionalMenuHandler);
+            console.log('add event listener');
+            this.initateOpenAdditionalMenu = true;
+        }
+        else {
+            document.removeEventListener('click', this.boundCloseAdditionalMenuHandler);
+            console.log('delete event listener');
         }
     }
 
     hideMoreMenu() {
+        if (this.initateOpenAdditionalMenu) {
+            this.initateOpenAdditionalMenu = false;
+            return;
+        }
         const menu = this.shadowRoot.querySelector("ul.extended-menu");
         if (menu && !menu.classList.contains('hidden'))
             this.toggleMoreMenu();
