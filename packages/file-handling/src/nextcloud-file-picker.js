@@ -691,8 +691,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                     this.loading = false;
                     this.statusText = "";
-                    this.tabulatorTable.placeholder = i18n.t('nextcloud-file-picker.no-favorites'); //TODO check why this is not working
                     this.tabulatorTable.setData(dataObject);
+
+                    //this.tabulatorTable.querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-favorites');
+                    this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-favorites');
+
                     this.isPickerActive = true;
                     this._(".nextcloud-content").scrollTop = 0;
                     this._("#download-button").setAttribute("disabled", "true");
