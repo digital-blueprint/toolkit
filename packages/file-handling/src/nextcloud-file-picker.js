@@ -441,6 +441,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         }
                     );
 
+                    this.userName = userName;
+
                     this.isPickerActive = true;
                     this.loadDirectory(this.directoryPath);
                 } catch (e) {
@@ -691,8 +693,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.statusText = "";
                     this.tabulatorTable.setData(dataObject);
 
-                    //this.tabulatorTable.querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-favorites');
-                    this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-favorites');
+                    if (this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span")) {
+                        //this.tabulatorTable.querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-favorites');
+                        this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-favorites');
+                    }
 
                     this.isPickerActive = true;
                     this._(".nextcloud-content").scrollTop = 0;
@@ -749,7 +753,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         date.setMonth(date.getMonth() - 3);
         let searchDate = date.toISOString().split('.')[0] + 'Z';
 
-        if (this.webDavClient === null) {
+        if (this.webDavClient === null || this.userName === null) {
             // client is broken reload try to reset & reconnect
             this.tabulatorTable.clearData();
             this.webDavClient = null;
@@ -824,6 +828,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.setSort([
                         {column: "lastmod", dir: "desc"}
                     ]);
+
+                    if (this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span")) {
+                        //this.tabulatorTable.querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-recent-files');
+                        this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-recent-files');
+                    }
+
                     this.isPickerActive = true;
                     this._(".nextcloud-content").scrollTop = 0;
                     this._("#download-button").setAttribute("disabled", "true");
