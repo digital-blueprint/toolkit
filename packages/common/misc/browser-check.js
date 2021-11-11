@@ -160,13 +160,6 @@ var ms = MultiString(function() {/**
         letter-spacing: 0.3em;
         margin: 2em 0;
     }
-    #unsupported .footer {
-        position: fixed;
-        top: 0.5em;
-        line-height: 2em;
-        width: 100%;
-        text-align: center;
-    }
 </style>
 <div id="unsupported">
     <div class="overlay">
@@ -182,11 +175,6 @@ var ms = MultiString(function() {/**
                 This application requires features that are not yet provided by your current browser.
                 Please try to use a different browser or update your current one.
             </p>
-        </div>
-        <div class="footer">
-            IT Support: <a href="mailto:it-support@tugraz.at">it-support@tugraz.at</a>
-            <br>
-            <a href="https://datenschutz.tugraz.at/erklaerung/" target="_blank" rel="noopener">Datenschutzerklärung / Privacy Policy</a>
         </div>
     </div> 
 </div>
