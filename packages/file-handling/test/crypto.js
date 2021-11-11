@@ -1,4 +1,4 @@
-import {assert, expect} from '@esm-bundle/chai';
+import {assert} from '@esm-bundle/chai';
 import {encrypt, decrypt} from '../src/crypto';
 
 
