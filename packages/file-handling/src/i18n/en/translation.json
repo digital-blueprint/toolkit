@@ -47,6 +47,7 @@
     "no-data": "No data avaible in this folder.",
     "no-data-type": "No data avaible in this folder.",
     "no-favorites": "No favorites could be found.",
+    "no-recent-files": "No recent files could be found from the last 3 months.",
     "webdav-error": "Something went wrong",
     "add-folder-error": "The resource \"{{folder}}\" you tried to create already exists.",
     "add-folder-success": "The folder '{{folder}}' was created successfully.",
