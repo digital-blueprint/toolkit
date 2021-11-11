@@ -18,7 +18,7 @@ export default {
         keyCloakClientId: 'dbp-demo',
         matomoUrl: 'https://analytics.tugraz.at/',
         matomoSiteId: 131,
-        nextcloudBaseURL: 'https://nc-dev.tugraz.at/pers',
+        nextcloudBaseURL: 'https://cloud-dev.tugraz.at',
         nextcloudName: 'TU Graz cloud',
     },
     demo: {
