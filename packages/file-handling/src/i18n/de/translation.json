@@ -46,6 +46,7 @@
     "no-data": "In diesem Ordner befinden sich keine Dateien.",
     "no-data-type": "In diesem Ordner befinden sich keine Daten vom benötigten Typ.",
     "no-favorites": "Es wurden keine Favoriten gefunden.",
+    "no-recent-files": "Es wurden keine Dateien innerhalb der letzten 3 Monate gefunden.",
     "webdav-error": "Etwas ist schief gelaufen: {{error}}",
     "add-folder-error": "Die Ressource \"{{folder}}\", ist bereits vorhanden.",
     "add-folder-success": "Der Ordner \"{{folder}}\" wurde erfolgreich erstellt.",
