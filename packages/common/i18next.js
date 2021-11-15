@@ -81,6 +81,8 @@ export function createInstance(languages, lng, fallback, namespace) {
         fallbackNS: namespace,
         initImmediate: false, // Don't init async
         resources: {},
+        // https://www.i18next.com/misc/migration-guide
+        compatibilityJSON: 'v3',
     };
 
     Object.keys(languages).forEach(function(key) {
