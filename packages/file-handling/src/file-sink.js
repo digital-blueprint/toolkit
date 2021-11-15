@@ -28,6 +28,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.nextcloudName ='Nextcloud';
         this.nextcloudPath = '';
         this.nextcloudFileURL = '';
+        this.nextcloudStoreSession = false;
         this.buttonLabel = '';
         this.filename = "files.zip";
         this.files = [];
@@ -66,6 +67,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
+            nextcloudStoreSession: {type: Boolean, attribute: 'nextcloud-store-session'},
             buttonLabel: {type: String, attribute: 'button-label'},
             isDialogOpen: {type: Boolean, attribute: false},
             activeTarget: {type: String, attribute: 'active-target'},
@@ -301,7 +303,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                    auth-info="${this.nextcloudAuthInfo}"
                    directory-path="${this.nextcloudPath}"
                    nextcloud-file-url="${this.nextcloudFileURL}"
-                   store-nextcloud-session="true"
+                   ?store-nextcloud-session="${this.nextcloudStoreSession}"
                    @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
                        this.uploadToNextcloud(event.detail);
                    }}"

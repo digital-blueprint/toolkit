@@ -428,13 +428,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         const token = parseJwt(this.auth.token);
         const sessionId = token ? token.sid : "";
         if (this.storeSession && sessionId
-            && localStorage.getItem("nextcloud-webdav-username" + publicId)
-            && localStorage.getItem("nextcloud-webdav-password" + publicId) ){
+            && localStorage.getItem('nextcloud-webdav-username-' + publicId)
+            && localStorage.getItem('nextcloud-webdav-password-' + publicId) ){
                 try {
-                    const userName = await decrypt(sessionId, localStorage.getItem("nextcloud-webdav-username" + publicId));
-                    const password = await decrypt(sessionId, localStorage.getItem("nextcloud-webdav-password" + publicId));
+                    const userName = await decrypt(sessionId, localStorage.getItem('nextcloud-webdav-username-' + publicId));
+                    const password = await decrypt(sessionId, localStorage.getItem('nextcloud-webdav-password-' + publicId));
                     this.webDavClient = createClient(
-                        this.webDavUrl + "/" + userName,
+                        this.webDavUrl + '/' + userName,
                         {
                             username: userName,
                             password: password
@@ -444,8 +444,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.isPickerActive = true;
                     this.loadDirectory(this.directoryPath);
                 } catch (e) {
-                    localStorage.removeItem('nextcloud-webdav-username' + publicId);
-                    localStorage.removeItem('nextcloud-webdav-password' + publicId);
+                    localStorage.removeItem('nextcloud-webdav-username-' + publicId);
+                    localStorage.removeItem('nextcloud-webdav-password-' + publicId);
                     return;
                 }
         }
@@ -492,15 +492,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return this.shadowRoot === null ? this.querySelectorAll(selector) : this.shadowRoot.querySelectorAll(selector);
     }
 
-    async persistStorageMaybe() {
-        if (navigator.storage && navigator.storage.persist) {
-            if (await navigator.storage.persist())
-                console.log("Storage will not be cleared except by explicit user action");
-            else
-                console.log("Storage may be cleared by the UA under storage pressure.");
-        }
-    }
-
     async onReceiveWindowMessage(event) {
         if (this.webDavClient === null) {
             const data = event.data;
@@ -521,16 +512,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
 
                 if (this.storeSession && this.isLoggedIn() && this._("#remember-checkbox") && this._("#remember-checkbox").checked) {
-                    this.persistStorageMaybe();
                     const publicId = this.auth['person-id'];
                     const token = parseJwt(this.auth.token);
                     const sessionId = token ? token.sid : "";
                     if (sessionId) {
                         const encrytedName = await encrypt(sessionId, data.loginName);
                         const encrytedToken = await encrypt(sessionId, data.token);
-                        localStorage.setItem('nextcloud-webdav-username' + publicId, encrytedName);
-                        localStorage.setItem('nextcloud-webdav-password' + publicId, encrytedToken);
-
+                        localStorage.setItem('nextcloud-webdav-username-' + publicId, encrytedName);
+                        localStorage.setItem('nextcloud-webdav-password-' + publicId, encrytedToken);
                     }
                 }
 
@@ -1644,7 +1633,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .remember-container{
                 display: inline-block;
                 line-height: 28px;
-                padding-left: 34px;
+                padding-left: 28px;
             }
 
             .remember-container .checkmark{
@@ -1824,7 +1813,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 }}">${i18n.t('nextcloud-file-picker.connect-nextcloud', {name: this.nextcloudName})}
                         </button>
                     </div>
-                    <div class="block text-center m-inherit ${classMap({hidden: this.isPickerActive && !this.storeSession || !this.isLoggedIn()})}"> <!-- remove hidden to enable remember me -->
+                    <div class="block text-center m-inherit ${classMap({hidden: !this.storeSession || !this.isLoggedIn()})}">
                         <label class="button-container remember-container">
                             ${i18n.t('nextcloud-file-picker.remember-me', {name: this.nextcloudName})}
                             <input type="checkbox" id="remember-checkbox" name="remember">

@@ -45,6 +45,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.nextcloudWebDavUrl = '';
         this.nextcloudPath = '';
         this.nextcloudFileURL = '';
+        this.nextcloudStoreSession = false;
         this.dropArea = null;
         this.allowedMimeTypes = '';
         this.enabledTargets = 'local';
@@ -86,6 +87,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
             nextcloudFileURL: { type: String, attribute: 'nextcloud-file-url' },
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
+            nextcloudStoreSession: {type: Boolean, attribute: 'nextcloud-store-session'},
             buttonLabel: { type: String, attribute: 'button-label' },
             disabled: { type: Boolean },
             decompressZip: { type: Boolean, attribute: 'decompress-zip' },
@@ -520,7 +522,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                    web-dav-url="${this.nextcloudWebDavUrl}"
                    nextcloud-name="${this.nextcloudName}"
                    nextcloud-file-url="${this.nextcloudFileURL}"
-                   store-nextcloud-session="true"
+                   ?store-nextcloud-session="${this.nextcloudStoreSession}"
                    auth-info="${this.nextcloudAuthInfo}"
                    allowed-mime-types="${this.allowedMimeTypes}"
                    max-selected-items="${this.multipleFiles}"

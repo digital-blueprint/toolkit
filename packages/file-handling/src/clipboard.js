@@ -37,6 +37,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this.nextcloudWebDavURL = "";
         this.nextcloudName = "";
         this.nextcloudFileURL = "";
+        this.nextcloudStoreSession = false;
         this.authInfo = '';
 
         this.allowNesting = false;
@@ -71,6 +72,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             nextcloudName: { type: String, attribute: 'nextcloud-name' },
             nextcloudFileURL: { type: String, attribute: 'nextcloud-file-url' },
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
+            nextcloudStoreSession: {type: Boolean, attribute: 'nextcloud-store-session'},
 
             mode: {type: String, attribute: 'mode'},
 
@@ -621,6 +623,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                 nextcloud-name="${this.nextcloudName}"
                                 nextcloud-file-url="${this.nextcloudFileURL}"
                                 nexcloud-auth-info="${this.nextcloudAuthInfo}"
+                                ?nextcloud-store-session="${this.nextcloudStoreSession}"
                                 enabled-targets="${this.allowNesting ? this.enabledTargets : this.enabledTargets.replace('clipboard', '')}"
                                 decompress-zip
                                 lang="${this.lang}"
@@ -640,6 +643,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                    nextcloud-name="${this.nextcloudName}"
                                    nextcloud-file-url="${this.nextcloudFileURL}"
                                    nexcloud-auth-info="${this.nextcloudAuthInfo}"
+                                   ?nextcloud-store-session="${this.nextcloudStoreSession}"
                                    lang="${this.lang}"
                     ></dbp-file-sink>
         `;
