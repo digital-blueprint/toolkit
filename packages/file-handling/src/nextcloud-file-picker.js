@@ -1633,11 +1633,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .remember-container{
                 display: inline-block;
                 line-height: 28px;
-                padding-left: 28px;
+                padding-left: 34px;
             }
 
             .remember-container .checkmark{
-                left: 0px;
+                left: 7px;
             }
 
 
@@ -1802,7 +1802,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         <p class="m-inherit">
                             ${i18n.t('nextcloud-file-picker.init-text-1', {name: this.nextcloudName})} <br>
                             ${i18n.t('nextcloud-file-picker.init-text-2')} <br><br>
-
                         </p>
                     </div>
                     <div class="block ${classMap({hidden: this.isPickerActive})}">
