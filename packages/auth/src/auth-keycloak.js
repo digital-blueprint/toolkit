@@ -84,27 +84,13 @@ export class AuthKeycloak extends AdapterLitElement {
 
     async _fetchUser(userId) {
         let jsonld;
-        try {
-            jsonld = await JSONLD.getInstance(this.entryPointUrl, this.lang);
-        } catch(error) {
-            // Server is down, just give up.
-            return {
-                roles: [],
-            };
-        }
+        jsonld = await JSONLD.getInstance(this.entryPointUrl, this.lang);
         let baseUrl = '';
         try {
             baseUrl = jsonld.getApiUrlForEntityName("FrontendUser");
         } catch(error) {
             // backwards compat
-            try {
-                baseUrl = jsonld.getApiUrlForEntityName("Person");
-            } catch(error) {
-                // There are no entities, just give up.
-                return {
-                    roles: [],
-                };
-            }
+            baseUrl = jsonld.getApiUrlForEntityName("Person");
         }
         const apiUrl = baseUrl + '/' + encodeURIComponent(userId);
 
@@ -137,7 +123,16 @@ export class AuthKeycloak extends AdapterLitElement {
             let userChanged = (userId !== this._userId);
             if (userChanged) {
                 this._userId = userId;
-                let user = await this._fetchUser(userId);
+                let user;
+                try {
+                    user = await this._fetchUser(userId);
+                } catch (error) {
+                    // In case fetching the user failed then likely the API backend
+                    // is not set up or broken. Return a user without any roles so we
+                    // can show something at least.
+                    console.error(error);
+                    user = {roles: []};
+                }
                 if (userId === this._userId) {
                     this._user = user;
                 }
