@@ -329,6 +329,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     } else {
                         // TODO
                         console.log('reached');
+                        if (this._('#tf-new-folder')) {
+                            this._('#tf-new-folder').focus();
+                        }
                     }
                 },
                 rowDblClick: (e, row) => {
@@ -384,6 +387,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             //         that.addFolder();
             //     }
             // });
+
+            
         });
     }
 
@@ -1478,18 +1483,22 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         if (this._('.addRowAnimation')) {
             this._('.addRowAnimation').classList.remove('addRowAnimation');
         }
-        // this._('#new-folder-wrapper').classList.toggle('hidden');
-        // if (this._('#new-folder-wrapper').classList.contains('hidden')) {
-            // this._('#add-folder-button').setAttribute("name", "plus");
-            // this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-open'));
-        // } else {
-            // this._('#add-folder-button').setAttribute("name", "close");
-            // this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-close'));
-            // this._('#new-folder').focus();
-        // }
+        this._('#new-folder-wrapper').classList.toggle('hidden');
+        if (this._('#new-folder-wrapper').classList.contains('hidden')) {
+            this._('#add-folder-button').setAttribute("name", "plus");
+            this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-open'));
+        } else {
+            this._('#add-folder-button').setAttribute("name", "close");
+            this._('#add-folder-button').setAttribute("title", i18n.t('nextcloud-file-picker.add-folder-close'));
+            this._('#new-folder').focus();
+        }
+    }
 
-
-        // TODO move this to new function
+    addOpenFolderTableEntry() {
+        const i18n = this._i18n;
+        if (this._('.addRowAnimation')) {
+            this._('.addRowAnimation').classList.remove('addRowAnimation');
+        }
 
         let props = {permissions: 'RGDNVCK'};
         var row = {
@@ -1505,6 +1514,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         this._('#new-folder-row').setAttribute('style', 'background: #259207; color: white');
         this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-open").classList.add('new-folder-selected');
+        this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-close").classList.add('new-folder-selected');
 
         // this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-table > div.tabulator-row:nth-child(1) > div.tabulator-cell:nth-child(3)")
         //     .classList.add('blinking');
@@ -1536,7 +1546,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         })
 
 
-        this._('#tf-new-folder').focus();
+        // this._('#tf-new-folder').focus();
     }
 
     addNewFolder() {
@@ -1785,6 +1795,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
+            .tabulator-row.no-select.tabulator-selected {
+                background-color: white;
+                color: #333;
+            }
+
             input[type=text]#tf-new-folder:focus {
                 border: none;
                 background: transparent;
@@ -1797,8 +1812,28 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             input[type=text]#tf-new-folder::placeholder {
-                color: #000;
-                font-weight: 200;
+                color: #333;
+                font-weight: 300;
+            }
+
+            #tf-new-folder::-webkit-input-placeholder {
+                color: #333;
+                font-weight: 300;
+            }
+
+            #tf-new-folder:-moz-placeholder {
+                color: #333;
+                font-weight: 300;
+            }
+
+            #tf-new-folder::-moz-placeholder {
+                color: #333;
+                font-weight: 300;
+            }
+
+            #tf-new-folder::-ms-input-placeholder {
+                color: #333;
+                font-weight: 300;
             }
 
             input[type=text]#tf-new-folder {
@@ -1806,33 +1841,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 background: transparent;
                 width: 100%;
                 height: 100%;
+                margin-left: -8px;
             }
 
             .new-folder-selected::after {
                 filter: invert(100%);
-            }
-
-            .blinking::after {
-                // animation: blink 1s linear infinite alternate;
-                content: "";
-                margin-left: 2px;
-                width: 2px;
-                height: 1rem;
-                background: white;
-                display: inline-block;
-                animation: cursor-blink 1.5s steps(2) infinite;
-            }
-
-            .blinking {
-                display: flex;
-                align-items: center;
-                gap: 2px;
-            }
-
-            @keyframes cursor-blink {
-                0% {
-                  opacity: 0;
-                }
             }
 
             .visible {
@@ -2432,7 +2445,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                     </a>
                                 </li>
                                 <li class="${classMap({hidden: !this.directoriesOnly})}">
-                                    <a class="${classMap({inactive: this.isInRecent || this.isInFavorites || this.disableRowClick})}" @click="${() => { this.openAddFolderDialogue(); }}">
+                                    <a class="${classMap({inactive: this.isInRecent || this.isInFavorites || this.disableRowClick})}" @click="${() => { this.addOpenFolderTableEntry(); }}">
                                         ${i18n.t('nextcloud-file-picker.add-folder')}
                                     </a>
                                 </li>
