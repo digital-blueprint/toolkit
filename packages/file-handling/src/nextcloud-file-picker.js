@@ -417,16 +417,22 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
 
-
     /**
      *
      */
     async checkLocalStorage() {
-        if (!this.isLoggedIn() || !this.auth)
+        if (!this.isLoggedIn() || !this.auth) {
+            for (let [key, value] of Object.entries(localStorage)) {
+                if (key.includes("nextcloud-webdav-username-") || key.includes("nextcloud-webdav-password-")) {
+                    localStorage.removeItem(key);
+                }
+            }
             return;
+        }
         const publicId = this.auth['person-id'];
         const token = parseJwt(this.auth.token);
         const sessionId = token ? token.sid : "";
+
         if (this.storeSession && sessionId
             && localStorage.getItem('nextcloud-webdav-username-' + publicId)
             && localStorage.getItem('nextcloud-webdav-password-' + publicId) ){
@@ -450,6 +456,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
         }
     }
+
 
     /**
      * check mime type of row
