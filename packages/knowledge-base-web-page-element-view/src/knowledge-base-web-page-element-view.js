@@ -1,9 +1,9 @@
 import {createInstance} from './i18n';
-import {html} from 'lit-element';
+import {html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {MiniSpinner} from '@dbp-toolkit/common';
 import * as commonUtils from "@dbp-toolkit/common/utils";
-import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 
 /**

@@ -1,5 +1,5 @@
 import {createInstance} from './src/i18n.js';
-import {css, html, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';

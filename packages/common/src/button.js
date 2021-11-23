@@ -1,4 +1,4 @@
-import {html, LitElement, css} from 'lit-element';
+import {html, LitElement, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {MiniSpinner} from './mini-spinner.js';
 import * as commonStyles from '../styles.js';

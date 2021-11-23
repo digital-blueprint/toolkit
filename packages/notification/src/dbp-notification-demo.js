@@ -1,6 +1,6 @@
 import {createInstance} from './i18n';
 import {send as notify} from '@dbp-toolkit/common/notification';
-import {css, html, LitElement} from 'lit-element';
+import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Notification} from './notification.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';

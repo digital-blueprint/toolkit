@@ -1,6 +1,6 @@
 import {createInstance} from './i18n';
-import {html, LitElement} from 'lit-element';
-import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
+import {html, LitElement} from 'lit';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {FileSource} from './file-source.js';
 import {FileSink} from './file-sink.js';

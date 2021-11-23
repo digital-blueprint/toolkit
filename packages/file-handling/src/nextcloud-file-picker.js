@@ -1,12 +1,12 @@
 import {createInstance} from './i18n';
-import {css, html} from 'lit-element';
+import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {createClient} from 'webdav/web';
-import {classMap} from 'lit-html/directives/class-map.js';
+import {classMap} from 'lit/directives/class-map.js';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import Tabulator from 'tabulator-tables';
 import MicroModal from './micromodal.es';

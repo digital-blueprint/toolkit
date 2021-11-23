@@ -1,4 +1,4 @@
-import {html , LitElement} from 'lit-element';
+import {html , LitElement} from 'lit';
 import {createInstance} from './i18n.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 

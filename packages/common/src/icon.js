@@ -1,4 +1,4 @@
-import {html, LitElement, css} from 'lit-element';
+import {html, LitElement, css} from 'lit';
 import * as commonUtils from '../utils.js';
 import {name as pkgName} from './../package.json';
 

@@ -1,6 +1,6 @@
 
 import JSONLD from '@dbp-toolkit/common/jsonld';
-import {css, html} from 'lit-element';
+import {css, html} from 'lit';
 import {createInstance} from './i18n.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
