@@ -422,7 +422,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      */
     async checkLocalStorage() {
         if (!this.isLoggedIn() || !this.auth) {
-            for (let [key, value] of Object.entries(localStorage)) {
+            for (let key of Object.keys(localStorage)) {
                 if (key.includes("nextcloud-webdav-username-") || key.includes("nextcloud-webdav-password-")) {
                     localStorage.removeItem(key);
                 }
