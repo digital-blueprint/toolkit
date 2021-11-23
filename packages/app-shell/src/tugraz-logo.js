@@ -1,4 +1,4 @@
-import {html, css} from 'lit';
+import {html, css} from 'lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {createInstance} from './i18n.js';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";

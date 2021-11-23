@@ -1,10 +1,10 @@
 import {createInstance} from './i18n';
-import {css, html, unsafeCSS} from 'lit';
+import {css, html, unsafeCSS} from 'lit-element';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
-import {classMap} from 'lit/directives/class-map.js';
+import {classMap} from 'lit-html/directives/class-map.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {getIconSVGURL} from '@dbp-toolkit/common';
 import {Mutex} from 'async-mutex';

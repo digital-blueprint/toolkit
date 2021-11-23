@@ -8,7 +8,7 @@ import bttn2 from 'datatables.net-buttons';
 import bttnHtml5 from 'datatables.net-buttons/js/buttons.html5.js';
 import bttnPrint from 'datatables.net-buttons/js/buttons.print.js';
 import {createInstance} from './i18n';
-import {css, html, unsafeCSS} from 'lit';
+import {css, html, unsafeCSS} from 'lit-element';
 import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
 import {getIconSVGURL} from '@dbp-toolkit/common';

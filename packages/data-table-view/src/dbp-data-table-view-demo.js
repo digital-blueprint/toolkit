@@ -1,7 +1,7 @@
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {DataTableView} from './data-table-view.js';
 import {createInstance} from './i18n';
-import {css, html} from 'lit';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';

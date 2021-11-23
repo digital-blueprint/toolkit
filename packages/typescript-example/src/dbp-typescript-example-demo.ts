@@ -1,4 +1,4 @@
-import {html, LitElement, TemplateResult} from 'lit';
+import {html, LitElement, TemplateResult} from 'lit-element';
 import {TypeScriptExample} from './typescript-example';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import { ScopedElementsMixin, ScopedElementsMap } from '@open-wc/scoped-elements';

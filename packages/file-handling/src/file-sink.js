@@ -1,11 +1,11 @@
 import {createInstance} from './i18n';
-import {css, html} from 'lit';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from "@dbp-toolkit/common/utils";
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from "./nextcloud-file-picker";
-import {classMap} from 'lit/directives/class-map.js';
+import {classMap} from 'lit-html/directives/class-map.js';
 import FileSaver from 'file-saver';
 import MicroModal from "./micromodal.es";
 import * as fileHandlingStyles from './styles';

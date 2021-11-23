@@ -1,4 +1,4 @@
-import {html, LitElement, css} from 'lit';
+import {html, LitElement, css} from 'lit-element';
 
 export class MiniSpinner extends LitElement {
     constructor() {

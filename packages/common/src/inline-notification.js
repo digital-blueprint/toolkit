@@ -1,4 +1,4 @@
-import {css, html} from 'lit';
+import {css, html} from 'lit-element';
 import DBPLitElement from '../dbp-lit-element';
 import * as commonStyles from '../styles';
 

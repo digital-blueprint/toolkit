@@ -1,9 +1,9 @@
-import {css, html} from 'lit';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {KnowledgeBaseWebPageElementViewDemo} from '@dbp-toolkit/knowledge-base-web-page-element-view/src/dbp-knowledge-base-web-page-element-view-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/knowledge-base-web-page-element-view/README.md';
 import * as demoStyles from "./styles";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";

@@ -1,5 +1,5 @@
-import {css, html} from 'lit';
-import {classMap} from 'lit/directives/class-map.js';
+import {css, html} from 'lit-element';
+import {classMap} from "lit-html/directives/class-map";
 import DBPLitElement from "../dbp-lit-element";
 
 export class Translated extends DBPLitElement {

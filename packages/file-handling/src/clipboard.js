@@ -1,5 +1,5 @@
 import {createInstance} from './i18n';
-import {css, html} from 'lit';
+import {css, html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -10,7 +10,7 @@ import {humanFileSize} from "@dbp-toolkit/common/i18next";
 import {name as pkgName} from "@dbp-toolkit/file-handling/package.json";
 import {send} from "@dbp-toolkit/common/notification";
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
-import {classMap} from 'lit/directives/class-map.js';
+import {classMap} from 'lit-html/directives/class-map.js';
 
 const MODE_TABLE_ONLY = "table-only";
 const MODE_FILE_SINK = "file-sink";

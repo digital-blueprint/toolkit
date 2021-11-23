@@ -1,5 +1,5 @@
 import {createInstance} from './i18n.js';
-import {html} from 'lit';
+import {html} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak} from './auth-keycloak.js';
 import {LoginButton} from './login-button.js';

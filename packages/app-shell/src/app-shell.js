@@ -1,5 +1,5 @@
 import {createInstance} from './i18n.js';
-import {html, css} from 'lit';
+import {html, css} from 'lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
@@ -7,7 +7,7 @@ import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from '@dbp-toolkit/notification';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {classMap} from 'lit/directives/class-map.js';
+import {classMap} from 'lit-html/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
 import {send as notify} from '@dbp-toolkit/common/notification';
