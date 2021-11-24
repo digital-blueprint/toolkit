@@ -24,8 +24,12 @@ export class Translated extends DBPLitElement {
 
     render() {
         return html`
-            <slot class="${classMap({hidden: this.lang !== 'de'})}" name="de"></slot>
-            <slot class="${classMap({hidden: this.lang !== 'en'})}" name="en"></slot>
+            <div class="${classMap({hidden: this.lang !== 'de'})}">
+                <slot name="de"></slot>
+            </div>
+            <div class="${classMap({hidden: this.lang !== 'en'})}">
+                <slot name="en"></slot>
+            </div>
         `;
     }
 }
