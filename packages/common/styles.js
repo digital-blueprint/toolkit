@@ -21,6 +21,7 @@ export function getThemeCSS() {
             --dbp-success-text-color: var(--dbp-override-success-text-color, #fff);
             --dbp-warning-bg-color: var(--dbp-override-warning-bg-color, #ffc107);
             --dbp-warning-text-color: var(--dbp-override-warning-text-color, #343a40);
+            --dbp-warning-color: var(--dbp-override-warning-color, #D57A1C);
             --dbp-danger-bg-color: var(--dbp-override-danger-bg-color, #dc3545);
             --dbp-danger-text-color: var(--dbp-override-danger-text-color, #fff);
             --dbp-light: var(--dbp-override-light, #f8f9fa);
