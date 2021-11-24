@@ -1,4 +1,4 @@
-import {html, css} from 'lit-element';
+import {html, css} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
 

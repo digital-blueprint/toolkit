@@ -1,4 +1,4 @@
-import {css, CSSResult, unsafeCSS} from 'lit-element';
+import {css, CSSResult, unsafeCSS} from 'lit';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import highlightCSSPath from 'highlight.js/styles/github.css';
 

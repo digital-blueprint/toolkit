@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
-import {html, css} from 'lit-element';
-import {unsafeHTML} from 'lit-html/directives/unsafe-html.js';
+import {html, css} from 'lit';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {LoginStatus} from './util.js';

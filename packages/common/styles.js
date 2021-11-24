@@ -1,4 +1,4 @@
-import {css, unsafeCSS, CSSResult} from 'lit-element';
+import {css, unsafeCSS, CSSResult} from 'lit';
 import {getIconSVGURL} from './src/icon.js';
 
 /**

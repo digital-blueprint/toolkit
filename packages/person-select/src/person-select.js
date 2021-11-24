@@ -4,7 +4,7 @@ import select2 from 'select2';
 import select2LangDe from './i18n/de/select2';
 import select2LangEn from './i18n/en/select2';
 import JSONLD from '@dbp-toolkit/common/jsonld';
-import {css, html} from 'lit-element';
+import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {createInstance} from './i18n.js';
 import {Icon} from '@dbp-toolkit/common';

@@ -1,5 +1,5 @@
 import {createInstance} from './i18n';
-import {css, html} from 'lit-element';
+import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {KnowledgeBaseWebPageElementView} from './knowledge-base-web-page-element-view.js';

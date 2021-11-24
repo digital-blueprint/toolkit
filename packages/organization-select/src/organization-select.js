@@ -2,7 +2,7 @@ import $ from 'jquery';
 import select2 from 'select2';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 import {createInstance} from './i18n.js';
-import {css, html} from 'lit-element';
+import {css, html} from 'lit';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2LangDe from "@dbp-toolkit/organization-select/src/i18n/de/select2";

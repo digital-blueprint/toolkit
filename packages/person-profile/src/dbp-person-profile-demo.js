@@ -1,6 +1,6 @@
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {createInstance} from './i18n.js';
-import {css, html} from 'lit-element';
+import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {PersonProfile} from './index.js';

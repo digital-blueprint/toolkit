@@ -1,4 +1,4 @@
-import {LitElement} from "lit-element";
+import {LitElement} from "lit";
 import {Logger} from "./logger";
 
 export class AdapterLitElement extends LitElement {
