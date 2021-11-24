@@ -4,6 +4,7 @@ export default class DBPLitElement extends AdapterLitElement {
     constructor() {
         super();
         this.htmlOverrides = '';
+        this._rootContainer = null;
     }
 
     /**
@@ -24,6 +25,14 @@ export default class DBPLitElement extends AdapterLitElement {
         });
 
         super.connectedCallback();
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+
+        if (this._rootContainer !== null) {
+            this._rootContainer.remove();
+        }
     }
 
     _(selector) {
@@ -86,6 +95,13 @@ export default class DBPLitElement extends AdapterLitElement {
                     // if there is an override we again need to clone that template so we can access the content
                     const templateOverrideElemClone = templateOverrideElem.content.cloneNode(true);
 
+                    // Create a dummy node and add it to the the same shadow root the templates are from
+                    // By adding it into the template we have the nice side effect that it is not visible
+                    let container = document.createElement("div");
+                    globalOverrideTemplateElem.append(container);
+                    container.appendChild(templateOverrideElemClone);
+                    this._rootContainer = container;
+
                     // now we need to look for slots in the override
                     slots.forEach((slot) => {
                         const slotName = slot.name;
@@ -101,8 +117,11 @@ export default class DBPLitElement extends AdapterLitElement {
                         }
                     });
 
-                    // append the cloned template to the light DOM
-                    this.appendChild(templateOverrideElemClone);
+                    // Now move the slots into the light dom of the target.
+                    // The parent node in the other shadow root has to stay around for this to work
+                    while (container.childNodes.length) {
+                        this.appendChild(container.removeChild(container.childNodes[0]));
+                    }
                 }
             }
         }
