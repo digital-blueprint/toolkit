@@ -79,7 +79,13 @@
     "favorites-link-text": "My Favorites",
     "remember-me": "Stay connected with {{name}}",
     "log-out": "Disconnect",
-    "open-submenu": "Open submenu"
+    "open-submenu": "Open submenu",
+    "show-only-my-files": "Show only my files",
+    "favorites-title": "Favorites",
+    "recent-files-title": "Recent Files",
+    "my-recent-files-title": "My Recent Files",
+    "my-recent-files-link-text": "My Recent Files",
+    "all-recent-files-link-text": "All Recent Files"
   },
   "clipboard": {
     "add-files": "Add files to clipboard",

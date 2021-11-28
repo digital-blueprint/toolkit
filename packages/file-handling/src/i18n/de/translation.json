@@ -45,8 +45,8 @@
     "connect-nextcloud": "{{name}} verbinden",
     "no-data": "In diesem Ordner befinden sich keine Dateien.",
     "no-data-type": "In diesem Ordner befinden sich keine Daten vom benötigten Typ.",
-    "no-favorites": "Es wurden keine Favoriten gefunden.",
-    "no-recent-files": "Es wurden keine Dateien innerhalb der letzten 3 Monate gefunden.",
+    "no-favorites": "Es wurden keine Favoriten des entsprechenden Typs gefunden.\nDefinieren Sie in Ihrer {{name}} Dateien und Ordner als Favoriten, um diese hier anzuzeigen.",
+    "no-recent-files": "Es wurden keine Dateien entsprechenden Dateien und Ordner innerhalb der letzten 3 Monate gefunden.",
     "webdav-error": "Etwas ist schief gelaufen: {{error}}",
     "add-folder-error": "Die Ressource \"{{folder}}\", ist bereits vorhanden.",
     "add-folder-success": "Der Ordner \"{{folder}}\" wurde erfolgreich erstellt.",
@@ -78,7 +78,13 @@
     "favorites-link-text": "Meine Favoriten",
     "remember-me": "Mit {{name}} verbunden bleiben",
     "log-out": "Verbindung trennen",
-    "open-submenu": "Untermenü öffnen"
+    "open-submenu": "Untermenü öffnen",
+    "show-only-my-files": "Nur eigene Dateien zeigen",
+    "favorites-title": "Favoriten",
+    "recent-files-title": "Neueste Dateien",
+    "my-recent-files-title": "Meine neuesten Dateien",
+    "my-recent-files-link-text": "Meine neuesten Dateien",
+    "all-recent-files-link-text": "Alle neuesten Dateien"
   },
   "clipboard": {
     "add-files": "Dateien der Zwischenablage hinzufügen",
