@@ -16,4 +16,5 @@ export {Spinner};
 export {InlineNotification};
 export {Translated};
 export * from './src/logger.js';
+export * from './src/utils.js';
 export {AdapterLitElement};

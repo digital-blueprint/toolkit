@@ -1,6 +1,7 @@
 import {expect, assert} from '@esm-bundle/chai';
 import * as utils from '../utils';
 import * as styles from '../styles';
+import {combineURLs} from '../';
 import '../jsonld.js';
 
 suite('utils', () => {
@@ -43,5 +44,19 @@ suite('utils', () => {
 
     test('getThemeCSS', () => {
         styles.getThemeCSS();
+    });
+
+    test('combineURLs', () => {
+        assert.equal(combineURLs('http://example.org/foo', 'bar'), "http://example.org/foo/bar");
+        assert.equal(combineURLs('http://example.org/foo', '/bar'), "http://example.org/foo/bar");
+        assert.equal(combineURLs('http://example.org/foo/', '/bar/'), "http://example.org/foo/bar/");
+        assert.equal(combineURLs('http://example.org', '/bar'), "http://example.org/bar");
+        assert.equal(combineURLs('http://example.org', 'bar/'), "http://example.org/bar/");
+        assert.equal(combineURLs('http://example.org', ''), "http://example.org/");
+        assert.equal(combineURLs('http://example.org/bla', ''), "http://example.org/bla/");
+        assert.equal(combineURLs('http://example.org/bla/', ''), "http://example.org/bla/");
+        assert.equal(combineURLs('http://example.org', 'http://other.com'), "http://other.com/");
+        assert.equal(combineURLs('http://example.org', 'http://other.com/test'), "http://other.com/test");
+        assert.equal(combineURLs('http://example.org', 'http://other.com/test/'), "http://other.com/test/");
     });
 });
