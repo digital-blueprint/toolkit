@@ -4,12 +4,12 @@ export default class DBPLitElement extends AdapterLitElement {
     constructor() {
         super();
         this.htmlOverrides = '';
-        this._rootContainer = null;
+        this._localTemplateSlotsImported = false;
+        this._globalSlotsContainer = null;
+        this._globalTemplateSlotsImported = false;
+        this._renderDone = false;
     }
 
-    /**
-     * See: https://lit-element.polymer-project.org/guide/properties#initialize
-     */
     static get properties() {
         return {
             ...super.properties,
@@ -18,20 +18,11 @@ export default class DBPLitElement extends AdapterLitElement {
 
     }
 
-    connectedCallback() {
-        this.updateComplete.then(() => {
-            // transform all global override templates or named template slots in the light DOM to named div slots
-            this.transformSlots();
-        });
-
-        super.connectedCallback();
-    }
-
     disconnectedCallback() {
         super.disconnectedCallback();
 
-        if (this._rootContainer !== null) {
-            this._rootContainer.remove();
+        if (this._globalSlotsContainer !== null) {
+            this._globalSlotsContainer.remove();
         }
     }
 
@@ -39,91 +30,106 @@ export default class DBPLitElement extends AdapterLitElement {
         return this.shadowRoot === null ? this.querySelector(selector) : this.shadowRoot.querySelector(selector);
     }
 
-    getTagName() {
-        const tagName = this.dataset ? (this.dataset.tagName || '') : '';
+    firstUpdated() {
+        super.firstUpdated();
+        this._renderDone = true;
+        this._importTemplateSlots();
+    }
 
-        return tagName !== '' ? tagName : this.tagName.toLowerCase();
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case "html-overrides":
+                    this._importTemplateSlots();
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
     }
 
     /**
      * Transforms all global override templates or named template slots in the light DOM to named div slots
+     * on the first render.
+     * 
+     * Global overrides will replace all existing slotted elements with the same slot name.
      */
-    transformSlots() {
-        // query all named slots of the component
-        const slots = this.shadowRoot.querySelectorAll("slot[name]");
+     _importTemplateSlots() {
+        if (!this._renderDone) {
+            return;
+        }
+        this._importLocalTemplateSlots();
+        this._importGlobalTemplateSlots();
+    }
 
-        // if there are no slots we can exit
-        if (slots.length === 0) {
+    _importLocalTemplateSlots() {
+        if(this._localTemplateSlotsImported ) {
             return;
         }
 
-        slots.forEach((slot) => {
-            const slotName = slot.name;
-
-            // search if there is a template with the name of the slot in the light DOM of the component
-            const templateElem = this.querySelector("template[slot=" + slotName + "]");
-
-            if (!templateElem) {
-                return;
-            }
-
+        // Now extract slots from templates contained in the light dom
+        let lightTemplateSlots = this.querySelectorAll(':scope > template[slot]:not([slot=""]');
+        for(let templateElem of lightTemplateSlots) {
             // create a slot div container to put in the cloned template content
             const divElem = document.createElement('div');
-            divElem.slot = slotName;
+            divElem.slot = templateElem.getAttribute('slot');
             divElem.appendChild(templateElem.content.cloneNode(true));
-
             // remove the old template
             templateElem.remove();
-
             // put the slot div container with the cloned template in the light DOM
             this.appendChild(divElem);
-        });
+        }
 
-        // check if we have an "html-override" attribute set so we need to check for the global override template
-        if (this.htmlOverrides !== '') {
-            const globalOverrideTemplateElem = document.querySelector('template#' + this.htmlOverrides);
+        this._localTemplateSlotsImported = true;
+    }
 
-            if (globalOverrideTemplateElem) {
-                // we need to clone the element so we can access the content
-                const overrideTemplateElemClone = globalOverrideTemplateElem.content.cloneNode(true);
-                const tagName = this.getTagName();
+    _importGlobalTemplateSlots() {
+        if(this.htmlOverrides === '' || this._globalTemplateSlotsImported) {
+            return;
+        }
 
-                // then we will look if there is an override for the current tag
-                const templateOverrideElem = overrideTemplateElemClone.querySelector('template#' + tagName);
+        // First add global override templates as light dom slots
+        let globalOverrideTemplateElem = document.querySelector('template#' + this.htmlOverrides);
+        if (globalOverrideTemplateElem !== null) {
+            // we need to clone the element so we can access the content
+            const overrideTemplateElemClone = globalOverrideTemplateElem.content.cloneNode(true);
+            const templateOverrideElem = overrideTemplateElemClone.querySelector('template#' + this.tagName.toLowerCase());
+            if (templateOverrideElem !== null) {
+                const templateOverrideElemClone = templateOverrideElem.content.cloneNode(true);
 
-                if (templateOverrideElem) {
-                    // if there is an override we again need to clone that template so we can access the content
-                    const templateOverrideElemClone = templateOverrideElem.content.cloneNode(true);
-
-                    // Create a dummy node and add it to the the same shadow root the templates are from
-                    // By adding it into the template we have the nice side effect that it is not visible
-                    let container = document.createElement("div");
-                    globalOverrideTemplateElem.append(container);
-                    container.appendChild(templateOverrideElemClone);
-                    this._rootContainer = container;
-
-                    // now we need to look for slots in the override
-                    slots.forEach((slot) => {
-                        const slotName = slot.name;
-
-                        // if a slot is found we need to remove the current slot in the light DOM
-                        // so we are not showing the old and new content at the same time
-                        if (templateOverrideElemClone.querySelector('[slot="' + slotName + '"]')) {
-                            const currentSlotElement = this.querySelector('[slot="' + slotName + '"]');
-
-                            if (currentSlotElement) {
-                                currentSlotElement.remove();
-                            }
-                        }
-                    });
-
-                    // Now move the slots into the light dom of the target.
-                    // The parent node in the other shadow root has to stay around for this to work
-                    while (container.childNodes.length) {
-                        this.appendChild(container.removeChild(container.childNodes[0]));
+                // Find all slots which are direct children (somehow :scope doesn't work here so check parentNode)
+                let globalTemplateSlots = [];
+                for(let e of templateOverrideElemClone.querySelectorAll('[slot]:not([slot=""]')) {
+                    if (e.parentNode === templateOverrideElemClone) {
+                        globalTemplateSlots.push(e);
                     }
+                }
+
+                // Global overrides will replace local ones.
+                // Either normal slotted elements or the ones we create from templates.
+                for(let slotElem of globalTemplateSlots) {
+                    for (let elm of this.querySelectorAll('[slot="' + slotElem.slot + '"]')) {
+                        elm.remove();
+                    }
+                }
+
+                // Create a dummy node and add it to the the same shadow root the templates are from
+                // By adding it into the template we have the nice side effect that it is not visible
+                let container = document.createElement("div");
+                globalOverrideTemplateElem.append(container);
+                this._globalSlotsContainer = container;
+                for(let slotElem of globalTemplateSlots) {
+                    container.appendChild(slotElem);
+                }
+
+                // Now move the slots into the light dom of the target.
+                // The parent node in the other shadow root has to stay around for this to work
+                while (container.childNodes.length) {
+                    this.appendChild(container.removeChild(container.childNodes[0]));
                 }
             }
         }
+
+        this._globalTemplateSlotsImported = true;
     }
 }
