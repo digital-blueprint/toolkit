@@ -61,11 +61,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.storeSession = false;
         this.boundCloseAdditionalMenuHandler = this.hideAdditionalMenu.bind(this);
         this.initateOpenAdditionalMenu = false;
-        this.showAdditionalMenu = false;
         this.isInFavorites = false;
         this.isInFilteredRecent = false;
         this.isInRecent = false;
         this.userName = '';
+
+        this.boundCloseBreadcrumbMenuHandler = this.hideBreadcrumbMenu.bind(this);
+        this.initateOpenBreadcrumbMenu = false;
 
         this.disableRowClick = false;
     }
@@ -105,7 +107,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             activeDirectoryACL: {type: String, attribute: false},
             abortUploadButton: {type: Boolean, attribute: false},
             selectBtnDisabled: {type: Boolean, attribute: true},
-            storeSession: {type: Boolean, attribute: 'store-nextcloud-session'},
             showSubmenu: {type: Boolean, attribute: false},
             showAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
             userName: { type: Boolean, attribute: false },
@@ -750,142 +751,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.isInFavorites = false;
         });
     }
-
-    // /**
-    //  * Loads recent files and folders from WebDAV
-    //  *
-    //  */
-    // loadRecent() {
-    //     this.hideAdditionalMenu();
-    //     const i18n = this._i18n;
-
-    //     if (typeof this.directoryPath === 'undefined' || this.directoryPath === undefined) {
-    //         this.directoryPath = '';
-    //     }
-
-    //     console.log("load recent files");
-    //     this.selectAllButton = true;
-    //     this.loading = true;
-    //     this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {name: this.nextcloudName});
-    //     this.lastDirectoryPath = this.directoryPath;
-    //     this.directoryPath = '';
-    //     this.isInFavorites = false;
-    //     this.isInFilteredRecent = false;
-    //     this.isInRecent = true;
-
-    //     let date = new Date();
-    //     date.setMonth(date.getMonth() - 3);
-    //     let searchDate = date.toISOString().split('.')[0] + 'Z';
-
-    //     if (this.webDavClient === null || this.userName === null) {
-    //         // client is broken reload try to reset & reconnect
-    //         this.tabulatorTable.clearData();
-    //         this.webDavClient = null;
-    //         let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
-    //                         title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-    //                         @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
-    //         this.loading = false;
-    //         this.statusText = reloadButton;
-    //     }
-
-    //     //see https://github.com/perry-mitchell/webdav-client#customRequest
-    //     this.webDavClient
-    //         .customRequest('../..', { method: 'SEARCH', responseType: "text/xml", headers: { 'Content-Type': "text/xml" }, details: true, data: "<?xml version=\"1.0\" encoding='UTF-8'?>" +
-    //             "   <d:searchrequest xmlns:d=\"DAV:\" xmlns:oc=\"http://owncloud.org/ns\" xmlns:nc=\"http://nextcloud.org/ns\">" +
-    //             "       <d:basicsearch>" +
-    //             "           <d:select>" +
-    //             "               <d:prop>" +
-    //             "                   <d:getlastmodified />" +
-    //             "                   <d:resourcetype />" +
-    //             "                   <d:getcontenttype />" +
-    //             "                   <d:getcontentlength />" +
-    //             "                   <d:getetag />" +
-    //             "                   <oc:permissions />" +
-    //             "                   <oc:size/>"+
-    //             "                   <oc:owner-id/>" +
-    //             "                   <oc:owner-display-name/>" +
-    //             "               </d:prop>" +
-    //             "           </d:select>" +
-    //             "           <d:from>" +
-    //             "               <d:scope>" +
-    //             "                   <d:href>/files/" + this.userName + "/</d:href>" +
-    //             "                   <d:depth>infinity</d:depth>" +
-    //             "               </d:scope>" + 
-    //             "           </d:from>" +
-    //             "           <d:where> " +
-    //             "               <d:gte>" +
-    //             "                   <d:prop>" +
-    //             "                      <d:getlastmodified/>" +
-    //             "                   </d:prop>" +
-    //             "                   <d:literal>" + searchDate + "</d:literal>" +
-    //             "               </d:gte>" +
-    //             "           </d:where>" +
-    //             "           <d:orderby>" +
-    //             "               <d:order>" +
-    //             "                   <d:prop>" +
-    //             "                       <d:getlastmodified/>" +
-    //             "                   </d:prop>" +
-    //             "                   <d:descending/>" +
-    //             "               </d:order>" +
-    //             "           </d:orderby>" +
-    //             "           <d:limit>"+
-    //             "               <d:nresults>15</d:nresults>" +
-    //             "           </d:limit>"+
-    //             "       </d:basicsearch>" +
-    //             "   </d:searchrequest>"
-    //         })
-    //         .then(contents => {
-    //             parseXML(contents.data).then(davResp => {
-    //                 console.log('davResp', davResp);
-
-    //                 let dataObject = this.mapResponseToObject(davResp.multistatus.response);
-    //                 console.log("-contents.data-----", dataObject);
-
-    //                 if (this._("#user_files_only") && this._("#user_files_only").checked) {
-    //                     dataObject = this.filterUserFilesOnly(dataObject);
-    //                     // console.log('show only my files');
-    //                 }
-
-    //                 this.loading = false;
-    //                 this.statusText = "";
-    //                 this.tabulatorTable.setData(dataObject);
-    //                 this.tabulatorTable.setSort([
-    //                     {column: "lastmod", dir: "desc"}
-    //                 ]);
-
-    //                 if (this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span")) {
-    //                     this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-placeholder > span").innerText = i18n.t('nextcloud-file-picker.no-recent-files');
-    //                 }
-
-    //                 this.isPickerActive = true;
-    //                 this._(".nextcloud-content").scrollTop = 0;
-    //                 this._("#download-button").setAttribute("disabled", "true");
-    //             });
-    //         }).catch(error => {
-    //             console.error(error.message);
-
-    //             // on Error: try to reload with home directory
-    //             if (this.webDavClient !== null && error.message.search("401") === -1) {
-    //                 console.log("error in load directory");
-    //                 this.directoryPath = "";
-    //                 this.loadDirectory("");
-    //             }
-    //             else {
-    //                 this.loading = false;
-    //                 this.statusText = html`<span class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;
-    //                 this.isPickerActive = false;
-    //                 this.tabulatorTable.clearData();
-    //                 this.webDavClient = null;
-    //                 let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')} <button class="button"
-    //                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-    //                             @click="${async () => { this.openFilePicker(); } }"><dbp-icon name="reload"></button>`;
-    //                 this.loading = false;
-    //                 this.statusText = reloadButton;
-    //             }
-
-    //             this.isInRecent = false;
-    //     });
-    // }
 
      /**
      * Loads recent files and folders from WebDAV
@@ -2019,9 +1884,93 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.loadDirectory(path);
                 }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
             }
+            
+            let length = htmlpath.length;
+            if (length > 3) { //TODO && only if mobile
+
+                let path_temp = [];
+
+                // for (let i = 2; i < htmlpath.length - 1; i++) {
+                //     path_temp[i] = html`<li class="breadcrumb-${i}" id="breadcrumb-${i}">${htmlpath[i]}</li>`;
+                // }
+
+                for (let i = 2; i < directories.length - 1; i++) {
+                    let path = "";
+                    for (let j = 1; j <= i; j++) {
+                        path += "/";
+                        path += directories[j];
+                    }
+    
+                    path_temp[i] = html`<li class="breadcrumb-${i}" id="breadcrumb-${i}"><a @click="${() => {
+                        this.loadDirectory(path);
+                    }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></li>`;
+                }
+
+                let shortcrumb = [];
+
+                shortcrumb[0] = htmlpath[0];
+                shortcrumb[1] = html`<span> › </span>
+                    <span class="breadcrumb">
+                        <a class="extended-breadcrumb-link" @click="${() => { this.toggleBreadcrumbMenu(); }}" title="TODO"><dbp-icon name="more-filled" class="more-filled"></dbp-icon></a>
+                        <div class="breadcrumb-menu"><ul class='extended-breadcrumb-menu hidden'>${path_temp}</ul></div>
+                    </span>`;
+                    
+                shortcrumb[2] = htmlpath[length - 1];
+                
+                return shortcrumb;
+            }
         }
 
         return htmlpath;
+    }
+
+    toggleBreadcrumbMenu() {
+        const menu = this.shadowRoot.querySelector("ul.extended-breadcrumb-menu");
+        const menuStart = this.shadowRoot.querySelector("a.extended-breadcrumb-link");
+
+        if (menu === null || menuStart === null) {
+            return;
+        }
+
+        menu.classList.toggle('hidden'); //sets hidden or removes it
+
+        // computations for overflow - begin
+        if (this.menuHeight === -1) {
+            this.menuHeight = menu.clientHeight;
+        }
+
+        let topValue = menuStart.getBoundingClientRect().bottom;
+        let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
+        
+        if (isMenuOverflow && !menu.classList.contains('hidden')) {
+            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
+            menu.scrollTop = 0;
+            document.body.setAttribute('style', 'overflow:hidden;');
+        } else if (isMenuOverflow && menu.classList.contains('hidden')) {
+            document.body.removeAttribute('style', 'overflow:hidden;');
+            menu.removeAttribute('style');
+        }
+        // computations for overflow - end
+
+        if (!menu.classList.contains('hidden')) { // add event listener for clicking outside of menu
+            document.addEventListener('click', this.boundCloseBreadcrumbMenuHandler);
+            console.log('add event listener');
+            this.initateOpenBreadcrumbMenu = true;
+        }
+        else {
+            document.removeEventListener('click', this.boundCloseBreadcrumbMenuHandler);
+            console.log('delete event listener');
+        }
+    }
+
+    hideBreadcrumbMenu() {
+        if (this.initateOpenBreadcrumbMenu) {
+            this.initateOpenBreadcrumbMenu = false;
+            return;
+        }
+        const menu = this.shadowRoot.querySelector("ul.extended-breadcrumb-menu");
+        if (menu && !menu.classList.contains('hidden'))
+            this.toggleBreadcrumbMenu();
     }
 
     /**
@@ -2091,6 +2040,50 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
+
+            
+            .breadcrumb.extended-breadcrumb-link a {
+                display: contents;
+            }
+
+            .breadcrumb-menu {
+                display: inline;
+            }
+
+            .extended-breadcrumb-menu li {
+                padding: 7px;
+                padding-right: 46px;
+            }
+
+            .extended-breadcrumb-menu li.active {
+                background-color: var(--dbp-dark);
+                color: var(--dbp-light);
+            }
+            .extended-breadcrumb-menu li.active a:hover {
+                color: var(--dbp-light);
+            }
+
+            .extended-breadcrumb-menu a.inactive {
+                color: var(--dbp-muted-text);
+                pointer-events: none;
+                cursor: default;
+            }
+
+            .extended-breadcrumb-menu a {
+                padding: 8px;
+            }
+
+            .extended-breadcrumb-menu {
+                list-style: none;
+                border: black 1px solid;
+                position: absolute;
+                background-color: white;
+                z-index: 1000;
+            }
+
+            .extended-breadcrumb-menu a:hover {
+                color: #E4154B;
+            }
 
             .button-container.filter-user {
                 line-height: 28px;
@@ -2262,7 +2255,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .select-button {
-                justify-self: end;
                 justify-self: end;
             }
 
@@ -2750,7 +2742,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     <div class="nextcloud-nav">
                         <p>${this.getBreadcrumb()}</p>
 
-                        <div class="additional-menu ${classMap({hidden: !this.showAdditionalMenu})}">
+                        <div class="additional-menu ${classMap({hidden: !this.storeSession})}">
 
                             <a class="extended-menu-link" @click="${() => { this.toggleMoreMenu(); }}" title="${i18n.t('nextcloud-file-picker.more-menu')}">
                                 <dbp-icon name="menu-dots" class="more-menu"></dbp-icon>
@@ -2761,11 +2753,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                         ${i18n.t('nextcloud-file-picker.favorites-link-text')}
                                     </a>
                                 </li>
-                                <!-- <li class="${classMap({active: this.isInRecent})}" id="recent-item">
-                                    <a class="" @click="${this.loadRecent}">
-                                        ${i18n.t('nextcloud-file-picker.recent-files-link-text')}
-                                    </a>
-                                </li> -->
                                 <li class="${classMap({active: this.isInFilteredRecent})}" id="my-recent-item">
                                     <a class="" @click="${this.loadMyRecentFiles}">
                                         ${i18n.t('nextcloud-file-picker.my-recent-files-link-text')}
@@ -2781,23 +2768,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                         ${i18n.t('nextcloud-file-picker.add-folder')}
                                     </a>
                                 </li>
-                            
-                                <!-- <div class="inline-block">
-                                    <div id="new-folder-wrapper" class="hidden">
-                                        <input type="text"
-                                            placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
-                                            name="new-folder" class="input" id="new-folder"/>
-                                        <button class="button add-folder-button"
-                                                title="${i18n.t('nextcloud-file-picker.add-folder')}"
-                                                @click="${() => {
-                                                    this.addFolder();
-                                                }}">
-                                            <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
-                                        </button>
-                                    </div>
-                                </div> -->
 
-                            <button class="button ${classMap({hidden: this.showAdditionalMenu})}"
+                            <button class="button ${classMap({hidden: this.storeSession})}"
                                     title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
                                     @click="${() => {
                                         this.openAddFolderDialogue();
@@ -2834,14 +2806,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                         </div>
                     </div> 
-                <!--TODO find filter-user-files-only checkbox place DELETED in JF 23.11.2021 -->
-                    <!-- <div class="filter-options-wrapper ${classMap({hidden: !this.isInRecent})}">
-                        <label id="user-files-only-wrapper" class="button-container filter-user">
-                        ${i18n.t('nextcloud-file-picker.show-only-my-files')}
-                            <input type="checkbox" id="user_files_only" name="user_files_only" value="user_files_only" checked @click="${() => { this.loadRecent(); }}">
-                            <span class="checkmark" id="user_files_only_checkmark"></span>
-                        </label>
-                    </div> -->
                     <div class="table-wrapper">
                         <table id="directory-content-table" class="force-no-select"></table>
                     </div>
