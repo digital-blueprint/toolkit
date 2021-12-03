@@ -58,7 +58,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.nextcloudAuthInfo = '';
         this.maxFileSize = '';
         this.multipleFiles = Number.MAX_VALUE;
-        this.showNextcloudAdditionalMenu = false;
 
         this.initialFileHandlingState = {target: '', path: ''};
     }
@@ -94,7 +93,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             isDialogOpen: { type: Boolean, attribute: 'dialog-open' },
             maxFileSize: { type: Number, attribute: 'max-file-size'},
             multipleFiles: { type: Number, attribute: 'number-of-files'},
-            showNextcloudAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
         };
@@ -526,7 +524,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                    auth-info="${this.nextcloudAuthInfo}"
                    allowed-mime-types="${this.allowedMimeTypes}"
                    max-selected-items="${this.multipleFiles}"
-                   ?show-nextcloud-additional-menu="${this.showNextcloudAdditionalMenu}"
                    @dbp-nextcloud-file-picker-file-downloaded="${(event) => {
                     this.sendFileEvent(event.detail.file, event.detail.maxUpload);}}">
                 </dbp-nextcloud-file-picker>`;

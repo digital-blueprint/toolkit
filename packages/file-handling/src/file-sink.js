@@ -37,7 +37,6 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.firstOpen = true;
         this.fullsizeModal = false;
         this.nextcloudAuthInfo = '';
-        this.showNextcloudAdditionalMenu = false;
 
         this.initialFileHandlingState = {target: '', path: ''};
     }
@@ -73,7 +72,6 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             firstOpen: {type: Boolean, attribute: false},
             nextcloudPath: {type: String, attribute: false},
             fullsizeModal: { type: Boolean, attribute: 'fullsize-modal' },
-            showNextcloudAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
         };
     }
@@ -303,7 +301,6 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                    auth-info="${this.nextcloudAuthInfo}"
                    directory-path="${this.nextcloudPath}"
                    nextcloud-file-url="${this.nextcloudFileURL}"
-                   ?show-nextcloud-additional-menu="${this.showNextcloudAdditionalMenu}"
                    store-nextcloud-session="true"
                    @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
                        this.uploadToNextcloud(event.detail);
