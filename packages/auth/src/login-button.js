@@ -133,12 +133,12 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .login-box:hover svg path {
-                fill: var(--dbp-light);
+                fill: var(--dbp-base-light);
             }
 
             .login-box:hover {
-                background-color: var(--dbp-dark);
-                color: var(--dbp-light);
+                background-color: var(--dbp-hover-base);
+                color: var(--dbp-hover-text);
                 cursor: pointer;
                 transition: none;
             }

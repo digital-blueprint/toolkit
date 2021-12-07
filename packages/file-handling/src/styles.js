@@ -18,8 +18,8 @@ export function getFileHandlingCss() {
         .modal-nav {
             cursor: pointer;
             overflow: hidden;
-            background-color: white;
-            border-right: 1px solid black;
+            background-color: var(--dbp-base-light);
+            border-right: var(--dbp-border-dark);
             grid-area: sidebar;
         }
 
@@ -34,8 +34,8 @@ export function getFileHandlingCss() {
         }
 
         .modal-nav .active{
-            background-color: var(--dbp-dark);
-            color: var(--dbp-light);
+            background-color: var(--dbp-secondary-dark);
+            color: var(--dbp-text-light);
         }
 
         .modal-content {
@@ -140,17 +140,17 @@ export function getFileHandlingCss() {
         }
 
         .tabulator-row, .tabulator-row.tabulator-row-even{
-            background-color: white;
+            background-color: var(--dbp-base-light);
         }
 
         .tabulator-row.tabulator-selectable.tabulator-selectable:hover{
-            background-color: white;
-            color: var(--dbp-dark);
+            background-color: var(--dbp-base-light);
+            color: var(--dbp-text-dark);
         }
 
         .tabulator-row.tabulator-selectable.tabulator-selected:hover, .tabulator-row.tabulator-selected{
-            background-color: var(--dbp-dark);
-            color: var(--dbp-light);
+            background-color: var(--dbp-hover-base);
+            color: var(--dbp-hover-text);
         }
 
         .tabulator .tabulator-header .tabulator-col .tabulator-col-content{
@@ -276,7 +276,7 @@ export function getFileHandlingCss() {
         
         .tabulator-selected .tabulator-responsive-collapse-toggle-open, 
         .tabulator-selected .tabulator-responsive-collapse-toggle-close{
-            color: white;
+            color: var(--dbp-text-light);
         }
         
         .tabulator .tabulator-header .tabulator-col{
@@ -314,8 +314,8 @@ export function getFileHandlingCss() {
                 /*justify-content: space-around;*/
                 grid-area: nav;
                 border: none;
-                border-bottom: 1px solid black;
-                border-top: 1px solid black;
+                border-bottom: var(--dbp-border-dark);
+                border-top: var(--dbp-border-dark);
                 white-space: nowrap;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;

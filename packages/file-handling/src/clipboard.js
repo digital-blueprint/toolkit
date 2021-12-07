@@ -728,13 +728,13 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             ${fileHandlingStyles.getFileHandlingCss()}
 
             a {
-                border-bottom: 1px solid rgba(0,0,0,0.3);
+                border-bottom: var(--dbp-border-dark);
                 padding: 0;
             }
 
             a:hover {
-                color: #fff;
-                background-color: #000;
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
             }
 
             h2:first-child {
@@ -809,7 +809,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .clipboard-footer {
-                background-color: white;
+                background-color: var(--dbp-base-light);
                 width: 100%;
                 padding-top: 10px;
                 display: flex;

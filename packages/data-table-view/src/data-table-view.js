@@ -256,8 +256,8 @@ export class DataTableView extends AdapterLitElement {
                 text-align: center;
                 text-indent: 0 !important;
                 line-height: 0.9em;
-                color: var(--dbp-primary-text-color);
-                background-color: var(--dbp-primary-bg-color);
+                color: var(--dbp-text-light);
+                background-color: var(--dbp-primary-dark);
                 content: '+';
             }
 
@@ -292,7 +292,7 @@ export class DataTableView extends AdapterLitElement {
             ${orderExpandIconOverrides}
 
             .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-                color: var(--dbp-muted-text);
+                color: var(--dbp-muted-text-dark);
                 border-radius: var(--dbp-border-radius);
                 background: transparent;
             }
@@ -314,7 +314,7 @@ export class DataTableView extends AdapterLitElement {
             .dataTables_filter input {
                 border-radius: 0;
                 border-style: solid;
-                border-color: var(--dbp-dark);
+                border-color: var(--dbp-base-dark);
                 border-width: 1px;
                 padding: 0.1em;
             }

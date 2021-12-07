@@ -85,8 +85,8 @@ export class LanguageSelect extends AdapterLitElement {
             }
 
             a:hover {
-                background-color: var(--dbp-dark);
-                color: var(--dbp-light);
+                background-color: var(--dbp-hover-base);
+                color: var(--dbp-hover-text);
                 transition: none;
             }
 
@@ -95,8 +95,7 @@ export class LanguageSelect extends AdapterLitElement {
                 display: inline-block;
                 text-decoration: none;
                 transition: background-color 0.15s, color 0.15s;
-                color: var(--dbp-dark);
-                border-radius: var(--dbp-border-radius);
+                color: var(--dbp-text-dark);
             }
             `
         ];

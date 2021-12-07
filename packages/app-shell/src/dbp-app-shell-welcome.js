@@ -50,7 +50,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
             }
 
             h2 a:hover {
-                color: #E4154B;
+                color: var(--dbp-accent-dark);
             }
             
             h2 a {

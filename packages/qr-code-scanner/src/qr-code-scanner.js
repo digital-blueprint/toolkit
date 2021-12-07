@@ -316,8 +316,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
                 canvas.beginPath();
                 if (lastCode) {
-                    let okColor = getComputedStyle(this).getPropertyValue('--dbp-success-bg-color');
-                    let notOkColor = getComputedStyle(this).getPropertyValue('--dbp-danger-bg-color');
+                    let okColor = getComputedStyle(this).getPropertyValue('--dbp-success-dark');
+                    let notOkColor = getComputedStyle(this).getPropertyValue('--dbp-danger-dark');
                     canvas.fillStyle = matched ? okColor : notOkColor;
                 } else {
                     canvas.fillStyle = 'white';
@@ -457,7 +457,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             
             #videoSource:hover {
                 background: calc(100% - 0.2rem) center no-repeat url("${unsafeCSS(getIconSVGURL('chevron-down'))}");
-                color: black;
+                color: var(--dbp-text-dark);
                 background-position-x: calc(100% - 0.4rem);
                 background-size: auto 45%;
             }
@@ -469,7 +469,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             .border{
                 margin-top: 2rem;
                 padding-top: 2rem;
-                border-top: 1px solid black;
+                border-top: var(--dbp-border-dark);
             }
             
             #video video, #video{

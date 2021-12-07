@@ -348,7 +348,8 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border: 1px solid #aaa;
+                border: var(--dbp-border-dark);
+                border-color: var(--dbp-text-muted-dark);
                 -moz-border-radius-topright: var(--dbp-border-radius);
                 -moz-border-radius-bottomright: var(--dbp-border-radius);
                 line-height: 100%;

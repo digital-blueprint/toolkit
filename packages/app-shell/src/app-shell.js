@@ -537,8 +537,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
             header .hd1-middle {
                 grid-area: hd1-middle;
-                background-color: #000;
-                background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 90%);
+                background-color: var(--dbp-text-dark);
+                background: linear-gradient(180deg, var(--dbp-text-dark) 0%, var(--dbp-text-dark) 85%, rgba(0,0,0,0) 90%);
             }
 
             header .hd1-right {
@@ -602,13 +602,13 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             footer a {
-                border-bottom: 1px solid rgba(0,0,0,0.3);
+                border-bottom: var(--dbp-border-dark);
                 padding: 0;
             }
 
             footer a:hover {
-                color: #fff;
-                background-color: #000;
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
             }
 
             /* We don't allow inline-svg */
@@ -627,17 +627,18 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             .menu a {
                 padding: 0.3em;
                 font-weight: 300;
-                color: #000;
+                color: var(--dbp-text-dark);
                 display: block;
             }
 
             .menu a:hover {
-                color: #E4154B;
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
             }
 
             .menu a.selected {
-                color: var(--dbp-light);
-                background-color: var(--dbp-dark);
+                color: var(--dbp-text-light);
+                background-color: var(--dbp-secondary-dark);
             }
 
             aside .subtitle {
@@ -687,22 +688,22 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     position: sticky;
                     top: 0;
                     width: 100%;
-                    background-color: white;
+                    background-color: var(--dbp-base-light);
                     z-index: 10;
                 }
 
                 aside h2.subtitle {
                     display: block;
-                    border-bottom: 1px solid black;
+                    border-bottom: var(--dbp-border-dark);
                     padding: 0.5em 0.5em;
                 }
 
                 aside .menu {
-                    border-bottom: black 1px solid;
+                    border-bottom: var(--dbp-border-dark);
                     border-top-width: 0;
                     width: 100%;
                     position: absolute;
-                    background-color: white;
+                    background-color: var(--dbp-base-light);
                     z-index: 10;
                 }
 
@@ -917,11 +918,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     <aside>
                         <h2 class="subtitle" @click="${this.toggleMenu}">
                             ${this.subtitle}
-                            <dbp-icon name="chevron-down" style="color: red" id="menu-chevron-icon"></dbp-icon>
+                            <dbp-icon name="chevron-down" style="color: var(--dbp-accent-dark)" id="menu-chevron-icon"></dbp-icon>
                         </h2>
                         <ul class="menu hidden">
                             ${menuTemplates}
-                            <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: red"></dbp-icon></li>
+                            <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: var(--dbp-accent-dark)"></dbp-icon></li>
                         </ul>
                     </aside>
 

@@ -9,30 +9,58 @@ import {getIconSVGURL} from './src/icon.js';
 export function getThemeCSS() {
     // language=css
     return css`
-        :host {
-            --dbp-primary-bg-color: var(--dbp-override-primary-bg-color, #007bff);
-            --dbp-primary-text-color: var(--dbp-override-primary-text-color, #fff);
-            --dbp-primary-button-border: var(--dbp-override-primary-button-border, #007bff);
-            --dbp-secondary-bg-color: var(--dbp-override-secondary-bg-color, #6c757d);
-            --dbp-secondary-text-color: var(--dbp-override-secondary-text-color, #fff);
-            --dbp-info-bg-color: var(--dbp-override-info-bg-color, #17a2b8);
-            --dbp-info-text-color: var(--dbp-override-info-text-color, #fff);
-            --dbp-success-bg-color: var(--dbp-override-success-bg-color, #28a745);
-            --dbp-success-text-color: var(--dbp-override-success-text-color, #fff);
-            --dbp-warning-bg-color: var(--dbp-override-warning-bg-color, #ffc107);
-            --dbp-warning-text-color: var(--dbp-override-warning-text-color, #343a40);
-            --dbp-warning-color: var(--dbp-override-warning-color, #D57A1C);
-            --dbp-danger-bg-color: var(--dbp-override-danger-bg-color, #dc3545);
-            --dbp-danger-text-color: var(--dbp-override-danger-text-color, #fff);
-            --dbp-light: var(--dbp-override-light, #f8f9fa);
-            --dbp-dark: var(--dbp-override-dark, #343a40);
-            --dbp-muted-text: var(--dbp-override-muted-text, #6c757d);
-            --dbp-border-radius: var(--dbp-override-border-radius, 0px);
-            --dbp-border-width: var(--dbp-override-border-width, 1px);
-            --dbp-border-color: var(--dbp-override-border-color, #000);
-            --dbp-placeholder-color: #777;
-            --dbp-downloaded-bg-color: var(--dbp-override-downloaded-bg-color, #c8dcc8);
-        }
+
+    :host {
+        /* old variables */
+        --dbp-primary-bg-color: var(--dbp-override-primary-bg-color, #007bff);
+        --dbp-primary-text-color: var(--dbp-override-primary-text-color, #fff);
+        --dbp-primary-button-border: var(--dbp-override-primary-button-border, #007bff);
+        --dbp-secondary-bg-color: var(--dbp-override-secondary-bg-color, #6c757d);
+        --dbp-secondary-text-color: var(--dbp-override-secondary-text-color, #fff);
+        --dbp-info-bg-color: var(--dbp-override-info-bg-color, #17a2b8);
+        --dbp-info-text-color: var(--dbp-override-info-text-color, #fff);
+        --dbp-success-bg-color: var(--dbp-override-success-bg-color, #28a745);
+        --dbp-success-text-color: var(--dbp-override-success-text-color, #fff);
+        --dbp-warning-bg-color: var(--dbp-override-warning-bg-color, #ffc107);
+        --dbp-warning-text-color: var(--dbp-override-warning-text-color, #343a40);
+        --dbp-warning-color: var(--dbp-override-warning-color, #D57A1C);
+        --dbp-danger-bg-color: var(--dbp-override-danger-bg-color, #dc3545);
+        --dbp-danger-text-color: var(--dbp-override-danger-text-color, #fff);
+        --dbp-light: var(--dbp-override-light, #f8f9fa);
+        --dbp-dark: var(--dbp-override-dark, #343a40);
+        --dbp-muted-text: var(--dbp-override-muted-text, #6c757d);
+        --dbp-border-width: var(--dbp-override-border-width, 1px);
+        --dbp-border-color: var(--dbp-override-border-color, #000);
+        --dbp-placeholder-color: #777;
+        --dbp-downloaded-bg-color: var(--dbp-override-downloaded-bg-color, #c8dcc8);
+        
+        --dbp-base-light: var(--dbp-override-base-light, var(--dbp-override-light, #ffffff));
+        --dbp-base-dark: var(--dbp-override-base-dark, var(--dbp-override-dark, #000000));
+        --dbp-text-light: var(--dbp-override-text-light, var(--dbp-override-light, #ffffff));
+        --dbp-text-dark: var(--dbp-override-text-dark, #000000);
+        --dbp-text-muted-light: var(--dbp-override-text-muted-light, #adadad);
+        --dbp-text-muted-dark: var(--dbp-override-text-muted-dark, #666666);
+        --dbp-accent-light: var(--dbp-override-accent-light, var(--dbp-override-primary-bg-color, #c24f68));
+        --dbp-accent-dark: var(--dbp-override-accent-dark, var(--dbp-override-primary-bg-color, #c24f68));
+        --dbp-primary-light: var(--dbp-override-primary-light, var(--dbp-override-primary-bg-color, #8ca4eb)); /*remove second value if no app needs to be backported */
+        --dbp-primary-dark: var(--dbp-override-primary-dark, var(--dbp-override-primary-bg-color, #2a4491));
+        --dbp-secondary-light: var(--dbp-override-secondary-light, var(--dbp-override-light, #ffffff));
+        --dbp-secondary-dark: var(--dbp-override-secondary-dark, var(--dbp-override-dark, #000000));
+        --dbp-info-light: var(--dbp-override-info-light, var(--dbp-override-primary-bg-color, #8ca4eb));
+        --dbp-info-dark: var(--dbp-override-info-dark, var(--dbp-override-primary-bg-color, #2a4491));
+        --dbp-success-light: var(--dbp-override-success-light, var(--dbp-override-success-bg-color, #7acc79));
+        --dbp-success-dark: var(--dbp-override-success-dark, var(--dbp-override-success-bg-color, #188018));
+        --dbp-warning-light: var(--dbp-override-warning-color, var(--dbp-override-warning-light, #f99a41));
+        --dbp-warning-dark: var(--dbp-override-warning-color, var(--dbp-override-warning-dark, #c15500));
+        --dbp-danger-light: var(--dbp-override-danger-bg-color, var(--dbp-override-danger-light, #ff887a));
+        --dbp-danger-dark: var(--dbp-override-danger-bg-color, var(--dbp-override-danger-dark, #de3535));
+        --dbp-border-light: var(--dbp-override-border-light, 1px solid #ffffff);
+        --dbp-border-dark: var(--dbp-override-border-dark, 1px solid #000000);
+        --dbp-border-radius: var(--dbp-override-border-radius, 0px);
+        --dbp-hover-base: var(--dbp-override-hover-base, var(--dbp-override-dark, #000000));
+        --dbp-hover-text: var(--dbp-override-hover-text, var(--dbp-override-light, #ffffff));
+    }
+    
     `;
 }
 
@@ -76,7 +104,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         .input::placeholder, .textarea::placeholder, .select select::placeholder {
-            color: var(--dbp-placeholder-color);
+            color: var(--dbp-text-muted-dark);
         }
 
         input, ::placeholder, textarea, select, .select select {
@@ -101,7 +129,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         .hidden { display: none; }
 
         a {
-            color: var(--dbp-override-muted-text);
+            color: var(--dbp-text-dark);
             cursor: pointer;
             text-decoration: none;
         }
@@ -112,8 +140,8 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         a.is-download:hover {
-            color: #fff;
-            background-color: #000;
+            color: var(--dbp-hover-text);
+            background-color: var(--dbp-hover-base);
         }
 
         /* Inline SVG don't work in our web-components */
@@ -130,13 +158,13 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         */
 
         .title {
-            color: #363636;
+            color: var(--dbp-text-dark);
             font-size: 2rem;
             font-weight: 600;
             line-height: 1.125;
         }
 
-        ${marginPaddingResetCss}
+        ${marginPaddingResetCss}.int-link-internal
 
         .button[disabled], .file-cta[disabled], .file-name[disabled], .input[disabled], .pagination-ellipsis[disabled],
         .pagination-link[disabled], .pagination-next[disabled], .pagination-previous[disabled], .select fieldset[disabled] select,
@@ -149,9 +177,9 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
 
         .input, .select select, .textarea {
             background-color: #fff;
-            border-color: var(--dbp-muted);
+            border-color: var(--dbp-text-muted-dark);
             border-radius: var(--dbp-border-radius);
-            color: var(--dbp-muted);
+            color: var(--dbp-text-muted-dark);
         }
 
         *, ::after, ::before {
@@ -159,16 +187,14 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         select:not(.select) {
-            -moz-appearance: none;
+            -moz-appearance: none;.dropdown-menu
             -webkit-appearance: none;
             background: calc(100% - 0.2rem) center no-repeat url("${unsafeCSS(getIconSVGURL('chevron-down'))}");
             background-size: 25%;
-            border-color: black;
-            border-width: 1px;
+            border: var(--dbp-border-dark);
             border-radius: var(--dbp-border-radius);
-            color: black;
+            color: var(--dbp-text-dark);
             padding: 0.14rem 1.0rem 0.14rem 0.14rem;
-            border-style: solid;
         }
     `;
 }
@@ -326,7 +352,8 @@ export function getNotificationCSS() {
     // language=css
     return css`
         .notification {
-            background-color: var(--dbp-light);
+            background-color: var(--dbp-base-light);
+            color: var(--dbp-text-dark);
             padding: 1.25rem 2.5rem 1.25rem 1.5rem;
             position: relative;
             border-radius: var(--dbp-border-radius);
@@ -343,8 +370,8 @@ export function getNotificationCSS() {
 
         .notification code,
         .notification pre {
-            color: var(--dbp-light);
-            background: var(--dbp-muted-text);
+            color: var(--dbp-text-light);
+            background: var(--dbp-muted-text-dark);
         }
 
         .notification pre code {
@@ -369,28 +396,28 @@ export function getNotificationCSS() {
         }
 
         .notification.is-primary {
-            background-color: var(--dbp-primary-bg-color);
-            color: var(--dbp-primary-text-color);
+            background-color: var(--dbp-primary-dark);
+            color: var(--dbp-text-light);
         }
 
         .notification.is-info {
-            background-color: var(--dbp-info-bg-color);
-            color: var(--dbp-info-text-color);
+            background-color: var(--dbp-info-dark);
+            color: var(--dbp-text-light);
         }
 
         .notification.is-success {
-            background-color: var(--dbp-success-bg-color);
-            color: var(--dbp-success-text-color);
+            background-color: var(--dbp-success-light);
+            color: var(--dbp-text-dark);
         }
 
         .notification.is-warning {
-            background-color: var(--dbp-warning-bg-color);
-            color: var(--dbp-warning-text-color);
+            background-color: var(--dbp-warning-light);
+            color: var(--dbp-text-dark);
         }
 
         .notification.is-danger {
-            background-color: var(--dbp-danger-bg-color);
-            color: var(--dbp-danger-text-color);
+            background-color: var(--dbp-danger-dark);
+            color: var(--dbp-text-light);
         }
     `;
 }
@@ -402,8 +429,9 @@ export function getButtonCSS() {
             border-style: solid;
             border-color: black;
             border-width: 1px;
+            border: var(--dbp-border-dark);
             border-radius: var(--dbp-border-radius);
-            color: black;
+            color: var(--dbp-text-dark);
             cursor: pointer;
             justify-content: center;
             padding-bottom: calc(0.375em - 1px);
@@ -419,9 +447,10 @@ export function getButtonCSS() {
         }
 
         button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled) {
-            color: white;
+            color: var(--dbp-hover-text);
             background: none;
-            background-color: black;
+            border-color: var(--dbp-hover-base);
+            background-color: var(--dbp-hover-base);
         }
 
         button.button.is-small, .button.is-small {
@@ -430,29 +459,33 @@ export function getButtonCSS() {
         }
 
         button.button.is-primary, .button.is-primary {
-            background-color: var(--dbp-primary-bg-color);
-            border: var(--dbp-primary-button-border);
-            color: var(--dbp-primary-text-color);
+            background-color: var(--dbp-primary-dark);
+            border-color: var(--dbp-primary-dark);
+            color: var(--dbp-text-light);
         }
 
         button.button.is-info, .button.is-info {
-            background-color: var(--dbp-info-bg-color);
-            color: var(--dbp-info-text-color);
+            background-color: var(--dbp-info-dark);
+            border-color: var(--dbp-info-dark);
+            color: var(--dbp-text-light);
         }
 
         button.button.is-success, .button.is-success {
-            background-color: var(--dbp-success-bg-color);
-            color: var(--dbp-success-text-color);
+            background-color: var(--dbp-success-light);
+            border-color: var(--dbp-success-light);
+            color: var(--dbp-text-dark);
         }
 
         button.button.is-warning, .button.is-warning {
-            background-color: var(--dbp-warning-bg-color);
-            color: var(--dbp-warning-text-color);
+            background-color: var(--dbp-warning-light);
+            border-color: var(--dbp-warning-light);
+            color: var(--dbp-text-dark);
         }
 
         .button.button.is-danger, .button.is-danger {
-            background-color: var(--dbp-danger-bg-color);
-            color: var(--dbp-danger-text-color);
+            background-color: var(--dbp-danger-dark);
+            border-color: var(--dbp-danger-dark);
+            color: var(--dbp-text-light);
         }
 
         button.button[disabled], .button[disabled], fieldset[disabled] .button {
@@ -508,11 +541,9 @@ export function getRadioAndCheckboxCss() {
             left: 0;
             height: 21px;
             width: 21px;
-            background-color: white;
-            border: solid;
-            border-radius: var(--dbp-border-radius);
-            border-width: var(--dbp-border-width);
-            border-color: var(--dbp-border-color);
+            background-color: var(--dbp-base-light);
+            border-radius: 0px;
+            border: var(--dbp-border-dark);
         }
         
         .radiobutton {
@@ -521,26 +552,26 @@ export function getRadioAndCheckboxCss() {
             left: 0;
             height: 20px;
             width: 20px;
-            background-color: white;
+            background-color: var(--dbp-base-light);
             border: solid;
             border-radius: 100%;
-            border-width: var(--dbp-border-width);
-            border-color: var(--dbp-border-color);
+            border: var(--dbp-border-dark);
+            
             box-sizing: content-box;
         }
 
         .button-container input[type="radio"]:checked ~ .radiobutton:after {
-            border-color: white;
+            border-color: var(--dbp-base-light);
         }
         
         .button-container input[type="radio"]:disabled ~ .radiobutton {
-            border-color: #aaa;
-            background-color: #eee;
+            border-color: var(--dbp-text-muted-light);
+            background-color: var(--dbp-text-muted-light);
         }
 
         .button-container input[type="radio"]:checked:disabled ~ .radiobutton:after {
-            border-color: #aaa;
-            background-color: #aaa;
+            border-color: var(--dbp-text-muted-light);
+            background-color: var(--dbp-text-muted-light);
         }
         
         .radiobutton:after {
@@ -558,24 +589,26 @@ export function getRadioAndCheckboxCss() {
             top: 0px;
             width: 100%;
             height: 100%;
-            background-color: var(--dbp-border-color);
+            background-color: var(--dbp-base-dark);
             border: none;
             border-radius: 100%;
-            border: 2px solid white;
+            border: 2px solid var(--dbp-base-light);
             box-sizing: border-box;
         }
         
         .button-container input[type="checkbox"]:checked ~ .checkmark:after {
-            border-color: var(--dbp-border-color);
+            border-bottom: var(--dbp-border-dark);
+            border-right: var(--dbp-border-dark);
+            border-width: 0 2px 2px 0;
         }
         
         .button-container input[type="checkbox"]:disabled ~ .checkmark {
-            border-color: #aaa;
-            background-color: #eee;
+            border-color: var(--dbp-text-muted-light);
+            background-color: var(--dbp-text-muted-light);
         }
 
         .button-container input[type="checkbox"]:checked:disabled ~ .checkmark:after {
-            border-color: #aaa;
+            border-color: var(--dbp-text-muted-light);
         }
 
         .checkmark:after {
@@ -593,7 +626,7 @@ export function getRadioAndCheckboxCss() {
             top: 4px;
             width: 6px;
             height: 10px;
-            border: solid var(--dbp-border-color);
+            border: var(--dbp-border-dark);
             border-width: 0 2px 2px 0;
             -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);
@@ -675,7 +708,7 @@ export function getTagCSS() {
 
         .tag:not(body) {
             align-items: center;
-            background-color: whitesmoke;
+            background-color: var(--dbp-text-muted-light);
             border-radius: var(--dbp-border-radius);
             color: #4a4a4a;
             display: inline-flex;
@@ -694,13 +727,13 @@ export function getTagCSS() {
         }
 
         .tag:not(body).is-dark {
-            background-color: var(--dbp-dark);
-            color: whitesmoke;
+            background-color: var(--dbp-secondary-dark);
+            color: var(--dbp-text-light);
         }
 
         .tag:not(body).is-light {
-            background-color: var(--dbp-light);
-            color: #363636;
+            background-color: var(--dbp-base-light);
+            color: var(--dbp-text-dark);
         }
 
         .tag:not(body).is-normal {
@@ -790,7 +823,7 @@ export function getDocumentationCSS() {
         }
 
         .documentation a {
-            border-bottom: 1px solid var(--dbp-muted-text);
+            border-bottom: 1px solid var(--dbp-muted-text-dark);
             transition: background-color 0.15s, color 0.15s;
         }
 
@@ -828,11 +861,10 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--single .select2-selection__clear {
             font-size: 1.5em;
             font-weight: 300;
-            /* color: red; */
         }
 
         .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: var(--dbp-placeholder-color);
+            color: var(--dbp-text-muted-dark);
         }
 
         /* Work around single selections not wrapping and breaking responsivness */
@@ -868,7 +900,7 @@ export function getModalDialogCSS() {
         }
 
         .modal-container {
-            background-color: #fff;
+            background-color: var(--dbp-base-light);
             max-width: 600px;
             max-height: 100vh;
             min-width: 60%;
@@ -885,7 +917,7 @@ export function getModalDialogCSS() {
             background: transparent;
             border: none;
             font-size: 1.5rem;
-            color: var(--dbp-override-danger-bg-color);
+            color: var(--dbp-accent-dark);
             cursor: pointer;
             padding: 0px;
         }
@@ -1043,8 +1075,8 @@ export function getLinkCss() {
         }
 
         .int-link-external:hover {
-            background-color: black;
-            color: white;
+            background-color: var(--dbp-hover-base);
+            color: var(--dbp-hover-text);
         }
 
         .int-link-external:after {
@@ -1073,12 +1105,12 @@ export function getLinkCss() {
 
         .int-link-internal{
             transition: background-color 0.15s, color 0.15s;
-            border-bottom: 1px solid rgba(0,0,0,0.3);
+            border-bottom: var(--dbp-border-dark);
         }
 
         .int-link-internal:hover{
-            background-color: black;
-            color: white;
+            background-color: var(--dbp-hover-base);
+            color: var(--dbp-hover-text);
             text-decoration: underline;
         }
     `;
