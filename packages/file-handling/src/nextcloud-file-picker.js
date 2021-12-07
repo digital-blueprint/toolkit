@@ -1465,7 +1465,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             #replace-modal-box input[type="text"]:disabled {
-                color: #aaa;
+                color: var(--dbp-text-muted-light);
             }
 
             #replace-modal-box .modal-content div {
@@ -1483,7 +1483,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .breadcrumb {
-                border-bottom: 1px solid black;
+                border-bottom: var(--dbp-border-dark);
             }
 
             .breadcrumb:last-child, .breadcrumb:first-child {
@@ -1499,7 +1499,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             input:disabled + label {
-                color: #aaa;
+                color: var(--dbp-text-muted-light);
             }
 
             .inline-block {

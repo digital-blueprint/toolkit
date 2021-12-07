@@ -353,11 +353,20 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
             .paddle {
                 position: absolute;
-                background-color: #ffffffd1;
                 top: 0px;
                 padding: 0px 5px;
                 box-sizing: content-box;
                 height: 100%;
+            }
+
+            .paddle::before {
+                background-color: var(--dbp-base-light);
+                opacity: 0.8;
+                content: "";
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
             }
 
             .right-paddle{

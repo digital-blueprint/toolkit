@@ -163,12 +163,12 @@ export function getFileHandlingCss() {
 
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-arrow{
             border-top: none;
-            border-bottom: 4px solid #666;
+            border-bottom: 4px solid var(--dbp-text-muted-dark);
         }
 
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-arrow{
             border-top: none;
-            border-bottom: 4px solid #bbb;
+            border-bottom: 4px solid var(--dbp-text-muted-light);
         }
 
         .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow{
@@ -178,14 +178,14 @@ export function getFileHandlingCss() {
 
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow,
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-arrow{
-            border-top: 4px solid #666;
+            border-top: 4px solid var(--dbp-text-muted-dark);
             border-bottom: none;
         }
 
         .tabulator-row, .tabulator-row.tabulator-row-even{
             padding-top: 10px;
             padding-bottom: 10px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--dbp-text-muted-light);
         }
 
         .tabulator-header{
@@ -222,7 +222,7 @@ export function getFileHandlingCss() {
             height: 32px;
             width: 32px;
             background-color: unset;
-            color: black;
+            color: var(--dbp-text-dark);
             font-size: 1.3em;
             margin-top: -8px;
         }

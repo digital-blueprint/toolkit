@@ -566,8 +566,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             header .hd2-left a:hover {
-                color: #fff;
-                background-color: #000;
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
             }
 
             header .hd2-right {
@@ -579,7 +579,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             header a {
-                color: black;
+                color: var(--dbp-text-dark);
                 display: inline;
             }
 

@@ -58,10 +58,9 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
 
             .tooltip-icon {
                 display: inline;
-                /* color: TODO CSS var */
-                /* opacity: 0.7; TODO CSS var */
+                color: var(--dbp-secondary-dark);
             }
-
+            
         `;
     }
 

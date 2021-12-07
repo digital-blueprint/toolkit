@@ -431,7 +431,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         
             .output {
                   margin-top: 20px;
-                  background: #eee;
+                  background: var(--dbp-text-muted-light);
+                  color: var(--dbp-text-dark);
                   padding: 10px;
                   padding-bottom: 0;
             }

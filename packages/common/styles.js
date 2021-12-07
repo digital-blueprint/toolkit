@@ -39,7 +39,7 @@ export function getThemeCSS() {
         --dbp-text-light: var(--dbp-override-text-light, var(--dbp-override-light, #ffffff));
         --dbp-text-dark: var(--dbp-override-text-dark, var(--dbp-override-dark, #000000));
         --dbp-text-muted-light: var(--dbp-override-text-muted-light, var(--dbp-override-muted-text, #adadad));
-        --dbp-text-muted-dark: var(--dbp-override-text-muted-dark, var(--dbp-override-muted-text, #666666));
+        --dbp-text-muted-dark: var(--dbp-override-text-muted-dark, var(--dbp-override-muted-text, #767676));
         --dbp-accent-light: var(--dbp-override-accent-light, var(--dbp-override-primary-bg-color, #c24f68));
         --dbp-accent-dark: var(--dbp-override-accent-dark, var(--dbp-override-primary-bg-color, #c24f68));
         --dbp-primary-light: var(--dbp-override-primary-light, var(--dbp-override-primary-bg-color, #8ca4eb)); /*remove second value if no app needs to be backported */
@@ -95,7 +95,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         .input, .textarea, .select select {
-            border: solid 1px #aaa;
+            border: solid 1px var(--dbp-text-muted-light);
             border-radius: var(--dbp-border-radius);
             padding-bottom: calc(.375em - 1px);
             padding-left: calc(.625em - 1px);
@@ -176,7 +176,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         .input, .select select, .textarea {
-            background-color: #fff;
+            background-color: var(--dbp-base-light);
             border-color: var(--dbp-text-muted-dark);
             border-radius: var(--dbp-border-radius);
             color: var(--dbp-text-muted-dark);
@@ -426,9 +426,6 @@ export function getButtonCSS() {
     // language=css
     return css`
         button.button, .button, button.dt-button {
-            border-style: solid;
-            border-color: black;
-            border-width: 1px;
             border: var(--dbp-border-dark);
             border-radius: var(--dbp-border-radius);
             color: var(--dbp-text-dark);
@@ -828,8 +825,8 @@ export function getDocumentationCSS() {
         }
 
         .documentation a:hover {
-            color: #fff;
-            background-color: #000;
+            color: var(--dbp-hover-text);
+            background-color: var(--dbp-hover-base);
         }
 
         .documentation ul, .documentation ol, .documentation li {
