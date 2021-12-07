@@ -65,6 +65,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isInFilteredRecent = false;
         this.isInRecent = false;
         this.userName = '';
+        this.menuHeightBreadcrumb = -1;
+        this.menuHeightAdditional = -1; 
 
         this.boundCloseBreadcrumbMenuHandler = this.hideBreadcrumbMenu.bind(this);
         this.initateOpenBreadcrumbMenu = false;
@@ -1911,7 +1913,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 shortcrumb[0] = htmlpath[0];
                 shortcrumb[1] = html`<span> › </span>
                     <span class="breadcrumb">
-                        <a class="extended-breadcrumb-link" @click="${() => { this.toggleBreadcrumbMenu(); }}" title="TODO"><dbp-icon name="more-filled" class="more-filled"></dbp-icon></a>
+                        <a class="extended-breadcrumb-link" @click="${() => { this.toggleBreadcrumbMenu(); }}" title="TODO">. . .</a>
                         <div class="breadcrumb-menu"><ul class='extended-breadcrumb-menu hidden'>${path_temp}</ul></div>
                     </span>`;
                     
@@ -1935,15 +1937,28 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         menu.classList.toggle('hidden'); //sets hidden or removes it
 
         // computations for overflow - begin
-        if (this.menuHeight === -1) {
-            this.menuHeight = menu.clientHeight;
+        if (this.menuHeightBreadcrumb === -1) {
+            this.menuHeightBreadcrumb = menu.clientHeight;
+            console.log("menuheight: ", this.menuHeightBreadcrumb);
         }
 
         let topValue = menuStart.getBoundingClientRect().bottom;
-        let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
+        let isMenuOverflow = this.menuHeightBreadcrumb + topValue >= this._('.wrapper').offsetHeight ? true : false; //replaced window.innerHeight
+        
+        console.log("modal.offsetHeight: ", this._('.wrapper').offsetHeight);
+        console.log("menuoverflow: ", isMenuOverflow);
+        console.log("menu height: ", this._('.nextcloud-nav').offsetHeight);
+
+        //set max-width to window with 
+        let maxWidth = this._('.wrapper').offsetWidth;
+        console.log ("offsetWidth", maxWidth);
+
+
+        let actualHeight = this._('.wrapper').offsetHeight - this._('.nextcloud-nav').offsetHeight;
+        console.log("actual height: ", actualHeight);
         
         if (isMenuOverflow && !menu.classList.contains('hidden')) {
-            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
+            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;height: ' + actualHeight + 'px;max-width: ' + maxWidth + 'px;overflow-y: auto;'); //TODO do we want border-bottom = 0 and bottom: 0?
             menu.scrollTop = 0;
             document.body.setAttribute('style', 'overflow:hidden;');
         } else if (isMenuOverflow && menu.classList.contains('hidden')) {
@@ -1993,12 +2008,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         menu.classList.toggle('hidden'); //sets hidden or removes it
 
         // computations for overflow - begin
-        if (this.menuHeight === -1) {
-            this.menuHeight = menu.clientHeight;
+        if (this.menuHeightAdditional === -1) {
+            this.menuHeightAdditional = menu.clientHeight;
         }
 
         let topValue = menuStart.getBoundingClientRect().bottom;
-        let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
+        let isMenuOverflow = this.menuHeightAdditional + topValue >= window.innerHeight ? true : false;
         
         if (isMenuOverflow && !menu.classList.contains('hidden')) {
             menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
@@ -2041,9 +2056,19 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
+            .extended-breadcrumb-menu li a {
+                max-width: none;
+                display: inline;
+            }
             
-            .breadcrumb.extended-breadcrumb-link a {
-                display: contents;
+            .nextcloud-nav { /** sticky header **/
+                position: absolute; /** relative **/
+                width: 100%;
+            }
+
+            .nextcloud-header {
+                padding-bottom: 10px;
+                height: 33px; /** TODO verify or change **/
             }
 
             .breadcrumb-menu {
@@ -2053,12 +2078,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .extended-breadcrumb-menu li {
                 padding: 7px;
                 padding-right: 46px;
+                overflow: hidden;
             }
 
             .extended-breadcrumb-menu li.active {
                 background-color: var(--dbp-dark);
                 color: var(--dbp-light);
             }
+
             .extended-breadcrumb-menu li.active a:hover {
                 color: var(--dbp-light);
             }
@@ -2069,18 +2096,16 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 cursor: default;
             }
 
-            .extended-breadcrumb-menu a {
-                padding: 8px;
-            }
-
             .extended-breadcrumb-menu {
                 list-style: none;
                 border: black 1px solid;
                 position: absolute;
                 background-color: white;
                 z-index: 1000;
+                /** display: grid; **/
+                /** max-width: 87.5%; TODO does not work everywhere, find a better solution **/
             }
-
+        
             .extended-breadcrumb-menu a:hover {
                 color: #E4154B;
             }
@@ -2200,7 +2225,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .nextcloud-header {
-                margin-bottom: 2rem;
+                /**margin-bottom: 2rem;**/
                 display: inline-grid;
                 width: 100%;
                 grid-template-columns: auto auto;
@@ -2290,7 +2315,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .additional-menu {
                 white-space: nowrap;
                 height: 33px;
-                margin-right: 10px; /** 5px */
+                /** margin-right: 10px; 5px */
             }
 
             .nextcloud-nav p {
@@ -2392,10 +2417,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 cursor: unset;
                 color: var(--dbp-text-dark);
                 background-color: var(--dbp-base-light);
-            }
-
-            .nextcloud-nav {
-                position: relative;
             }
 
             .inline-block {
@@ -2554,6 +2575,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             @media only screen
             and (orientation: portrait)
             and (max-width: 768px) {
+
+                .breadcrumb .extended-breadcrumb-menu a {
+                    /** overflow: visible; **/
+                    display: inherit;
+                }
+
                 .additional-menu button {
                     float: right;
                 }
@@ -2561,12 +2588,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 .additional-menu {
                     position: absolute;
                     right: 0px;
-                    margin-right: 10px;
+                    /** margin-right: 10px; **/
                 }
-
-                /* .nextcloud-nav {
-                    display: block; TODO verify if this is enough
-                } */
 
                 .additional-menu {
                     position: inherit;
@@ -2596,6 +2619,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 .nextcloud-nav a {
                     font-size: 1rem;
+                    /** max-width: max-content; **/
                 }
 
                 .nextcloud-nav .home-link {
@@ -2738,7 +2762,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         
                     </div>
                 </div>
-                <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
+                <div class="nextcloud-header ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-nav">
                         <p>${this.getBreadcrumb()}</p>
 
@@ -2806,6 +2830,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                         </div>
                     </div> 
+                </div>
+                <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
+                    
                     <div class="table-wrapper">
                         <table id="directory-content-table" class="force-no-select"></table>
                     </div>
