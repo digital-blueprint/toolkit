@@ -643,7 +643,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
             aside .subtitle {
                 display: none;
-                color: #4a4a4a;
+                color: var(--dbp-text-dark);
                 font-size: 1.25rem;
                 font-weight: 300;
                 line-height: 1.25;
