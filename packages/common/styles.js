@@ -34,6 +34,8 @@ export function getThemeCSS() {
         --dbp-placeholder-color: #777;
         --dbp-downloaded-bg-color: var(--dbp-override-downloaded-bg-color, #c8dcc8);
         
+        
+        /* new variables */
         --dbp-base-light: var(--dbp-override-base-light, var(--dbp-override-light, #ffffff));
         --dbp-base-dark: var(--dbp-override-base-dark, var(--dbp-override-dark, #000000));
         --dbp-text-light: var(--dbp-override-text-light, var(--dbp-override-light, #ffffff));
