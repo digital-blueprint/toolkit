@@ -37,9 +37,9 @@ export function getThemeCSS() {
         --dbp-base-light: var(--dbp-override-base-light, var(--dbp-override-light, #ffffff));
         --dbp-base-dark: var(--dbp-override-base-dark, var(--dbp-override-dark, #000000));
         --dbp-text-light: var(--dbp-override-text-light, var(--dbp-override-light, #ffffff));
-        --dbp-text-dark: var(--dbp-override-text-dark, #000000);
-        --dbp-text-muted-light: var(--dbp-override-text-muted-light, #adadad);
-        --dbp-text-muted-dark: var(--dbp-override-text-muted-dark, #666666);
+        --dbp-text-dark: var(--dbp-override-text-dark, var(--dbp-override-dark, #000000));
+        --dbp-text-muted-light: var(--dbp-override-text-muted-light, var(--dbp-override-muted-text, #adadad));
+        --dbp-text-muted-dark: var(--dbp-override-text-muted-dark, var(--dbp-override-muted-text, #666666));
         --dbp-accent-light: var(--dbp-override-accent-light, var(--dbp-override-primary-bg-color, #c24f68));
         --dbp-accent-dark: var(--dbp-override-accent-dark, var(--dbp-override-primary-bg-color, #c24f68));
         --dbp-primary-light: var(--dbp-override-primary-light, var(--dbp-override-primary-bg-color, #8ca4eb)); /*remove second value if no app needs to be backported */
