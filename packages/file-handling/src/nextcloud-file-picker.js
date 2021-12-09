@@ -1856,19 +1856,21 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> </a></span>`;
         
         if (this.isInFavorites) {
-            htmlpath[1] = html`<span> › </span><span class="breadcrumb"><a @click="${() => {
-                this.loadDirectory(path);
+            htmlpath[1] = html`<span> › </span><span class="breadcrumb special"><a @click="${() => {
+                this.loadFavorites();
             }}" title="${i18n.t('nextcloud-file-picker.favorites-title')}">${i18n.t('nextcloud-file-picker.favorites-title')}</a></span>`;
 
         } else if (this.isInRecent) {
-            htmlpath[1] = html`<span> › </span><span class="breadcrumb"><a @click="${() => {
-                this.loadDirectory(path);
+            htmlpath[1] = html`<span> › </span><span class="breadcrumb special"><a @click="${() => {
+                this.loadAllRecentFiles();
             }}" title="${i18n.t('nextcloud-file-picker.recent-files-title')}">${i18n.t('nextcloud-file-picker.recent-files-title')}</a></span>`;
 
         } else if (this.isInFilteredRecent) { 
-            htmlpath[1] = html`<span> › </span><span class="breadcrumb"><a @click="${() => {
-                this.loadDirectory(path);
+            htmlpath[1] = html`<span> › </span><span class="breadcrumb special"><a @click="${() => {
+                this.loadMyRecentFiles();
             }}" title="${i18n.t('nextcloud-file-picker.my-recent-files-title')}">${i18n.t('nextcloud-file-picker.my-recent-files-title')}</a></span>`;
+
+
         
         } else { // case normal folders
             const directories = this.directoryPath.split('/');
@@ -1938,35 +1940,35 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         // computations for overflow - begin
         //if (this.menuHeightBreadcrumb === -1) {
             this.menuHeightBreadcrumb = menu.clientHeight;
-            console.log("menuheight: ", this.menuHeightBreadcrumb);
+            // console.log("menuheight: ", this.menuHeightBreadcrumb);
         //}
 
         let topValue = menuStart.getBoundingClientRect().bottom;
-        console.log("topValue", topValue);
+        // console.log("topValue", topValue);
         let isMenuOverflow = this.menuHeightBreadcrumb + topValue >= this._('.wrapper').offsetHeight ? true : false;
         
-        console.log("modal.offsetHeight: ", this._('.wrapper').offsetHeight);
-        console.log("ismenuoverflow: ", isMenuOverflow);
-        console.log("navigation height: ", this._('.nextcloud-nav').offsetHeight);
+        // console.log("modal.offsetHeight: ", this._('.wrapper').offsetHeight);
+        // console.log("ismenuoverflow: ", isMenuOverflow);
+        // console.log("navigation height: ", this._('.nextcloud-nav').offsetHeight);
 
         //set max-width to window with 
         let maxWidth = this._('.wrapper').offsetWidth;
-        console.log ("offsetWidth", maxWidth);
+        // console.log ("offsetWidth", maxWidth);
         
         if (isMenuOverflow && !menu.classList.contains('hidden')) {
             let actualHeight = this._('.wrapper').offsetHeight - this._('.nextcloud-nav').offsetHeight;
-            console.log("actual height: ", actualHeight);
+            // console.log("actual height: ", actualHeight);
 
             menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;height: ' + actualHeight + 'px;max-width: ' + maxWidth + 'px;overflow-y: auto;');
             menu.scrollTop = 0;
 
-            document.body.setAttribute('style', 'overflow:hidden;'); //TODO delete?
+            document.body.setAttribute('style', 'overflow:hidden;'); //TODO replace with correct scrollbar remove
 
         } else if (isMenuOverflow && menu.classList.contains('hidden')) {
 
             console.log("isMenuOverflow AND hidden - remove attributes");
 
-            document.body.removeAttribute('style', 'overflow:hidden;'); //TODO delete?
+            document.body.removeAttribute('style', 'overflow:hidden;'); //TODO replace with correct scrollbar remove
 
             menu.removeAttribute('style');
 
@@ -2064,6 +2066,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
+
+            .breadcrumb.special a {
+                overflow: visible;
+            }
 
             .extended-breadcrumb-menu li a {
                 max-width: none;
