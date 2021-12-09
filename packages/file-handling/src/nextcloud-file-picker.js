@@ -1887,7 +1887,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             
             let length = htmlpath.length;
             let width = window.innerWidth;
-            console.log ("window width", width);
 
             if (length > 3 && width <= 768) { //breadcrumb longer than 3 && only for mobile view
 
@@ -1913,10 +1912,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 shortcrumb[0] = htmlpath[0];
                 shortcrumb[1] = html`<span> › </span>
-                    <span class="breadcrumb">
-                        <a class="extended-breadcrumb-link" @click="${() => { this.toggleBreadcrumbMenu(); }}" title="TODO">. . .</a>
-                        <div class="breadcrumb-menu"><ul class='extended-breadcrumb-menu hidden'>${path_temp}</ul></div>
-                    </span>`;
+                    <span class="breadcrumb"><a class="extended-breadcrumb-link" @click="${() => { this.toggleBreadcrumbMenu(); }}" title="TODO">. . .</a><div class="breadcrumb-menu"><ul class='extended-breadcrumb-menu hidden'>${path_temp}</ul></div></span>`;
                     
                 shortcrumb[2] = htmlpath[length - 1];
                 
@@ -1938,32 +1934,40 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         menu.classList.toggle('hidden'); //sets hidden or removes it
 
         // computations for overflow - begin
-        if (this.menuHeightBreadcrumb === -1) {
+        //if (this.menuHeightBreadcrumb === -1) {
             this.menuHeightBreadcrumb = menu.clientHeight;
             console.log("menuheight: ", this.menuHeightBreadcrumb);
-        }
+        //}
 
         let topValue = menuStart.getBoundingClientRect().bottom;
-        let isMenuOverflow = this.menuHeightBreadcrumb + topValue >= this._('.wrapper').offsetHeight ? true : false; //replaced window.innerHeight
+        console.log("topValue", topValue);
+        let isMenuOverflow = this.menuHeightBreadcrumb + topValue >= this._('.wrapper').offsetHeight ? true : false;
         
         console.log("modal.offsetHeight: ", this._('.wrapper').offsetHeight);
-        console.log("menuoverflow: ", isMenuOverflow);
-        console.log("menu height: ", this._('.nextcloud-nav').offsetHeight);
+        console.log("ismenuoverflow: ", isMenuOverflow);
+        console.log("navigation height: ", this._('.nextcloud-nav').offsetHeight);
 
         //set max-width to window with 
         let maxWidth = this._('.wrapper').offsetWidth;
         console.log ("offsetWidth", maxWidth);
-
-        let actualHeight = this._('.wrapper').offsetHeight - this._('.nextcloud-nav').offsetHeight;
-        console.log("actual height: ", actualHeight);
         
         if (isMenuOverflow && !menu.classList.contains('hidden')) {
-            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;height: ' + actualHeight + 'px;max-width: ' + maxWidth + 'px;overflow-y: auto;'); //TODO do we want border-bottom = 0 and bottom: 0?
+            let actualHeight = this._('.wrapper').offsetHeight - this._('.nextcloud-nav').offsetHeight;
+            console.log("actual height: ", actualHeight);
+
+            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;height: ' + actualHeight + 'px;max-width: ' + maxWidth + 'px;overflow-y: auto;');
             menu.scrollTop = 0;
-            document.body.setAttribute('style', 'overflow:hidden;');
+
+            document.body.setAttribute('style', 'overflow:hidden;'); //TODO delete?
+
         } else if (isMenuOverflow && menu.classList.contains('hidden')) {
-            document.body.removeAttribute('style', 'overflow:hidden;');
+
+            console.log("isMenuOverflow AND hidden - remove attributes");
+
+            document.body.removeAttribute('style', 'overflow:hidden;'); //TODO delete?
+
             menu.removeAttribute('style');
+
         }
         // computations for overflow - end
 
@@ -1975,6 +1979,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         else {
             document.removeEventListener('click', this.boundCloseBreadcrumbMenuHandler);
             console.log('delete event listener');
+
+            menu.removeAttribute('style');
         }
     }
 
@@ -2063,7 +2069,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
             
             .nextcloud-nav { /** sticky header - TODO nur mobil! **/
-                /** position: absolute; /** relative **/
+                /** position: absolute;  relative **/
                 position: relative;
                 width: 100%;
             }
@@ -2074,7 +2080,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .nextcloud-header {
                 /** padding-bottom: 40px; 10px**/
-                /** height: 33px;  TODO verify or change - TODO nur mobil! **/
+                /** height: 33px; TODO nur mobil! **/
             }
 
             .breadcrumb-menu {
