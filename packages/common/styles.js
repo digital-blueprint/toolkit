@@ -61,6 +61,9 @@ export function getThemeCSS() {
         --dbp-border-radius: var(--dbp-override-border-radius, 0px);
         --dbp-button-hover-base: var(--dbp-override-button-hover-base, var(--dbp-override-dark, #000000));
         --dbp-button-hover-text: var(--dbp-override-button-hover-text, var(--dbp-override-light, #ffffff));
+
+        --dbp-hover-base: var(--dbp-override-button-hover-base, var(--dbp-override-dark, #000000));
+        --dbp-hover-text: var(--dbp-override-button-hover-text, var(--dbp-override-light, #ffffff));
     }
     
     `;
