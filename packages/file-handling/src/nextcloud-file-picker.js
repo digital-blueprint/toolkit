@@ -2064,8 +2064,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 display: inline;
             }
             
-            .nextcloud-nav { /** sticky header **/
-                position: absolute; /** relative **/
+            .nextcloud-nav { /** sticky header - TODO nur mobil! **/
+                /** position: absolute; /** relative **/
+                position: relative;
                 width: 100%;
             }
 
@@ -2074,8 +2075,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .nextcloud-header {
-                padding-bottom: 40px; /**10px**/
-                height: 33px; /** TODO verify or change **/
+                /** padding-bottom: 40px; 10px**/
+                /** height: 33px;  TODO verify or change - TODO nur mobil! **/
             }
 
             .breadcrumb-menu {
@@ -2232,9 +2233,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .nextcloud-header {
                 /**margin-bottom: 2rem;**/
-                display: inline-grid;
+                /**display: inline-grid; TODO**/
                 width: 100%;
-                grid-template-columns: auto auto;
+                /**grid-template-columns: auto auto;**/
             }
 
             .nextcloud-header div button {
