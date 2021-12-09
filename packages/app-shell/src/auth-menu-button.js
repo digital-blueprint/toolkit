@@ -117,10 +117,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .dropdown-content {
-                background-color: var(--dbp-base-light);
-                color: var(--dbp-text-dark);
-                /*padding-bottom: 0.5rem;*/
-                /*padding-top: 0.5rem;*/
+                padding-bottom: 0.5rem;
+                padding-top: 0.5rem;
             }
 
             .menu a {
@@ -132,8 +130,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .menu a:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                color: var(--dbp-accent-dark);
             }
 
             .menu a.selected { color: var(--dbp-text-light); background-color: var(--dbp-secondary-dark); }

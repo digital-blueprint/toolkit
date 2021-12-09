@@ -50,8 +50,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
             }
 
             h2 a:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                color: var(--dbp-accent-dark);
             }
             
             h2 a {
@@ -71,7 +70,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
                 font-size: 100%;
             }
 
-            h2 a:hover::after {
+           /* h2 a:hover::after {
                 content: "\\00a0\\00a0\\00a0";
                 background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%228.6836mm%22%20width%3D%225.2043mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2018.440707%2030.768605%22%3E%3Cg%20transform%3D%22translate(-382.21%20-336.98)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23FFF%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3Bstroke-width%3A2%3Bfill%3Anone%22%20d%3D%22m383.22%20366.74%2016.43-14.38-16.43-14.37%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
                 background-size: 60%;
@@ -81,7 +80,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
                 padding: 0 0 -0.75% 0;
                 animation: 0s linkIconIn;
                 font-size: 100%;
-            }
+            }*/
         `;
     }
 
