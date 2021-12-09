@@ -66,7 +66,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isInRecent = false;
         this.userName = '';
         this.menuHeightBreadcrumb = -1;
-        this.menuHeightAdditional = -1; 
+        this.menuHeightAdditional = -1;
 
         this.boundCloseBreadcrumbMenuHandler = this.hideBreadcrumbMenu.bind(this);
         this.initateOpenBreadcrumbMenu = false;
@@ -1958,32 +1958,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         if (isMenuOverflow && !menu.classList.contains('hidden')) {
             let actualHeight = this._('.wrapper').offsetHeight - this._('.nextcloud-nav').offsetHeight;
             // console.log("actual height: ", actualHeight);
-
             menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;height: ' + actualHeight + 'px;max-width: ' + maxWidth + 'px;overflow-y: auto;');
             menu.scrollTop = 0;
+            this._('.nextcloud-content').setAttribute('style', 'overflow:hidden;');
 
-            document.body.setAttribute('style', 'overflow:hidden;'); //TODO replace with correct scrollbar remove
-
-        } else if (isMenuOverflow && menu.classList.contains('hidden')) {
-
-            console.log("isMenuOverflow AND hidden - remove attributes");
-
-            document.body.removeAttribute('style', 'overflow:hidden;'); //TODO replace with correct scrollbar remove
-
+        } else if (isMenuOverflow && menu.classList.contains('hidden')) { //TODO is this case possible?
+            this._('.nextcloud-content').removeAttribute('style', 'overflow:hidden;');
             menu.removeAttribute('style');
-
         }
         // computations for overflow - end
 
         if (!menu.classList.contains('hidden')) { // add event listener for clicking outside of menu
             document.addEventListener('click', this.boundCloseBreadcrumbMenuHandler);
-            console.log('add event listener');
             this.initateOpenBreadcrumbMenu = true;
         }
         else {
             document.removeEventListener('click', this.boundCloseBreadcrumbMenuHandler);
-            console.log('delete event listener');
-
+            this._('.nextcloud-content').removeAttribute('style', 'overflow:hidden;');
             menu.removeAttribute('style');
         }
     }
