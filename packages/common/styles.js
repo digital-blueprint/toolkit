@@ -448,7 +448,7 @@ export function getButtonCSS() {
         button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled) {
             color: var(--dbp-hover-text);
             background: none;
-            border-color: var(--dbp-hover-base);
+            border: var(--dbp-border-dark);
             background-color: var(--dbp-hover-base);
         }
 
