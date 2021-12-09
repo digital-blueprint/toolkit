@@ -137,7 +137,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         a.is-download {
-            border-bottom: 1px solid rgba(0,0,0,0.4);
+            border-bottom: var(--dbp-border-dark);
             transition: background-color 0.15s, color 0.15s;
         }
 
@@ -891,11 +891,20 @@ export function getModalDialogCSS() {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10000;
+        }
+
+        .modal-overlay::before {
+            content: "";
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            background-color: var(--dbp-base-dark);
+            opacity: 0.6;
         }
 
         .modal-container {
