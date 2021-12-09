@@ -733,8 +733,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             a:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                color: var(--dbp-accent-dark);
+                border-color: var(--dbp-accent-dark);
             }
 
             h2:first-child {

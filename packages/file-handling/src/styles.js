@@ -149,8 +149,8 @@ export function getFileHandlingCss() {
         }
 
         .tabulator-row.tabulator-selectable.tabulator-selected:hover, .tabulator-row.tabulator-selected{
-            background-color: var(--dbp-hover-base);
-            color: var(--dbp-hover-text);
+            background-color: var(--dbp-button-hover-base);
+            color: var(--dbp-button-hover-text);
         }
 
         .tabulator .tabulator-header .tabulator-col .tabulator-col-content{

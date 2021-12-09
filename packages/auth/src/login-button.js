@@ -137,8 +137,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .login-box:hover {
-                background-color: var(--dbp-hover-base);
-                color: var(--dbp-hover-text);
+                color: var(--dbp-accent-dark);
                 cursor: pointer;
                 transition: none;
             }

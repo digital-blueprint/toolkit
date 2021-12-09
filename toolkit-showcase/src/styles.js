@@ -37,8 +37,8 @@ export function getDemoCSS() {
         }
 
         a:hover {
-            background-color: var(--dbp-hover-base);
-            color: var(--dbp-hover-text);
+            color: var(--dbp-accent-dark);
+            border-color: var(--dbp-accent-dark);
         }
 
         a:after {

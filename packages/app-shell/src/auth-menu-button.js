@@ -177,8 +177,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .login-button:hover {
-                background-color: var(--dbp-hover-base);
-                color: var(--dbp-hover-text);
+                color: var(--dbp-accent-dark);
                 cursor: pointer;
                 transition: none;
             }

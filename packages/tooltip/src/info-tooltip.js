@@ -75,12 +75,12 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .tippy-box {
-                background-color: var(--dbp-hover-base);
+                background-color: var(--dbp-base-dark);
                 color: var(--dbp-text-light);
             }
 
             .tippy-arrow{
-               color: var(--dbp-hover-base);
+               color: var(--dbp-base-dark);
             }
         `;
     }

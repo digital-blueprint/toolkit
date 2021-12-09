@@ -85,8 +85,7 @@ export class LanguageSelect extends AdapterLitElement {
             }
 
             a:hover {
-                background-color: var(--dbp-hover-base);
-                color: var(--dbp-hover-text);
+                color: var(--dbp-accent-dark);
                 transition: none;
             }
 
