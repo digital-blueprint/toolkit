@@ -592,6 +592,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
             }
         }
+
         return result;
     }
 
@@ -897,7 +898,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.directoryPath = '';
         }
 
-        console.log("load recent files");
+        console.log("load only my recent files");
         this.selectAllButton = true;
         this.loading = true;
         this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {name: this.nextcloudName});
@@ -1085,6 +1086,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.isPickerActive = true;
                 this.isInFavorites = false;
                 this.isInRecent = false;
+                this.isInFilteredRecent = false;
                 this._(".nextcloud-content").scrollTop = 0;
                 if (!this.activeDirectoryRights.includes("CK") && !this.activeDirectoryRights.includes("NV")) {
                     this._("#download-button").setAttribute("disabled", "true");
@@ -1214,7 +1216,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         if (this.isInFavorites) {
             this.statusText = html`<span class="error"> ${ i18n.t('nextcloud-file-picker.error-save-to-favorites') } </span>`;
             return;
-        } else if (this.isInRecent) { //TODO verify
+        } else if (this.isInRecent || this.isInFilteredRecent) { //TODO verify
             this.statusText = html`<span class="error"> ${ i18n.t('nextcloud-file-picker.error-save-to-recent') } </span>`;
             return;
         }
@@ -1871,7 +1873,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }}" title="${i18n.t('nextcloud-file-picker.my-recent-files-title')}">${i18n.t('nextcloud-file-picker.my-recent-files-title')}</a></span>`;
 
 
-        
         } else { // case normal folders
             const directories = this.directoryPath.split('/');
             if (directories[1] === "") {
@@ -1938,10 +1939,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         menu.classList.toggle('hidden'); //sets hidden or removes it
 
         // computations for overflow - begin
-        //if (this.menuHeightBreadcrumb === -1) {
-            this.menuHeightBreadcrumb = menu.clientHeight;
-            // console.log("menuheight: ", this.menuHeightBreadcrumb);
-        //}
+        this.menuHeightBreadcrumb = menu.clientHeight;
+        // console.log("menuheight: ", this.menuHeightBreadcrumb);
 
         let topValue = menuStart.getBoundingClientRect().bottom;
         // console.log("topValue", topValue);
@@ -2006,26 +2005,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
 
-        menu.classList.toggle('hidden'); //sets hidden or removes it
-
-        // TODO: fix or delete
-        // computations for overflow - begin
-        // if (this.menuHeightAdditional === -1) {
-        //     this.menuHeightAdditional = menu.clientHeight;
-        // }
-
-        // let topValue = menuStart.getBoundingClientRect().bottom;
-        // let isMenuOverflow = this.menuHeightAdditional + topValue >= window.innerHeight ? true : false;
-        
-        // if (isMenuOverflow && !menu.classList.contains('hidden')) {
-        //     menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
-        //     menu.scrollTop = 0;
-        //     document.body.setAttribute('style', 'overflow:hidden;');
-        // } else if (isMenuOverflow && menu.classList.contains('hidden')) {
-        //     document.body.removeAttribute('style', 'overflow:hidden;');
-        //     menu.removeAttribute('style');
-        // }
-        // computations for overflow - end
+        menu.classList.toggle('hidden');
 
         if (!menu.classList.contains('hidden')) { // add event listener for clicking outside of menu
             document.addEventListener('click', this.boundCloseAdditionalMenuHandler);
