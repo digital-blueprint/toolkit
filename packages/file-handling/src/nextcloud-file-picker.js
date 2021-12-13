@@ -2566,6 +2566,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             and (orientation: portrait)
             and (max-width: 768px) {
 
+                .extended-menu {
+                    top: 0px;
+                }
+
                 .breadcrumb .extended-breadcrumb-menu a {
                     /** overflow: visible; **/
                     display: inherit;
