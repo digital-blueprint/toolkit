@@ -98,6 +98,18 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 color: currentColor;
                 cursor: pointer;
                 text-decoration: none;
+                display: block;
+            }
+
+            input::-moz-focus-inner { border: 0; }
+
+            :focus-visible{
+                outline:none !important;
+                outline-width: 0 !important;
+                box-shadow: none;
+                -moz-box-shadow: none;
+                -webkit-box-shadow: none;
+                box-shadow: 0px 0px 9px 2px var(--dbp-accent-dark);
             }
 
             .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
@@ -130,13 +142,17 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .menu a.selected { color: var(--dbp-text-light); background-color: var(--dbp-secondary-dark); }
-
+            
             .dropdown-item {
                 color: var(--dbp-text-muted-dark);
                 display: block;
                 font-size: 0.875rem;
                 line-height: 1.5;
                 padding: 0.375rem 1rem;
+                margin-left: 0.5em;
+                margin-right: 0.5em;
+                padding-left: 0.5em;
+                padding-right: 0.5em;
                 position: relative;
             }
 

@@ -117,6 +117,17 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             font-family: inherit;
         }
 
+        input::-moz-focus-inner { border: 0; }
+        
+        :focus-visible{
+            outline:none !important;
+            outline-width: 0 !important;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+            box-shadow: 0px 0px 9px 2px var(--dbp-accent-dark);
+        }
+
         .control {
             box-sizing: border-box;
             clear: both;
@@ -425,6 +436,7 @@ export function getButtonCSS() {
             text-align: center;
             white-space: nowrap;
             font-size: inherit;
+            font-weight: bolder;
             font-family: inherit;
             transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
             background: none;
@@ -468,6 +480,15 @@ export function getButtonCSS() {
         button.button[disabled], .button[disabled], fieldset[disabled] .button {
             opacity: .4;
             cursor: not-allowed;
+        }
+
+        button:focus-visible{
+            outline:none !important;
+            outline-width: 0 !important;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+            box-shadow: 0px 0px 9px 2px var(--dbp-accent-dark);
         }
     `;
 }
@@ -578,6 +599,16 @@ export function getRadioAndCheckboxCss() {
             border-right: var(--dbp-border-dark);
             border-width: 0 2px 2px 0;
         }
+
+        .button-container input[type="checkbox"]:focus-visible ~ .checkmark{
+            outline:none !important;
+            outline-width: 0 !important;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+            box-shadow: 0px 0px 9px 2px var(--dbp-accent-dark);
+        }
+        
         
         .button-container input[type="checkbox"]:disabled ~ .checkmark {
             border-color: var(--dbp-text-muted-light);

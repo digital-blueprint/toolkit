@@ -54,7 +54,11 @@ export class TUGrazLogo extends AdapterLitElement {
                 overflow: visible;
             }
 
-            a:hover path, a:focus path {
+             a{
+                display:block;
+            }
+            
+             a:focus path {
                 fill:#000 !important;
                 transition:none;
             }

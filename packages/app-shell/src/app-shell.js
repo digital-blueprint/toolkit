@@ -534,6 +534,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 text-align: right;
                 padding-right: 20px;
             }
+            
+            header .hd1-left #lang-select{
+                margin: auto;
+                margin-right: 0px;
+            }
 
             header .hd1-middle {
                 grid-area: hd1-middle;
@@ -861,7 +866,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                <dbp-language-select lang="${this.lang}"></dbp-language-select>
+                                <dbp-language-select id="lang-select" lang="${this.lang}"></dbp-language-select>
                             </div>
                             <div class="hd1-middle">
                             </div>

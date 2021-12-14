@@ -78,8 +78,8 @@ export class LanguageSelect extends AdapterLitElement {
 
     static get styles() {
         // language=css
-        return [commonStyles.getThemeCSS(),
-            css`
+        return css`
+                ${commonStyles.getThemeCSS()}
             :host {
                 display: inline-block;
             }
@@ -91,8 +91,20 @@ export class LanguageSelect extends AdapterLitElement {
                 transition: background-color 0.15s, color 0.15s;
                 color: var(--dbp-text-dark);
             }
+
+            input::-moz-focus-inner { border: 0; }
+
+            :focus-visible{
+                outline:none !important;
+                outline-width: 0 !important;
+                box-shadow: none;
+                -moz-box-shadow: none;
+                -webkit-box-shadow: none;
+                box-shadow: 0px 0px 9px 2px var(--dbp-accent-dark);
+            }
+            
             `
-        ];
+        ;
     }
 
     onClick(e) {
