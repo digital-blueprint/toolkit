@@ -456,13 +456,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 font-size: inherit;
             }
             
-            #videoSource:hover {
-                background: calc(100% - 0.2rem) center no-repeat url("${unsafeCSS(getIconSVGURL('chevron-down'))}");
-                color: var(--dbp-text-dark);
-                background-position-x: calc(100% - 0.4rem);
-                background-size: auto 45%;
-            }
-            
             select:not(.select)#videoSource{
                 background-size: auto 45%;
             }

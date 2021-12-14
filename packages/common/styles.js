@@ -144,24 +144,6 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             transition: background-color 0.15s, color 0.15s;
         }
 
-        a.is-download:hover {
-            color: var(--dbp-accent-dark);
-            border-color: var(--dbp-accent-dark);
-        }
-
-        /* Inline SVG don't work in our web-components */
-        /*
-        a.is-download:after, a.is-download:hover:after {
-            content: "\\00a0\\00a0\\00a0\\00a0";
-            background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%228.3021mm%22%20width%3D%228.2977mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2029.401607%2029.41681%22%3E%3Cg%20style%3D%22stroke-width%3A2.1%22%20transform%3D%22translate(-271.68%20-367.92)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A2.1%3Bfill%3Anone%22%20d%3D%22m300.13%20390.41v2.3918c0%201.9813-1.6064%203.5877-3.5877%203.5877h-20.326c-1.9813%200-3.5877-1.6064-3.5877-3.5877v-2.3918%22%2F%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A2.1%3Bfill%3Anone%22%20d%3D%22m286.38%20390.27v-21.384%22%2F%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A2.1%3Bfill%3Anone%22%20d%3D%22m295.13%20381.52-8.7501%208.7462-8.7501-8.7462%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center center;
-            margin: 0 0.25% 0 1.5%;
-            font-size: 94%;
-        }
-        */
-
         .title {
             color: var(--dbp-text-dark);
             font-size: 2rem;
@@ -447,14 +429,7 @@ export function getButtonCSS() {
             transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
             background: none;
         }
-
-        button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled) {
-            color: var(--dbp-button-hover-text);
-            background: none;
-            border-color: var(--dbp-button-hover-base);
-            background-color: var(--dbp-button-hover-base);
-        }
-
+        
         button.button.is-small, .button.is-small {
             border-radius: calc(var(--dbp-border-radius) / 2);
             font-size: .75rem;
@@ -829,11 +804,6 @@ export function getDocumentationCSS() {
             transition: background-color 0.15s, color 0.15s;
         }
 
-        .documentation a:hover {
-            color: var(--dbp-accent-dark);
-            border-color: var(--dbp-accent-dark);
-        }
-
         .documentation ul, .documentation ol, .documentation li {
             margin: inherit;
             padding: inherit;
@@ -1085,11 +1055,6 @@ export function getLinkCss() {
             border-bottom: var(--dbp-border-dark);
         }
 
-        .int-link-external:hover {
-            color: var(--dbp-accent-dark);
-            border-color: var(--dbp-accent-dark);
-        }
-
         .int-link-external:after {
             content: "\\00a0\\00a0\\00a0";
             background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%228.6836mm%22%20width%3D%225.2043mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2018.440707%2030.768605%22%3E%3Cg%20transform%3D%22translate(-382.21%20-336.98)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3Bstroke-width%3A2%3Bfill%3Anone%22%20d%3D%22m383.22%20366.74%2016.43-14.38-16.43-14.37%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
@@ -1105,11 +1070,6 @@ export function getLinkCss() {
         .int-link-internal{
             transition: background-color 0.15s, color 0.15s;
             border-bottom: var(--dbp-border-dark);
-        }
-
-        .int-link-internal:hover{
-            color: var(--dbp-accent-dark);
-            border-color: var(--dbp-accent-dark);
         }
     `;
 }

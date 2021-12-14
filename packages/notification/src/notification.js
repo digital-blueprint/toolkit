@@ -136,12 +136,12 @@ export class Notification extends DBPLitElement {
                 width: 2px;
             }
 
-            .delete:hover, .modal-close:hover, .delete:focus, .modal-close:focus {
-                background-color: rgba(10, 10, 10, 0.3);
+            .delete:focus, .modal-close:focus {
+                background-color: var(--dbp-text-dark);
             }
 
             .delete:active, .modal-close:active {
-                background-color: rgba(10, 10, 10, 0.4);
+                background-color: var(--dbp-text-dark);
             }
 
             #notification {
