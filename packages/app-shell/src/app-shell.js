@@ -609,8 +609,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
             
             .menu a.selected {
-                color: var(--dbp-text-light);
-                background-color: var(--dbp-secondary-dark);
+                border-left: 2px solid var(--dbp-accent-dark);
+                font-weight: bolder;
+                padding-left: 0.5em;
+
             }
 
             aside .subtitle {
