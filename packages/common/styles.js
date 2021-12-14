@@ -125,7 +125,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             box-shadow: none;
             -moz-box-shadow: none;
             -webkit-box-shadow: none;
-            box-shadow: 0px 0px 9px 2px var(--dbp-accent-dark);
+            box-shadow: 0px 0px 4px 2px var(--dbp-accent-dark);
         }
 
         .control {
@@ -488,7 +488,7 @@ export function getButtonCSS() {
             box-shadow: none;
             -moz-box-shadow: none;
             -webkit-box-shadow: none;
-            box-shadow: 0px 0px 9px 2px var(--dbp-accent-dark);
+            box-shadow: 0px 0px 4px 2px var(--dbp-accent-dark);
         }
     `;
 }
@@ -606,7 +606,7 @@ export function getRadioAndCheckboxCss() {
             box-shadow: none;
             -moz-box-shadow: none;
             -webkit-box-shadow: none;
-            box-shadow: 0px 0px 9px 2px var(--dbp-accent-dark);
+            box-shadow: 0px 0px 4px 2px var(--dbp-accent-dark);
         }
         
         
