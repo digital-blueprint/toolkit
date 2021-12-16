@@ -571,7 +571,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             header .hd2-left a:hover {
-                color: var(--dbp-accent-dark);
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
             }
 
             header .hd2-right {
@@ -611,8 +612,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             footer a:hover {
-                color: var(--dbp-accent-dark);
-                border-color: var(--dbp-accent-dark);
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
             }
 
             /* We don't allow inline-svg */
@@ -636,11 +637,12 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .menu a:hover {
-                color: var(--dbp-accent-dark);
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
             }
 
             .menu a.selected {
-                border-left: 2px solid var(--dbp-accent-dark);
+                border-left: 3px solid var(--dbp-accent-dark);
                 font-weight: bolder;
                 padding-left: 0.5em;
 

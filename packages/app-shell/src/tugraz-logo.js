@@ -57,11 +57,6 @@ export class TUGrazLogo extends AdapterLitElement {
              a{
                 display:block;
             }
-            
-             a:focus path {
-                fill:#000 !important;
-                transition:none;
-            }
 
              * {
                 transition:fill 0.15s, stroke 0.15s;

@@ -59,11 +59,13 @@ export function getThemeCSS() {
         --dbp-border-light: var(--dbp-override-border-light, 1px solid #ffffff);
         --dbp-border-dark: var(--dbp-override-border-dark, 1px solid #000000);
         --dbp-border-radius: var(--dbp-override-border-radius, 0px);
+        --dbp-hover-base: var(--dbp-override-hover-base, var(--dbp-override-dark, inherit));
+        --dbp-hover-text: var(--dbp-override-hover-text, var(--dbp-override-light, inherit));
+        
+        /* TODO check if there are any uses of this in other apps then remove it */
         --dbp-button-hover-base: var(--dbp-override-button-hover-base, var(--dbp-override-dark, #000000));
         --dbp-button-hover-text: var(--dbp-override-button-hover-text, var(--dbp-override-light, #ffffff));
 
-        --dbp-hover-base: var(--dbp-override-button-hover-base, var(--dbp-override-dark, #000000));
-        --dbp-hover-text: var(--dbp-override-button-hover-text, var(--dbp-override-light, #ffffff));
     }
     
     `;
@@ -156,8 +158,8 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         a.is-download:hover {
-            color: var(--dbp-accent-dark);
-            border-color: var(--dbp-accent-dark);
+            color: var(--dbp-hover-text);
+            background-color: var(--dbp-hover-base);
         }
 
         /* Inline SVG don't work in our web-components */
@@ -461,10 +463,9 @@ export function getButtonCSS() {
         }
 
         button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled) {
-            color: var(--dbp-button-hover-text);
-            background: none;
-            border-color: var(--dbp-button-hover-base);
-            background-color: var(--dbp-button-hover-base);
+            /*color: var(--dbp-hover-text, currentColor);
+            border-color: var(--dbp-hover-base);
+            background-color: var(--dbp-hover-base, inherit);*/
         }
 
         button.button.is-small, .button.is-small {
@@ -861,8 +862,8 @@ export function getDocumentationCSS() {
         }
 
         .documentation a:hover {
-            color: var(--dbp-accent-dark);
-            border-color: var(--dbp-accent-dark);
+            color: var(--dbp-hover-text);
+            background-color: var(--dbp-hover-base);
         }
 
         .documentation ul, .documentation ol, .documentation li {
@@ -1117,8 +1118,8 @@ export function getLinkCss() {
         }
 
         .int-link-external:hover {
-            color: var(--dbp-accent-dark);
-            border-color: var(--dbp-accent-dark);
+            color: var(--dbp-hover-text);
+            background-color: var(--dbp-hover-base);
         }
 
         .int-link-external:after {
@@ -1139,9 +1140,23 @@ export function getLinkCss() {
         }
 
         .int-link-internal:hover{
-            color: var(--dbp-accent-dark);
-            border-color: var(--dbp-accent-dark);
+            color: var(--dbp-hover-text);
+            background-color: var(--dbp-hover-base);
         }
+
+        /* TODO Change color(mask) */
+        /*.int-link-internal:hover::after{
+                    content: "\\00a0\\00a0\\00a0";
+                    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%228.6836mm%22%20width%3D%225.2043mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2018.440707%2030.768605%22%3E%3Cg%20transform%3D%22translate(-382.21%20-336.98)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23FFF%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3Bstroke-width%3A2%3Bfill%3Anone%22%20d%3D%22m383.22%20366.74%2016.43-14.38-16.43-14.37%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
+                    background-size: 73%;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    margin: 0 0 0 3px;
+                    padding: 0 0 0.25% 0;
+                    animation: 0s linkIconIn;
+                    font-size: 103%;
+                }*/
+
     `;
 }
 

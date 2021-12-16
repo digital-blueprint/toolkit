@@ -142,7 +142,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .menu a:hover {
-                color: var(--dbp-accent-dark);
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
             }
 
             .menu a.selected { color: var(--dbp-text-light); background-color: var(--dbp-secondary-dark); }
@@ -190,7 +191,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .login-button:hover {
-                color: var(--dbp-accent-dark);
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
                 cursor: pointer;
                 transition: none;
             }
@@ -201,7 +203,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .login-box:hover svg path {
-                fill: var(--dbp-base-light);
+                fill: var(--dbp-hover-text);
             }
 
             .login-box .label {
