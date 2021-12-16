@@ -569,7 +569,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             header .hd2-left .header {
                 margin-left: 50px;
             }
-            
+
+            header .hd2-left a:hover {
+                color: var(--dbp-accent-dark);
+            }
+
             header .hd2-right {
                 grid-area: hd2-right;
                 display: flex;
@@ -606,13 +610,35 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 padding: 0;
             }
 
+            footer a:hover {
+                color: var(--dbp-accent-dark);
+                border-color: var(--dbp-accent-dark);
+            }
+
+            /* We don't allow inline-svg */
+            /*
+            footer .int-link-external::after {
+                content: "\\00a0\\00a0\\00a0\\00a0";
+                background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%225.6842mm%22%20width%3D%225.6873mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2020.151879%2020.141083%22%3E%3Cg%20transform%3D%22translate(-258.5%20-425.15)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A1.2%3Bfill%3Anone%22%20d%3D%22m266.7%20429.59h-7.5029v15.002h15.002v-7.4634%22%2F%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A1.2%3Bfill%3Anone%22%20d%3D%22m262.94%20440.86%2015.002-15.002%22%2F%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A1.2%3Bfill%3Anone%22%20d%3D%22m270.44%20425.86h7.499v7.499%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
+                background-size:contain;
+                background-repeat: no-repeat;
+                background-position:center center;
+                margin: 0 0.5% 0 1.5%;
+                font-size:94%;
+            } 
+            */
+
             .menu a {
                 padding: 0.3em;
                 font-weight: 300;
                 color: var(--dbp-text-dark);
                 display: block;
             }
-            
+
+            .menu a:hover {
+                color: var(--dbp-accent-dark);
+            }
+
             .menu a.selected {
                 border-left: 2px solid var(--dbp-accent-dark);
                 font-weight: bolder;
