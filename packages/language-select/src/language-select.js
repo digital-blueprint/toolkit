@@ -84,6 +84,11 @@ export class LanguageSelect extends AdapterLitElement {
                 display: inline-block;
             }
 
+            a:hover {
+                color: var(--dbp-accent-dark);
+                transition: none;
+            }
+
             a {
                 padding: 0.3em;
                 display: inline-block;
