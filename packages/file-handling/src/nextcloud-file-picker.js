@@ -71,6 +71,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.boundCloseBreadcrumbMenuHandler = this.hideBreadcrumbMenu.bind(this);
         this.initateOpenBreadcrumbMenu = false;
 
+        this.boundClickOutsideNewFolderHandler = this.cancelNewFolderCreation.bind(this);
+        this.initateOpenNewFolder = false;
+
         this.disableRowClick = false;
     }
 
@@ -180,6 +183,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 responsiveLayout: "collapse",
                 responsiveLayoutCollapseStartOpen: false,
                 resizableColumns: false,
+                // autoResize: true, //TODO
+                // virtualDomBuffer: 1000, //TODO
+                // reactiveData: true, //TODO
                 columns: [
                     {
                         width: 32,
@@ -290,7 +296,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     }
                 },
                 rowSelectionChanged: (data, rows) => {
-                    if (!this.disableRowClick) {
+                    if (!this.disableRowClick) { //TODO delete condition? - should not be able to select things
                         if (data.length > 0 && this.directoriesOnly) {
                             this.folderIsSelected = i18n.t('nextcloud-file-picker.load-to-folder');
                         } else {
@@ -335,11 +341,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         } else {
                             row.deselect();
                         }
-                    } else {
-                        // TODO
+                    } else { // TODO
                         console.log('reached');
                         if (this._('#tf-new-folder')) {
                             this._('#tf-new-folder').focus();
+                            // this._('#tf-new-folder').select();
                         }
                     }
                 },
@@ -352,8 +358,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                      }*/
                 },
                 rowAdded: (row) => {
-                    if (that._('#new-folder-row')) { //TODO find a better condition
+                    console.log('row added');
+                    if (!this.disableRowClick) { //TODO find a better condition-name
                         row.getElement().classList.toggle("addRowAnimation");
+                    } else {
+                        console.log('in new folder row');
                     }
                 },
                 dataLoaded: () => {
@@ -396,8 +405,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             //         that.addFolder();
             //     }
             // });
-
-            
         });
     }
 
@@ -683,7 +690,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isInRecent = false;
         this.isInFilteredRecent = false;
         this.isInFavorites = true;
-                    
+        
         if (this.webDavClient === null) {
             // client is broken reload try to reset & reconnect
             this.tabulatorTable.clearData();
@@ -1238,7 +1245,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.dispatchEvent(event);
     }
 
-
     /**
      * Upload Files to a directory
      *
@@ -1638,9 +1644,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     addOpenFolderTableEntry() {
         const i18n = this._i18n;
-        if (this._('.addRowAnimation')) {
+        if (this._('.addRowAnimation')) { //TODO verify
             this._('.addRowAnimation').classList.remove('addRowAnimation');
         }
+        this.disableRowClick = true;
 
         let props = {permissions: 'RGDNVCK'};
         var row = {
@@ -1649,52 +1656,129 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             basename: "",
             props: props
         };
-        this.tabulatorTable.addRow(row, 1, 1);
+        
+        var data = this.tabulatorTable.getData();
+        console.log('1', data);
+        
+        const that = this;
+        
+        // this.tabulatorTable.addData(row, true); //this
+        this.tabulatorTable.addRow(row, true, 1).then(() => {
+
+            // setTimeout(function(){
+            //     that.tabulatorTable.redraw(true);
+            // }, 0);
+
+            that._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-table > div.tabulator-row:nth-child(1)").setAttribute('id', 'new-folder-row');
+            that._('#new-folder-row').classList.toggle('highlighted');
+
+            that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-open").classList.add('new-folder-selected');
+            that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-close").classList.add('new-folder-selected');
+            that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(6)").innerText = '';
+
+            that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(3)").setAttribute('id', 'new-folder-cell');
+
+            // add text input field
+            that._('#new-folder-cell').innerHTML = '<input type="text" class="input" name="tf-new-folder" id ="tf-new-folder" value="'+ i18n.t('nextcloud-file-picker.new-folder-placeholder') +'" placeholder="'+ i18n.t('nextcloud-file-picker.new-folder-placeholder') + '" />';
+
+            that._('#tf-new-folder').addEventListener("keydown", ({key}) => {
+                if (key === "Enter") {
+                    console.log('ENTER pressed');
+                    that.addNewFolder();
+                }
+            })
+
+            that._('#tf-new-folder').addEventListener("keydown", ({key}) => {
+                if (key === "Escape") {
+                    console.log('ESC pressed');
+                    that.cancelNewFolderCreation();
+                }
+            })
+
+            that._('#tf-new-folder').addEventListener("click", (event) => {
+                // console.log('clicked inside', event);
+                that._('#tf-new-folder').select();
+                event.stopPropagation();
+            })
+
+            that.initateOpenNewFolder = true;
+        
+        }).catch((error) => {
+            console.log('error', error);
+        });
+
+        var data2 = this.tabulatorTable.getData();
+        console.log('2', data2);
 
         // row id
-        this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-table > div.tabulator-row:nth-child(1)").setAttribute('id', 'new-folder-row');
+        // this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-table > div.tabulator-row:nth-child(1)").setAttribute('id', 'new-folder-row');
 
-        this._('#new-folder-row').setAttribute('style', 'background: #259207; color: white');
-        this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-open").classList.add('new-folder-selected');
-        this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-close").classList.add('new-folder-selected');
+        // this._('#new-folder-row').setAttribute('style', 'background: #259207; color: white');
+        // this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-open").classList.add('new-folder-selected');
+        // this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-close").classList.add('new-folder-selected');
 
-        this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(6)").innerText = '';
-        this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(3)").setAttribute('id', 'new-folder-cell');
+        // this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(6)").innerText = '';
+        // this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(3)").setAttribute('id', 'new-folder-cell');
 
-        // add text input field
-        this._('#new-folder-cell').innerHTML = '<input type="text" class="input" name="tf-new-folder" id ="tf-new-folder" value="" placeholder="'+ i18n.t('nextcloud-file-picker.new-folder-placeholder') + '" />';
+        // // add text input field
+        // this._('#new-folder-cell').innerHTML = '<input type="text" class="input" name="tf-new-folder" id ="tf-new-folder" value="'+ i18n.t('nextcloud-file-picker.new-folder-placeholder') +'" placeholder="'+ i18n.t('nextcloud-file-picker.new-folder-placeholder') + '" />';
 
-        // add event listener for pressing enter to save new folder with given name
-        this._('#tf-new-folder').addEventListener("keyup", ({key}) => {
-            if (key === "Enter") {
-                console.log('enter pressed');
-                this.addNewFolder();
-            }
-        })
+        // this._('#tf-new-folder').addEventListener("keydown", ({key}) => {
+        //     if (key === "Enter") {
+        //         console.log('ENTER pressed');
+        //         this.addNewFolder();
+        //     }
+        // })
 
-        this._('#tf-new-folder').addEventListener("keyup", ({key}) => {
-            if (key === "Escape") {
-                console.log('ESC pressed');
-                // TODO abbrechen
-            }
-        })
+        // this._('#tf-new-folder').addEventListener("keydown", ({key}) => {
+        //     if (key === "Escape") {
+        //         console.log('ESC pressed');
+        //         this.cancelNewFolderCreation();
+        //     }
+        // })
 
-        this._('#tf-new-folder').addEventListener("click", ({key}) => {
-            //TODO add click rules
-        })
+        // this._('#tf-new-folder').addEventListener("click", (event) => {
+        //     console.log('clicked inside', event);
+        //     //TODO do we need to set focus?
+        //     this._('#tf-new-folder').select();
+        //     event.stopPropagation();
+        // })
 
+        // document.addEventListener('click', this.boundClickOutsideNewFolderHandler);
+        // this.initateOpenNewFolder = true;
 
-        // during folder creation it should not be possible to click something
-        this.disableRowClick = true;
-
-        // disable selection of rows during folder creation
-        this.tabulatorTable.getRows().forEach((row) => {
-            row.getElement().classList.add("no-select");
-            row.getElement().classList.remove("tabulator-selectable");
-        })
+        // // during folder creation it should not be possible to click something
+        document.addEventListener('click', this.boundClickOutsideNewFolderHandler);
+       
+        // // disable selection of rows during folder creation
+        // this.tabulatorTable.getRows().forEach((row) => {
+        //     row.getElement().classList.add("no-select");
+        //     row.getElement().classList.remove("tabulator-selectable");
+        // })
 
         // set focus to text field
         // this._('#tf-new-folder').focus();
+        // this._('#tf-new-folder').select();
+    }
+
+    cancelNewFolderCreation() {
+        
+        if (this.initateOpenNewFolder) {
+            this.initateOpenNewFolder = false;
+            return;
+        }
+
+        console.log('canceled folder creation');
+
+        this._('#new-folder-row').classList.toggle('highlighted');
+        
+        var row = this.tabulatorTable.getRowFromPosition(0);
+        if (row) {
+            row.delete();
+        }
+
+        this.disableRowClick = false;
+        document.removeEventListener('click', this.boundClickOutsideNewFolderHandler);
     }
 
     addNewFolder() {
@@ -1704,8 +1788,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             if (typeof this.directoryPath === 'undefined') {
                 this.directoryPath = '';
             }
+            this.cancelNewFolderCreation();
+
             let folderPath = this.directoryPath + "/" + folderName;
             this.webDavClient.createDirectory(folderPath).then(contents => {
+
                 const d = new Date();
                 let props = {permissions: 'RGDNVCK'};
                 this.tabulatorTable.addRow({
@@ -1730,24 +1817,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }  
             })
             .finally(() => { // folder should be created now - delete default entry
-                // this.tabulatorTable.deleteRow(row);
-                var row = this.tabulatorTable.getRowFromPosition(1);
-                row.delete();
-                // console.log(this.tabulatorTable.getData());
-                this.disableRowClick = false;
-
-          
-                this.tabulatorTable.getRows().forEach((row) => {
-                    let data = row.getData();
-                    if (!this.checkFileType(data, this.allowedMimeTypes)) {   
-                        row.getElement().classList.remove("no-select");
-                        row.getElement().classList.add("tabulator-selectable");
-                    }
-                    if (!(this.directoriesOnly && typeof data.mime !== 'undefined')) {
-                        row.getElement().classList.remove("no-select");
-                        row.getElement().classList.add("tabulator-selectable");
-                    }
-                })
+      
+                // this.tabulatorTable.getRows().forEach((row) => {
+                //     let data = row.getData();
+                //     if (!this.checkFileType(data, this.allowedMimeTypes)) {   
+                //         row.getElement().classList.remove("no-select");
+                //         row.getElement().classList.add("tabulator-selectable");
+                //     }
+                //     if (!(this.directoriesOnly && typeof data.mime !== 'undefined')) {
+                //         row.getElement().classList.remove("no-select");
+                //         row.getElement().classList.add("tabulator-selectable");
+                //     }
+                // })
             });
         }
     }
@@ -1858,17 +1939,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }}" title="${i18n.t('nextcloud-file-picker.folder-home')}"><dbp-icon name="home"></dbp-icon> </a></span>`;
         
         if (this.isInFavorites) {
-            htmlpath[1] = html`<span> › </span><span class="breadcrumb special"><a @click="${() => {
+            htmlpath[1] = html`<span class="first"> › </span><span class="breadcrumb special"><a @click="${() => {
                 this.loadFavorites();
             }}" title="${i18n.t('nextcloud-file-picker.favorites-title')}">${i18n.t('nextcloud-file-picker.favorites-title')}</a></span>`;
 
         } else if (this.isInRecent) {
-            htmlpath[1] = html`<span> › </span><span class="breadcrumb special"><a @click="${() => {
+            htmlpath[1] = html`<span class="first"> › </span><span class="breadcrumb special"><a @click="${() => {
                 this.loadAllRecentFiles();
             }}" title="${i18n.t('nextcloud-file-picker.recent-files-title')}">${i18n.t('nextcloud-file-picker.recent-files-title')}</a></span>`;
 
         } else if (this.isInFilteredRecent) { 
-            htmlpath[1] = html`<span> › </span><span class="breadcrumb special"><a @click="${() => {
+            htmlpath[1] = html`<span class="first"> › </span><span class="breadcrumb special"><a @click="${() => {
                 this.loadMyRecentFiles();
             }}" title="${i18n.t('nextcloud-file-picker.my-recent-files-title')}">${i18n.t('nextcloud-file-picker.my-recent-files-title')}</a></span>`;
 
@@ -1885,9 +1966,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     path += directories[j];
                 }
 
-                htmlpath[i] = html`<span> › </span><span class="breadcrumb"><a @click="${() => {
-                    this.loadDirectory(path);
-                }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
+                if (i === 1) {
+                    htmlpath[i] = html`<span class="first"> › </span><span class="breadcrumb"><a @click="${() => {
+                        this.loadDirectory(path);
+                    }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
+                } else {
+                    htmlpath[i] = html`<span> › </span><span class="breadcrumb"><a @click="${() => {
+                        this.loadDirectory(path);
+                    }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
+                }                
             }
             
             let length = htmlpath.length;
@@ -1916,8 +2003,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 let shortcrumb = [];
 
                 shortcrumb[0] = htmlpath[0];
-                shortcrumb[1] = html`<span> › </span>
-                    <span class="breadcrumb"><a class="extended-breadcrumb-link" @click="${() => { this.toggleBreadcrumbMenu(); }}" title="TODO">. . .</a><div class="breadcrumb-menu"><ul class='extended-breadcrumb-menu hidden'>${path_temp}</ul></div></span>`;
+                shortcrumb[1] = html`<span class="first"> › </span>
+                    <span class="breadcrumb"><a class="extended-breadcrumb-link" @click="${() => { this.toggleBreadcrumbMenu(); }}">. . .</a><div class="breadcrumb-menu"><ul class='extended-breadcrumb-menu hidden'>${path_temp}</ul></div></span>`;
                     
                 shortcrumb[2] = htmlpath[length - 1];
                 
@@ -2038,6 +2125,25 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
+            #new-folder-row.highlighted {
+                background: #259207; 
+                color: white;
+            }
+
+            span.first {
+                margin-left: -6px;
+            }
+
+            a.home-link {
+                padding-left: 6px;
+                padding-right: 6px;
+                margin-left: -6px;
+            }
+
+            .extended-menu-link {
+                padding: 7px;
+            }
+
             .breadcrumb.special a {
                 overflow: visible;
             }
@@ -2058,8 +2164,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .nextcloud-header {
-                /** padding-bottom: 40px; 10px**/
-                /** height: 33px; TODO nur mobil! **/
+                padding-bottom: 7px;
             }
 
             .breadcrumb-menu {
@@ -2305,7 +2410,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .additional-menu {
                 white-space: nowrap;
                 height: 33px;
-                margin-right: -8px
+                margin-right: -12px; /*-15px; -8px*/
             }
 
             .nextcloud-nav p {
@@ -2556,6 +2661,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 height: 22.4px;
                 /*top: 4px;*/
                 width: 19px;
+                margin-top: 4px;
             }
 
             .nextcloud-nav a.home-link {
@@ -2566,12 +2672,20 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             and (orientation: portrait)
             and (max-width: 768px) {
 
+                .nextcloud-header {
+                    padding-bottom: 0px;
+                }
+
+                .extended-breadcrumb-link {
+                    margin-top: -2px; /*TODO verify*/
+                }
+
                 .extended-menu {
                     top: 0px;
                 }
 
                 .breadcrumb .extended-breadcrumb-menu a {
-                    /** overflow: visible; **/
+                    /* overflow: visible; */
                     display: inherit;
                 }
 
