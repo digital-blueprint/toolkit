@@ -71,10 +71,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.boundCloseBreadcrumbMenuHandler = this.hideBreadcrumbMenu.bind(this);
         this.initateOpenBreadcrumbMenu = false;
 
-        this.boundClickOutsideNewFolderHandler = this.cancelNewFolderCreation.bind(this);
+        this.boundClickOutsideNewFolderHandler = this.deleteNewFolderEntry.bind(this);
         this.initateOpenNewFolder = false;
 
         this.disableRowClick = false;
+
     }
 
     static get scopedElements() {
@@ -183,9 +184,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 responsiveLayout: "collapse",
                 responsiveLayoutCollapseStartOpen: false,
                 resizableColumns: false,
-                // autoResize: true, //TODO
-                // virtualDomBuffer: 1000, //TODO
-                // reactiveData: true, //TODO
                 columns: [
                     {
                         width: 32,
@@ -342,8 +340,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             row.deselect();
                         }
                     } else { // TODO
-                        console.log('reached');
+                        console.log('reached 1');
                         if (this._('#tf-new-folder')) {
+                            console.log('reached 2');
                             this._('#tf-new-folder').focus();
                             // this._('#tf-new-folder').select();
                         }
@@ -405,6 +404,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             //         that.addFolder();
             //     }
             // });
+
+            window.addEventListener("resize", function () { 
+                that.requestUpdate();
+                // that.tabulatorTable.redraw(true); //TODO new folder doesn't work
+            });
+
         });
     }
 
@@ -1644,7 +1649,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     addOpenFolderTableEntry() {
         const i18n = this._i18n;
-        if (this._('.addRowAnimation')) { //TODO verify
+        if (this._('.addRowAnimation')) {
             this._('.addRowAnimation').classList.remove('addRowAnimation');
         }
         this.disableRowClick = true;
@@ -1657,23 +1662,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             props: props
         };
         
-        var data = this.tabulatorTable.getData();
-        console.log('1', data);
-        
         const that = this;
         
-        // this.tabulatorTable.addData(row, true); //this
         this.tabulatorTable.addRow(row, true, 1).then(() => {
-
-            // setTimeout(function(){
-            //     that.tabulatorTable.redraw(true);
-            // }, 0);
-
             that._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-table > div.tabulator-row:nth-child(1)").setAttribute('id', 'new-folder-row');
             that._('#new-folder-row').classList.toggle('highlighted');
 
-            that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-open").classList.add('new-folder-selected');
-            that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-close").classList.add('new-folder-selected');
+            that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-open").classList.add('new-folder-selected'); //TODO
+            that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-close").classList.add('new-folder-selected'); //TODO
             that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(6)").innerText = '';
 
             that._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(3)").setAttribute('id', 'new-folder-cell');
@@ -1688,15 +1684,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
             })
 
-            that._('#tf-new-folder').addEventListener("keydown", ({key}) => {
-                if (key === "Escape") {
+            that._('#new-folder-row').addEventListener("keydown", event => {
+                if (event.key === "Escape") {
                     console.log('ESC pressed');
-                    that.cancelNewFolderCreation();
+                    that.deleteNewFolderEntry();
+                    event.stopPropagation();
                 }
             })
 
-            that._('#tf-new-folder').addEventListener("click", (event) => {
-                // console.log('clicked inside', event);
+            that._('#new-folder-row').addEventListener("click", (event) => {
                 that._('#tf-new-folder').select();
                 event.stopPropagation();
             })
@@ -1707,50 +1703,16 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             console.log('error', error);
         });
 
-        var data2 = this.tabulatorTable.getData();
-        console.log('2', data2);
-
-        // row id
-        // this._('#directory-content-table').querySelector("div.tabulator-tableHolder > div.tabulator-table > div.tabulator-row:nth-child(1)").setAttribute('id', 'new-folder-row');
-
-        // this._('#new-folder-row').setAttribute('style', 'background: #259207; color: white');
-        // this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-open").classList.add('new-folder-selected');
-        // this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-close").classList.add('new-folder-selected');
-
-        // this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(6)").innerText = '';
-        // this._('#new-folder-row').querySelector("div.tabulator-cell:nth-child(3)").setAttribute('id', 'new-folder-cell');
-
-        // // add text input field
-        // this._('#new-folder-cell').innerHTML = '<input type="text" class="input" name="tf-new-folder" id ="tf-new-folder" value="'+ i18n.t('nextcloud-file-picker.new-folder-placeholder') +'" placeholder="'+ i18n.t('nextcloud-file-picker.new-folder-placeholder') + '" />';
-
-        // this._('#tf-new-folder').addEventListener("keydown", ({key}) => {
-        //     if (key === "Enter") {
-        //         console.log('ENTER pressed');
-        //         this.addNewFolder();
-        //     }
-        // })
-
-        // this._('#tf-new-folder').addEventListener("keydown", ({key}) => {
-        //     if (key === "Escape") {
-        //         console.log('ESC pressed');
-        //         this.cancelNewFolderCreation();
-        //     }
-        // })
-
-        // this._('#tf-new-folder').addEventListener("click", (event) => {
-        //     console.log('clicked inside', event);
-        //     //TODO do we need to set focus?
-        //     this._('#tf-new-folder').select();
-        //     event.stopPropagation();
-        // })
-
-        // document.addEventListener('click', this.boundClickOutsideNewFolderHandler);
-        // this.initateOpenNewFolder = true;
-
         // // during folder creation it should not be possible to click something
         document.addEventListener('click', this.boundClickOutsideNewFolderHandler);
+
+        this.tabulatorTable.getRows().forEach((row) => {
+            if (row.getElement().classList.contains('tabulator-selected')) {
+                row.getElement().classList.remove('tabulator-selected');
+            }
+        })
        
-        // // disable selection of rows during folder creation
+        // disable selection of rows during folder creation
         // this.tabulatorTable.getRows().forEach((row) => {
         //     row.getElement().classList.add("no-select");
         //     row.getElement().classList.remove("tabulator-selectable");
@@ -1761,15 +1723,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         // this._('#tf-new-folder').select();
     }
 
-    cancelNewFolderCreation() {
-        
+    deleteNewFolderEntry() {
         if (this.initateOpenNewFolder) {
             this.initateOpenNewFolder = false;
             return;
         }
-
-        console.log('canceled folder creation');
-
+        // console.log('canceled folder creation');
         this._('#new-folder-row').classList.toggle('highlighted');
         
         var row = this.tabulatorTable.getRowFromPosition(0);
@@ -1788,7 +1747,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             if (typeof this.directoryPath === 'undefined') {
                 this.directoryPath = '';
             }
-            this.cancelNewFolderCreation();
+            this.deleteNewFolderEntry();
 
             let folderPath = this.directoryPath + "/" + folderName;
             this.webDavClient.createDirectory(folderPath).then(contents => {
@@ -1816,8 +1775,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;
                 }  
             })
-            .finally(() => { // folder should be created now - delete default entry
-      
+            .finally(() => {
                 // this.tabulatorTable.getRows().forEach((row) => {
                 //     let data = row.getData();
                 //     if (!this.checkFileType(data, this.allowedMimeTypes)) {   
@@ -2124,6 +2082,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
+
+            div.tabulator-placeholder span {
+                white-space: normal;
+            }
 
             #new-folder-row.highlighted {
                 background: #259207; 
