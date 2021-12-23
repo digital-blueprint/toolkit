@@ -49,6 +49,7 @@
     "no-recent-files": "Es wurden keine entsprechenden Dateien und Ordner innerhalb der letzten 3 Monate gefunden.",
     "webdav-error": "Etwas ist schief gelaufen: {{error}}",
     "add-folder-error": "Die Ressource \"{{folder}}\", ist bereits vorhanden.",
+    "add-folder-error-empty": "Der Ordnername darf nicht leer sein.",
     "add-folder-success": "Der Ordner \"{{folder}}\" wurde erfolgreich erstellt.",
     "add-folder-open": "Neuer Ordner Dialog öffnen",
     "add-folder-close": "Neuer Ordner Dialog schließen",
