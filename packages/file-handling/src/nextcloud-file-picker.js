@@ -1663,21 +1663,21 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 if (key === "Enter") {
                     that.addNewFolder();
                 }
-            })
+            });
 
             that._('#new-folder-row').addEventListener("keydown", event => {
                 if (event.key === "Escape") {
                     that.deleteNewFolderEntry();
                     event.stopPropagation();
                 }
-            })
+            });
 
             document.addEventListener("keydown", this.boundCancelNewFolderHandler);
 
             that._('#new-folder-row').addEventListener("click", (event) => {
                 that._('#tf-new-folder').select();
                 event.stopPropagation();
-            })
+            });
 
             that.initateOpenNewFolder = true;
 
@@ -1753,7 +1753,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.statusText = html`<span
                             class="error"> ${i18n.t('nextcloud-file-picker.webdav-error', {error: error.message})} </span>`;
                 }  
-            })
+            });
         } else {
             this.statusText = html`<span
                     class="error"> ${i18n.t('nextcloud-file-picker.add-folder-error-empty')} </span>`;
