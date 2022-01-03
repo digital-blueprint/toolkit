@@ -1974,7 +1974,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         // computations for overflow - end
 
         if (!menu.classList.contains('hidden')) { // add event listener for clicking outside of menu
-            menu.setAttribute('style', 'max-width: ' + maxWidth + 'px;'); //TODO verify if this is enough
+            if (!isMenuOverflow) {
+                menu.setAttribute('style', 'max-width: ' + maxWidth + 'px;');
+            }
             document.addEventListener('click', this.boundCloseBreadcrumbMenuHandler);
             this.initateOpenBreadcrumbMenu = true;
         }
