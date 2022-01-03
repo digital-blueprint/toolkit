@@ -95,8 +95,6 @@ files from a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
   This is supported by the provider! Use this object to sync file source and file sink on one page at first time open.
     - example `<dbp-file-source initial-file-handling-state="{target: 'local', path:'my/server/path'}"></dbp-file-source>`
     - example provider `<dbp-file-source subscribe="initial-file-handling-state"></dbp-file-source>`
-- `show-nextcloud-favorites` (optional): Needs to be set to show the favorites icon
-    - example `show-nextcloud-favorites`
 
 ### Emitted attributes
 
@@ -162,9 +160,7 @@ files to a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
   This is supported by the provider! Use this object to sync file source and file sink on one page at first time open.
   - example `<dbp-file-source initial-file-handling-state="{target: 'local', path:'my/server/path'}"></dbp-file-source>`
   - example provider `<dbp-file-source subscribe="initial-file-handling-state"></dbp-file-source>`
-- `show-nextcloud-additional-menu` (optional): Needs to be set to show the additional menu
-    - example `show-nextcloud-additional-menu`
-    
+
 ### Emitted attributes
 
 The component emits a `dbp-set-property` event for the attribute `initial-file-handling-state`:

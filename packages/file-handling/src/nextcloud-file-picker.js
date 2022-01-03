@@ -5,8 +5,8 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import {createClient, parseXML} from 'webdav/web';
 import {classMap} from 'lit/directives/class-map.js';
-import {createClient, parseXML, parseStat} from 'webdav/web';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import Tabulator from 'tabulator-tables';
 import MicroModal from './micromodal.es';
@@ -114,8 +114,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             activeDirectoryACL: {type: String, attribute: false},
             abortUploadButton: {type: Boolean, attribute: false},
             selectBtnDisabled: {type: Boolean, attribute: true},
-            showSubmenu: {type: Boolean, attribute: false},
-            showAdditionalMenu: { type: Boolean, attribute: 'show-nextcloud-additional-menu' },
             userName: { type: Boolean, attribute: false },
             storeSession: {type: Boolean, attribute: 'store-nextcloud-session'},
             disableRowClick: {type: Boolean, attribute: false },
@@ -2053,7 +2051,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             #new-folder-row.highlighted {
-                background: #259207; 
+                background: #259207;
                 color: white;
             }
 
@@ -2151,6 +2149,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             input[type=text]#tf-new-folder:focus-visible {
                 outline: none;
+                box-shadow: none;
             }
 
             input[type=text]#tf-new-folder::placeholder {
@@ -2184,6 +2183,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 width: 100%;
                 height: 100%;
                 margin-left: -8px;
+                color: white;
             }
 
             .new-folder-selected::after {
@@ -2461,35 +2461,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             #abortButton:hover {
                 color: var(--dbp-text-light);
-            }
-            
-            #submenu {
-                height: 33px;
-                width: 33px;
-                justify-content: center;
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-            }
-            
-            .submenu-icon {
-                margin-top: -5px;
-            }
-            
-            #submenu-content {
-                position: absolute;
-                right: 0px;
-                top: 33px;
-                z-index: 1;
-            }
-
-            #submenu-content button{
-                border-radius: 0px;
-            }
-            
-            .menu-buttons {
-                display: flex;
-                gap: 1em;
             }
             
             .menu-buttons {
@@ -2827,42 +2798,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                         ${i18n.t('nextcloud-file-picker.add-folder')}
                                     </a>
                                 </li>
-
-                            <button class="button ${classMap({hidden: this.storeSession})}"
-                                    title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
-                                    @click="${() => {
-                                        this.openAddFolderDialogue();
-                                    }}">
-                                <dbp-icon name="plus" class="nextcloud-add-folder" id="add-folder-button"></dbp-icon>
-                            </button>
                             
                                 <li class="${classMap({hidden: !this.storeSession})}" title="${i18n.t('nextcloud-file-picker.log-out')}">
                                     <a class="" @click="${() => { this.logOut(); this.hideAdditionalMenu(); }}">
                                         ${i18n.t('nextcloud-file-picker.log-out')}
                                     </a>
                                 </li>
-                            
                             </ul>
-
-<!-- TODO integrate submenu in additional menu
-                            <div id="submenu" class="${classMap({hidden: !this.storeSession})}"
-                                title="${i18n.t('nextcloud-file-picker.open-submenu')}"
-                                @click="${() => {
-                                    this.toggleSubmenu();
-                                }}">
-                                <dbp-icon name="menu-dots" class="submenu-icon"></dbp-icon>
-                                <div id="submenu-content" class="${classMap({hidden: !this.showSubmenu})}">
-                                    <button class="button"
-                                            title="${i18n.t('nextcloud-file-picker.log-out')}"
-                                            @click="${() => {
-                                                this.logOut();
-                                            }}">
-                                            ${i18n.t('nextcloud-file-picker.log-out')}
-                                    </button>
-                                </div>
-                            </div>
--->
-
                         </div>
                     </div> 
                 </div>
