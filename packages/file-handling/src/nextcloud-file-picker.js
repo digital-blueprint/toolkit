@@ -139,9 +139,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         this._("#select_all_wrapper").classList.remove("hidden");
                     }
             }
-        });
-
-        
+        });        
 
         super.update(changedProperties);
     }
@@ -1894,11 +1892,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 if (i === 1) {
-                    htmlpath[i] = html`<span class="first"> › </span><span class="breadcrumb"><a @click="${() => {
+                    htmlpath[i] = html`<span class="first breadcrumb-arrow"> › </span><span class="breadcrumb"><a @click="${() => {
                         this.loadDirectory(path);
                     }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
                 } else {
-                    htmlpath[i] = html`<span> › </span><span class="breadcrumb"><a @click="${() => {
+                    htmlpath[i] = html`<span class="breadcrumb-arrow"> › </span><span class="breadcrumb"><a @click="${() => {
                         this.loadDirectory(path);
                     }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></span>`;
                 }                
@@ -1924,13 +1922,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     
                     path_temp[i] = html`<li class="breadcrumb-${i}" id="breadcrumb-${i}"><a @click="${() => {
                         this.loadDirectory(path);
-                    }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}">${directories[i]}</a></li>`;
+                    }}" title="${i18n.t('nextcloud-file-picker.load-path-link', {path: directories[i]})}"><dbp-icon name="folder" class="breadcrumb-folder"></dbp-icon> ${directories[i]}</a></li>`;
                 }
 
                 let shortcrumb = [];
 
                 shortcrumb[0] = htmlpath[0];
-                shortcrumb[1] = html`<span class="first"> › </span>
+                shortcrumb[1] = html`<span class="first breadcrumb-arrow"> › </span>
                     <span class="breadcrumb"><a class="extended-breadcrumb-link" @click="${() => { this.toggleBreadcrumbMenu(); }}">. . .</a><div class="breadcrumb-menu"><ul class='extended-breadcrumb-menu hidden'>${path_temp}</ul></div></span>`;
                     
                 shortcrumb[2] = htmlpath[length - 1];
@@ -1956,7 +1954,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.menuHeightBreadcrumb = menu.clientHeight;
 
         let topValue = menuStart.getBoundingClientRect().bottom;
-        let isMenuOverflow = this.menuHeightBreadcrumb + topValue >= this._('.wrapper').offsetHeight ? true : false;
+        let topHeight = this._('.nextcloud-header').offsetHeight;
+        let isMenuOverflow = this.menuHeightBreadcrumb + topHeight >= this._('.wrapper').offsetHeight ? true : false;
         
         //set max-width to window with 
         let maxWidth = this._('.wrapper').offsetWidth;
@@ -2049,8 +2048,21 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
-            div.tabulator-placeholder span {
+            .breadcrumb-folder {
+                padding-right: 5px;
+                color: #444;
+                font-size: 1.4em;
+                padding-top: 7px;
+            }
+
+            .tabulator-header {
+                padding-top: 0px; /**TODO verify*/
+            }
+
+            .tabulator-placeholder span {
+                padding: 14px!important; /*TODO find a better way*/
                 white-space: normal;
+                border-top: 1px solid var(--dbp-text-muted-light);
             }
 
             #new-folder-row.highlighted {
@@ -2573,12 +2585,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             and (orientation: portrait)
             and (max-width: 768px) {
 
+                .breadcrumb-arrow {
+                    font-size: 1.6em;
+                    vertical-align: middle;
+                    padding-bottom: 3px;
+                    padding-left: 2px;
+                    padding-right: 2px;
+                    /**padding: 0px 2px 2px 3px;*/
+                }
+
                 .nextcloud-header {
                     padding-bottom: 0px;
                 }
 
                 .extended-breadcrumb-link {
-                    margin-top: -2px;
+                    margin-top: -4px; /**TODO -3px; -2px;*/
+                    font-size: 1.2em!important; /**TODO for demo purpose only */
+                    font-weight: 400;
                 }
 
                 .extended-menu {
@@ -2708,10 +2731,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 .button-container .checkmark::after {
-                    left: 8px;
+                    /** left: 8px;
                     top: 2px;
                     width: 8px;
-                    height: 15px;
+                    height: 15px; */
                 }
 
                 .select-all-icon {
@@ -2719,10 +2742,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 .checkmark {
-                    height: 25px;
+                    /** height: 25px;
                     width: 25px;
                     left: 9px;
-                    top: 2px;
+                    top: 2px; */
+
                 }
 
             }
