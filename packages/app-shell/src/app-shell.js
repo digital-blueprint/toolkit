@@ -634,6 +634,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 font-weight: 300;
                 color: var(--dbp-text-dark);
                 display: block;
+                padding-right: 13px;
+                word-break: break-word;
             }
 
             .menu a:hover {
@@ -645,6 +647,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 border-left: 3px solid var(--dbp-accent-dark);
                 font-weight: bolder;
                 padding-left: 0.5em;
+                padding-right: 0.3em;
 
             }
 
