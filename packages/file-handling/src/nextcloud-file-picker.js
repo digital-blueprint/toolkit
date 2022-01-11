@@ -2056,7 +2056,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .tabulator-header {
-                padding-top: 0px; /**TODO verify*/
+                padding-top: 8px;
+                padding-bottom: 0;
             }
 
             .tabulator-placeholder span {
