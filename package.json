@@ -26,6 +26,6 @@
     "lerna": "^4.0.0"
   },
   "dependencies": {
-    "webdav": "4.6.0"
+    "webdav": "4.6.1"
   }
 }
