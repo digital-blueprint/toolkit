@@ -8604,10 +8604,10 @@ web-component-analyzer@~1.1.1:
     typescript "^3.8.3"
     yargs "^15.3.1"
 
-webdav@4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/webdav/-/webdav-4.6.0.tgz#b12d3631562ed4a7d665dd1757349682dfc8f441"
-  integrity sha512-amL/NeZ73xe8cNC+uqAF3mOC/j5dNoNWlZswYCd7DKxhnZM7dViAVSv6gdCYeGAETjPEZVubcKDDRwGKz9ShQQ==
+webdav@4.6.1:
+  version "4.6.1"
+  resolved "https://registry.yarnpkg.com/webdav/-/webdav-4.6.1.tgz#ba4cdd505dc63ae63487027eea81f1cbf93b1bf3"
+  integrity sha512-fjFnJHHGsmkf3ool8DjybH/LL+9gLKRLB3a5EV6V+FsqIwf/rNPKmUYu1Wc1vWOTf1EnOdf/oeLp75jyLrkOHQ==
   dependencies:
     axios "^0.21.1"
     base-64 "^1.0.0"
