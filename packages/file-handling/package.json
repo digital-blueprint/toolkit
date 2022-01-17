@@ -42,7 +42,7 @@
     "lit": "^2.0.0",
     "material-design-icons-svg": "^3.0.0",
     "tabulator-tables": "^4.8.4",
-    "webdav": "4.6.1"
+    "webdav": "4.8.0"
   },
   "scripts": {
     "clean": "rm dist/*",
