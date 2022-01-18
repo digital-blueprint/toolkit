@@ -59,8 +59,8 @@ export function getThemeCSS() {
         --dbp-border-light: var(--dbp-override-border-light, 1px solid #ffffff);
         --dbp-border-dark: var(--dbp-override-border-dark, 1px solid #000000);
         --dbp-border-radius: var(--dbp-override-border-radius, 0px);
-        --dbp-hover-base: var(--dbp-override-hover-base, var(--dbp-override-dark, inherit));
-        --dbp-hover-text: var(--dbp-override-hover-text, var(--dbp-override-light, inherit));
+        --dbp-hover-base: var(--dbp-override-hover-base, var(--dbp-override-dark, var(--dbp-base-light)));
+        --dbp-hover-text: var(--dbp-override-hover-text, var(--dbp-override-light, var(--dbp-base-dark)));
         
         /* TODO check if there are any uses of this in other apps then remove it */
         --dbp-button-hover-base: var(--dbp-override-button-hover-base, var(--dbp-override-dark, #000000));
@@ -463,9 +463,9 @@ export function getButtonCSS() {
         }
 
         button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled) {
-            /*color: var(--dbp-hover-text, currentColor);
-            border-color: var(--dbp-hover-base);
-            background-color: var(--dbp-hover-base, inherit);*/
+            color: var(--dbp-hover-text, currentColor);
+          /*  border-color: var(--dbp-hover-base); */
+            background-color: var(--dbp-hover-base, inherit);
         }
 
         button.button.is-small, .button.is-small {
@@ -1112,51 +1112,31 @@ export function getActivityCSS() {
 export function getLinkCss() {
     // language=css
     return css`
-        .int-link-external {
-            transition: background-color 0.15s, color 0.15s;
+        .int-link-external, .int-link-internal, .link, .link-without-hover {
             border-bottom: var(--dbp-border-dark);
         }
 
-        .int-link-external:hover {
+        .int-link-external:hover, .int-link-internal:hover, .link:hover {
             color: var(--dbp-hover-text);
             background-color: var(--dbp-hover-base);
+            border-color: var(--dbp-hover-text);
         }
 
-        .int-link-external:after {
+        .int-link-external:after, .int-link-internal:after, .link:after, .link-without-hover:after {
             content: "\\00a0\\00a0\\00a0";
-            background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%228.6836mm%22%20width%3D%225.2043mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2018.440707%2030.768605%22%3E%3Cg%20transform%3D%22translate(-382.21%20-336.98)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3Bstroke-width%3A2%3Bfill%3Anone%22%20d%3D%22m383.22%20366.74%2016.43-14.38-16.43-14.37%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
-            background-size: 73%;
-            background-repeat: no-repeat;
-            background-position: center center;
-            margin: 0 0 0 3px;
+            background-color: var(--dbp-text-dark);
+            -webkit-mask-image: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2026.0.2%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2014.8%2024.6%22%0A%09%20style%3D%22enable-background%3Anew%200%200%2014.8%2024.6%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%20transform%3D%22translate%28-382.21%20-336.98%29%22%3E%0A%09%3Cg%3E%0A%09%09%3Cpath%20d%3D%22M383%2C361.6c-0.2%2C0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2C0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1%0A%09%09%09c0.3-0.3%2C0.8-0.4%2C1.1-0.1l13.1%2C11.5c0.2%2C0.2%2C0.3%2C0.4%2C0.3%2C0.6c0%2C0.2-0.1%2C0.5-0.3%2C0.6l-13.1%2C11.5C383.4%2C361.5%2C383.2%2C361.6%2C383%2C361.6%0A%09%09%09z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E');
+            mask-image: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2026.0.2%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2014.8%2024.6%22%0A%09%20style%3D%22enable-background%3Anew%200%200%2014.8%2024.6%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%20transform%3D%22translate%28-382.21%20-336.98%29%22%3E%0A%09%3Cg%3E%0A%09%09%3Cpath%20d%3D%22M383%2C361.6c-0.2%2C0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2C0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1%0A%09%09%09c0.3-0.3%2C0.8-0.4%2C1.1-0.1l13.1%2C11.5c0.2%2C0.2%2C0.3%2C0.4%2C0.3%2C0.6c0%2C0.2-0.1%2C0.5-0.3%2C0.6l-13.1%2C11.5C383.4%2C361.5%2C383.2%2C361.6%2C383%2C361.6%0A%09%09%09z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E');
+            mask-repeat: no-repeat;
+            mask-position: center 4px;
+            margin: 0 2px 0 6px;
             padding: 0 0 0.25% 0;
-            animation: 0.15s linkIconOut;
-            font-size: 103%;
+            mask-size: 82%;
         }
 
-        .int-link-internal{
-            transition: background-color 0.15s, color 0.15s;
-            border-bottom: var(--dbp-border-dark);
+        .int-link-external:hover::after, .int-link-internal:hover::after, .link:hover::after{
+            background-color: var(--dbp-hover-text);
         }
-
-        .int-link-internal:hover{
-            color: var(--dbp-hover-text);
-            background-color: var(--dbp-hover-base);
-        }
-
-        /* TODO Change color(mask) */
-        /*.int-link-internal:hover::after{
-                    content: "\\00a0\\00a0\\00a0";
-                    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%228.6836mm%22%20width%3D%225.2043mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2018.440707%2030.768605%22%3E%3Cg%20transform%3D%22translate(-382.21%20-336.98)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23FFF%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3Bstroke-width%3A2%3Bfill%3Anone%22%20d%3D%22m383.22%20366.74%2016.43-14.38-16.43-14.37%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
-                    background-size: 73%;
-                    background-repeat: no-repeat;
-                    background-position: center center;
-                    margin: 0 0 0 3px;
-                    padding: 0 0 0.25% 0;
-                    animation: 0s linkIconIn;
-                    font-size: 103%;
-                }*/
-
     `;
 }
 
