@@ -488,6 +488,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
+            ${commonStyles.getLinkCss()}
 
             .hidden {display: none}
 

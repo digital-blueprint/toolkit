@@ -214,6 +214,8 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             color: var(--dbp-text-dark);
             padding: 0.14rem 1.0rem 0.14rem 0.14rem;
         }
+
+
     `;
 }
 
@@ -441,6 +443,31 @@ export function getNotificationCSS() {
 }
 
 export function getButtonCSS() {
+    const docStyle = getComputedStyle(document.documentElement);
+    let hoverTextCheck = false;
+    let hoverBaseCheck = false;
+    if (docStyle) {
+        const hoverBase = docStyle.getPropertyValue('--dbp-override-hover-base');
+        hoverBaseCheck = hoverBase ? true : false
+        const hoverText = docStyle.getPropertyValue('--dbp-override-hover-text');
+        hoverTextCheck = hoverText ? true : false
+    }
+
+    let hoverTextStyle = css``;
+    let hoverBaseStyle = css``;
+
+    if (hoverTextCheck) {
+        hoverTextStyle = css`
+            color: var(--dbp-hover-text);
+        `;
+    }
+
+    if (hoverBaseCheck) {
+        hoverBaseStyle = css`
+            background-color: var(--dbp-hover-base);
+        `;
+    }
+
     // language=css
     return css`
         button.button, .button, button.dt-button {
@@ -462,10 +489,9 @@ export function getButtonCSS() {
             background: none;
         }
 
-        button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled) {
-            color: var(--dbp-hover-text, currentColor);
-          /*  border-color: var(--dbp-hover-base); */
-            background-color: var(--dbp-hover-base, inherit);
+        button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled), .button:hover {
+            ${hoverTextStyle}
+            ${hoverBaseStyle}
         }
 
         button.button.is-small, .button.is-small {
@@ -1110,6 +1136,35 @@ export function getActivityCSS() {
 }
 
 export function getLinkCss() {
+    const docStyle = getComputedStyle(document.documentElement);
+    let hoverTextCheck = false;
+    let hoverBaseCheck = false;
+    if (docStyle) {
+        const hoverBase = docStyle.getPropertyValue('--dbp-override-hover-base');
+        hoverBaseCheck = hoverBase ? true : false
+        const hoverText = docStyle.getPropertyValue('--dbp-override-hover-text');
+        hoverTextCheck = hoverText ? true : false
+    }
+
+    let hoverTextStyle = css``;
+    let hoverChevronStyle = css``;
+    let hoverBaseStyle = css``;
+
+    if (hoverTextCheck) {
+        hoverTextStyle = css`
+            color: var(--dbp-hover-text);
+            border-color: var(--dbp-hover-text);
+        `;
+        hoverChevronStyle = css`
+            background-color: var(--dbp-hover-text);
+        `;
+    }
+
+    if (hoverBaseCheck) {
+        hoverBaseStyle = css`
+            background-color: var(--dbp-hover-base);
+        `;
+    }
     // language=css
     return css`
         .int-link-external, .int-link-internal, .link, .link-without-hover {
@@ -1117,9 +1172,8 @@ export function getLinkCss() {
         }
 
         .int-link-external:hover, .int-link-internal:hover, .link:hover {
-            color: var(--dbp-hover-text);
-            background-color: var(--dbp-hover-base);
-            border-color: var(--dbp-hover-text);
+            ${hoverTextStyle}
+            ${hoverBaseStyle}
         }
 
         .int-link-external:after, .int-link-internal:after, .link:after, .link-without-hover:after {
@@ -1135,7 +1189,7 @@ export function getLinkCss() {
         }
 
         .int-link-external:hover::after, .int-link-internal:hover::after, .link:hover::after{
-            background-color: var(--dbp-hover-text);
+            ${hoverChevronStyle}
         }
     `;
 }
