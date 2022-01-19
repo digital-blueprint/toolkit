@@ -448,9 +448,9 @@ export function getButtonCSS() {
     let hoverBaseCheck = false;
     if (docStyle) {
         const hoverBase = docStyle.getPropertyValue('--dbp-override-hover-base');
-        hoverBaseCheck = hoverBase ? true : false
+        hoverBaseCheck = hoverBase ? true : false;
         const hoverText = docStyle.getPropertyValue('--dbp-override-hover-text');
-        hoverTextCheck = hoverText ? true : false
+        hoverTextCheck = hoverText ? true : false;
     }
 
     let hoverTextStyle = css``;
@@ -1141,9 +1141,9 @@ export function getLinkCss() {
     let hoverBaseCheck = false;
     if (docStyle) {
         const hoverBase = docStyle.getPropertyValue('--dbp-override-hover-base');
-        hoverBaseCheck = hoverBase ? true : false
+        hoverBaseCheck = hoverBase ? true : false;
         const hoverText = docStyle.getPropertyValue('--dbp-override-hover-text');
-        hoverTextCheck = hoverText ? true : false
+        hoverTextCheck = hoverText ? true : false;
     }
 
     let hoverTextStyle = css``;
