@@ -162,7 +162,7 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
             and (orientation: portrait)
             and (max-width: 768px) {
                 .button {
-                    min-height: 40px;
+                    min-height: 36px;
                 }
 
                 .label {
