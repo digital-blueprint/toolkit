@@ -68,6 +68,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
         this._onShowActivityEvent = this._onShowActivityEvent.bind(this);
 
+        this.boundCloseMenuHandler = this.hideMenu.bind(this);
+        this.initateOpenMenu = false;
+
         this.auth = {};
     }
 
@@ -475,9 +478,22 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         if (chevron !== null) {
             chevron.name = menu.classList.contains('hidden') ? 'chevron-down' : 'chevron-up';
         }
+
+        if (!menu.classList.contains('hidden')) {
+            document.addEventListener('click', this.boundCloseMenuHandler);
+            this.initateOpenMenu = true;
+        }
+        else {
+            document.removeEventListener('click', this.boundCloseMenuHandler);
+            menu.removeAttribute('style');
+        }
     }
 
     hideMenu() {
+        if (this.initateOpenMenu) {
+            this.initateOpenMenu = false;
+            return;
+        }
         const menu = this.shadowRoot.querySelector("ul.menu");
         if (menu && !menu.classList.contains('hidden'))
             this.toggleMenu();
