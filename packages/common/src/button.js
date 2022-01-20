@@ -157,6 +157,18 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
             .button {
                 width: 100%;
             }
+
+            @media only screen
+            and (orientation: portrait)
+            and (max-width: 768px) {
+                .button {
+                    min-height: 40px;
+                }
+
+                .label {
+                    margin: auto;
+                }
+            }
         `;
     }
 
