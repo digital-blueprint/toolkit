@@ -2063,6 +2063,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .tabulator-placeholder span {
                 padding: 14px!important; /*TODO find a better way*/
                 white-space: normal;
+            }
+
+            .tabulator-placeholder {
                 border-top: 1px solid var(--dbp-text-muted-light);
             }
 
