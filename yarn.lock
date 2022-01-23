@@ -15,9 +15,7 @@
   integrity sha512-m7OkX0IdKLKPpBlJtF561YJal5y/jyI5fNfWbPxh2D/nbzzGI4qRyrD8xO2jB24u7l+5I2a43scCG2IrfjC50Q==
 
 "@babel/core@^7.10.3":
-  version "7.16.7"
-  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.16.7.tgz#db990f931f6d40cb9b87a0dc7d2adc749f1dcbcf"
-  integrity sha512-aeLaqcqThRNZYmbMqtulsetOQZ/5gbR/dWruUCJcpas4Qoyy+QeagfDsPdMrqwsPRDNxJvBlRiZxxX7THO7qtA==
+  version: "7.16.12"
   dependencies:
     "@babel/code-frame" "^7.16.7"
     "@babel/generator" "^7.16.7"
@@ -714,9 +712,7 @@
     "@babel/helper-plugin-utils" "^7.16.7"
 
 "@babel/plugin-transform-runtime@^7.10.3":
-  version "7.16.8"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-runtime/-/plugin-transform-runtime-7.16.8.tgz#3339368701103edae708f0fba9e4bfb70a3e5872"
-  integrity sha512-6Kg2XHPFnIarNweZxmzbgYnnWsXxkx9WQUVk2sksBRL80lBC1RAQV3wQagWxdCHiYHqPN+oenwNIuttlYgIbQQ==
+  version: "7.16.10"
   dependencies:
     "@babel/helper-module-imports" "^7.16.7"
     "@babel/helper-plugin-utils" "^7.16.7"
@@ -777,9 +773,7 @@
     "@babel/helper-plugin-utils" "^7.16.7"
 
 "@babel/preset-env@^7.10.3":
-  version "7.16.8"
-  resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.16.8.tgz#e682fa0bcd1cf49621d64a8956318ddfb9a05af9"
-  integrity sha512-9rNKgVCdwHb3z1IlbMyft6yIXIeP3xz6vWvGaLHrJThuEIqWfHb0DNBH9VuTgnDfdbUDhkmkvMZS/YMCtP7Elg==
+  version: "7.16.11"
   dependencies:
     "@babel/compat-data" "^7.16.8"
     "@babel/helper-compilation-targets" "^7.16.7"
@@ -3244,26 +3238,20 @@ dashdash@^1.12.0:
     assert-plus "^1.0.0"
 
 datatables.net-buttons-dt@^2.0.0:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/datatables.net-buttons-dt/-/datatables.net-buttons-dt-2.2.1.tgz#94871de5cdb0b91eb7e950da0a3fd4e8cce7e8f2"
-  integrity sha512-L2C/pv708tv+conCDOqexyl9LmQLTl5H8+GcJBRoLRXSuBg8h9L9zMOObUs1ZAkenunHJupR48+xBKmaxQP/jg==
+  version: "2.2.2"
   dependencies:
     datatables.net-buttons ">=2.0.1"
     datatables.net-dt ">=1.11.3"
     jquery ">=1.7"
 
 datatables.net-buttons@>=2.0.1, datatables.net-buttons@^2.0.0:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/datatables.net-buttons/-/datatables.net-buttons-2.2.1.tgz#4f4b1ca8b1175b035e15f91dd08330daf592ad7d"
-  integrity sha512-eZQyt5TElvs3QLsLfDCVR6v60g1wff6fAXPTCm5TzJkCAI/vsRLpv0ZRRc9wKW35LsdkaXBBya5vqY/1wzhcJQ==
+  version: "2.2.2"
   dependencies:
     datatables.net ">=1.11.3"
     jquery ">=1.7"
 
 datatables.net-dt@>=1.11.3, datatables.net-dt@^1.10.15, datatables.net-dt@^1.10.20:
-  version "1.11.3"
-  resolved "https://registry.yarnpkg.com/datatables.net-dt/-/datatables.net-dt-1.11.3.tgz#242556a490585b457b7d2b9f5fd8fb10761d621b"
-  integrity sha512-EX/thRwXpQRj8hZSb+ZMDNQ4uW1zLZa9BoAhhw1b5HIDH1nJ9WRTkERsoxE+3WISeX8bDiaEydf8TTQBSqxXVw==
+  version: "1.11.4"
   dependencies:
     datatables.net ">=1.10.25"
     jquery ">=1.7"
@@ -3696,9 +3684,7 @@ escape-string-regexp@^1.0.5:
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
 eslint-plugin-jsdoc@^37.0.0:
-  version "37.6.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-37.6.1.tgz#3d2a18d2535618d3f9d26c3c7eccfb15b6db20d4"
-  integrity sha512-Y9UhH9BQD40A9P1NOxj59KrSLZb9qzsqYkLCZv30bNeJ7C9eaumTWhh9beiGqvK7m821Hj1dTsZ5LOaFIUTeTg==
+  version: "37.6.3"
   dependencies:
     "@es-joy/jsdoccomment" "~0.17.0"
     comment-parser "1.3.0"
@@ -4675,9 +4661,7 @@ i18next-scanner@^3.0.0:
     vinyl-fs "^3.0.1"
 
 i18next@*, i18next@^21.4.2:
-  version "21.6.6"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.6.6.tgz#65db9a32e4746d145b3ab3f12c59fc02ad7b5101"
-  integrity sha512-K1Pw8K+nHVco56PO6UrqNq4K/ZVbb2eqBQwPqmzYDm4tGQYXBjdz8jrnvuNvV5STaE8oGpWKQMxHOvh2zhVE7Q==
+  version: "21.6.7"
   dependencies:
     "@babel/runtime" "^7.12.0"
 
@@ -5211,9 +5195,7 @@ jest-worker@^26.2.1:
     supports-color "^7.0.0"
 
 jose@^4.0.0:
-  version "4.3.8"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.3.8.tgz#149cb6a318689d5dbf469b40ac48c3f82276f4e6"
-  integrity sha512-dFiqN5FPLNWa/v+J3ShFjV/9sRGickxMbGUbqBrYr+BkrqLOieACaavSi9XmLJXe0Uzd7Cgs1oYtDvDrOyWLgw==
+  version: "4.3.9"
 
 jquery@>=1.7, jquery@^3.4.1:
   version "3.6.0"
@@ -8268,9 +8250,7 @@ typescript@^3.8.3:
   integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
 typescript@^4.1.2:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.4.tgz#a17d3a0263bf5c8723b9c52f43c5084edf13c2e8"
-  integrity sha512-VgYs2A2QIRuGphtzFV7aQJduJ2gyfTljngLzjpfW9FoYZF6xuw1W0vW9ghCKLfcWrCFxK81CSGRAvS1pn4fIUg==
+  version: "4.5.5"
 
 ua-parser-js@^0.7.30:
   version "0.7.31"
