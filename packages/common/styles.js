@@ -69,6 +69,7 @@ export function getThemeCSS() {
     
     #main{
         background-color: var(--dbp-base-light);
+        color: var(--dbp-text-dark);
     }
     
     .dark {
