@@ -35,6 +35,36 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
     }
 
     static get styles() {
+        const docStyle = getComputedStyle(document.documentElement);
+        let hoverTextCheck = false;
+        let hoverBaseCheck = false;
+        if (docStyle) {
+            const hoverBase = docStyle.getPropertyValue('--dbp-override-hover-base');
+            hoverBaseCheck = hoverBase ? true : false;
+            const hoverText = docStyle.getPropertyValue('--dbp-override-hover-text');
+            hoverTextCheck = hoverText ? true : false;
+        }
+
+        let hoverTextStyle = css``;
+        let hoverChevronStyle = css``;
+        let hoverBaseStyle = css``;
+
+        if (hoverTextCheck) {
+            hoverTextStyle = css`
+            color: var(--dbp-hover-text);
+            border-color: var(--dbp-hover-text);
+        `;
+            hoverChevronStyle = css`
+            background-color: var(--dbp-hover-text);
+        `;
+        }
+
+        if (hoverBaseCheck) {
+            hoverBaseStyle = css`
+            background-color: var(--dbp-hover-base);
+        `;
+        }
+
         // language=css
         return css`
             ${commonStyles.getThemeCSS()}
@@ -50,8 +80,8 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
             }
 
             h2 a:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                ${hoverTextStyle}
+                ${hoverBaseStyle}
             }
             
             h2 a {
@@ -61,29 +91,22 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
 
             h2 a::after {
                 content: "\\00a0\\00a0\\00a0";
-                background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%228.6836mm%22%20width%3D%225.2043mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2018.440707%2030.768605%22%3E%3Cg%20transform%3D%22translate(-382.21%20-336.98)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3Bstroke-width%3A2%3Bfill%3Anone%22%20d%3D%22m383.22%20366.74%2016.43-14.38-16.43-14.37%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
-                background-size: 60%;
-                background-repeat: no-repeat;
-                background-position: center center;
-                margin: 0 0 0 6px;
-                padding: 0 0 -0.75% 0px;
-                animation: 0.15s linkIconOut;
-                font-size: 100%;
+                background-color: var(--dbp-text-dark);
+                -webkit-mask-image: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2014.8%2062.4%22%20style%3D%22enable-background%3Anew%200%200%2014.8%2062.4%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%20transform%3D%22translate%28-382.21%20-336.98%29%22%3E%0A%09%3Cg%3E%0A%09%09%3Cpath%20d%3D%22M383%2C380.5c-0.2%2C0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2C0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1%0A%09%09%09c0.3-0.3%2C0.8-0.4%2C1.1-0.1l13.1%2C11.5c0.2%2C0.2%2C0.3%2C0.4%2C0.3%2C0.6s-0.1%2C0.5-0.3%2C0.6l-13.1%2C11.5C383.4%2C380.4%2C383.2%2C380.5%2C383%2C380.5z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A');
+                mask-image: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2014.8%2062.4%22%20style%3D%22enable-background%3Anew%200%200%2014.8%2062.4%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%20transform%3D%22translate%28-382.21%20-336.98%29%22%3E%0A%09%3Cg%3E%0A%09%09%3Cpath%20d%3D%22M383%2C380.5c-0.2%2C0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2C0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1%0A%09%09%09c0.3-0.3%2C0.8-0.4%2C1.1-0.1l13.1%2C11.5c0.2%2C0.2%2C0.3%2C0.4%2C0.3%2C0.6s-0.1%2C0.5-0.3%2C0.6l-13.1%2C11.5C383.4%2C380.4%2C383.2%2C380.5%2C383%2C380.5z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A');
+                mask-repeat: no-repeat;
+                -webkit-mask-repeat: no-repeat;
+                mask-position: center center;
+                -webkit-mask-position: center center;
+                margin: 0 2px 0 4px;
+                padding: 0 0 0.25% 0;
+                mask-size: 62%;
+                -webkit-mask-size: 62%;
             }
-
-           /* TODO Change color(mask) */
             
-           /*     h2 a:hover::after {
-                content: "\\00a0\\00a0\\00a0";
-                background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%228.6836mm%22%20width%3D%225.2043mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2018.440707%2030.768605%22%3E%3Cg%20transform%3D%22translate(-382.21%20-336.98)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23FFF%3Bstroke-linecap%3Around%3Bstroke-miterlimit%3A10%3Bstroke-width%3A2%3Bfill%3Anone%22%20d%3D%22m383.22%20366.74%2016.43-14.38-16.43-14.37%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
-                background-size: 60%;
-                background-repeat: no-repeat;
-                background-position: center center;
-                margin: 0 0 0 6px;
-                padding: 0 0 -0.75% 0;
-                animation: 0s linkIconIn;
-                font-size: 100%;
-            }*/
+           h2 a:hover::after {
+               ${hoverChevronStyle}
+           }
         `;
     }
     _onVisibilityChanged() {
