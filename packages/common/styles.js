@@ -59,8 +59,8 @@ export function getThemeCSS() {
         --dbp-border-light: var(--dbp-override-border-light, 1px solid #ffffff);
         --dbp-border-dark: var(--dbp-override-border-dark, 1px solid #000000);
         --dbp-border-radius: var(--dbp-override-border-radius, 0px);
-        --dbp-hover-base: var(--dbp-override-hover-base, var(--dbp-override-dark, var(--dbp-base-light)));
-        --dbp-hover-text: var(--dbp-override-hover-text, var(--dbp-override-light, var(--dbp-base-dark)));
+        --dbp-hover-base: var(--dbp-override-hover-base, var(--dbp-override-dark));
+        --dbp-hover-text: var(--dbp-override-hover-text, var(--dbp-override-light));
         
         /* TODO check if there are any uses of this in other apps then remove it */
         --dbp-button-hover-base: var(--dbp-override-button-hover-base, var(--dbp-override-dark, #000000));
@@ -69,6 +69,10 @@ export function getThemeCSS() {
     
     #main{
         background-color: var(--dbp-base-light);
+    }
+    
+    .dark {
+        background-color: var(--dbp-base-dark);
     }
     
     `;
@@ -162,7 +166,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         a.is-download:hover {
-            color: var(--dbp-hover-text);
+            color: var(--dbp-hover-text, var(--dbp-text-dark));
             background-color: var(--dbp-hover-base);
         }
 
@@ -447,30 +451,6 @@ export function getNotificationCSS() {
 }
 
 export function getButtonCSS() {
-    const docStyle = getComputedStyle(document.documentElement);
-    let hoverTextCheck = false;
-    let hoverBaseCheck = false;
-    if (docStyle) {
-        const hoverBase = docStyle.getPropertyValue('--dbp-override-hover-base');
-        hoverBaseCheck = hoverBase ? true : false;
-        const hoverText = docStyle.getPropertyValue('--dbp-override-hover-text');
-        hoverTextCheck = hoverText ? true : false;
-    }
-
-    let hoverTextStyle = css``;
-    let hoverBaseStyle = css``;
-
-    if (hoverTextCheck) {
-        hoverTextStyle = css`
-            color: var(--dbp-hover-text);
-        `;
-    }
-
-    if (hoverBaseCheck) {
-        hoverBaseStyle = css`
-            background-color: var(--dbp-hover-base);
-        `;
-    }
 
     // language=css
     return css`
@@ -494,8 +474,8 @@ export function getButtonCSS() {
         }
 
         button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled), .button:hover {
-            ${hoverTextStyle}
-            ${hoverBaseStyle}
+            color: var(--dbp-hover-text, var(--dbp-text-dark));
+            background-color: var(--dbp-hover-base);
         }
 
         button.button.is-small, .button.is-small {
@@ -505,8 +485,13 @@ export function getButtonCSS() {
 
         button.button.is-primary, .button.is-primary {
             background-color: var(--dbp-primary-dark);
-            border-color: var(--dbp-primary-dark);
+            border: var(--dbp-border-dark);
             color: var(--dbp-text-light);
+        }
+
+        button.button.is-primary:hover {
+            background-color: var(--dbp-hover-base, var(--dbp-primary-dark));
+            color: var(--dbp-hover-text, var(--dbp-text-light));
         }
 
         button.button.is-info, .button.is-info {
@@ -1140,35 +1125,6 @@ export function getActivityCSS() {
 }
 
 export function getLinkCss() {
-    const docStyle = getComputedStyle(document.documentElement);
-    let hoverTextCheck = false;
-    let hoverBaseCheck = false;
-    if (docStyle) {
-        const hoverBase = docStyle.getPropertyValue('--dbp-override-hover-base');
-        hoverBaseCheck = hoverBase ? true : false;
-        const hoverText = docStyle.getPropertyValue('--dbp-override-hover-text');
-        hoverTextCheck = hoverText ? true : false;
-    }
-
-    let hoverTextStyle = css``;
-    let hoverChevronStyle = css``;
-    let hoverBaseStyle = css``;
-
-    if (hoverTextCheck) {
-        hoverTextStyle = css`
-            color: var(--dbp-hover-text);
-            border-color: var(--dbp-hover-text);
-        `;
-        hoverChevronStyle = css`
-            background-color: var(--dbp-hover-text);
-        `;
-    }
-
-    if (hoverBaseCheck) {
-        hoverBaseStyle = css`
-            background-color: var(--dbp-hover-base);
-        `;
-    }
     // language=css
     return css`
         .int-link-external, .int-link-internal, .link, .link-without-hover {
@@ -1176,8 +1132,9 @@ export function getLinkCss() {
         }
 
         .int-link-external:hover, .int-link-internal:hover, .link:hover {
-            ${hoverTextStyle}
-            ${hoverBaseStyle}
+            color: var(--dbp-hover-text);
+            border-color: var(--dbp-hover-text);
+            background-color: var(--dbp-hover-base);
         }
 
         .int-link-external:after, .int-link-internal:after, .link:after, .link-without-hover:after {
@@ -1187,7 +1144,7 @@ export function getLinkCss() {
             mask-image: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Ebene_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20viewBox%3D%220%200%2022.7%2062.4%22%20style%3D%22enable-background%3Anew%200%200%2022.7%2062.4%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%20transform%3D%22translate%28-382.21%20-336.98%29%22%3E%0A%09%3Cg%3E%0A%09%09%3Cpath%20d%3D%22M386.9%2C380.5c-0.2%2C0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2C0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1%0A%09%09%09c0.3-0.3%2C0.8-0.4%2C1.1-0.1l13.1%2C11.5c0.2%2C0.2%2C0.3%2C0.4%2C0.3%2C0.6s-0.1%2C0.5-0.3%2C0.6l-13.1%2C11.5C387.3%2C380.4%2C387.1%2C380.5%2C386.9%2C380.5z%22%0A%09%09%09%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A');
             -webkit-mask-repeat: no-repeat;
             mask-repeat: no-repeat;
-            -webkit-mask-position: center center;
+            -webkit-mask-position: center -2px;
             mask-position: center center;
             margin: 0 2px 0 4px;
             padding: 0 0 0.25% 0;
@@ -1196,7 +1153,7 @@ export function getLinkCss() {
         }
 
         .int-link-external:hover::after, .int-link-internal:hover::after, .link:hover::after{
-            ${hoverChevronStyle}
+            background-color: var(--dbp-hover-text, var(--dbp-text-dark));
         }
     `;
 }
