@@ -65,7 +65,6 @@ export function getThemeCSS() {
         /* TODO check if there are any uses of this in other apps then remove it */
         --dbp-button-hover-base: var(--dbp-override-button-hover-base, var(--dbp-override-dark, #000000));
         --dbp-button-hover-text: var(--dbp-override-button-hover-text, var(--dbp-override-light, #ffffff));
-
     }
     
     `;
@@ -82,6 +81,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
 
     // language=css
     return css`
+        
         h2 {
             font-weight: 300;
         }
@@ -1181,11 +1181,15 @@ export function getLinkCss() {
             background-color: var(--dbp-text-dark);
             -webkit-mask-image: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2026.0.2%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2014.8%2024.6%22%0A%09%20style%3D%22enable-background%3Anew%200%200%2014.8%2024.6%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%20transform%3D%22translate%28-382.21%20-336.98%29%22%3E%0A%09%3Cg%3E%0A%09%09%3Cpath%20d%3D%22M383%2C361.6c-0.2%2C0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2C0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1%0A%09%09%09c0.3-0.3%2C0.8-0.4%2C1.1-0.1l13.1%2C11.5c0.2%2C0.2%2C0.3%2C0.4%2C0.3%2C0.6c0%2C0.2-0.1%2C0.5-0.3%2C0.6l-13.1%2C11.5C383.4%2C361.5%2C383.2%2C361.6%2C383%2C361.6%0A%09%09%09z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E');
             mask-image: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2026.0.2%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2014.8%2024.6%22%0A%09%20style%3D%22enable-background%3Anew%200%200%2014.8%2024.6%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%20transform%3D%22translate%28-382.21%20-336.98%29%22%3E%0A%09%3Cg%3E%0A%09%09%3Cpath%20d%3D%22M383%2C361.6c-0.2%2C0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2C0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1%0A%09%09%09c0.3-0.3%2C0.8-0.4%2C1.1-0.1l13.1%2C11.5c0.2%2C0.2%2C0.3%2C0.4%2C0.3%2C0.6c0%2C0.2-0.1%2C0.5-0.3%2C0.6l-13.1%2C11.5C383.4%2C361.5%2C383.2%2C361.6%2C383%2C361.6%0A%09%09%09z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E');
+            -webkitmask-image: url('data:image/svg+xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C%21--%20Generator%3A%20Adobe%20Illustrator%2026.0.2%2C%20SVG%20Export%20Plug-In%20.%20SVG%20Version%3A%206.00%20Build%200%29%20%20--%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20viewBox%3D%220%200%2014.8%2024.6%22%0A%09%20style%3D%22enable-background%3Anew%200%200%2014.8%2024.6%3B%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cg%20transform%3D%22translate%28-382.21%20-336.98%29%22%3E%0A%09%3Cg%3E%0A%09%09%3Cpath%20d%3D%22M383%2C361.6c-0.2%2C0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2C0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1%0A%09%09%09c0.3-0.3%2C0.8-0.4%2C1.1-0.1l13.1%2C11.5c0.2%2C0.2%2C0.3%2C0.4%2C0.3%2C0.6c0%2C0.2-0.1%2C0.5-0.3%2C0.6l-13.1%2C11.5C383.4%2C361.5%2C383.2%2C361.6%2C383%2C361.6%0A%09%09%09z%22%2F%3E%0A%09%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E');
             mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
             mask-position: center 4px;
+            -webkit-mask-position: center 4px;
             margin: 0 2px 0 6px;
             padding: 0 0 0.25% 0;
             mask-size: 82%;
+            -webkit-mask-size: 82%;
         }
 
         .int-link-external:hover::after, .int-link-internal:hover::after, .link:hover::after{
