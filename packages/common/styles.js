@@ -1147,10 +1147,10 @@ export function getLinkCss() {
             mask-repeat: no-repeat;
             -webkit-mask-position: center -2px;
             mask-position: center center;
-            margin: 0 2px 0 4px;
+            margin: 0 0 0 4px;
             padding: 0 0 0.25% 0;
             -webkit-mask-size: 100%;
-            mask-size: 100%;
+            mask-size: 120%;
         }
 
         .int-link-external:hover::after, .int-link-internal:hover::after, .link:hover::after{
