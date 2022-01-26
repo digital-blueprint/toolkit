@@ -162,10 +162,6 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                     <h2>Theming CSS API</h2>
                     <div class="control">
                         <ul>
-                            <li><code>--dbp-primary-light</code>: Primary Light color <div class="demoblock" style="background-color: var(--dbp-primary-light); color: var(--dbp-text)">X</div></li>
-                            <li><code>--dbp-primary-base</code>: Primary dark color <div class="demoblock" style="background-color: var(--dbp-primary-base); color: var(--dbp-override-text-light);">X</div></li>
-                            <li><code>--dbp-primary-base</code>: secondary Light color <div class="demoblock" style="background-color: var(--dbp-primary-base); color: var(--dbp-text)">X</div></li>
-                            <li><code>--dbp-primary-base</code>: secondary dark color <div class="demoblock" style="background-color: var(--dbp-primary-base); color: var(--dbp-override-text-light);">X</div></li>
                             <!-- TODO -->
                             <!-- old
                             <li><code>--dbp-primary-bg-color</code>: Primary background color <div class="demoblock" style="background-color: var(--dbp-primary-bg-color)"></div></li>

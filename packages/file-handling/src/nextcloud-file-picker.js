@@ -2428,7 +2428,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .breadcrumb {
-                border-bottom: var(--dbp-border-dark);
+                border-bottom: var(--dbp-border);
             }
 
             .breadcrumb:last-child, .breadcrumb:first-child {

@@ -471,7 +471,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             .border{
                 margin-top: 2rem;
                 padding-top: 2rem;
-                border-top: var(--dbp-border-dark);
+                border-top: var(--dbp-border);
             }
             
             #video video, #video{

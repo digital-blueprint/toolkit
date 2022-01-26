@@ -806,7 +806,7 @@ export function getTagCSS() {
             align-items: center;
             background-color: var(--dbp-text-muted);
             border-radius: var(--dbp-border-radius);
-            color: #4a4a4a;
+            color: var(--dbp-text-muted);
             display: inline-flex;
             font-size: 0.75rem;
             height: 2em;
@@ -890,11 +890,11 @@ export function getTagCSS() {
         }
 
         .tag:not(body).is-delete:hover, .tag:not(body).is-delete:focus {
-            background-color: #e8e8e8;
+            background-color: var(--dbp-text-inverted);
         }
 
         .tag:not(body).is-delete:active {
-            background-color: #dbdbdb;
+            background-color: var(--dbp-text-inverted);
         }
 
         .tag:not(body).is-rounded {

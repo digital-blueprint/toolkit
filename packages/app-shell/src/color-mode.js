@@ -46,6 +46,7 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
     connectedCallback() {
         super.connectedCallback();
         this.updateComplete.then(() => {
+            this.loadTheme("light-theme");
             this.detectInitialMode();
         });
 
@@ -182,6 +183,7 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
               position: absolute;
               background-color: var(--dbp-base);
               z-index: 1000;
+              boader-radius: var(--dbp-border-radius);
             }
             
             .extended-menu li {
