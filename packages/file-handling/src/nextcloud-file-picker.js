@@ -2259,6 +2259,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 background-color: var(--dbp-base);
                 z-index: 1000;
                 right: 0px;
+                border-radius: var(--dbp-border-radius);
             }
 
             .extended-menu a:hover {

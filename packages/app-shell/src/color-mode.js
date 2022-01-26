@@ -183,7 +183,7 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
               position: absolute;
               background-color: var(--dbp-base);
               z-index: 1000;
-              boader-radius: var(--dbp-border-radius);
+              border-radius: var(--dbp-border-radius);
             }
             
             .extended-menu li {
@@ -197,7 +197,7 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
               overflow: hidden;
               text-overflow: ellipsis;
               padding: 12px 15px;
-              width: 100%;
+              w1idth: 100%;
               box-sizing: border-box;
               text-align: left;
               color: var(--dbp-text);

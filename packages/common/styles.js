@@ -90,6 +90,16 @@ export function getThemeCSS() {
         background-color: var(--dbp-base);
         color: var(--dbp-text);
     }
+
+    ::-moz-selection {
+        color: var(--dbp-primary-text);
+        background: var(--dbp-primary-base);
+    }
+
+    ::selection {
+        color: var(--dbp-primary-text);
+        background: var(--dbp-primary-base);
+    }
     
     
     `;
@@ -1016,6 +1026,7 @@ export function getModalDialogCSS() {
             height: 70%;
             width: 70%;
             position: relative;
+            border-radius: var(--dbp-border-radius);
         }
         
         .modal-close {
