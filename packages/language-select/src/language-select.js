@@ -95,7 +95,7 @@ export class LanguageSelect extends AdapterLitElement {
                 display: inline-block;
                 text-decoration: none;
                 transition: background-color 0.15s, color 0.15s;
-                color: var(--dbp-text-dark);
+                color: var(--dbp-text);
             }
 
             input::-moz-focus-inner { border: 0; }
@@ -106,7 +106,7 @@ export class LanguageSelect extends AdapterLitElement {
                 box-shadow: none;
                 -moz-box-shadow: none;
                 -webkit-box-shadow: none;
-                box-shadow: 0px 0px 4px 2px var(--dbp-accent-dark);
+                box-shadow: 0px 0px 4px 2px var(--dbp-accent);
             }
             
             `

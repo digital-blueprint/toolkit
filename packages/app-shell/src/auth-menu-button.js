@@ -95,7 +95,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             a {
-                color: currentColor;
+                color: var(--dbp-text);
+                fill: var(--dbp-text);
                 cursor: pointer;
                 text-decoration: none;
                 display: block;
@@ -109,7 +110,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 box-shadow: none;
                 -moz-box-shadow: none;
                 -webkit-box-shadow: none;
-                box-shadow: 0px 0px 4px 2px var(--dbp-accent-dark);
+                box-shadow: 0px 0px 4px 2px var(--dbp-accent);
             }
 
             .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
@@ -122,10 +123,10 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 max-width: 25em;
                 position: absolute;
                 z-index: 20;
-                border: var(--dbp-border-dark);
+                border: var(--dbp-border);
                 border-radius: 0px;
                 overflow: hidden;
-                background-color: var(--dbp-base-light);
+                background-color: var(--dbp-base);
             }
 
             .dropdown-content {
@@ -136,7 +137,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             .menu a {
                 /*padding: 0.3em;*/
                 font-weight: 400;
-                color: var(--dbp-text-dark);
+                color: var(--dbp-text);
                 display: block;
                 text-decoration: none;
             }
@@ -146,10 +147,13 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 background-color: var(--dbp-hover-base);
             }
 
-            .menu a.selected { color: var(--dbp-text-light); background-color: var(--dbp-secondary-dark); }
+            .menu a.selected { 
+                color: var(--dbp-secondary-text); 
+                background-color: var(--dbp-secondary-base); 
+            }
             
             .dropdown-item {
-                color: var(--dbp-text-muted-dark);
+                color: var(--dbp-text-muted);
                 display: block;
                 font-size: 0.875rem;
                 line-height: 1.5;

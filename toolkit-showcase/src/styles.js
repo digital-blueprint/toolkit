@@ -82,16 +82,16 @@ export function getDemoCSS() {
         }
 
         pre {
-            background-color: var(--dbp-base-light);
-            color: var(--dbp-text-dark);
+            background-color: var(--dbp-base);
+            color: var(--dbp-text);
             padding: 0.4em;
             overflow-x: auto;
             border: 1px solid #ddd;
         }
 
         code {
-            background-color: var(--dbp-base-light);
-            color: var(--dbp-text-dark);
+            background-color: var(--dbp-base);
+            color: var(--dbp-text);
             line-height: 1.5em;
             font-weight: normal;
             padding: 0.25em 0.5em 0.25em;

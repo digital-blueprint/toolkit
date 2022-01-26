@@ -556,7 +556,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             }
             
             #dropArea {
-                border: var(--dbp-border-dark, var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, black));
+                border: var(--dbp-border, var(--FUBorderWidth, 2px) var(--FUBorderStyle, dashed) var(--FUBBorderColor, black));
                 border-style: var(--FUBorderStyle, dashed);
                 border-radius: var(--FUBorderRadius, var(--dbp-border-radius, 0));
                 border-width: var(--FUBorderWidth, 2px);
@@ -590,7 +590,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             }
             
             .paddle::before {
-                background-color: var(--dbp-base-light);
+                background-color: var(--dbp-base);
                 opacity: 0.8;
                 content: "";
                 width: 100%;

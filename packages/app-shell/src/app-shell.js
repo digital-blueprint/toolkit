@@ -5,6 +5,7 @@ import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
+import {ColorMode} from './color-mode.js';
 import {Notification} from '@dbp-toolkit/notification';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';
@@ -72,6 +73,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.initateOpenMenu = false;
 
         this.auth = {};
+
+        this.themes = "";
+        this.themesDisableDetectBrowserMode = false;
     }
 
     static get scopedElements() {
@@ -80,6 +84,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
           'dbp-build-info': BuildInfo,
           'dbp-auth-keycloak': AuthKeycloak,
           'dbp-auth-menu-button': AuthMenuButton,
+          'dbp-color-mode-button': ColorMode,
           'dbp-notification': Notification,
           'dbp-icon': Icon,
           'dbp-matomo': MatomoElement,
@@ -256,6 +261,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             buildTime: { type: String, attribute: "build-time" },
             env: { type: String },
             auth: { type: Object },
+            themes: { type: String, attribute: "themes" },
+            themesDisableDetectBrowserMode: {type: Boolean, attribute: "themes-disable-detect-browser-mode"}
         };
     }
 
@@ -545,22 +552,24 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
             header .hd1-left {
                 display: flex;
-                flex-direction: column;
-                justify-content: center;
+                flex-direction: row;
+                justify-content: right;
                 grid-area: hd1-left;
                 text-align: right;
                 padding-right: 20px;
+                align-items: center;
+                gap: 10px;
             }
             
             header .hd1-left #lang-select{
-                margin: auto;
-                margin-right: 0px;
+                padding-right: 10px;
+                padding-left: 10px;
             }
 
             header .hd1-middle {
                 grid-area: hd1-middle;
-                background-color: var(--dbp-text-dark);
-                background: linear-gradient(180deg, var(--dbp-text-dark) 0%, var(--dbp-text-dark) 85%, rgba(0,0,0,0) 90%);
+                background-color: var(--dbp-text);
+                background: linear-gradient(180deg, var(--dbp-text) 0%, var(--dbp-text) 85%, rgba(0,0,0,0) 90%);
             }
 
             header .hd1-right {
@@ -601,7 +610,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             header a {
-                color: var(--dbp-text-dark);
+                color: var(--dbp-text);
                 display: inline;
             }
 
@@ -624,13 +633,14 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             footer a {
-                border-bottom: var(--dbp-border-dark);
+                border-bottom: var(--dbp-border);
                 padding: 0;
             }
 
             footer a:hover {
                 color: var(--dbp-hover-text);
                 background-color: var(--dbp-hover-base);
+                border-color: var(--dbp-hover-text);
             }
 
             /* We don't allow inline-svg */
@@ -649,7 +659,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             .menu a {
                 padding: 0.3em;
                 font-weight: 300;
-                color: var(--dbp-text-dark);
+                color: var(--dbp-text);
                 display: block;
                 padding-right: 13px;
                 word-break: break-word;
@@ -661,7 +671,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .menu a.selected {
-                border-left: 3px solid var(--dbp-accent-dark);
+                border-left: 3px solid var(--dbp-accent);
                 font-weight: bolder;
                 padding-left: 0.5em;
                 padding-right: 0.3em;
@@ -670,7 +680,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
             aside .subtitle {
                 display: none;
-                color: var(--dbp-text-dark);
+                color: var(--dbp-text);
                 font-size: 1.25rem;
                 font-weight: 300;
                 line-height: 1.25;
@@ -715,22 +725,22 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     position: sticky;
                     top: 0;
                     width: 100%;
-                    background-color: var(--dbp-base-light);
+                    background-color: var(--dbp-base);
                     z-index: 10;
                 }
 
                 aside h2.subtitle {
                     display: block;
-                    border-bottom: var(--dbp-border-dark);
+                    border-bottom: var(--dbp-border);
                     padding: 0.5em 0.5em;
                 }
 
                 aside .menu {
-                    border-bottom: var(--dbp-border-dark);
+                    border-bottom: var(--dbp-border);
                     border-top-width: 0;
                     width: 100%;
                     position: absolute;
-                    background-color: var(--dbp-base-light);
+                    background-color: var(--dbp-base);
                     z-index: 10;
                 }
 
@@ -901,19 +911,20 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         for (let routingName of this.visibleRoutes) {
             menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
         }
-
+        
         const kc = this.keycloakConfig;
-
         return html`
             <slot class="${slotClassMap}"></slot>
             <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
             <dbp-matomo subscribe="auth,analytics-event" endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
-            <div class="${mainClassMap}">
+            <div class="${mainClassMap}" id="root">
                 <div id="main">
                     <dbp-notification id="dbp-notification" lang="${this.lang}"></dbp-notification>
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
+                                <dbp-color-mode-button themes="${this.themes}" ?themes-disable-detect-browser-mode="${this.themesDisableDetectBrowserMode}" lang="${this.lang}"></dbp-color-mode-button>
+
                                 <dbp-language-select id="lang-select" lang="${this.lang}"></dbp-language-select>
                             </div>
                             <div class="hd1-middle">
@@ -945,11 +956,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     <aside>
                         <h2 class="subtitle" @click="${this.toggleMenu}">
                             ${this.subtitle}
-                            <dbp-icon name="chevron-down" style="color: var(--dbp-accent-dark)" id="menu-chevron-icon"></dbp-icon>
+                            <dbp-icon name="chevron-down" style="color: var(--dbp-accent)" id="menu-chevron-icon"></dbp-icon>
                         </h2>
                         <ul class="menu hidden">
                             ${menuTemplates}
-                            <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: var(--dbp-accent-dark)"></dbp-icon></li>
+                            <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon></li>
                         </ul>
                     </aside>
 
@@ -965,9 +976,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     <footer>
                         <slot name="footer">
                             <slot name="footer-links">
-                                <a rel="noopener" class="int-link-external" href="#use-your-privacy-policy-link">${i18n.t('privacy-policy')}</a>
-                                <a rel="noopener" class="int-link-external" href="#use-your-imprint-link">${i18n.t('imprint')}</a>
-                                <a rel="noopener" class="int-link-external" href="#use-your-imprint-link">${i18n.t('contact')}</a>
+                                <a rel="noopener" class="" href="#use-your-privacy-policy-link">${i18n.t('privacy-policy')}</a>
+                                <a rel="noopener" class="" href="#use-your-imprint-link">${i18n.t('imprint')}</a>
+                                <a rel="noopener" class="" href="#use-your-imprint-link">${i18n.t('contact')}</a>
                             </slot>
                             <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
                         </slot>

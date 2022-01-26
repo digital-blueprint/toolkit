@@ -173,7 +173,7 @@ export class DataTableViewDemo extends ScopedElementsMixin(DBPLitElement) {
                     margin-bottom: .5em;
                 }
                 .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
-                    color: var(--dbp-text-dark);
+                    color: var(--dbp-text);
                     font-weight: 600;
                     line-height: 1.125;
                 }
@@ -187,7 +187,7 @@ export class DataTableViewDemo extends ScopedElementsMixin(DBPLitElement) {
                 }
                 .content table thead th {
                     border-width: 0 0 2px;
-                    color: var(--dbp-text-dark);
+                    color: var(--dbp-text);
                 }
                 .content table th {
                     border: 1px solid #dbdbdb;

@@ -2050,7 +2050,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .breadcrumb-folder {
                 padding-right: 5px;
-                color: #444;
+                color: var(--dbp-text-muted);
                 font-size: 1.4em;
                 padding-top: 7px;
             }
@@ -2066,12 +2066,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .tabulator-placeholder {
-                border-top: 1px solid var(--dbp-text-muted-light);
+                border-top: 1px solid var(--dbp-text-muted);
             }
 
             #new-folder-row.highlighted {
-                background: #259207;
-                color: white;
+                background: var(--dbp-success);
+                color: var(--dbp-text-inverted);
             }
 
             span.first {
@@ -2137,9 +2137,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .extended-breadcrumb-menu {
                 list-style: none;
-                border: black 1px solid;
+                border: var(--dbp-border);
                 position: absolute;
-                background-color: white;
+                background-color: var(--dbp-base);
                 z-index: 1000;
                 /** display: grid; **/
             }
@@ -2154,8 +2154,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .tabulator-row.no-select.tabulator-selected {
-                background-color: white;
-                color: #333;
+                background-color: var(--dbp-base);
+                color: var(--dbp-text-muted);
             }
 
             input[type=text]#tf-new-folder:focus {
@@ -2218,8 +2218,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .error {
-                background-color: var(--dbp-base-light);
-                color: var(--dbp-danger-dark);
+                background-color: var(--dbp-base);
+                color: var(--dbp-danger);
             }
 
             .filter-options-wrapper {
@@ -2254,15 +2254,16 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .extended-menu {
                 list-style: none;
-                border: black 1px solid;
+                border: var(--dbp-border);
                 position: absolute;
-                background-color: white;
+                background-color: var(--dbp-base);
                 z-index: 1000;
                 right: 0px;
             }
 
             .extended-menu a:hover {
-                color: #E4154B;
+                color: var(--dbp-hover-text, var(--dbp-text));
+                background-color: var(--dbp-hover-base);
             }
 
             .nextcloud-header {
@@ -2339,7 +2340,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
 
             .nextcloud-footer {
-                background-color: var(--dbp-base-light);
+                background-color: var(--dbp-base);
                 width: 100%;
                 padding-top: 10px;
             }
@@ -2409,7 +2410,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             #replace-modal-box input[type="text"]:disabled {
-                color: var(--dbp-text-muted-light);
+                color: var(--dbp-text-muted);
             }
 
             #replace-modal-box .modal-content div {
@@ -2443,7 +2444,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             input:disabled + label {
-                color: var(--dbp-text-muted-light);
+                color: var(--dbp-text-muted);
             }
 
             .inline-block {
@@ -2456,30 +2457,30 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .no-select, .tabulator-row.tabulator-selected.no-select:hover, .tabulator-row.no-select:hover, .tabulator-row.tabulator-selectable.no-select:hover {
                 cursor: unset;
-                color: var(--dbp-text-dark);
-                background-color: var(--dbp-base-light);
+                color: var(--dbp-text);
+                background-color: var(--dbp-base);
             }
 
             .inline-block {
                 position: absolute;
                 right: 0px;
                 z-index: 1;
-                background-color: var(--dbp-base-light);
+                background-color: var(--dbp-base);
                 bottom: -45px;
             }
 
             .addRowAnimation {
-                color: var(--dbp-text-dark);
+                color: var(--dbp-text);
                 animation: added 0.4s ease;
             }
 
             #abortButton {
-                background-color: var(--dbp-base-light);
-                color: var(--dbp-danger-dark);
+                background-color: var(--dbp-base);
+                color: var(--dbp-danger);
             }
 
             #abortButton:hover {
-                color: var(--dbp-text-light);
+                color: var(--dbp-text-inverted);
             }
             
             .menu-buttons {
@@ -2489,13 +2490,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             @keyframes added {
                 0% {
-                    background-color: var(--dbp-base-light);
+                    background-color: var(--dbp-base);
                 }
                 50% {
-                    background-color: var(--dbp-success-light);
+                    background-color: var(--dbp-success);
                 }
                 100% {
-                    background-color: var(--dbp-base-light);
+                    background-color: var(--dbp-base);
                 }
             }
 
@@ -2508,7 +2509,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .button.button, .button, button.dt-button {
-                background-color: var(--dbp-base-light);
+                background-color: var(--dbp-base);
             }
 
             #new-folder {
@@ -2636,7 +2637,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     position: absolute;
                     right: 52px;
                     z-index: 1;
-                    background-color: var(--dbp-base-light);
+                    background-color: var(--dbp-base);
                     bottom: 0px;
                 }
 

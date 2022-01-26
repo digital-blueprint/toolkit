@@ -22,7 +22,7 @@ export class Spinner extends HTMLElement {
 .all-spinner-tuglogo-box {
   width:20%;
     height:20%;
-     background-color:var(--dbp-accent-dark);
+     background-color:var(--dbp-accent);
         position:absolute;
           top:50%;
             left:50%;

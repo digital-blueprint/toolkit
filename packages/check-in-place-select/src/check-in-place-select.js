@@ -362,8 +362,8 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border: var(--dbp-border-dark);
-                border-color: var(--dbp-text-muted-dark);
+                border: var(--dbp-border);
+                border-color: var(--dbp-text-muted);
                 -moz-border-radius-topright: var(--dbp-border-radius);
                 -moz-border-radius-bottomright: var(--dbp-border-radius);
                 line-height: 100%;

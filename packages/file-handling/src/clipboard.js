@@ -728,7 +728,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             ${fileHandlingStyles.getFileHandlingCss()}
 
             a {
-                border-bottom: var(--dbp-border-dark);
+                border-bottom: var(--dbp-border);
                 padding: 0;
             }
 
@@ -809,7 +809,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .clipboard-footer {
-                background-color: var(--dbp-base-light);
+                background-color: var(--dbp-base);
                 width: 100%;
                 padding-top: 10px;
                 display: flex;

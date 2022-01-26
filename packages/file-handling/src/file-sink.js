@@ -360,7 +360,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             }
 
             .paddle::before {
-                background-color: var(--dbp-base-light);
+                background-color: var(--dbp-base);
                 opacity: 0.8;
                 content: "";
                 width: 100%;

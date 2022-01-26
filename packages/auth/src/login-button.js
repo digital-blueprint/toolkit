@@ -111,7 +111,8 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             a {
-                color: currentColor;
+                color: var(--dbp-text);
+                fill: var(--dbp-text);
                 cursor: pointer;
                 text-decoration: none;
             }

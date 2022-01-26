@@ -76,7 +76,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                 margin-bottom: .5em;
             }
             .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
-                color: var(--dbp-text-dark);
+                color: var(--dbp-text);
                 font-weight: 600;
                 line-height: 1.125;
             }
@@ -162,10 +162,10 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                     <h2>Theming CSS API</h2>
                     <div class="control">
                         <ul>
-                            <li><code>--dbp-primary-light</code>: Primary Light color <div class="demoblock" style="background-color: var(--dbp-primary-light); color: var(--dbp-text-dark)">X</div></li>
-                            <li><code>--dbp-primary-dark</code>: Primary dark color <div class="demoblock" style="background-color: var(--dbp-primary-dark); color: var(--dbp-override-text-light);">X</div></li>
-                            <li><code>--dbp-secondary-light</code>: secondary Light color <div class="demoblock" style="background-color: var(--dbp-secondary-light); color: var(--dbp-text-dark)">X</div></li>
-                            <li><code>--dbp-secondary-dark</code>: secondary dark color <div class="demoblock" style="background-color: var(--dbp-secondary-dark); color: var(--dbp-override-text-light);">X</div></li>
+                            <li><code>--dbp-primary-light</code>: Primary Light color <div class="demoblock" style="background-color: var(--dbp-primary-light); color: var(--dbp-text)">X</div></li>
+                            <li><code>--dbp-primary-base</code>: Primary dark color <div class="demoblock" style="background-color: var(--dbp-primary-base); color: var(--dbp-override-text-light);">X</div></li>
+                            <li><code>--dbp-primary-base</code>: secondary Light color <div class="demoblock" style="background-color: var(--dbp-primary-base); color: var(--dbp-text)">X</div></li>
+                            <li><code>--dbp-primary-base</code>: secondary dark color <div class="demoblock" style="background-color: var(--dbp-primary-base); color: var(--dbp-override-text-light);">X</div></li>
                             <!-- TODO -->
                             <!-- old
                             <li><code>--dbp-primary-bg-color</code>: Primary background color <div class="demoblock" style="background-color: var(--dbp-primary-bg-color)"></div></li>
@@ -195,7 +195,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                     <pre>
 &lt;style&gt;
 html {
-    /* This will override --dbp-primary-dark */
+    /* This will override --dbp-primary-base */
     --dbp-override-primary-dark: green;
     /* Same for all other variables, prefix with "override" */
 }

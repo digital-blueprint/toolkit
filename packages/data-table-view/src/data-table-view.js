@@ -256,8 +256,8 @@ export class DataTableView extends AdapterLitElement {
                 text-align: center;
                 text-indent: 0 !important;
                 line-height: 0.9em;
-                color: var(--dbp-text-light);
-                background-color: var(--dbp-primary-dark);
+                color: var(--dbp-primary-text);
+                background-color: var(--dbp-primary-base);
                 content: '+';
             }
 
@@ -313,9 +313,7 @@ export class DataTableView extends AdapterLitElement {
 
             .dataTables_filter input {
                 border-radius: 0;
-                border-style: solid;
-                border-color: var(--dbp-base-dark);
-                border-width: 1px;
+                border:;
                 padding: 0.1em;
             }
 
