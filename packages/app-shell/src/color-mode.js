@@ -220,7 +220,7 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
                 <ul class='extended-menu hidden'>
                     ${this.themes.map(theme => html`
                         <li class="" id="${theme.class}">
-                            <a class="button-theme button-${theme.class}" @click="${() => {this.loadTheme(theme.class); this.saveTheme(theme.class)}}" title="${theme.name}">
+                            <a class="button-theme button-${theme.class}" @click="${() => {this.loadTheme(theme.class); this.saveTheme(theme.class);}}" title="${theme.name}">
                                 <dbp-icon class="icon" name="${theme.icon}"></dbp-icon> ${theme.name}
                             </a>
                         </li>
