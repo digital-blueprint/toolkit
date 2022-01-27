@@ -81,6 +81,9 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
 
     toggleModeMenu() {
         const button = this.shadowRoot.querySelector(".mode-button");
+        if(!button) {
+            return;
+        }
         if (button.classList.contains("active"))
             button.classList.remove("active");
         else
@@ -116,10 +119,15 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
     loadTheme(themeName) {
         const button = this.shadowRoot.querySelector(".button-" + themeName);
         const otherButtons = this.shadowRoot.querySelectorAll(".button-theme");
+        const body = this.shadowRoot.host.getRootNode({composed: true}).body;
+
+        if (button === null || otherButtons.length === 0 || body === null ) {
+            return;
+        }
+
         otherButtons.forEach(button => button.classList.remove("active"));
         button.classList.add("active");
 
-        const body = this.shadowRoot.host.getRootNode({composed: true}).body;
         if (!body.classList.contains(themeName)) {
 
             this.themes.forEach(theme => {
