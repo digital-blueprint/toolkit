@@ -14,8 +14,9 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.themes = [];
-        this.disableDetectBrowserMode = false;
         this.boundCloseAdditionalMenuHandler = this.hideModeMenu.bind(this);
+        this.detectBrowserDarkMode = false;
+        this.darkModeClass = "dark-theme";
     }
 
     static get properties() {
@@ -23,7 +24,7 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: { type: String },
             themes: { type: Array, attribute: "themes" },
-            disableDetectBrowserMode: {type: Boolean, attribute: "themes-disable-detect-browser-mode"}
+            darkModeThemeOverride: {type: String, attribute: "dark-mode-theme-override"}
         };
     }
 
@@ -46,6 +47,17 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
     connectedCallback() {
         super.connectedCallback();
         this.updateComplete.then(() => {
+            console.log("------", this.darkModeThemeOverride);
+            if (typeof this.darkModeThemeOverride === "undefined") {
+                this.detectBrowserDarkMode = true;
+                console.log("darkMode on");
+            } else if ( this.darkModeThemeOverride === "") {
+                this.detectBrowserDarkMode = false;
+                console.log("darkMode off");
+            } else {
+                this.detectBrowserDarkMode = true;
+                this.darkModeClass = this.darkModeThemeOverride;
+            }
             this.loadTheme("light-theme");
             this.detectInitialMode();
         });
@@ -65,12 +77,12 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
 
-        if (!this.disableDetectBrowserMode) {
+        if (this.detectBrowserDarkMode) {
             //look for browser mode
             const useDark = window.matchMedia("(prefers-color-scheme: dark)");
             if (useDark.matches) {
                 // search for dark mode
-                const theme = this.themes.find(theme => theme.class === "dark-theme");
+                const theme = this.themes.find(theme => theme.class === this.darkModeClass);
 
                 if (theme) {
                     this.loadTheme(theme.class);
@@ -145,7 +157,7 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
 
         if (themeName === "light-theme" && browserModeLight.matches) {
             localStorage.removeItem('prefered-color-mode');
-        } else if (themeName === "dark-theme" && browserModeDark.matches) {
+        } else if (themeName === this.darkModeClass && browserModeDark.matches) {
             localStorage.removeItem('prefered-color-mode');
         } else {
             localStorage.setItem('prefered-color-mode', themeName);

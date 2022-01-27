@@ -75,7 +75,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.auth = {};
 
         this.themes = "";
-        this.themesDisableDetectBrowserMode = false;
     }
 
     static get scopedElements() {
@@ -262,7 +261,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             env: { type: String },
             auth: { type: Object },
             themes: { type: String, attribute: "themes" },
-            themesDisableDetectBrowserMode: {type: Boolean, attribute: "themes-disable-detect-browser-mode"}
+            darkModeThemeOverride: {type: String, attribute: "dark-mode-theme-override"}
         };
     }
 
@@ -911,7 +910,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         for (let routingName of this.visibleRoutes) {
             menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
         }
-        
+
+        const colorModeButton = this.darkModeThemeOverride !== undefined ?
+            html`<dbp-color-mode-button themes="${this.themes}" dark-mode-theme-override=${this.darkModeThemeOverride} lang="${this.lang}"></dbp-color-mode-button>` :
+            html`<dbp-color-mode-button themes="${this.themes}" lang="${this.lang}"></dbp-color-mode-button>`;
+
         const kc = this.keycloakConfig;
         return html`
             <slot class="${slotClassMap}"></slot>
@@ -923,8 +926,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                <dbp-color-mode-button themes="${this.themes}" ?themes-disable-detect-browser-mode="${this.themesDisableDetectBrowserMode}" lang="${this.lang}"></dbp-color-mode-button>
-
+                                ${colorModeButton}
                                 <dbp-language-select id="lang-select" lang="${this.lang}"></dbp-language-select>
                             </div>
                             <div class="hd1-middle">
