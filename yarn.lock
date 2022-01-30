@@ -2117,9 +2117,7 @@
   integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
 
 "@typescript-eslint/eslint-plugin@^5.0.0-alpha.42":
-  version "5.10.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-5.10.0.tgz#e90afea96dff8620892ad216b0e4ccdf8ee32d3a"
-  integrity sha512-XXVKnMsq2fuu9K2KsIxPUGqb6xAImz8MEChClbXmE3VbveFtBUU5bzM6IPVWqzyADIgdkS2Ws/6Xo7W2TeZWjQ==
+  version: "5.10.1"
   dependencies:
     "@typescript-eslint/scope-manager" "5.10.0"
     "@typescript-eslint/type-utils" "5.10.0"
@@ -2132,9 +2130,7 @@
     tsutils "^3.21.0"
 
 "@typescript-eslint/parser@^5.0.0-alpha.42":
-  version "5.10.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-5.10.0.tgz#8f59e036f5f1cffc178cacbd5ccdd02aeb96c91c"
-  integrity sha512-pJB2CCeHWtwOAeIxv8CHVGJhI5FNyJAIpx5Pt72YkK3QfEzt6qAlXZuyaBmyfOdM62qU0rbxJzNToPTVeJGrQw==
+  version: "5.10.1"
   dependencies:
     "@typescript-eslint/scope-manager" "5.10.0"
     "@typescript-eslint/types" "5.10.0"
@@ -4689,9 +4685,7 @@ i18next-scanner@^3.0.0:
     vinyl-fs "^3.0.1"
 
 i18next@*, i18next@^21.4.2:
-  version "21.6.7"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.6.7.tgz#062560decbabcdb691885e6401f2843ec25c3c10"
-  integrity sha512-26dTDa2gBz+vMk6WPf1pxTx3S5HIAptbyODmni/JsN6R1W2WNkGVFXBusUK7T6y1wLeJi5CIrqmQ2gl18vdh3A==
+  version: "21.6.10"
   dependencies:
     "@babel/runtime" "^7.12.0"
 
@@ -5367,9 +5361,7 @@ karma-mocha@^2.0.0, karma-mocha@^2.0.1:
     minimist "^1.2.3"
 
 karma@^6.0.0:
-  version "6.3.11"
-  resolved "https://registry.yarnpkg.com/karma/-/karma-6.3.11.tgz#2c2fb09f1a9f52e1a0739adeedace2a68d4c0d34"
-  integrity sha512-QGUh4yXgizzDNPLB5nWTvP+wysKexngbyLVWFOyikB661hpa2RZLf5anZQzqliWtAQuYVep0ot0D1U7UQKpsxQ==
+  version: "6.3.12"
   dependencies:
     body-parser "^1.19.0"
     braces "^3.0.2"
@@ -5538,9 +5530,7 @@ lit-html@^2.1.0:
     "@types/trusted-types" "^2.0.2"
 
 lit@^2.0.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/lit/-/lit-2.1.1.tgz#65f43abca945988f696391f762c645ba51966b0b"
-  integrity sha512-yqDqf36IhXwOxIQSFqCMgpfvDCRdxLCLZl7m/+tO5C9W/OBHUj17qZpiMBT35v97QMVKcKEi1KZ3hZRyTwBNsQ==
+  version: "2.1.2"
   dependencies:
     "@lit/reactive-element" "^1.1.0"
     lit-element "^3.1.0"
@@ -7391,11 +7381,7 @@ rollup-pluginutils@^2.6.0, rollup-pluginutils@^2.8.2:
     estree-walker "^0.6.1"
 
 rollup@^2.18.1, rollup@^2.19.0, rollup@^2.33.3, rollup@^2.35.1:
-  version "2.66.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.66.0.tgz#ee529ea15a20485d579039637fec3050bad03bbb"
-  integrity sha512-L6mKOkdyP8HK5kKJXaiWG7KZDumPJjuo1P+cfyHOJPNNTK3Moe7zCH5+fy7v8pVmHXtlxorzaBjvkBMB23s98g==
-  optionalDependencies:
-    fsevents "~2.3.2"
+  version: "2.66.1"
 
 run-async@^2.4.0:
   version "2.4.1"
