@@ -236,7 +236,7 @@ export class ColorMode extends ScopedElementsMixin(DBPLitElement) {
         const i18n = this._i18n;
 
         return html`
-            <div class="${classMap({hidden: this.themes.length === 0})}">
+            <div class="${classMap({hidden: this.themes.length <= 1})}">
                 <a class="mode-button" title="${i18n.t('color-mode')}"
                         @click="${() => {this.toggleModeMenu();}}"><dbp-icon name="contrast"></dbp-icon></a>
                 <ul class='extended-menu hidden'>
