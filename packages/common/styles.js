@@ -513,6 +513,7 @@ export function getButtonCSS() {
         button.button:hover:enabled, .button:hover:enabled, button.dt-button:hover:enabled, button.dt-button:hover:not(.disabled) {
             color: var(--dbp-hover-text, var(--dbp-secondary-text));
             background-color: var(--dbp-hover-base, var(--dbp-secondary-base));
+            border-color: var(--dbp-hover-base, var(--dbp-secondary-base));
         }
 
         button.button.is-small, .button.is-small {
