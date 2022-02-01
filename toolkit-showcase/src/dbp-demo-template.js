@@ -2,7 +2,7 @@ import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 //import {ClassName} from '@dbp-toolkit/package-name/src/dbp-demo-activity-name'; TODO
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import * as commonUtils from "@dbp-toolkit/common/utils";
+//import * as commonUtils from "@dbp-toolkit/common/utils";
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 // import readme from '@dbp-toolkit/class-name/README.md'; TODO
 import * as demoStyles from "./styles";
@@ -60,7 +60,7 @@ export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitE
         return html`
              <!--
                 TODO
-                ${unsafeHTML(readme)}
+                ${//unsafeHTML(readme)}
                 <dbp-class-name-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-class-name-demo>
             -->
         `;
