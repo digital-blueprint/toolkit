@@ -5,8 +5,8 @@ import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
-import {ColorMode} from './color-mode.js';
 import {Notification} from '@dbp-toolkit/notification';
+import {ThemeSwitcher} from '@dbp-toolkit/theme-switcher';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';
 import {Router} from './router.js';
@@ -74,7 +74,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         this.auth = {};
 
-        this.themes = "";
     }
 
     static get scopedElements() {
@@ -83,7 +82,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
           'dbp-build-info': BuildInfo,
           'dbp-auth-keycloak': AuthKeycloak,
           'dbp-auth-menu-button': AuthMenuButton,
-          'dbp-color-mode-button': ColorMode,
+          'dbp-theme-switcher': ThemeSwitcher,
           'dbp-notification': Notification,
           'dbp-icon': Icon,
           'dbp-matomo': MatomoElement,
@@ -260,8 +259,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             buildTime: { type: String, attribute: "build-time" },
             env: { type: String },
             auth: { type: Object },
-            themes: { type: String, attribute: "themes" },
-            darkModeThemeOverride: {type: String, attribute: "dark-mode-theme-override"}
         };
     }
 
@@ -911,10 +908,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
         }
 
-        const colorModeButton = this.darkModeThemeOverride !== undefined ?
-            html`<dbp-color-mode-button themes="${this.themes}" dark-mode-theme-override=${this.darkModeThemeOverride} lang="${this.lang}"></dbp-color-mode-button>` :
-            html`<dbp-color-mode-button themes="${this.themes}" lang="${this.lang}"></dbp-color-mode-button>`;
-
         const kc = this.keycloakConfig;
         return html`
             <slot class="${slotClassMap}"></slot>
@@ -926,7 +919,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                ${colorModeButton}
+                                <dbp-theme-switcher subscribe="themes,dark-mode-theme-override" lang="${this.lang}"></dbp-theme-switcher>
                                 <dbp-language-select id="lang-select" lang="${this.lang}"></dbp-language-select>
                             </div>
                             <div class="hd1-middle">
