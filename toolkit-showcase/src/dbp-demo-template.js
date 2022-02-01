@@ -60,7 +60,7 @@ export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitE
         return html`
              <!--
                 TODO
-                ${//unsafeHTML(readme)}
+                ${unsafeHTML('readme')}
                 <dbp-class-name-demo id="demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-class-name-demo>
             -->
         `;
