@@ -18,7 +18,7 @@ You can then open <http://127.0.0.1:8001/>.
 
 1) Add demo activity path to `input` list of `rollup.config.js`
 2) Create `assets/*.metadata.json` file like `assets/file-handling.metadata.json`
-3) Reference in `assets/*.metadata.json` file in the `activities` part of `assets/dbp-toolkit-demo.topic.metadata.json.ejs`
+3) Reference in `assets/*.metadata.json` file in the `activities` part of `assets/dbp-toolkit-showcase.topic.metadata.json.ejs`
 
 ## Importing demo activities
 - imported demo activity has to be a `export class`
