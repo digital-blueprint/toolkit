@@ -550,10 +550,12 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 display: flex;
                 flex-direction: row;
                 justify-content: right;
+                -webkit-justify-content: right;
                 grid-area: hd1-left;
                 text-align: right;
                 padding-right: 20px;
                 align-items: center;
+                -webkit-align-items: center;
                 gap: 10px;
             }
             
@@ -572,9 +574,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 grid-area: hd1-right;
                 display: flex;
                 justify-content: flex-start;
+                -webkit-justify-content: flex-start;
                 padding: 0 20px;
                 min-width: 0;
                 align-items: center;
+                -webkit-align-items: center;
             }
 
             header .hd1-right .auth-button {
