@@ -27,6 +27,7 @@
     "karma-firefox-launcher": "^2.1.0",
     "karma-mocha": "^2.0.1",
     "mocha": "^9.0.0",
+    "prettier": "^2.5.1",
     "rollup": "^2.33.3",
     "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-delete": "^2.0.0",
@@ -43,6 +44,9 @@
   },
   "scripts": {
     "i18next": "i18next-scanner",
+    "format": "yarn run format:eslint && yarn run format:prettier",
+    "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
+    "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
     "clean": "rm dist/*",
     "build": "npm run build-local",
     "build-local": "rollup -c",

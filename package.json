@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "test": "lerna run test",
+    "format": "lerna run format",
     "build": "lerna run build",
     "i18next": "lerna run i18next",
     "version-patch": "lerna version patch",
