@@ -110,7 +110,7 @@ Or you can include the JS files directly via CDN:
       
 
 ### Note
-Where to body is defined, there the classes had to be defined!
+The classes should be defined outside of the body tag.
 
 ## Local development
 
