@@ -11,21 +11,19 @@ import {Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import * as errorUtils from "@dbp-toolkit/common/error";
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
-
+import * as errorUtils from '@dbp-toolkit/common/error';
+import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
 const personContext = {
-    "@id": "@id",
-    "givenName": "http://schema.org/givenName",
-    "familyName": "http://schema.org/familyName",
-    "email": "http://schema.org/email"
+    '@id': '@id',
+    givenName: 'http://schema.org/givenName',
+    familyName: 'http://schema.org/familyName',
+    email: 'http://schema.org/email',
 };
 
 select2(window, $);
 
 export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
-
     constructor() {
         super();
         Object.assign(PersonSelect.prototype, errorUtils.errorMixin);
@@ -52,7 +50,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     static get scopedElements() {
         return {
-          'dbp-icon': Icon,
+            'dbp-icon': Icon,
         };
     }
 
@@ -63,26 +61,26 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            active: { type: Boolean, attribute: false },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            value: { type: String },
-            object: { type: Object, attribute: false },
-            showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
-            reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
-            showDetails: { type: Boolean, attribute: 'show-details' },
-            auth: { type: Object },
+            lang: {type: String},
+            active: {type: Boolean, attribute: false},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            value: {type: String},
+            object: {type: Object, attribute: false},
+            showReloadButton: {type: Boolean, attribute: 'show-reload-button'},
+            reloadButtonTitle: {type: String, attribute: 'reload-button-title'},
+            showDetails: {type: Boolean, attribute: 'show-details'},
+            auth: {type: Object},
         };
     }
 
     clear() {
         this.object = null;
-        $(this).attr("data-object", "");
-        $(this).data("object", null);
-        this.value = "";
+        $(this).attr('data-object', '');
+        $(this).data('object', null);
+        this.value = '';
         // Reset value attribute to really make sure it is empty and will trigger a change event
         // when it is set again with the previous value
-        $(this).attr("value", "");
+        $(this).attr('value', '');
         this.$select.val(null).trigger('change').trigger('select2:unselect');
     }
 
@@ -90,7 +88,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         super.connectedCallback();
         document.addEventListener('click', this._onDocumentClicked);
 
-        this.updateComplete.then(()=>{
+        this.updateComplete.then(() => {
             this.$select = this.$('#' + this.selectId);
             // try an init when user-interface is loaded
             this.initJSONLD();
@@ -115,14 +113,24 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     initJSONLD(ignorePreset = false) {
         const that = this;
 
-        JSONLD.getInstance(this.entryPointUrl).then(function (jsonld) {
-            that.jsonld = jsonld;
-            that.active = that.authenticated();
+        JSONLD.getInstance(this.entryPointUrl).then(
+            function (jsonld) {
+                that.jsonld = jsonld;
+                that.active = that.authenticated();
 
-            // we need to poll because maybe the user interface isn't loaded yet
-            // Note: we need to call initSelect2() in a different function so we can access "this" inside initSelect2()
-            commonUtils.pollFunc(() => { return that.initSelect2(ignorePreset); }, 10000, 100);
-        }, {}, this.lang);
+                // we need to poll because maybe the user interface isn't loaded yet
+                // Note: we need to call initSelect2() in a different function so we can access "this" inside initSelect2()
+                commonUtils.pollFunc(
+                    () => {
+                        return that.initSelect2(ignorePreset);
+                    },
+                    10000,
+                    100
+                );
+            },
+            {},
+            this.lang
+        );
     }
 
     /**
@@ -140,7 +148,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         }
 
         // find the correct api url for a person
-        const apiUrl = this.jsonld.getApiUrlForIdentifier("http://schema.org/Person");
+        const apiUrl = this.jsonld.getApiUrlForIdentifier('http://schema.org/Person');
         // const apiUrl = this.jsonld.getApiUrlForEntityName("Event");
 
         if (this.$select === null) {
@@ -154,71 +162,83 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             this.$select.off('select2:closing');
         }
 
-        this.$select.select2({
-            width: '100%',
-            language: this.lang === "de" ? select2LangDe() : select2LangEn(),
-            minimumInputLength: 2,
-            placeholder: this.authenticated() ? i18n.t('person-select.placeholder') : i18n.t('person-select.login-required'),
-            dropdownParent: this.$('#person-select-dropdown'),
-            ajax: {
-                delay: 500,
-                url: apiUrl,
-                contentType: "application/ld+json",
-                beforeSend: function (jqXHR) {
-                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
-                    that.isSearching = true;
-                },
-                data: function (params) {
-                    return {
-                        search: params.term.trim(),
-                    };
-                },
-                processResults: function (data) {
-                    that.$('#person-select-dropdown').addClass('select2-bug');
-
-                    that.lastResult = data;
-                    let transformed = that.jsonld.transformMembers(data, personContext);
-                    const results = [];
-                    transformed.forEach((person) => {
-                        results.push({id: person["@id"], text: that.generateOptionText(person)});
-                    });
-
-                    return {
-                        results: results
-                    };
-                },
-                error: (jqXHR, textStatus, errorThrown) => { this.handleXhrError(jqXHR, textStatus, errorThrown); },
-                complete: (jqXHR, textStatus) => {
-                    that.isSearching = false;
-                }
-            }
-        }).on("select2:select", function (e) {
-            that.$('#person-select-dropdown').removeClass('select2-bug');
-
-            // set custom element attributes
-            const identifier = e.params.data.id;
-            that.object = findObjectInApiResults(identifier, that.lastResult);
-
-            $this.attr("data-object", JSON.stringify(that.object));
-            $this.data("object", that.object);
-
-            if ($this.attr("value") !== identifier) {
-                that.ignoreValueUpdate = true;
-                $this.attr("value", identifier);
-
-                // fire a change event
-                that.dispatchEvent(new CustomEvent('change', {
-                    detail: {
-                        value: identifier,
+        this.$select
+            .select2({
+                width: '100%',
+                language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
+                minimumInputLength: 2,
+                placeholder: this.authenticated()
+                    ? i18n.t('person-select.placeholder')
+                    : i18n.t('person-select.login-required'),
+                dropdownParent: this.$('#person-select-dropdown'),
+                ajax: {
+                    delay: 500,
+                    url: apiUrl,
+                    contentType: 'application/ld+json',
+                    beforeSend: function (jqXHR) {
+                        jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
+                        that.isSearching = true;
                     },
-                    bubbles: true
-                }));
-            }
-        }).on("select2:closing", (e) => {
-            if (that.isSearching) {
-                e.preventDefault();
-            }
-        });
+                    data: function (params) {
+                        return {
+                            search: params.term.trim(),
+                        };
+                    },
+                    processResults: function (data) {
+                        that.$('#person-select-dropdown').addClass('select2-bug');
+
+                        that.lastResult = data;
+                        let transformed = that.jsonld.transformMembers(data, personContext);
+                        const results = [];
+                        transformed.forEach((person) => {
+                            results.push({
+                                id: person['@id'],
+                                text: that.generateOptionText(person),
+                            });
+                        });
+
+                        return {
+                            results: results,
+                        };
+                    },
+                    error: (jqXHR, textStatus, errorThrown) => {
+                        this.handleXhrError(jqXHR, textStatus, errorThrown);
+                    },
+                    complete: (jqXHR, textStatus) => {
+                        that.isSearching = false;
+                    },
+                },
+            })
+            .on('select2:select', function (e) {
+                that.$('#person-select-dropdown').removeClass('select2-bug');
+
+                // set custom element attributes
+                const identifier = e.params.data.id;
+                that.object = findObjectInApiResults(identifier, that.lastResult);
+
+                $this.attr('data-object', JSON.stringify(that.object));
+                $this.data('object', that.object);
+
+                if ($this.attr('value') !== identifier) {
+                    that.ignoreValueUpdate = true;
+                    $this.attr('value', identifier);
+
+                    // fire a change event
+                    that.dispatchEvent(
+                        new CustomEvent('change', {
+                            detail: {
+                                value: identifier,
+                            },
+                            bubbles: true,
+                        })
+                    );
+                }
+            })
+            .on('select2:closing', (e) => {
+                if (that.isSearching) {
+                    e.preventDefault();
+                }
+            });
 
         // TODO: doesn't work here
         // this.$('.select2-selection__arrow').click(() => {
@@ -232,48 +252,59 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             fetch(apiUrl, {
                 headers: {
                     'Content-Type': 'application/ld+json',
-                    'Authorization': 'Bearer ' + this.auth.token,
+                    Authorization: 'Bearer ' + this.auth.token,
                 },
             })
-            .then(result => {
-                if (!result.ok) throw result;
-                return result.json();
-            })
-            .then((person) => {
-                that.object = person;
-                const transformed = that.jsonld.compactMember(that.jsonld.expandMember(person), personContext);
-                const identifier = transformed["@id"];
+                .then((result) => {
+                    if (!result.ok) throw result;
+                    return result.json();
+                })
+                .then((person) => {
+                    that.object = person;
+                    const transformed = that.jsonld.compactMember(
+                        that.jsonld.expandMember(person),
+                        personContext
+                    );
+                    const identifier = transformed['@id'];
 
-                const option = new Option(that.generateOptionText(transformed), identifier, true, true);
-                $this.attr("data-object", JSON.stringify(person));
-                $this.data("object", person);
-                that.$select.append(option).trigger('change');
+                    const option = new Option(
+                        that.generateOptionText(transformed),
+                        identifier,
+                        true,
+                        true
+                    );
+                    $this.attr('data-object', JSON.stringify(person));
+                    $this.data('object', person);
+                    that.$select.append(option).trigger('change');
 
-                // fire a change event
-                that.dispatchEvent(new CustomEvent('change', {
-                    detail: {
-                        value: identifier,
-                    },
-                    bubbles: true
-                }));
-            }).catch((e) => {
-                console.log(e);
-                that.clear();
-            });
+                    // fire a change event
+                    that.dispatchEvent(
+                        new CustomEvent('change', {
+                            detail: {
+                                value: identifier,
+                            },
+                            bubbles: true,
+                        })
+                    );
+                })
+                .catch((e) => {
+                    console.log(e);
+                    that.clear();
+                });
         }
 
         return true;
     }
 
     generateOptionText(person) {
-        let text = person["givenName"] ?? '';
-        if (person["familyName"]) {
-            text += ` ${person["familyName"]}`;
+        let text = person['givenName'] ?? '';
+        if (person['familyName']) {
+            text += ` ${person['familyName']}`;
         }
 
         // add birth date to name if present
-        if (this.showDetails && (person["email"] !== undefined) && (person["email"] !== null)) {
-            text += ` (${person["email"]})`;
+        if (this.showDetails && person['email'] !== undefined && person['email'] !== null) {
+            text += ` (${person['email']})`;
         }
 
         return text;
@@ -282,7 +313,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case "lang":
+                case 'lang':
                     this._i18n.changeLanguage(this.lang);
 
                     if (this.select2IsInitialized()) {
@@ -290,18 +321,18 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                         this.initSelect2(true);
                     }
                     break;
-                case "value":
+                case 'value':
                     if (!this.ignoreValueUpdate && this.select2IsInitialized()) {
                         this.initSelect2();
                     }
 
                     this.ignoreValueUpdate = false;
                     break;
-                case "entryPointUrl":
+                case 'entryPointUrl':
                     // we don't need to preset the selector if the entry point url changes
                     this.initJSONLD(true);
                     break;
-                case "auth":
+                case 'auth':
                     this.active = this.authenticated();
                     break;
             }
@@ -311,7 +342,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     select2IsInitialized() {
-        return this.$select !== null && this.$select.hasClass("select2-hidden-accessible");
+        return this.$select !== null && this.$select.hasClass('select2-hidden-accessible');
     }
 
     reloadClick() {
@@ -320,12 +351,14 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         }
 
         // fire a change event
-        this.dispatchEvent(new CustomEvent('change', {
-            detail: {
-                value: this.value,
-            },
-            bubbles: true
-        }));
+        this.dispatchEvent(
+            new CustomEvent('change', {
+                detail: {
+                    value: this.value,
+                },
+                bubbles: true,
+            })
+        );
     }
 
     authenticated() {
@@ -340,30 +373,30 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             commonStyles.getFormAddonsCSS(),
             commonStyles.getSelect2CSS(),
             css`
-            .select2-control.control {
-                width: 100%;
-            }
+                .select2-control.control {
+                    width: 100%;
+                }
 
-            .field .button.control {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: var(--dbp-border);
-                border-color: var(--dbp-text-muted);
-                -moz-border-radius-topright: var(--dbp-border-radius);
-                -moz-border-radius-bottomright: var(--dbp-border-radius);
-                line-height: 100%;
-            }
+                .field .button.control {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: var(--dbp-border);
+                    border-color: var(--dbp-text-muted);
+                    -moz-border-radius-topright: var(--dbp-border-radius);
+                    -moz-border-radius-bottomright: var(--dbp-border-radius);
+                    line-height: 100%;
+                }
 
-            .field .button.control dbp-icon {
-                top: 0;
-            }
+                .field .button.control dbp-icon {
+                    top: 0;
+                }
 
-            /* https://github.com/select2/select2/issues/5457 */
-            .select2-bug .loading-results {
-                display: none !important;
-            }
-            `
+                /* https://github.com/select2/select2/issues/5457 */
+                .select2-bug .loading-results {
+                    display: none !important;
+                }
+            `,
         ];
     }
 
@@ -371,7 +404,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         const i18n = this._i18n;
         const select2CSS = commonUtils.getAssetURL(select2CSSPath);
         return html`
-            <link rel="stylesheet" href="${select2CSS}">
+            <link rel="stylesheet" href="${select2CSS}" />
             <style>
                 #${this.selectId} {
                     width: 100%;
@@ -382,17 +415,27 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                 <div class="field has-addons">
                     <div class="select2-control control">
                         <!-- https://select2.org-->
-                        <select id="${this.selectId}" name="person" class="select" 
-                                ?disabled=${!this.active}>
-                            ${!this.authenticated() ? html`<option value="" disabled selected>${ i18n.t('person-select.login-required')}</option>` : ''}
+                        <select
+                            id="${this.selectId}"
+                            name="person"
+                            class="select"
+                            ?disabled=${!this.active}>
+                            ${!this.authenticated()
+                                ? html`
+                                      <option value="" disabled selected>
+                                          ${i18n.t('person-select.login-required')}
+                                      </option>
+                                  `
+                                : ''}
                         </select>
                     </div>
-                    <a class="control button"
-                       id="reload-button"
-                       ?disabled=${this.object === null}
-                       @click="${this.reloadClick}"
-                       style="display: ${this.showReloadButton ? "flex" : "none"}"
-                       title="${this.reloadButtonTitle}">
+                    <a
+                        class="control button"
+                        id="reload-button"
+                        ?disabled=${this.object === null}
+                        @click="${this.reloadClick}"
+                        style="display: ${this.showReloadButton ? 'flex' : 'none'}"
+                        title="${this.reloadButtonTitle}">
                         <dbp-icon name="reload"></dbp-icon>
                     </a>
                 </div>

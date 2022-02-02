@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
-import DBPLitElement from "../dbp-lit-element";
+import DBPLitElement from '../dbp-lit-element';
 
 export class Translated extends DBPLitElement {
     constructor() {
@@ -11,14 +11,16 @@ export class Translated extends DBPLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
+            lang: {type: String},
         };
-      }
+    }
 
     static get styles() {
         // language=css
         return css`
-            .hidden {display: none}
+            .hidden {
+                display: none;
+            }
         `;
     }
 

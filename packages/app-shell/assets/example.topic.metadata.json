@@ -1,20 +1,17 @@
 {
-  "name": {
-    "de": "Beispiel",
-    "en": "Example"
-  },
-  "short_name": {
-    "de": "Beispiel",
-    "en": "Example"
-  },
-  "description": {
-    "de": "Ich bin eine Beschreibung der Applikation",
-    "en": "I am a description of this application"
-  },
-  "routing_name": "example",
-  "activities": [
-    {"path": "example.metadata.json"},
-    {"path": "example2.metadata.json"}
-  ],
-  "attributes": []
+    "name": {
+        "de": "Beispiel",
+        "en": "Example"
+    },
+    "short_name": {
+        "de": "Beispiel",
+        "en": "Example"
+    },
+    "description": {
+        "de": "Ich bin eine Beschreibung der Applikation",
+        "en": "I am a description of this application"
+    },
+    "routing_name": "example",
+    "activities": [{"path": "example.metadata.json"}, {"path": "example2.metadata.json"}],
+    "attributes": []
 }

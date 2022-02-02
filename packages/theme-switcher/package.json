@@ -1,58 +1,62 @@
 {
-  "name": "@dbp-toolkit/theme-switcher",
-  "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/theme-switcher",
-  "version": "0.0.1",
-  "main": "src/index.js",
-  "license": "LGPL-2.1-or-later",
-  "repository": {
-    "type": "git",
-    "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
-    "directory": "packages/theme-switcher"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org",
-    "access": "public"
-  },
-  "devDependencies": {
-    "@esm-bundle/chai": "^4.2.0",
-    "@rollup/plugin-commonjs": "^21.0.0",
-    "@rollup/plugin-json": "^4.0.2",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "eslint": "^8.0.0",
-    "eslint-plugin-jsdoc": "^37.0.0",
-    "i18next-scanner": "^3.0.0",
-    "karma": "^6.0.0",
-    "karma-chrome-launcher": "^3.0.0",
-    "karma-firefox-launcher": "^2.1.0",
-    "karma-mocha": "^2.0.0",
-    "mocha": "^9.0.0",
-    "rollup": "^2.33.3",
-    "rollup-plugin-copy": "^3.1.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-terser": "^7.0.2"
-  },
-  "dependencies": {
-    "@dbp-toolkit/common": "^0.2.2",
-    "@open-wc/scoped-elements": "^2.0.0",
-    "i18next": "^21.4.2",
-    "jszip": "^3.5.0",
-    "lit": "^2.0.0",
-    "material-design-icons-svg": "^3.0.0"
-  },
-  "scripts": {
-    "clean": "rm dist/*",
-    "build": "npm run build-local",
-    "build-local": "rollup -c",
-    "build-dev": "rollup -c --environment BUILD:development",
-    "build-prod": "rollup -c --environment BUILD:production",
-    "build-demo": "rollup -c --environment BUILD:demo",
-    "build-test": "rollup -c --environment BUILD:test",
-    "i18next": "i18next-scanner",
-    "watch": "npm run watch-local",
-    "watch-local": "rollup -c --watch",
-    "watch-dev": "rollup -c --watch --environment BUILD:development",
-    "test": "npm run build-test && karma start --singleRun",
-    "lint": "eslint ."
-  }
+    "name": "@dbp-toolkit/theme-switcher",
+    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/theme-switcher",
+    "version": "0.0.1",
+    "main": "src/index.js",
+    "license": "LGPL-2.1-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+        "directory": "packages/theme-switcher"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "devDependencies": {
+        "@esm-bundle/chai": "^4.2.0",
+        "@rollup/plugin-commonjs": "^21.0.0",
+        "@rollup/plugin-json": "^4.0.2",
+        "@rollup/plugin-node-resolve": "^13.0.0",
+        "eslint": "^8.0.0",
+        "eslint-plugin-jsdoc": "^37.0.0",
+        "i18next-scanner": "^3.0.0",
+        "karma": "^6.0.0",
+        "karma-chrome-launcher": "^3.0.0",
+        "karma-firefox-launcher": "^2.1.0",
+        "karma-mocha": "^2.0.0",
+        "mocha": "^9.0.0",
+        "prettier": "^2.5.1",
+        "rollup": "^2.33.3",
+        "rollup-plugin-copy": "^3.1.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-serve": "^1.0.1",
+        "rollup-plugin-terser": "^7.0.2"
+    },
+    "dependencies": {
+        "@dbp-toolkit/common": "^0.2.2",
+        "@open-wc/scoped-elements": "^2.0.0",
+        "i18next": "^21.4.2",
+        "jszip": "^3.5.0",
+        "lit": "^2.0.0",
+        "material-design-icons-svg": "^3.0.0"
+    },
+    "scripts": {
+        "clean": "rm dist/*",
+        "format": "yarn run format:eslint && yarn run format:prettier",
+        "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
+        "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
+        "build": "npm run build-local",
+        "build-local": "rollup -c",
+        "build-dev": "rollup -c --environment BUILD:development",
+        "build-prod": "rollup -c --environment BUILD:production",
+        "build-demo": "rollup -c --environment BUILD:demo",
+        "build-test": "rollup -c --environment BUILD:test",
+        "i18next": "i18next-scanner",
+        "watch": "npm run watch-local",
+        "watch-local": "rollup -c --watch",
+        "watch-dev": "rollup -c --watch --environment BUILD:development",
+        "test": "npm run build-test && karma start --singleRun",
+        "lint": "eslint ."
+    }
 }

@@ -5,7 +5,6 @@ import generateUrls from 'universal-router/generateUrls';
  * A wrapper around UniversalRouter which adds history integration
  */
 export class Router {
-
     /**
      * @param {Array} routes The routes passed to UniversalRouter
      * @param {object} options Options
@@ -42,21 +41,24 @@ export class Router {
     setStateFromCurrentLocation() {
         const oldPathName = location.pathname;
 
-        this.router.resolve({pathname: oldPathName}).then(page => {
-            const newPathname = this.getPathname(page);
-            // In case of a router redirect, set the new location
-            if (newPathname !== oldPathName) {
-                const referrerUrl = location.href;
-                window.history.replaceState({}, '', newPathname);
-                this.dispatchLocationChanged(referrerUrl);
-            } else if (this.isBasePath(oldPathName)) {
-                page = this.getDefaultState();
-            }
-            this.setState(page);
-        }).catch((e) => {
-            // In case we can't resolve the location, just leave things as is.
-            // This happens when a user enters a wrong URL or when testing with karma.
-        });
+        this.router
+            .resolve({pathname: oldPathName})
+            .then((page) => {
+                const newPathname = this.getPathname(page);
+                // In case of a router redirect, set the new location
+                if (newPathname !== oldPathName) {
+                    const referrerUrl = location.href;
+                    window.history.replaceState({}, '', newPathname);
+                    this.dispatchLocationChanged(referrerUrl);
+                } else if (this.isBasePath(oldPathName)) {
+                    page = this.getDefaultState();
+                }
+                this.setState(page);
+            })
+            .catch((e) => {
+                // In case we can't resolve the location, just leave things as is.
+                // This happens when a user enters a wrong URL or when testing with karma.
+            });
     }
 
     isBasePath(pathname) {
@@ -72,8 +74,7 @@ export class Router {
         setTimeout(() => {
             const newPathname = this.getPathname();
             const oldPathname = location.pathname;
-            if (newPathname === oldPathname)
-                return;
+            if (newPathname === oldPathname) return;
 
             const defaultPathname = this.getPathname(this.getDefaultState());
             if (newPathname === defaultPathname && this.isBasePath(oldPathname)) {
@@ -92,16 +93,18 @@ export class Router {
      * @param {string} pathname
      */
     updateFromPathname(pathname) {
-        this.router.resolve({pathname: pathname}).then(page => {
-            if (location.pathname === pathname)
-                return;
-            const referrerUrl = location.href;
-            window.history.pushState({}, '', pathname);
-            this.setState(page);
-            this.dispatchLocationChanged(referrerUrl);
-        }).catch((err) => {
-            throw new Error(`Route not found: ${pathname}: ${err}`);
-        });
+        this.router
+            .resolve({pathname: pathname})
+            .then((page) => {
+                if (location.pathname === pathname) return;
+                const referrerUrl = location.href;
+                window.history.pushState({}, '', pathname);
+                this.setState(page);
+                this.dispatchLocationChanged(referrerUrl);
+            })
+            .catch((err) => {
+                throw new Error(`Route not found: ${pathname}: ${err}`);
+            });
     }
 
     /**
@@ -114,8 +117,7 @@ export class Router {
      */
     getPathname(partialState) {
         const currentState = this.getState();
-        if (partialState === undefined)
-            partialState = {};
+        if (partialState === undefined) partialState = {};
         let combined = {...currentState, ...partialState};
 
         try {
@@ -126,13 +128,15 @@ export class Router {
         }
     }
 
-    dispatchLocationChanged(referrerUrl = "") {
+    dispatchLocationChanged(referrerUrl = '') {
         // fire a locationchanged event
-        window.dispatchEvent(new CustomEvent('locationchanged', {
-            detail: {
-                referrerUrl: referrerUrl,
-            },
-            bubbles: true
-        }));
+        window.dispatchEvent(
+            new CustomEvent('locationchanged', {
+                detail: {
+                    referrerUrl: referrerUrl,
+                },
+                bubbles: true,
+            })
+        );
     }
 }

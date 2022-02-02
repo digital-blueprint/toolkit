@@ -5,7 +5,7 @@ import {MiniSpinner} from './src/mini-spinner.js';
 import {Button, LoadingButton} from './src/button.js';
 import {Spinner} from './src/spinner.js';
 import {InlineNotification} from './src/inline-notification.js';
-import {Translated} from "./src/translated";
+import {Translated} from './src/translated';
 import {AdapterLitElement} from './src/adapter-lit-element.js';
 
 export {EventBus, createLinkedAbortController, createTimeoutAbortSignal};

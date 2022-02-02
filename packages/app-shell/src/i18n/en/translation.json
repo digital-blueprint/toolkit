@@ -1,22 +1,22 @@
 {
-  "logo": {
-    "word1": "Science",
-    "word2": "Passion",
-    "word3": "Technology"
-  },
-  "privacy-policy": "Privacy Policy",
-  "imprint": "Legal Notice",
-  "contact": "Contact",
-  "page-updated-needs-reload": "The application has been updated. Please reload the page.",
-  "activity-example": {
-    "hello-world": "Hello World"
-  },
-  "welcome": {
-    "headline": "Welcome to the '{{appname}}' application."
-  },
-  "login": "Login",
-  "logout": "Logout",
-  "page-not-found": "Requested Page Not Found",
-  "choose-from-menu": "Please choose an activity from the menu.",
-  "color-mode": "Change color mode"
+    "logo": {
+        "word1": "Science",
+        "word2": "Passion",
+        "word3": "Technology"
+    },
+    "privacy-policy": "Privacy Policy",
+    "imprint": "Legal Notice",
+    "contact": "Contact",
+    "page-updated-needs-reload": "The application has been updated. Please reload the page.",
+    "activity-example": {
+        "hello-world": "Hello World"
+    },
+    "welcome": {
+        "headline": "Welcome to the '{{appname}}' application."
+    },
+    "login": "Login",
+    "logout": "Logout",
+    "page-not-found": "Requested Page Not Found",
+    "choose-from-menu": "Please choose an activity from the menu.",
+    "color-mode": "Change color mode"
 }

@@ -1,10 +1,9 @@
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import DBPLitElement from "../../common/dbp-lit-element";
+import DBPLitElement from '../../common/dbp-lit-element';
 
 export default class DbpFileHandlingLitElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
-
     }
 
     static get properties() {
@@ -20,23 +19,22 @@ export default class DbpFileHandlingLitElement extends ScopedElementsMixin(DBPLi
      * @param e
      */
     handleScroll(e) {
-        if (!this._(".right-paddle") || !this._(".left-paddle"))
-            return;
+        if (!this._('.right-paddle') || !this._('.left-paddle')) return;
         let horizontal = e.currentTarget.scrollLeft;
         let scrollWidth = e.currentTarget.scrollWidth - e.currentTarget.clientWidth; //e.currentTarget.scrollLeftMax isn't support except firefox
-        if(horizontal > 0) {
-            this._(".left-paddle").classList.remove("hidden");
+        if (horizontal > 0) {
+            this._('.left-paddle').classList.remove('hidden');
         }
         if (horizontal < scrollWidth) {
-            this._(".right-paddle").classList.remove("hidden");
+            this._('.right-paddle').classList.remove('hidden');
         }
 
         if (horizontal >= scrollWidth) {
-            this._(".right-paddle").classList.add("hidden");
+            this._('.right-paddle').classList.add('hidden');
         }
 
         if (horizontal <= 0) {
-            this._(".left-paddle").classList.add("hidden");
+            this._('.left-paddle').classList.add('hidden');
         }
     }
 
@@ -49,10 +47,10 @@ export default class DbpFileHandlingLitElement extends ScopedElementsMixin(DBPLi
         const maxwidth = element.scrollWidth - element.clientWidth;
         let container = element;
         let scrollAmount = 0;
-        let slideTimer = setInterval(function(){
+        let slideTimer = setInterval(function () {
             container.scrollLeft += 10;
             scrollAmount += 10;
-            if(scrollAmount >= maxwidth){
+            if (scrollAmount >= maxwidth) {
                 window.clearInterval(slideTimer);
             }
         }, 25);
@@ -67,13 +65,12 @@ export default class DbpFileHandlingLitElement extends ScopedElementsMixin(DBPLi
         const minwidth = 0;
         let container = element;
         let scrollAmount = element.scrollWidth - element.clientWidth;
-        let slideTimer = setInterval(function(){
+        let slideTimer = setInterval(function () {
             container.scrollLeft -= 10;
             scrollAmount -= 10;
-            if(scrollAmount <= minwidth){
+            if (scrollAmount <= minwidth) {
                 window.clearInterval(slideTimer);
             }
         }, 25);
     }
-
 }

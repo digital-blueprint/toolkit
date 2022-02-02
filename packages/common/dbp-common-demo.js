@@ -3,7 +3,16 @@ import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
-import {getIconCSS, Icon, MiniSpinner, Button, LoadingButton, Spinner, InlineNotification, Translated} from './index.js';
+import {
+    getIconCSS,
+    Icon,
+    MiniSpinner,
+    Button,
+    LoadingButton,
+    Spinner,
+    InlineNotification,
+    Translated,
+} from './index.js';
 
 export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -33,8 +42,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
 
     static get properties() {
         return {
-            lang: { type: String },
-            noAuth: { type: Boolean, attribute: 'no-auth' },
+            lang: {type: String},
+            noAuth: {type: Boolean, attribute: 'no-auth'},
         };
     }
 
@@ -42,17 +51,20 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         super.connectedCallback();
         this._i18n.changeLanguage(this.lang);
 
-        this.updateComplete.then(()=>{
-        });
+        this.updateComplete.then(() => {});
     }
 
     static get styles() {
         // language=css
         return css`
-            ${ commonStyles.getThemeCSS() }
+            ${commonStyles.getThemeCSS()}
 
-            h1.title {margin-bottom: 1em;}
-            div.container {margin-bottom: 1.5em;}
+            h1.title {
+                margin-bottom: 1em;
+            }
+            div.container {
+                margin-bottom: 1.5em;
+            }
 
             a:hover {
                 color: #ffbb00 !important;
@@ -67,15 +79,20 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                 padding: 0px 0px 0px 3px;
             }
 
-           /* from BULMA.CSS */
+            /* from BULMA.CSS */
             .section {
-               padding: 3rem 1.5rem;
+                padding: 3rem 1.5rem;
             }
             .content h1 {
                 font-size: 2em;
-                margin-bottom: .5em;
+                margin-bottom: 0.5em;
             }
-            .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+            .content h1,
+            .content h2,
+            .content h3,
+            .content h4,
+            .content h5,
+            .content h6 {
                 color: var(--dbp-text);
                 font-weight: 600;
                 line-height: 1.125;
@@ -87,11 +104,13 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     }
 
     getAuthComponentHtml() {
-        return this.noAuth ? html`` : html`
-            <div class="container">
-                <dbp-auth lang="${this.lang}"></dbp-auth>
-            </div>
-        `;
+        return this.noAuth
+            ? html``
+            : html`
+                  <div class="container">
+                      <dbp-auth lang="${this.lang}"></dbp-auth>
+                  </div>
+              `;
     }
 
     buttonClickHandler() {
@@ -113,7 +132,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         return html`
             <style>
                 a:after {
-                    ${ getIconCSS('envelope') };
+                    ${getIconCSS('envelope')};
                 }
             </style>
             <section class="section">
@@ -139,23 +158,60 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                 <div class="content">
                     <h2>Icons</h2>
                     <div class="control">
-                        <p style="text-decoration: underline">Foo <dbp-icon name="cloudnetwork"></dbp-icon> bar</p>
-                        <p style="font-size: 2em;">Foo <dbp-icon name="cloudnetwork"></dbp-icon> bar</p>
-                        <p style="font-size: 2em; color: orange">Foo <dbp-icon name="cloudnetwork"></dbp-icon> bar</p>
-                        <span style="background-color: #000"><a href="#" style=" color: #fff">foobar</a></span>
-                        <p style="font-size: 2em; color: orange">Foo <dbp-icon name="information"></dbp-icon> bar</p>
-                        <br>
+                        <p style="text-decoration: underline">
+                            Foo
+                            <dbp-icon name="cloudnetwork"></dbp-icon>
+                            bar
+                        </p>
+                        <p style="font-size: 2em;">
+                            Foo
+                            <dbp-icon name="cloudnetwork"></dbp-icon>
+                            bar
+                        </p>
+                        <p style="font-size: 2em; color: orange">
+                            Foo
+                            <dbp-icon name="cloudnetwork"></dbp-icon>
+                            bar
+                        </p>
+                        <span style="background-color: #000">
+                            <a href="#" style=" color: #fff">foobar</a>
+                        </span>
+                        <p style="font-size: 2em; color: orange">
+                            Foo
+                            <dbp-icon name="information"></dbp-icon>
+                            bar
+                        </p>
+                        <br />
 
-                        ${(new Array(100).fill(0)).map(i => html`<dbp-icon style="color: green; width: 50px; height: 50px; border: #000 solid 1px"name="happy"></dbp-icon>`)}
+                        ${new Array(100).fill(0).map(
+                            (i) =>
+                                html`
+                                    <dbp-icon
+                                        style="color: green; width: 50px; height: 50px; border: #000 solid 1px"
+                                        name="happy"></dbp-icon>
+                                `
+                        )}
                     </div>
                 </div>
                 <div class="content">
                     <h2>Button</h2>
                     <div class="control">
-                        <dbp-button value="Load" @click="${this.buttonClickHandler}" type="is-primary"></dbp-button>
+                        <dbp-button
+                            value="Load"
+                            @click="${this.buttonClickHandler}"
+                            type="is-primary"></dbp-button>
 
-                        <dbp-loading-button @click="${this.loadingButtonClickHandler}" type="is-primary">Loading Button</dbp-loading-button>
-                        <dbp-loading-button @click="${this.loadingButtonClickHandler}" type="is-primary" disabled>Loading Button Disabled</dbp-loading-button>
+                        <dbp-loading-button
+                            @click="${this.loadingButtonClickHandler}"
+                            type="is-primary">
+                            Loading Button
+                        </dbp-loading-button>
+                        <dbp-loading-button
+                            @click="${this.loadingButtonClickHandler}"
+                            type="is-primary"
+                            disabled>
+                            Loading Button Disabled
+                        </dbp-loading-button>
                     </div>
                 </div>
                 <div class="content">
@@ -195,16 +251,33 @@ html {
     --dbp-override-primary-dark: green;
     /* Same for all other variables, prefix with "override" */
 }
-&lt;/style&gt;</pre>
+&lt;/style&gt;</pre
+                    >
                 </div>
                 <div class="content">
                     <h2>Inline Notification</h2>
                     <div class="control">
-                        <dbp-inline-notification body="Item <b>foo</b> was deleted!" type="primary"></dbp-inline-notification><br>
-                        <dbp-inline-notification summary="Item foo was deleted."></dbp-inline-notification><br>
-                        <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="success"></dbp-inline-notification><br>
-                        <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="danger"></dbp-inline-notification><br>
-                        <dbp-inline-notification summary="Item deleted" body="Item <b>foo</b> was deleted!" type="warning"></dbp-inline-notification>
+                        <dbp-inline-notification
+                            body="Item <b>foo</b> was deleted!"
+                            type="primary"></dbp-inline-notification>
+                        <br />
+                        <dbp-inline-notification
+                            summary="Item foo was deleted."></dbp-inline-notification>
+                        <br />
+                        <dbp-inline-notification
+                            summary="Item deleted"
+                            body="Item <b>foo</b> was deleted!"
+                            type="success"></dbp-inline-notification>
+                        <br />
+                        <dbp-inline-notification
+                            summary="Item deleted"
+                            body="Item <b>foo</b> was deleted!"
+                            type="danger"></dbp-inline-notification>
+                        <br />
+                        <dbp-inline-notification
+                            summary="Item deleted"
+                            body="Item <b>foo</b> was deleted!"
+                            type="warning"></dbp-inline-notification>
                     </div>
                 </div>
                 <div class="content">
@@ -212,10 +285,12 @@ html {
                     <div class="control" id="dbp-translated-demo">
                         <dbp-translated subscribe="lang">
                             <div slot="de">
-                                Dieser Text ist Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.
+                                Dieser Text ist Deutsch und wird Englisch werden wenn man die
+                                Sprache auf Englisch stellt.
                             </div>
                             <div slot="en">
-                                This text is English and will be German if the language is changed to German.
+                                This text is English and will be German if the language is changed
+                                to German.
                             </div>
                         </dbp-translated>
                     </div>

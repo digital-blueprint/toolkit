@@ -6,9 +6,8 @@
 
 const OPERATION_FETCH_RETAINED = 'fetch-retained';
 
-export function checkIndentifier(name, allowEmpty=false) {
-    if (name.length === 0 && allowEmpty)
-        return;
+export function checkIndentifier(name, allowEmpty = false) {
+    if (name.length === 0 && allowEmpty) return;
     // we are strict here, so we can used special characters to extend the format later on
     if (!/^[a-z]+[a-z0-9-]*$/.test(name)) {
         throw new Error('Only a-z0-9 and - allowed: ' + JSON.stringify(name));
@@ -30,13 +29,12 @@ export function createEventName(busName, eventName, operation) {
  * An event bus implementation which doesn't depend on a global bus instance and supports retained messages
  * (similar to MQTT retained messages)
  */
-export class EventBus
-{
+export class EventBus {
     /**
      * @param {object} options
      * @param {string} options.name The bus name, events will only be visible on the same bus
      */
-    constructor(options={}) {
+    constructor(options = {}) {
         const {name = ''} = options;
         this._busName = name;
         this._retainedData = {};
@@ -65,8 +63,7 @@ export class EventBus
         const eventHandler = (e) => {
             const meta = {};
             const detail = e.detail;
-            if (detail.retain !== undefined)
-                meta.retain = detail.retain;
+            if (detail.retain !== undefined) meta.retain = detail.retain;
             callback(detail.data, meta);
             e.preventDefault();
         };
@@ -76,7 +73,7 @@ export class EventBus
         this._listeners[name] = listeners.set(callback, eventHandler);
 
         const fetchEvent = new CustomEvent(this._name(name, OPERATION_FETCH_RETAINED), {
-            detail: {callback: eventHandler}
+            detail: {callback: eventHandler},
         });
         window.dispatchEvent(fetchEvent);
     }
@@ -91,7 +88,7 @@ export class EventBus
         const listeners = this._listeners[name] || new Map();
         const eventHandler = listeners.get(callback);
         if (eventHandler === undefined) {
-            throw new Error("Not subscribed to: " + name);
+            throw new Error('Not subscribed to: ' + name);
         }
         window.removeEventListener(this._name(name), eventHandler);
         listeners.delete(callback);
@@ -100,13 +97,13 @@ export class EventBus
     /**
      * Publish a value for an event name. Set the retained flag to send the event also to future subscribers.
      *
-     * @param {string} name 
-     * @param {any} data 
+     * @param {string} name
+     * @param {any} data
      * @param {object} options
      * @param {boolean} options.retain If the event should be retained i.e. send to all future subscribers as well
      * @returns {boolean} If the event was handled by at least one bus member.
      */
-    publish(name, data, options={}) {
+    publish(name, data, options = {}) {
         const {retain = false} = options;
         const eventName = this._name(name);
 
@@ -116,11 +113,16 @@ export class EventBus
                 if (data !== undefined) {
                     const callback = e.detail['callback'];
                     e.stopImmediatePropagation();
-                    const event = new CustomEvent(eventName, {detail: {data: data, retain: retain}});
+                    const event = new CustomEvent(eventName, {
+                        detail: {data: data, retain: retain},
+                    });
                     callback(event);
                 }
             };
-            window.addEventListener(this._name(name, OPERATION_FETCH_RETAINED), retainedEventHandler);
+            window.addEventListener(
+                this._name(name, OPERATION_FETCH_RETAINED),
+                retainedEventHandler
+            );
 
             const eventHandler = (e) => {
                 const detail = e.detail;
@@ -133,7 +135,10 @@ export class EventBus
             this._retainedListeners[name] = [retainedEventHandler, eventHandler];
         }
 
-        const event = new CustomEvent(eventName, {detail: {data: data, retain: retain}, cancelable: true});
+        const event = new CustomEvent(eventName, {
+            detail: {data: data, retain: retain},
+            cancelable: true,
+        });
         return !window.dispatchEvent(event);
     }
 

@@ -7,11 +7,9 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Provider} from '@dbp-toolkit/provider';
 import {Adapter} from '@dbp-toolkit/provider';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
-import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
-
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
-
     constructor() {
         super();
         this._i18n = createInstance();
@@ -32,13 +30,23 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
+            lang: {type: String},
         };
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        console.debug('ProviderDemo (' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
-        switch(name) {
+        console.debug(
+            'ProviderDemo (' +
+                this.id +
+                ') attributeChangesCallback( ' +
+                name +
+                ', ' +
+                oldValue +
+                ', ' +
+                newValue +
+                ')'
+        );
+        switch (name) {
             case 'lang':
                 this.lang = newValue;
                 this._i18n.changeLanguage(this.lang);
@@ -55,9 +63,14 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
             commonStyles.getThemeCSS(),
             commonStyles.getGeneralCSS(),
             css`
-            h1.title {margin-bottom: 1em;}
-            div.container {margin-bottom: 1.5em; padding-left:20px;}
-            `
+                h1.title {
+                    margin-bottom: 1em;
+                }
+                div.container {
+                    margin-bottom: 1.5em;
+                    padding-left: 20px;
+                }
+            `,
         ];
     }
 
@@ -69,13 +82,20 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
         const i18n = this._i18n;
         return html`
             <section class="section">
-                <p>${i18n.t('demo.provider_description', {id: "root", description: "is the top most in hierarchy"})}</p>
+                <p>${i18n.t('demo.provider_description', {
+                    id: 'root',
+                    description: 'is the top most in hierarchy',
+                })}</p>
                 <pre>&lt;dbp-provider  id="root"  root="1" availability="global" >&lt;/dbp-provider&gt;</pre>
                 <div class="container">
                     <h1 class="title">${i18n.t('demo.provider')}-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu" client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
+                    <dbp-auth-keycloak subscribe="requested-login-status" lang="${
+                        this.lang
+                    }" entry-point-url="${
+            this.entryPointUrl
+        }" url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu" client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
                     <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
                     <dbp-language-select></dbp-language-select>
                 </div>
@@ -86,22 +106,40 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                                   bar="20">
                         <div class="container">
                             <h2>${i18n.t('demo.provider')}</h2>
-                            <p>${i18n.t('demo.provider_description', {id: "demo", description: "has only \"border-color\" to offer"})}</p>                            <pre>&lt;dbp-provider  id="demo"  bc="blue" &gt;&lt;/dbp-provider&gt;</pre>
-                            <p>${i18n.t('demo.provider_description', {id: "foo-bar", description: "has some values in its store"})}</p>
+                            <p>${i18n.t('demo.provider_description', {
+                                id: 'demo',
+                                description: 'has only "border-color" to offer',
+                            })}</p>                            <pre>&lt;dbp-provider  id="demo"  bc="blue" &gt;&lt;/dbp-provider&gt;</pre>
+                            <p>${i18n.t('demo.provider_description', {
+                                id: 'foo-bar',
+                                description: 'has some values in its store',
+                            })}</p>
                             <pre>&lt;dbp-provider  id="foo-bar"  foo="9" bar="20" &gt;&lt;/dbp-provider&gt;</pre>
 
                             <h2>${i18n.t('demo.consumer')}</h2>
-                            <p>${i18n.t('demo.consumer_description', {id: "c1", subscriptions: "border-color"})}</p>
+                            <p>${i18n.t('demo.consumer_description', {
+                                id: 'c1',
+                                subscriptions: 'border-color',
+                            })}</p>
                             <pre>&lt;dbp-consumer  id="c1"  subscribe="border-color:bc" &gt;&lt;/dbp-consumer&gt;</pre>
                             <dbp-consumer id="c1" subscribe="border-color:bc,lang"></dbp-consumer>
-                            <p>${i18n.t('demo.consumer_description', {id: "c2", subscriptions: "foo"})}</p>
+                            <p>${i18n.t('demo.consumer_description', {
+                                id: 'c2',
+                                subscriptions: 'foo',
+                            })}</p>
                             <pre>&lt;dbp-consumer  id="c2"  subscribe="foo:foo" &gt;&lt;/dbp-consumer&gt;</pre>
                             <dbp-consumer id="c2" subscribe="foo:foo,lang"></dbp-consumer>
-                            <p>${i18n.t('demo.consumer_description', {id: "c3", subscriptions: "availability:status"})}</p>
+                            <p>${i18n.t('demo.consumer_description', {
+                                id: 'c3',
+                                subscriptions: 'availability:status',
+                            })}</p>
                             <p>Local <em>status</em> is provided as <em>availability</em></p>
                             <pre>&lt;dbp-consumer  id="c3"  subscribe="status:availability"  border-color="orange" &gt;&lt;/dbp-consumer&gt;</pre>
                             <dbp-consumer id="c3" subscribe="status:availability,lang" border-color="orange"></dbp-consumer>
-                            <p>${i18n.t('demo.consumer_description', {id: "c4", subscriptions: "unknown-name:status"})}</p>
+                            <p>${i18n.t('demo.consumer_description', {
+                                id: 'c4',
+                                subscriptions: 'unknown-name:status',
+                            })}</p>
                             <p>Remote <em>unknown-name</em> does not exist, the default value is overwritten by <em>undefined</em></i></p>
                             <pre>&lt;dbp-consumer  id="c4"  subscribe="status:unknown-name"  border-color="darkgray" &gt;&lt;/dbp-consumer&gt;</pre>
                             <dbp-consumer id="c4" subscribe="status:unknown-name" border-color="darkgray"></dbp-consumer>
@@ -161,13 +199,13 @@ class DemoConsumer extends DBPLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            foo: { type: String },
-            bar: { type: String },
-            gong: { type: String },
-            borderColor: { type: String, attribute: 'border-color' },
-            ping: { type: String }
+            lang: {type: String},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            foo: {type: String},
+            bar: {type: String},
+            gong: {type: String},
+            borderColor: {type: String, attribute: 'border-color'},
+            ping: {type: String},
         };
     }
 
@@ -176,8 +214,18 @@ class DemoConsumer extends DBPLitElement {
             return;
         }
 
-        console.debug('DemoConsumer(' + this.id + ') attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
-        switch(name) {
+        console.debug(
+            'DemoConsumer(' +
+                this.id +
+                ') attributeChangesCallback( ' +
+                name +
+                ', ' +
+                oldValue +
+                ', ' +
+                newValue +
+                ')'
+        );
+        switch (name) {
             case 'lang':
                 this.lang = newValue;
                 this._i18n.changeLanguage(this.lang);
@@ -206,25 +254,37 @@ class DemoConsumer extends DBPLitElement {
 
     render() {
         const i18n = this._i18n;
-        if (! this.connected) {
+        if (!this.connected) {
             return `not connected!`;
         }
         console.debug('DemoConsumer(' + this.id + ') render()');
 
         const sum = this.foo + this.bar;
         return html`
-        <div style="border: ${this['border-color']} dotted; padding: 10px;">
-            <table style="width:200px;">
-                <tr style="background-color: #aaa;">
-                    <th style="text-align: left;">${i18n.t('consumer.item')}</th>
-                    <th style="text-align: right;">${i18n.t('consumer.price')}</th>
-                </tr>
-                <tr><td>foo</td><td style="text-align: right;">${this.foo}</td></tr>
-                <tr><td>bar</td><td style="text-align: right;">${this.bar}</td></tr>
-                <tr><td>${i18n.t('consumer.sum')}</td><td style="text-align: right;">${sum}</td></tr>
-            </table>
-            <p>Status: <b>${this.status}</b></p>
-        </div>
+            <div style="border: ${this['border-color']} dotted; padding: 10px;">
+                <table style="width:200px;">
+                    <tr style="background-color: #aaa;">
+                        <th style="text-align: left;">${i18n.t('consumer.item')}</th>
+                        <th style="text-align: right;">${i18n.t('consumer.price')}</th>
+                    </tr>
+                    <tr>
+                        <td>foo</td>
+                        <td style="text-align: right;">${this.foo}</td>
+                    </tr>
+                    <tr>
+                        <td>bar</td>
+                        <td style="text-align: right;">${this.bar}</td>
+                    </tr>
+                    <tr>
+                        <td>${i18n.t('consumer.sum')}</td>
+                        <td style="text-align: right;">${sum}</td>
+                    </tr>
+                </table>
+                <p>
+                    Status:
+                    <b>${this.status}</b>
+                </p>
+            </div>
         `;
     }
 }

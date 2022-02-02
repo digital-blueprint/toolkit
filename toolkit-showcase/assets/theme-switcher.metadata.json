@@ -1,18 +1,18 @@
 {
-  "element": "dbp-theme-switcher-demo-activity",
-  "module_src": "dbp-theme-switcher-demo-activity.js",
-  "routing_name": "theme-switcher",
-  "name": {
-    "de": "Theme-Switcher Komponente",
-    "en": "Theme-switcher component"
-  },
-  "short_name": {
-    "de": "Theme-Switcher Komponente",
-    "en": "Theme-switcher component"
-  },
-  "description": {
-    "de": "Theme Switcher Web Komponente",
-    "en": "Theme-Switcher web component"
-  },
-  "subscribe": "lang"
+    "element": "dbp-theme-switcher-demo-activity",
+    "module_src": "dbp-theme-switcher-demo-activity.js",
+    "routing_name": "theme-switcher",
+    "name": {
+        "de": "Theme-Switcher Komponente",
+        "en": "Theme-switcher component"
+    },
+    "short_name": {
+        "de": "Theme-Switcher Komponente",
+        "en": "Theme-switcher component"
+    },
+    "description": {
+        "de": "Theme Switcher Web Komponente",
+        "en": "Theme-Switcher web component"
+    },
+    "subscribe": "lang"
 }

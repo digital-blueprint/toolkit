@@ -41,6 +41,6 @@ export default function () {
         },
         removeAllItems: function () {
             return 'Auswahl aufheben';
-        }
+        },
     };
 }

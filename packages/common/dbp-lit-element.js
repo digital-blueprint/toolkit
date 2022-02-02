@@ -1,4 +1,4 @@
-import {AdapterLitElement} from "./src/adapter-lit-element";
+import {AdapterLitElement} from './src/adapter-lit-element';
 
 export default class DBPLitElement extends AdapterLitElement {
     constructor() {
@@ -13,9 +13,8 @@ export default class DBPLitElement extends AdapterLitElement {
     static get properties() {
         return {
             ...super.properties,
-            htmlOverrides: { type: String, attribute: 'html-overrides' },
+            htmlOverrides: {type: String, attribute: 'html-overrides'},
         };
-
     }
 
     disconnectedCallback() {
@@ -27,7 +26,9 @@ export default class DBPLitElement extends AdapterLitElement {
     }
 
     _(selector) {
-        return this.shadowRoot === null ? this.querySelector(selector) : this.shadowRoot.querySelector(selector);
+        return this.shadowRoot === null
+            ? this.querySelector(selector)
+            : this.shadowRoot.querySelector(selector);
     }
 
     firstUpdated() {
@@ -39,7 +40,7 @@ export default class DBPLitElement extends AdapterLitElement {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case "html-overrides":
+                case 'html-overrides':
                     this._importTemplateSlots();
                     break;
             }
@@ -51,10 +52,10 @@ export default class DBPLitElement extends AdapterLitElement {
     /**
      * Transforms all global override templates or named template slots in the light DOM to named div slots
      * on the first render.
-     * 
+     *
      * Global overrides will replace all existing slotted elements with the same slot name.
      */
-     _importTemplateSlots() {
+    _importTemplateSlots() {
         if (!this._renderDone) {
             return;
         }
@@ -63,13 +64,13 @@ export default class DBPLitElement extends AdapterLitElement {
     }
 
     _importLocalTemplateSlots() {
-        if(this._localTemplateSlotsImported ) {
+        if (this._localTemplateSlotsImported) {
             return;
         }
 
         // Now extract slots from templates contained in the light dom
         let lightTemplateSlots = this.querySelectorAll(':scope > template[slot]:not([slot=""]');
-        for(let templateElem of lightTemplateSlots) {
+        for (let templateElem of lightTemplateSlots) {
             // create a slot div container to put in the cloned template content
             const divElem = document.createElement('div');
             divElem.slot = templateElem.getAttribute('slot');
@@ -84,7 +85,7 @@ export default class DBPLitElement extends AdapterLitElement {
     }
 
     _importGlobalTemplateSlots() {
-        if(this.htmlOverrides === '' || this._globalTemplateSlotsImported) {
+        if (this.htmlOverrides === '' || this._globalTemplateSlotsImported) {
             return;
         }
 
@@ -93,13 +94,15 @@ export default class DBPLitElement extends AdapterLitElement {
         if (globalOverrideTemplateElem !== null) {
             // we need to clone the element so we can access the content
             const overrideTemplateElemClone = globalOverrideTemplateElem.content.cloneNode(true);
-            const templateOverrideElem = overrideTemplateElemClone.querySelector('template#' + this.tagName.toLowerCase());
+            const templateOverrideElem = overrideTemplateElemClone.querySelector(
+                'template#' + this.tagName.toLowerCase()
+            );
             if (templateOverrideElem !== null) {
                 const templateOverrideElemClone = templateOverrideElem.content.cloneNode(true);
 
                 // Find all slots which are direct children (somehow :scope doesn't work here so check parentNode)
                 let globalTemplateSlots = [];
-                for(let e of templateOverrideElemClone.querySelectorAll('[slot]:not([slot=""]')) {
+                for (let e of templateOverrideElemClone.querySelectorAll('[slot]:not([slot=""]')) {
                     if (e.parentNode === templateOverrideElemClone) {
                         globalTemplateSlots.push(e);
                     }
@@ -107,7 +110,7 @@ export default class DBPLitElement extends AdapterLitElement {
 
                 // Global overrides will replace local ones.
                 // Either normal slotted elements or the ones we create from templates.
-                for(let slotElem of globalTemplateSlots) {
+                for (let slotElem of globalTemplateSlots) {
                     for (let elm of this.querySelectorAll('[slot="' + slotElem.slot + '"]')) {
                         elm.remove();
                     }
@@ -115,10 +118,10 @@ export default class DBPLitElement extends AdapterLitElement {
 
                 // Create a dummy node and add it to the the same shadow root the templates are from
                 // By adding it into the template we have the nice side effect that it is not visible
-                let container = document.createElement("div");
+                let container = document.createElement('div');
                 globalOverrideTemplateElem.append(container);
                 this._globalSlotsContainer = container;
-                for(let slotElem of globalTemplateSlots) {
+                for (let slotElem of globalTemplateSlots) {
                     container.appendChild(slotElem);
                 }
 

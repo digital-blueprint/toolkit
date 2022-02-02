@@ -14,11 +14,11 @@ suite('helpers', () => {
 
         checkIndentifier('', true);
 
-        for(let key of ok) {
+        for (let key of ok) {
             checkIndentifier(key);
         }
 
-        for(let key of notOk) {
+        for (let key of notOk) {
             assert.throws(() => {
                 checkIndentifier(key);
             });
@@ -35,12 +35,12 @@ suite('events', () => {
     test('pub sub', () => {
         const bus = new EventBus();
         let called = false;
-        bus.subscribe("foo", (data) => {
+        bus.subscribe('foo', (data) => {
             called = true;
             assert.deepEqual(data, 42);
         });
 
-        const res = bus.publish("foo", 42);
+        const res = bus.publish('foo', 42);
         assert.isTrue(called);
         assert.isTrue(res);
         bus.close();
@@ -48,7 +48,7 @@ suite('events', () => {
 
     test('no handler', () => {
         const bus = new EventBus();
-        const res = bus.publish("foo", 42);
+        const res = bus.publish('foo', 42);
         assert.isFalse(res);
         bus.close();
     });
@@ -60,10 +60,10 @@ suite('events', () => {
         const func = () => {
             called = true;
         };
-        bus.subscribe("foo", func);
-        bus.unsubscribe("foo", func);
+        bus.subscribe('foo', func);
+        bus.unsubscribe('foo', func);
 
-        const res = bus.publish("foo", 42);
+        const res = bus.publish('foo', 42);
         assert.isFalse(res);
         assert.isFalse(called);
         bus.close();
@@ -77,9 +77,9 @@ suite('events', () => {
             calledData = {data: data, meta: meta};
         };
 
-        bus.subscribe("foo", func);
+        bus.subscribe('foo', func);
 
-        let res = bus.publish("foo", 42, {retain: true});
+        let res = bus.publish('foo', 42, {retain: true});
         assert.isTrue(res);
 
         assert.equal(calledData.data, 42);
@@ -87,15 +87,15 @@ suite('events', () => {
 
         calledData = null;
 
-        res = bus.publish("foo", 24);
+        res = bus.publish('foo', 24);
         assert.isTrue(res);
 
         assert.equal(calledData.data, 24);
         assert.isFalse(calledData.meta.retain);
-        bus.unsubscribe("foo", func);
+        bus.unsubscribe('foo', func);
 
         calledData = null;
-        bus.subscribe("foo", func);
+        bus.subscribe('foo', func);
         assert.equal(calledData.data, 42);
         assert.isTrue(calledData.meta.retain);
 
@@ -111,9 +111,9 @@ suite('events', () => {
         const func = () => {
             called = true;
         };
-        bus.subscribe("foo", func);
+        bus.subscribe('foo', func);
 
-        const res = bus2.publish("foo", 42);
+        const res = bus2.publish('foo', 42);
         assert.isTrue(res);
         assert.isTrue(called);
 
@@ -123,10 +123,10 @@ suite('events', () => {
 
     test('multiple retain conflict', () => {
         const bus = new EventBus();
-        bus.publish("foo", 42, {retain: true});
+        bus.publish('foo', 42, {retain: true});
 
         const bus2 = new EventBus();
-        bus.publish("foo", 24, {retain: true});
+        bus.publish('foo', 24, {retain: true});
 
         const bus3 = new EventBus();
 
@@ -136,7 +136,7 @@ suite('events', () => {
             callCount++;
             calledData = {data: data, meta: meta};
         };
-        bus3.subscribe("foo", func);
+        bus3.subscribe('foo', func);
 
         assert.equal(callCount, 1);
         assert.deepEqual(calledData.data, 24);

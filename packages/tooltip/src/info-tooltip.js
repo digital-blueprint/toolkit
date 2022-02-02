@@ -8,7 +8,6 @@ import tippy2CSSPath from 'tippy.js/dist/tippy.css';
 import {Icon} from '@dbp-toolkit/common';
 
 export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
-
     constructor() {
         super();
         this.textContent = 'missing text.';
@@ -24,8 +23,8 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            textContent: { type: String, attribute: 'text-content' },
-            interactive: { type: Boolean, attribute: true },
+            textContent: {type: String, attribute: 'text-content'},
+            interactive: {type: Boolean, attribute: true},
         };
     }
 
@@ -79,24 +78,22 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
                 color: var(--dbp-text-inverted);
             }
 
-            .tippy-arrow{
-               color: var(--dbp-text);
+            .tippy-arrow {
+                color: var(--dbp-text);
             }
         `;
     }
 
     render() {
-
         const tippy2CSS = commonUtils.getAssetURL(tippy2CSSPath);
-       
+
         this.setOrUpdateTippy();
 
         return html`
-            <link rel="stylesheet" href="${tippy2CSS}">
+            <link rel="stylesheet" href="${tippy2CSS}" />
             <div class="info-icon" id="info-tooltip-icon">
                 <dbp-icon name="information-circle"></dbp-icon>
             </div>
         `;
     }
-
 }

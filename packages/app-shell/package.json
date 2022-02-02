@@ -1,58 +1,62 @@
 {
-  "name": "@dbp-toolkit/app-shell",
-  "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/app-shell",
-  "version": "0.2.7",
-  "main": "src/index.js",
-  "license": "LGPL-2.1-or-later",
-  "repository": {
-    "type": "git",
-    "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
-    "directory": "packages/app-shell"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org",
-    "access": "public"
-  },
-  "devDependencies": {
-    "@esm-bundle/chai": "^4.2.0",
-    "@rollup/plugin-commonjs": "^21.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "eslint": "^8.0.0",
-    "eslint-plugin-jsdoc": "^37.0.0",
-    "glob": "^7.1.6",
-    "i18next-scanner": "^3.0.0",
-    "karma": "^6.0.0",
-    "karma-chrome-launcher": "^3.0.0",
-    "karma-firefox-launcher": "^2.1.0",
-    "karma-mocha": "^2.0.1",
-    "mocha": "^9.0.0",
-    "rollup": "^2.33.3",
-    "rollup-plugin-copy": "^3.1.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-emit-ejs": "^3.1.0",
-    "rollup-plugin-serve": "^1.0.1"
-  },
-  "dependencies": {
-    "@dbp-toolkit/auth": "^0.2.2",
-    "@dbp-toolkit/common": "^0.2.2",
-    "@dbp-toolkit/language-select": "^0.2.2",
-    "@dbp-toolkit/matomo": "^0.2.2",
-    "@dbp-toolkit/notification": "^0.2.2",
-    "@dbp-toolkit/person-profile": "^0.2.2",
-    "@open-wc/scoped-elements": "^2.0.0",
-    "i18next": "^21.4.2",
-    "lit": "^2.0.0",
-    "universal-router": "^9.0.1"
-  },
-  "scripts": {
-    "i18next": "i18next-scanner",
-    "build": "npm run build-local",
-    "build-local": "rollup -c",
-    "build-test": "rollup -c --environment BUILD:test",
-    "watch": "npm run watch-local",
-    "watch-local": "rollup -c --watch",
-    "test": "npm run build-test && karma start --singleRun",
-    "lint": "eslint ."
-  }
+    "name": "@dbp-toolkit/app-shell",
+    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/app-shell",
+    "version": "0.2.7",
+    "main": "src/index.js",
+    "license": "LGPL-2.1-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+        "directory": "packages/app-shell"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "devDependencies": {
+        "@esm-bundle/chai": "^4.2.0",
+        "@rollup/plugin-commonjs": "^21.0.0",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-node-resolve": "^13.0.0",
+        "eslint": "^8.0.0",
+        "eslint-plugin-jsdoc": "^37.0.0",
+        "glob": "^7.1.6",
+        "i18next-scanner": "^3.0.0",
+        "karma": "^6.0.0",
+        "karma-chrome-launcher": "^3.0.0",
+        "karma-firefox-launcher": "^2.1.0",
+        "karma-mocha": "^2.0.1",
+        "mocha": "^9.0.0",
+        "prettier": "^2.5.1",
+        "rollup": "^2.33.3",
+        "rollup-plugin-copy": "^3.1.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-emit-ejs": "^3.1.0",
+        "rollup-plugin-serve": "^1.0.1"
+    },
+    "dependencies": {
+        "@dbp-toolkit/auth": "^0.2.2",
+        "@dbp-toolkit/common": "^0.2.2",
+        "@dbp-toolkit/language-select": "^0.2.2",
+        "@dbp-toolkit/matomo": "^0.2.2",
+        "@dbp-toolkit/notification": "^0.2.2",
+        "@dbp-toolkit/person-profile": "^0.2.2",
+        "@open-wc/scoped-elements": "^2.0.0",
+        "i18next": "^21.4.2",
+        "lit": "^2.0.0",
+        "universal-router": "^9.0.1"
+    },
+    "scripts": {
+        "i18next": "i18next-scanner",
+        "format": "yarn run format:eslint && yarn run format:prettier",
+        "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
+        "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
+        "build": "npm run build-local",
+        "build-local": "rollup -c",
+        "build-test": "rollup -c --environment BUILD:test",
+        "watch": "npm run watch-local",
+        "watch-local": "rollup -c --watch",
+        "test": "npm run build-test && karma start --singleRun",
+        "lint": "eslint ."
+    }
 }

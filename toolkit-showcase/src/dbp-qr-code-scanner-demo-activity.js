@@ -6,7 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/qr-code-scanner/README.md';
 import * as demoStyles from './styles';
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
 class DbpQrCodeScannerDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -24,16 +24,15 @@ class DbpQrCodeScannerDemoActivity extends ScopedElementsMixin(AdapterLitElement
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            lang: {type: String},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
 
-        this.updateComplete.then(()=>{
-        });
+        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -43,19 +42,21 @@ class DbpQrCodeScannerDemoActivity extends ScopedElementsMixin(AdapterLitElement
             commonStyles.getGeneralCSS(),
             demoStyles.getDemoCSS(),
             css`
-            
-            #scanner-demo{
-                display: block;
-                padding-top: 50px;
-            }
-            `
+                #scanner-demo {
+                    display: block;
+                    padding-top: 50px;
+                }
+            `,
         ];
     }
 
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-qr-code-scanner-demo id="scanner-demo" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-qr-code-scanner-demo>
+            <dbp-qr-code-scanner-demo
+                id="scanner-demo"
+                lang="${this.lang}"
+                entry-point-url="${this.entryPointUrl}"></dbp-qr-code-scanner-demo>
         `;
     }
 }

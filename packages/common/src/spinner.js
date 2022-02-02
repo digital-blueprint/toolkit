@@ -2,7 +2,6 @@
 // other web components (assuming it's not bundled)
 
 export class Spinner extends HTMLElement {
-
     constructor() {
         super();
         let shadowRoot = this.attachShadow({mode: 'open'});

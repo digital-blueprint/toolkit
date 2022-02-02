@@ -19,7 +19,7 @@ suite('utils', () => {
                 this.foo = 42;
             }
         }
-        var res = utils.defineCustomElement("test-some-element", SomeElement);
+        var res = utils.defineCustomElement('test-some-element', SomeElement);
         expect(res).to.equal(true);
 
         var node = document.createElement('test-some-element');
@@ -27,19 +27,21 @@ suite('utils', () => {
     });
 
     test('defineCustomElement multiple times', () => {
-        class SomeElement2 extends HTMLElement {
-        }
-        let res = utils.defineCustomElement("test-some-element-2", SomeElement2);
+        class SomeElement2 extends HTMLElement {}
+        let res = utils.defineCustomElement('test-some-element-2', SomeElement2);
         assert.isTrue(res);
-        res = utils.defineCustomElement("test-some-element-2", SomeElement2);
+        res = utils.defineCustomElement('test-some-element-2', SomeElement2);
         assert.isTrue(res);
     });
 
     test('getAssetURL', () => {
         // Backwards compat
-        assert.equal(new URL(utils.getAssetURL("foo/bar")).pathname, "/foo/bar");
+        assert.equal(new URL(utils.getAssetURL('foo/bar')).pathname, '/foo/bar');
         // Normal usage
-        assert.equal(new URL(utils.getAssetURL('foobar', 'bar/quux')).pathname, "/local/foobar/bar/quux");
+        assert.equal(
+            new URL(utils.getAssetURL('foobar', 'bar/quux')).pathname,
+            '/local/foobar/bar/quux'
+        );
     });
 
     test('getThemeCSS', () => {
@@ -47,16 +49,25 @@ suite('utils', () => {
     });
 
     test('combineURLs', () => {
-        assert.equal(combineURLs('http://example.org/foo', 'bar'), "http://example.org/foo/bar");
-        assert.equal(combineURLs('http://example.org/foo', '/bar'), "http://example.org/foo/bar");
-        assert.equal(combineURLs('http://example.org/foo/', '/bar/'), "http://example.org/foo/bar/");
-        assert.equal(combineURLs('http://example.org', '/bar'), "http://example.org/bar");
-        assert.equal(combineURLs('http://example.org', 'bar/'), "http://example.org/bar/");
-        assert.equal(combineURLs('http://example.org', ''), "http://example.org/");
-        assert.equal(combineURLs('http://example.org/bla', ''), "http://example.org/bla/");
-        assert.equal(combineURLs('http://example.org/bla/', ''), "http://example.org/bla/");
-        assert.equal(combineURLs('http://example.org', 'http://other.com'), "http://other.com/");
-        assert.equal(combineURLs('http://example.org', 'http://other.com/test'), "http://other.com/test");
-        assert.equal(combineURLs('http://example.org', 'http://other.com/test/'), "http://other.com/test/");
+        assert.equal(combineURLs('http://example.org/foo', 'bar'), 'http://example.org/foo/bar');
+        assert.equal(combineURLs('http://example.org/foo', '/bar'), 'http://example.org/foo/bar');
+        assert.equal(
+            combineURLs('http://example.org/foo/', '/bar/'),
+            'http://example.org/foo/bar/'
+        );
+        assert.equal(combineURLs('http://example.org', '/bar'), 'http://example.org/bar');
+        assert.equal(combineURLs('http://example.org', 'bar/'), 'http://example.org/bar/');
+        assert.equal(combineURLs('http://example.org', ''), 'http://example.org/');
+        assert.equal(combineURLs('http://example.org/bla', ''), 'http://example.org/bla/');
+        assert.equal(combineURLs('http://example.org/bla/', ''), 'http://example.org/bla/');
+        assert.equal(combineURLs('http://example.org', 'http://other.com'), 'http://other.com/');
+        assert.equal(
+            combineURLs('http://example.org', 'http://other.com/test'),
+            'http://other.com/test'
+        );
+        assert.equal(
+            combineURLs('http://example.org', 'http://other.com/test/'),
+            'http://other.com/test/'
+        );
     });
 });

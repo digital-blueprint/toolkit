@@ -1,4 +1,4 @@
-import { CompactEncrypt, compactDecrypt, importJWK, base64url } from 'jose';
+import {CompactEncrypt, compactDecrypt, importJWK, base64url} from 'jose';
 
 /**
  * This encrypts the payload using the token,
@@ -28,7 +28,10 @@ export async function encrypt(token, payload) {
  */
 export async function decrypt(token, payload) {
     const key = await importJWK({kty: 'oct', k: base64url.encode(token)}, 'PBES2-HS256+A128KW');
-    const decryption = await compactDecrypt(payload, key, {alg: 'PBES2-HS256+A128KW', enc: 'A256GCM'});
+    const decryption = await compactDecrypt(payload, key, {
+        alg: 'PBES2-HS256+A128KW',
+        enc: 'A256GCM',
+    });
     const secret = new TextDecoder().decode(decryption.plaintext);
 
     return secret;
@@ -40,14 +43,18 @@ export async function decrypt(token, payload) {
  * @param {string} token
  * @returns {string}
  */
-export function parseJwt (token) {
-    if (!token)
-        return null;
+export function parseJwt(token) {
+    if (!token) return null;
     let base64Url = token.split('.')[1];
     let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+    let jsonPayload = decodeURIComponent(
+        atob(base64)
+            .split('')
+            .map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+    );
 
     return JSON.parse(jsonPayload);
 }

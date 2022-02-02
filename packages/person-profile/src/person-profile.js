@@ -1,13 +1,10 @@
-
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html} from 'lit';
 import {createInstance} from './i18n.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-
 export class PersonProfile extends DBPLitElement {
-
     constructor() {
         super();
         this._i18n = createInstance();
@@ -21,27 +18,31 @@ export class PersonProfile extends DBPLitElement {
 
     static get properties() {
         return {
-            lang: { type: String },
-            active: { type: Boolean, attribute: false },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            value: { type: String },
-            person: { type: Object, attribute: false },
-            auth: { type: Object },
+            lang: {type: String},
+            active: {type: Boolean, attribute: false},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            value: {type: String},
+            person: {type: Object, attribute: false},
+            auth: {type: Object},
         };
     }
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case "lang":
+                case 'lang':
                     this._i18n.changeLanguage(this.lang);
                     break;
-                case "entryPointUrl": {
+                case 'entryPointUrl': {
                     const that = this;
 
-                    JSONLD.getInstance(this.entryPointUrl).then(function (jsonld) {
-                        that.jsonld = jsonld;
-                    }, {}, that.lang);
+                    JSONLD.getInstance(this.entryPointUrl).then(
+                        function (jsonld) {
+                            that.jsonld = jsonld;
+                        },
+                        {},
+                        that.lang
+                    );
                     break;
                 }
                 case 'value':
@@ -52,10 +53,10 @@ export class PersonProfile extends DBPLitElement {
                         fetch(apiUrl, {
                             headers: {
                                 'Content-Type': 'application/ld+json',
-                                'Authorization': 'Bearer ' + this.auth.token,
+                                Authorization: 'Bearer ' + this.auth.token,
                             },
                         })
-                            .then(response => response.json())
+                            .then((response) => response.json())
                             .then((person) => {
                                 this.person = person;
                             });
@@ -81,24 +82,42 @@ export class PersonProfile extends DBPLitElement {
 
         return html`
             <style>
-            .profile {
-                padding: 1rem
-            }
-            .td-profile {
-                padding-right: 2rem
-            }
+                .profile {
+                    padding: 1rem;
+                }
+                .td-profile {
+                    padding-right: 2rem;
+                }
             </style>
 
-            ${this.person !== null ? html`<h3>${i18n.t('person-profile.profile-caption')} ${this.person.givenName} ${this.person.familyName}</h3>
-            <table class="profile">
-            <thead></thead>
-            <tbody>
-                <tr><td class="td-profile">${i18n.t('person-profile.given-name')}</td><td>${this.person.givenName}</td></tr>
-                <tr><td class="td-profile">${i18n.t('person-profile.family-name')}</td><td>${this.person.familyName}</td></tr>
-                <tr><td class="td-profile">${i18n.t('person-profile.email')}</td><td>${this.person.email}</td></tr>
-            </tbody>
-            <tfoot></tfoot>
-            </table>` : i18n.t('person-profile.none-selected') }
+            ${this.person !== null
+                ? html`
+                      <h3>
+                          ${i18n.t('person-profile.profile-caption')} ${this.person.givenName}
+                          ${this.person.familyName}
+                      </h3>
+                      <table class="profile">
+                          <thead></thead>
+                          <tbody>
+                              <tr>
+                                  <td class="td-profile">${i18n.t('person-profile.given-name')}</td>
+                                  <td>${this.person.givenName}</td>
+                              </tr>
+                              <tr>
+                                  <td class="td-profile">
+                                      ${i18n.t('person-profile.family-name')}
+                                  </td>
+                                  <td>${this.person.familyName}</td>
+                              </tr>
+                              <tr>
+                                  <td class="td-profile">${i18n.t('person-profile.email')}</td>
+                                  <td>${this.person.email}</td>
+                              </tr>
+                          </tbody>
+                          <tfoot></tfoot>
+                      </table>
+                  `
+                : i18n.t('person-profile.none-selected')}
         `;
     }
 }

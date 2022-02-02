@@ -15,7 +15,11 @@ export default function () {
         inputTooShort: function (args) {
             var remainingChars = args.minimum - args.input.length;
 
-            return 'Bitte ' + remainingChars + ' Zeichen mehr eingeben, es kann nach mehreren Teilen von Namen gesucht werden';
+            return (
+                'Bitte ' +
+                remainingChars +
+                ' Zeichen mehr eingeben, es kann nach mehreren Teilen von Namen gesucht werden'
+            );
         },
         loadingMore: function () {
             return 'Lade mehr Ergebnisse…';
@@ -41,6 +45,6 @@ export default function () {
         },
         removeAllItems: function () {
             return 'Entferne alle Gegenstände';
-        }
+        },
     };
 }

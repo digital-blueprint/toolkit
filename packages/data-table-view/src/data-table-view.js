@@ -15,7 +15,7 @@ import {getIconSVGURL} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {name as pkgName} from './../package.json';
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
 dt(window, $);
 resp(window, $);
@@ -52,18 +52,18 @@ export class DataTableView extends AdapterLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            table: { type: Object, attribute: false },
-            paging: { type: Boolean },
-            searching: { type: Boolean },
-            columns: { type: Array, attribute: false },
-            columnDefs: { type: Array, attribute: false },
-            data: { type: Array, attribute: false },
-            cssStyle: { type: String, attribute: false },
-            exportable: { type: Boolean },
-            exportName: { type: String, attribute: 'export-name' },
-            columnSearching: { type: Boolean, attribute: 'column-searching'},
-            defaultOrder: { type: Array, attribute: 'default-order'}
+            lang: {type: String},
+            table: {type: Object, attribute: false},
+            paging: {type: Boolean},
+            searching: {type: Boolean},
+            columns: {type: Array, attribute: false},
+            columnDefs: {type: Array, attribute: false},
+            data: {type: Array, attribute: false},
+            cssStyle: {type: String, attribute: false},
+            exportable: {type: Boolean},
+            exportName: {type: String, attribute: 'export-name'},
+            columnSearching: {type: Boolean, attribute: 'column-searching'},
+            defaultOrder: {type: Array, attribute: 'default-order'},
         };
     }
 
@@ -91,8 +91,8 @@ export class DataTableView extends AdapterLitElement {
     columnSearch(col, str) {
         this.table.column(col).search(str).draw();
     }
-    columnReduce(col, func, init=0) {
-        return this.table.column(col, { search: 'applied' }).data().reduce( func, init);
+    columnReduce(col, func, init = 0) {
+        return this.table.column(col, {search: 'applied'}).data().reduce(func, init);
     }
     on(eventName, func) {
         this.table.on(eventName, func);
@@ -104,8 +104,7 @@ export class DataTableView extends AdapterLitElement {
         const i18n = this._i18n;
 
         if (typeof this.columns === 'undefined' || !this.columns.length) {
-            if (data.length)
-                throw new Error('columns not set-up');
+            if (data.length) throw new Error('columns not set-up');
             return this;
         }
 
@@ -121,14 +120,18 @@ export class DataTableView extends AdapterLitElement {
                 const tr = document.createElement('tr');
                 this.columns.forEach(function (element, index) {
                     const th = document.createElement('td');
-                    if (element !== null
-                        && (typeof element.visible === 'undefined' || element.visible !== false)
-                        && (typeof element.searchable === 'undefined' || element.searchable !== false)) {
+                    if (
+                        element !== null &&
+                        (typeof element.visible === 'undefined' || element.visible !== false) &&
+                        (typeof element.searchable === 'undefined' || element.searchable !== false)
+                    ) {
                         const input = document.createElement('input');
                         input.type = 'text';
                         input.className = 'column-search-line';
                         input.id = 'input-col-' + index;
-                        input.placeholder = i18n.t('column-search-placeholder', {fieldName: element.title});
+                        input.placeholder = i18n.t('column-search-placeholder', {
+                            fieldName: element.title,
+                        });
                         th.appendChild(input);
                     }
                     tr.appendChild(th);
@@ -164,7 +167,7 @@ export class DataTableView extends AdapterLitElement {
                     className: 'button is-small',
                     charset: 'UTF-8',
                     bom: true,
-                    fieldSeparator: this.lang === 'en' ? ',' : ';'
+                    fieldSeparator: this.lang === 'en' ? ',' : ';',
                 },
                 {
                     extend: 'print',
@@ -172,7 +175,7 @@ export class DataTableView extends AdapterLitElement {
                     title: this.exportName,
                     className: 'button is-small',
                 },
-            ]
+            ],
         });
 
         const dataTableLength = sessionStorage.getItem('dbp-data-table-length');
@@ -183,7 +186,7 @@ export class DataTableView extends AdapterLitElement {
         }
 
         //Save page length in session storage
-        this.table.on('length.dt', function ( e, settings, len ) {
+        this.table.on('length.dt', function (e, settings, len) {
             sessionStorage.setItem('dbp-data-table-length', len);
         });
 
@@ -195,29 +198,31 @@ export class DataTableView extends AdapterLitElement {
         }
 
         new $.fn.dataTable.Responsive(this.table, {
-            details: true
+            details: true,
         });
 
         if (this.columnSearching) {
-                const thisTable = this.table;
-                const that = this;
-                this.columns.forEach(function (element, index) {
-                    if (element !== null
-                        && (typeof element.visible === 'undefined' || element.visible !== false)
-                        && (typeof element.searchable === 'undefined' || element.searchable !== false)) {
-                        const input = that.shadowRoot.querySelector('#input-col-' + index);
-                        if (input) {
-                            ['keyup', 'change', 'clear'].forEach(function (event) {
-                                input.addEventListener(event, function () {
-                                    const column = thisTable.column(index);
-                                    if (column.search() !== input.value) {
-                                        column.search(input.value).draw();
-                                    }
-                                });
+            const thisTable = this.table;
+            const that = this;
+            this.columns.forEach(function (element, index) {
+                if (
+                    element !== null &&
+                    (typeof element.visible === 'undefined' || element.visible !== false) &&
+                    (typeof element.searchable === 'undefined' || element.searchable !== false)
+                ) {
+                    const input = that.shadowRoot.querySelector('#input-col-' + index);
+                    if (input) {
+                        ['keyup', 'change', 'clear'].forEach(function (event) {
+                            input.addEventListener(event, function () {
+                                const column = thisTable.column(index);
+                                if (column.search() !== input.value) {
+                                    column.search(input.value).draw();
+                                }
                             });
-                        }
+                        });
                     }
-                });
+                }
+            });
         }
 
         this.table.order(this.defaultOrder);
@@ -230,20 +235,25 @@ export class DataTableView extends AdapterLitElement {
         let languageChange = false;
 
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
-                this._i18n.changeLanguage(this.lang).catch(e => { console.log(e);});
+            if (propName === 'lang') {
+                this._i18n.changeLanguage(this.lang).catch((e) => {
+                    console.log(e);
+                });
                 languageChange = true;
             }
         });
 
-        this.updateComplete.then(this.set_datatable(this.data, languageChange)).catch(e => { console.log(e);});
+        this.updateComplete.then(this.set_datatable(this.data, languageChange)).catch((e) => {
+            console.log(e);
+        });
         super.update(changedProperties);
     }
 
     static get styles() {
         // language=css
         const orderExpandIconOverrides = css`
-            table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::before {
+            table.dataTable.dtr-inline.collapsed > tbody > tr[role='row'] > td:first-child::before,
+            table.dataTable.dtr-inline.collapsed > tbody > tr[role='row'] > th:first-child::before {
                 all: initial;
                 top: 0.7em;
                 left: 0.4em;
@@ -261,12 +271,14 @@ export class DataTableView extends AdapterLitElement {
                 content: '+';
             }
 
-            table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before {
+            table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::before,
+            table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before {
                 content: '-';
             }
 
             table.dataTable thead .sorting {
-                background-image: url('${unsafeCSS(getIconSVGURL('chevron-up'))}'), url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
+                background-image: url('${unsafeCSS(getIconSVGURL('chevron-up'))}'),
+                    url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
                 background-position: 100% 40%, 100% 60%;
                 background-size: 0.5em, 0.5em;
             }
@@ -298,11 +310,11 @@ export class DataTableView extends AdapterLitElement {
             }
 
             .export-btn {
-                margin-bottom: .6rem;
+                margin-bottom: 0.6rem;
             }
 
             select {
-                border-radius: calc(var(--dbp-border-radius)/2);
+                border-radius: calc(var(--dbp-border-radius) / 2);
                 height: 28px;
                 margin-left: 3px;
             }
@@ -313,7 +325,7 @@ export class DataTableView extends AdapterLitElement {
 
             .dataTables_filter input {
                 border-radius: 0;
-                border:;
+                border: ;
                 padding: 0.1em;
             }
 
@@ -329,9 +341,9 @@ export class DataTableView extends AdapterLitElement {
         let bt_css = commonUtils.getAssetURL(pkgName, 'css/buttons.dataTables.min.css');
 
         return html`
-            <link rel="stylesheet" href="${dt_css}">
-            <link rel="stylesheet" href="${rs_css}">
-            <link rel="stylesheet" href="${bt_css}">
+            <link rel="stylesheet" href="${dt_css}" />
+            <link rel="stylesheet" href="${rs_css}" />
+            <link rel="stylesheet" href="${bt_css}" />
             <style>
                 ${this.cssStyle}
             </style>

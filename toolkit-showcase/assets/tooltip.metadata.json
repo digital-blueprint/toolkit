@@ -1,18 +1,18 @@
 {
-  "element": "dbp-tooltip-demo-activity",
-  "module_src": "dbp-tooltip-demo-activity.js",
-  "routing_name": "tooltip",
-  "name": {
-    "de": "Tooltip Komponenten",
-    "en": "Tooltip components"
-  },
-  "short_name": {
-    "de": "Tooltip Komponenten",
-    "en": "Tooltip components"
-  },
-  "description": {
-    "de": "Tooltip Web Components",
-    "en": "Tooltip web components"
-  },
-  "subscribe": "lang,entry-point-url"
+    "element": "dbp-tooltip-demo-activity",
+    "module_src": "dbp-tooltip-demo-activity.js",
+    "routing_name": "tooltip",
+    "name": {
+        "de": "Tooltip Komponenten",
+        "en": "Tooltip components"
+    },
+    "short_name": {
+        "de": "Tooltip Komponenten",
+        "en": "Tooltip components"
+    },
+    "description": {
+        "de": "Tooltip Web Components",
+        "en": "Tooltip web components"
+    },
+    "subscribe": "lang,entry-point-url"
 }

@@ -4,11 +4,10 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Icon} from '@dbp-toolkit/common';
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
-import {LoginStatus} from "@dbp-toolkit/auth/src/util";
+import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {LoginStatus} from '@dbp-toolkit/auth/src/util';
 
 export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
-
     constructor() {
         super();
         this._i18n = createInstance();
@@ -28,8 +27,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            auth: { type: Object },
+            lang: {type: String},
+            auth: {type: Object},
         };
     }
 
@@ -55,7 +54,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
      * We need to set the width manually because a percent width is in relation to the viewport
      */
     updateDropdownWidth() {
-        const dropdown = this.shadowRoot.querySelector("div.dropdown-menu");
+        const dropdown = this.shadowRoot.querySelector('div.dropdown-menu');
 
         if (!dropdown) {
             return;
@@ -63,7 +62,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
         let viewportOffset = this.getBoundingClientRect();
         let spaceToRIght = window.innerWidth - viewportOffset.left;
-        dropdown.setAttribute("style", `width: ${spaceToRIght - 20}px`);
+        dropdown.setAttribute('style', `width: ${spaceToRIght - 20}px`);
     }
 
     onLoginClicked(e) {
@@ -77,7 +76,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
+            if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
             }
         });
@@ -102,10 +101,12 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 display: block;
             }
 
-            input::-moz-focus-inner { border: 0; }
+            input::-moz-focus-inner {
+                border: 0;
+            }
 
-            :focus-visible{
-                outline:none !important;
+            :focus-visible {
+                outline: none !important;
                 outline-width: 0 !important;
                 box-shadow: none;
                 -moz-box-shadow: none;
@@ -113,7 +114,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 box-shadow: 0px 0px 4px 2px var(--dbp-accent);
             }
 
-            .dropdown.is-active .dropdown-menu, .dropdown.is-hoverable:hover .dropdown-menu {
+            .dropdown.is-active .dropdown-menu,
+            .dropdown.is-hoverable:hover .dropdown-menu {
                 display: block;
             }
 
@@ -147,11 +149,11 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 background-color: var(--dbp-hover-base);
             }
 
-            .menu a.selected { 
-                color: var(--dbp-secondary-text); 
-                background-color: var(--dbp-secondary-base); 
+            .menu a.selected {
+                color: var(--dbp-secondary-text);
+                background-color: var(--dbp-secondary-base);
             }
-            
+
             .dropdown-item {
                 color: var(--dbp-text-muted);
                 display: block;
@@ -224,13 +226,13 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 min-width: 0;
-                margin-right: 0.5em
+                margin-right: 0.5em;
             }
         `;
     }
 
     setChevron(name) {
-        const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
+        const chevron = this.shadowRoot.querySelector('#menu-chevron-icon');
         if (chevron !== null) {
             chevron.name = name;
         }
@@ -239,7 +241,9 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     onDropdownClick(event) {
         event.stopPropagation();
         event.currentTarget.classList.toggle('is-active');
-        this.setChevron(event.currentTarget.classList.contains('is-active') ? 'chevron-up' : 'chevron-down');
+        this.setChevron(
+            event.currentTarget.classList.contains('is-active') ? 'chevron-up' : 'chevron-down'
+        );
         this.updateDropdownWidth();
     }
 
@@ -253,19 +257,24 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
     renderLoggedIn() {
         const i18n = this._i18n;
- 
+
         return html`
             <div class="dropdown" @click="${this.onDropdownClick}">
                 <a href="#">
                     <div class="dropdown-trigger login-button">
                         <div class="name">${this.auth['user-full-name']}</div>
-                        <dbp-icon class="menu-icon" name="chevron-down" id="menu-chevron-icon"></dbp-icon>
+                        <dbp-icon
+                            class="menu-icon"
+                            name="chevron-down"
+                            id="menu-chevron-icon"></dbp-icon>
                     </div>
                 </a>
                 <div class="dropdown-menu" id="dropdown-menu2" role="menu">
                     <div class="dropdown-content" @blur="${this.closeDropdown}">
                         <div class="menu">
-                            <a href="#" @click="${this.onLogoutClicked}" class="dropdown-item">${i18n.t('logout')}</a>
+                            <a href="#" @click="${this.onLogoutClicked}" class="dropdown-item">
+                                ${i18n.t('logout')}
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -307,11 +316,9 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     render() {
-        const loggedIn = (this.auth['login-status'] === 'logged-in');
+        const loggedIn = this.auth['login-status'] === 'logged-in';
         return html`
-            <div class="authbox">
-                ${loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
-            </div>
+            <div class="authbox">${loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}</div>
         `;
     }
 }

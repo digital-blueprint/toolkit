@@ -2,7 +2,7 @@ import {createInstance} from './i18n';
 import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import * as commonStyles from "@dbp-toolkit/common/styles";
+import * as commonStyles from '@dbp-toolkit/common/styles';
 import {QrCodeScanner} from './qr-code-scanner.js';
 
 export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
@@ -16,16 +16,16 @@ export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
         return {
             'dbp-qr-code-scanner': QrCodeScanner,
         };
-      }
+    }
 
     static get properties() {
         return {
-            lang: { type: String },
+            lang: {type: String},
         };
     }
 
     update(changedProperties) {
-        if (changedProperties.has("lang")) {
+        if (changedProperties.has('lang')) {
             this._i18n.changeLanguage(this.lang);
         }
         super.update(changedProperties);
@@ -33,16 +33,16 @@ export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
 
     static get styles() {
         // language=css
-        return css`        
+        return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             
-            h1{
+            h1 {
                 margin-bottom: 20px;
             }
-            
-            .section{
+
+            .section {
                 margin-bottom: 50px;
             }
         `;
@@ -50,14 +50,18 @@ export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-             <section class="section">
+            <section class="section">
                 <div class="container">
                     <h1 class="title">QR-Code-Scanner-Demo</h1>
                 </div>
                 <div class="container">
                     <div class="columns is-centered">
                         <div class="column">
-                            <dbp-qr-code-scanner @code-detected="${(e) => console.log(e)}" @scan-started="${(e) => console.log(e)}" show-output lang="${this.lang}"></dbp-qr-code-scanner>
+                            <dbp-qr-code-scanner
+                                @code-detected="${(e) => console.log(e)}"
+                                @scan-started="${(e) => console.log(e)}"
+                                show-output
+                                lang="${this.lang}"></dbp-qr-code-scanner>
                         </div>
                     </div>
                 </div>

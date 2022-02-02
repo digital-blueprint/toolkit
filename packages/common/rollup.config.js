@@ -8,22 +8,22 @@ import json from '@rollup/plugin-json';
 import {getDistPath} from '../../rollup.utils.js';
 
 const pkg = require('./package.json');
-const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
-console.log("build: " + build);
+const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
+console.log('build: ' + build);
 
 export default (async () => {
     return {
-        input: (build !='test') ? ['demo.js', 'components.js'] : glob.sync('test/**/*.js'),
+        input: build != 'test' ? ['demo.js', 'components.js'] : glob.sync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
             chunkFileNames: 'shared/[name].[hash].[format].js',
             format: 'esm',
-            sourcemap: true
+            sourcemap: true,
         },
         plugins: [
             del({
-                targets: 'dist/*'
+                targets: 'dist/*',
             }),
             resolve(),
             commonjs(),
@@ -31,10 +31,15 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
-                    {src: 'assets/icons/*.svg', dest: 'dist/' + await getDistPath(pkg.name, 'icons')},
+                    {
+                        src: 'assets/icons/*.svg',
+                        dest: 'dist/' + (await getDistPath(pkg.name, 'icons')),
+                    },
                 ],
             }),
-            (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
-        ]
+            process.env.ROLLUP_WATCH === 'true'
+                ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
+                : false,
+        ],
     };
 })();

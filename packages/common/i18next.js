@@ -33,13 +33,13 @@ export function humanFileSize(bytes, si = false) {
     if (Math.abs(bytes) < thresh) {
         return bytes + ' B';
     }
-    const units = ['kB','MB','GB','TB','PB','EB','ZB','YB'];
+    const units = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     let u = -1;
     do {
         bytes /= thresh;
         ++u;
-    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-    return bytes.toFixed(1)+' '+units[u];
+    } while (Math.abs(bytes) >= thresh && u < units.length - 1);
+    return bytes.toFixed(1) + ' ' + units[u];
 }
 
 /**
@@ -85,7 +85,7 @@ export function createInstance(languages, lng, fallback, namespace) {
         compatibilityJSON: 'v3',
     };
 
-    Object.keys(languages).forEach(function(key) {
+    Object.keys(languages).forEach(function (key) {
         options['resources'][key] = {[namespace]: languages[key]};
     });
 
@@ -115,10 +115,9 @@ export function setOverrides(i18n, element, overrides) {
     let namespace = i18n.options.fallbackNS;
     let overrideNamespace = getOverrideNamespace(namespace);
     let hasOverrides = false;
-    for(let lng of i18n.languages) {
+    for (let lng of i18n.languages) {
         i18n.removeResourceBundle(lng, overrideNamespace);
-        if (overrides[lng] === undefined || overrides[lng][tagName] === undefined)
-            continue;
+        if (overrides[lng] === undefined || overrides[lng][tagName] === undefined) continue;
         let resources = overrides[lng][tagName];
         hasOverrides = true;
         i18n.addResourceBundle(lng, overrideNamespace, resources);

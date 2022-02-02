@@ -7,7 +7,7 @@
  */
 export const parseLinkHeader = (header) => {
     if (header.length === 0) {
-        throw new Error("input must not be of zero length");
+        throw new Error('input must not be of zero length');
     }
 
     // Split parts by comma
@@ -15,7 +15,7 @@ export const parseLinkHeader = (header) => {
     const links = {};
 
     // Parse each part into a named link
-    for(let i=0; i<parts.length; i++) {
+    for (let i = 0; i < parts.length; i++) {
         const section = parts[i].split(';');
         if (section.length !== 2) {
             throw new Error("section could not be split on ';'");
@@ -49,7 +49,9 @@ export const parseBaseUrl = (url) => {
  */
 export const stringListToSelect2DataArray = (list) => {
     let data = [];
-    list.forEach((item) => {data.push({id: item, text: item});});
+    list.forEach((item) => {
+        data.push({id: item, text: item});
+    });
     return data;
 };
 
@@ -63,7 +65,7 @@ export const stringListToSelect2DataArray = (list) => {
 export const base64EncodeUnicode = (str) => {
     // First we escape the string using encodeURIComponent to get the UTF-8 encoding of the characters,
     // then we convert the percent encodings into raw bytes, and finally feed it to btoa() function.
-    const utf8Bytes = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+    const utf8Bytes = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
         return String.fromCharCode('0x' + p1);
     });
 
@@ -89,9 +91,9 @@ export const base64EncodeUnicode = (str) => {
  * custom tags with an error message so the user gets some feedback instead of
  * just an empty page.
  *
- * @param {string} name 
- * @param {Function} constructor 
- * @param {object} options 
+ * @param {string} name
+ * @param {Function} constructor
+ * @param {object} options
  */
 export const defineCustomElement = (name, constructor, options) => {
     // In case the constructor is already defined just do nothing
@@ -99,13 +101,20 @@ export const defineCustomElement = (name, constructor, options) => {
         return true;
     }
     // Checks taken from https://github.com/webcomponents/webcomponentsjs/blob/master/webcomponents-loader.js
-    if (!('attachShadow' in Element.prototype && 'getRootNode' in Element.prototype && window.customElements)) {
+    if (
+        !(
+            'attachShadow' in Element.prototype &&
+            'getRootNode' in Element.prototype &&
+            window.customElements
+        )
+    ) {
         var elements = document.getElementsByTagName(name);
-        for(var i=0; i < elements.length; i++) {
-            elements[i].innerHTML = "<span style='border: 1px solid red; font-size: 0.8em; "
-                + "opacity: 0.5; padding: 0.2em;'>☹ Your browser is not supported ☹</span>";
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].innerHTML =
+                "<span style='border: 1px solid red; font-size: 0.8em; " +
+                "opacity: 0.5; padding: 0.2em;'>☹ Your browser is not supported ☹</span>";
         }
-       return false;
+        return false;
     }
     customElements.define(name, constructor, options);
     return true;
@@ -120,10 +129,10 @@ export const defineCustomElement = (name, constructor, options) => {
  * @returns {string}
  */
 export const makeId = (length) => {
-    let result           = '';
-    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
-    for ( let i = 0; i < length; i++ ) {
+    for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
 
@@ -136,7 +145,9 @@ export const makeId = (length) => {
  * @param n
  * @returns {string}
  */
-export const pad10 = (n) => { return n < 10 ? '0' + n : n; };
+export const pad10 = (n) => {
+    return n < 10 ? '0' + n : n;
+};
 
 /**
  * Converts a date object or string to a local iso datetime with stripped seconds and timezone for the datetime-local input
@@ -149,7 +160,9 @@ export const dateToStrippedIsoDT = (date) => {
         date = new Date(date);
     }
 
-    return `${date.getFullYear()}-${pad10(date.getMonth()+1)}-${pad10(date.getDate())}T${pad10(date.getHours())}:${pad10(date.getMinutes())}`;
+    return `${date.getFullYear()}-${pad10(date.getMonth() + 1)}-${pad10(date.getDate())}T${pad10(
+        date.getHours()
+    )}:${pad10(date.getMinutes())}`;
 };
 
 /**
@@ -163,7 +176,7 @@ export const dateToInputDateString = (date) => {
         date = new Date(date);
     }
 
-    return `${date.getFullYear()}-${pad10(date.getMonth()+1)}-${pad10(date.getDate())}`;
+    return `${date.getFullYear()}-${pad10(date.getMonth() + 1)}-${pad10(date.getDate())}`;
 };
 
 /**
@@ -198,7 +211,6 @@ export const getAssetURL = (pkg, path) => {
     return new URL(fullPath, new URL('..', import.meta.url).href).href;
 };
 
-
 /**
  * Poll <fn> every <interval> ms until <timeout> ms
  *
@@ -207,17 +219,17 @@ export const getAssetURL = (pkg, path) => {
  * @param interval
  */
 export const pollFunc = (fn, timeout, interval) => {
-    var startTime = (new Date()).getTime();
+    var startTime = new Date().getTime();
     interval = interval || 1000;
 
     (function p() {
         // don't retry if we took longer than timeout ms
-        if (((new Date).getTime() - startTime ) > timeout) {
+        if (new Date().getTime() - startTime > timeout) {
             return;
         }
 
         // retry until fn() returns true
-        if (!fn())  {
+        if (!fn()) {
             setTimeout(p, interval);
         }
     })();
@@ -327,8 +339,8 @@ export async function getMimeTypeOfFile(file) {
 export const getBaseName = (str) => {
     let base = String(str).substring(str.lastIndexOf('/') + 1);
 
-    if (base.lastIndexOf(".") !== -1) {
-        base = base.substring(0, base.lastIndexOf("."));
+    if (base.lastIndexOf('.') !== -1) {
+        base = base.substring(0, base.lastIndexOf('.'));
     }
 
     return base;
@@ -356,9 +368,11 @@ export const querySlotted = (root, selector) => {
     let matched = [];
 
     slots.forEach((slot) => {
-        matched = matched.concat(slot.assignedElements().filter((el) => {
-            return el.matches(selector);
-        }));
+        matched = matched.concat(
+            slot.assignedElements().filter((el) => {
+                return el.matches(selector);
+            })
+        );
     });
 
     return matched;

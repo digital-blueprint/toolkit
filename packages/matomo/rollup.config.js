@@ -2,18 +2,18 @@ import glob from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
-import {terser} from "rollup-plugin-terser";
+import {terser} from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import url from "@rollup/plugin-url";
+import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import emitEJS from 'rollup-plugin-emit-ejs'
+import emitEJS from 'rollup-plugin-emit-ejs';
 import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 
 const pkg = require('./package.json');
-const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : 'local';
-console.log("build: " + build);
-const matomoUrl = "https://analytics.tugraz.at/";
+const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
+console.log('build: ' + build);
+const matomoUrl = 'https://analytics.tugraz.at/';
 const matomoSiteId = 131;
 
 function getBuildInfo() {
@@ -26,7 +26,7 @@ function getBuildInfo() {
     let parsed = url.parse(remote);
     // convert git urls
     if (parsed.protocol === null) {
-        parsed = url.parse('git://' + remote.replace(":", "/"));
+        parsed = url.parse('git://' + remote.replace(':', '/'));
         parsed.protocol = 'https:';
     }
     let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.'));
@@ -36,23 +36,26 @@ function getBuildInfo() {
         info: commit,
         url: newUrl,
         time: new Date().toISOString(),
-        env: build
-    }
+        env: build,
+    };
 }
 
 export default (async () => {
     return {
-        input: (build != 'test') ? ['src/dbp-matomo.js', 'src/dbp-matomo-demo.js'] : glob.sync('test/**/*.js'),
+        input:
+            build != 'test'
+                ? ['src/dbp-matomo.js', 'src/dbp-matomo-demo.js']
+                : glob.sync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
             chunkFileNames: 'shared/[name].[hash].[format].js',
             format: 'esm',
-            sourcemap: true
+            sourcemap: true,
         },
         plugins: [
             del({
-                targets: 'dist/*'
+                targets: 'dist/*',
             }),
             emitEJS({
                 src: 'assets',
@@ -68,29 +71,32 @@ export default (async () => {
                     environment: build,
                     matomoUrl: matomoUrl,
                     matomoSiteId: matomoSiteId,
-                    buildInfo: getBuildInfo()
-                }
+                    buildInfo: getBuildInfo(),
+                },
             }),
             resolve(),
             commonjs(),
             url({
                 limit: 0,
-                include: [
-                    await getPackagePath('select2', '**/*.css'),
-                ],
+                include: [await getPackagePath('select2', '**/*.css')],
                 emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]'
+                fileName: 'shared/[name].[hash][extname]',
             }),
             json(),
-            (build !== 'local' && build !== 'test') ? terser() : false,
+            build !== 'local' && build !== 'test' ? terser() : false,
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
-                    {src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'), dest: 'dist/' + await getDistPath('@dbp-toolkit/common', 'icons')},
-                    {src: 'assets/favicon.ico', dest:'dist'},
+                    {
+                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
+                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
+                    },
+                    {src: 'assets/favicon.ico', dest: 'dist'},
                 ],
             }),
-            (process.env.ROLLUP_WATCH === 'true') ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002}) : false
-        ]
+            process.env.ROLLUP_WATCH === 'true'
+                ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
+                : false,
+        ],
     };
 })();

@@ -9,127 +9,129 @@ Example usage:
     <noscript>Diese Applikation benötigt Javascript / This application requires Javascript</noscript>
 */
 
-
 (function () {
+    // https://caniuse.com/#feat=es6
+    function supportsES6() {
+        if (typeof Symbol == 'undefined') return false;
 
-// https://caniuse.com/#feat=es6
-function supportsES6() {
-    if (typeof Symbol == "undefined")
-        return false;
+        try {
+            eval('class Foo {}');
+            eval('var bar = (x) => x+1');
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
 
-    try {
-        eval("class Foo {}");
-        eval("var bar = (x) => x+1");
-    } catch (e) {
-        console.log(e);
-        return false;
-    }
-
-    return true;
-}
-
-// https://caniuse.com/#feat=es6-module-dynamic-import
-function supportsDynamicImport() {
-    try {
-        new Function('import("")');
-        return true;
-    } catch (err) {
-        return false;
-    }
-}
-
-// https://caniuse.com/#feat=shadowdomv1
-function supportsShadowDOM() {
-    return (typeof Element != "undefined" && 'attachShadow' in Element.prototype && 'getRootNode' in Element.prototype);
-}
-
-// https://caniuse.com/#feat=custom-elementsv1
-function supportsCustomElements() {
-    return !!window.customElements;
-}
-
-// https://caniuse.com/#feat=async-functions
-function supportsAsyncAwait() {
-    try {
-        eval('async () => {}');
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
-
-// https://caniuse.com/#feat=mdn-javascript_statements_import_meta
-function supportsImportMeta() {
-    // TODO: sadly no idea how to test this..
-    return true;
-}
-
-// Eval can be disabled through https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-function supportsEval() {
-    try {
-        eval('');
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
-
-// https://caniuse.com/abortcontroller
-function supportsAbortController() {
-    // AbortController in older Safari is broken, so check for the signal property
-    // as well.
-    return (!!window.AbortController && Request.prototype.hasOwnProperty('signal'));
-}
-
-function isBrowserSupported() {
-    if (!supportsEval()) {
-        console.log("Eval support disabled, skipping browser feature detection.");
         return true;
     }
 
-    if (!supportsES6()) {
-        console.log("ES6 not supported");
-        return false;
+    // https://caniuse.com/#feat=es6-module-dynamic-import
+    function supportsDynamicImport() {
+        try {
+            new Function('import("")');
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
 
-    if (!supportsDynamicImport()) {
-        console.log("Dynamic imports not supported");
-        return false;
+    // https://caniuse.com/#feat=shadowdomv1
+    function supportsShadowDOM() {
+        return (
+            typeof Element != 'undefined' &&
+            'attachShadow' in Element.prototype &&
+            'getRootNode' in Element.prototype
+        );
     }
 
-    if (!supportsShadowDOM()) {
-        console.log("Shadow DOM not supported");
-        return false;
+    // https://caniuse.com/#feat=custom-elementsv1
+    function supportsCustomElements() {
+        return !!window.customElements;
     }
 
-    if (!supportsCustomElements()) {
-        console.log("Custom Elements not supported");
-        return false;
+    // https://caniuse.com/#feat=async-functions
+    function supportsAsyncAwait() {
+        try {
+            eval('async () => {}');
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 
-    if (!supportsAsyncAwait()) {
-        console.log("Async Await not supported");
-        return false;
-    }
-    
-    if (!supportsImportMeta()) {
-        console.log("import.meta not supported");
-        return false;
+    // https://caniuse.com/#feat=mdn-javascript_statements_import_meta
+    function supportsImportMeta() {
+        // TODO: sadly no idea how to test this..
+        return true;
     }
 
-    if (!supportsAbortController()) {
-        console.log("AbortController not supported");
-        return false;
+    // Eval can be disabled through https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    function supportsEval() {
+        try {
+            eval('');
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 
-    return true;
-}
+    // https://caniuse.com/abortcontroller
+    function supportsAbortController() {
+        // AbortController in older Safari is broken, so check for the signal property
+        // as well.
+        return !!window.AbortController && Request.prototype.hasOwnProperty('signal');
+    }
 
-var MultiString = function(f) {
-    return f.toString().split('\n').slice(1, -1).join('\n');
-};
+    function isBrowserSupported() {
+        if (!supportsEval()) {
+            console.log('Eval support disabled, skipping browser feature detection.');
+            return true;
+        }
 
-var ms = MultiString(function() {/**
+        if (!supportsES6()) {
+            console.log('ES6 not supported');
+            return false;
+        }
+
+        if (!supportsDynamicImport()) {
+            console.log('Dynamic imports not supported');
+            return false;
+        }
+
+        if (!supportsShadowDOM()) {
+            console.log('Shadow DOM not supported');
+            return false;
+        }
+
+        if (!supportsCustomElements()) {
+            console.log('Custom Elements not supported');
+            return false;
+        }
+
+        if (!supportsAsyncAwait()) {
+            console.log('Async Await not supported');
+            return false;
+        }
+
+        if (!supportsImportMeta()) {
+            console.log('import.meta not supported');
+            return false;
+        }
+
+        if (!supportsAbortController()) {
+            console.log('AbortController not supported');
+            return false;
+        }
+
+        return true;
+    }
+
+    var MultiString = function (f) {
+        return f.toString().split('\n').slice(1, -1).join('\n');
+    };
+
+    var ms = MultiString(function () {
+        /**
 <style>
     #unsupported .overlay {
         font-family: sans-serif;
@@ -178,14 +180,14 @@ var ms = MultiString(function() {/**
         </div>
     </div> 
 </div>
-**/});
+**/
+    });
 
-function main() {
-    if (!isBrowserSupported()) {
-        document.body.innerHTML = ms;
+    function main() {
+        if (!isBrowserSupported()) {
+            document.body.innerHTML = ms;
+        }
     }
-}
 
-main();
-
+    main();
 })();

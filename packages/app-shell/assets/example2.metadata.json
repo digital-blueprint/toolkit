@@ -1,17 +1,17 @@
 {
-  "element": "dbp-activity-example",
-  "module_src": "dbp-activity-example.js",
-  "routing_name": "activity-example2",
-  "name": {
-    "de": "Beispielaktivität 2",
-    "en": "Example Activity 2"
-  },
-  "short_name": {
-    "de": "Beispielaktivität 2",
-    "en": "Example Activity 2"
-  },
-  "description": {
-    "de": "Eine Beschreibung",
-    "en": "A Description"
-  }
+    "element": "dbp-activity-example",
+    "module_src": "dbp-activity-example.js",
+    "routing_name": "activity-example2",
+    "name": {
+        "de": "Beispielaktivität 2",
+        "en": "Example Activity 2"
+    },
+    "short_name": {
+        "de": "Beispielaktivität 2",
+        "en": "Example Activity 2"
+    },
+    "description": {
+        "de": "Eine Beschreibung",
+        "en": "A Description"
+    }
 }

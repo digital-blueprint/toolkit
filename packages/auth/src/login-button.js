@@ -52,7 +52,6 @@ let loginSVG = `
 `;
 
 export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
-
     constructor() {
         super();
         this._i18n = createInstance();
@@ -68,8 +67,8 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
 
     static get properties() {
         return {
-            lang: { type: String },
-            auth: { type: Object },
+            lang: {type: String},
+            auth: {type: Object},
         };
     }
 
@@ -93,7 +92,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
+            if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
             }
         });
@@ -106,48 +105,50 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
         return [
             commonStyles.getThemeCSS(),
             css`
-            :host {
-                display: inline-block;
-            }
+                :host {
+                    display: inline-block;
+                }
 
-            a {
-                color: var(--dbp-text);
-                fill: var(--dbp-text);
-                cursor: pointer;
-                text-decoration: none;
-            }
+                a {
+                    color: var(--dbp-text);
+                    fill: var(--dbp-text);
+                    cursor: pointer;
+                    text-decoration: none;
+                }
 
-            .login-box {
-                display: flex;
-                align-items: center;
-                padding: 0.3em 0.4em;
-                transition: background-color 0.15s, color 0.15s;
-            }
+                .login-box {
+                    display: flex;
+                    align-items: center;
+                    padding: 0.3em 0.4em;
+                    transition: background-color 0.15s, color 0.15s;
+                }
 
-            .login-box svg, .icon {
-                width: 1.1em;
-                height: 1.1em;
-            }
+                .login-box svg,
+                .icon {
+                    width: 1.1em;
+                    height: 1.1em;
+                }
 
-            .login-box svg, .spinner {
-                display: flex;
-            }
+                .login-box svg,
+                .spinner {
+                    display: flex;
+                }
 
-            .login-box:hover svg path {
-                fill: var(--dbp-hover-text);
-            }
+                .login-box:hover svg path {
+                    fill: var(--dbp-hover-text);
+                }
 
-            .login-box:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
-                cursor: pointer;
-                transition: none;
-            }
+                .login-box:hover {
+                    color: var(--dbp-hover-text);
+                    background-color: var(--dbp-hover-base);
+                    cursor: pointer;
+                    transition: none;
+                }
 
-            .login-box .label {
-                padding-left: 0.2em;
-            }
-            `
+                .login-box .label {
+                    padding-left: 0.2em;
+                }
+            `,
         ];
     }
 
@@ -158,7 +159,9 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
             return html`
                 <a href="#">
                     <div class="login-box login-button">
-                        <div class="icon"><dbp-mini-spinner class="spinner"></dbp-mini-spinner></div>
+                        <div class="icon">
+                            <dbp-mini-spinner class="spinner"></dbp-mini-spinner>
+                        </div>
                         <div class="label">&#8203;</div>
                     </div>
                 </a>

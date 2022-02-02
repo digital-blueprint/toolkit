@@ -20,7 +20,7 @@ export class Notification extends DBPLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
+            lang: {type: String},
         };
     }
 
@@ -28,23 +28,24 @@ export class Notification extends DBPLitElement {
         super.connectedCallback();
         const that = this;
 
-        window.addEventListener("dbp-notification-send", (e) => {
+        window.addEventListener('dbp-notification-send', (e) => {
             if (typeof e.detail === 'undefined') {
                 return;
             }
 
-            that.notificationBlock = that._("#notification");
+            that.notificationBlock = that._('#notification');
             const notificationId = `notification-${createUUID()}`;
 
-            const type = typeof e.detail.type !== 'undefined' ? e.detail.type : "info";
-            const body = typeof e.detail.body !== 'undefined' ? e.detail.body : "";
-            const summary = typeof e.detail.summary !== 'undefined' ? e.detail.summary : "";
+            const type = typeof e.detail.type !== 'undefined' ? e.detail.type : 'info';
+            const body = typeof e.detail.body !== 'undefined' ? e.detail.body : '';
+            const summary = typeof e.detail.summary !== 'undefined' ? e.detail.summary : '';
             const timeout = typeof e.detail.timeout !== 'undefined' ? e.detail.timeout : 0;
             const icon = typeof e.detail.icon !== 'undefined' ? e.detail.icon : '';
-            const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : "";
-            const summaryHTML = summary !== "" ? `<h3>${summary}</h3>` : "";
+            const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : '';
+            const summaryHTML = summary !== '' ? `<h3>${summary}</h3>` : '';
 
-            that.notificationBlock.innerHTML = `
+            that.notificationBlock.innerHTML =
+                `
                 <div id="${notificationId}" class="notification is-${type}">
                     <button id="${notificationId}-button" onclick="parentNode.parentNode.removeChild(parentNode)" class="delete"></button>
                     ${summaryHTML}
@@ -89,10 +90,11 @@ export class Notification extends DBPLitElement {
                 margin-bottom: 3px;
             }
 
-            .delete, .modal-close {
+            .delete,
+            .modal-close {
                 -moz-appearance: none;
                 -webkit-appearance: none;
-                background-color: rgba(10,10,10,.2);
+                background-color: rgba(10, 10, 10, 0.2);
                 border: none;
                 border-radius: 290486px;
                 cursor: pointer;
@@ -112,46 +114,62 @@ export class Notification extends DBPLitElement {
                 width: 20px;
             }
 
-            .delete::before, .modal-close::before, .delete::after, .modal-close::after {
+            .delete::before,
+            .modal-close::before,
+            .delete::after,
+            .modal-close::after {
                 background-color: var(--dbp-base);
                 color: var(--dbp-text);
-                content: "";
+                content: '';
                 display: block;
                 left: 50%;
                 position: absolute;
                 top: 50%;
                 -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
-                        transform: translateX(-50%) translateY(-50%) rotate(45deg);
+                transform: translateX(-50%) translateY(-50%) rotate(45deg);
                 -webkit-transform-origin: center center;
-                        transform-origin: center center;
+                transform-origin: center center;
             }
 
-            .delete::before, .modal-close::before {
+            .delete::before,
+            .modal-close::before {
                 height: 2px;
                 width: 50%;
             }
 
-            .delete::after, .modal-close::after {
+            .delete::after,
+            .modal-close::after {
                 height: 50%;
                 width: 2px;
             }
 
-            .delete:hover, .modal-close:hover, .delete:focus, .modal-close:focus {
+            .delete:hover,
+            .modal-close:hover,
+            .delete:focus,
+            .modal-close:focus {
                 background-color: rgba(10, 10, 10, 0.3);
             }
 
-            .delete:active, .modal-close:active {
+            .delete:active,
+            .modal-close:active {
                 background-color: rgba(10, 10, 10, 0.4);
             }
 
             #notification {
-                position: fixed; top: 0; max-width: 500px; margin: 0.75em auto; left: 0; right: 0; z-index: 1000; padding: 0;
+                position: fixed;
+                top: 0;
+                max-width: 500px;
+                margin: 0.75em auto;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                padding: 0;
             }
 
             .notification h3 {
                 margin: 0 0 3px 0;
                 font: inherit;
-                font-weight: bold; 
+                font-weight: bold;
             }
         `;
     }
@@ -159,8 +177,7 @@ export class Notification extends DBPLitElement {
     render() {
         return html`
             <div class="columns">
-                <div class="column" id="notification">
-                </div>
+                <div class="column" id="notification"></div>
             </div>
         `;
     }

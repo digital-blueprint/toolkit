@@ -1,5 +1,5 @@
-import {LitElement} from "lit";
-import {Logger} from "./logger";
+import {LitElement} from 'lit';
+import {Logger} from './logger';
 
 export class AdapterLitElement extends LitElement {
     constructor() {
@@ -66,14 +66,14 @@ export class AdapterLitElement extends LitElement {
 
         if (this.deferUnSubscribe) {
             const attrs = this.unsubscribe.split(',');
-            attrs.forEach(element => this.unSubscribeProviderFor(element));
+            attrs.forEach((element) => this.unSubscribeProviderFor(element));
             this.deferSubscribe = false;
             this.unsubscribe = '';
         }
 
         if (this.deferSubscribe) {
             const attrs = this.subscribe.split(',');
-            attrs.forEach(element => this.subscribeProviderFor(element));
+            attrs.forEach((element) => this.subscribeProviderFor(element));
             this.deferSubscribe = false;
         }
 
@@ -81,69 +81,115 @@ export class AdapterLitElement extends LitElement {
 
         const that = this;
 
-        this.addEventListener('dbp-subscribe', function (e) {
-            const name = e.detail.name;
-            if (that.hasProperty(name) || that.providerRoot) {
-                Logger.debug('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-subscribe",..) name "' + name + '" found.');
-                that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
+        this.addEventListener(
+            'dbp-subscribe',
+            function (e) {
+                const name = e.detail.name;
+                if (that.hasProperty(name) || that.providerRoot) {
+                    Logger.debug(
+                        'AdapterLitElementProvider(' +
+                            that.tagName +
+                            ') eventListener("dbp-subscribe",..) name "' +
+                            name +
+                            '" found.'
+                    );
+                    that.callbackStore.push({
+                        name: name,
+                        callback: e.detail.callback,
+                        sender: e.detail.sender,
+                    });
 
-                e.detail.callback(that.getProperty(name));
-                e.stopPropagation();
-            }
-        }, false);
+                    e.detail.callback(that.getProperty(name));
+                    e.stopPropagation();
+                }
+            },
+            false
+        );
 
-        this.addEventListener('dbp-unsubscribe', function (e) {
-            const name = e.detail.name;
-            const sender = e.detail.sender;
-            if (that.hasProperty(name) || that.providerRoot) {
-                Logger.debug('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-unsubscribe",..) name "' + name + '" found.');
-                that.callbackStore.forEach(item => {
-                    if (item.sender === sender && item.name === name) {
-                        const index = that.callbackStore.indexOf(item);
-                        that.callbackStore.splice(index, 1);
-                        Logger.debug('AdapterLitElementProvider(' + that.tagName + ') eventListener for name "' + name + '" removed.');
-                    }
-                });
+        this.addEventListener(
+            'dbp-unsubscribe',
+            function (e) {
+                const name = e.detail.name;
+                const sender = e.detail.sender;
+                if (that.hasProperty(name) || that.providerRoot) {
+                    Logger.debug(
+                        'AdapterLitElementProvider(' +
+                            that.tagName +
+                            ') eventListener("dbp-unsubscribe",..) name "' +
+                            name +
+                            '" found.'
+                    );
+                    that.callbackStore.forEach((item) => {
+                        if (item.sender === sender && item.name === name) {
+                            const index = that.callbackStore.indexOf(item);
+                            that.callbackStore.splice(index, 1);
+                            Logger.debug(
+                                'AdapterLitElementProvider(' +
+                                    that.tagName +
+                                    ') eventListener for name "' +
+                                    name +
+                                    '" removed.'
+                            );
+                        }
+                    });
 
-                e.stopPropagation();
-            }
-        }, false);
+                    e.stopPropagation();
+                }
+            },
+            false
+        );
 
         // listen to property changes
-        this.addEventListener('dbp-set-property', function (e) {
-            const name = e.detail.name;
-            const value = e.detail.value;
+        this.addEventListener(
+            'dbp-set-property',
+            function (e) {
+                const name = e.detail.name;
+                const value = e.detail.value;
 
-            if (that.hasProperty(name) || that.providerRoot) {
-                Logger.debug('AdapterLitElementProvider(' + that.tagName + ') eventListener("dbp-set-property",..) name "' + name + '" found.');
-                that.setProperty(name, value);
+                if (that.hasProperty(name) || that.providerRoot) {
+                    Logger.debug(
+                        'AdapterLitElementProvider(' +
+                            that.tagName +
+                            ') eventListener("dbp-set-property",..) name "' +
+                            name +
+                            '" found.'
+                    );
+                    that.setProperty(name, value);
 
-                that.callbackStore.forEach(item => {
-                    if (item.name === name) {
-                        item.callback(value);
-                    }
-                });
+                    that.callbackStore.forEach((item) => {
+                        if (item.name === name) {
+                            item.callback(value);
+                        }
+                    });
 
-                e.stopPropagation();
-            }
-        }, false);
+                    e.stopPropagation();
+                }
+            },
+            false
+        );
 
         // Options for the observer (which mutations to observe)
-        const config = { attributes: true, childList: false, subtree: false };
+        const config = {attributes: true, childList: false, subtree: false};
 
         // Callback function to execute when mutations are observed
-        const callback = function(mutationsList, observer) {
+        const callback = function (mutationsList, observer) {
             // Use traditional 'for loops' for IE 11
-            for(const mutation of mutationsList) {
+            for (const mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
                     const name = mutation.attributeName;
                     const value = that.getAttribute(name);
 
                     if (that.hasPropertyChanged(name, value)) {
-                        Logger.debug('AdapterLitElementProvider (' + that.tagName + ') observed attribute "' + name + '" changed');
+                        Logger.debug(
+                            'AdapterLitElementProvider (' +
+                                that.tagName +
+                                ') observed attribute "' +
+                                name +
+                                '" changed'
+                        );
                         that.setProperty(name, value);
 
-                        that.callbackStore.forEach(item => {
+                        that.callbackStore.forEach((item) => {
                             if (item.name === name) {
                                 item.callback(value);
                             }
@@ -162,94 +208,123 @@ export class AdapterLitElement extends LitElement {
         // get all *not observed* attributes
         if (this.hasAttributes()) {
             const attrs = this.attributes;
-            for(let i = attrs.length - 1; i >= 0; i--) {
+            for (let i = attrs.length - 1; i >= 0; i--) {
                 if (['id', 'class', 'style', 'data-tag-name'].includes(attrs[i].name)) {
                     continue;
                 }
 
                 this.setProperty(attrs[i].name, attrs[i].value);
-                Logger.debug('AdapterLitElementProvider (' + that.tagName + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
+                Logger.debug(
+                    'AdapterLitElementProvider (' +
+                        that.tagName +
+                        ') found attribute "' +
+                        attrs[i].name +
+                        '" = "' +
+                        attrs[i].value +
+                        '"'
+                );
             }
         }
     }
 
     disconnectedCallback() {
         const attrs = this.subscribe.split(',');
-        attrs.forEach(element => this.unSubscribeProviderFor(element));
+        attrs.forEach((element) => this.unSubscribeProviderFor(element));
 
         super.disconnectedCallback();
     }
 
     subscribeProviderFor(element) {
-        Logger.debug('AdapterLitElement(' + this.tagName + ') subscribeProviderFor( ' + element + ' )');
+        Logger.debug(
+            'AdapterLitElement(' + this.tagName + ') subscribeProviderFor( ' + element + ' )'
+        );
         const pair = element.trim().split(':');
         const local = pair[0];
         const global = pair[1] || local;
         const that = this;
-        const event = new CustomEvent('dbp-subscribe',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    callback: (value) => {
-                        // Don't send back "undefined" if the attribute wasn't found (for example if the providerRoot
-                        // is used and the attribute was subscribed but not set anywhere), because that will be
-                        // interpreted as "true" for Boolean lit-element attributes!
-                        if (value === undefined) {
-                            return;
-                        }
+        const event = new CustomEvent('dbp-subscribe', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                name: global,
+                callback: (value) => {
+                    // Don't send back "undefined" if the attribute wasn't found (for example if the providerRoot
+                    // is used and the attribute was subscribed but not set anywhere), because that will be
+                    // interpreted as "true" for Boolean lit-element attributes!
+                    if (value === undefined) {
+                        return;
+                    }
 
-                        Logger.debug('AdapterLitElement(' + that.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
+                    Logger.debug(
+                        'AdapterLitElement(' +
+                            that.tagName +
+                            ') sub/Callback ' +
+                            global +
+                            ' -> ' +
+                            local +
+                            ' = ' +
+                            value
+                    );
 
-                        // If value is an object set it directly as property
-                        if (typeof value === 'object' && value !== null) {
-                            // Logger.debug("value is object", value);
-                            that.setPropertyByAttributeName(local, value);
-                        } else {
-                            // Logger.debug("local, that.getPropertyByAttributeName(local), value", local, that.getPropertyByAttributeName(local), value);
-                            that.attributeChangedCallback(local, that.getPropertyByAttributeName(local), value);
+                    // If value is an object set it directly as property
+                    if (typeof value === 'object' && value !== null) {
+                        // Logger.debug("value is object", value);
+                        that.setPropertyByAttributeName(local, value);
+                    } else {
+                        // Logger.debug("local, that.getPropertyByAttributeName(local), value", local, that.getPropertyByAttributeName(local), value);
+                        that.attributeChangedCallback(
+                            local,
+                            that.getPropertyByAttributeName(local),
+                            value
+                        );
 
-                            // check if an attribute also exists in the tag
-                            if (that.getAttribute(local) !== null) {
-                                // we don't support attributes and provider values at the same time
-                                console.warn('Provider callback: "' + local + '" is also an attribute in tag "' + that.tagName + '", this is not supported!');
+                        // check if an attribute also exists in the tag
+                        if (that.getAttribute(local) !== null) {
+                            // we don't support attributes and provider values at the same time
+                            console.warn(
+                                'Provider callback: "' +
+                                    local +
+                                    '" is also an attribute in tag "' +
+                                    that.tagName +
+                                    '", this is not supported!'
+                            );
 
-                                // update attribute if reflectAttribute is enabled
-                                if (that.reflectAttribute) {
-                                    that.setAttribute(local, value);
-                                }
+                            // update attribute if reflectAttribute is enabled
+                            if (that.reflectAttribute) {
+                                that.setAttribute(local, value);
                             }
                         }
-                    },
-                    sender: this,
-                }
-            });
+                    }
+                },
+                sender: this,
+            },
+        });
         this.dispatchEvent(event);
     }
 
     unSubscribeProviderFor(element) {
-        Logger.debug('AdapterLitElement(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
+        Logger.debug(
+            'AdapterLitElement(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )'
+        );
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
-        const event = new CustomEvent('dbp-unsubscribe',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    sender: this,
-                }
-            });
+        const event = new CustomEvent('dbp-unsubscribe', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                name: global,
+                sender: this,
+            },
+        });
         this.dispatchEvent(event);
     }
 
     static get properties() {
         return {
             ...super.properties,
-            subscribe: { type: String },
-            unsubscribe: { type: String },
-            providerRoot: { type: Boolean, attribute: 'provider-root' },
+            subscribe: {type: String},
+            unsubscribe: {type: String},
+            providerRoot: {type: Boolean, attribute: 'provider-root'},
         };
     }
 
@@ -271,14 +346,22 @@ export class AdapterLitElement extends LitElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        switch(name) {
+        switch (name) {
             case 'subscribe':
-                Logger.debug('AdapterLitElement() attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
+                Logger.debug(
+                    'AdapterLitElement() attributeChangesCallback( ' +
+                        name +
+                        ', ' +
+                        oldValue +
+                        ', ' +
+                        newValue +
+                        ')'
+                );
 
                 if (this.subscribe && this.subscribe.length > 0) {
                     if (this.connected) {
                         const attrs = this.subscribe.split(',');
-                        attrs.forEach(element => this.unSubscribeProviderFor(element));
+                        attrs.forEach((element) => this.unSubscribeProviderFor(element));
                     } else {
                         this.deferUnSubscribe = this.subscribe.length > 0;
                         this.unsubscribe = this.subscribe;
@@ -289,7 +372,7 @@ export class AdapterLitElement extends LitElement {
                     this.subscribe = newValue;
                     if (this.connected) {
                         const attrs = newValue.split(',');
-                        attrs.forEach(element => this.subscribeProviderFor(element));
+                        attrs.forEach((element) => this.subscribeProviderFor(element));
                     } else {
                         this.deferSubscribe = newValue && newValue.length > 0;
                     }
@@ -299,7 +382,10 @@ export class AdapterLitElement extends LitElement {
                 // The function should not be called if oldValue is an object, oldValue and newValue are empty
                 // or if newValue is empty but name and oldValue are set
                 // This should prevent 'Uncaught SyntaxError: JSON.parse unexpected end of data at line 1 column 1 of the JSON data'
-                if ((typeof oldValue === 'object' && !oldValue && !newValue) || (!newValue && oldValue && name)) {
+                if (
+                    (typeof oldValue === 'object' && !oldValue && !newValue) ||
+                    (!newValue && oldValue && name)
+                ) {
                     // Logger.debug("attributeChangedCallback ignored", name, oldValue, newValue);
                     break;
                 }
@@ -325,7 +411,7 @@ export class AdapterLitElement extends LitElement {
         const event = new CustomEvent('dbp-set-property', {
             bubbles: true,
             composed: true,
-            detail: {'name': name, 'value': value}
+            detail: {name: name, value: value},
         });
 
         // dispatch the dbp-set-property event to the parent (if there is any) so that the current element

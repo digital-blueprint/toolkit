@@ -1,18 +1,18 @@
 {
-  "element": "dbp-matomo-demo-activity",
-  "module_src": "dbp-matomo-demo-activity.js",
-  "routing_name": "matomo",
-  "name": {
-    "de": "Matomo",
-    "en": "Matomo"
-  },
-  "short_name": {
-    "de": "Matomo",
-    "en": "Matomo"
-  },
-  "description": {
-    "de": "Matomo Web Component",
-    "en": "Matomo web component"
-  },
-  "subscribe": "lang,entry-point-url"
+    "element": "dbp-matomo-demo-activity",
+    "module_src": "dbp-matomo-demo-activity.js",
+    "routing_name": "matomo",
+    "name": {
+        "de": "Matomo",
+        "en": "Matomo"
+    },
+    "short_name": {
+        "de": "Matomo",
+        "en": "Matomo"
+    },
+    "description": {
+        "de": "Matomo Web Component",
+        "en": "Matomo web component"
+    },
+    "subscribe": "lang,entry-point-url"
 }

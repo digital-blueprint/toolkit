@@ -1,7 +1,7 @@
 import {createInstance} from './i18n';
 import {html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {ThemeSwitcher} from "./theme-switcher";
+import {ThemeSwitcher} from './theme-switcher';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
 export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
@@ -16,13 +16,13 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'dbp-theme-switcher': ThemeSwitcher,
+            'dbp-theme-switcher': ThemeSwitcher,
         };
     }
 
     static get properties() {
         return {
-            lang: { type: String }
+            lang: {type: String},
         };
     }
 
@@ -32,7 +32,7 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
+            if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
             }
         });
@@ -40,13 +40,12 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
         super.update(changedProperties);
     }
 
-
     render() {
         const i18n = this._i18n;
 
         return html`
             <style>
-                .light-theme{
+                .light-theme {
                     /* You must not fill out all vars, if they are not filled in, it would take an appropriate default value */
                     --dbp-override-base: white;
                     --dbp-override-base-inverted: black;
@@ -72,10 +71,9 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
 
                     --dbp-override-hover-base: black;
                     --dbp-override-hover-text: white;
-
                 }
 
-                .dark-theme{
+                .dark-theme {
                     /* If you don't want to use an additional theme, then delete the "themes" attribute */
                     /* You have to fill out all vars, if you want to use the dark theme, the default values would be the light theme. */
 
@@ -99,27 +97,25 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
                     --dbp-override-border: 1px solid white;
                     --dbp-override-border-radius: 0px;
 
-
                     /* Remove hover vars if you don't want a hover effect */
 
                     --dbp-override-hover-base: white;
                     --dbp-override-hover-text: #151515;
-
                 }
             </style>
- 
+
             <section class="section">
                 <div class="content">
                     <h1 class="title">${i18n.t('demo-title')}</h1>
                     <p>${i18n.t('intro')}</p>
                 </div>
                 <div class="content">
-                    <dbp-theme-switcher themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"}, {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'></dbp-theme-switcher>
-               </div>
+                    <dbp-theme-switcher
+                        themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"}, {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'></dbp-theme-switcher>
+                </div>
             </section>
         `;
     }
-
 }
 
 commonUtils.defineCustomElement('dbp-theme-switcher-demo', ThemeSwitcherDemo);

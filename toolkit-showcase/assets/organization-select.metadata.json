@@ -1,18 +1,18 @@
 {
-  "element": "dbp-organization-select-demo-activity",
-  "module_src": "dbp-organization-select-demo-activity.js",
-  "routing_name": "organization-select",
-  "name": {
-    "de": "Institutsauswahl",
-    "en": "Organization select"
-  },
-  "short_name": {
-    "de": "Institutsauswahl",
-    "en": "Organization select"
-  },
-  "description": {
-    "de": "Erlaubt die Auswahl von Instituten",
-    "en": "Allows selection of organizations"
-  },
-  "subscribe": "lang,entry-point-url"
+    "element": "dbp-organization-select-demo-activity",
+    "module_src": "dbp-organization-select-demo-activity.js",
+    "routing_name": "organization-select",
+    "name": {
+        "de": "Institutsauswahl",
+        "en": "Organization select"
+    },
+    "short_name": {
+        "de": "Institutsauswahl",
+        "en": "Organization select"
+    },
+    "description": {
+        "de": "Erlaubt die Auswahl von Instituten",
+        "en": "Allows selection of organizations"
+    },
+    "subscribe": "lang,entry-point-url"
 }

@@ -1,6 +1,6 @@
 {
-  "select-organization": {
-    "placeholder": "Bitte wählen Sie ein Institut aus",
-    "loading": "Wird geladen..."
-  }
+    "select-organization": {
+        "placeholder": "Bitte wählen Sie ein Institut aus",
+        "loading": "Wird geladen..."
+    }
 }
