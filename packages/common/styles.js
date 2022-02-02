@@ -78,6 +78,7 @@ export function getThemeCSS() {
         --dbp-info: var(--dbp-override-info, var(--dbp-override-info-dark, var(--dbp-override-primary-bg-color, #2a4491)));
         --dbp-success: var(--dbp-override-success, var(--dbp-override-success-dark, var(--dbp-override-success-bg-color, #188018)));
         --dbp-warning-as-text: var(--dbp-override-warning-as-text, var(--dbp-override-warning-color, var(--dbp-override-warning-dark, #c15500)));
+        --dbp-warning-text: var(--dbp-override-warning-text, #000000);
         --dbp-warning: var(--dbp-override-warning, var(--dbp-override-warning-color, var(--dbp-override-warning-light, #ffad4d)));
         --dbp-danger: var(--dbp-override-danger, var(--dbp-override-danger-bg-color, var(--dbp-override-danger-dark, #de3535)));
         --dbp-border: var(--dbp-override-border, var(--dbp-override-border-dark, 1px solid #000000));
@@ -475,7 +476,7 @@ export function getNotificationCSS() {
 
         .notification.is-warning {
             background-color: var(--dbp-warning);
-            color: var(--dbp-text);
+            color: var(--dbp-warning-text);
         }
 
         .notification.is-danger {
