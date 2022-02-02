@@ -549,8 +549,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             header .hd1-left {
                 display: flex;
                 flex-direction: row;
-                justify-content: right;
-                -webkit-justify-content: right;
+                justify-content: flex-end;
+                -webkit-justify-content: flex-end;
                 grid-area: hd1-left;
                 text-align: right;
                 padding-right: 20px;
