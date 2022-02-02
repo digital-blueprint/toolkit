@@ -1,9 +1,8 @@
 import {createInstance} from './i18n.js';
 import JSONLD from '@dbp-toolkit/common/jsonld';
-import  {KeycloakWrapper} from './keycloak.js';
+import {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
-
+import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
 /**
  * Keycloak auth web component
@@ -20,13 +19,13 @@ export class AuthKeycloak extends AdapterLitElement {
     constructor() {
         super();
         this.forceLogin = false;
-        this.token = "";
-        this.subject = "";
-        this.name = "";
+        this.token = '';
+        this.subject = '';
+        this.name = '';
         this.tryLogin = false;
         this.entryPointUrl = '';
         this._user = null;
-        this._userId = "";
+        this._userId = '';
         this._authenticated = false;
         this._loginStatus = LoginStatus.UNKNOWN;
         this.requestedLoginStatus = LoginStatus.UNKNOWN;
@@ -50,17 +49,17 @@ export class AuthKeycloak extends AdapterLitElement {
             switch (propName) {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
-                break;
+                    break;
                 case 'entryPointUrl':
                     // for preloading the instance
                     JSONLD.getInstance(this.entryPointUrl, this.lang);
-                break;
+                    break;
                 case 'requestedLoginStatus':
-                    console.log("requested-login-status changed", this.requestedLoginStatus);
-                    switch(this.requestedLoginStatus) {
+                    console.log('requested-login-status changed', this.requestedLoginStatus);
+                    switch (this.requestedLoginStatus) {
                         case LoginStatus.LOGGED_IN:
                             this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
-                        break;
+                            break;
                         case LoginStatus.LOGGED_OUT:
                             // Keycloak will redirect right away without emitting events, so we have
                             // to do this manually here
@@ -73,9 +72,9 @@ export class AuthKeycloak extends AdapterLitElement {
                             if (this._loginStatus === LoginStatus.LOGGING_OUT) {
                                 this._setLoginStatus(LoginStatus.LOGGED_IN);
                             }
-                        break;
+                            break;
                     }
-                break;
+                    break;
             }
         });
 
@@ -87,16 +86,16 @@ export class AuthKeycloak extends AdapterLitElement {
         jsonld = await JSONLD.getInstance(this.entryPointUrl, this.lang);
         let baseUrl = '';
         try {
-            baseUrl = jsonld.getApiUrlForEntityName("FrontendUser");
-        } catch(error) {
+            baseUrl = jsonld.getApiUrlForEntityName('FrontendUser');
+        } catch (error) {
             // backwards compat
-            baseUrl = jsonld.getApiUrlForEntityName("Person");
+            baseUrl = jsonld.getApiUrlForEntityName('Person');
         }
         const apiUrl = baseUrl + '/' + encodeURIComponent(userId);
 
         let response = await fetch(apiUrl, {
             headers: {
-                'Authorization': 'Bearer ' + this.token,
+                Authorization: 'Bearer ' + this.token,
             },
         });
         if (!response.ok) {
@@ -114,13 +113,13 @@ export class AuthKeycloak extends AdapterLitElement {
 
         this._authenticated = kc.authenticated;
         if (kc.authenticated) {
-            let tokenChanged = (this.token !== kc.token);
+            let tokenChanged = this.token !== kc.token;
             this.name = kc.idTokenParsed.name;
             this.token = kc.token;
 
             this.subject = kc.subject;
             const userId = kc.idTokenParsed.preferred_username;
-            let userChanged = (userId !== this._userId);
+            let userChanged = userId !== this._userId;
             if (userChanged) {
                 this._userId = userId;
                 let user;
@@ -144,10 +143,10 @@ export class AuthKeycloak extends AdapterLitElement {
             if (this._loginStatus === LoginStatus.LOGGED_IN) {
                 this._setLoginStatus(LoginStatus.LOGGING_OUT);
             }
-            this.name = "";
-            this.token = "";
-            this.subject = "";
-            this._userId = "";
+            this.name = '';
+            this.token = '';
+            this.subject = '';
+            this._userId = '';
             this._user = null;
 
             this._setLoginStatus(LoginStatus.LOGGED_OUT);
@@ -157,13 +156,13 @@ export class AuthKeycloak extends AdapterLitElement {
     sendSetPropertyEvents() {
         const auth = {
             'login-status': this._loginStatus,
-            'subject': this.subject,
-            'token': this.token,
+            subject: this.subject,
+            token: this.token,
             'user-full-name': this.name,
             'user-id': this._userId,
             // Deprecated
             'person-id': this._userId,
-            'person': this._user,
+            person: this._user,
         };
 
         // inject a window.DBPAuth variable for cypress
@@ -175,8 +174,7 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     _setLoginStatus(status, force) {
-        if (this._loginStatus === status && !force)
-            return;
+        if (this._loginStatus === status && !force) return;
 
         this._loginStatus = status;
         this.sendSetPropertyEvents();
@@ -185,36 +183,39 @@ export class AuthKeycloak extends AdapterLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            forceLogin: { type: Boolean, attribute: 'force-login' },
-            tryLogin: { type: Boolean, attribute: 'try-login' },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            name: { type: String, attribute: false },
-            token: { type: String, attribute: false },
-            subject: { type: String, attribute: false },
-            _userId: { type: String, attribute: false },
-            _user: { type: Object, attribute: false },
-            _loginStatus: { type: String, attribute: false },
-            keycloakUrl: { type: String, attribute: 'url' },
-            realm: { type: String },
-            clientId: { type: String, attribute: 'client-id' },
-            silentCheckSsoRedirectUri: { type: String, attribute: 'silent-check-sso-redirect-uri' },
-            scope: { type: String },
-            idpHint: { type: String, attribute: 'idp-hint' },
-            requestedLoginStatus: { type: String, attribute: 'requested-login-status' },
+            lang: {type: String},
+            forceLogin: {type: Boolean, attribute: 'force-login'},
+            tryLogin: {type: Boolean, attribute: 'try-login'},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            name: {type: String, attribute: false},
+            token: {type: String, attribute: false},
+            subject: {type: String, attribute: false},
+            _userId: {type: String, attribute: false},
+            _user: {type: Object, attribute: false},
+            _loginStatus: {type: String, attribute: false},
+            keycloakUrl: {type: String, attribute: 'url'},
+            realm: {type: String},
+            clientId: {type: String, attribute: 'client-id'},
+            silentCheckSsoRedirectUri: {type: String, attribute: 'silent-check-sso-redirect-uri'},
+            scope: {type: String},
+            idpHint: {type: String, attribute: 'idp-hint'},
+            requestedLoginStatus: {type: String, attribute: 'requested-login-status'},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
 
-        if (!this.keycloakUrl)
-            throw Error("url not set");
-        if (!this.realm)
-            throw Error("realm not set");
-        if (!this.clientId)
-            throw Error("client-id not set");
-        this._kcwrapper = new KeycloakWrapper(this.keycloakUrl, this.realm, this.clientId, this.silentCheckSsoRedirectUri, this.idpHint);
+        if (!this.keycloakUrl) throw Error('url not set');
+        if (!this.realm) throw Error('realm not set');
+        if (!this.clientId) throw Error('client-id not set');
+        this._kcwrapper = new KeycloakWrapper(
+            this.keycloakUrl,
+            this.realm,
+            this.clientId,
+            this.silentCheckSsoRedirectUri,
+            this.idpHint
+        );
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 
         const handleLogin = async () => {

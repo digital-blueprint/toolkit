@@ -21,7 +21,10 @@ export default function () {
         inputTooShort: function (args) {
             var remainingChars = args.minimum - args.input.length;
 
-            var message = 'Please enter ' + remainingChars + ' or more characters, you can also search for multiple parts of names';
+            var message =
+                'Please enter ' +
+                remainingChars +
+                ' or more characters, you can also search for multiple parts of names';
 
             return message;
         },
@@ -45,6 +48,6 @@ export default function () {
         },
         removeAllItems: function () {
             return 'Remove all items';
-        }
+        },
     };
 }

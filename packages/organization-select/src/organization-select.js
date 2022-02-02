@@ -5,10 +5,10 @@ import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import select2LangDe from "@dbp-toolkit/organization-select/src/i18n/de/select2";
-import select2LangEn from "@dbp-toolkit/organization-select/src/i18n/en/select2";
-import JSONLD from "@dbp-toolkit/common/jsonld";
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import select2LangDe from '@dbp-toolkit/organization-select/src/i18n/de/select2';
+import select2LangEn from '@dbp-toolkit/organization-select/src/i18n/en/select2';
+import JSONLD from '@dbp-toolkit/common/jsonld';
+import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
 select2(window, $);
 
@@ -34,10 +34,10 @@ export class OrganizationSelect extends AdapterLitElement {
         return {
             ...super.properties,
             lang: {type: String},
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
             value: {type: String, reflect: true},
             context: {type: String},
-            auth: { type: Object },
+            auth: {type: Object},
         };
     }
 
@@ -46,7 +46,7 @@ export class OrganizationSelect extends AdapterLitElement {
     }
 
     select2IsInitialized(elm) {
-        return elm !== null && elm.hasClass("select2-hidden-accessible");
+        return elm !== null && elm.hasClass('select2-hidden-accessible');
     }
 
     connectedCallback() {
@@ -83,7 +83,7 @@ export class OrganizationSelect extends AdapterLitElement {
 
     _clearSelect2() {
         const $select = this.$('#' + this.selectId);
-        console.assert($select.length, "select2 missing");
+        console.assert($select.length, 'select2 missing');
 
         // we need to destroy Select2 and remove the event listeners before we can initialize it again
         if (this.select2IsInitialized($select)) {
@@ -98,7 +98,7 @@ export class OrganizationSelect extends AdapterLitElement {
         await this.updateComplete;
 
         const $select = this.$('#' + this.selectId);
-        console.assert($select.length, "select2 missing");
+        console.assert($select.length, 'select2 missing');
 
         // Show an empty select until we load the organizations
         if (this._needsLoading()) {
@@ -106,37 +106,39 @@ export class OrganizationSelect extends AdapterLitElement {
 
             $select.select2({
                 width: '100%',
-                language: this.lang === "de" ? select2LangDe() : select2LangEn(),
+                language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
                 placeholder: i18n.t('select-organization.loading'),
                 data: [],
-                disabled: true
+                disabled: true,
             });
         }
 
-        this.removeAttribute("data-organizations-loaded");
+        this.removeAttribute('data-organizations-loaded');
         await this.load_organizations();
-        this.setAttribute("data-organizations-loaded", "");
+        this.setAttribute('data-organizations-loaded', '');
 
         this._clearSelect2();
 
         const data = this.organizations.map((item) => {
-            return {'id': item.object["@id"], 'text': item.code + ' ' + item.name};
+            return {id: item.object['@id'], text: item.code + ' ' + item.name};
         });
 
         data.sort((a, b) => {
             return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
         });
 
-        $select.select2({
-            width: '100%',
-            language: this.lang === "de" ? select2LangDe() : select2LangEn(),
-            placeholder: i18n.t('select-organization.placeholder'),
-            dropdownParent: this.$('#select-organization-dropdown'),
-            data: data,
-            disabled: false
-        }).on("select2:select", () => {
-            this.value = $select.select2('data')[0].id;
-        });
+        $select
+            .select2({
+                width: '100%',
+                language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
+                placeholder: i18n.t('select-organization.placeholder'),
+                dropdownParent: this.$('#select-organization-dropdown'),
+                data: data,
+                disabled: false,
+            })
+            .on('select2:select', () => {
+                this.value = $select.select2('data')[0].id;
+            });
 
         // If none is selected, default to the first one
         if (!this.value.length && data.length) {
@@ -149,14 +151,14 @@ export class OrganizationSelect extends AdapterLitElement {
 
     fireEvent() {
         const organization = this.organizations.find((item) => {
-            return item.object["@id"] === this.value;
+            return item.object['@id'] === this.value;
         });
 
         const $this = $(this);
 
         if (organization === undefined) {
-            $this.attr("data-object", null);
-            $this.data("object", null);
+            $this.attr('data-object', null);
+            $this.data('object', null);
             return;
         }
 
@@ -166,42 +168,46 @@ export class OrganizationSelect extends AdapterLitElement {
             bubbles: true,
             composed: true,
             detail: {
-                'value': organization.value,
-                'object': organization.object,
-            }
+                value: organization.value,
+                object: organization.object,
+            },
         });
         this.dispatchEvent(event);
     }
 
     setDataObject(organization) {
         const $this = $(this);
-        $this.attr("data-object", JSON.stringify(organization.object));
-        $this.data("object", organization.object);
+        $this.attr('data-object', JSON.stringify(organization.object));
+        $this.data('object', organization.object);
     }
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case "lang":
+                case 'lang':
                     this._i18n.changeLanguage(this.lang);
                     this.updateSelect2();
                     break;
-                case "value": {
+                case 'value': {
                     this.updateSelect2();
                     this.fireEvent();
                     break;
                 }
-                case "context": {
+                case 'context': {
                     delete this.cache[this.lang];
                     this.updateSelect2();
                     break;
                 }
-                case "entryPointUrl":
-                    JSONLD.getInstance(this.entryPointUrl).then((jsonld) => {
-                        this.jsonld = jsonld;
-                    }, {}, this.lang);
+                case 'entryPointUrl':
+                    JSONLD.getInstance(this.entryPointUrl).then(
+                        (jsonld) => {
+                            this.jsonld = jsonld;
+                        },
+                        {},
+                        this.lang
+                    );
                     break;
-                case "auth":
+                case 'auth':
                     this.initAuthPersonOnce().then();
                     break;
                 default:
@@ -212,7 +218,7 @@ export class OrganizationSelect extends AdapterLitElement {
     }
 
     async initAuthPersonOnce() {
-        if (!this.auth.person || this.hasAttribute("data-auth-person-init-finished")) {
+        if (!this.auth.person || this.hasAttribute('data-auth-person-init-finished')) {
             return;
         }
 
@@ -220,7 +226,7 @@ export class OrganizationSelect extends AdapterLitElement {
         await this.updateSelect2();
 
         // this attribute is used in end2end tests
-        this.setAttribute("data-auth-person-init-finished", "");
+        this.setAttribute('data-auth-person-init-finished', '');
     }
 
     /**
@@ -233,21 +239,24 @@ export class OrganizationSelect extends AdapterLitElement {
             return [];
         }
 
-        let orgUrl = this.entryPointUrl + '/base/people/' +
+        let orgUrl =
+            this.entryPointUrl +
+            '/base/people/' +
             encodeURIComponent(this.auth['person-id']) +
             '/organizations' +
-            '?context=' + encodeURIComponent(this.context) +
-            '&lang=' + encodeURIComponent(this.lang);
+            '?context=' +
+            encodeURIComponent(this.context) +
+            '&lang=' +
+            encodeURIComponent(this.lang);
 
         let response = await fetch(orgUrl, {
             headers: {
                 'Content-Type': 'application/ld+json',
-                'Authorization': 'Bearer ' + this.auth.token,
+                Authorization: 'Bearer ' + this.auth.token,
             },
         });
 
-        if (!response.ok)
-            throw new Error(response.statusText);
+        if (!response.ok) throw new Error(response.statusText);
 
         let data = await response.json();
 
@@ -283,16 +292,19 @@ export class OrganizationSelect extends AdapterLitElement {
     render() {
         const select2CSS = commonUtils.getAssetURL(select2CSSPath);
         return html`
-            <link rel="stylesheet" href="${select2CSS}">
+            <link rel="stylesheet" href="${select2CSS}" />
 
-        <div class="select">
-            <div class="select2-control control">
-                <!-- https://select2.org-->
-                <select id="${this.selectId}" name="select-organization" class="select" style="visibility: hidden;"></select>
+            <div class="select">
+                <div class="select2-control control">
+                    <!-- https://select2.org-->
+                    <select
+                        id="${this.selectId}"
+                        name="select-organization"
+                        class="select"
+                        style="visibility: hidden;"></select>
+                </div>
+                <div id="select-organization-dropdown"></div>
             </div>
-            <div id="select-organization-dropdown"></div>
-        </div>
-
         `;
     }
 }

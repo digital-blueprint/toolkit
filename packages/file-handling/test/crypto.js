@@ -1,7 +1,6 @@
 import {assert} from '@esm-bundle/chai';
 import {encrypt, decrypt} from '../src/crypto';
 
-
 suite('encyptAndDecrypt', () => {
     test('encrypt', async () => {
         let res = await encrypt('token', 'my-payload');

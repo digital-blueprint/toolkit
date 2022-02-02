@@ -1,5 +1,4 @@
-import {EventTarget} from "event-target-shim";  // Because EventTarget() doesn't exist on Safari
-
+import {EventTarget} from 'event-target-shim'; // Because EventTarget() doesn't exist on Safari
 
 /**
  * Imports the keycloak JS API as if it was a module.
@@ -10,35 +9,29 @@ async function importKeycloak(baseUrl) {
     const keycloakSrc = baseUrl + '/js/keycloak.min.js';
     // Importing will write it to window so we take it from there
     await import(keycloakSrc);
-    if (importKeycloak._keycloakMod !== undefined)
-        return importKeycloak._keycloakMod;
+    if (importKeycloak._keycloakMod !== undefined) return importKeycloak._keycloakMod;
     importKeycloak._keycloakMod = window.Keycloak;
     delete window.Keycloak;
     return importKeycloak._keycloakMod;
 }
 
-
-const promiseTimeout = function(ms, promise) {
+const promiseTimeout = function (ms, promise) {
     let timeout = new Promise((resolve, reject) => {
-      let id = setTimeout(() => {
-        clearTimeout(id);
-        reject('Timed out in '+ ms + 'ms.');
-      }, ms);
+        let id = setTimeout(() => {
+            clearTimeout(id);
+            reject('Timed out in ' + ms + 'ms.');
+        }, ms);
     });
 
-    return Promise.race([
-      promise,
-      timeout
-    ]);
+    return Promise.race([promise, timeout]);
 };
-
 
 /**
  * Returns a URL for a relative path or URL
  *
  * @param {string} urlOrPath
  */
-const ensureURL = function(urlOrPath) {
+const ensureURL = function (urlOrPath) {
     try {
         return new URL(urlOrPath).href;
     } catch (e) {
@@ -46,15 +39,13 @@ const ensureURL = function(urlOrPath) {
     }
 };
 
-
 /**
  * Wraps the keycloak API to support async/await, adds auto token refreshing and consolidates all
  * events into one native "changed" event
- * 
+ *
  * The "changed" event has the real keycloak instance as "detail"
  */
 export class KeycloakWrapper extends EventTarget {
-
     constructor(baseURL, realm, clientId, silentCheckSsoUri, idpHint) {
         super();
 
@@ -77,36 +68,35 @@ export class KeycloakWrapper extends EventTarget {
         this.DEBUG = false;
 
         this._onVisibilityChanged = this._onVisibilityChanged.bind(this);
-        document.addEventListener("visibilitychange", this._onVisibilityChanged);
+        document.addEventListener('visibilitychange', this._onVisibilityChanged);
     }
 
     /**
      * This needs to be called or the instance will leak;
      */
     close() {
-        document.removeEventListener("visibilitychange", this._onVisibilityChanged);
+        document.removeEventListener('visibilitychange', this._onVisibilityChanged);
     }
 
     _onVisibilityChanged() {
-        let isVisible = (document.visibilityState === 'visible');
+        let isVisible = document.visibilityState === 'visible';
         if (isVisible && this._keycloak.authenticated) {
             this._checkTokeHasExpired();
         }
     }
 
     _onChanged() {
-        const event = new CustomEvent("changed", {
+        const event = new CustomEvent('changed', {
             detail: this._keycloak,
             bubbles: true,
-            composed: true
+            composed: true,
         });
         this.dispatchEvent(event);
     }
 
     _onReady(authenticated) {
         // Avoid emitting changed when nothing has changed on init()
-        if (authenticated)
-            this._onChanged();
+        if (authenticated) this._onChanged();
     }
 
     async _onTokenExpired() {
@@ -121,7 +111,7 @@ export class KeycloakWrapper extends EventTarget {
             return;
         }
 
-        console.assert(refreshed, "token should have been refreshed");
+        console.assert(refreshed, 'token should have been refreshed');
     }
 
     async _checkTokeHasExpired() {
@@ -137,8 +127,7 @@ export class KeycloakWrapper extends EventTarget {
             console.log('Failed to refresh the token', error);
         }
 
-        if (this.DEBUG && refreshed)
-            console.log("token has been refreshed");
+        if (this.DEBUG && refreshed) console.log('token has been refreshed');
     }
 
     async _onAuthSuccess() {
@@ -148,7 +137,10 @@ export class KeycloakWrapper extends EventTarget {
             clearInterval(this._checkId);
             this._checkId = null;
         }
-        this._checkId = setInterval(this._checkTokeHasExpired.bind(this), this.CHECK_INTERVAL * 1000);
+        this._checkId = setInterval(
+            this._checkTokeHasExpired.bind(this),
+            this.CHECK_INTERVAL * 1000
+        );
 
         this._onChanged();
     }
@@ -163,8 +155,7 @@ export class KeycloakWrapper extends EventTarget {
     }
 
     async _ensureInstance() {
-        if (this._keycloak !== null)
-            return;
+        if (this._keycloak !== null) return;
 
         const Keycloak = await importKeycloak(this._baseURL);
 
@@ -195,8 +186,7 @@ export class KeycloakWrapper extends EventTarget {
 
     async _ensureInit() {
         await this._ensureInstance();
-        if (this._initDone)
-            return;
+        if (this._initDone) return;
         this._initDone = true;
 
         const options = {
@@ -209,7 +199,6 @@ export class KeycloakWrapper extends EventTarget {
         }
 
         if (this._silentCheckSsoUri) {
-
             options['onLoad'] = 'check-sso';
             options['silentCheckSsoRedirectUri'] = ensureURL(this._silentCheckSsoUri);
 
@@ -222,7 +211,6 @@ export class KeycloakWrapper extends EventTarget {
         } else {
             await this._keycloakInit(options);
         }
-
     }
 
     /**
@@ -230,7 +218,7 @@ export class KeycloakWrapper extends EventTarget {
      */
     isLoggingIn() {
         const href = window.location.href;
-        return (href.search('[&#]state=') >= 0 && href.search('[&#]session_state=') >= 0);
+        return href.search('[&#]state=') >= 0 && href.search('[&#]session_state=') >= 0;
     }
 
     /**
@@ -248,7 +236,7 @@ export class KeycloakWrapper extends EventTarget {
 
         if (!this._keycloak.authenticated) {
             await this._keycloak.login({
-                kcLocale: language,  // Keycloak < 9.0
+                kcLocale: language, // Keycloak < 9.0
                 locale: language,
                 scope: scope,
                 idpHint: this._idpHint,

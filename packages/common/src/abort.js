@@ -31,7 +31,9 @@ export function createLinkedAbortController(...signals) {
 export function createTimeoutAbortSignal(delay) {
     const controller = new AbortController();
 
-    setTimeout(() => {controller.abort(); }, delay);
+    setTimeout(() => {
+        controller.abort();
+    }, delay);
 
     return controller.signal;
 }

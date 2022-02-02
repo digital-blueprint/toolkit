@@ -5,7 +5,7 @@ import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {KnowledgeBaseWebPageElementView} from './knowledge-base-web-page-element-view.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -18,24 +18,24 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBP
 
     static get scopedElements() {
         return {
-          'dbp-knowledge-base-web-page-element-view' : KnowledgeBaseWebPageElementView,
-          'dbp-auth-keycloak': AuthKeycloak,
-          'dbp-login-button': LoginButton,
+            'dbp-knowledge-base-web-page-element-view': KnowledgeBaseWebPageElementView,
+            'dbp-auth-keycloak': AuthKeycloak,
+            'dbp-login-button': LoginButton,
         };
     }
 
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            noAuth: { type: Boolean, attribute: 'no-auth' },
+            lang: {type: String},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            noAuth: {type: Boolean, attribute: 'no-auth'},
         };
     }
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
+            if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
             }
         });
@@ -46,8 +46,12 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBP
     static get styles() {
         // language=css
         const styles = css`
-            h1.title {margin-bottom: 1em;}
-            div.container {margin-bottom: 1.5em;}
+            h1.title {
+                margin-bottom: 1em;
+            }
+            div.container {
+                margin-bottom: 1.5em;
+            }
 
             .clean {
                 --KBBorder: initial;
@@ -60,22 +64,28 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBP
             }
         `;
 
-        return [
-            commonStyles.getThemeCSS(),
-            commonStyles.getGeneralCSS(),
-            styles,
-        ];
+        return [commonStyles.getThemeCSS(), commonStyles.getGeneralCSS(), styles];
     }
 
     getAuthComponentHtml() {
-        return this.noAuth ? html`<dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>` : html`
-            <div class="container">
-                <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
-                                   url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu"
-                                   client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
-                <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
-            </div>
-        `;
+        return this.noAuth
+            ? html`
+                  <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
+              `
+            : html`
+                  <div class="container">
+                      <dbp-auth-keycloak
+                          subscribe="requested-login-status"
+                          lang="${this.lang}"
+                          entry-point-url="${this.entryPointUrl}"
+                          silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                          url="https://auth-dev.tugraz.at/auth"
+                          realm="tugraz-vpu"
+                          client-id="auth-dev-mw-frontend-local"
+                          try-login></dbp-auth-keycloak>
+                      <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
+                  </div>
+              `;
     }
     render() {
         return html`
@@ -87,27 +97,48 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBP
                 <div class="container">
                     <h2 class="subtitle">Deutsch</h2>
                     <p>Ein erster Schritt</p>
-                    <dbp-knowledge-base-web-page-element-view subscribe="auth" lang="de" entry-point-url="${this.entryPointUrl}" value="bedienstete/bibliothek/buch-ausleihen" text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view
+                        subscribe="auth"
+                        lang="de"
+                        entry-point-url="${this.entryPointUrl}"
+                        value="bedienstete/bibliothek/buch-ausleihen"
+                        text="Ein Buch ausleihen"></dbp-knowledge-base-web-page-element-view>
                 </div>
                 <div class="container">
                     <h2 class="subtitle">Englisch</h2>
                     <p>A first step</p>
-                    <dbp-knowledge-base-web-page-element-view subscribe="auth" lang="en" entry-point-url="${this.entryPointUrl}" value="bedienstete/bibliothek/buch-ausleihen" text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view
+                        subscribe="auth"
+                        lang="en"
+                        entry-point-url="${this.entryPointUrl}"
+                        value="bedienstete/bibliothek/buch-ausleihen"
+                        text="Borrow a book"></dbp-knowledge-base-web-page-element-view>
                 </div>
-                <hr>
+                <hr />
                 <div class="container">
                     <p>mit Text in der WebComponent:</p>
-                    <dbp-knowledge-base-web-page-element-view subscribe="auth" lang="${this.lang}" value="abc/def/xyz" text="FAQ"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view
+                        subscribe="auth"
+                        lang="${this.lang}"
+                        value="abc/def/xyz"
+                        text="FAQ"></dbp-knowledge-base-web-page-element-view>
                 </div>
-                <hr>
+                <hr />
                 <div class="container">
                     <p>ohne Text in der WebComponent:</p>
                     Kontaktieren Sie uns unter...
-                    <dbp-knowledge-base-web-page-element-view subscribe="auth" class="opt" lang="${this.lang}" value="abc/def/klm"></dbp-knowledge-base-web-page-element-view>
+                    <dbp-knowledge-base-web-page-element-view
+                        subscribe="auth"
+                        class="opt"
+                        lang="${this.lang}"
+                        value="abc/def/klm"></dbp-knowledge-base-web-page-element-view>
                 </div>
             </section>
         `;
     }
 }
 
-commonUtils.defineCustomElement('dbp-knowledge-base-web-page-element-view-demo', KnowledgeBaseWebPageElementViewDemo);
+commonUtils.defineCustomElement(
+    'dbp-knowledge-base-web-page-element-view-demo',
+    KnowledgeBaseWebPageElementViewDemo
+);

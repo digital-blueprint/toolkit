@@ -1,1 +1,1 @@
-export {AdapterLitElement} from "@dbp-toolkit/common";
+export {AdapterLitElement} from '@dbp-toolkit/common';

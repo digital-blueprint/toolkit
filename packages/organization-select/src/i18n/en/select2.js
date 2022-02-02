@@ -45,6 +45,6 @@ export default function () {
         },
         removeAllItems: function () {
             return 'Remove selection';
-        }
+        },
     };
 }

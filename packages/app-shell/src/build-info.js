@@ -1,9 +1,8 @@
 import {html, css} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
 export class BuildInfo extends AdapterLitElement {
-
     constructor() {
         super();
         this.env = '';
@@ -15,10 +14,10 @@ export class BuildInfo extends AdapterLitElement {
     static get properties() {
         return {
             ...super.properties,
-            env: { type: String },
-            buildUrl: { type: String, attribute: "build-url" },
-            buildTime: { type: String, attribute: "build-time" },
-            gitInfo: { type: String, attribute: "git-info" }
+            env: {type: String},
+            buildUrl: {type: String, attribute: 'build-url'},
+            buildTime: {type: String, attribute: 'build-time'},
+            gitInfo: {type: String, attribute: 'git-info'},
         };
     }
 
@@ -32,7 +31,7 @@ export class BuildInfo extends AdapterLitElement {
                 display: inline-block;
             }
         `;
-    } 
+    }
 
     render() {
         const date = new Date(this.buildTime);

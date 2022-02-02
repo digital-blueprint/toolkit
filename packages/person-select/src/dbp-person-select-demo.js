@@ -5,7 +5,7 @@ import {PersonSelect} from './person-select.js';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -18,18 +18,18 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
 
     static get scopedElements() {
         return {
-          'dbp-auth-keycloak': AuthKeycloak,
-          'dbp-login-button': LoginButton,
-          'dbp-person-select': PersonSelect,
+            'dbp-auth-keycloak': AuthKeycloak,
+            'dbp-login-button': LoginButton,
+            'dbp-person-select': PersonSelect,
         };
     }
 
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            noAuth: { type: Boolean, attribute: 'no-auth' },
+            lang: {type: String},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            noAuth: {type: Boolean, attribute: 'no-auth'},
         };
     }
 
@@ -39,28 +39,42 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
             commonStyles.getThemeCSS(),
             commonStyles.getGeneralCSS(),
             css`
-            h1.title {margin-bottom: 1em;}
-            div.container {margin-bottom: 1.5em;}
-            `
+                h1.title {
+                    margin-bottom: 1em;
+                }
+                div.container {
+                    margin-bottom: 1.5em;
+                }
+            `,
         ];
     }
 
     update(changedProperties) {
-        if (changedProperties.has("lang")) {
+        if (changedProperties.has('lang')) {
             this._i18n.changeLanguage(this.lang);
         }
         super.update(changedProperties);
     }
 
     getAuthComponentHtml() {
-        return this.noAuth ? html`<dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>` : html`
-            <div class="container">
-                <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
-                                   url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu"
-                                   client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
-                <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
-            </div>
-        `;
+        return this.noAuth
+            ? html`
+                  <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
+              `
+            : html`
+                  <div class="container">
+                      <dbp-auth-keycloak
+                          subscribe="requested-login-status"
+                          lang="${this.lang}"
+                          entry-point-url="${this.entryPointUrl}"
+                          silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                          url="https://auth-dev.tugraz.at/auth"
+                          realm="tugraz-vpu"
+                          client-id="auth-dev-mw-frontend-local"
+                          try-login></dbp-auth-keycloak>
+                      <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
+                  </div>
+              `;
     }
 
     render() {
@@ -75,21 +89,36 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                         <div class="field">
                             <label class="label">Person 1</label>
                             <div class="control">
-                                <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+                                <dbp-person-select
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"></dbp-person-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Person 2</label>
                             <div class="control">
-                                <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" show-reload-button reload-button-title="Click me"></dbp-person-select>
+                                <dbp-person-select
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    show-reload-button
+                                    reload-button-title="Click me"></dbp-person-select>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Person 3 unsubscribed</label>
                             <div class="control">
-                                <dbp-person-select lang="${this.lang}" entry-point-url="${this.entryPointUrl}" show-reload-button reload-button-title="Click me"></dbp-person-select>
+                                <dbp-person-select
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    show-reload-button
+                                    reload-button-title="Click me"></dbp-person-select>
                             </div>
-                            <p>This component doesn't get any notification about user's login and will become active.</p>
+                            <p>
+                                This component doesn't get any notification about user's login and
+                                will become active.
+                            </p>
                         </div>
                     </form>
                 </div>

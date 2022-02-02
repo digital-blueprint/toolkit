@@ -9,19 +9,16 @@ import {Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import * as errorUtils from "@dbp-toolkit/common/error";
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
-
+import * as errorUtils from '@dbp-toolkit/common/error';
+import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
 const checkInPlaceContext = {
-    "@id": "@id",
-    "name": "http://schema.org/name",
-    "maximumPhysicalAttendeeCapacity": "http://schema.org/maximumPhysicalAttendeeCapacity"
+    '@id': '@id',
+    name: 'http://schema.org/name',
+    maximumPhysicalAttendeeCapacity: 'http://schema.org/maximumPhysicalAttendeeCapacity',
 };
 
-
 export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
-
     constructor() {
         super();
         Object.assign(CheckInPlaceSelect.prototype, errorUtils.errorMixin);
@@ -48,37 +45,36 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
 
     static get scopedElements() {
         return {
-          'dbp-icon': Icon,
+            'dbp-icon': Icon,
         };
     }
 
     $(selector) {
-        if (typeof selector === "string")
+        if (typeof selector === 'string')
             return this._jquery(this.shadowRoot.querySelector(selector));
-        else
-            return this._jquery(selector);
+        else return this._jquery(selector);
     }
 
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            active: { type: Boolean, attribute: false },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            value: { type: String },
-            object: { type: Object, attribute: false },
-            showReloadButton: { type: Boolean, attribute: 'show-reload-button' },
-            reloadButtonTitle: { type: String, attribute: 'reload-button-title' },
-            showCapacity: { type: Boolean, attribute: 'show-capacity' },
-            auth: { type: Object },
+            lang: {type: String},
+            active: {type: Boolean, attribute: false},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            value: {type: String},
+            object: {type: Object, attribute: false},
+            showReloadButton: {type: Boolean, attribute: 'show-reload-button'},
+            reloadButtonTitle: {type: String, attribute: 'reload-button-title'},
+            showCapacity: {type: Boolean, attribute: 'show-capacity'},
+            auth: {type: Object},
         };
     }
 
     clear() {
         this.object = null;
-        this.$(this).attr("data-object", "");
-        this.$(this).attr("value", "");
-        this.$(this).data("object", null);
+        this.$(this).attr('data-object', '');
+        this.$(this).attr('value', '');
+        this.$(this).data('object', null);
         this.$select.val(null).trigger('change').trigger('select2:unselect');
     }
 
@@ -106,10 +102,9 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     _onDocumentClicked(event) {
-        if (event.composedPath().includes(this))
-            return;
+        if (event.composedPath().includes(this)) return;
         const $select = this.$('#' + this.selectId);
-        console.assert($select.length, "select2 missing");
+        console.assert($select.length, 'select2 missing');
         if (this.select2IsInitialized($select)) {
             $select.select2('close');
         }
@@ -118,14 +113,24 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
     initJSONLD(ignorePreset = false) {
         const that = this;
 
-        JSONLD.getInstance(this.entryPointUrl).then(function (jsonld) {
-            that.jsonld = jsonld;
-            that.active = true;
+        JSONLD.getInstance(this.entryPointUrl).then(
+            function (jsonld) {
+                that.jsonld = jsonld;
+                that.active = true;
 
-            // we need to poll because maybe the user interface isn't loaded yet
-            // Note: we need to call initSelect2() in a different function so we can access "this" inside initSelect2()
-            commonUtils.pollFunc(() => { return that.initSelect2(ignorePreset); }, 10000, 100);
-        }, {}, this.lang);
+                // we need to poll because maybe the user interface isn't loaded yet
+                // Note: we need to call initSelect2() in a different function so we can access "this" inside initSelect2()
+                commonUtils.pollFunc(
+                    () => {
+                        return that.initSelect2(ignorePreset);
+                    },
+                    10000,
+                    100
+                );
+            },
+            {},
+            this.lang
+        );
     }
 
     /**
@@ -142,7 +147,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
         }
 
         // find the correct api url for a checkInPlace
-        const apiUrl = this.jsonld.getApiUrlForIdentifier("http://schema.org/Place");
+        const apiUrl = this.jsonld.getApiUrlForIdentifier('http://schema.org/Place');
         // const apiUrl = this.jsonld.getApiUrlForEntityName("CheckInPlace");
 
         if (this.$select === null) {
@@ -156,86 +161,98 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
             this.$select.off('select2:closing');
         }
 
-        this.$select.select2({
-            width: '100%',
-            language: this.lang === "de" ? select2LangDe() : select2LangEn(),
-            minimumInputLength: 2,
-            placeholder: this._i18n.t('check-in-place-select.placeholder'),
-            dropdownParent: this.$('#check-in-place-select-dropdown'),
-            ajax: {
-                delay: 500,
-                url: apiUrl,
-                contentType: "application/ld+json",
-                beforeSend: function (jqXHR) {
-                    jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
-                    that.isSearching = true;
-                },
-                data: function (params) {
-                    return {
-                        search: params.term.trim(),
-                    };
-                },
-                processResults: function (data) {
-                    that.$('#check-in-place-select-dropdown').addClass('select2-bug');
-
-                    that.lastResult = data;
-                    let transformed = that.jsonld.transformMembers(data, checkInPlaceContext);
-                    const results = [];
-                    transformed.forEach((place) => {
-                        results.push({id: place["@id"], maximumPhysicalAttendeeCapacity: place["maximumPhysicalAttendeeCapacity"], text: that.generateOptionText(place)});
-                    });
-
-                    return {
-                        results: results
-                    };
-                },
-                error: (jqXHR, textStatus, errorThrown) => { this.handleXhrError(jqXHR, textStatus, errorThrown); },
-                complete: (jqXHR, textStatus) => {
-                    that.isSearching = false;
-                }
-            }
-        }).on("select2:open", function (e) {
-            const selectId = e.target.id;
-
-            that.$(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function (
-                key,
-                value,
-            ) {
-                value.focus();
-            });
-        }).on("select2:select", function (e) {
-            that.$('#check-in-place-select-dropdown').removeClass('select2-bug');
-            // set custom element attributes
-            const identifier = e.params.data.id;
-            const maxCapacity = e.params.data.maximumPhysicalAttendeeCapacity;
-            that.object = findObjectInApiResults(identifier, that.lastResult);
-
-            const room = that.object.identifier;
-
-            $this.attr("data-object", JSON.stringify(that.object));
-            $this.data("object", that.object);
-            const roomName = that.object.name;
-
-            if ($this.attr("value") !== identifier) {
-                that.ignoreValueUpdate = true;
-                $this.attr("value", identifier);
-
-                // fire a change event
-                that.dispatchEvent(new CustomEvent('change', {
-                    detail: {
-                        value: identifier,
-                        capacity: maxCapacity,
-                        room: room,
-                        name: roomName,
+        this.$select
+            .select2({
+                width: '100%',
+                language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
+                minimumInputLength: 2,
+                placeholder: this._i18n.t('check-in-place-select.placeholder'),
+                dropdownParent: this.$('#check-in-place-select-dropdown'),
+                ajax: {
+                    delay: 500,
+                    url: apiUrl,
+                    contentType: 'application/ld+json',
+                    beforeSend: function (jqXHR) {
+                        jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
+                        that.isSearching = true;
                     },
-                    bubbles: true
-                }));
-            }
-        }).on("select2:closing", (e) => {
-            if (that.isSearching) {
-                e.preventDefault();
-            }
-        });
+                    data: function (params) {
+                        return {
+                            search: params.term.trim(),
+                        };
+                    },
+                    processResults: function (data) {
+                        that.$('#check-in-place-select-dropdown').addClass('select2-bug');
+
+                        that.lastResult = data;
+                        let transformed = that.jsonld.transformMembers(data, checkInPlaceContext);
+                        const results = [];
+                        transformed.forEach((place) => {
+                            results.push({
+                                id: place['@id'],
+                                maximumPhysicalAttendeeCapacity:
+                                    place['maximumPhysicalAttendeeCapacity'],
+                                text: that.generateOptionText(place),
+                            });
+                        });
+
+                        return {
+                            results: results,
+                        };
+                    },
+                    error: (jqXHR, textStatus, errorThrown) => {
+                        this.handleXhrError(jqXHR, textStatus, errorThrown);
+                    },
+                    complete: (jqXHR, textStatus) => {
+                        that.isSearching = false;
+                    },
+                },
+            })
+            .on('select2:open', function (e) {
+                const selectId = e.target.id;
+
+                that.$(
+                    ".select2-search__field[aria-controls='select2-" + selectId + "-results']"
+                ).each(function (key, value) {
+                    value.focus();
+                });
+            })
+            .on('select2:select', function (e) {
+                that.$('#check-in-place-select-dropdown').removeClass('select2-bug');
+                // set custom element attributes
+                const identifier = e.params.data.id;
+                const maxCapacity = e.params.data.maximumPhysicalAttendeeCapacity;
+                that.object = findObjectInApiResults(identifier, that.lastResult);
+
+                const room = that.object.identifier;
+
+                $this.attr('data-object', JSON.stringify(that.object));
+                $this.data('object', that.object);
+                const roomName = that.object.name;
+
+                if ($this.attr('value') !== identifier) {
+                    that.ignoreValueUpdate = true;
+                    $this.attr('value', identifier);
+
+                    // fire a change event
+                    that.dispatchEvent(
+                        new CustomEvent('change', {
+                            detail: {
+                                value: identifier,
+                                capacity: maxCapacity,
+                                room: room,
+                                name: roomName,
+                            },
+                            bubbles: true,
+                        })
+                    );
+                }
+            })
+            .on('select2:closing', (e) => {
+                if (that.isSearching) {
+                    e.preventDefault();
+                }
+            });
 
         // TODO: doesn't work here
         // this.$('.select2-selection__arrow').click(() => {
@@ -249,51 +266,66 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
             fetch(apiUrl, {
                 headers: {
                     'Content-Type': 'application/ld+json',
-                    'Authorization': 'Bearer ' + this.auth.token,
+                    Authorization: 'Bearer ' + this.auth.token,
                 },
             })
-            .then(result => {
-                if (!result.ok) throw result;
-                return result.json();
-            })
-            .then((place) => {
-                that.object = place;
-                const transformed = that.jsonld.compactMember(that.jsonld.expandMember(place), checkInPlaceContext);
-                const identifier = transformed["@id"];
-                const maxCapacity = transformed["maximumPhysicalAttendeeCapacity"];
-                const roomName = transformed["name"];
-                const room = place.identifier;
+                .then((result) => {
+                    if (!result.ok) throw result;
+                    return result.json();
+                })
+                .then((place) => {
+                    that.object = place;
+                    const transformed = that.jsonld.compactMember(
+                        that.jsonld.expandMember(place),
+                        checkInPlaceContext
+                    );
+                    const identifier = transformed['@id'];
+                    const maxCapacity = transformed['maximumPhysicalAttendeeCapacity'];
+                    const roomName = transformed['name'];
+                    const room = place.identifier;
 
-                const option = new Option(that.generateOptionText(transformed), identifier, true, true);
-                $this.attr("data-object", JSON.stringify(place));
-                $this.data("object", place);
-                that.$select.append(option).trigger('change');
+                    const option = new Option(
+                        that.generateOptionText(transformed),
+                        identifier,
+                        true,
+                        true
+                    );
+                    $this.attr('data-object', JSON.stringify(place));
+                    $this.data('object', place);
+                    that.$select.append(option).trigger('change');
 
-                // fire a change event
-                that.dispatchEvent(new CustomEvent('change', {
-                    detail: {
-                        value: identifier,
-                        capacity: maxCapacity,
-                        room: room,
-                        name: roomName,
-                    },
-                    bubbles: true
-                }));
-            }).catch((e) => {
-                console.log(e);
-                that.clear();
-            });
+                    // fire a change event
+                    that.dispatchEvent(
+                        new CustomEvent('change', {
+                            detail: {
+                                value: identifier,
+                                capacity: maxCapacity,
+                                room: room,
+                                name: roomName,
+                            },
+                            bubbles: true,
+                        })
+                    );
+                })
+                .catch((e) => {
+                    console.log(e);
+                    that.clear();
+                });
         }
 
         return true;
     }
 
     generateOptionText(place) {
-        let text = place["name"];
+        let text = place['name'];
 
         // add maximum capacity to checkInPlace if present
-        if (this.showCapacity && (place["maximumPhysicalAttendeeCapacity"] !== undefined) && (place["maximumPhysicalAttendeeCapacity"] !== null)) {
-            let capacity = place["maximumPhysicalAttendeeCapacity"];
+        if (
+            this.showCapacity &&
+            place['maximumPhysicalAttendeeCapacity'] !== undefined &&
+            place['maximumPhysicalAttendeeCapacity'] !== null
+        ) {
+            let capacity = place['maximumPhysicalAttendeeCapacity'];
             text += ` (${capacity})`;
         }
 
@@ -303,7 +335,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case "lang":
+                case 'lang':
                     this._i18n.changeLanguage(this.lang);
 
                     if (this.select2IsInitialized()) {
@@ -311,14 +343,14 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                         this.initSelect2(true);
                     }
                     break;
-                case "value":
+                case 'value':
                     if (!this.ignoreValueUpdate && this.select2IsInitialized()) {
                         this.initSelect2();
                     }
 
                     this.ignoreValueUpdate = false;
                     break;
-                case "entryPointUrl":
+                case 'entryPointUrl':
                     // we don't need to preset the selector if the entry point url changes
                     this.initJSONLD(true);
                     break;
@@ -329,7 +361,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     select2IsInitialized() {
-        return this.$select !== null && this.$select.hasClass("select2-hidden-accessible");
+        return this.$select !== null && this.$select.hasClass('select2-hidden-accessible');
     }
 
     reloadClick() {
@@ -338,12 +370,14 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
         }
 
         // fire a change event
-        this.dispatchEvent(new CustomEvent('change', {
-            detail: {
-                value: this.value,
-            },
-            bubbles: true
-        }));
+        this.dispatchEvent(
+            new CustomEvent('change', {
+                detail: {
+                    value: this.value,
+                },
+                bubbles: true,
+            })
+        );
     }
 
     static get styles() {
@@ -354,38 +388,38 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
             commonStyles.getFormAddonsCSS(),
             commonStyles.getSelect2CSS(),
             css`
-            .select2-control.control {
-                width: 100%;
-            }
+                .select2-control.control {
+                    width: 100%;
+                }
 
-            .field .button.control {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: var(--dbp-border);
-                border-color: var(--dbp-text-muted);
-                -moz-border-radius-topright: var(--dbp-border-radius);
-                -moz-border-radius-bottomright: var(--dbp-border-radius);
-                line-height: 100%;
-            }
+                .field .button.control {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: var(--dbp-border);
+                    border-color: var(--dbp-text-muted);
+                    -moz-border-radius-topright: var(--dbp-border-radius);
+                    -moz-border-radius-bottomright: var(--dbp-border-radius);
+                    line-height: 100%;
+                }
 
-            .field .button.control dbp-icon {
-                top: 0;
-            }
+                .field .button.control dbp-icon {
+                    top: 0;
+                }
 
-            input {
-                border-radius: 0;
-            }
-              
-            input[type="search"] {
-                -webkit-appearance: none;
-            }
+                input {
+                    border-radius: 0;
+                }
 
-            /* https://github.com/select2/select2/issues/5457 */
-            .select2-bug .loading-results {
-                display: none !important;
-            }
-            `
+                input[type='search'] {
+                    -webkit-appearance: none;
+                }
+
+                /* https://github.com/select2/select2/issues/5457 */
+                .select2-bug .loading-results {
+                    display: none !important;
+                }
+            `,
         ];
     }
 
@@ -393,7 +427,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
         const select2CSS = commonUtils.getAssetURL(select2CSSPath);
         const i18n = this._i18n;
         return html`
-            <link rel="stylesheet" href="${select2CSS}">
+            <link rel="stylesheet" href="${select2CSS}" />
             <style>
                 #${this.selectId} {
                     width: 100%;
@@ -404,14 +438,27 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
                 <div class="field has-addons">
                     <div class="select2-control control">
                         <!-- https://select2.org-->
-                        <select id="${this.selectId}" name="check-in-place" class="select" ?disabled=${!this.active}>${!this.active ? html`<option value="" disabled selected>${ i18n.t('check-in-place-select.login-required')}</option>` : ''}</select>
+                        <select
+                            id="${this.selectId}"
+                            name="check-in-place"
+                            class="select"
+                            ?disabled=${!this.active}>
+                            ${!this.active
+                                ? html`
+                                      <option value="" disabled selected>
+                                          ${i18n.t('check-in-place-select.login-required')}
+                                      </option>
+                                  `
+                                : ''}
+                        </select>
                     </div>
-                    <a class="control button"
-                       id="reload-button"
-                       ?disabled=${this.object === null}
-                       @click="${this.reloadClick}"
-                       style="display: ${this.showReloadButton ? "flex" : "none"}"
-                       title="${this.reloadButtonTitle}">
+                    <a
+                        class="control button"
+                        id="reload-button"
+                        ?disabled=${this.object === null}
+                        @click="${this.reloadClick}"
+                        style="display: ${this.showReloadButton ? 'flex' : 'none'}"
+                        title="${this.reloadButtonTitle}">
                         <dbp-icon name="reload"></dbp-icon>
                     </a>
                 </div>

@@ -23,95 +23,126 @@ export class Adapter extends HTMLElement {
     }
 
     connectedCallback() {
-
         this.connected = true;
 
         const that = this;
 
-
         // get all *not observed* attributes
         if (this.hasAttributes()) {
             const attrs = this.attributes;
-            for(let i = attrs.length - 1; i >= 0; i--) {
+            for (let i = attrs.length - 1; i >= 0; i--) {
                 if (['id', 'class', 'style', 'data-tag-name'].includes(attrs[i].name)) {
                     continue;
                 }
                 this.setPropertiesToChildNodes();
 
-                this.attributeChangedCallback(attrs[i].name, this.getPropertyByAttributeName(attrs[i].name), attrs[i].value);
+                this.attributeChangedCallback(
+                    attrs[i].name,
+                    this.getPropertyByAttributeName(attrs[i].name),
+                    attrs[i].value
+                );
 
-                console.debug('AdapterProvider (' + that.tagName + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
+                console.debug(
+                    'AdapterProvider (' +
+                        that.tagName +
+                        ') found attribute "' +
+                        attrs[i].name +
+                        '" = "' +
+                        attrs[i].value +
+                        '"'
+                );
             }
         }
     }
 
     disconnectedCallback() {
         const attrs = this.subscribe.split(',');
-        attrs.forEach(element => this.unSubscribeProviderFor(element));
+        attrs.forEach((element) => this.unSubscribeProviderFor(element));
     }
 
     subscribeProviderFor(element) {
-        console.debug('AdapterProvider(' + this.tagName + ') subscribeProviderFor( ' + element + ' )');
+        console.debug(
+            'AdapterProvider(' + this.tagName + ') subscribeProviderFor( ' + element + ' )'
+        );
         const pair = element.trim().split(':');
         const local = pair[0];
         const global = pair[1] || local;
         const that = this;
-        const event = new CustomEvent('dbp-subscribe',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    callback: (value) => {
-                        console.debug('AdapterProvider(' + that.tagName + ') sub/Callback ' + global + ' -> ' + local + ' = ' + value);
-                        that.setPropertiesToChildNodes(local, value);
+        const event = new CustomEvent('dbp-subscribe', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                name: global,
+                callback: (value) => {
+                    console.debug(
+                        'AdapterProvider(' +
+                            that.tagName +
+                            ') sub/Callback ' +
+                            global +
+                            ' -> ' +
+                            local +
+                            ' = ' +
+                            value
+                    );
+                    that.setPropertiesToChildNodes(local, value);
 
-                        // If value is an object set it directly as property
-                        if (typeof value === 'object' && value !== null) {
-                            // console.debug("value is object", value);
-                            that.setPropertyByAttributeName(local, value);
-                        } else {
-                            // console.debug("local, that.getPropertyByAttributeName(local), value", local, that.getPropertyByAttributeName(local), value);
-                            that.attributeChangedCallback(local, that.getPropertyByAttributeName(local), value);
+                    // If value is an object set it directly as property
+                    if (typeof value === 'object' && value !== null) {
+                        // console.debug("value is object", value);
+                        that.setPropertyByAttributeName(local, value);
+                    } else {
+                        // console.debug("local, that.getPropertyByAttributeName(local), value", local, that.getPropertyByAttributeName(local), value);
+                        that.attributeChangedCallback(
+                            local,
+                            that.getPropertyByAttributeName(local),
+                            value
+                        );
 
-                            // check if an attribute also exists in the tag
-                            if (that.getAttribute(local) !== null) {
-                                // we don't support attributes and provider values at the same time
-                                console.warn('Provider callback: "' + local + '" is also an attribute in tag "' + that.tagName + '", this is not supported!');
+                        // check if an attribute also exists in the tag
+                        if (that.getAttribute(local) !== null) {
+                            // we don't support attributes and provider values at the same time
+                            console.warn(
+                                'Provider callback: "' +
+                                    local +
+                                    '" is also an attribute in tag "' +
+                                    that.tagName +
+                                    '", this is not supported!'
+                            );
 
-                                // update attribute if reflectAttribute is enabled
-                                if (that.reflectAttribute) {
-                                    that.setAttribute(local, value);
-                                }
+                            // update attribute if reflectAttribute is enabled
+                            if (that.reflectAttribute) {
+                                that.setAttribute(local, value);
                             }
                         }
-                    },
-                    sender: this,
-                }
-            });
+                    }
+                },
+                sender: this,
+            },
+        });
         this.dispatchEvent(event);
     }
 
     unSubscribeProviderFor(element) {
-        console.debug('AdapterProvider(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )');
+        console.debug(
+            'AdapterProvider(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )'
+        );
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
-        const event = new CustomEvent('dbp-unsubscribe',
-            {
-                bubbles: true,
-                composed: true,
-                detail: {
-                    name: global,
-                    sender: this,
-                }
-            });
+        const event = new CustomEvent('dbp-unsubscribe', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                name: global,
+                sender: this,
+            },
+        });
         this.dispatchEvent(event);
     }
 
     static get properties() {
         return {
-            subscribe: { type: String },
-            unsubscribe: { type: String },
+            subscribe: {type: String},
+            unsubscribe: {type: String},
         };
     }
 
@@ -133,14 +164,22 @@ export class Adapter extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        switch(name) {
+        switch (name) {
             case 'subscribe':
-                console.debug('AdapterProvider() attributeChangesCallback( ' + name + ', ' + oldValue + ', ' + newValue + ')');
+                console.debug(
+                    'AdapterProvider() attributeChangesCallback( ' +
+                        name +
+                        ', ' +
+                        oldValue +
+                        ', ' +
+                        newValue +
+                        ')'
+                );
 
                 if (this.subscribe && this.subscribe.length > 0) {
                     if (this.connected) {
                         const attrs = this.subscribe.split(',');
-                        attrs.forEach(element => this.unSubscribeProviderFor(element));
+                        attrs.forEach((element) => this.unSubscribeProviderFor(element));
                     } else {
                         this.deferUnSubscribe = this.subscribe.length > 0;
                         this.unsubscribe = this.subscribe;
@@ -151,7 +190,7 @@ export class Adapter extends HTMLElement {
                     this.subscribe = newValue;
                     if (this.connected) {
                         const attrs = newValue.split(',');
-                        attrs.forEach(element => this.subscribeProviderFor(element));
+                        attrs.forEach((element) => this.subscribeProviderFor(element));
                     } else {
                         this.deferSubscribe = newValue && newValue.length > 0;
                     }
@@ -160,7 +199,6 @@ export class Adapter extends HTMLElement {
             default:
                 break;
         }
-
     }
 
     /**
@@ -171,19 +209,17 @@ export class Adapter extends HTMLElement {
      * @returns {boolean}
      */
     sendSetPropertyEvent(name, value) {
-        const event = new CustomEvent("set-property", {
+        const event = new CustomEvent('set-property', {
             bubbles: true,
             composed: true,
-            detail: {'name': name, 'value': value}
+            detail: {name: name, value: value},
         });
 
         return this.dispatchEvent(event);
     }
 
-    setPropertiesToChildNodes(local, value)
-    {
+    setPropertiesToChildNodes(local, value) {
         let children = this.children;
-        Array.from(children).forEach(child => child.setAttribute(local, value));
+        Array.from(children).forEach((child) => child.setAttribute(local, value));
     }
-
 }

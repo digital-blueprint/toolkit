@@ -1,6 +1,6 @@
 {
-  "check-in-place-select": {
-    "placeholder": "E.g. \"P1\", \"Rechbauerstraße\", \"PZ2EG048\"",
-    "login-required": "Login required"
-  }
+    "check-in-place-select": {
+        "placeholder": "E.g. \"P1\", \"Rechbauerstraße\", \"PZ2EG048\"",
+        "login-required": "Login required"
+    }
 }

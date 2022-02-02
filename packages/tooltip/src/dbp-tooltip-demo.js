@@ -6,11 +6,9 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TooltipElement} from './tooltip';
 import {InfoTooltip} from './info-tooltip';
 import {ButtonTooltip} from './button-tooltip';
-import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
-
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
-
     constructor() {
         super();
         this._i18n = createInstance();
@@ -28,13 +26,13 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
+            lang: {type: String},
         };
     }
 
     update(changedProperties) {
-         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
+        changedProperties.forEach((oldValue, propName) => {
+            if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
             }
         });
@@ -48,15 +46,23 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
             commonStyles.getThemeCSS(),
             commonStyles.getGeneralCSS(),
             css`
-            h1.title {margin-bottom: 1em;}
-            div.container {margin-bottom: 1.5em; padding-left:20px;}
-            .group { display: flex; flex-direction: auto; column-gap: 3px; }
-            `
+                h1.title {
+                    margin-bottom: 1em;
+                }
+                div.container {
+                    margin-bottom: 1.5em;
+                    padding-left: 20px;
+                }
+                .group {
+                    display: flex;
+                    flex-direction: auto;
+                    column-gap: 3px;
+                }
+            `,
         ];
     }
 
     render() {
-
         return html`
             <section class="section">
                 <div class="container">
@@ -64,20 +70,27 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
                 <div class="container">
                     <h2>Standard Info Tooltip</h2>
-                    <p>Mind the gap!
-                        <dbp-info-tooltip text-content="tippy info tooltip demo text" interactive></dbp-info-tooltip>
+                    <p>
+                        Mind the gap!
+                        <dbp-info-tooltip
+                            text-content="tippy info tooltip demo text"
+                            interactive></dbp-info-tooltip>
                     </p>
                 </div>
                 <div class="container">
                     <h2>Custom Tooltip</h2>
                     <p>Choose an icon from those bundled with your app.</p>
-                    <p>Mind the gap!
-                        <dbp-tooltip text-content="tippy tooltip demo text" icon-name="information"></dbp-tooltip>
+                    <p>
+                        Mind the gap!
+                        <dbp-tooltip
+                            text-content="tippy tooltip demo text"
+                            icon-name="information"></dbp-tooltip>
                     </p>
                 </div>
                 <div class="container">
                     <h2>Incorrectly Configured Tooltip</h2>
-                    <p>Missing text, default icon: 
+                    <p>
+                        Missing text, default icon:
                         <dbp-tooltip></dbp-tooltip>
                     </p>
                 </div>
@@ -86,10 +99,24 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
                     <p>Add a tooltip info to your submit/reset button.</p>
                     <form action="/" class="group">
                         <label for="text">Text</label>
-                        <input type="text" id="text" name="text" value="" placeholder="text">
-                        <div><dbp-button-tooltip button-text="save" text-content="submit to server"></dbp-button-tooltip></div>
-                        <div><dbp-button-tooltip button-text="reset" text-content="clear all inputs" type="reset"></dbp-button-tooltip></div>
-                        <div><dbp-button-tooltip button-text="silent" text-content="does nothing" type="btn"></dbp-button-tooltip></div>
+                        <input type="text" id="text" name="text" value="" placeholder="text" />
+                        <div>
+                            <dbp-button-tooltip
+                                button-text="save"
+                                text-content="submit to server"></dbp-button-tooltip>
+                        </div>
+                        <div>
+                            <dbp-button-tooltip
+                                button-text="reset"
+                                text-content="clear all inputs"
+                                type="reset"></dbp-button-tooltip>
+                        </div>
+                        <div>
+                            <dbp-button-tooltip
+                                button-text="silent"
+                                text-content="does nothing"
+                                type="btn"></dbp-button-tooltip>
+                        </div>
                     </form>
                 </div>
             </section>

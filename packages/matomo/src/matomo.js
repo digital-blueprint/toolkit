@@ -1,8 +1,7 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {LoginStatus} from "@dbp-toolkit/auth/src/util";
+import {LoginStatus} from '@dbp-toolkit/auth/src/util';
 
 export class MatomoElement extends DBPLitElement {
-
     constructor() {
         super();
         this.endpoint = '';
@@ -15,15 +14,14 @@ export class MatomoElement extends DBPLitElement {
         this.loginStatus = '';
     }
 
-
     static get properties() {
         return {
             ...super.properties,
-            endpoint: { type: String },
-            siteId: { type: String, attribute: 'site-id' },
-            gitInfo: { type: String, attribute: 'git-info' },
-            auth: { type: Object },
-            analyticsEvent: { type: Object, attribute: 'analytics-event' },
+            endpoint: {type: String},
+            siteId: {type: String, attribute: 'site-id'},
+            gitInfo: {type: String, attribute: 'git-info'},
+            auth: {type: Object},
+            analyticsEvent: {type: Object, attribute: 'analytics-event'},
         };
     }
 
@@ -31,33 +29,47 @@ export class MatomoElement extends DBPLitElement {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'auth':
-                {
-                    const loginStatus = this.auth['login-status'];
+                    {
+                        const loginStatus = this.auth['login-status'];
 
-                    if (this.loginStatus !== loginStatus) {
-                        this.setupMatomo(loginStatus === LoginStatus.LOGGED_IN);
-                        this.loginStatus = loginStatus;
+                        if (this.loginStatus !== loginStatus) {
+                            this.setupMatomo(loginStatus === LoginStatus.LOGGED_IN);
+                            this.loginStatus = loginStatus;
+                        }
                     }
-                }
-                break;
+                    break;
                 case 'analyticsEvent':
-                {
-                    // ignore analyticsEvent without data
-                    if (this.analyticsEvent.category === undefined && this.analyticsEvent.message === undefined) {
-                        break;
-                    }
-                    console.log('MatomoElement(' + this.isRunning + ') analyticsEvent: ' +
-                        this.analyticsEvent.action + ', ' + this.analyticsEvent.message);
-                    const event = ['trackEvent', this.analyticsEvent.category, this.analyticsEvent.action,
-                        this.analyticsEvent.name, this.analyticsEvent.value];
+                    {
+                        // ignore analyticsEvent without data
+                        if (
+                            this.analyticsEvent.category === undefined &&
+                            this.analyticsEvent.message === undefined
+                        ) {
+                            break;
+                        }
+                        console.log(
+                            'MatomoElement(' +
+                                this.isRunning +
+                                ') analyticsEvent: ' +
+                                this.analyticsEvent.action +
+                                ', ' +
+                                this.analyticsEvent.message
+                        );
+                        const event = [
+                            'trackEvent',
+                            this.analyticsEvent.category,
+                            this.analyticsEvent.action,
+                            this.analyticsEvent.name,
+                            this.analyticsEvent.value,
+                        ];
 
-                    if (this.isRunning) {
-                        this.pushEvent(event);
-                    } else {
-                        this.lastEvent = event;
+                        if (this.isRunning) {
+                            this.pushEvent(event);
+                        } else {
+                            this.lastEvent = event;
+                        }
                     }
-                }
-                break;
+                    break;
             }
         });
 
@@ -69,7 +81,7 @@ export class MatomoElement extends DBPLitElement {
     }
 
     setupMatomo(loggedIn) {
-        if (loggedIn && ! this.isRunning) {
+        if (loggedIn && !this.isRunning) {
             if (this.siteId === '') {
                 console.log('site id missing, skipping matomo...');
                 return;
@@ -80,7 +92,7 @@ export class MatomoElement extends DBPLitElement {
             }
             console.log('add matomo...');
 
-            this.pushEvent(['setCustomVariable', 1, "GitCommit", this.gitInfo, "visit"]);
+            this.pushEvent(['setCustomVariable', 1, 'GitCommit', this.gitInfo, 'visit']);
             this.pushEvent(['enableHeartBeatTimer']);
             this.pushEvent(['disableCookies']);
             this.pushEvent(['trackPageView']);
@@ -89,7 +101,7 @@ export class MatomoElement extends DBPLitElement {
             const that = this;
 
             (function (endpoint, siteId) {
-                that.pushEvent(['setTrackerUrl', endpoint+'matomo.php']);
+                that.pushEvent(['setTrackerUrl', endpoint + 'matomo.php']);
                 that.pushEvent(['setSiteId', siteId]);
 
                 var g = document.createElement('script');
@@ -102,7 +114,7 @@ export class MatomoElement extends DBPLitElement {
             })(this.endpoint, this.siteId);
 
             // track changed locations
-            window.addEventListener('locationchanged', function(e) {
+            window.addEventListener('locationchanged', function (e) {
                 that.pushEvent(['setReferrerUrl', e.detail.referrerUrl]);
                 that.pushEvent(['setCustomUrl', location.href]);
                 // that.pushEvent(['setDocumentTitle', '']);
@@ -116,24 +128,27 @@ export class MatomoElement extends DBPLitElement {
             });
 
             // track errors
-            window.addEventListener('error', function(e) {
-                that.pushEvent(['trackEvent', 'Error', e.error ?
-                    e.error.message + '\n' + e.error.stack : e.message]);
+            window.addEventListener('error', function (e) {
+                that.pushEvent([
+                    'trackEvent',
+                    'Error',
+                    e.error ? e.error.message + '\n' + e.error.stack : e.message,
+                ]);
             });
 
-            window.addEventListener('unhandledrejection', function(e) {
+            window.addEventListener('unhandledrejection', function (e) {
                 let name = e.reason;
 
                 // TypeError objects have no toJSON() method, so we can't serialize them by themselves
                 if (e.reason instanceof TypeError) {
                     const error = e.reason;
                     name = {
-                        'message': error.message,
-                        'name': error.name,
-                        'fileName': error.fileName,
-                        'lineNumber': error.lineNumber,
-                        'columnNumber': error.columnNumber,
-                        'stack': error.stack,
+                        message: error.message,
+                        name: error.name,
+                        fileName: error.fileName,
+                        lineNumber: error.lineNumber,
+                        columnNumber: error.columnNumber,
+                        stack: error.stack,
                     };
                 }
 
@@ -142,13 +157,20 @@ export class MatomoElement extends DBPLitElement {
 
             this.isRunning = true;
             if (this.lastEvent.length > 0) {
-                console.log('MatomoElement* (' + this.isRunning + '): ' + this.lastEvent[1] + ', ' + this.lastEvent[2]);
+                console.log(
+                    'MatomoElement* (' +
+                        this.isRunning +
+                        '): ' +
+                        this.lastEvent[1] +
+                        ', ' +
+                        this.lastEvent[2]
+                );
                 that.pushEvent(this.lastEvent);
                 this.lastEvent = [];
             }
             return;
         }
-        if (! loggedIn && this.isRunning) {
+        if (!loggedIn && this.isRunning) {
             // TODO: remove those event listeners
             console.log('remove matomo...');
             this.isRunning = false;

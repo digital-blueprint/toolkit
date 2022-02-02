@@ -1,5 +1,13 @@
-import * as commonUtils from "./utils";
-import {Button, Icon, InlineNotification, LoadingButton, MiniSpinner, Spinner, Translated} from "./index";
+import * as commonUtils from './utils';
+import {
+    Button,
+    Icon,
+    InlineNotification,
+    LoadingButton,
+    MiniSpinner,
+    Spinner,
+    Translated,
+} from './index';
 
 commonUtils.defineCustomElement('dbp-mini-spinner', MiniSpinner);
 commonUtils.defineCustomElement('dbp-spinner', Spinner);

@@ -4,7 +4,7 @@ import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Notification} from './notification.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import * as commonStyles from "@dbp-toolkit/common/styles";
+import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export class NotificationDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
@@ -15,25 +15,25 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
 
     static get scopedElements() {
         return {
-          'dbp-notification': Notification,
+            'dbp-notification': Notification,
         };
-      }
+    }
 
     static get properties() {
         return {
-            lang: { type: String },
+            lang: {type: String},
         };
     }
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-           if (propName === "lang") {
-               this._i18n.changeLanguage(this.lang);
-           }
-       });
+            if (propName === 'lang') {
+                this._i18n.changeLanguage(this.lang);
+            }
+        });
 
-       super.update(changedProperties);
-   }
+        super.update(changedProperties);
+    }
 
     static get styles() {
         // language=css
@@ -55,7 +55,9 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
                 <div class="container">
                     <div class="columns is-vcentered">
                         <div class="column">
-                            <button id="send-button" @click="${this.send}" class="button">${i18n.t('send')}</button>
+                            <button id="send-button" @click="${this.send}" class="button">
+                                ${i18n.t('send')}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -67,12 +69,12 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
     }
 
     send() {
-        const types = ["primary", "info", "success", "danger", "warning"];
+        const types = ['primary', 'info', 'success', 'danger', 'warning'];
         notify({
-            "summary": "Item deleted",
-            "body": `Item ${Math.random().toString(36).substring(7)} foo was deleted!`,
-            "type": types[Math.floor(Math.random() * types.length)],
-            "timeout": 0,
+            summary: 'Item deleted',
+            body: `Item ${Math.random().toString(36).substring(7)} foo was deleted!`,
+            type: types[Math.floor(Math.random() * types.length)],
+            timeout: 0,
         });
     }
 }

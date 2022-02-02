@@ -5,7 +5,6 @@ import {AdapterLitElement, Icon} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';
 
-
 export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
@@ -15,28 +14,27 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.themes = [];
         this.boundCloseAdditionalMenuHandler = this.hideModeMenu.bind(this);
         this.detectBrowserDarkMode = false;
-        this.darkModeClass = "dark-theme";
+        this.darkModeClass = 'dark-theme';
     }
 
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            themes: { type: Array, attribute: "themes" },
-            darkModeThemeOverride: {type: String, attribute: "dark-mode-theme-override"}
+            lang: {type: String},
+            themes: {type: Array, attribute: 'themes'},
+            darkModeThemeOverride: {type: String, attribute: 'dark-mode-theme-override'},
         };
     }
 
     static get scopedElements() {
         return {
-            'dbp-icon': Icon
+            'dbp-icon': Icon,
         };
     }
 
-
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === "lang") {
+            if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
             }
         });
@@ -46,18 +44,17 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     connectedCallback() {
         super.connectedCallback();
         this.updateComplete.then(() => {
-            if (typeof this.darkModeThemeOverride === "undefined") {
+            if (typeof this.darkModeThemeOverride === 'undefined') {
                 this.detectBrowserDarkMode = true;
-            } else if ( this.darkModeThemeOverride === "") {
+            } else if (this.darkModeThemeOverride === '') {
                 this.detectBrowserDarkMode = false;
             } else {
                 this.detectBrowserDarkMode = true;
                 this.darkModeClass = this.darkModeThemeOverride;
             }
-            this.loadTheme("light-theme");
+            this.loadTheme('light-theme');
             this.detectInitialMode();
         });
-
     }
 
     detectInitialMode() {
@@ -65,7 +62,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         let prefMode = localStorage.getItem('prefered-color-mode');
         if (prefMode) {
             // search for prefered mode
-            const theme = this.themes.find(theme => theme.class === prefMode);
+            const theme = this.themes.find((theme) => theme.class === prefMode);
 
             if (theme) {
                 this.loadTheme(theme.class);
@@ -75,10 +72,10 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
         if (this.detectBrowserDarkMode) {
             //look for browser mode
-            const useDark = window.matchMedia("(prefers-color-scheme: dark)");
+            const useDark = window.matchMedia('(prefers-color-scheme: dark)');
             if (useDark.matches) {
                 // search for dark mode
-                const theme = this.themes.find(theme => theme.class === this.darkModeClass);
+                const theme = this.themes.find((theme) => theme.class === this.darkModeClass);
 
                 if (theme) {
                     this.loadTheme(theme.class);
@@ -88,27 +85,25 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     toggleModeMenu() {
-        const button = this.shadowRoot.querySelector(".mode-button");
-        if(!button) {
+        const button = this.shadowRoot.querySelector('.mode-button');
+        if (!button) {
             return;
         }
-        if (button.classList.contains("active"))
-            button.classList.remove("active");
-        else
-            button.classList.add("active");
-        const menu = this.shadowRoot.querySelector("ul.extended-menu");
-        const menuStart = this.shadowRoot.querySelector(".mode-button");
+        if (button.classList.contains('active')) button.classList.remove('active');
+        else button.classList.add('active');
+        const menu = this.shadowRoot.querySelector('ul.extended-menu');
+        const menuStart = this.shadowRoot.querySelector('.mode-button');
         if (menu === null || menuStart === null) {
             return;
         }
 
         menu.classList.toggle('hidden');
 
-        if (!menu.classList.contains('hidden')) { // add event listener for clicking outside of menu
+        if (!menu.classList.contains('hidden')) {
+            // add event listener for clicking outside of menu
             document.addEventListener('click', this.boundCloseAdditionalMenuHandler);
             this.initateOpenAdditionalMenu = true;
-        }
-        else {
+        } else {
             document.removeEventListener('click', this.boundCloseAdditionalMenuHandler);
         }
     }
@@ -119,25 +114,24 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             return;
         }
 
-        const menu = this.shadowRoot.querySelector("ul.extended-menu");
-        if (menu && !menu.classList.contains('hidden'))
-            this.toggleModeMenu();
+        const menu = this.shadowRoot.querySelector('ul.extended-menu');
+        if (menu && !menu.classList.contains('hidden')) this.toggleModeMenu();
     }
 
     loadTheme(themeName) {
-        const button = this.shadowRoot.querySelector(".button-" + themeName);
-        const otherButtons = this.shadowRoot.querySelectorAll(".button-theme");
+        const button = this.shadowRoot.querySelector('.button-' + themeName);
+        const otherButtons = this.shadowRoot.querySelectorAll('.button-theme');
         const body = this.shadowRoot.host.getRootNode({composed: true}).body;
 
-        if (button === null || otherButtons.length === 0 || body === null ) {
+        if (button === null || otherButtons.length === 0 || body === null) {
             return;
         }
 
-        otherButtons.forEach(button => button.classList.remove("active"));
-        button.classList.add("active");
+        otherButtons.forEach((button) => button.classList.remove('active'));
+        button.classList.add('active');
 
         if (!body.classList.contains(themeName)) {
-            this.themes.forEach(theme => {
+            this.themes.forEach((theme) => {
                 body.classList.remove(theme.class);
             });
 
@@ -147,10 +141,10 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
     saveTheme(themeName) {
         //set active state
-        const browserModeDark = window.matchMedia("(prefers-color-scheme: dark)");
-        const browserModeLight = window.matchMedia("(prefers-color-scheme: light)");
+        const browserModeDark = window.matchMedia('(prefers-color-scheme: dark)');
+        const browserModeLight = window.matchMedia('(prefers-color-scheme: light)');
 
-        if (themeName === "light-theme" && browserModeLight.matches) {
+        if (themeName === 'light-theme' && browserModeLight.matches) {
             localStorage.removeItem('prefered-color-mode');
         } else if (themeName === this.darkModeClass && browserModeDark.matches) {
             localStorage.removeItem('prefered-color-mode');
@@ -169,61 +163,61 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             mode-button, button.button {
                 border: none;
             }
-            
-            .active, .extended-menu li a.active dbp-icon {
+
+            .active,
+            .extended-menu li a.active dbp-icon {
                 color: var(--dbp-accent);
             }
-            
+
             .active {
                 font-weight: bolder;
             }
-            
-            a:hover:not(.active) , .extended-menu li a:hover:not(.active) {
-              color: var(--dbp-hover-text);
-              background-color: var(--dbp-hover-base);
-              transition: none;
+
+            a:hover:not(.active),
+            .extended-menu li a:hover:not(.active) {
+                color: var(--dbp-hover-text);
+                background-color: var(--dbp-hover-base);
+                transition: none;
             }
-            
+
             a {
-              padding: 0.3em;
-              display: inline-block;
-              text-decoration: none;
-              transition: background-color 0.15s, color 0.15s;
-              color: var(--dbp-text);
+                padding: 0.3em;
+                display: inline-block;
+                text-decoration: none;
+                transition: background-color 0.15s, color 0.15s;
+                color: var(--dbp-text);
             }
-            
+
             .extended-menu {
-              list-style: none;
-              border: var(--dbp-border);
-              position: absolute;
-              background-color: var(--dbp-base);
-              z-index: 1000;
-              border-radius: var(--dbp-border-radius);
+                list-style: none;
+                border: var(--dbp-border);
+                position: absolute;
+                background-color: var(--dbp-base);
+                z-index: 1000;
+                border-radius: var(--dbp-border-radius);
             }
-            
+
             .extended-menu li {
-       
-              text-align: left;
-              min-width: 160px;
+                text-align: left;
+                min-width: 160px;
             }
-            
+
             .extended-menu li a {
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              padding: 12px 15px;
-              w1idth: 100%;
-              box-sizing: border-box;
-              text-align: left;
-              color: var(--dbp-text);
-              background: none;
-              display: block
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 12px 15px;
+                w1idth: 100%;
+                box-sizing: border-box;
+                text-align: left;
+                color: var(--dbp-text);
+                background: none;
+                display: block;
             }
-            
+
             .icon {
                 margin-right: 10px;
             }
-          
         `;
     }
 
@@ -232,16 +226,31 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
         return html`
             <div class="${classMap({hidden: this.themes.length <= 1})}">
-                <a class="mode-button" title="${i18n.t('color-mode')}"
-                        @click="${() => {this.toggleModeMenu();}}"><dbp-icon name="contrast"></dbp-icon></a>
-                <ul class='extended-menu hidden'>
-                    ${this.themes.map(theme => html`
-                        <li class="" id="${theme.class}">
-                            <a class="button-theme button-${theme.class}" @click="${() => {this.loadTheme(theme.class); this.saveTheme(theme.class);}}" title="${theme.name}">
-                                <dbp-icon class="icon" name="${theme.icon}"></dbp-icon> ${theme.name}
-                            </a>
-                        </li>
-                    `)}
+                <a
+                    class="mode-button"
+                    title="${i18n.t('color-mode')}"
+                    @click="${() => {
+                        this.toggleModeMenu();
+                    }}">
+                    <dbp-icon name="contrast"></dbp-icon>
+                </a>
+                <ul class="extended-menu hidden">
+                    ${this.themes.map(
+                        (theme) => html`
+                            <li class="" id="${theme.class}">
+                                <a
+                                    class="button-theme button-${theme.class}"
+                                    @click="${() => {
+                                        this.loadTheme(theme.class);
+                                        this.saveTheme(theme.class);
+                                    }}"
+                                    title="${theme.name}">
+                                    <dbp-icon class="icon" name="${theme.icon}"></dbp-icon>
+                                    ${theme.name}
+                                </a>
+                            </li>
+                        `
+                    )}
                 </ul>
             </div>
         `;

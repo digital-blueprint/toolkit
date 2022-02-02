@@ -1,5 +1,5 @@
 import {send as notify} from './notification';
-import {createInstance} from "./src/i18n";
+import {createInstance} from './src/i18n';
 
 /**
  * Escapes html
@@ -22,10 +22,10 @@ export const escapeHTML = (string) => {
  * @returns {string}
  */
 export const stripHTML = (string) => {
-    var div = document.createElement("div");
+    var div = document.createElement('div');
     div.innerHTML = string;
 
-    return div.textContent || div.innerText || "";
+    return div.textContent || div.innerText || '';
 };
 
 /**
@@ -41,9 +41,9 @@ export const errorMixin = {
      * @param icon
      * @param lang
      */
-    handleXhrError(jqXHR, textStatus, errorThrown, icon = "sad", lang = "de") {
+    handleXhrError(jqXHR, textStatus, errorThrown, icon = 'sad', lang = 'de') {
         // return if user aborted the request
-        if (textStatus === "abort") {
+        if (textStatus === 'abort') {
             return;
         }
 
@@ -51,9 +51,12 @@ export const errorMixin = {
         const i18n = createInstance();
         i18n.changeLanguage(lang);
 
-        if (jqXHR.responseJSON !== undefined && jqXHR.responseJSON["hydra:description"] !== undefined) {
+        if (
+            jqXHR.responseJSON !== undefined &&
+            jqXHR.responseJSON['hydra:description'] !== undefined
+        ) {
             // response is a JSON-LD
-            body = jqXHR.responseJSON["hydra:description"];
+            body = jqXHR.responseJSON['hydra:description'];
         } else if (jqXHR.responseJSON !== undefined && jqXHR.responseJSON['detail'] !== undefined) {
             // response is a plain JSON
             body = jqXHR.responseJSON['detail'];
@@ -72,14 +75,14 @@ export const errorMixin = {
         }
 
         notify({
-            "summary": i18n.t('error.summary'),
-            "body": escapeHTML(stripHTML(body)),
-            "icon": icon,
-            "type": "danger",
+            summary: i18n.t('error.summary'),
+            body: escapeHTML(stripHTML(body)),
+            icon: icon,
+            type: 'danger',
         });
 
         if (this.sendSetPropertyEvent !== undefined) {
-            this.sendSetPropertyEvent('analytics-event', {'category': 'XhrError', 'action': body});
+            this.sendSetPropertyEvent('analytics-event', {category: 'XhrError', action: body});
         }
     },
 
@@ -91,9 +94,9 @@ export const errorMixin = {
      * @param icon
      * @param lang
      */
-    handleFetchError: async function (error, summary = "", icon = "sad", lang = "de") {
+    handleFetchError: async function (error, summary = '', icon = 'sad', lang = 'de') {
         // return if user aborted the request
-        if (error.name === "AbortError") {
+        if (error.name === 'AbortError') {
             return;
         }
 
@@ -102,41 +105,47 @@ export const errorMixin = {
         i18n.changeLanguage(lang);
 
         try {
-            await error.json().then((json) => {
-                if (json["hydra:description"] !== undefined) {
-                    // response is a JSON-LD and possibly also contains HTML!
-                    body = json["hydra:description"];
-                } else if (json['detail'] !== undefined) {
-                    // response is a plain JSON
-                    body = json['detail'];
-                } else {
-                    // no description available
-                    body = error.statusText;
-                }
-            }).catch(() => {
-                body = error.statusText !== undefined ? error.statusText : error;
-            });
+            await error
+                .json()
+                .then((json) => {
+                    if (json['hydra:description'] !== undefined) {
+                        // response is a JSON-LD and possibly also contains HTML!
+                        body = json['hydra:description'];
+                    } else if (json['detail'] !== undefined) {
+                        // response is a plain JSON
+                        body = json['detail'];
+                    } else {
+                        // no description available
+                        body = error.statusText;
+                    }
+                })
+                .catch(() => {
+                    body = error.statusText !== undefined ? error.statusText : error;
+                });
         } catch (e) {
             // a TypeError means the connection to the server was refused most of the times
-            if (error.name === "TypeError") {
-                body = error.message !== "" ? error.message : i18n.t('error.connection-to-server-refused');
+            if (error.name === 'TypeError') {
+                body =
+                    error.message !== ''
+                        ? error.message
+                        : i18n.t('error.connection-to-server-refused');
             }
         }
 
         notify({
-            "summary": summary === "" ? i18n.t('error.summary') : summary,
-            "body": escapeHTML(stripHTML(body)),
-            "icon": icon,
-            "type": "danger",
+            summary: summary === '' ? i18n.t('error.summary') : summary,
+            body: escapeHTML(stripHTML(body)),
+            icon: icon,
+            type: 'danger',
         });
 
         if (this.sendSetPropertyEvent !== undefined) {
             this.sendSetPropertyEvent('analytics-event', {
-                'category': 'FetchError',
-                'action': summary === "" ? body : summary + ": " + body
+                category: 'FetchError',
+                action: summary === '' ? body : summary + ': ' + body,
             });
         }
-    }
+    },
 };
 
 /**
@@ -146,6 +155,8 @@ export const errorMixin = {
  */
 export const getStackTrace = () => {
     let stack = new Error().stack || '';
-    stack = stack.split('\n').map(function (line) { return line.trim(); });
+    stack = stack.split('\n').map(function (line) {
+        return line.trim();
+    });
     return stack.splice(stack[0] === 'Error' ? 2 : 1);
 };

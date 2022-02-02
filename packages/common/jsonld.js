@@ -1,6 +1,6 @@
 import {send as notify} from './notification';
-import * as utils from "./utils";
-import {createInstance} from "./src/i18n";
+import * as utils from './utils';
+import {createInstance} from './src/i18n';
 
 export default class JSONLD {
     constructor(baseApiUrl, entities) {
@@ -9,7 +9,7 @@ export default class JSONLD {
 
         let idToEntityNameMatchList = {};
         for (const entityName in entities) {
-            const id = entities[entityName]["@id"];
+            const id = entities[entityName]['@id'];
             idToEntityNameMatchList[id] = entityName;
         }
 
@@ -71,7 +71,7 @@ export default class JSONLD {
     static _doInitialization(apiUrl) {
         const xhr = new XMLHttpRequest();
         const i18n = JSONLD._i18n;
-        xhr.open("GET", apiUrl, true);
+        xhr.open('GET', apiUrl, true);
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState !== 4) {
@@ -84,21 +84,22 @@ export default class JSONLD {
                 let entryPoints = {};
                 for (let property in json) {
                     // for some reason the properties start with a lower case character
-                    if (!property.startsWith("@")) entryPoints[property.toLowerCase()] = json[property];
+                    if (!property.startsWith('@'))
+                        entryPoints[property.toLowerCase()] = json[property];
                 }
 
                 // read the link header of the api response
                 //                const utils = require("./utils");
-                const links = utils.parseLinkHeader(this.getResponseHeader("link"));
+                const links = utils.parseLinkHeader(this.getResponseHeader('link'));
 
                 // get the hydra apiDocumentation url
-                const apiDocUrl = links["http://www.w3.org/ns/hydra/core#apiDocumentation"];
+                const apiDocUrl = links['http://www.w3.org/ns/hydra/core#apiDocumentation'];
 
                 if (apiDocUrl !== undefined) {
                     // load the hydra apiDocumentation
                     const docXhr = new XMLHttpRequest();
-                    docXhr.open("GET", apiDocUrl, true);
-                    docXhr.setRequestHeader("Content-Type", "application/json");
+                    docXhr.open('GET', apiDocUrl, true);
+                    docXhr.setRequestHeader('Content-Type', 'application/json');
                     docXhr.onreadystatechange = function () {
                         if (docXhr.readyState !== 4) {
                             return;
@@ -107,16 +108,25 @@ export default class JSONLD {
                         if (docXhr.status === 200) {
                             JSONLD._gatherEntities(docXhr, apiUrl, entryPoints);
                         } else {
-                            JSONLD._executeFailureFunctions(apiUrl, i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl}));
+                            JSONLD._executeFailureFunctions(
+                                apiUrl,
+                                i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl})
+                            );
                         }
                     };
 
                     docXhr.send();
                 } else {
-                    JSONLD._executeFailureFunctions(apiUrl, i18n.t('jsonld.error-hydra-documentation-url-not-set', {apiUrl: apiUrl}));
+                    JSONLD._executeFailureFunctions(
+                        apiUrl,
+                        i18n.t('jsonld.error-hydra-documentation-url-not-set', {apiUrl: apiUrl})
+                    );
                 }
             } else {
-                JSONLD._executeFailureFunctions(apiUrl, i18n.t('jsonld.error-api-server', {apiUrl: apiUrl}));
+                JSONLD._executeFailureFunctions(
+                    apiUrl,
+                    i18n.t('jsonld.error-api-server', {apiUrl: apiUrl})
+                );
             }
         };
 
@@ -132,7 +142,7 @@ export default class JSONLD {
      */
     static _gatherEntities(docXhr, apiUrl, entryPoints) {
         const json = JSON.parse(docXhr.responseText);
-        const supportedClasses = json["hydra:supportedClass"];
+        const supportedClasses = json['hydra:supportedClass'];
 
         let entities = {};
         const baseUrl = utils.parseBaseUrl(apiUrl);
@@ -140,10 +150,11 @@ export default class JSONLD {
         // gather the entities
         supportedClasses.forEach(function (classData) {
             // add entry point url
-            const entityName = classData["hydra:title"];
+            const entityName = classData['hydra:title'];
             let entryPoint = entryPoints[entityName.toLowerCase()];
-            if (entryPoint !== undefined && !entryPoint.startsWith("http")) entryPoint = baseUrl + entryPoint;
-            classData["@entryPoint"] = entryPoint;
+            if (entryPoint !== undefined && !entryPoint.startsWith('http'))
+                entryPoint = baseUrl + entryPoint;
+            classData['@entryPoint'] = entryPoint;
 
             entities[entityName] = classData;
         });
@@ -168,7 +179,7 @@ export default class JSONLD {
      * @param apiUrl
      * @param message
      */
-    static _executeFailureFunctions(apiUrl, message = "") {
+    static _executeFailureFunctions(apiUrl, message = '') {
         const i18n = JSONLD._i18n;
         if (JSONLD.failureFunctions[apiUrl] !== undefined) {
             for (const fnc of JSONLD.failureFunctions[apiUrl]) {
@@ -179,11 +190,11 @@ export default class JSONLD {
         }
         JSONLD.failureFunctions[apiUrl] = [];
 
-        if (message !== "") {
+        if (message !== '') {
             notify({
-                "summary": i18n.t('error.summary'),
-                "body": message,
-                "type": "danger",
+                summary: i18n.t('error.summary'),
+                body: message,
+                type: 'danger',
             });
         }
     }
@@ -200,21 +211,21 @@ export default class JSONLD {
     getApiUrlForIdentifier(identifier) {
         const entity = this.getEntityForIdentifier(identifier);
 
-        if (entity === undefined || entity["@entryPoint"] === undefined) {
+        if (entity === undefined || entity['@entryPoint'] === undefined) {
             throw new Error(`Entity with identifier "${identifier}" not found!`);
         }
 
-        return entity["@entryPoint"];
+        return entity['@entryPoint'];
     }
 
     getApiUrlForEntityName(entityName) {
         const entity = this.getEntityForEntityName(entityName);
 
-        if (entity === undefined || entity["@entryPoint"] === undefined) {
+        if (entity === undefined || entity['@entryPoint'] === undefined) {
             throw new Error(`Entity "${entityName}" not found!`);
         }
 
-        return entity["@entryPoint"];
+        return entity['@entryPoint'];
     }
 
     getEntityNameForIdentifier(identifier) {
@@ -238,14 +249,13 @@ export default class JSONLD {
      */
     expandMember(member, context) {
         if (context === undefined) {
-            context = member["@context"];
+            context = member['@context'];
         }
 
-        let result = {"@id": member["@id"]};
+        let result = {'@id': member['@id']};
         for (const key of Object.keys(context)) {
             const value = context[key];
-            if (member[key] !== undefined)
-                result[value] = member[key];
+            if (member[key] !== undefined) result[value] = member[key];
         }
 
         return result;

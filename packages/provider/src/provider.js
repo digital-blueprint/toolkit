@@ -1,4 +1,4 @@
-import {Logger} from "@dbp-toolkit/common";
+import {Logger} from '@dbp-toolkit/common';
 
 export class Provider extends HTMLElement {
     constructor() {
@@ -39,69 +39,111 @@ export class Provider extends HTMLElement {
 
         const that = this;
 
-        this.addEventListener('dbp-subscribe', function (e) {
-            const name = e.detail.name;
-            if (that.hasProperty(name) || that.root) {
-                Logger.debug('Provider(' + that.id + ') eventListener("dbp-subscribe",..) name "' + name + '" found.');
-                that.callbackStore.push({name: name, callback: e.detail.callback, sender: e.detail.sender});
+        this.addEventListener(
+            'dbp-subscribe',
+            function (e) {
+                const name = e.detail.name;
+                if (that.hasProperty(name) || that.root) {
+                    Logger.debug(
+                        'Provider(' +
+                            that.id +
+                            ') eventListener("dbp-subscribe",..) name "' +
+                            name +
+                            '" found.'
+                    );
+                    that.callbackStore.push({
+                        name: name,
+                        callback: e.detail.callback,
+                        sender: e.detail.sender,
+                    });
 
-                e.detail.callback(that.getProperty(name));
-                e.stopPropagation();
-            }
-        }, false);
+                    e.detail.callback(that.getProperty(name));
+                    e.stopPropagation();
+                }
+            },
+            false
+        );
 
-        this.addEventListener('dbp-unsubscribe', function (e) {
-            const name = e.detail.name;
-            const sender = e.detail.sender;
-            if (that.hasProperty(name) || that.root) {
-                Logger.debug('Provider(' + that.id + ') eventListener("dbp-unsubscribe",..) name "' + name + '" found.');
-                that.callbackStore.forEach(item => {
-                    if (item.sender === sender && item.name === name) {
-                        const index = that.callbackStore.indexOf(item);
-                        that.callbackStore.splice(index, 1);
-                        Logger.debug('Provider(' + that.id + ') eventListener for name "' + name + '" removed.');
-                    }
-                });
+        this.addEventListener(
+            'dbp-unsubscribe',
+            function (e) {
+                const name = e.detail.name;
+                const sender = e.detail.sender;
+                if (that.hasProperty(name) || that.root) {
+                    Logger.debug(
+                        'Provider(' +
+                            that.id +
+                            ') eventListener("dbp-unsubscribe",..) name "' +
+                            name +
+                            '" found.'
+                    );
+                    that.callbackStore.forEach((item) => {
+                        if (item.sender === sender && item.name === name) {
+                            const index = that.callbackStore.indexOf(item);
+                            that.callbackStore.splice(index, 1);
+                            Logger.debug(
+                                'Provider(' +
+                                    that.id +
+                                    ') eventListener for name "' +
+                                    name +
+                                    '" removed.'
+                            );
+                        }
+                    });
 
-                e.stopPropagation();
-            }
-        }, false);
+                    e.stopPropagation();
+                }
+            },
+            false
+        );
 
         // listen to property changes
-        this.addEventListener('dbp-set-property', function (e) {
-            const name = e.detail.name;
-            const value = e.detail.value;
+        this.addEventListener(
+            'dbp-set-property',
+            function (e) {
+                const name = e.detail.name;
+                const value = e.detail.value;
 
-            if (that.hasProperty(name) || that.root) {
-                Logger.debug('Provider(' + that.id + ') eventListener("dbp-set-property",..) name "' + name + '" found.');
-                that.setProperty(name, value);
+                if (that.hasProperty(name) || that.root) {
+                    Logger.debug(
+                        'Provider(' +
+                            that.id +
+                            ') eventListener("dbp-set-property",..) name "' +
+                            name +
+                            '" found.'
+                    );
+                    that.setProperty(name, value);
 
-                that.callbackStore.forEach(item => {
-                    if (item.name === name) {
-                        item.callback(value);
-                    }
-                });
+                    that.callbackStore.forEach((item) => {
+                        if (item.name === name) {
+                            item.callback(value);
+                        }
+                    });
 
-                e.stopPropagation();
-            }
-        }, false);
+                    e.stopPropagation();
+                }
+            },
+            false
+        );
 
         // Options for the observer (which mutations to observe)
-        const config = { attributes: true, childList: false, subtree: false };
+        const config = {attributes: true, childList: false, subtree: false};
 
         // Callback function to execute when mutations are observed
-        const callback = function(mutationsList, observer) {
+        const callback = function (mutationsList, observer) {
             // Use traditional 'for loops' for IE 11
-            for(const mutation of mutationsList) {
+            for (const mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
                     const name = mutation.attributeName;
                     const value = that.getAttribute(name);
 
                     if (that.hasPropertyChanged(name, value)) {
-                        Logger.debug('Provider (' + that.id + ') observed attribute "' + name + '" changed');
+                        Logger.debug(
+                            'Provider (' + that.id + ') observed attribute "' + name + '" changed'
+                        );
                         that.setProperty(name, value);
 
-                        that.callbackStore.forEach(item => {
+                        that.callbackStore.forEach((item) => {
                             if (item.name === name) {
                                 item.callback(value);
                             }
@@ -120,13 +162,21 @@ export class Provider extends HTMLElement {
         // get all *not observed* attributes
         if (this.hasAttributes()) {
             const attrs = this.attributes;
-            for(let i = attrs.length - 1; i >= 0; i--) {
+            for (let i = attrs.length - 1; i >= 0; i--) {
                 if (['id', 'class', 'style', 'data-tag-name'].includes(attrs[i].name)) {
                     continue;
                 }
 
                 this.setProperty(attrs[i].name, attrs[i].value);
-                Logger.debug('Provider (' + that.id + ') found attribute "' + attrs[i].name + '" = "' + attrs[i].value + '"');
+                Logger.debug(
+                    'Provider (' +
+                        that.id +
+                        ') found attribute "' +
+                        attrs[i].name +
+                        '" = "' +
+                        attrs[i].value +
+                        '"'
+                );
             }
         }
     }

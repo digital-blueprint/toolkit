@@ -23,40 +23,40 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
 
     static get scopedElements() {
         return {
-          'dbp-person-profile': PersonProfile,
-          'dbp-auth-keycloak': AuthKeycloak,
-          'dbp-login-button': LoginButton,
-          'dbp-person-select': PersonSelect,
+            'dbp-person-profile': PersonProfile,
+            'dbp-auth-keycloak': AuthKeycloak,
+            'dbp-login-button': LoginButton,
+            'dbp-person-select': PersonSelect,
         };
-      }
+    }
 
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            person: { type: String, attribute: false },
-            selectedPerson: { type: String, attribute: false },
-            noAuth: { type: Boolean, attribute: 'no-auth' },
-            auth: { type: Object },
+            lang: {type: String},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            person: {type: String, attribute: false},
+            selectedPerson: {type: String, attribute: false},
+            noAuth: {type: Boolean, attribute: 'no-auth'},
+            auth: {type: Object},
         };
     }
 
     update(changedProperties) {
-        if (changedProperties.has("lang")) {
+        if (changedProperties.has('lang')) {
             this._i18n.changeLanguage(this.lang);
         }
 
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'auth':
-                {
-                    const person = this.auth.person;
+                    {
+                        const person = this.auth.person;
 
-                    if (person) {
-                        this.person = person.identifier;
+                        if (person) {
+                            this.person = person.identifier;
+                        }
                     }
-                }
                     break;
             }
         });
@@ -68,12 +68,11 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
         super.connectedCallback();
         const that = this;
 
-        this.updateComplete.then(()=>{
+        this.updateComplete.then(() => {
             const personSelect = that._(this.getScopedTagName('dbp-person-select'));
             personSelect.onchange = function () {
-                that.selectedPerson = $(this).data("object").identifier;
+                that.selectedPerson = $(this).data('object').identifier;
             };
-
         });
     }
 
@@ -83,20 +82,34 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
 
-            h1.title {margin-bottom: 1em;}
-            div.container {margin-bottom: 1.5em;}
+            h1.title {
+                margin-bottom: 1em;
+            }
+            div.container {
+                margin-bottom: 1.5em;
+            }
         `;
     }
 
     getAuthComponentHtml() {
-        return this.noAuth ? html`<dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>` : html`
-            <div class="container">
-                <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
-                                   url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu"
-                                   client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
-                <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
-            </div>
-        `;
+        return this.noAuth
+            ? html`
+                  <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
+              `
+            : html`
+                  <div class="container">
+                      <dbp-auth-keycloak
+                          subscribe="requested-login-status"
+                          lang="${this.lang}"
+                          entry-point-url="${this.entryPointUrl}"
+                          silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                          url="https://auth-dev.tugraz.at/auth"
+                          realm="tugraz-vpu"
+                          client-id="auth-dev-mw-frontend-local"
+                          try-login></dbp-auth-keycloak>
+                      <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
+                  </div>
+              `;
     }
 
     render() {
@@ -108,7 +121,11 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Person-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-profile subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.person}"></dbp-person-profile>
+                    <dbp-person-profile
+                        subscribe="auth"
+                        lang="${this.lang}"
+                        entry-point-url="${this.entryPointUrl}"
+                        value="${this.person}"></dbp-person-profile>
                 </div>
             </section>
             <section class="section">
@@ -116,10 +133,17 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h1 class="title">Select-Profile-Demo</h1>
                 </div>
                 <div class="container">
-                    <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+                    <dbp-person-select
+                        subscribe="auth"
+                        lang="${this.lang}"
+                        entry-point-url="${this.entryPointUrl}"></dbp-person-select>
                 </div>
                 <div class="container">
-                    <dbp-person-profile subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" value="${this.selectedPerson}"></dbp-person-profile>
+                    <dbp-person-profile
+                        subscribe="auth"
+                        lang="${this.lang}"
+                        entry-point-url="${this.entryPointUrl}"
+                        value="${this.selectedPerson}"></dbp-person-profile>
                 </div>
             </section>
         `;

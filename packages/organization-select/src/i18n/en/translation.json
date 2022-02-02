@@ -1,6 +1,6 @@
 {
-  "select-organization": {
-    "placeholder": "Please select an organization",
-    "loading": "Loading..."
-  }
+    "select-organization": {
+        "placeholder": "Please select an organization",
+        "loading": "Loading..."
+    }
 }

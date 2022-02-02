@@ -4,37 +4,37 @@ import '../src/dbp-check-in-place-select.js';
 import '../src/demo.js';
 
 suite('dbp-check-in-place-select basics', () => {
-  let node;
+    let node;
 
-  setup(async () => {
-    node = document.createElement('dbp-check-in-place-select');
-    document.body.appendChild(node);
-    await node.updateComplete;
-  });
+    setup(async () => {
+        node = document.createElement('dbp-check-in-place-select');
+        document.body.appendChild(node);
+        await node.updateComplete;
+    });
 
-  teardown(() => {
-    node.remove();
-  });
+    teardown(() => {
+        node.remove();
+    });
 
-  test('should render', () => {
-    assert.isNotNull(node.shadowRoot);
-  });
+    test('should render', () => {
+        assert.isNotNull(node.shadowRoot);
+    });
 });
 
 suite('dbp-check-in-place-select-demo basics', () => {
-  let node;
+    let node;
 
-  setup(async () => {
-    node = document.createElement('dbp-check-in-place-select-demo');
-    document.body.appendChild(node);
-    await node.updateComplete;
-  });
+    setup(async () => {
+        node = document.createElement('dbp-check-in-place-select-demo');
+        document.body.appendChild(node);
+        await node.updateComplete;
+    });
 
-  teardown(() => {
-    node.remove();
-  });
+    teardown(() => {
+        node.remove();
+    });
 
-  test('should render', () => {
-    assert.isNotNull(node.shadowRoot);
-  });
+    test('should render', () => {
+        assert.isNotNull(node.shadowRoot);
+    });
 });

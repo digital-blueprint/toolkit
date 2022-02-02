@@ -10,8 +10,8 @@ export function getIconCSS(name) {
     const iconURL = getIconSVGURL(name);
     return `
         background-color: currentColor;
-        mask-image: url(${ iconURL });
-        -webkit-mask-image: url(${ iconURL });
+        mask-image: url(${iconURL});
+        -webkit-mask-image: url(${iconURL});
         mask-size: contain;
         -webkit-mask-size: contain;
         mask-repeat: no-repeat;
@@ -28,17 +28,16 @@ export function getIconCSS(name) {
  * For icon names see https://lineicons.com
  */
 export class Icon extends LitElement {
-
     constructor() {
         super();
-        this.name = "bolt";
+        this.name = 'bolt';
     }
 
     static get properties() {
-        return { 
-          name: { type: String },
+        return {
+            name: {type: String},
         };
-      }
+    }
 
     static get styles() {
         // language=css
@@ -47,7 +46,7 @@ export class Icon extends LitElement {
                 display: inline-block;
                 height: 1em;
                 width: 1em;
-                top: .125em;
+                top: 0.125em;
                 position: relative;
             }
 
@@ -63,7 +62,7 @@ export class Icon extends LitElement {
                 -webkit-mask-position: center;
             }
         `;
-    } 
+    }
 
     render() {
         const iconURL = getIconSVGURL(this.name);

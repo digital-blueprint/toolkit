@@ -4,37 +4,37 @@ import '../src/dbp-file-source';
 import '../src/demo';
 
 suite('dbp-file-source basics', () => {
-  let node;
+    let node;
 
-  setup(async () => {
-    node = document.createElement('dbp-file-source');
-    document.body.appendChild(node);
-    await node.updateComplete;
-  });
+    setup(async () => {
+        node = document.createElement('dbp-file-source');
+        document.body.appendChild(node);
+        await node.updateComplete;
+    });
 
-  teardown(() => {
-    node.remove();
-  });
+    teardown(() => {
+        node.remove();
+    });
 
-  test('should render', () => {
-    assert.isNotNull(node.shadowRoot);
-  });
+    test('should render', () => {
+        assert.isNotNull(node.shadowRoot);
+    });
 });
 
 suite('dbp-file-source demo', () => {
-  let node;
+    let node;
 
-  setup(async () => {
-    node = document.createElement('dbp-file-source-demo');
-    document.body.appendChild(node);
-    await node.updateComplete;
-  });
+    setup(async () => {
+        node = document.createElement('dbp-file-source-demo');
+        document.body.appendChild(node);
+        await node.updateComplete;
+    });
 
-  teardown(() => {
-    node.remove();
-  });
+    teardown(() => {
+        node.remove();
+    });
 
-  test('should render', () => {
-    assert.isNotNull(node.shadowRoot);
-  });
+    test('should render', () => {
+        assert.isNotNull(node.shadowRoot);
+    });
 });

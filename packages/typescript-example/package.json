@@ -1,55 +1,55 @@
 {
-  "name": "@dbp-toolkit/typescript-example",
-  "version": "0.2.3",
-  "main": "src/index.js",
-  "license": "LGPL-2.1-or-later",
-  "repository": {
-    "type": "git",
-    "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
-    "directory": "packages/typescript-example"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org",
-    "access": "public"
-  },
-  "devDependencies": {
-    "@esm-bundle/chai": "^4.2.0",
-    "@rollup/plugin-commonjs": "^21.0.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "@types/mocha": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.0.0-alpha.42",
-    "@typescript-eslint/parser": "^5.0.0-alpha.42",
-    "eslint": "^8.0.0",
-    "karma": "^6.0.0",
-    "karma-chrome-launcher": "^3.0.0",
-    "karma-firefox-launcher": "^2.1.0",
-    "karma-mocha": "^2.0.1",
-    "mocha": "^9.0.0",
-    "prettier": "^2.5.1",
-    "rollup": "^2.33.3",
-    "rollup-plugin-copy": "^3.1.0",
-    "rollup-plugin-delete": "^2.0.0",
-    "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.31.0",
-    "ts-lit-plugin": "^1.2.1",
-    "tslib": "^2.0.3",
-    "typescript": "^4.1.2"
-  },
-  "dependencies": {
-    "@dbp-toolkit/common": "^0.2.2",
-    "@open-wc/scoped-elements": "^2.0.0",
-    "lit": "^2.0.0"
-  },
-  "scripts": {
-    "format": "yarn run format:eslint && yarn run format:prettier",
-    "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
-    "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
-    "clean": "rm dist/*",
-    "build": "rollup -c",
-    "watch": "rollup -c --watch",
-    "test": "rollup -c --environment BUILD:test && karma start --singleRun",
-    "lint": "eslint . --ext .js,.ts"
-  }
+    "name": "@dbp-toolkit/typescript-example",
+    "version": "0.2.3",
+    "main": "src/index.js",
+    "license": "LGPL-2.1-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+        "directory": "packages/typescript-example"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "devDependencies": {
+        "@esm-bundle/chai": "^4.2.0",
+        "@rollup/plugin-commonjs": "^21.0.0",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-node-resolve": "^13.0.0",
+        "@types/mocha": "^9.0.0",
+        "@typescript-eslint/eslint-plugin": "^5.0.0-alpha.42",
+        "@typescript-eslint/parser": "^5.0.0-alpha.42",
+        "eslint": "^8.0.0",
+        "karma": "^6.0.0",
+        "karma-chrome-launcher": "^3.0.0",
+        "karma-firefox-launcher": "^2.1.0",
+        "karma-mocha": "^2.0.1",
+        "mocha": "^9.0.0",
+        "prettier": "^2.5.1",
+        "rollup": "^2.33.3",
+        "rollup-plugin-copy": "^3.1.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-serve": "^1.0.1",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-typescript2": "^0.31.0",
+        "ts-lit-plugin": "^1.2.1",
+        "tslib": "^2.0.3",
+        "typescript": "^4.1.2"
+    },
+    "dependencies": {
+        "@dbp-toolkit/common": "^0.2.2",
+        "@open-wc/scoped-elements": "^2.0.0",
+        "lit": "^2.0.0"
+    },
+    "scripts": {
+        "format": "yarn run format:eslint && yarn run format:prettier",
+        "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
+        "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
+        "clean": "rm dist/*",
+        "build": "rollup -c",
+        "watch": "rollup -c --watch",
+        "test": "rollup -c --environment BUILD:test && karma start --singleRun",
+        "lint": "eslint . --ext .js,.ts"
+    }
 }

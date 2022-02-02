@@ -13,8 +13,8 @@ import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
-import {MatomoElement} from "@dbp-toolkit/matomo/src/matomo";
-import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
+import {MatomoElement} from '@dbp-toolkit/matomo/src/matomo';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 /**
  * In case the application gets updated future dynamic imports might fail.
@@ -31,9 +31,9 @@ const importNotify = async (i18n, promise) => {
     } catch (error) {
         console.log(error);
         notify({
-            "body": i18n.t('page-updated-needs-reload'),
-            "type": "info",
-            "icon": "warning"
+            body: i18n.t('page-updated-needs-reload'),
+            type: 'info',
+            icon: 'warning',
         });
         throw error;
     }
@@ -73,24 +73,23 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.initateOpenMenu = false;
 
         this.auth = {};
-
     }
 
     static get scopedElements() {
         return {
-          'dbp-language-select': LanguageSelect,
-          'dbp-build-info': BuildInfo,
-          'dbp-auth-keycloak': AuthKeycloak,
-          'dbp-auth-menu-button': AuthMenuButton,
-          'dbp-theme-switcher': ThemeSwitcher,
-          'dbp-notification': Notification,
-          'dbp-icon': Icon,
-          'dbp-matomo': MatomoElement,
+            'dbp-language-select': LanguageSelect,
+            'dbp-build-info': BuildInfo,
+            'dbp-auth-keycloak': AuthKeycloak,
+            'dbp-auth-menu-button': AuthMenuButton,
+            'dbp-theme-switcher': ThemeSwitcher,
+            'dbp-notification': Notification,
+            'dbp-icon': Icon,
+            'dbp-matomo': MatomoElement,
         };
     }
 
     onAttributeObserved(mutationsList, observer) {
-        for(let mutation of mutationsList) {
+        for (let mutation of mutationsList) {
             if (mutation.type === 'attributes') {
                 const key = mutation.attributeName;
                 const value = mutation.target.getAttribute(key);
@@ -109,22 +108,23 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         let metadata = {};
         let routes = [];
 
-        const result = await (await fetch(topicURL, {
-            headers: {'Content-Type': 'application/json'}
-        })).json();
+        const result = await (
+            await fetch(topicURL, {
+                headers: {'Content-Type': 'application/json'},
+            })
+        ).json();
 
         this.topic = result;
 
         const fetchOne = async (url) => {
-              const result = await fetch(url, {
-                headers: {'Content-Type': 'application/json'}
+            const result = await fetch(url, {
+                headers: {'Content-Type': 'application/json'},
             });
-            if (!result.ok)
-                throw result;
+            if (!result.ok) throw result;
 
             const jsondata = await result.json();
-            if (jsondata["element"] === undefined)
-                throw new Error("no element defined in metadata");
+            if (jsondata['element'] === undefined)
+                throw new Error('no element defined in metadata');
 
             return jsondata;
         };
@@ -132,7 +132,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         let promises = [];
         for (const activity of result.activities) {
             const actURL = new URL(activity.path, new URL(topicURL, window.location).href).href;
-            promises.push([activity.visible === undefined || activity.visible, actURL, fetchOne(actURL)]);
+            promises.push([
+                activity.visible === undefined || activity.visible,
+                actURL,
+                fetchOne(actURL),
+            ]);
         }
 
         for (const [visible, actURL, p] of promises) {
@@ -151,11 +155,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         if (!this.noWelcomePage) {
             // Inject the welcome activity
-            routes.unshift("welcome");
+            routes.unshift('welcome');
             metadata = Object.assign(metadata, {
-                "welcome": appWelcomeMeta,
+                welcome: appWelcomeMeta,
             });
-            customElements.get("dbp-app-shell-welcome").app = this;
+            customElements.get('dbp-app-shell-welcome').app = this;
         }
 
         // this also triggers a rebuilding of the menu
@@ -163,11 +167,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.routes = routes;
 
         // Switch to the first route if none is selected
-        if (!this.activeView)
-            this.switchComponent(routes[0]);
-        else
-            this.switchComponent(this.activeView);
-
+        if (!this.activeView) this.switchComponent(routes[0]);
+        else this.switchComponent(this.activeView);
     }
 
     initRouter() {
@@ -179,7 +180,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                         lang: this.lang,
                         component: '',
                     };
-                }
+                },
             },
             {
                 path: '/:lang',
@@ -191,14 +192,14 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                                 lang: params.lang,
                                 component: '',
                             };
-                        }
+                        },
                     },
                     {
                         name: 'mainRoute',
                         path: '/:component',
                         action: (context, params) => {
                             // remove the additional parameters added by Keycloak
-                            let componentTag = params.component.toLowerCase().replace(/&.+/,"");
+                            let componentTag = params.component.toLowerCase().replace(/&.+/, '');
                             return {
                                 lang: params.lang,
                                 component: componentTag,
@@ -209,28 +210,32 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             },
         ];
 
-        this.router = new Router(routes, {
-            routeName: 'mainRoute',
-            getState: () => {
-                let state = {
-                    component: this.activeView,
-                    lang: this.lang,
-                };
-                return state;
+        this.router = new Router(
+            routes,
+            {
+                routeName: 'mainRoute',
+                getState: () => {
+                    let state = {
+                        component: this.activeView,
+                        lang: this.lang,
+                    };
+                    return state;
+                },
+                setState: (state) => {
+                    this.updateLangIfChanged(state.lang);
+                    this.switchComponent(state.component);
+                },
+                getDefaultState: () => {
+                    return {
+                        lang: 'de',
+                        component: this.routes[0],
+                    };
+                },
             },
-            setState: (state) => {
-                this.updateLangIfChanged(state.lang);
-                this.switchComponent(state.component);
-            },
-            getDefaultState: () => {
-                return {
-                    lang: 'de',
-                    component: this.routes[0],
-                };
+            {
+                baseUrl: new URL(this.basePath, window.location).pathname.replace(/\/$/, ''),
             }
-        }, {
-            baseUrl: new URL(this.basePath, window.location).pathname.replace(/\/$/, ''),
-        });
+        );
 
         this.router.setStateFromCurrentLocation();
     }
@@ -238,35 +243,34 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: { type: String, reflect: true },
-            src: { type: String },
-            basePath: { type: String, attribute: 'base-path' },
-            activeView: { type: String, attribute: false},
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            keycloakConfig: { type: Object, attribute: 'keycloak-config' },
-            metadata: { type: Object, attribute: false },
-            visibleRoutes:  { type: Array, attribute: false },
-            topic: { type: Object, attribute: false },
-            subtitle: { type: String, attribute: false },
-            description: { type: String, attribute: false },
-            _loginStatus: { type: Boolean, attribute: false },
-            _roles: { type: Array, attribute: false },
-            matomoUrl: { type: String, attribute: "matomo-url" },
-            matomoSiteId: { type: Number, attribute: "matomo-site-id" },
-            noWelcomePage: { type: Boolean, attribute: "no-welcome-page" },
-            gitInfo: { type: String, attribute: "git-info" },
-            buildUrl: { type: String, attribute: "build-url" },
-            buildTime: { type: String, attribute: "build-time" },
-            env: { type: String },
-            auth: { type: Object },
+            lang: {type: String, reflect: true},
+            src: {type: String},
+            basePath: {type: String, attribute: 'base-path'},
+            activeView: {type: String, attribute: false},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            keycloakConfig: {type: Object, attribute: 'keycloak-config'},
+            metadata: {type: Object, attribute: false},
+            visibleRoutes: {type: Array, attribute: false},
+            topic: {type: Object, attribute: false},
+            subtitle: {type: String, attribute: false},
+            description: {type: String, attribute: false},
+            _loginStatus: {type: Boolean, attribute: false},
+            _roles: {type: Array, attribute: false},
+            matomoUrl: {type: String, attribute: 'matomo-url'},
+            matomoSiteId: {type: Number, attribute: 'matomo-site-id'},
+            noWelcomePage: {type: Boolean, attribute: 'no-welcome-page'},
+            gitInfo: {type: String, attribute: 'git-info'},
+            buildUrl: {type: String, attribute: 'build-url'},
+            buildTime: {type: String, attribute: 'build-time'},
+            env: {type: String},
+            auth: {type: Object},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
 
-        if (this.src)
-            this.fetchMetadata(this.src);
+        if (this.src) this.fetchMetadata(this.src);
         this.initRouter();
     }
 
@@ -295,48 +299,48 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
                     // For screen readers
-                    document.documentElement.setAttribute("lang", this.lang);
+                    document.documentElement.setAttribute('lang', this.lang);
 
                     this.router.update();
-                    this.subtitle = this.activeMetaDataText("short_name");
-                    this.description = this.activeMetaDataText("description");
+                    this.subtitle = this.activeMetaDataText('short_name');
+                    this.description = this.activeMetaDataText('description');
 
                     // send a dbp-lang event with the language
                     this.dispatchEvent(
                         new CustomEvent('dbp-lang', {
                             bubbles: true,
                             composed: true,
-                            detail: this.lang
+                            detail: this.lang,
                         })
                     );
-                break;
+                    break;
                 case 'metadata':
-                {
-                    this._updateVisibleRoutes();
-                }
-                break;
+                    {
+                        this._updateVisibleRoutes();
+                    }
+                    break;
                 case 'auth':
-                {
-                    if (this.auth.person) {
-                        this._roles = this.auth.person['roles'];
-                    } else {
-                        this._roles = [];
-                    }
-                    this._updateVisibleRoutes();
+                    {
+                        if (this.auth.person) {
+                            this._roles = this.auth.person['roles'];
+                        } else {
+                            this._roles = [];
+                        }
+                        this._updateVisibleRoutes();
 
-                    const loginStatus = this.auth['login-status'];
-                    if (loginStatus !== this._loginStatus) {
-                        console.log('Login status: ' + loginStatus);
-                    }
+                        const loginStatus = this.auth['login-status'];
+                        if (loginStatus !== this._loginStatus) {
+                            console.log('Login status: ' + loginStatus);
+                        }
 
-                    this._loginStatus = loginStatus;
+                        this._loginStatus = loginStatus;
 
-                    // Clear the session storage when the user logs out
-                    if (this._loginStatus === 'logging-out') {
-                        sessionStorage.clear();
+                        // Clear the session storage when the user logs out
+                        if (this._loginStatus === 'logging-out') {
+                            sessionStorage.clear();
+                        }
                     }
-                }
-                break;
+                    break;
             }
         });
 
@@ -347,9 +351,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         e.preventDefault();
 
         // if not the current page was clicked we need to check if the page can be left
-        if (!e.currentTarget.className.includes("selected")) {
+        if (!e.currentTarget.className.includes('selected')) {
             // simulate a "beforeunload" event
-            const event = new CustomEvent("beforeunload", {
+            const event = new CustomEvent('beforeunload', {
                 bubbles: true,
                 cancelable: true,
             });
@@ -370,21 +374,20 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
     onLanguageChanged(e) {
         const newLang = e.detail.lang;
-        const changed = (this.lang !== newLang);
+        const changed = this.lang !== newLang;
         this.lang = newLang;
         if (changed) {
             this.router.update();
-            this.subtitle = this.activeMetaDataText("short_name");
-            this.description = this.activeMetaDataText("description");
+            this.subtitle = this.activeMetaDataText('short_name');
+            this.description = this.activeMetaDataText('description');
         }
     }
 
     switchComponent(componentTag) {
         let offset = window.pageYOffset;
-        const changed = (componentTag !== this.activeView);
+        const changed = componentTag !== this.activeView;
         this.activeView = componentTag;
-        if (changed)
-            this.router.update();
+        if (changed) this.router.update();
         const metadata = this.metadata[componentTag];
 
         if (metadata === undefined) {
@@ -392,21 +395,27 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         }
 
         let updateFunc = () => {
-           
             if (offset > 0) {
-
-                const header = this.shadowRoot.querySelector("header");
-                const title = this.shadowRoot.querySelector("#headline");
+                const header = this.shadowRoot.querySelector('header');
+                const title = this.shadowRoot.querySelector('#headline');
 
                 if (header === null || title === null) {
                     return;
                 }
 
                 let style = getComputedStyle(title);
-                let marginTop = isNaN(parseInt(style.marginTop, 10)) ? 0 : parseInt(style.marginTop, 10);
-                let marginBottom = isNaN(parseInt(style.marginBottom, 10)) ? 0 : parseInt(style.marginBottom, 10);
+                let marginTop = isNaN(parseInt(style.marginTop, 10))
+                    ? 0
+                    : parseInt(style.marginTop, 10);
+                let marginBottom = isNaN(parseInt(style.marginBottom, 10))
+                    ? 0
+                    : parseInt(style.marginBottom, 10);
 
-                let topValue = header.getBoundingClientRect().height + title.getBoundingClientRect().height + marginTop + marginBottom;
+                let topValue =
+                    header.getBoundingClientRect().height +
+                    title.getBoundingClientRect().height +
+                    marginTop +
+                    marginBottom;
 
                 if (offset < topValue) {
                     window.scrollTo(0, offset);
@@ -415,8 +424,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 }
             }
             this.updatePageTitle();
-            this.subtitle = this.activeMetaDataText("short_name");
-            this.description = this.activeMetaDataText("description");
+            this.subtitle = this.activeMetaDataText('short_name');
+            this.description = this.activeMetaDataText('description');
         };
 
         // If it is empty assume the element is already registered through other means
@@ -425,21 +434,25 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
 
-        importNotify(this._i18n, import(metadata.module_src)).then(() => {
-            updateFunc();
-        }).catch((e) => {
-            console.error(`Error loading ${ metadata.element }`);
-            throw e;
-        });
+        importNotify(this._i18n, import(metadata.module_src))
+            .then(() => {
+                updateFunc();
+            })
+            .catch((e) => {
+                console.error(`Error loading ${metadata.element}`);
+                throw e;
+            });
     }
 
     metaDataText(routingName, key) {
         const metadata = this.metadata[routingName];
-        return metadata !== undefined && metadata[key] !== undefined ? metadata[key][this.lang] : '';
+        return metadata !== undefined && metadata[key] !== undefined
+            ? metadata[key][this.lang]
+            : '';
     }
 
     topicMetaDataText(key) {
-        return (this.topic[key] !== undefined) ? this.topic[key][this.lang] : '';
+        return this.topic[key] !== undefined ? this.topic[key][this.lang] : '';
     }
 
     activeMetaDataText(key) {
@@ -447,12 +460,14 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     }
 
     updatePageTitle() {
-        document.title = `${this.topicMetaDataText('name')} - ${this.activeMetaDataText("short_name")}`;
+        document.title = `${this.topicMetaDataText('name')} - ${this.activeMetaDataText(
+            'short_name'
+        )}`;
     }
 
     toggleMenu() {
-        const menu = this.shadowRoot.querySelector("ul.menu");
-        const subtitle = this.shadowRoot.querySelector("h2.subtitle");
+        const menu = this.shadowRoot.querySelector('ul.menu');
+        const subtitle = this.shadowRoot.querySelector('h2.subtitle');
 
         if (menu === null || subtitle === null) {
             return;
@@ -466,18 +481,22 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         let topValue = subtitle.getBoundingClientRect().bottom;
         let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
-        
+
         if (isMenuOverflow && !menu.classList.contains('hidden')) {
-            menu.setAttribute('style', 'position: fixed;top: ' + topValue + 'px;bottom: 0;border-bottom: 0;overflow-y: auto;');
+            menu.setAttribute(
+                'style',
+                'position: fixed;top: ' +
+                    topValue +
+                    'px;bottom: 0;border-bottom: 0;overflow-y: auto;'
+            );
             menu.scrollTop = 0;
             document.body.setAttribute('style', 'overflow:hidden;');
-        
         } else if (isMenuOverflow && menu.classList.contains('hidden')) {
             document.body.removeAttribute('style', 'overflow:hidden;');
             menu.removeAttribute('style');
         }
 
-        const chevron = this.shadowRoot.querySelector("#menu-chevron-icon");
+        const chevron = this.shadowRoot.querySelector('#menu-chevron-icon');
         if (chevron !== null) {
             chevron.name = menu.classList.contains('hidden') ? 'chevron-down' : 'chevron-up';
         }
@@ -485,8 +504,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         if (!menu.classList.contains('hidden')) {
             document.addEventListener('click', this.boundCloseMenuHandler);
             this.initateOpenMenu = true;
-        }
-        else {
+        } else {
             document.removeEventListener('click', this.boundCloseMenuHandler);
             menu.removeAttribute('style');
         }
@@ -497,9 +515,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             this.initateOpenMenu = false;
             return;
         }
-        const menu = this.shadowRoot.querySelector("ul.menu");
-        if (menu && !menu.classList.contains('hidden'))
-            this.toggleMenu();
+        const menu = this.shadowRoot.querySelector('ul.menu');
+        if (menu && !menu.classList.contains('hidden')) this.toggleMenu();
     }
 
     static get styles() {
@@ -509,7 +526,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getLinkCss()}
 
-            .hidden {display: none}
+            .hidden {
+                display: none;
+            }
 
             h1.title {
                 margin-bottom: 0;
@@ -520,7 +539,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 display: grid;
                 grid-template-columns: minmax(180px, 17%) minmax(0, auto);
                 grid-template-rows: min-content min-content 1fr min-content;
-                grid-template-areas: "header header" "headline headline" "sidebar main" "footer footer";
+                grid-template-areas: 'header header' 'headline headline' 'sidebar main' 'footer footer';
                 max-width: 1400px;
                 margin: auto;
                 min-height: 100vh;
@@ -535,16 +554,30 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 display: grid;
                 grid-template-columns: 50% 1px auto;
                 grid-template-rows: 60px 60px;
-                grid-template-areas: "hd1-left hd1-middle hd1-right" "hd2-left . hd2-right";
+                grid-template-areas: 'hd1-left hd1-middle hd1-right' 'hd2-left . hd2-right';
                 width: 100%;
                 max-width: 1060px;
                 margin: 0 auto;
             }
 
-            aside { grid-area: sidebar; margin: 15px 15px; }
-            #headline { grid-area: headline; margin: 20px 0 30px 0; text-align: center; }
-            main { grid-area: main; margin: 15px 15px; }
-            footer { grid-area: footer; margin: 15px; text-align: right; }
+            aside {
+                grid-area: sidebar;
+                margin: 15px 15px;
+            }
+            #headline {
+                grid-area: headline;
+                margin: 20px 0 30px 0;
+                text-align: center;
+            }
+            main {
+                grid-area: main;
+                margin: 15px 15px;
+            }
+            footer {
+                grid-area: footer;
+                margin: 15px;
+                text-align: right;
+            }
 
             header .hd1-left {
                 display: flex;
@@ -558,8 +591,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 -webkit-align-items: center;
                 gap: 10px;
             }
-            
-            header .hd1-left #lang-select{
+
+            header .hd1-left #lang-select {
                 padding-right: 10px;
                 padding-left: 10px;
             }
@@ -567,7 +600,12 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             header .hd1-middle {
                 grid-area: hd1-middle;
                 background-color: var(--dbp-text);
-                background: linear-gradient(180deg, var(--dbp-text) 0%, var(--dbp-text) 85%, rgba(0,0,0,0) 90%);
+                background: linear-gradient(
+                    180deg,
+                    var(--dbp-text) 0%,
+                    var(--dbp-text) 85%,
+                    rgba(0, 0, 0, 0) 90%
+                );
             }
 
             header .hd1-right {
@@ -614,7 +652,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 display: inline;
             }
 
-            aside ul.menu, footer ul.menu {
+            aside ul.menu,
+            footer ul.menu {
                 list-style: none;
             }
 
@@ -628,7 +667,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 flex-wrap: wrap;
             }
 
-            footer > *, footer slot > * {
+            footer > *,
+            footer slot > * {
                 margin: 0.5em 0 0 1em;
             }
 
@@ -675,7 +715,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 font-weight: bolder;
                 padding-left: 0.5em;
                 padding-right: 0.3em;
-
             }
 
             aside .subtitle {
@@ -692,15 +731,17 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 display: block;
             }
 
-            a { transition: background-color 0.15s ease 0s, color 0.15s ease 0s; }
+            a {
+                transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
+            }
 
             .description {
                 text-align: left;
                 margin-bottom: 1rem;
                 display: none;
             }
-            
-            #dbp-notification{
+
+            #dbp-notification {
                 z-index: 99999;
             }
 
@@ -708,15 +749,16 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 #main {
                     grid-template-columns: minmax(0, auto);
                     grid-template-rows: min-content min-content min-content 1fr min-content;
-                    grid-template-areas: "header" "headline" "sidebar" "main" "footer";
+                    grid-template-areas: 'header' 'headline' 'sidebar' 'main' 'footer';
                 }
 
                 header {
                     grid-template-rows: 40px;
-                    grid-template-areas: "hd1-left hd1-middle hd1-right";
+                    grid-template-areas: 'hd1-left hd1-middle hd1-right';
                 }
 
-                header .hd2-left, header .hd2-right {
+                header .hd2-left,
+                header .hd2-right {
                     display: none;
                 }
 
@@ -805,13 +847,16 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     }
 
     _onActivityAdded(element) {
-        for(const key of this.topic.attributes || []) {
+        for (const key of this.topic.attributes || []) {
             let value = sessionStorage.getItem('dbp-attr-' + key);
             if (value !== null) {
                 element.setAttribute(key, value);
             }
         }
-        this._attrObserver.observe(element, {attributes: true, attributeFilter: this.topic.attributes});
+        this._attrObserver.observe(element, {
+            attributes: true,
+            attributeFilter: this.topic.attributes,
+        });
         element.addEventListener('dbp-show-activity', this._onShowActivityEvent);
     }
 
@@ -821,29 +866,28 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     }
 
     track(action, message) {
-        this.sendSetPropertyEvent('analytics-event', {'category': action, 'action': message}, true);
+        this.sendSetPropertyEvent('analytics-event', {category: action, action: message}, true);
     }
 
     _renderActivity() {
         const act = this.metadata[this.activeView];
-        if (act === undefined)
-            return html``;
+        if (act === undefined) return html``;
 
-        const elm =  this._createActivityElement(act);
+        const elm = this._createActivityElement(act);
 
         // add subscriptions for the provider component
         if (act.subscribe !== undefined) {
-            elm.setAttribute("subscribe", act.subscribe);
+            elm.setAttribute('subscribe', act.subscribe);
         }
 
         // only add the entry-point-url attribute if it isn't subscribed
-        if (act.subscribe === undefined || !act.subscribe.includes("entry-point-url:")) {
-            elm.setAttribute("entry-point-url", this.entryPointUrl);
+        if (act.subscribe === undefined || !act.subscribe.includes('entry-point-url:')) {
+            elm.setAttribute('entry-point-url', this.entryPointUrl);
         }
 
         // only add the lang attribute if it isn't subscribed
-        if (act.subscribe === undefined || !act.subscribe.includes("lang:")) {
-            elm.setAttribute("lang", this.lang);
+        if (act.subscribe === undefined || !act.subscribe.includes('lang:')) {
+            elm.setAttribute('lang', this.lang);
         }
         return elm;
     }
@@ -871,7 +915,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         this.visibleRoutes = visibleRoutes;
 
-        const event = new CustomEvent("visibility-changed", {
+        const event = new CustomEvent('visibility-changed', {
             bubbles: false,
             cancelable: true,
         });
@@ -881,13 +925,13 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     render() {
         let i18n = this._i18n;
 
-        const getSelectClasses = (name => {
+        const getSelectClasses = (name) => {
             return classMap({selected: this.activeView === name});
-        });
+        };
 
         // We hide the app until we are either fully logged in or logged out
         // At the same time when we hide the main app we show the main slot (e.g. a loading spinner)
-        const appHidden = (this._loginStatus === 'unknown' || this._loginStatus === 'logging-in');
+        const appHidden = this._loginStatus === 'unknown' || this._loginStatus === 'logging-in';
         const mainClassMap = classMap({hidden: appHidden});
         const slotClassMap = classMap({hidden: !appHidden});
 
@@ -896,50 +940,146 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 // XXX: Safari 11 doesn't like CSS being applied to slots or via HTML,
                 // so we have to remove the slot instead of hiding it
                 // select slots with no name attribute
-                const slot = this.shadowRoot.querySelector("slot:not([name])");
-                if (slot)
-                    slot.remove();
+                const slot = this.shadowRoot.querySelector('slot:not([name])');
+                if (slot) slot.remove();
             });
         }
 
-        const prodClassMap = classMap({hidden: this.env === 'production' || this.env === 'demo' || this.env === ''});
+        const prodClassMap = classMap({
+            hidden: this.env === 'production' || this.env === 'demo' || this.env === '',
+        });
 
         this.updatePageTitle();
 
         // build the menu
         let menuTemplates = [];
         for (let routingName of this.visibleRoutes) {
-            menuTemplates.push(html`<li><a @click="${(e) => this.onMenuItemClick(e)}" href="${this.router.getPathname({component: routingName})}" data-nav class="${getSelectClasses(routingName)}" title="${this.metaDataText(routingName, "description")}">${this.metaDataText(routingName, "short_name")}</a></li>`);
+            menuTemplates.push(
+                html`
+                    <li>
+                        <a
+                            @click="${(e) => this.onMenuItemClick(e)}"
+                            href="${this.router.getPathname({component: routingName})}"
+                            data-nav
+                            class="${getSelectClasses(routingName)}"
+                            title="${this.metaDataText(routingName, 'description')}">
+                            ${this.metaDataText(routingName, 'short_name')}
+                        </a>
+                    </li>
+                `
+            );
         }
 
         const kc = this.keycloakConfig;
         return html`
             <slot class="${slotClassMap}"></slot>
-            <dbp-auth-keycloak subscribe="requested-login-status" lang="${this.lang}" entry-point-url="${this.entryPointUrl}" url="${kc.url}" realm="${kc.realm}" client-id="${kc.clientId}" silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}" scope="${kc.scope || ''}"  idp-hint="${kc.idpHint || ''}" ?force-login="${kc.forceLogin}" ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
-            <dbp-matomo subscribe="auth,analytics-event" endpoint="${this.matomoUrl}" site-id="${this.matomoSiteId}" git-info="${this.gitInfo}"></dbp-matomo>
+            <dbp-auth-keycloak
+                subscribe="requested-login-status"
+                lang="${this.lang}"
+                entry-point-url="${this.entryPointUrl}"
+                url="${kc.url}"
+                realm="${kc.realm}"
+                client-id="${kc.clientId}"
+                silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}"
+                scope="${kc.scope || ''}"
+                idp-hint="${kc.idpHint || ''}"
+                ?force-login="${kc.forceLogin}"
+                ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
+            <dbp-matomo
+                subscribe="auth,analytics-event"
+                endpoint="${this.matomoUrl}"
+                site-id="${this.matomoSiteId}"
+                git-info="${this.gitInfo}"></dbp-matomo>
             <div class="${mainClassMap}" id="root">
                 <div id="main">
                     <dbp-notification id="dbp-notification" lang="${this.lang}"></dbp-notification>
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                <dbp-theme-switcher subscribe="themes,dark-mode-theme-override" lang="${this.lang}"></dbp-theme-switcher>
-                                <dbp-language-select id="lang-select" lang="${this.lang}"></dbp-language-select>
+                                <dbp-theme-switcher
+                                    subscribe="themes,dark-mode-theme-override"
+                                    lang="${this.lang}"></dbp-theme-switcher>
+                                <dbp-language-select
+                                    id="lang-select"
+                                    lang="${this.lang}"></dbp-language-select>
                             </div>
-                            <div class="hd1-middle">
-                            </div>
+                            <div class="hd1-middle"></div>
                             <div class="hd1-right">
-                                <dbp-auth-menu-button subscribe="auth" class="auth-button" lang="${this.lang}"></dbp-auth-menu-button>
+                                <dbp-auth-menu-button
+                                    subscribe="auth"
+                                    class="auth-button"
+                                    lang="${this.lang}"></dbp-auth-menu-button>
                             </div>
                             <div class="hd2-left">
                                 <div class="header">
-                                    <slot name="name">DBP<br />Digital Blueprint</slot>
+                                    <slot name="name">
+                                        DBP
+                                        <br />
+                                        Digital Blueprint
+                                    </slot>
                                 </div>
                             </div>
                             <div class="hd2-right">
                                 <slot name="logo">
                                     <div id="main-logo">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="70" viewBox="0 0 13.197 11.828" xmlns:v="https://vecta.io/nano"><style><![CDATA[.B{fill:#c8c7c7}.C{fill:#231f20}]]></style><path d="M0 4.942v.313l5.866 3.295 5.927-3.295v-.313L5.896 8.237z" class="B"/><path d="M5.865 8.549l5.927-3.295v-.313L5.896 8.237z" class="C"/><path d="M0 6.581v.312l5.866 3.295 5.927-3.295v-.312L5.896 9.876z" class="B"/><path d="M5.865 10.188l5.927-3.295v-.312L5.896 9.876z" class="C"/><path d="M0 8.22v.313l5.866 3.295 5.927-3.295V8.22l-5.896 3.295z" class="B"/><path d="M5.865 11.827l5.927-3.295V8.22l-5.897 3.295z" class="C"/><path d="M8.844 4.991L7.37 4.167l1.474-.824 1.474.824z" class="B"/><use xlink:href="#B" class="C"/><path d="M8.774 3.295L7.3 2.471l1.474-.824 1.474.824z" fill="#656263"/><use xlink:href="#B" x="-1.474" y="0.823" class="C"/><use xlink:href="#B" x="-2.948" class="B"/><g fill="#7b7979"><use xlink:href="#B" x="-1.474" y="-0.824"/><use xlink:href="#B" x="-1.474" y="-2.471"/><path d="M4.422 2.471l-1.474-.824L4.422.823l1.474.824z"/></g><use xlink:href="#B" x="-4.422" y="-0.824" class="B"/><path d="M11.722 1.647L10.249.823 11.722 0l1.474.824z" class="C"/><g class="B"><path d="M8.844 6.589L7.37 5.766l1.474-.824 1.474.824z"/><use xlink:href="#B" y="1.647"/></g><use xlink:href="#B" x="-4.422" y="0.823" class="C"/><defs ><path id="B" d="M7.37 5.766l-1.474-.824 1.474-.824 1.474.824z"/></defs></svg>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                                            height="70"
+                                            viewBox="0 0 13.197 11.828"
+                                            xmlns:v="https://vecta.io/nano">
+                                            <style>
+                                                <![CDATA[.B{fill:#c8c7c7}.C{fill:#231f20}]]>
+                                            </style>
+                                            <path
+                                                d="M0 4.942v.313l5.866 3.295 5.927-3.295v-.313L5.896 8.237z"
+                                                class="B" />
+                                            <path
+                                                d="M5.865 8.549l5.927-3.295v-.313L5.896 8.237z"
+                                                class="C" />
+                                            <path
+                                                d="M0 6.581v.312l5.866 3.295 5.927-3.295v-.312L5.896 9.876z"
+                                                class="B" />
+                                            <path
+                                                d="M5.865 10.188l5.927-3.295v-.312L5.896 9.876z"
+                                                class="C" />
+                                            <path
+                                                d="M0 8.22v.313l5.866 3.295 5.927-3.295V8.22l-5.896 3.295z"
+                                                class="B" />
+                                            <path
+                                                d="M5.865 11.827l5.927-3.295V8.22l-5.897 3.295z"
+                                                class="C" />
+                                            <path
+                                                d="M8.844 4.991L7.37 4.167l1.474-.824 1.474.824z"
+                                                class="B" />
+                                            <use xlink:href="#B" class="C" />
+                                            <path
+                                                d="M8.774 3.295L7.3 2.471l1.474-.824 1.474.824z"
+                                                fill="#656263" />
+                                            <use xlink:href="#B" x="-1.474" y="0.823" class="C" />
+                                            <use xlink:href="#B" x="-2.948" class="B" />
+                                            <g fill="#7b7979">
+                                                <use xlink:href="#B" x="-1.474" y="-0.824" />
+                                                <use xlink:href="#B" x="-1.474" y="-2.471" />
+                                                <path
+                                                    d="M4.422 2.471l-1.474-.824L4.422.823l1.474.824z" />
+                                            </g>
+                                            <use xlink:href="#B" x="-4.422" y="-0.824" class="B" />
+                                            <path
+                                                d="M11.722 1.647L10.249.823 11.722 0l1.474.824z"
+                                                class="C" />
+                                            <g class="B">
+                                                <path
+                                                    d="M8.844 6.589L7.37 5.766l1.474-.824 1.474.824z" />
+                                                <use xlink:href="#B" y="1.647" />
+                                            </g>
+                                            <use xlink:href="#B" x="-4.422" y="0.823" class="C" />
+                                            <defs>
+                                                <path
+                                                    id="B"
+                                                    d="M7.37 5.766l-1.474-.824 1.474-.824 1.474.824z" />
+                                            </defs>
+                                        </svg>
                                     </div>
                                 </slot>
                             </div>
@@ -947,39 +1087,54 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     </header>
                     <div id="headline">
                         <h1 class="title">
-                            <slot name="title">
-                                ${this.topicMetaDataText('name')}
-                            </slot>
+                            <slot name="title">${this.topicMetaDataText('name')}</slot>
                         </h1>
                     </div>
                     <aside>
                         <h2 class="subtitle" @click="${this.toggleMenu}">
                             ${this.subtitle}
-                            <dbp-icon name="chevron-down" style="color: var(--dbp-accent)" id="menu-chevron-icon"></dbp-icon>
+                            <dbp-icon
+                                name="chevron-down"
+                                style="color: var(--dbp-accent)"
+                                id="menu-chevron-icon"></dbp-icon>
                         </h2>
                         <ul class="menu hidden">
                             ${menuTemplates}
-                            <li class="close" @click="${this.hideMenu}"><dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon></li>
+                            <li class="close" @click="${this.hideMenu}">
+                                <dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon>
+                            </li>
                         </ul>
                     </aside>
 
                     <main>
-                        <div style="display: ${!  this.metadata[this.activeView] ? 'block' : 'none'};">
+                        <div
+                            style="display: ${!this.metadata[this.activeView] ? 'block' : 'none'};">
                             <h2>${i18n.t('page-not-found')}</h2>
                             <p>${i18n.t('choose-from-menu')}</p>
                         </div>
                         <p class="description">${this.description}</p>
-                        ${ this._renderActivity() }
+                        ${this._renderActivity()}
                     </main>
 
                     <footer>
                         <slot name="footer">
                             <slot name="footer-links">
-                                <a rel="noopener" class="" href="#use-your-privacy-policy-link">${i18n.t('privacy-policy')}</a>
-                                <a rel="noopener" class="" href="#use-your-imprint-link">${i18n.t('imprint')}</a>
-                                <a rel="noopener" class="" href="#use-your-imprint-link">${i18n.t('contact')}</a>
+                                <a rel="noopener" class="" href="#use-your-privacy-policy-link">
+                                    ${i18n.t('privacy-policy')}
+                                </a>
+                                <a rel="noopener" class="" href="#use-your-imprint-link">
+                                    ${i18n.t('imprint')}
+                                </a>
+                                <a rel="noopener" class="" href="#use-your-imprint-link">
+                                    ${i18n.t('contact')}
+                                </a>
                             </slot>
-                            <dbp-build-info class="${prodClassMap}" git-info="${this.gitInfo}" env="${this.env}" build-url="${this.buildUrl}" build-time="${this.buildTime}"></dbp-build-info>
+                            <dbp-build-info
+                                class="${prodClassMap}"
+                                git-info="${this.gitInfo}"
+                                env="${this.env}"
+                                build-url="${this.buildUrl}"
+                                build-time="${this.buildTime}"></dbp-build-info>
                         </slot>
                     </footer>
                 </div>

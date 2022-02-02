@@ -15,8 +15,8 @@ import * as commonStyles from '../styles.js';
 export class Button extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
-        this.value = "";
-        this.type = "";
+        this.value = '';
+        this.type = '';
         this.spinner = false;
         this.noSpinnerOnClick = false;
         this.disabled = false;
@@ -34,11 +34,11 @@ export class Button extends ScopedElementsMixin(LitElement) {
 
     static get properties() {
         return {
-            value: { type: String },
-            type: { type: String },
-            spinner: { type: Boolean },
-            noSpinnerOnClick: { type: Boolean, attribute: 'no-spinner-on-click' },
-            disabled: { type: Boolean, reflect: true },
+            value: {type: String},
+            type: {type: String},
+            spinner: {type: Boolean},
+            noSpinnerOnClick: {type: Boolean, attribute: 'no-spinner-on-click'},
+            disabled: {type: Boolean, reflect: true},
         };
     }
 
@@ -68,14 +68,22 @@ export class Button extends ScopedElementsMixin(LitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getButtonCSS()}
 
-            .spinner { margin-left: 0.5em; }
+            .spinner {
+                margin-left: 0.5em;
+            }
         `;
     }
 
     render() {
         return html`
-            <button @click="${this.clickHandler}" class="button ${this.type}" ?disabled="${this.disabled}">
-                ${this.value} <dbp-mini-spinner class="spinner" style="display: ${this.spinner ? "inline" : "none"}"></dbp-mini-spinner>
+            <button
+                @click="${this.clickHandler}"
+                class="button ${this.type}"
+                ?disabled="${this.disabled}">
+                ${this.value}
+                <dbp-mini-spinner
+                    class="spinner"
+                    style="display: ${this.spinner ? 'inline' : 'none'}"></dbp-mini-spinner>
             </button>
         `;
     }
@@ -84,15 +92,15 @@ export class Button extends ScopedElementsMixin(LitElement) {
 export class LoadingButton extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
-        this.value = "";
-        this.type = "";
+        this.value = '';
+        this.type = '';
         this.loading = false;
         this.disabled = false;
 
         // https://bugs.chromium.org/p/chromium/issues/detail?id=1061240#c12
         this.addEventListener('click', (e) => {
             if (this.disabled) {
-              e.stopImmediatePropagation();
+                e.stopImmediatePropagation();
             }
         });
     }
@@ -106,10 +114,10 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
     static get properties() {
         return {
             // value is deprecated, use the main slot instead
-            value: { type: String },
-            type: { type: String },
-            loading: { type: Boolean },
-            disabled: { type: Boolean, reflect: true },
+            value: {type: String},
+            type: {type: String},
+            loading: {type: Boolean},
+            disabled: {type: Boolean, reflect: true},
         };
     }
 
@@ -158,9 +166,7 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
                 width: 100%;
             }
 
-            @media only screen
-            and (orientation: portrait)
-            and (max-width: 768px) {
+            @media only screen and (orientation: portrait) and (max-width: 768px) {
                 .button {
                     min-height: 36px;
                 }
@@ -174,8 +180,15 @@ export class LoadingButton extends ScopedElementsMixin(LitElement) {
 
     render() {
         return html`
-            <button class="button ${this.type} loading-container ${!this.loading ? "is-not-loading" : ""}" ?disabled="${this.disabled}">
-               <div class="label"><slot>${this.value}</slot></div> <dbp-mini-spinner class="spinner" style="display: ${this.loading ? "inline" : "none"}"></dbp-mini-spinner>
+            <button
+                class="button ${this.type} loading-container ${!this.loading
+                    ? 'is-not-loading'
+                    : ''}"
+                ?disabled="${this.disabled}">
+                <div class="label"><slot>${this.value}</slot></div>
+                <dbp-mini-spinner
+                    class="spinner"
+                    style="display: ${this.loading ? 'inline' : 'none'}"></dbp-mini-spinner>
             </button>
         `;
     }
