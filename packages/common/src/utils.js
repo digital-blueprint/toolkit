@@ -15,3 +15,23 @@ export const combineURLs = (baseURL, addedURL) => {
     }
     return new URL(addedURL.replace(/^\/+/, ''), baseURL).href;
 };
+
+/**
+ * Returns a Document like thing that can be used to create elements.
+ *
+ * It provides createElement()/createElementNS()/importNode().
+ * The Document type annotation, while not correct, is used here for simplicity.
+ *
+ * https://github.com/WICG/webcomponents/blob/gh-pages/proposals/Scoped-Custom-Element-Registries.md#scoped-element-creation-apis
+ *
+ * @param {HTMLElement} element
+ * @returns {Document|null}
+ */
+export function getShadowRootDocument(element) {
+    // In case the polyfill is loaded return the shadowRoot
+    // otherwise fall back to the global document
+    if (ShadowRoot.prototype.createElement !== undefined) {
+        return element.shadowRoot;
+    }
+    return document;
+}

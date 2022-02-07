@@ -2,7 +2,7 @@ import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
-import {Icon} from '@dbp-toolkit/common';
+import {Icon, getShadowRootDocument} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
 import {AuthMenuButton} from './auth-menu-button.js';
 import {Notification} from '@dbp-toolkit/notification';
@@ -829,13 +829,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             this.defineScopedElement(activity.element, customElements.get(activity.element));
         });
 
-        // In case of "Scoped Custom Element Registries" polyfill we create a scoped element
-        let elm;
-        if (this.shadowRoot.createElement !== undefined) {
-            elm = this.shadowRoot.createElement(activity.element);
-        } else {
-            elm = document.createElement(activity.element);
-        }
+        let elm = getShadowRootDocument(this).createElement(activity.element);
 
         this._onActivityAdded(elm);
         this._lastElm = elm;
