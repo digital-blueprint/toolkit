@@ -57,7 +57,7 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
 
             .tooltip-icon {
                 display: inline;
-                color: var(--dbp-text);
+                color: var(--dbp-content);
             }
         `;
     }

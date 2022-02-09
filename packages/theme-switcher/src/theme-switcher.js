@@ -175,8 +175,8 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
             a:hover:not(.active),
             .extended-menu li a:hover:not(.active) {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                color: var(--dbp-hover-color, var(--dbp-content));
+                background-color: var(--dbp-hover-background-color);
                 transition: none;
             }
 
@@ -185,14 +185,14 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 display: inline-block;
                 text-decoration: none;
                 transition: background-color 0.15s, color 0.15s;
-                color: var(--dbp-text);
+                color: var(--dbp-content);
             }
 
             .extended-menu {
                 list-style: none;
                 border: var(--dbp-border);
                 position: absolute;
-                background-color: var(--dbp-base);
+                background-color: var(--dbp-background);
                 z-index: 1000;
                 border-radius: var(--dbp-border-radius);
             }
@@ -210,7 +210,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 w1idth: 100%;
                 box-sizing: border-box;
                 text-align: left;
-                color: var(--dbp-text);
+                color: var(--dbp-content);
                 background: none;
                 display: block;
             }

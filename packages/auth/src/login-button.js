@@ -110,8 +110,8 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
                 }
 
                 a {
-                    color: var(--dbp-text);
-                    fill: var(--dbp-text);
+                    color: var(--dbp-content);
+                    fill: var(--dbp-content);
                     cursor: pointer;
                     text-decoration: none;
                 }
@@ -135,12 +135,12 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
                 }
 
                 .login-box:hover svg path {
-                    fill: var(--dbp-hover-text);
+                    fill: var(--dbp-hover-color);
                 }
 
                 .login-box:hover {
-                    color: var(--dbp-hover-text);
-                    background-color: var(--dbp-hover-base);
+                    color: var(--dbp-hover-color, var(--dbp-content));
+                    background-color: var(--dbp-hover-background-color);
                     cursor: pointer;
                     transition: none;
                 }

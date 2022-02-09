@@ -94,8 +94,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             a {
-                color: var(--dbp-text);
-                fill: var(--dbp-text);
+                color: var(--dbp-content);
+                fill: var(--dbp-content);
                 cursor: pointer;
                 text-decoration: none;
                 display: block;
@@ -128,7 +128,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                 border: var(--dbp-border);
                 border-radius: 0px;
                 overflow: hidden;
-                background-color: var(--dbp-base);
+                background-color: var(--dbp-background);
             }
 
             .dropdown-content {
@@ -139,14 +139,14 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             .menu a {
                 /*padding: 0.3em;*/
                 font-weight: 400;
-                color: var(--dbp-text);
+                color: var(--dbp-content);
                 display: block;
                 text-decoration: none;
             }
 
             .menu a:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                color: var(--dbp-hover-color, var(--dbp-content));
+                background-color: var(--dbp-hover-background-color);
             }
 
             .menu a.selected {
@@ -155,7 +155,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .dropdown-item {
-                color: var(--dbp-text-muted);
+                color: var(--dbp-muted);
                 display: block;
                 font-size: 0.875rem;
                 line-height: 1.5;
@@ -197,8 +197,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .login-button:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                color: var(--dbp-hover-color, var(--dbp-content));
+                background-color: var(--dbp-hover-background-color);
                 cursor: pointer;
                 transition: none;
             }
@@ -209,7 +209,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .login-box:hover svg path {
-                fill: var(--dbp-hover-text);
+                fill: var(--dbp-hover-color);
             }
 
             .login-box .label {

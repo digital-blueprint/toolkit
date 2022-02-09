@@ -55,10 +55,10 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
                     --dbp-override-accent: #c24f68;
                     --dbp-override-primary-base: #2a4491;
                     --dbp-override-primary-text: white;
-                    --dbp-override-primary-border: 1px solid #2a4491;
+                    --dbp-override-primary-surface-border-color: #2a4491;
                     --dbp-override-secondary-base: white;
                     --dbp-override-secondary-text: black;
-                    --dbp-override-secondary-border: 1px solid black;
+                    --dbp-override-secondary-surface-border-color: black;
                     --dbp-override-info: #2a4491;
                     --dbp-override-success: #188018;
                     --dbp-override-warning-as-text: #c15500;
@@ -85,10 +85,10 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
                     --dbp-override-accent: #c24f68;
                     --dbp-override-primary-base: #8ca4eb;
                     --dbp-override-primary-text: #151515;
-                    --dbp-override-primary-border: 1px solid #8ca4eb;
+                    --dbp-override-primary-surface-border-color: #8ca4eb;
                     --dbp-override-secondary-base: #151515;
                     --dbp-override-secondary-text: white;
-                    --dbp-override-secondary-border: 1px solid white;
+                    --dbp-override-secondary-surface-border-color: white;
                     --dbp-override-info: #8ca4eb;
                     --dbp-override-success: #7acc79;
                     --dbp-override-warning-as-text: #f99a41;

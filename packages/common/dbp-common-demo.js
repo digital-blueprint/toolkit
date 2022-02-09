@@ -93,7 +93,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
             .content h4,
             .content h5,
             .content h6 {
-                color: var(--dbp-text);
+                color: var(--dbp-content);
                 font-weight: 600;
                 line-height: 1.125;
             }
@@ -247,8 +247,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                     <pre>
 &lt;style&gt;
 html {
-    /* This will override --dbp-primary-base */
-    --dbp-override-primary-dark: green;
+    /* This will override --dbp-primary-surface */
+    --dbp-override-primary-surface: green;
     /* Same for all other variables, prefix with "override" */
 }
 &lt;/style&gt;</pre

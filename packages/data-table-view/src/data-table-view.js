@@ -266,8 +266,8 @@ export class DataTableView extends AdapterLitElement {
                 text-align: center;
                 text-indent: 0 !important;
                 line-height: 0.9em;
-                color: var(--dbp-primary-text);
-                background-color: var(--dbp-primary-base);
+                color: var(--dbp-on-primary-surface);
+                background-color: var(--dbp-primary-surface);
                 content: '+';
             }
 

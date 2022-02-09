@@ -118,8 +118,8 @@ export class Notification extends DBPLitElement {
             .modal-close::before,
             .delete::after,
             .modal-close::after {
-                background-color: var(--dbp-base);
-                color: var(--dbp-text);
+                background-color: var(--dbp-background);
+                color: var(--dbp-content);
                 content: '';
                 display: block;
                 left: 50%;

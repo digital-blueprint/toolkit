@@ -599,11 +599,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
             header .hd1-middle {
                 grid-area: hd1-middle;
-                background-color: var(--dbp-text);
+                background-color: var(--dbp-content);
                 background: linear-gradient(
                     180deg,
-                    var(--dbp-text) 0%,
-                    var(--dbp-text) 85%,
+                    var(--dbp-content) 0%,
+                    var(--dbp-content) 85%,
                     rgba(0, 0, 0, 0) 90%
                 );
             }
@@ -635,8 +635,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             header .hd2-left a:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                color: var(--dbp-hover-color, var(--dbp-content));
+                background-color: var(--dbp-hover-background-color);
             }
 
             header .hd2-right {
@@ -648,7 +648,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             header a {
-                color: var(--dbp-text);
+                color: var(--dbp-content);
                 display: inline;
             }
 
@@ -678,9 +678,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             footer a:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
-                border-color: var(--dbp-hover-text);
+                color: var(--dbp-hover-color, var(--dbp-content));
+                background-color: var(--dbp-hover-background-color);
+                border-color: var(--dbp-hover-color, var(--dbp-content));
             }
 
             /* We don't allow inline-svg */
@@ -699,15 +699,15 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             .menu a {
                 padding: 0.3em;
                 font-weight: 300;
-                color: var(--dbp-text);
+                color: var(--dbp-content);
                 display: block;
                 padding-right: 13px;
                 word-break: break-word;
             }
 
             .menu a:hover {
-                color: var(--dbp-hover-text);
-                background-color: var(--dbp-hover-base);
+                color: var(--dbp-hover-color, var(--dbp-content));
+                background-color: var(--dbp-hover-background-color);
             }
 
             .menu a.selected {
@@ -719,7 +719,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
             aside .subtitle {
                 display: none;
-                color: var(--dbp-text);
+                color: var(--dbp-content);
                 font-size: 1.25rem;
                 font-weight: 300;
                 line-height: 1.25;
@@ -767,7 +767,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     position: sticky;
                     top: 0;
                     width: 100%;
-                    background-color: var(--dbp-base);
+                    background-color: var(--dbp-background);
                     z-index: 10;
                 }
 
@@ -782,7 +782,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     border-top-width: 0;
                     width: 100%;
                     position: absolute;
-                    background-color: var(--dbp-base);
+                    background-color: var(--dbp-background);
                     z-index: 10;
                 }
 

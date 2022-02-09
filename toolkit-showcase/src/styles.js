@@ -45,8 +45,8 @@ export function getDemoCSS() {
         }
 
         a:hover {
-            color: var(--dbp-hover-text);
-            background-color: var(--dbp-hover-base);
+            color: var(--dbp-hover-color, var(--dbp-content));
+            background-color: var(--dbp-hover-background-color);
         }
 
         a:after {
@@ -90,16 +90,16 @@ export function getDemoCSS() {
         }
 
         pre {
-            background-color: var(--dbp-base);
-            color: var(--dbp-text);
+            background-color: var(--dbp-background);
+            color: var(--dbp-content);
             padding: 0.4em;
             overflow-x: auto;
             border: 1px solid #ddd;
         }
 
         code {
-            background-color: var(--dbp-base);
-            color: var(--dbp-text);
+            background-color: var(--dbp-background);
+            color: var(--dbp-content);
             line-height: 1.5em;
             font-weight: normal;
             padding: 0.25em 0.5em 0.25em;

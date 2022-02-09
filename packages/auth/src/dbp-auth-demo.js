@@ -117,7 +117,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
                 .content h4,
                 .content h5,
                 .content h6 {
-                    color: var(--dbp-text);
+                    color: var(--dbp-content);
                     font-weight: 600;
                     line-height: 1.125;
                 }

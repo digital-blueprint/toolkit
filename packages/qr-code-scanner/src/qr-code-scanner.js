@@ -494,8 +494,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
             .output {
                 margin-top: 20px;
-                background: var(--dbp-text-muted);
-                color: var(--dbp-text);
+                background: var(--dbp-muted-surface);
+                color: var(--dbp-on-muted-surface);
+                border: var(--dbp-border);
+                border-color: var(--dbp-muted-surface-border-color);
                 padding: 10px;
                 padding-bottom: 0;
             }
@@ -522,7 +524,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             #videoSource:hover {
                 background: calc(100% - 0.2rem) center no-repeat
                     url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
-                color: var(--dbp-text);
+                color: var(--dbp-content);
                 background-position-x: calc(100% - 0.4rem);
                 background-size: auto 45%;
             }
