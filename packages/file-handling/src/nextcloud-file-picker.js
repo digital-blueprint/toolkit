@@ -1961,7 +1961,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 that._('#new-folder-row-btn').addEventListener("click", event => {
                     that.addNewFolder();
                     event.stopPropagation();
-                })
+                });
 
                 that._('#new-folder-row').addEventListener('keydown', (event) => {
                     if (event.key === 'Escape') {
