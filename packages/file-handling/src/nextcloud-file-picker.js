@@ -2572,7 +2572,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .extended-breadcrumb-menu li.active {
-                background-color: var(--dbp-base-inverted);
+                background-color: var(--dbp-content-surface);
             }
 
             .extended-breadcrumb-menu li:hover > a {
@@ -2580,11 +2580,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .extended-breadcrumb-menu li.active > a {
-                color: var(--dbp-text-inverted);
+                color: var(--dbp-on-content-surface);
             }
 
             .extended-breadcrumb-menu a.inactive {
-                color: var(--dbp-text-muted);
+                color: var(--dbp-muted);
                 pointer-events: none;
                 cursor: default;
             }
@@ -2687,7 +2687,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .extended-menu a.inactive {
-                color: var(--dbp-text-muted);
+                color: var(--dbp-muted);
                 pointer-events: none;
                 cursor: default;
             }
@@ -2711,7 +2711,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .extended-menu li.active {
-                background-color: var(--dbp-base-inverted);
+                background-color: var(--dbp-content-surface);
             }
 
             .extended-menu li:hover > a {
@@ -2719,15 +2719,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .extended-menu li.active > a {
-                color: var(--dbp-text-inverted);
+                color: var(--dbp-on-content-surface);
             }
 
             .extended-menu li.inactive:hover {
-                background-color: var(--dbp-base);
+                background-color: var(--dbp-background);
             }
 
             .extended-menu li.inactive > a {
-                color: var(--dbp-text-muted);
+                color: var(--dbp-muted);
                 pointer-events: none;
                 cursor: default;
             }
