@@ -817,6 +817,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.loading = false;
                     this.statusText = '';
                     this.tabulatorTable.setData(dataObject);
+                    this.tabulatorTable.setSort([
+                        {column: "basename", dir: "asc"},
+                        {column: "type", dir: "asc"},
+                    ]);
 
                     if (
                         this._('#directory-content-table').querySelector(
@@ -1262,6 +1266,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 this.loading = false;
                 this.statusText = '';
                 this.tabulatorTable.setData(contents.data);
+                this.tabulatorTable.setSort([
+                    {column: "basename", dir: "asc"},
+                    {column: "type", dir: "asc"},
+                ]);
                 this.isPickerActive = true;
                 this.isInFavorites = false;
                 this.isInRecent = false;
@@ -1940,11 +1948,20 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     i18n.t('nextcloud-file-picker.new-folder-placeholder') +
                     '" />';
 
+                const icon_tag = that.getScopedTagName("dbp-icon");
+                let html = `<${icon_tag} name="checkmark-circle" class="new-folder-checkmark-icon"></${icon_tag}>`;
+                that._('#new-folder-row').innerHTML  += '<button class="button" title="" id="new-folder-row-btn">' + html + '</button>';
+                    
                 that._('#tf-new-folder').addEventListener('keydown', ({key}) => {
                     if (key === 'Enter') {
                         that.addNewFolder();
                     }
                 });
+
+                that._('#new-folder-row-btn').addEventListener("click", event => {
+                    that.addNewFolder();
+                    event.stopPropagation();
+                })
 
                 that._('#new-folder-row').addEventListener('keydown', (event) => {
                     if (event.key === 'Escape') {
@@ -1956,7 +1973,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 document.addEventListener('keydown', this.boundCancelNewFolderHandler);
 
                 that._('#new-folder-row').addEventListener('click', (event) => {
-                    that._('#tf-new-folder').select();
                     event.stopPropagation();
                 });
 
@@ -1978,7 +1994,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     cancelNewFolder(event) {
         if (event.key === 'Escape') {
             this.deleteNewFolderEntry();
-            event.stopPropagation(); //TODO verify
+            event.stopPropagation();
         }
     }
 
@@ -2469,6 +2485,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
+            #new-folder-row .button {
+                background-color: var(--dbp-success);
+                color: var(--dbp-on-success-surface);
+                border: 1px solid var(--dbp-on-success-surface);
+                position: absolute;
+                right: 10px;
+                top: 8px;
+            }
+
             .breadcrumb-folder {
                 padding-right: 5px;
                 color: var(--dbp-muted);
@@ -2493,6 +2518,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             #new-folder-row.highlighted {
                 background: var(--dbp-success-surface);
                 color: var(--dbp-on-success-surface);
+                position: relative;
             }
 
             span.first {
@@ -2541,17 +2567,24 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 overflow: hidden;
             }
 
-            .extended-breadcrumb-menu li.active {
-                background-color: var(--dbp-dark);
-                color: var(--dbp-light);
+            .extended-breadcrumb-menu li:hover {
+                background-color: var(--dbp-hover-background-color);
             }
 
-            .extended-breadcrumb-menu li.active a:hover {
-                color: var(--dbp-light);
+            .extended-breadcrumb-menu li.active {
+                background-color: var(--dbp-base-inverted);
+            }
+
+            .extended-breadcrumb-menu li:hover > a {
+                color: var(--dbp-hover-color, var(--dbp-content));
+            }
+
+            .extended-breadcrumb-menu li.active > a {
+                color: var(--dbp-text-inverted);
             }
 
             .extended-breadcrumb-menu a.inactive {
-                color: var(--dbp-muted-text);
+                color: var(--dbp-text-muted);
                 pointer-events: none;
                 cursor: default;
             }
@@ -2563,10 +2596,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 background-color: var(--dbp-background);
                 z-index: 1000;
                 /** display: grid; **/
-            }
-
-            .extended-breadcrumb-menu a:hover {
-                color: #e4154b;
             }
 
             .button-container.filter-user {
@@ -2583,7 +2612,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 /* font-weight: 300; */
                 border: none;
                 background: transparent;
-                width: 100%;
+                /** width: 100%; */
+                width: calc(100% - 42px);
                 height: 100%;
             }
 
@@ -2620,7 +2650,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             input[type='text']#tf-new-folder {
                 border: 0px;
                 background: transparent;
-                width: 100%;
+                /**width: 100%;*/
+                width: calc(100% - 42px);
                 height: 100%;
                 margin-left: -8px;
                 color: white;
@@ -2655,16 +2686,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-right: 46px;
             }
 
-            .extended-menu li.active {
-                background-color: var(--dbp-dark);
-                color: var(--dbp-light);
-            }
-            .extended-menu li.active a:hover {
-                color: var(--dbp-light);
-            }
-
             .extended-menu a.inactive {
-                color: var(--dbp-muted-text);
+                color: var(--dbp-text-muted);
                 pointer-events: none;
                 cursor: default;
             }
@@ -2683,16 +2706,34 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 border-radius: var(--dbp-border-radius);
             }
 
-            .extended-menu a:hover {
-                color: var(--dbp-hover-color, var(--dbp-content));
+            .extended-menu li:hover {
                 background-color: var(--dbp-hover-background-color);
             }
 
+            .extended-menu li.active {
+                background-color: var(--dbp-base-inverted);
+            }
+
+            .extended-menu li:hover > a {
+                color: var(--dbp-hover-color, var(--dbp-content));
+            }
+
+            .extended-menu li.active > a {
+                color: var(--dbp-text-inverted);
+            }
+
+            .extended-menu li.inactive:hover {
+                background-color: var(--dbp-base);
+            }
+
+            .extended-menu li.inactive > a {
+                color: var(--dbp-text-muted);
+                pointer-events: none;
+                cursor: default;
+            }
+
             .nextcloud-header {
-                /**margin-bottom: 2rem;**/
-                /**display: inline-grid; **/
                 width: 100%;
-                /**grid-template-columns: auto auto;**/
             }
 
             .nextcloud-header div button {
@@ -2779,7 +2820,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .additional-menu {
                 white-space: nowrap;
                 height: 33px;
-                margin-right: -12px; /*-15px; -8px*/
+                margin-right: -11px;
             }
 
             .nextcloud-nav p {
@@ -3047,13 +3088,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 .additional-menu {
-                    position: absolute;
+                    position: inherit; /** absolute */
                     right: 0px;
-                    /** margin-right: 10px; **/
-                }
-
-                .additional-menu {
-                    position: inherit;
+                    margin-right: -12px;
                 }
 
                 .inline-block {
@@ -3252,6 +3289,33 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     <div class="nextcloud-nav">
                         <p>${this.getBreadcrumb()}</p>
 
+                         <div class="menu-buttons">
+                            <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
+                            <div class="inline-block">
+                                <div id="new-folder-wrapper" class="hidden">
+                                    <input type="text"
+                                           placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
+                                           name="new-folder" class="input" id="new-folder"/>
+                                    <button class="button add-folder-button"
+                                            title="${i18n.t('nextcloud-file-picker.add-folder')}"
+                                            @click="${() => {
+                                                this.addFolder();
+                                            }}">
+                                        <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </div>
+                            <button class="button ${classMap({hidden: this.storeSession})}"
+                                    title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
+                                    @click="${() => {
+                                        this.openAddFolderDialogue();
+                                    }}">
+                                <dbp-icon name="plus" class="nextcloud-add-folder" id="add-folder-button"></dbp-icon>
+                            </button>
+                        </div>
+                        
+
                         <div class="additional-menu ${classMap({hidden: !this.storeSession})}">
                             <a
                                 class="extended-menu-link"
@@ -3285,22 +3349,20 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                         )}
                                     </a>
                                 </li>
-                                <li class="${classMap({hidden: !this.directoriesOnly})}">
-                                    <a
-                                        class="${classMap({
+                                <li class="${classMap({hidden: !this.directoriesOnly,
                                             inactive:
                                                 this.isInRecent ||
                                                 this.isInFavorites ||
                                                 this.isInFilteredRecent ||
                                                 this.disableRowClick,
-                                        })}"
+                                            })}">
+                                    <a class=""
                                         @click="${() => {
                                             this.addOpenFolderTableEntry();
                                         }}">
                                         ${i18n.t('nextcloud-file-picker.add-folder')}
                                     </a>
                                 </li>
-
                                 <li
                                     class="${classMap({hidden: !this.storeSession})}"
                                     title="${i18n.t('nextcloud-file-picker.log-out')}">
