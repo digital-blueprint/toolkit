@@ -1948,6 +1948,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     i18n.t('nextcloud-file-picker.new-folder-placeholder') +
                     '" />';
 
+                let mimeElement = that._('#new-folder-row').querySelector('div.tabulator-cell[tabulator-field="mime"]');
+                if (window.getComputedStyle(mimeElement).display === "none") {
+                    that._('#tf-new-folder').classList.add('smaller');
+                }
+
                 const icon_tag = that.getScopedTagName("dbp-icon");
                 let html = `<${icon_tag} name="checkmark-circle" class="new-folder-checkmark-icon"></${icon_tag}>`;
                 that._('#new-folder-row').innerHTML  += '<button class="button" title="" id="new-folder-row-btn">' + html + '</button>';
@@ -2612,8 +2617,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 /* font-weight: 300; */
                 border: none;
                 background: transparent;
-                /** width: 100%; */
-                width: calc(100% - 42px);
                 height: 100%;
             }
 
@@ -2650,11 +2653,14 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             input[type='text']#tf-new-folder {
                 border: 0px;
                 background: transparent;
-                /**width: 100%;*/
-                width: calc(100% - 42px);
+                width: 100%;
                 height: 100%;
                 margin-left: -8px;
                 color: white;
+            }
+
+            input[type='text']#tf-new-folder.smaller {
+                width: calc(100% - 42px);
             }
 
             .new-folder-selected::after {
