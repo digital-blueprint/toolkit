@@ -945,8 +945,6 @@ export function getTagCSS() {
             align-items: center;
             background-color: var(--dbp-muted);
             border-radius: var(--dbp-border-radius);
-            border: var(--dbp-border);
-            border-color: var(--dbp-muted-surface-border-color);
             color: var(--dbp-muted);
             display: inline-flex;
             font-size: 0.75rem;
@@ -964,15 +962,13 @@ export function getTagCSS() {
         }
 
         .tag:not(body).is-dark {
-            background-color: var(--dbp-secondary-surface);
-            color: var(--dbp-on-secondary-surface);
-            border-color: var(--dbp-secondary-surface-border-color);
+            background-color: var(--dbp-content-surface);
+            color: var(--dbp-on-content-surface);
         }
 
         .tag:not(body).is-light {
             background-color: var(--dbp-background);
             color: var(--dbp-content);
-            border: var(--dbp-border);
         }
 
         .tag:not(body).is-normal {
@@ -1323,7 +1319,8 @@ export function getLinkCss() {
         .int-link-internal,
         .link,
         .link-without-hover {
-            border-bottom: 1px solid var(--dbp-content);
+            border-bottom: var(--dbp-border);
+            border-color: var(--dbp-content);
         }
 
         .int-link-external:hover,
