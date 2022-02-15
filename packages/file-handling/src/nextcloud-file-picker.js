@@ -3015,9 +3015,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .button-container .checkmark::after {
-                left: 8px;
-                top: 3px;
-                width: 4px;
+                left: 6px;
+                top: 1px;
+                width: 5px;
                 height: 11px;
             }
 
