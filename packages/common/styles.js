@@ -824,8 +824,8 @@ export function getRadioAndCheckboxCss() {
         }
 
         .button-container input[type='checkbox']:checked ~ .checkmark:after {
-            border-bottom: var(--dbp-border);
-            border-right: var(--dbp-border);
+            border-bottom: 1px solid var(--dbp-content);
+            border-right: 1px solid var(--dbp-content);
             border-width: 0 2px 2px 0;
         }
 
@@ -858,11 +858,11 @@ export function getRadioAndCheckboxCss() {
         }
 
         .button-container .checkmark:after {
-            left: 7px;
-            top: 4px;
-            width: 6px;
-            height: 10px;
-            border: var(--dbp-border);
+            left: 6px;
+            top: 1px;
+            width: 5px;
+            height: 11px;
+            border: 1px solid var(--dbp-content);
             border-width: 0 2px 2px 0;
             -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);
@@ -1116,6 +1116,16 @@ export function getSelect2CSS() {
             word-wrap: break-word !important;
             text-overflow: inherit !important;
             white-space: normal !important;
+        }
+
+        .select2-dropdown{
+            background-color: var(--dbp-background);
+        }
+
+        .select2-container--default .select2-selection--single, .select2-dropdown, .select2-container--default .select2-search--dropdown .select2-search__field{
+            background: var(--dbp-background);
+            border: var(--dbp-border);
+            border-color: var(--dbp-muted);
         }
     `;
 }

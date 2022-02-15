@@ -593,7 +593,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             }
 
             header .hd1-left #lang-select {
-                padding-right: 10px;
                 padding-left: 10px;
             }
 
