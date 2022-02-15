@@ -1886,8 +1886,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      *
      */
     addOpenFolderTableEntry() {
-        const i18n = this._i18n;
-
         // Avoid row animation for previously created folders
         if (this._('.addRowAnimation')) {
             this._('.addRowAnimation').classList.remove('addRowAnimation');
@@ -1895,25 +1893,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         this.disableRowClick = true;
 
-        /**
-            that._('#new-folder-row-btn').addEventListener("click", event => {
-                that.addNewFolder();
-                event.stopPropagation();
-            });
-
-            that._('#new-folder-row').addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') {
-                    that.deleteNewFolderEntry();
-                    event.stopPropagation();
-                }
-            });
-
-            document.addEventListener('keydown', this.boundCancelNewFolderHandler);
-
-            that._('#new-folder-row').addEventListener('click', (event) => {
-                event.stopPropagation();
-            });
-        */
+        // that._('#new-folder-row').addEventListener('keydown', (event) => {
+        //     if (event.key === 'Escape') {
+        //         that.deleteNewFolderEntry();
+        //         event.stopPropagation();
+        //     }
+        // });
 
         // Click handler should ignore first click
         this.initateOpenNewFolder = true;
