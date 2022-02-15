@@ -24,6 +24,7 @@ const buildFull = (!watch && appEnv !== 'test') || process.env.FORCE_FULL !== un
 let useTerser = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
+let treeshake = buildFull;
 let useHTTPS = true;
 
 console.log('APP_ENV: ' + appEnv);
@@ -81,6 +82,7 @@ export default (async () => {
             format: 'esm',
             sourcemap: true,
         },
+        treeshake: treeshake,
         preserveEntrySignatures: false,
         plugins: [
             del({
