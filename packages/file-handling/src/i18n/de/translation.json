@@ -85,7 +85,12 @@
         "recent-files-title": "Neueste Dateien",
         "my-recent-files-title": "Meine neuesten Dateien",
         "my-recent-files-link-text": "Meine neuesten Dateien",
-        "all-recent-files-link-text": "Alle neuesten Dateien"
+        "all-recent-files-link-text": "Alle neuesten Dateien",
+        "new-folder-dialog-title": "Neuen Ordner erstellen",
+        "new-folder-dialog-label": "Name eingeben:",
+        "new-folder-dialog-button-ok": "Übernehmen",
+        "new-folder-dialog-button-cancel": "Abbrechen",
+        "new-folder-dialog-default-name": "Neuer Ordner"
     },
     "clipboard": {
         "add-files": "Dateien der Zwischenablage hinzufügen",

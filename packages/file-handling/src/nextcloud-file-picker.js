@@ -1881,116 +1881,63 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
+    /**
+     * Opens new folder modal
+     *
+     */
     addOpenFolderTableEntry() {
         const i18n = this._i18n;
+
+        // Avoid row animation for previously created folders
         if (this._('.addRowAnimation')) {
             this._('.addRowAnimation').classList.remove('addRowAnimation');
         }
+
         this.disableRowClick = true;
 
-        const d = new Date();
-        let props = {permissions: 'RGDNVCK'};
-        var row = {
-            type: 'directory',
-            filename: '',
-            basename: '',
-            lastmod: d,
-            props: props,
-        };
-
-        const that = this;
-
-        this.tabulatorTable
-            .addRow(row, true, 1)
-            .then(() => {
-                that._('#directory-content-table')
-                    .querySelector(
-                        'div.tabulator-tableHolder > div.tabulator-table > div.tabulator-row:nth-child(1)'
-                    )
-                    .setAttribute('id', 'new-folder-row');
-                that._('#new-folder-row').classList.toggle('highlighted');
-
-                that._('#new-folder-row')
-                    .querySelector(
-                        'div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-open'
-                    )
-                    .classList.add('new-folder-selected');
-                that._('#new-folder-row')
-                    .querySelector(
-                        'div.tabulator-cell:nth-child(1) > div > span.tabulator-responsive-collapse-toggle-close'
-                    )
-                    .classList.add('new-folder-selected');
-
-                // overwrite date
-                that
-                    ._('#new-folder-row')
-                    .querySelector('div.tabulator-cell:nth-child(6)').innerText = '';
-                if (
-                    that
-                        ._('#new-folder-row')
-                        .querySelector(
-                            'div.tabulator-responsive-collapse > table > tbody > tr:nth-child(1) > td:nth-child(2)'
-                        )
-                ) {
-                    that
-                        ._('#new-folder-row')
-                        .querySelector(
-                            'div.tabulator-responsive-collapse > table > tbody > tr:nth-child(1) > td:nth-child(2)'
-                        ).innerText = '';
-                }
-
-                // add input field
-                that._('#new-folder-row')
-                    .querySelector('div.tabulator-cell:nth-child(3)')
-                    .setAttribute('id', 'new-folder-cell');
-                that._('#new-folder-cell').innerHTML =
-                    '<input type="text" class="input" name="tf-new-folder" id="tf-new-folder" value="' +
-                    i18n.t('nextcloud-file-picker.new-folder-placeholder') +
-                    '" />';
-
-                let mimeElement = that._('#new-folder-row').querySelector('div.tabulator-cell[tabulator-field="mime"]');
-                if (window.getComputedStyle(mimeElement).display === "none") {
-                    that._('#tf-new-folder').classList.add('smaller');
-                }
-
-                const icon_tag = that.getScopedTagName("dbp-icon");
-                let html = `<${icon_tag} name="checkmark-circle" class="new-folder-checkmark-icon"></${icon_tag}>`;
-                that._('#new-folder-row').innerHTML  += '<button class="button" title="" id="new-folder-row-btn">' + html + '</button>';
-                    
-                that._('#tf-new-folder').addEventListener('keydown', ({key}) => {
-                    if (key === 'Enter') {
-                        that.addNewFolder();
-                    }
-                });
-
-                that._('#new-folder-row-btn').addEventListener("click", event => {
-                    that.addNewFolder();
-                    event.stopPropagation();
-                });
-
-                that._('#new-folder-row').addEventListener('keydown', (event) => {
-                    if (event.key === 'Escape') {
-                        that.deleteNewFolderEntry();
-                        event.stopPropagation();
-                    }
-                });
-
-                document.addEventListener('keydown', this.boundCancelNewFolderHandler);
-
-                that._('#new-folder-row').addEventListener('click', (event) => {
-                    event.stopPropagation();
-                });
-
-                that.initateOpenNewFolder = true;
-
-                // give the browser a chance to paint before selecting
-                setTimeout(() => {
-                    this._('#tf-new-folder').select();
-                }, 0);
-            })
-            .catch((error) => {
-                console.log('error', error);
+        /**
+            that._('#new-folder-row-btn').addEventListener("click", event => {
+                that.addNewFolder();
+                event.stopPropagation();
             });
+
+            that._('#new-folder-row').addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    that.deleteNewFolderEntry();
+                    event.stopPropagation();
+                }
+            });
+
+            document.addEventListener('keydown', this.boundCancelNewFolderHandler);
+
+            that._('#new-folder-row').addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        */
+
+        // Click handler should ignore first click
+        this.initateOpenNewFolder = true;
+
+        // give the browser a chance to paint before selecting
+        setTimeout(() => {
+            this._('#tf-new-folder-dialog').select();
+        }, 0);
+
+        MicroModal.show(this._('#new-folder-modal'), {
+            disableScroll: true,
+        });
+
+        this._('#tf-new-folder-dialog').addEventListener('keydown', ({key}) => { //TODO since we do not destroy the modal it is enough to do this once
+            if (key === 'Enter') {
+                this.addNewFolder();
+            }
+        });
+
+        this._('#new-folder-modal-box').addEventListener('click', (event) => { //TODO same here?
+            event.stopPropagation();
+        });
+
+        document.addEventListener('keydown', this.boundCancelNewFolderHandler);
 
         // during folder creation it should not be possible to click something
         document.addEventListener('click', this.boundClickOutsideNewFolderHandler);
@@ -2004,27 +1951,25 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     deleteNewFolderEntry() {
+        const i18n = this._i18n;
+
         if (this.initateOpenNewFolder) {
             this.initateOpenNewFolder = false;
             return;
         }
 
-        this._('#new-folder-row').classList.toggle('highlighted');
-
-        var row = this.tabulatorTable.getRowFromPosition(0);
-        if (row) {
-            row.delete();
-        }
-
         this.disableRowClick = false;
+        MicroModal.close(this._('#new-folder-modal'));
+
         document.removeEventListener('click', this.boundClickOutsideNewFolderHandler);
         document.removeEventListener('keydown', this.boundCancelNewFolderHandler);
+        this._('#tf-new-folder-dialog').value = i18n.t('nextcloud-file-picker.new-folder-dialog-default-name');
     }
 
     addNewFolder() {
         const i18n = this._i18n;
-        if (this._('#tf-new-folder').value !== '') {
-            let folderName = this._('#tf-new-folder').value;
+        if (this._('#tf-new-folder-dialog').value !== '') {
+            let folderName = this._('#tf-new-folder-dialog').value;
             if (typeof this.directoryPath === 'undefined') {
                 this.directoryPath = '';
             }
@@ -3060,6 +3005,43 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 font-size: 1.4em;
             }
 
+            #new-folder-modal-box {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 15px 20px 20px 20px;
+                max-height: 190px;
+                min-height: 190px;
+                min-width: 320px;
+                max-width: 400px;
+            }
+
+            #new-folder-modal-box header.modal-header {
+                padding: 0px;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            #new-folder-modal-box footer.modal-footer .modal-footer-btn  {
+                padding: 0px;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            #new-folder-modal-content {
+                display: block;
+                padding-left: 0px;
+                padding-right: 0px;
+            }
+
+            #new-folder-modal-content div .input {
+                width: 100%;
+            }
+
+            #new-folder-modal-content .nf-label {
+                padding-bottom: 1px;
+            }
+
             @media only screen and (orientation: portrait) and (max-width: 768px) {
                 .breadcrumb-arrow {
                     font-size: 1.6em;
@@ -3355,8 +3337,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                         )}
                                     </a>
                                 </li>
-                                <li class="${classMap({hidden: !this.directoriesOnly,
-                                            inactive:
+                                <li class="${classMap({inactive:
                                                 this.isInRecent ||
                                                 this.isInFavorites ||
                                                 this.isInFilteredRecent ||
@@ -3570,6 +3551,69 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                         }}" />
                                     <span class="checkmark"></span>
                                 </label>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal micromodal-slide" id="new-folder-modal" aria-hidden="true">
+                <div class="modal-overlay" tabindex="-2" data-micromodal-close>
+                    <div
+                        class="modal-container"
+                        id="new-folder-modal-box"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="new-folder-modal-title">
+                        <header class="modal-header">
+                            <button
+                                title="${i18n.t('file-sink.modal-close')}"
+                                class="modal-close"
+                                aria-label="Close modal"
+                                @click="${() => {
+                                    this.deleteNewFolderEntry();
+                                }}">
+                                <dbp-icon
+                                    title="${i18n.t('file-sink.modal-close')}"
+                                    name="close"
+                                    class="close-icon"></dbp-icon>
+                            </button>
+                            <h3 id="new-folder-modal-title">
+                                ${i18n.t('nextcloud-file-picker.new-folder-dialog-title')}
+                            </h3>
+                        </header>
+                        <main class="modal-content" id="new-folder-modal-content">
+                            <div class="nf-label">
+                                ${i18n.t('nextcloud-file-picker.new-folder-dialog-label')}
+                            </div>
+                            <div>
+                                <input 
+                                    type="text" 
+                                    class="input" 
+                                    name="tf-new-folder-dialog" 
+                                    id="tf-new-folder-dialog" 
+                                    value="${i18n.t('nextcloud-file-picker.new-folder-dialog-default-name')}" 
+                                />
+                            </div>
+                        </main>
+                        <footer class="modal-footer">
+                            <div class="modal-footer-btn">
+                                <button
+                                    class="button"
+                                    data-micromodal-close
+                                    aria-label="Close this dialog window"
+                                    @click="${() => {
+                                        this.deleteNewFolderEntry();
+                                    }}">
+                                    ${i18n.t('nextcloud-file-picker.new-folder-dialog-button-cancel')}
+                                </button>
+                                <button
+                                    class="button select-button is-primary"
+                                    @click="${() => {
+                                        this.addNewFolder();
+                                    }}">
+                                    ${i18n.t('nextcloud-file-picker.new-folder-dialog-button-ok')}
+                                </button>
                             </div>
                         </footer>
                     </div>
