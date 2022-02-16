@@ -1903,7 +1903,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         // Click handler should ignore first click
         this.initateOpenNewFolder = true;
 
-        // give the browser a chance to paint before selecting
+        // Give the browser a chance to paint before selecting
         setTimeout(() => {
             this._('#tf-new-folder-dialog').select();
         }, 0);
@@ -3017,6 +3017,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 display: block;
                 padding-left: 0px;
                 padding-right: 0px;
+                overflow: unset;
             }
 
             #new-folder-modal-content div .input {
@@ -3024,7 +3025,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             #new-folder-modal-content .nf-label {
-                padding-bottom: 1px;
+                padding-bottom: 2px;
             }
 
             @media only screen and (orientation: portrait) and (max-width: 768px) {
