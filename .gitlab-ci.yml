@@ -16,8 +16,8 @@ stages:
 test:
   stage: test
   script:
-    - yarn check --integrity
     - yarn install --frozen-lockfile
+    - yarn check --integrity
     - yarn run test
 
 linting:
