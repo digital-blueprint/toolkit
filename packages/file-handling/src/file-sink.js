@@ -174,7 +174,8 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     async uploadToNextcloud(directory) {
         let that = this;
         const element = that._('#nextcloud-file-picker');
-        await element.uploadFiles(that.files, directory);
+        const files = [...this.files];
+        await element.uploadFiles(files, directory);
     }
 
     finishedFileUpload(event) {
@@ -214,10 +215,12 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
     loadWebdavDirectory() {
         const filePicker = this._('#nextcloud-file-picker');
-
         if (filePicker) {
+
             filePicker.checkLocalStorage().then((contents) => {
+
                 if (filePicker.webDavClient !== null) {
+
                     filePicker.loadDirectory(filePicker.directoryPath);
                 }
             });

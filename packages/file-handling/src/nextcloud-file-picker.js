@@ -1480,18 +1480,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         const i18n = this._i18n;
         this.loading = true;
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
-        this.fileList = files;
-        this.forAll = false;
-        this.setRepeatForAllConflicts();
-        this.uploadFile(directory);
-
-        if (files.length > 0) {
+        this.fileList = [...files];
+        if (typeof this.fileList !== undefined && this.fileList.length > 0) {
             this.sendSetPropertyEvent('analytics-event', {
                 category: 'FileHandlingNextcloud',
                 action: 'UploadFiles',
                 name: files.length,
             });
         }
+        this.forAll = false;
+        this.setRepeatForAllConflicts();
+        this.uploadFile(directory);
     }
 
     /**
@@ -1522,31 +1521,28 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             await this.webDavClient
                 .putFileContents(path, file, {
                     contentLength: file.size,
-                    overwrite: false,
-                    onUploadProgress: (progress) => {
-                        /* console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);*/
-                    },
+                    overwrite: false
                 })
-                .then(function () {
-                    that.uploadCount += 1;
-                    that.fileList.shift();
-                    that.uploadFile(directory);
-                })
-                .catch((error) => {
-                    if (error.message.search('412') !== -1 || error.message.search('403') !== -1) {
-                        this.generatedFilename = this.getNextFilename();
-                        this._('#replace-filename').value = this.generatedFilename;
-                        if (this.forAll) {
-                            this.uploadFileObject = file;
-                            this.uploadFileDirectory = directory;
-                            this.abortUploadButton = true;
-                            this.uploadFileAfterConflict();
+                .then(function (success) {
+                    if (!success) {
+                        that.generatedFilename = that.getNextFilename();
+                        that._('#replace-filename').value = that.generatedFilename;
+                        if (that.forAll) {
+                            that.uploadFileObject = file;
+                            that.uploadFileDirectory = directory;
+                            that.abortUploadButton = true;
+                            that.uploadFileAfterConflict();
                         } else {
-                            this.replaceModalDialog(file, directory);
+                            that.replaceModalDialog(file, directory);
                         }
                     } else {
-                        throw error;
+                        that.uploadCount += 1;
+                        that.fileList.shift();
+                        that.uploadFile(directory);
                     }
+                })
+                .catch((error) => {
+                    throw error;
                 });
         } else {
             this.loadDirectory(this.directoryPath);
