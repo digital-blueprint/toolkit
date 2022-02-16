@@ -39,7 +39,7 @@ host('development')
 
 task('build', function () {
     $stage = get('stage');
-    runLocally("yarn install");
+    runLocally("yarn install --frozen-lockfile");
     runLocally("APP_ENV=$stage yarn run build");
 });
 

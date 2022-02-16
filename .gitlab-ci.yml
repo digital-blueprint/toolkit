@@ -16,13 +16,13 @@ stages:
 test:
   stage: test
   script:
-    - yarn install
+    - yarn install --frozen-lockfile
     - yarn run test
 
 linting:
   stage: test
   script:
-    - yarn install
+    - yarn install --frozen-lockfile
     - yarn run lint
 
 publish:
@@ -36,7 +36,7 @@ publish:
     # NPM_TOKEN needs to be a "Publish" token with 2FA disabled!
     # "Automation" tokens don't work with lerna (even if they would work with "npm publish")
     - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
-    - yarn install
+    - yarn install --frozen-lockfile
     - yarn run build
     - yarn run publish
 
