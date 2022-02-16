@@ -106,7 +106,7 @@ export class LanguageSelect extends AdapterLitElement {
                 box-shadow: none;
                 -moz-box-shadow: none;
                 -webkit-box-shadow: none;
-                box-shadow: 0px 0px 4px 2px var(--dbp-accent);
+                box-shadow: 0px 0px 4px 2px var(--dbp-primary);
             }
             
             `
