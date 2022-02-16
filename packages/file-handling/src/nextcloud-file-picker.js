@@ -2406,6 +2406,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         if (menu && !menu.classList.contains('hidden')) this.toggleMoreMenu();
     }
 
+    _atChangeInput(event) {
+        if (this._("#new-folder-confirm-btn") )
+            this._("#new-folder-confirm-btn").disabled = this._('#tf-new-folder-dialog') && this._('#tf-new-folder-dialog').value === '';
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -3574,7 +3579,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                     class="input" 
                                     name="tf-new-folder-dialog" 
                                     id="tf-new-folder-dialog" 
-                                    value="${i18n.t('nextcloud-file-picker.new-folder-dialog-default-name')}" 
+                                    value="${i18n.t('nextcloud-file-picker.new-folder-dialog-default-name')}"
+                                    @input="${() => {this._atChangeInput();}}"
                                 />
                             </div>
                         </main>
@@ -3591,6 +3597,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 </button>
                                 <button
                                     class="button select-button is-primary"
+                                    id="new-folder-confirm-btn"
                                     @click="${() => {
                                         this.addNewFolder();
                                     }}">

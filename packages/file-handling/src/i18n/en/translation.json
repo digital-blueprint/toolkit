@@ -89,7 +89,7 @@
         "all-recent-files-link-text": "All Recent Files",
         "new-folder-dialog-title": "Create a new folder",
         "new-folder-dialog-label": "Enter a name:",
-        "new-folder-dialog-button-ok": "Apply",
+        "new-folder-dialog-button-ok": "Create",
         "new-folder-dialog-button-cancel": "Cancel",
         "new-folder-dialog-default-name": "New folder"
     },
