@@ -120,7 +120,7 @@ export class OrganizationSelect extends AdapterLitElement {
         this._clearSelect2();
 
         const data = this.organizations.map((item) => {
-            return {id: item.object['@id'], text: item.code + ' ' + item.name};
+            return {id: item.object['@id'], text: item.name};
         });
 
         data.sort((a, b) => {
@@ -264,7 +264,6 @@ export class OrganizationSelect extends AdapterLitElement {
         for (let org of data['hydra:member']) {
             let organization = {
                 id: org.identifier,
-                code: org.alternateName,
                 name: org.name,
                 url: org.url,
                 value: org['@id'],
