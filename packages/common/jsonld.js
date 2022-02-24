@@ -208,16 +208,6 @@ export default class JSONLD {
         return this.entities[entityName];
     }
 
-    getApiUrlForIdentifier(identifier) {
-        const entity = this.getEntityForIdentifier(identifier);
-
-        if (entity === undefined || entity['@entryPoint'] === undefined) {
-            throw new Error(`Entity with identifier "${identifier}" not found!`);
-        }
-
-        return entity['@entryPoint'];
-    }
-
     getApiUrlForEntityName(entityName) {
         const entity = this.getEntityForEntityName(entityName);
 

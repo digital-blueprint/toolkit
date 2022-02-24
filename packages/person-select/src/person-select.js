@@ -148,8 +148,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         }
 
         // find the correct api url for a person
-        const apiUrl = this.jsonld.getApiUrlForIdentifier('http://schema.org/Person');
-        // const apiUrl = this.jsonld.getApiUrlForEntityName("Event");
+        const apiUrl = this.jsonld.getApiUrlForEntityName("BasePerson");
 
         if (this.$select === null) {
             return false;

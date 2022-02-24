@@ -147,8 +147,7 @@ export class CheckInPlaceSelect extends ScopedElementsMixin(AdapterLitElement) {
         }
 
         // find the correct api url for a checkInPlace
-        const apiUrl = this.jsonld.getApiUrlForIdentifier('http://schema.org/Place');
-        // const apiUrl = this.jsonld.getApiUrlForEntityName("CheckInPlace");
+        const apiUrl = this.jsonld.getApiUrlForEntityName("CheckinPlace");
 
         if (this.$select === null) {
             return false;
