@@ -51,7 +51,7 @@
         "@dbp-toolkit/person-profile": "^0.2.0",
         "@dbp-toolkit/person-select": "^0.2.0",
         "@open-wc/scoped-elements": "^2.0.0",
-        "@rollup/plugin-replace": "^3.0.0",
+        "@rollup/plugin-replace": "^4.0.0",
         "highlight.js": "^11.0.0",
         "lit": "^2.0.0"
     },
