@@ -258,7 +258,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             box-shadow: none;
             -moz-box-shadow: none;
             -webkit-box-shadow: none;
-            box-shadow: 0px 0px 3px 2px var(--dbp-primary);
+            box-shadow: 0px 0px 3px 1px var(--dbp-primary);
         }
 
         .control {
@@ -717,7 +717,7 @@ export function getButtonCSS() {
             box-shadow: none;
             -moz-box-shadow: none;
             -webkit-box-shadow: none;
-            box-shadow: 0px 0px 3px 2px var(--dbp-primary);
+            box-shadow: 0px 0px 3px 1px var(--dbp-primary);
         }
     `;
 }
@@ -835,7 +835,7 @@ export function getRadioAndCheckboxCss() {
             box-shadow: none;
             -moz-box-shadow: none;
             -webkit-box-shadow: none;
-            box-shadow: 0px 0px 3px 2px var(--dbp-primary);
+            box-shadow: 0px 0px 3px 1px var(--dbp-primary);
         }
 
         .button-container input[type='checkbox']:disabled ~ .checkmark {
