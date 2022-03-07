@@ -322,8 +322,8 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             box-sizing: inherit;
         }
 
-        select:not(.select) {
-            -moz-appearance: none;.dropdown-menu
+        select:not(.select), .dropdown-menu {
+            -moz-appearance: none;
             -webkit-appearance: none;
             background: calc(100% - 0.2rem) center no-repeat url("${unsafeCSS(
                 getIconSVGURL('chevron-down')
