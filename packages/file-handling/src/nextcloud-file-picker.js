@@ -3265,7 +3265,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         <p>${this.getBreadcrumb()}</p>
 
                          <div class="menu-buttons">
-                            <div class="add-folder ${classMap({hidden: !this.directoriesOnly})}">
+                            <div class="add-folder ${classMap({hidden: this.storeSession})}">
                             <div class="inline-block">
                                 <div id="new-folder-wrapper" class="hidden">
                                     <input type="text"
