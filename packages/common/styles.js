@@ -47,7 +47,7 @@ export function getThemeCSS() {
                     var(--dbp-primary-surface)
             );
             --dbp-secondary: 
-                    var(--dbp-override-secondary, var(--dbp-override-content)
+                    var(--dbp-override-secondary, var(--dbp-content)
             );
             --dbp-secondary-surface:
                     var(--dbp-override-secondary-surface,
