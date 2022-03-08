@@ -858,8 +858,8 @@ export function getRadioAndCheckboxCss() {
         }
 
         .button-container .checkmark:after {
-            left: 6px;
-            top: 1px;
+            left: 8px;
+            top: 3px;
             width: 5px;
             height: 11px;
             border: 1px solid var(--dbp-content);
@@ -867,6 +867,28 @@ export function getRadioAndCheckboxCss() {
             -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);
             transform: rotate(45deg);
+        }
+
+        @media only screen and (orientation: portrait) and (max-width: 768px) {
+            .checkmark {
+                width: 30px;
+                height: 30px;
+                top: 5px;
+            }
+
+            .button-container{
+                line-height: 40px;
+            }
+            
+            .button-container {
+                padding-left: 40px;
+            }
+            
+            .button-container .checkmark::after {
+                left: 10px;
+                width: 10px;
+                height: 19px;
+            }
         }
     `;
 }
@@ -1270,6 +1292,15 @@ export function getModalDialogCSS() {
             .micromodal-slide .modal-container {
                 height: 100%;
                 width: 100%;
+            }
+            
+           
+        }
+
+        @media only screen and (max-width: 768px) {
+            .modal-close {
+                width: 40px;
+                height: 40px;
             }
         }
     `;
