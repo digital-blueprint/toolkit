@@ -19,7 +19,7 @@
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^13.0.0",
         "eslint": "^8.0.0",
-        "eslint-plugin-jsdoc": "^37.0.0",
+        "eslint-plugin-jsdoc": "^38.0.0",
         "glob": "^7.1.6",
         "i18next-scanner": "^3.0.0",
         "karma": "^6.0.0",
