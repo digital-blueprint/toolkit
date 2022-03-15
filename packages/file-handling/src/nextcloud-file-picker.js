@@ -641,7 +641,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      *
      * @param {*} data
-     * @returns reduced list of objects, including users files
+     * @returns {Array} reduced list of objects, including users files
      */
     filterUserFilesOnly(data) {
         // R = Share, S = Shared Folder, M = Group folder or external source, G = Read, D = Delete, NV / NVW = Write, CK = Create
@@ -662,7 +662,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      *
      * @param {*} path
-     * @returns array including file path and base name
+     * @returns {Array} including file path and base name
      */
     parseFileAndBaseName(path) {
         if (path[0] !== '/') {
@@ -696,7 +696,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     /**
      *
      * @param {*} response
-     * @returns list of file objects containing corresponding information
+     * @returns {Array} list of file objects containing corresponding information
      */
     mapResponseToObject(response) {
         let results = [];
@@ -1481,7 +1481,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.loading = true;
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
         this.fileList = [...files];
-        if (typeof this.fileList !== undefined && this.fileList.length > 0) {
+        if (this.fileList !== undefined && this.fileList.length > 0) {
             this.sendSetPropertyEvent('analytics-event', {
                 category: 'FileHandlingNextcloud',
                 action: 'UploadFiles',
