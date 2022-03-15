@@ -46,6 +46,7 @@ for more explanation.
 - `client-id` (required): The Keycloak client to use
 - `silent-check-sso-redirect-uri` (optional): URI or path to a separate page for checking the login session in an iframe, see https://www.keycloak.org/docs/latest/securing_apps/#_javascript_adapter
 - `scope` (optional): Space separated list of scopes to request. These scopes get added in addition to the default ones, assuming the scope is in the optional scopes list of the Keycloak client in use.
+- `idp-hint` (optional): Set a client suggested identity provider
 
 ### Emitted attributes
 
