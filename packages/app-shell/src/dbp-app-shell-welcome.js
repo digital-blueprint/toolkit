@@ -61,6 +61,14 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
                 cursor: pointer;
                 text-decoration: none;
             }
+            
+            h2 a {
+                white-space: nowrap;
+            }
+            h2 a > span {
+                white-space: normal;
+                padding-right: 8px;
+            }
 
             h2 a::after {
                 content: '\\00a0\\00a0';
@@ -71,7 +79,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
                 mask-repeat: no-repeat;
                 -webkit-mask-position: center center;
                 mask-position: center center;
-                margin: 0 2px 0 8px;
+                margin: 0 2px 0 0px;
                 padding: 0 0 0.25% 0;
                 -webkit-mask-size: 100%;
                 mask-size: 100%;
@@ -122,7 +130,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
                                 @click=${(e) => {
                                     switchActivity(e, data);
                                 }}>
-                                ${data.name[this.lang]}
+                                <span>${data.name[this.lang]}</span>
                             </a>
                         </h2>
                         <p class="description">${data.description[this.lang]}</p>
