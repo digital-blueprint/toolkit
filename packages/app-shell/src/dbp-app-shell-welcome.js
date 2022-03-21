@@ -67,7 +67,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
             }
             h2 a > span {
                 white-space: normal;
-                padding-right: 8px;
+                padding-right: 5px;
             }
 
             h2 a::after {
