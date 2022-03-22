@@ -187,13 +187,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 addRowPos: 'top',
                 columnDefaults: {
                     vertAlign: 'middle',
-                    hozAlign: 'center',
+                    hozAlign: 'left',
                     resizable: false,
                 },
                 columns: [
                     {
                         width: 32,
-                        minWidth: 32,
                         headerSort: false,
                         formatter: 'responsiveCollapse',
                     },
@@ -204,6 +203,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             '<span class="checkmark" id="select_all_checkmark"></span>' +
                             '</label>',
                         field: 'type',
+                        hozAlign: 'center',
                         width: 50,
                         responsive: 1,
                         formatter: (cell, formatterParams, onRendered) => {
@@ -297,7 +297,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 rowFormatter: (row) => {
                     let data = row.getData();
                     if (!this.checkFileType(data, this.allowedMimeTypes)) {
-                        row.getElement().classList.add('no-select');
+                        row.getElement().classList.add('no-select'); // TODO check this
                         row.getElement().classList.remove('tabulator-selectable');
                     }
                     if (this.directoriesOnly && typeof data.mime !== 'undefined') {
@@ -359,6 +359,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     rowClickFunction(e, row) {
+        const i18n = this._i18n;
         const data = row.getData();
         if (
             !row.getElement().classList.contains('no-select') &&
@@ -2432,20 +2433,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-top: 7px;
             }
 
-            .tabulator-header {
-                padding-top: 8px;
-                padding-bottom: 0;
-            }
-
-            .tabulator-placeholder span {
-                padding: 14px !important; /*TODO find a better way*/
-                white-space: normal;
-            }
-
-            .tabulator-placeholder {
-                border-top: 1px solid var(--dbp-muted);
-            }
-
             #new-folder-row.highlighted {
                 background: var(--dbp-success-surface);
                 color: var(--dbp-on-success-surface);
@@ -2532,11 +2519,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .button-container.filter-user {
                 line-height: 28px;
                 padding-left: 40px;
-            }
-
-            .tabulator-row.no-select.tabulator-selected {
-                background-color: var(--dbp-background);
-                color: var(--dbp-muted);
             }
 
             input[type='text']#tf-new-folder:focus {
@@ -2850,15 +2832,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-top: 10px;
             }
 
-            .no-select,
-            .tabulator-row.tabulator-selected.no-select:hover,
-            .tabulator-row.no-select:hover,
-            .tabulator-row.tabulator-selectable.no-select:hover {
-                cursor: unset;
-                color: var(--dbp-content);
-                background-color: var(--dbp-background);
-            }
-
             .inline-block {
                 position: absolute;
                 right: 0px;
@@ -3166,22 +3139,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     display: none;
                 }
 
-                .button-container .checkmark::after {
-                    /** left: 8px;
-                    top: 2px;
-                    width: 8px;
-                    height: 15px; */
-                }
-
                 .select-all-icon {
                     height: 32px;
-                }
-
-                .checkmark {
-                    /** height: 25px;
-                    width: 25px;
-                    left: 9px;
-                    top: 2px; */
                 }
             }
         `;

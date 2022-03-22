@@ -41,6 +41,28 @@ export function getTabulatorStyles() {
             text-align: center;
             padding-top: 10px;
         }
+
+        .tabulator-placeholder {
+            border-top: 1px solid var(--dbp-muted);
+        }
+
+        .tabulator-row.no-select.tabulator-selected {
+            background-color: var(--dbp-background);
+            color: var(--dbp-muted);
+        }
+
+        .no-select,
+        .tabulator-row.tabulator-selected.no-select:hover,
+        .tabulator-row.no-select:hover,
+        .tabulator-row.tabulator-selectable.no-select:hover {
+            cursor: unset;
+            color: var(--dbp-content);
+            background-color: var(--dbp-background);
+        }
+
+        @media only screen and (orientation: portrait) and (max-width: 768px) {
+            
+        }
        
     `;
 }
