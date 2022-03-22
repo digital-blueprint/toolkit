@@ -323,7 +323,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         });
     }
 
-    rowSelectionChangedFunction(){
+    rowSelectionChangedFunction(data, rows){
+        const i18n = this._i18n;
+
         if (!this.disableRowClick) {
             if (data.length > 0 && this.directoriesOnly) {
                 this.folderIsSelected = i18n.t('nextcloud-file-picker.load-to-folder');
@@ -354,7 +356,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-    rowClick() {
+    rowClickFunction(e, row) {
         const data = row.getData();
         if (
             !row.getElement().classList.contains('no-select') &&
@@ -397,13 +399,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-    rowAddedFunction(){
+    rowAddedFunction(row){
         if (!this.disableRowClick) {
             row.getElement().classList.toggle('addRowAnimation');
         }
     }
 
-    dataLoadedFunction() {
+    dataLoadedFunction(data) {
         if (this.tabulatorTable !== null) {
             const that = this;
             setTimeout(function () {

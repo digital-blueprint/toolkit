@@ -133,20 +133,20 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this.updateComplete.then(() => {
             // see: http://tabulator.info/docs/4.7
             this.tabulatorTable = new Tabulator(this._('#clipboard-content-table'), {
-                //if you delete the wrapper around the table you need to set a heigh here
                 layout: 'fitColumns',
                 selectable: true,
-                selectableRangeMode: 'drag',
+                placeholder: i18n.t('clipboard.no-data'),
                 responsiveLayout: 'collapse',
                 responsiveLayoutCollapseStartOpen: false,
-                resizableColumns: false,
-                placeholder: i18n.t('clipboard.no-data'),
+                columnDefaults: {
+                    vertAlign: 'middle',
+                    hozAlign: 'center',
+                    resizable: false,
+                },
                 columns: [
                     {
                         width: 32,
                         minWidth: 32,
-                        align: 'center',
-                        resizable: false,
                         headerSort: false,
                         formatter: 'responsiveCollapse',
                     },
@@ -157,7 +157,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             '<span class="checkmark" id="select_all_checkmark"></span>' +
                             '</label>',
                         field: 'type',
-                        align: 'center',
                         headerSort: false,
                         width: 50,
                         responsive: 1,
@@ -235,65 +234,16 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     {column: 'name', dir: 'asc'},
                     {column: 'type', dir: 'asc'},
                 ],
-                rowClick: (e, row) => {
-                    this.numberOfSelectedFiles =
-                        this.tabulatorTable !== null
-                            ? this.tabulatorTable.getSelectedRows().length
-                            : 0;
-                    if (
-                        this.tabulatorTable !== null &&
-                        this.tabulatorTable.getSelectedRows().length ===
-                            this.tabulatorTable
-                                .getRows()
-                                .filter((row) => this.checkFileType(row.getData())).length
-                    ) {
-                        this._('#select_all').checked = true;
-                    } else {
-                        this._('#select_all').checked = false;
-                    }
-                },
-                rowSelectionChanged: (data, rows) => {
-                    if (this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0) {
-                        this.clipboardSelectBtnDisabled = false;
-                    } else {
-                        this.clipboardSelectBtnDisabled = true;
-                    }
-
-                    if (this._('#select_all_checkmark')) {
-                        this._('#select_all_checkmark').title = this.checkAllSelected()
-                            ? i18n.t('clipboard.select-nothing')
-                            : i18n.t('clipboard.select-all');
-                    }
-                },
-                dataLoaded: () => {
-                    if (this.tabulatorTable !== null) {
-                        const that = this;
-                        setTimeout(function () {
-                            if (that._('.tabulator-responsive-collapse-toggle-open')) {
-                                that._a('.tabulator-responsive-collapse-toggle-open').forEach(
-                                    (element) =>
-                                        element.addEventListener(
-                                            'click',
-                                            that.toggleCollapse.bind(that)
-                                        )
-                                );
-                            }
-
-                            if (that._('.tabulator-responsive-collapse-toggle-close')) {
-                                that._a('.tabulator-responsive-collapse-toggle-close').forEach(
-                                    (element) =>
-                                        element.addEventListener(
-                                            'click',
-                                            that.toggleCollapse.bind(that)
-                                        )
-                                );
-                            }
-                        }, 0);
-                    }
-                },
             });
             that.generateClipboardTable();
+
+            this.tabulatorTable.on("rowClick", this.rowClickFunction.bind(this));
+            this.tabulatorTable.on("rowSelectionChanged", this.rowSelectionChangedFunction.bind(this));
+            this.tabulatorTable.on("dataLoaded", this.dataLoadedFunction.bind(this));
         });
+
+
+
         //Register only one beforeunload Event for the clipboard warning
         if (!window.clipboardWarning) {
             window.addEventListener('beforeunload', this._onReceiveBeforeUnload, false);
@@ -301,10 +251,73 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
+    rowClickFunction(e, row) {
+        this.numberOfSelectedFiles =
+            this.tabulatorTable !== null
+                ? this.tabulatorTable.getSelectedRows().length
+                : 0;
+        if (
+            this.tabulatorTable !== null &&
+            this.tabulatorTable.getSelectedRows().length ===
+            this.tabulatorTable
+                .getRows()
+                .filter((row) => this.checkFileType(row.getData())).length
+        ) {
+            this._('#select_all').checked = true;
+        } else {
+            this._('#select_all').checked = false;
+        }
+    }
+
+    rowSelectionChangedFunction(data, rows) {
+        const i18n = this._i18n;
+
+        if (this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0) {
+            this.clipboardSelectBtnDisabled = false;
+        } else {
+            this.clipboardSelectBtnDisabled = true;
+        }
+
+        if (this._('#select_all_checkmark')) {
+            this._('#select_all_checkmark').title = this.checkAllSelected()
+                ? i18n.t('clipboard.select-nothing')
+                : i18n.t('clipboard.select-all');
+        }
+    }
+
+    dataLoadedFunction() {
+        if (this.tabulatorTable !== null) {
+            const that = this;
+            setTimeout(function () {
+                if (that._('.tabulator-responsive-collapse-toggle-open')) {
+                    that._a('.tabulator-responsive-collapse-toggle-open').forEach(
+                        (element) =>
+                            element.addEventListener(
+                                'click',
+                                that.toggleCollapse.bind(that)
+                            )
+                    );
+                }
+
+                if (that._('.tabulator-responsive-collapse-toggle-close')) {
+                    that._a('.tabulator-responsive-collapse-toggle-close').forEach(
+                        (element) =>
+                            element.addEventListener(
+                                'click',
+                                that.toggleCollapse.bind(that)
+                            )
+                    );
+                }
+            }, 0);
+        }
+    }
+
     disconnectedCallback() {
         //We doesn't want to deregister this event, because we want to use this event over activities
         //window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
         super.disconnectedCallback();
+        this.tabulatorTable.off("dataProcessed");
+
     }
 
     /**
