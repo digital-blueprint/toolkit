@@ -184,7 +184,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     : i18n.t('nextcloud-file-picker.no-data-type'),
                 responsiveLayout: 'collapse',
                 responsiveLayoutCollapseStartOpen: false,
-                addRowPos: 'top',
                 columnDefaults: {
                     vertAlign: 'middle',
                     hozAlign: 'left',
@@ -2950,7 +2949,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .more-menu {
                 height: 22.4px;
-                /*top: 4px;*/
                 width: 19px;
                 margin-top: 4px;
             }

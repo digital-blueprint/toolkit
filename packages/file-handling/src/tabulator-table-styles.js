@@ -32,11 +32,6 @@ export function getTabulatorStyles() {
             padding-bottom: 20px;
         }
 
-        .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right, .tabulator-row .tabulator-frozen.tabulator-frozen-right{
-            background-color:  var(--dbp-background);
-            color: var(--dbp-content);
-        }
-
         .tabulator-placeholder-contents {
             text-align: center;
             padding-top: 10px;
