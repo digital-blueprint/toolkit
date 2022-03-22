@@ -184,6 +184,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     : i18n.t('nextcloud-file-picker.no-data-type'),
                 responsiveLayout: 'collapse',
                 responsiveLayoutCollapseStartOpen: false,
+                addRowPos: 'top',
                 columnDefaults: {
                     vertAlign: 'middle',
                     hozAlign: 'center',
@@ -1951,6 +1952,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.webDavClient
                 .createDirectory(folderPath)
                 .then((contents) => {
+                    this.tabulatorTable.setSort();
                     const d = new Date();
                     let props = {permissions: 'RGDNVCK'};
                     this.tabulatorTable.addRow(
@@ -2011,6 +2013,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 .createDirectory(folderPath)
                 .then((contents) => {
                     // this.loadDirectory(this.directoryPath);
+                    this.tabulatorTable.setSort();
                     const d = new Date();
                     let props = {permissions: 'RGDNVCK'};
                     this.tabulatorTable.addRow(
@@ -3281,7 +3284,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-icon name="plus" class="nextcloud-add-folder" id="add-folder-button"></dbp-icon>
                             </button>
                         </div>
-                        
+
 
                         <div class="additional-menu ${classMap({hidden: !this.storeSession})}">
                             <a
@@ -3566,11 +3569,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 ${i18n.t('nextcloud-file-picker.new-folder-dialog-label')}
                             </div>
                             <div>
-                                <input 
-                                    type="text" 
-                                    class="input" 
-                                    name="tf-new-folder-dialog" 
-                                    id="tf-new-folder-dialog" 
+                                <input
+                                    type="text"
+                                    class="input"
+                                    name="tf-new-folder-dialog"
+                                    id="tf-new-folder-dialog"
                                     value="${i18n.t('nextcloud-file-picker.new-folder-dialog-default-name')}"
                                     @input="${() => {this._atChangeInput();}}"
                                 />
