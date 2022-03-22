@@ -5,7 +5,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as fileHandlingStyles from '@dbp-toolkit/file-handling/src/styles';
 import {Icon} from '@dbp-toolkit/common';
-import Tabulator from 'tabulator-tables';
+import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
 import {send} from '@dbp-toolkit/common/notification';

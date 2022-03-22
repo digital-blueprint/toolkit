@@ -8,7 +8,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {createClient, parseXML} from 'webdav/web';
 import {classMap} from 'lit/directives/class-map.js';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
-import Tabulator from 'tabulator-tables';
+import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import MicroModal from './micromodal.es';
 import {name as pkgName} from './../package.json';
 import * as fileHandlingStyles from './styles';
