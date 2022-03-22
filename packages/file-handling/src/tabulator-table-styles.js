@@ -36,6 +36,11 @@ export function getTabulatorStyles() {
             background-color:  var(--dbp-background);
             color: var(--dbp-content);
         }
+
+        .tabulator-placeholder-contents {
+            text-align: center;
+            padding-top: 10px;
+        }
        
     `;
 }
