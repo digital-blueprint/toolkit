@@ -146,6 +146,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     disconnectedCallback() {
         window.removeEventListener('message', this._onReceiveWindowMessage);
         window.removeEventListener('resize', this.boundRefreshOnWindowSizeChange);
+        this.tabulatorTable.off("dataProcessed");
         super.disconnectedCallback();
     }
 
@@ -177,19 +178,20 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable = new Tabulator(this._('#directory-content-table'), {
                 layout: 'fitColumns',
                 selectable: this.maxSelectedItems,
-                selectableRangeMode: 'drag',
                 placeholder: this.directoriesOnly
                     ? i18n.t('nextcloud-file-picker.no-data')
                     : i18n.t('nextcloud-file-picker.no-data-type'),
                 responsiveLayout: 'collapse',
                 responsiveLayoutCollapseStartOpen: false,
-                resizableColumns: false,
+                columnDefaults: {
+                    vertAlign: 'middle',
+                    hozAlign: 'center',
+                    resizable: false,
+                },
                 columns: [
                     {
                         width: 32,
                         minWidth: 32,
-                        align: 'center',
-                        resizable: false,
                         headerSort: false,
                         formatter: 'responsiveCollapse',
                     },
@@ -200,8 +202,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             '<span class="checkmark" id="select_all_checkmark"></span>' +
                             '</label>',
                         field: 'type',
-                        align: 'center',
-                        headerSort: false,
                         width: 50,
                         responsive: 1,
                         formatter: (cell, formatterParams, onRendered) => {
@@ -303,124 +303,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         row.getElement().classList.remove('tabulator-selectable');
                     }
                 },
-                rowSelectionChanged: (data, rows) => {
-                    if (!this.disableRowClick) {
-                        if (data.length > 0 && this.directoriesOnly) {
-                            this.folderIsSelected = i18n.t('nextcloud-file-picker.load-to-folder');
-                        } else {
-                            this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
-                        }
-                        if (
-                            !this.directoriesOnly &&
-                            this.tabulatorTable &&
-                            this.tabulatorTable
-                                .getSelectedRows()
-                                .filter(
-                                    (row) =>
-                                        row.getData().type != 'directory' &&
-                                        this.checkFileType(row.getData(), this.allowedMimeTypes)
-                                ).length > 0
-                        ) {
-                            this.selectBtnDisabled = false;
-                        } else {
-                            this.selectBtnDisabled = true;
-                        }
-                        if (this._('#select_all_checkmark')) {
-                            this._('#select_all_checkmark').title = this.checkAllSelected()
-                                ? i18n.t('clipboard.select-nothing')
-                                : i18n.t('clipboard.select-all');
-                        }
-                        this.requestUpdate();
-                    }
-                },
-                rowClick: (e, row) => {
-                    const data = row.getData();
-                    if (
-                        !row.getElement().classList.contains('no-select') &&
-                        !this.disableRowClick
-                    ) {
-                        if (this.directoriesOnly) {
-                            // comment out if you want to navigate through folders with double click
-                            const data = row.getData();
-                            this.directoryClicked(e, data);
-                            this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
-                        } else {
-                            switch (data.type) {
-                                case 'directory':
-                                    this.directoryClicked(e, data);
-                                    break;
-                                case 'file':
-                                    if (
-                                        this.tabulatorTable !== null &&
-                                        this.tabulatorTable.getSelectedRows().length ===
-                                            this.tabulatorTable
-                                                .getRows()
-                                                .filter(
-                                                    (row) =>
-                                                        row.getData().type != 'directory' &&
-                                                        this.checkFileType(
-                                                            row.getData(),
-                                                            this.allowedMimeTypes
-                                                        )
-                                                ).length
-                                    ) {
-                                        this._('#select_all').checked = true;
-                                    } else {
-                                        this._('#select_all').checked = false;
-                                    }
-                                    break;
-                            }
-                        }
-                    } else {
-                        row.deselect();
-                    }
-                },
-                rowDblClick: (e, row) => {
-                    // comment this in for double click directory change
-                    /* if (this.directoriesOnly) {
-                         const data = row.getData();
-                         this.directoryClicked(e, data);
-                         this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
-                     }*/
-                },
-                rowAdded: (row) => {
-                    // console.log('row added');
-                    if (!this.disableRowClick) {
-                        row.getElement().classList.toggle('addRowAnimation');
-                    }
-                },
-                dataLoaded: () => {
-                    if (this.tabulatorTable !== null) {
-                        const that = this;
-                        setTimeout(function () {
-                            if (that._('.tabulator-responsive-collapse-toggle-open')) {
-                                that._a('.tabulator-responsive-collapse-toggle-open').forEach(
-                                    (element) =>
-                                        element.addEventListener(
-                                            'click',
-                                            that.toggleCollapse.bind(that)
-                                        )
-                                );
-                            }
-
-                            if (that._('.tabulator-responsive-collapse-toggle-close')) {
-                                that._a('.tabulator-responsive-collapse-toggle-close').forEach(
-                                    (element) =>
-                                        element.addEventListener(
-                                            'click',
-                                            that.toggleCollapse.bind(that)
-                                        )
-                                );
-                            }
-                        }, 0);
-                    }
-                },
             });
 
-            // Strg + click select mode on desktop
-            /*if (this.tabulatorTable.browserMobile === false) {
-                this.tabulatorTable.options.selectableRangeMode = "click";
-            }*/
+            this.tabulatorTable.on("rowSelectionChanged", this.rowSelectionChangedFunction.bind(this));
+            this.tabulatorTable.on("rowClick", this.rowClickFunction.bind(this));
+            this.tabulatorTable.on("rowAdded", this.rowAddedFunction.bind(this));
+            this.tabulatorTable.on("dataLoaded", this.dataLoadedFunction.bind(this));
+
 
             if (
                 typeof this.allowedMimeTypes !== 'undefined' &&
@@ -429,17 +318,116 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ) {
                 this.tabulatorTable.setFilter(this.checkFileType, this.allowedMimeTypes);
             }
-            // comment this in to show only directories in filesink
-            /*
-            if (typeof this.directoriesOnly !== 'undefined' && this.directoriesOnly) {
-                this.tabulatorTable.setFilter([
-                    {field:"type", type:"=", value:"directory"},
-                ]);
-            }
-            */
 
             window.addEventListener('resize', this.boundRefreshOnWindowSizeChange);
         });
+    }
+
+    rowSelectionChangedFunction(){
+        if (!this.disableRowClick) {
+            if (data.length > 0 && this.directoriesOnly) {
+                this.folderIsSelected = i18n.t('nextcloud-file-picker.load-to-folder');
+            } else {
+                this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
+            }
+            if (
+                !this.directoriesOnly &&
+                this.tabulatorTable &&
+                this.tabulatorTable
+                    .getSelectedRows()
+                    .filter(
+                        (row) =>
+                            row.getData().type != 'directory' &&
+                            this.checkFileType(row.getData(), this.allowedMimeTypes)
+                    ).length > 0
+            ) {
+                this.selectBtnDisabled = false;
+            } else {
+                this.selectBtnDisabled = true;
+            }
+            if (this._('#select_all_checkmark')) {
+                this._('#select_all_checkmark').title = this.checkAllSelected()
+                    ? i18n.t('clipboard.select-nothing')
+                    : i18n.t('clipboard.select-all');
+            }
+            this.requestUpdate();
+        }
+    }
+
+    rowClick() {
+        const data = row.getData();
+        if (
+            !row.getElement().classList.contains('no-select') &&
+            !this.disableRowClick
+        ) {
+            if (this.directoriesOnly) {
+                // comment out if you want to navigate through folders with double click
+                const data = row.getData();
+                this.directoryClicked(e, data);
+                this.folderIsSelected = i18n.t('nextcloud-file-picker.load-in-folder');
+            } else {
+                switch (data.type) {
+                    case 'directory':
+                        this.directoryClicked(e, data);
+                        break;
+                    case 'file':
+                        if (
+                            this.tabulatorTable !== null &&
+                            this.tabulatorTable.getSelectedRows().length ===
+                            this.tabulatorTable
+                                .getRows()
+                                .filter(
+                                    (row) =>
+                                        row.getData().type != 'directory' &&
+                                        this.checkFileType(
+                                            row.getData(),
+                                            this.allowedMimeTypes
+                                        )
+                                ).length
+                        ) {
+                            this._('#select_all').checked = true;
+                        } else {
+                            this._('#select_all').checked = false;
+                        }
+                        break;
+                }
+            }
+        } else {
+            row.deselect();
+        }
+    }
+
+    rowAddedFunction(){
+        if (!this.disableRowClick) {
+            row.getElement().classList.toggle('addRowAnimation');
+        }
+    }
+
+    dataLoadedFunction() {
+        if (this.tabulatorTable !== null) {
+            const that = this;
+            setTimeout(function () {
+                if (that._('.tabulator-responsive-collapse-toggle-open')) {
+                    that._a('.tabulator-responsive-collapse-toggle-open').forEach(
+                        (element) =>
+                            element.addEventListener(
+                                'click',
+                                that.toggleCollapse.bind(that)
+                            )
+                    );
+                }
+
+                if (that._('.tabulator-responsive-collapse-toggle-close')) {
+                    that._a('.tabulator-responsive-collapse-toggle-close').forEach(
+                        (element) =>
+                            element.addEventListener(
+                                'click',
+                                that.toggleCollapse.bind(that)
+                            )
+                    );
+                }
+            }, 0);
+        }
     }
 
     /**
