@@ -93,10 +93,6 @@ export function getFileHandlingCss() {
             height: 100%;
             margin: var(--FUMargin, 0px);
             padding: var(--FUPadding, 20px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
 
         #fileElem {

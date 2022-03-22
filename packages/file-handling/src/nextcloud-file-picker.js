@@ -2949,6 +2949,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .more-menu {
                 height: 22.4px;
+                /*top: 4px;*/
                 width: 19px;
                 margin-top: 4px;
             }
