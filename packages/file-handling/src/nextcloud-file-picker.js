@@ -12,7 +12,6 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import MicroModal from './micromodal.es';
 import {name as pkgName} from './../package.json';
 import * as fileHandlingStyles from './styles';
-import * as tabulatorStyles from './tabulator-table-styles';
 import {encrypt, decrypt, parseJwt} from './crypto.js';
 
 /**
@@ -2419,8 +2418,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getTextUtilities()}
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
+            ${commonStyles.getTabulatorStyles()}
             ${fileHandlingStyles.getFileHandlingCss()}
-            ${tabulatorStyles.getTabulatorStyles()}
 
             #new-folder-row .button {
                 background-color: var(--dbp-success);

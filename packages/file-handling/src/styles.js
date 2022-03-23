@@ -139,8 +139,8 @@ export function getFileHandlingCss() {
         }
 
         .tabulator-row.tabulator-selectable.tabulator-selectable:hover {
-            background-color: var(--dbp-hover-background-color, var(--dbp-content-surface));
-            color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+            background-color: var(--dbp-hover-background-color, var(--dbp-background));
+            color: var(--dbp-hover-color, var(--dbp-content));
         }
 
         .tabulator-row.tabulator-selectable.tabulator-selected:hover,
@@ -155,8 +155,6 @@ export function getFileHandlingCss() {
 
         .tabulator-row,
         .tabulator-row.tabulator-row-even {
-            padding-top: 10px;
-            padding-bottom: 10px;
             border-top: 1px solid #eee;
             color: var(--dbp-content);
         }

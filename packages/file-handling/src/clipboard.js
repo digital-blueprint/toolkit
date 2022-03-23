@@ -6,7 +6,6 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as fileHandlingStyles from '@dbp-toolkit/file-handling/src/styles';
 import {Icon} from '@dbp-toolkit/common';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
-import * as tabulatorStyles from './tabulator-table-styles';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
 import {send} from '@dbp-toolkit/common/notification';
@@ -416,7 +415,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
             this.tabulatorTable.clearData();
             this.tabulatorTable.setData(data);
-            
+
         } else {
             if (this.tabulatorTable)
                 this.tabulatorTable.setData([]);
@@ -843,8 +842,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             ${commonStyles.getTextUtilities()}
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
+            ${commonStyles.getTabulatorStyles()}
             ${fileHandlingStyles.getFileHandlingCss()}
-            ${tabulatorStyles.getTabulatorStyles()}
 
 
             a {
