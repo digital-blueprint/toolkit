@@ -204,6 +204,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         field: 'type',
                         hozAlign: 'center',
                         width: 50,
+                        headerSort: false,
                         responsive: 1,
                         formatter: (cell, formatterParams, onRendered) => {
                             const icon_tag = that.getScopedTagName('dbp-icon');
@@ -302,6 +303,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     if (this.directoriesOnly && typeof data.mime !== 'undefined') {
                         row.getElement().classList.add('no-select');
                         row.getElement().classList.remove('tabulator-selectable');
+                    }
+
+                    if (!this.directoriesOnly && typeof data.mime === 'undefined') {
+                        row.getElement().classList.add('no-select-styles');
                     }
                 },
             });

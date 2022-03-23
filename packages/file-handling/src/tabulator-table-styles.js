@@ -32,9 +32,10 @@ export function getTabulatorStyles() {
             padding-bottom: 20px;
         }
 
-        .tabulator-placeholder-contents {
-            text-align: center;
-            padding-top: 10px;
+        .tabulator .tabulator-tableholder .tabulator-placeholder .tabulator-placeholder-contents {
+            color: var(--dbp-muted);
+            font-size: 1rem;
+            font-weight: initial;
         }
 
         .tabulator-placeholder {
@@ -51,10 +52,24 @@ export function getTabulatorStyles() {
         .tabulator-row.no-select:hover,
         .tabulator-row.tabulator-selectable.no-select:hover {
             cursor: unset;
+        }
+
+        .no-select-styles,
+        .no-select,
+        .tabulator-row.tabulator-selected.no-select:hover,
+        .tabulator-row.no-select:hover,
+        .tabulator-row.tabulator-selectable.no-select:hover,
+        .tabulator-row.tabulator-selected.no-select-styles:hover,
+        .tabulator-row.no-select-styles:hover,
+        .tabulator-row.tabulator-selectable.no-select-styles:hover{
             color: var(--dbp-content);
             background-color: var(--dbp-background);
         }
 
+        .tabulator .tabulator-tableholder{
+            overflow: inherit;
+        }
+        
         @media only screen and (orientation: portrait) and (max-width: 768px) {
             
         }
