@@ -242,6 +242,13 @@ export function getFileHandlingCss() {
             background-color: var(--dbp-hover-color, var(--dbp-on-content-surface));
         }
 
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles .tabulator-responsive-collapse-toggle-close::after,
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles:hover .tabulator-responsive-collapse-toggle-close::after,
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles .tabulator-responsive-collapse-toggle-open::after,
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles:hover .tabulator-responsive-collapse-toggle-open::after{
+            background-color: var(--dbp-content);
+        }
+
         .tabulator-row-handle {
             padding: 0px !important;
         }
