@@ -191,7 +191,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 },
                 columns: [
                     {
-                        width: 32,
+                        minWidth: 40,
                         headerSort: false,
                         formatter: 'responsiveCollapse',
                     },
@@ -201,6 +201,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
                             '<span class="checkmark" id="select_all_checkmark"></span>' +
                             '</label>',
+                        
                         field: 'type',
                         hozAlign: 'center',
                         width: 50,

@@ -141,13 +141,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 responsiveLayoutCollapseStartOpen: false,
                 columnDefaults: {
                     vertAlign: 'middle',
-                    hozAlign: 'center',
+                    hozAlign: 'left',
                     resizable: false,
                 },
                 columns: [
                     {
-                        width: 32,
-                        minWidth: 32,
+                        minWidth: 40,
                         headerSort: false,
                         formatter: 'responsiveCollapse',
                     },
@@ -403,7 +402,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
      */
     generateClipboardTable() {
         this.numberOfSelectedFiles = 0;
-        if (this.clipboardFiles.files) {
+        if (this.clipboardFiles.files && this.tabulatorTable) {
             let data = [];
             for (let i = 0; i < this.clipboardFiles.files.length; i++) {
                 data[i] = {
@@ -415,10 +414,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 };
             }
 
-            if (this.tabulatorTable !== null) {
-                this.tabulatorTable.clearData();
-                this.tabulatorTable.setData(data);
-            }
+            this.tabulatorTable.clearData();
+            this.tabulatorTable.setData(data);
+            
+        } else {
+            if (this.tabulatorTable)
+                this.tabulatorTable.setData([]);
         }
         if (this._('#select_all')) {
             this._('#select_all').checked = false;
