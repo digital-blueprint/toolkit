@@ -4,7 +4,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as fileHandlingStyles from '@dbp-toolkit/file-handling/src/styles';
-import {Icon} from '@dbp-toolkit/common';
+import {Icon, getShadowRootDocument} from '@dbp-toolkit/common';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
@@ -156,13 +156,19 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             '<span class="checkmark" id="select_all_checkmark"></span>' +
                             '</label>',
                         field: 'type',
-                        headerSort: false,
+                        hozAlign: 'center',
                         width: 50,
+                        headerSort: false,
                         responsive: 1,
                         formatter: (cell, formatterParams, onRendered) => {
                             const icon_tag = that.getScopedTagName('dbp-icon');
-                            let icon = `<${icon_tag} name="empty-file" class="nextcloud-picker-icon"></${icon_tag}>`;
-                            return icon;
+                            let icon =
+                                `<${icon_tag} name="empty-file" class="nextcloud-picker-icon ` +
+                                `"></${icon_tag}>`;
+                            let div = getShadowRootDocument(this).createElement('div');
+                            div.innerHTML = icon;
+                            return div;
+
                         },
                     },
                     {
@@ -173,11 +179,11 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         field: 'name',
                         sorter: 'alphanum',
                         formatter: (cell) => {
-                            let data = cell.getRow().getData();
-                            if (data.edit) {
-                                cell.getElement().classList.add('fokus-edit');
-                            }
-                            return cell.getValue();
+                            var data = cell.getValue();
+                            let div = getShadowRootDocument(this).createElement('div');
+                            div.classList.add('filename');
+                            div.innerHTML = cell.getValue();
+                            return div;
                         },
                     },
                     {
@@ -187,9 +193,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         minWidth: 84,
                         field: 'size',
                         formatter: (cell, formatterParams, onRendered) => {
-                            return cell.getRow().getData().type === 'directory'
-                                ? ''
-                                : humanFileSize(cell.getValue());
+                            return humanFileSize(cell.getValue());
                         },
                     },
                     {

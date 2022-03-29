@@ -257,6 +257,13 @@ export function getFileHandlingCss() {
             min-height: 37px !important;
         }
 
+        .filename{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            white-space: nowrap;
+        }
+        
         @media only screen and (orientation: portrait) and (max-width: 768px) {
             .tabulator .tabulator-tableHolder {
                 white-space: inherit;

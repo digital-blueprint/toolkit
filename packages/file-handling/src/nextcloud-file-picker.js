@@ -232,11 +232,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         field: 'basename',
                         sorter: 'alphanum',
                         formatter: (cell) => {
-                            var data = cell.getRow().getData();
-                            if (data.edit) {
-                                cell.getElement().classList.add('fokus-edit');
-                            }
-                            return cell.getValue();
+                            var data = cell.getValue();
+                            let div = getShadowRootDocument(this).createElement('div');
+                            div.classList.add('filename');
+                            div.innerHTML = cell.getValue();
+                            return div;
                         },
                     },
                     {
@@ -2914,7 +2914,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .table-wrapper {
-                position: relative;
+                /*position: relative;*/
+                max-width: 100%;
+                width: 100%;
             }
 
             .button-container .checkmark::after {
