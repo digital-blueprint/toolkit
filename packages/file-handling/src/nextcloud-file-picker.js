@@ -76,6 +76,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.disableRowClick = false;
         this.boundRefreshOnWindowSizeChange = this.refreshOnWindowSizeChange.bind(this);
         this.boundCancelNewFolderHandler = this.cancelNewFolder.bind(this);
+        this.boundSelectHandler = this.selectAllFiles.bind(this);
     }
 
     static get scopedElements() {
@@ -148,19 +149,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         window.removeEventListener('resize', this.boundRefreshOnWindowSizeChange);
         this.tabulatorTable.off("dataProcessed");
         super.disconnectedCallback();
-    }
-
-    async firstUpdated() {
-        // Give the browser a chance to paint
-        await new Promise((r) => setTimeout(r, 0));
-        if (this._('#select_all')) {
-            let boundSelectHandler = this.selectAllFiles.bind(this);
-            this._('#select_all').addEventListener('click', boundSelectHandler);
-        }
-        if (this.directoriesOnly && this._('#select_all_wrapper')) {
-            this._('#select_all_wrapper').classList.remove('button-container');
-            this._('#select_all_wrapper').classList.add('hidden');
-        }
     }
 
     connectedCallback() {
@@ -316,7 +304,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable.on("rowAdded", this.rowAddedFunction.bind(this));
             this.tabulatorTable.on("dataLoaded", this.dataLoadedFunction.bind(this));
 
-
             if (
                 typeof this.allowedMimeTypes !== 'undefined' &&
                 this.allowedMimeTypes !== '' &&
@@ -436,6 +423,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     );
                 }
             }, 0);
+            if (this._('#select_all')) {
+                this._('#select_all').addEventListener('click', this.boundSelectHandler);
+            }
+            if (this.directoriesOnly && this._('#select_all_wrapper')) {
+                this._('#select_all_wrapper').classList.remove('button-container');
+                this._('#select_all_wrapper').classList.add('hidden');
+            }
         }
     }
 
@@ -2068,6 +2062,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
      */
     selectAllFiles() {
         let allSelected = this.checkAllSelected();
+
         if (allSelected) {
             this.tabulatorTable.getSelectedRows().forEach((row) => row.deselect());
         } else {
@@ -3158,6 +3153,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             pkgName,
             'tabulator-tables/css/tabulator.min.css'
         );
+        
         return html`
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}" />

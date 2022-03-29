@@ -26,6 +26,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this.clipboardSelectBtnDisabled = true;
         this.tabulatorTable = null;
         this._onReceiveBeforeUnload = this.onReceiveBeforeUnload.bind(this);
+        this.boundSelectHandler = this.selectAllFiles.bind(this);
         this.filesToSave = [];
         this.numberOfSelectedFiles = 0;
         this.enabledTargets = 'local';
@@ -108,15 +109,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             }
         });
         super.update(changedProperties);
-    }
-
-    async firstUpdated() {
-        // Give the browser a chance to paint
-        await new Promise((r) => setTimeout(r, 0));
-        if (this._('#select_all')) {
-            let boundSelectHandler = this.selectAllFiles.bind(this);
-            this._('#select_all').addEventListener('click', boundSelectHandler);
-        }
     }
 
     toggleCollapse(e) {
@@ -245,8 +237,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             this.tabulatorTable.on("dataLoaded", this.dataLoadedFunction.bind(this));
         });
 
-
-
         //Register only one beforeunload Event for the clipboard warning
         if (!window.clipboardWarning) {
             window.addEventListener('beforeunload', this._onReceiveBeforeUnload, false);
@@ -312,6 +302,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     );
                 }
             }, 0);
+            if (this._('#select_all')) {
+                this._('#select_all').addEventListener('click', this.boundSelectHandler);
+            }
         }
     }
 
@@ -320,7 +313,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         //window.removeEventListener('beforeunload', this._onReceiveBeforeUnload);
         super.disconnectedCallback();
         this.tabulatorTable.off("dataProcessed");
-
     }
 
     /**
