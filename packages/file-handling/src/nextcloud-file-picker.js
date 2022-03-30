@@ -176,6 +176,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     : i18n.t('nextcloud-file-picker.no-data-type'),
                 responsiveLayout: 'collapse',
                 responsiveLayoutCollapseStartOpen: false,
+                columnHeaderVertAlign: 'middle',
                 columnDefaults: {
                     vertAlign: 'middle',
                     hozAlign: 'left',
@@ -2882,28 +2883,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             #replace-modal .checkmark {
                 height: 20px;
                 width: 20px;
-                left: 1px;
-                top: 0px;
+                left: 15px;
+                top: 5px;
             }
-
-            .checkmark {
-                height: 20px;
-                width: 20px;
-                left: 11px;
-                top: 4px;
-            }
-
+            
             .table-wrapper {
                 max-width: 100%;
                 width: 100%;
             }
 
-            .button-container .checkmark::after {
-                left: 6px;
-                top: 1px;
-                width: 5px;
-                height: 11px;
-            }
 
             .select-all-icon {
                 height: 30px;

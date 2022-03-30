@@ -133,6 +133,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 placeholder: i18n.t('clipboard.no-data'),
                 responsiveLayout: 'collapse',
                 responsiveLayoutCollapseStartOpen: false,
+                columnHeaderVertAlign: 'middle',
                 columnDefaults: {
                     vertAlign: 'middle',
                     hozAlign: 'left',
@@ -990,12 +991,13 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     display: block;
                 }
 
-                .checkmark {
+            /*    .checkmark {
                     height: 25px;
                     width: 25px;
                     left: 9px;
                     top: 2px;
                 }
+
 
                 .button-container .checkmark::after {
                     left: 8px;
@@ -1003,7 +1005,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     width: 8px;
                     height: 15px;
                 }
-
+*/
                 .select-all-icon {
                     height: 32px;
                 }
