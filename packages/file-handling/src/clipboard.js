@@ -911,7 +911,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             .tabulator .tabulator-tableHolder .tabulator-placeholder span {
                 margin: initial;
             }
-
+/*
             .checkmark {
                 height: 20px;
                 width: 20px;
@@ -924,7 +924,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 top: 3px;
                 width: 4px;
                 height: 11px;
-            }
+            }*/
 
             .table-wrapper {
                 position: relative;
