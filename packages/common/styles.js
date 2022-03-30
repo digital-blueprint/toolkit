@@ -1547,10 +1547,12 @@ export function getTabulatorStyles() {
             color: var(--dbp-muted);
             font-size: 1rem;
             font-weight: initial;
+            text-align: center;
         }
 
         .tabulator-placeholder {
             border-top: 1px solid var(--dbp-muted);
+            padding-top: 10px;
         }
 
         .tabulator-row.no-select.tabulator-selected {
