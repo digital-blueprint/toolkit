@@ -174,7 +174,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         field: 'name',
                         sorter: 'alphanum',
                         formatter: (cell) => {
-                            var data = cell.getValue();
                             let div = getShadowRootDocument(this).createElement('div');
                             div.classList.add('filename');
                             div.innerHTML = cell.getValue();
