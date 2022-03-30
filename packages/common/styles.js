@@ -576,7 +576,7 @@ export function getNotificationCSS() {
         .notification.is-success {
             background-color: var(--dbp-success-surface);
             color: var(--dbp-on-success-surface);
-            border-color: var(--dbp-surccess-surface-border-color);
+            border-color: var(--dbp-success-surface-border-color);
         }
 
         .notification.is-warning {
