@@ -576,7 +576,7 @@ export function getNotificationCSS() {
         .notification.is-success {
             background-color: var(--dbp-success-surface);
             color: var(--dbp-on-success-surface);
-            border-color: var(--dbp-surccess-surface-border-color);
+            border-color: var(--dbp-success-surface-border-color);
         }
 
         .notification.is-warning {
@@ -1397,3 +1397,198 @@ export function getLinkCss() {
         }
     `;
 }
+
+export function getTabulatorStyles() {
+    // language=css
+    return css`
+
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
+            font-weight: normal;
+            font-size: 1rem;
+        }
+
+        .tabulator .tabulator-header,
+        .tabulator .tabulator-header,
+        .tabulator .tabulator-header .tabulator-col,
+        .tabulator,
+        .tabulator-row .tabulator-cell,
+        .tabulator-row.tabulator-row-even,
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover {
+            background-color: unset;
+            background: unset;
+            color: unset;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .tabulator-row,
+        .tabulator-row.tabulator-row-even {
+            background-color: var(--dbp-background);
+        }
+
+        .tabulator-row.tabulator-selectable.tabulator-selectable:hover {
+            background-color: var(--dbp-hover-background-color, var(--dbp-background));
+            color: var(--dbp-hover-color, var(--dbp-content));
+        }
+
+        .tabulator-row.tabulator-selectable.tabulator-selected:hover,
+        .tabulator-row.tabulator-selected {
+            background-color: var(--dbp-hover-background-color, var(--dbp-content-surface));
+            color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+        }
+
+        .tabulator-row,
+        .tabulator-row.tabulator-row-even {
+            border-top: 1px solid #eee;
+            color: var(--dbp-content);
+        }
+
+        .tabulator-row.tabulator-row-even.tabulator-selected {
+            color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+        }
+
+        .tabulator-header {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+            /* Toggle Button Styles */
+        .tabulator-row .tabulator-responsive-collapse {
+            border: none;
+        }
+
+        .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle {
+            height: 100%;
+            width: 100%;
+            background-color: unset;
+        }
+
+        .tabulator-responsive-collapse-toggle-open,
+        .tabulator-responsive-collapse-toggle-close {
+            content: none;
+            visibility: hidden;
+        }
+
+
+        .tabulator-responsive-collapse-toggle-open::after,
+        .tabulator-responsive-collapse-toggle-close::after {
+            content: '\\00a0\\00a0\\00a0\\00a0\\00a0';
+            background-color: var(--dbp-content);
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center -2px;
+            mask-position: center center;
+            margin: 0 0 0 4px;
+            padding: 0 0 0.25% 0;
+            -webkit-mask-size: 100%;
+            mask-size: 100%;
+            visibility: visible;
+        }
+
+        .tabulator-responsive-collapse-toggle-open::after {
+            -webkit-mask-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzJfMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxMDAgMTAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxwYXRoIGQ9Ik0yOS42LDk3LjZsNDQuMi00NC40YzAuOS0wLjksMS4zLTIuMSwxLjMtMy4zYzAtMS4yLTAuNS0yLjQtMS4zLTMuM0wyOS42LDIuNGMtMS4xLTEuMS0yLjgtMS4xLTMuOSwwCgljLTAuNSwwLjUtMC44LDEuMi0wLjgsMS45YzAsMC43LDAuMywxLjQsMC44LDEuOWw0My42LDQzLjZMMjUuNyw5My43Yy0xLjEsMS4xLTEuMSwyLjgsMCwzLjlDMjYuOCw5OC43LDI4LjUsOTguNywyOS42LDk3LjZ6Ii8+Cjwvc3ZnPgo=');
+            mask-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzJfMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxMDAgMTAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxwYXRoIGQ9Ik0yOS42LDk3LjZsNDQuMi00NC40YzAuOS0wLjksMS4zLTIuMSwxLjMtMy4zYzAtMS4yLTAuNS0yLjQtMS4zLTMuM0wyOS42LDIuNGMtMS4xLTEuMS0yLjgtMS4xLTMuOSwwCgljLTAuNSwwLjUtMC44LDEuMi0wLjgsMS45YzAsMC43LDAuMywxLjQsMC44LDEuOWw0My42LDQzLjZMMjUuNyw5My43Yy0xLjEsMS4xLTEuMSwyLjgsMCwzLjlDMjYuOCw5OC43LDI4LjUsOTguNywyOS42LDk3LjZ6Ii8+Cjwvc3ZnPgo=');
+        }
+
+        .tabulator-responsive-collapse-toggle-close::after {
+            -webkit-mask-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzJfMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxMDAgMTAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxwYXRoIGQ9Ik0yLjQsMjkuNmw0NC40LDQ0LjJjMC45LDAuOSwyLjEsMS4zLDMuMywxLjNjMS4yLDAsMi40LTAuNSwzLjMtMS4zbDQ0LjItNDQuMmMxLjEtMS4xLDEuMS0yLjgsMC0zLjkKCWMtMC41LTAuNS0xLjItMC44LTEuOS0wLjhjLTAuNywwLTEuNCwwLjMtMS45LDAuOEw1MC4xLDY5LjNMNi4zLDI1LjdjLTEuMS0xLjEtMi44LTEuMS0zLjksMEMxLjMsMjYuOCwxLjMsMjguNSwyLjQsMjkuNnoiLz4KPC9zdmc+Cg==');
+            mask-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzJfMV8iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAxMDAgMTAwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxwYXRoIGQ9Ik0yLjQsMjkuNmw0NC40LDQ0LjJjMC45LDAuOSwyLjEsMS4zLDMuMywxLjNjMS4yLDAsMi40LTAuNSwzLjMtMS4zbDQ0LjItNDQuMmMxLjEtMS4xLDEuMS0yLjgsMC0zLjkKCWMtMC41LTAuNS0xLjItMC44LTEuOS0wLjhjLTAuNywwLTEuNCwwLjMtMS45LDAuOEw1MC4xLDY5LjNMNi4zLDI1LjdjLTEuMS0xLjEtMi44LTEuMS0zLjksMEMxLjMsMjYuOCwxLjMsMjguNSwyLjQsMjkuNnoiLz4KPC9zdmc+Cg==');
+            margin-left: 6px;
+        }
+
+        .tabulator-responsive-collapse-toggle-open:hover::after,
+        .tabulator-responsive-collapse-toggle-close:hover::after {
+            background-color: var(--dbp-hover-color, var(--dbp-content));
+        }
+
+        .tabulator-selected .tabulator-responsive-collapse-toggle-open::after,
+        .tabulator-selected .tabulator-responsive-collapse-toggle-close::after {
+            background-color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+        }
+
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles .tabulator-responsive-collapse-toggle-close::after,
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles:hover .tabulator-responsive-collapse-toggle-close::after,
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles .tabulator-responsive-collapse-toggle-open::after,
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles:hover .tabulator-responsive-collapse-toggle-open::after {
+            background-color: var(--dbp-content);
+        }
+
+        /* Define the style when the column is not sorted */
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow{
+            border-top: none;
+            border-bottom: 6px solid var(--dbp-muted);
+        }
+
+        /* Define the style when the column is sorted in ascending order */
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow{
+            border-top: none;
+            border-bottom: 6px solid var(--dbp-accent);
+        }
+
+        /* Define the style when the column is sorted in descending order */
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow{
+            border-bottom: none;
+            border-top: 6px solid var(--dbp-accent);
+            color: var(--dbp-accent);
+        }        
+        
+        .tabulator-row, .tabulator-row.tabulator-row-even, .tabulator-row.tabulator-row-odd{
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+
+        .tabulator-row .tabulator-cell{
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+
+        .tabulator .tabulator-tableholder .tabulator-placeholder .tabulator-placeholder-contents {
+            color: var(--dbp-muted);
+            font-size: 1rem;
+            font-weight: initial;
+            text-align: center;
+        }
+
+        .tabulator-placeholder {
+            border-top: 1px solid var(--dbp-muted);
+            padding-top: 10px;
+        }
+
+        .tabulator-row.no-select.tabulator-selected {
+            background-color: var(--dbp-background);
+            color: var(--dbp-muted);
+        }
+
+        .no-select,
+        .tabulator-row.tabulator-selected.no-select:hover,
+        .tabulator-row.no-select:hover,
+        .tabulator-row.tabulator-selectable.no-select:hover {
+            cursor: unset;
+        }
+
+        .no-select-styles,
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles,
+        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles:hover,
+        .no-select,
+        .tabulator-row.tabulator-selected.no-select:hover,
+        .tabulator-row.no-select:hover,
+        .tabulator-row.tabulator-selectable.no-select:hover,
+        .tabulator-row.tabulator-selected.no-select-styles:hover,
+        .tabulator-row.no-select-styles:hover,
+        .tabulator-row.tabulator-selectable.no-select-styles:hover{
+            color: var(--dbp-content);
+            background-color: var(--dbp-background);
+        }
+
+        .tabulator .tabulator-tableholder{
+            overflow: inherit;
+        }
+        
+        @media only screen and (orientation: portrait) and (max-width: 768px) {
+            
+        }
+       
+    `;
+}
+
