@@ -65,7 +65,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.isInRecent = false;
         this.userName = '';
         this.menuHeightBreadcrumb = -1;
-        this.menuHeightAdditional = -1;
 
         this.boundCloseBreadcrumbMenuHandler = this.hideBreadcrumbMenu.bind(this);
         this.initateOpenBreadcrumbMenu = false;
@@ -147,7 +146,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     disconnectedCallback() {
         window.removeEventListener('message', this._onReceiveWindowMessage);
         window.removeEventListener('resize', this.boundRefreshOnWindowSizeChange);
-        this.tabulatorTable.off("dataProcessed");
+
+        // deregister tabulator table callback events
+        this.tabulatorTable.off("tableBuilt");
+        this.tabulatorTable.off("rowSelectionChanged");
+        this.tabulatorTable.off("rowClick");
+        this.tabulatorTable.off("rowAdded");
+        this.tabulatorTable.off("dataLoaded");
         super.disconnectedCallback();
     }
 
@@ -162,7 +167,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.updateComplete.then(() => {
             // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
             window.addEventListener('message', this._onReceiveWindowMessage);
-            // see: http://tabulator.info/docs/4.7
+            // see: http://tabulator.info/docs/5.1
             this.tabulatorTable = new Tabulator(this._('#directory-content-table'), {
                 layout: 'fitColumns',
                 selectable: this.maxSelectedItems,
@@ -188,7 +193,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
                             '<span class="checkmark" id="select_all_checkmark"></span>' +
                             '</label>',
-                        
+
                         field: 'type',
                         hozAlign: 'center',
                         width: 50,
@@ -299,6 +304,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 },
             });
 
+            this.tabulatorTable.on("tableBuilt", this.tableBuiltFunction.bind(this));
             this.tabulatorTable.on("rowSelectionChanged", this.rowSelectionChangedFunction.bind(this));
             this.tabulatorTable.on("rowClick", this.rowClickFunction.bind(this));
             this.tabulatorTable.on("rowAdded", this.rowAddedFunction.bind(this));
@@ -316,7 +322,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         });
     }
 
-    rowSelectionChangedFunction(data, rows){
+    tableBuiltFunction() {
+        if (this._('#select_all')) {
+            this._('#select_all').addEventListener('click', this.boundSelectHandler);
+        }
+        if (this.directoriesOnly && this._('#select_all_wrapper')) {
+            this._('#select_all_wrapper').classList.remove('button-container');
+            this._('#select_all_wrapper').classList.add('hidden');
+        }
+    }
+
+    rowSelectionChangedFunction(data, rows) {
         const i18n = this._i18n;
 
         if (!this.disableRowClick) {
@@ -393,7 +409,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-    rowAddedFunction(row){
+    rowAddedFunction(row) {
         if (!this.disableRowClick) {
             row.getElement().classList.toggle('addRowAnimation');
         }
@@ -423,13 +439,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     );
                 }
             }, 0);
-            if (this._('#select_all')) {
-                this._('#select_all').addEventListener('click', this.boundSelectHandler);
-            }
-            if (this.directoriesOnly && this._('#select_all_wrapper')) {
-                this._('#select_all_wrapper').classList.remove('button-container');
-                this._('#select_all_wrapper').classList.add('hidden');
-            }
+
         }
     }
 
@@ -449,12 +459,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         if (this.isLoggedIn() && !this._loginCalled) {
             this._loginCalled = true;
-            this.loginCallback();
+            this.checkLocalStorage();
         }
-    }
-
-    loginCallback() {
-        this.checkLocalStorage();
     }
 
     /**
@@ -624,6 +630,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     toggleCollapse(e) {
         const table = this.tabulatorTable;
+        // give a chance to draw the table
+        // this is for getting more hight in tabulator table, when toggle is called
         setTimeout(function () {
             table.redraw();
         }, 0);
@@ -768,12 +776,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable.clearData();
             this.webDavClient = null;
             let reloadButton = html`${i18n.t(
-                'nextcloud-file-picker.something-went-wrong'
-            )} <button class="button"
-                            title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => {
-                                this.openFilePicker();
-                            }}"><dbp-icon name="reload"></button>`;
+                    'nextcloud-file-picker.something-went-wrong'
+            )}
+            <button class="button"
+                    title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                    @click="${async () => {
+                        this.openFilePicker();
+                    }}">
+                <dbp-icon name="reload">
+            </button>`;
             this.loading = false;
             this.statusText = reloadButton;
         }
@@ -850,14 +861,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.clearData();
                     this.webDavClient = null;
                     let reloadButton = html`${i18n.t(
-                        'nextcloud-file-picker.something-went-wrong'
-                    )} <button class="button"
-                                title="${i18n.t(
+                            'nextcloud-file-picker.something-went-wrong'
+                    )}
+                    <button class="button"
+                            title="${i18n.t(
                                     'nextcloud-file-picker.refresh-nextcloud-file-picker'
-                                )}"
-                                @click="${async () => {
-                                    this.openFilePicker();
-                                }}"><dbp-icon name="reload"></button>`;
+                            )}"
+                            @click="${async () => {
+                                this.openFilePicker();
+                            }}">
+                        <dbp-icon name="reload">
+                    </button>`;
                     this.loading = false;
                     this.statusText = reloadButton;
                 }
@@ -898,12 +912,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable.clearData();
             this.webDavClient = null;
             let reloadButton = html`${i18n.t(
-                'nextcloud-file-picker.something-went-wrong'
-            )} <button class="button"
-                            title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => {
-                                this.openFilePicker();
-                            }}"><dbp-icon name="reload"></button>`;
+                    'nextcloud-file-picker.something-went-wrong'
+            )}
+            <button class="button"
+                    title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                    @click="${async () => {
+                        this.openFilePicker();
+                    }}">
+                <dbp-icon name="reload">
+            </button>`;
             this.loading = false;
             this.statusText = reloadButton;
         }
@@ -1009,14 +1026,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.clearData();
                     this.webDavClient = null;
                     let reloadButton = html`${i18n.t(
-                        'nextcloud-file-picker.something-went-wrong'
-                    )} <button class="button"
-                                title="${i18n.t(
+                            'nextcloud-file-picker.something-went-wrong'
+                    )}
+                    <button class="button"
+                            title="${i18n.t(
                                     'nextcloud-file-picker.refresh-nextcloud-file-picker'
-                                )}"
-                                @click="${async () => {
-                                    this.openFilePicker();
-                                }}"><dbp-icon name="reload"></button>`;
+                            )}"
+                            @click="${async () => {
+                                this.openFilePicker();
+                            }}">
+                        <dbp-icon name="reload">
+                    </button>`;
                     this.loading = false;
                     this.statusText = reloadButton;
                 }
@@ -1058,12 +1078,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable.clearData();
             this.webDavClient = null;
             let reloadButton = html`${i18n.t(
-                'nextcloud-file-picker.something-went-wrong'
-            )} <button class="button"
-                            title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => {
-                                this.openFilePicker();
-                            }}"><dbp-icon name="reload"></button>`;
+                    'nextcloud-file-picker.something-went-wrong'
+            )}
+            <button class="button"
+                    title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                    @click="${async () => {
+                        this.openFilePicker();
+                    }}">
+                <dbp-icon name="reload">
+            </button>`;
             this.loading = false;
             this.statusText = reloadButton;
         }
@@ -1172,14 +1195,17 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.clearData();
                     this.webDavClient = null;
                     let reloadButton = html`${i18n.t(
-                        'nextcloud-file-picker.something-went-wrong'
-                    )} <button class="button"
-                                title="${i18n.t(
+                            'nextcloud-file-picker.something-went-wrong'
+                    )}
+                    <button class="button"
+                            title="${i18n.t(
                                     'nextcloud-file-picker.refresh-nextcloud-file-picker'
-                                )}"
-                                @click="${async () => {
-                                    this.openFilePicker();
-                                }}"><dbp-icon name="reload"></button>`;
+                            )}"
+                            @click="${async () => {
+                                this.openFilePicker();
+                            }}">
+                        <dbp-icon name="reload">
+                    </button>`;
                     this.loading = false;
                     this.statusText = reloadButton;
                 }
@@ -1221,11 +1247,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             let reloadButton = html`
                 ${i18n.t('nextcloud-file-picker.something-went-wrong')}
                 <button
-                    class="button"
-                    title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                    @click="${async () => {
-                        this.openFilePicker();
-                    }}">
+                        class="button"
+                        title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                        @click="${async () => {
+                            this.openFilePicker();
+                        }}">
                     <dbp-icon name="reload"></dbp-icon>
                 </button>
             `;
@@ -1312,11 +1338,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     let reloadButton = html`
                         ${i18n.t('nextcloud-file-picker.something-went-wrong')}
                         <button
-                            class="button"
-                            title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => {
-                                this.openFilePicker();
-                            }}">
+                                class="button"
+                                title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
+                                @click="${async () => {
+                                    this.openFilePicker();
+                                }}">
                             <dbp-icon name="reload"></dbp-icon>
                         </button>
                     `;
@@ -1880,13 +1906,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
         this.disableRowClick = true;
 
-        // that._('#new-folder-row').addEventListener('keydown', (event) => {
-        //     if (event.key === 'Escape') {
-        //         that.deleteNewFolderEntry();
-        //         event.stopPropagation();
-        //     }
-        // });
-
         // Click handler should ignore first click
         this.initateOpenNewFolder = true;
 
@@ -1983,8 +2002,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         this.statusText = html`
                             <span class="error">
                                 ${i18n.t('nextcloud-file-picker.webdav-error', {
-                                    error: error.message,
-                                })}
+                            error: error.message,
+                        })}
                             </span>
                         `;
                     }
@@ -2106,21 +2125,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     /**
-     * Returns the parent directory path
-     *
-     * @returns {string} parent directory path
-     */
-    getParentDirectoryPath() {
-        if (typeof this.directoryPath === 'undefined') {
-            this.directoryPath = '';
-        }
-        let path = this.directoryPath.replace(/\/$/, '');
-        path = path.replace(path.split('/').pop(), '').replace(/\/$/, '');
-
-        return path === '' ? '/' : path;
-    }
-
-    /**
      * Returns the directory path as clickable breadcrumbs
      *
      * @returns {string} clickable breadcrumb path
@@ -2134,11 +2138,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         htmlpath[0] = html`
             <span class="breadcrumb">
                 <a
-                    class="home-link"
-                    @click="${() => {
-                        this.loadDirectory('');
-                    }}"
-                    title="${i18n.t('nextcloud-file-picker.folder-home')}">
+                        class="home-link"
+                        @click="${() => {
+                            this.loadDirectory('');
+                        }}"
+                        title="${i18n.t('nextcloud-file-picker.folder-home')}">
                     <dbp-icon name="home"></dbp-icon>
                 </a>
             </span>
@@ -2149,10 +2153,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <span class="first">›</span>
                 <span class="breadcrumb special">
                     <a
-                        @click="${() => {
-                            this.loadFavorites();
-                        }}"
-                        title="${i18n.t('nextcloud-file-picker.favorites-title')}">
+                            @click="${() => {
+                                this.loadFavorites();
+                            }}"
+                            title="${i18n.t('nextcloud-file-picker.favorites-title')}">
                         ${i18n.t('nextcloud-file-picker.favorites-title')}
                     </a>
                 </span>
@@ -2162,10 +2166,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <span class="first">›</span>
                 <span class="breadcrumb special">
                     <a
-                        @click="${() => {
-                            this.loadAllRecentFiles();
-                        }}"
-                        title="${i18n.t('nextcloud-file-picker.recent-files-title')}">
+                            @click="${() => {
+                                this.loadAllRecentFiles();
+                            }}"
+                            title="${i18n.t('nextcloud-file-picker.recent-files-title')}">
                         ${i18n.t('nextcloud-file-picker.recent-files-title')}
                     </a>
                 </span>
@@ -2175,10 +2179,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <span class="first">›</span>
                 <span class="breadcrumb special">
                     <a
-                        @click="${() => {
-                            this.loadMyRecentFiles();
-                        }}"
-                        title="${i18n.t('nextcloud-file-picker.my-recent-files-title')}">
+                            @click="${() => {
+                                this.loadMyRecentFiles();
+                            }}"
+                            title="${i18n.t('nextcloud-file-picker.my-recent-files-title')}">
                         ${i18n.t('nextcloud-file-picker.my-recent-files-title')}
                     </a>
                 </span>
@@ -2201,12 +2205,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         <span class="first breadcrumb-arrow">›</span>
                         <span class="breadcrumb">
                             <a
-                                @click="${() => {
-                                    this.loadDirectory(path);
-                                }}"
-                                title="${i18n.t('nextcloud-file-picker.load-path-link', {
-                                    path: directories[i],
-                                })}">
+                                    @click="${() => {
+                                        this.loadDirectory(path);
+                                    }}"
+                                    title="${i18n.t('nextcloud-file-picker.load-path-link', {
+                                        path: directories[i],
+                                    })}">
                                 ${directories[i]}
                             </a>
                         </span>
@@ -2216,12 +2220,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         <span class="breadcrumb-arrow">›</span>
                         <span class="breadcrumb">
                             <a
-                                @click="${() => {
-                                    this.loadDirectory(path);
-                                }}"
-                                title="${i18n.t('nextcloud-file-picker.load-path-link', {
-                                    path: directories[i],
-                                })}">
+                                    @click="${() => {
+                                        this.loadDirectory(path);
+                                    }}"
+                                    title="${i18n.t('nextcloud-file-picker.load-path-link', {
+                                        path: directories[i],
+                                    })}">
                                 ${directories[i]}
                             </a>
                         </span>
@@ -2251,12 +2255,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     path_temp[i] = html`
                         <li class="breadcrumb-${i}" id="breadcrumb-${i}">
                             <a
-                                @click="${() => {
-                                    this.loadDirectory(path);
-                                }}"
-                                title="${i18n.t('nextcloud-file-picker.load-path-link', {
-                                    path: directories[i],
-                                })}">
+                                    @click="${() => {
+                                        this.loadDirectory(path);
+                                    }}"
+                                    title="${i18n.t('nextcloud-file-picker.load-path-link', {
+                                        path: directories[i],
+                                    })}">
                                 <dbp-icon name="folder" class="breadcrumb-folder"></dbp-icon>
                                 ${directories[i]}
                             </a>
@@ -2271,10 +2275,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     <span class="first breadcrumb-arrow">›</span>
                     <span class="breadcrumb">
                         <a
-                            class="extended-breadcrumb-link"
-                            @click="${() => {
-                                this.toggleBreadcrumbMenu();
-                            }}">
+                                class="extended-breadcrumb-link"
+                                @click="${() => {
+                                    this.toggleBreadcrumbMenu();
+                                }}">
                             . . .
                         </a>
                         <div class="breadcrumb-menu">
@@ -2321,12 +2325,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             menu.setAttribute(
                 'style',
                 'position: fixed;top: ' +
-                    topValue +
-                    'px;height: ' +
-                    actualHeight +
-                    'px;max-width: ' +
-                    maxWidth +
-                    'px;overflow-y: auto;'
+                topValue +
+                'px;height: ' +
+                actualHeight +
+                'px;max-width: ' +
+                maxWidth +
+                'px;overflow-y: auto;'
             );
             menu.scrollTop = 0;
             this._('.nextcloud-content').setAttribute('style', 'overflow:hidden;');
@@ -2401,7 +2405,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     }
 
     _atChangeInput(event) {
-        if (this._("#new-folder-confirm-btn") )
+        if (this._("#new-folder-confirm-btn"))
             this._("#new-folder-confirm-btn").disabled = this._('#tf-new-folder-dialog') && this._('#tf-new-folder-dialog').value === '';
     }
 
@@ -2415,16 +2419,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${commonStyles.getTabulatorStyles()}
             ${fileHandlingStyles.getFileHandlingCss()}
-
-            #new-folder-row .button {
-                background-color: var(--dbp-success);
-                color: var(--dbp-on-success-surface);
-                border: 1px solid var(--dbp-on-success-surface);
-                position: absolute;
-                right: 10px;
-                top: 8px;
-            }
-
             .breadcrumb-folder {
                 padding-right: 5px;
                 color: var(--dbp-muted);
@@ -2432,10 +2426,28 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-top: 7px;
             }
 
-            #new-folder-row.highlighted {
-                background: var(--dbp-success-surface);
-                color: var(--dbp-on-success-surface);
-                position: relative;
+            .breadcrumb.special a {
+                overflow: visible;
+            }
+
+            .breadcrumb-menu {
+                display: inline;
+            }
+
+            .breadcrumb {
+                border-bottom: var(--dbp-border);
+            }
+
+            .breadcrumb:last-child,
+            .breadcrumb:first-child {
+                border-bottom: none;
+            }
+
+            .breadcrumb a {
+                display: inline-block;
+                height: 33px;
+                vertical-align: middle;
+                line-height: 33px;
             }
 
             span.first {
@@ -2452,10 +2464,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding: 7px;
             }
 
-            .breadcrumb.special a {
-                overflow: visible;
-            }
-
             .extended-breadcrumb-menu li a {
                 max-width: none;
                 display: inline;
@@ -2464,6 +2472,27 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             .nextcloud-nav {
                 position: relative;
                 width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .nextcloud-nav p {
+                align-self: center;
+            }
+
+            .nextcloud-nav h2 {
+                padding-top: 10px;
+            }
+
+            .nextcloud-nav a {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 130px;
+            }
+
+            .nextcloud-nav a.home-link {
+                font-size: 1.4em;
             }
 
             .nextcloud-header.hidden {
@@ -2472,10 +2501,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .nextcloud-header {
                 padding-bottom: 7px;
+                width: 100%;
             }
 
-            .breadcrumb-menu {
-                display: inline;
+            .nextcloud-header div button {
+                justify-self: start;
             }
 
             .extended-breadcrumb-menu li {
@@ -2512,16 +2542,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 position: absolute;
                 background-color: var(--dbp-background);
                 z-index: 1000;
-                /** display: grid; **/
-            }
-
-            .button-container.filter-user {
-                line-height: 28px;
-                padding-left: 40px;
             }
 
             input[type='text']#tf-new-folder:focus {
-                /* font-weight: 300; */
                 border: none;
                 background: transparent;
                 height: 100%;
@@ -2570,10 +2593,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 width: calc(100% - 42px);
             }
 
-            .new-folder-selected::after {
-                filter: invert(100%);
-            }
-
             .visible {
                 display: unset;
             }
@@ -2591,7 +2610,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-right: 0px;
                 padding-top: 10px;
                 padding-bottom: 10px;
-                padding-left: 4px; /** align with */
+                padding-left: 4px;
             }
 
             .extended-menu li {
@@ -2645,14 +2664,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 cursor: default;
             }
 
-            .nextcloud-header {
-                width: 100%;
-            }
-
-            .nextcloud-header div button {
-                justify-self: start;
-            }
-
             .nextcloud-intro {
                 text-align: center;
             }
@@ -2669,8 +2680,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 height: 100%;
                 width: 100%;
                 background-image: var(
-                    --dbp-override-image-nextcloud,
-                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M69.3 86.1l-46.1 0C11 85.9 1.1 75.9 1.1 63.7c0-11.8 9.1-21.4 20.6-22.4 0.5-15.2 13-27.4 28.3-27.4 3.4 0 6.6 0.5 9.2 1.6 6.2 2.1 11.4 6.4 14.8 12 6.5 1 12.7 4.3 16.9 9.1 5 5.5 7.8 12.6 7.8 19.9C98.8 72.8 85.6 86.1 69.3 86.1zM23.6 80.6h45.7c13.3 0 24-10.8 24-24 0-6-2.3-11.8-6.4-16.2 -3.7-4.2-9.1-6.9-14.9-7.5l-1.4-0.2L70 31.4c-2.8-5.1-7.2-8.9-12.6-10.7l-0.1 0c-2-0.8-4.5-1.2-7.2-1.2 -12.6 0-22.9 10.3-22.9 22.9v4.5h-3.6c-9.3 0-17 7.6-17 17C6.6 73 14.3 80.6 23.6 80.6z'/%3E%3C/svg%3E")
+                        --dbp-override-image-nextcloud,
+                        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M69.3 86.1l-46.1 0C11 85.9 1.1 75.9 1.1 63.7c0-11.8 9.1-21.4 20.6-22.4 0.5-15.2 13-27.4 28.3-27.4 3.4 0 6.6 0.5 9.2 1.6 6.2 2.1 11.4 6.4 14.8 12 6.5 1 12.7 4.3 16.9 9.1 5 5.5 7.8 12.6 7.8 19.9C98.8 72.8 85.6 86.1 69.3 86.1zM23.6 80.6h45.7c13.3 0 24-10.8 24-24 0-6-2.3-11.8-6.4-16.2 -3.7-4.2-9.1-6.9-14.9-7.5l-1.4-0.2L70 31.4c-2.8-5.1-7.2-8.9-12.6-10.7l-0.1 0c-2-0.8-4.5-1.2-7.2-1.2 -12.6 0-22.9 10.3-22.9 22.9v4.5h-3.6c-9.3 0-17 7.6-17 17C6.6 73 14.3 80.6 23.6 80.6z'/%3E%3C/svg%3E")
                 );
                 background-repeat: no-repeat;
                 background-position: center;
@@ -2696,10 +2707,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 position: relative;
             }
 
-            .wrapper-select {
-                justify-content: inherit;
-            }
-
             .select-button {
                 justify-self: end;
             }
@@ -2709,11 +2716,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 height: 100%;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-            }
-
-            .nextcloud-nav {
-                display: flex;
-                justify-content: space-between;
             }
 
             .nextcloud-footer {
@@ -2734,10 +2736,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 white-space: nowrap;
                 height: 33px;
                 margin-right: -11px;
-            }
-
-            .nextcloud-nav p {
-                align-self: center;
             }
 
             #replace-modal-box {
@@ -2803,32 +2801,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-bottom: 15px;
             }
 
-            .breadcrumb {
-                border-bottom: var(--dbp-border);
-            }
-
-            .breadcrumb:last-child,
-            .breadcrumb:first-child {
-                border-bottom: none;
-            }
-
-            .breadcrumb a {
-                display: inline-block;
-                height: 33px;
-                vertical-align: middle;
-                line-height: 33px;
-            }
-
             input:disabled + label {
                 color: var(--dbp-muted);
             }
 
             .inline-block {
                 display: inline-block;
-            }
-
-            .nextcloud-nav h2 {
-                padding-top: 10px;
             }
 
             .inline-block {
@@ -2888,12 +2866,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-right: 50px;
             }
 
-            .nextcloud-nav a {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 130px;
-            }
 
             #replace-modal-box .modal-header {
                 padding: 0px;
@@ -2908,8 +2880,21 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 text-align: left;
             }
 
+            #replace-modal .checkmark {
+                height: 20px;
+                width: 20px;
+                left: 1px;
+                top: 0px;
+            }
+
+            .checkmark {
+                height: 20px;
+                width: 20px;
+                left: 11px;
+                top: 4px;
+            }
+
             .table-wrapper {
-                /*position: relative;*/
                 max-width: 100%;
                 width: 100%;
             }
@@ -2925,20 +2910,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 height: 30px;
             }
 
-            .checkmark {
-                height: 20px;
-                width: 20px;
-                left: 11px;
-                top: 4px;
-            }
-
-            #replace-modal .checkmark {
-                height: 20px;
-                width: 20px;
-                left: 1px;
-                top: 0px;
-            }
-
             .remember-container {
                 display: inline-block;
                 line-height: 28px;
@@ -2951,13 +2922,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .more-menu {
                 height: 22.4px;
-                /*top: 4px;*/
                 width: 19px;
                 margin-top: 4px;
-            }
-
-            .nextcloud-nav a.home-link {
-                font-size: 1.4em;
             }
 
             #new-folder-modal-box {
@@ -2977,7 +2943,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 justify-content: space-between;
             }
 
-            #new-folder-modal-box footer.modal-footer .modal-footer-btn  {
+            #new-folder-modal-box footer.modal-footer .modal-footer-btn {
                 padding: 0px;
                 display: flex;
                 justify-content: space-between;
@@ -2999,56 +2965,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             @media only screen and (orientation: portrait) and (max-width: 768px) {
-                .breadcrumb-arrow {
-                    font-size: 1.6em;
-                    vertical-align: middle;
-                    padding-bottom: 3px;
-                    padding-left: 2px;
-                    padding-right: 2px;
-                    /**padding: 0px 2px 2px 3px;*/
-                }
 
                 .nextcloud-header {
                     padding-bottom: 0px;
-                }
-
-                .extended-breadcrumb-link {
-                    margin-top: -4px; /**TODO -3px; -2px;*/
-                    font-size: 1.2em !important; /**TODO for demo purpose only */
-                    font-weight: 400;
-                }
-
-                .extended-menu {
-                    top: 0px;
-                }
-
-                .breadcrumb .extended-breadcrumb-menu a {
-                    /* overflow: visible; */
-                    display: inherit;
-                }
-
-                .additional-menu button {
-                    float: right;
-                }
-
-                .additional-menu {
-                    position: inherit; /** absolute */
-                    right: 0px;
-                    margin-right: -12px;
-                }
-
-                .inline-block {
-                    width: inherit;
-                    position: absolute;
-                    right: 52px;
-                    z-index: 1;
-                    background-color: var(--dbp-background);
-                    bottom: 0px;
-                }
-
-                .add-folder-button {
-                    right: 0px;
-                    position: absolute;
+                    grid-area: header-l;
+                    margin-bottom: 0px;
                 }
 
                 .nextcloud-nav h2 > a {
@@ -3076,20 +2997,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     margin: 0 auto;
                 }
 
-                .button-wrapper {
-                    justify-self: start;
-                }
-
-                .wrapper {
-                    display: flex;
-                    justify-content: space-between;
-                }
-
-                .nextcloud-header {
-                    grid-area: header-l;
-                    margin-bottom: 0px;
-                }
-
                 .nextcloud-content,
                 .nextcloud-intro {
                     grid-area: content;
@@ -3109,18 +3016,73 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     left: 0px;
                 }
 
+                .nextcloud-footer-grid {
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column-reverse;
+                }
+
+                .breadcrumb-arrow {
+                    font-size: 1.6em;
+                    vertical-align: middle;
+                    padding-bottom: 3px;
+                    padding-left: 2px;
+                    padding-right: 2px;
+                }
+
+                .breadcrumb .extended-breadcrumb-menu a {
+                    display: inherit;
+                }
+
+                .extended-breadcrumb-link {
+                    margin-top: -4px;
+                    font-size: 1.2em !important; /**TODO for demo purpose only */
+                    font-weight: 400;
+                }
+
+                .extended-menu {
+                    top: 0px;
+                }
+
+                .additional-menu {
+                    position: inherit;
+                    right: 0px;
+                    margin-right: -12px;
+                }
+
+                .additional-menu button {
+                    float: right;
+                }
+
+                .inline-block {
+                    width: inherit;
+                    position: absolute;
+                    right: 52px;
+                    z-index: 1;
+                    background-color: var(--dbp-background);
+                    bottom: 0px;
+                }
+
+                .add-folder-button {
+                    right: 0px;
+                    position: absolute;
+                }
+
+                .button-wrapper {
+                    justify-self: start;
+                }
+
+                .wrapper {
+                    display: flex;
+                    justify-content: space-between;
+                }
+
                 .mobile-hidden {
                     display: none;
                 }
 
                 .info-box {
                     position: relative;
-                }
-
-                .nextcloud-footer-grid {
-                    display: flex;
-                    justify-content: center;
-                    flex-direction: column-reverse;
                 }
 
                 .select-button {
@@ -3153,15 +3115,15 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             pkgName,
             'tabulator-tables/css/tabulator.min.css'
         );
-        
+
         return html`
             <div class="wrapper">
-                <link rel="stylesheet" href="${tabulatorCss}" />
+                <link rel="stylesheet" href="${tabulatorCss}"/>
                 <div class="nextcloud-intro ${classMap({hidden: this.isPickerActive})}">
                     <div
-                        class="nextcloud-logo ${classMap({
-                            'nextcloud-logo-sm': this.isPickerActive,
-                        })}">
+                            class="nextcloud-logo ${classMap({
+                                'nextcloud-logo-sm': this.isPickerActive,
+                            })}">
                         <div class="nextcloud-logo-image"></div>
                     </div>
                     <div class="block text-center ${classMap({hidden: this.isPickerActive})}">
@@ -3170,47 +3132,47 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             ${i18n.t('nextcloud-file-picker.init-text-1', {
                                 name: this.nextcloudName,
                             })}
-                            <br />
+                            <br/>
                             ${i18n.t('nextcloud-file-picker.init-text-2')}
-                            <br />
-                            <br />
+                            <br/>
+                            <br/>
                         </p>
                     </div>
                     <div class="block ${classMap({hidden: this.isPickerActive})}">
                         <button
-                            class="button  is-primary"
-                            title="${i18n.t('nextcloud-file-picker.open-nextcloud-file-picker', {
-                                name: this.nextcloudName,
-                            })}"
-                            @click="${async () => {
-                                this.openFilePicker();
-                            }}">
+                                class="button  is-primary"
+                                title="${i18n.t('nextcloud-file-picker.open-nextcloud-file-picker', {
+                                    name: this.nextcloudName,
+                                })}"
+                                @click="${async () => {
+                                    this.openFilePicker();
+                                }}">
                             ${i18n.t('nextcloud-file-picker.connect-nextcloud', {
                                 name: this.nextcloudName,
                             })}
                         </button>
                     </div>
                     <div
-                        class="block text-center m-inherit ${classMap({
-                            hidden: !this.storeSession || !this.isLoggedIn(),
-                        })}">
+                            class="block text-center m-inherit ${classMap({
+                                hidden: !this.storeSession || !this.isLoggedIn(),
+                            })}">
                         <label class="button-container remember-container">
                             ${i18n.t('nextcloud-file-picker.remember-me', {
                                 name: this.nextcloudName,
                             })}
-                            <input type="checkbox" id="remember-checkbox" name="remember" />
+                            <input type="checkbox" id="remember-checkbox" name="remember"/>
                             <span class="checkmark"></span>
                         </label>
                     </div>
                     <div
-                        class="block text-center m-inherit ${classMap({
-                            hidden: this.isPickerActive,
-                        })}">
+                            class="block text-center m-inherit ${classMap({
+                                hidden: this.isPickerActive,
+                            })}">
                         <p class="m-inherit">
-                            <br />
+                            <br/>
                             ${i18n.t('nextcloud-file-picker.auth-info')}
                             <slot name="auth-info">
-                                <br />
+                                <br/>
                                 ${this.authInfo}
                             </slot>
                         </p>
@@ -3220,22 +3182,22 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     <div class="nextcloud-nav">
                         <p>${this.getBreadcrumb()}</p>
 
-                         <div class="menu-buttons">
+                        <div class="menu-buttons">
                             <div class="add-folder ${classMap({hidden: this.storeSession})}">
-                            <div class="inline-block">
-                                <div id="new-folder-wrapper" class="hidden">
-                                    <input type="text"
-                                           placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
-                                           name="new-folder" class="input" id="new-folder"/>
-                                    <button class="button add-folder-button"
-                                            title="${i18n.t('nextcloud-file-picker.add-folder')}"
-                                            @click="${() => {
-                                                this.addFolder();
-                                            }}">
-                                        <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
-                                    </button>
+                                <div class="inline-block">
+                                    <div id="new-folder-wrapper" class="hidden">
+                                        <input type="text"
+                                               placeholder="${i18n.t('nextcloud-file-picker.new-folder-placeholder')}"
+                                               name="new-folder" class="input" id="new-folder"/>
+                                        <button class="button add-folder-button"
+                                                title="${i18n.t('nextcloud-file-picker.add-folder')}"
+                                                @click="${() => {
+                                                    this.addFolder();
+                                                }}">
+                                            <dbp-icon name="checkmark-circle" class="nextcloud-add-folder"></dbp-icon>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                             <button class="button ${classMap({hidden: this.storeSession})}"
                                     title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
@@ -3249,59 +3211,60 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                         <div class="additional-menu ${classMap({hidden: !this.storeSession})}">
                             <a
-                                class="extended-menu-link"
-                                @click="${() => {
-                                    this.toggleMoreMenu();
-                                }}"
-                                title="${i18n.t('nextcloud-file-picker.more-menu')}">
+                                    class="extended-menu-link"
+                                    @click="${() => {
+                                        this.toggleMoreMenu();
+                                    }}"
+                                    title="${i18n.t('nextcloud-file-picker.more-menu')}">
                                 <dbp-icon name="menu-dots" class="more-menu"></dbp-icon>
                             </a>
                             <ul class="extended-menu hidden">
                                 <li
-                                    class="${classMap({active: this.isInFavorites})}"
-                                    id="favorites-item">
+                                        class="${classMap({active: this.isInFavorites})}"
+                                        id="favorites-item">
                                     <a class="" @click="${this.loadFavorites}">
                                         ${i18n.t('nextcloud-file-picker.favorites-link-text')}
                                     </a>
                                 </li>
                                 <li
-                                    class="${classMap({active: this.isInFilteredRecent})}"
-                                    id="my-recent-item">
+                                        class="${classMap({active: this.isInFilteredRecent})}"
+                                        id="my-recent-item">
                                     <a class="" @click="${this.loadMyRecentFiles}">
                                         ${i18n.t('nextcloud-file-picker.my-recent-files-link-text')}
                                     </a>
                                 </li>
                                 <li
-                                    class="${classMap({active: this.isInRecent})}"
-                                    id="all-recent-item">
+                                        class="${classMap({active: this.isInRecent})}"
+                                        id="all-recent-item">
                                     <a class="" @click="${this.loadAllRecentFiles}">
                                         ${i18n.t(
-                                            'nextcloud-file-picker.all-recent-files-link-text'
+                                                'nextcloud-file-picker.all-recent-files-link-text'
                                         )}
                                     </a>
                                 </li>
-                                <li class="${classMap({inactive:
-                                                this.isInRecent ||
-                                                this.isInFavorites ||
-                                                this.isInFilteredRecent ||
-                                                this.disableRowClick,
-                                            })}">
+                                <li class="${classMap({
+                                    inactive:
+                                            this.isInRecent ||
+                                            this.isInFavorites ||
+                                            this.isInFilteredRecent ||
+                                            this.disableRowClick,
+                                })}">
                                     <a class=""
-                                        @click="${() => {
-                                            this.addOpenFolderTableEntry();
-                                        }}">
+                                       @click="${() => {
+                                           this.addOpenFolderTableEntry();
+                                       }}">
                                         ${i18n.t('nextcloud-file-picker.add-folder')}
                                     </a>
                                 </li>
                                 <li
-                                    class="${classMap({hidden: !this.storeSession})}"
-                                    title="${i18n.t('nextcloud-file-picker.log-out')}">
+                                        class="${classMap({hidden: !this.storeSession})}"
+                                        title="${i18n.t('nextcloud-file-picker.log-out')}">
                                     <a
-                                        class=""
-                                        @click="${() => {
-                                            this.logOut();
-                                            this.hideAdditionalMenu();
-                                        }}">
+                                            class=""
+                                            @click="${() => {
+                                                this.logOut();
+                                                this.hideAdditionalMenu();
+                                            }}">
                                         ${i18n.t('nextcloud-file-picker.log-out')}
                                     </a>
                                 </li>
@@ -3318,60 +3281,60 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 <div class="nextcloud-footer ${classMap({hidden: !this.isPickerActive})}">
                     <div class="nextcloud-footer-grid">
                         <button
-                            id="download-button"
-                            class="button select-button is-primary ${classMap({
-                                hidden:
-                                    !this.directoriesOnly ||
-                                    (this.directoriesOnly && this.abortUploadButton && this.forAll),
-                            })}"
-                            @click="${() => {
-                                this.sendDirectory(this.tabulatorTable.getSelectedData());
-                            }}"
-                            ?disabled="${this.selectBtnDisabled}">
+                                id="download-button"
+                                class="button select-button is-primary ${classMap({
+                                    hidden:
+                                            !this.directoriesOnly ||
+                                            (this.directoriesOnly && this.abortUploadButton && this.forAll),
+                                })}"
+                                @click="${() => {
+                                    this.sendDirectory(this.tabulatorTable.getSelectedData());
+                                }}"
+                                ?disabled="${this.selectBtnDisabled}">
                             <dbp-icon class="nav-icon" name="cloud-upload"></dbp-icon>
                             ${this.folderIsSelected}
                         </button>
                         <button
-                            class="button select-button is-primary ${classMap({
-                                hidden: this.directoriesOnly,
-                            })}"
-                            @click="${() => {
-                                this.downloadFiles(this.tabulatorTable.getSelectedData());
-                            }}"
-                            ?disabled="${this.selectBtnDisabled}">
+                                class="button select-button is-primary ${classMap({
+                                    hidden: this.directoriesOnly,
+                                })}"
+                                @click="${() => {
+                                    this.downloadFiles(this.tabulatorTable.getSelectedData());
+                                }}"
+                                ?disabled="${this.selectBtnDisabled}">
                             ${this.tabulatorTable &&
                             this.tabulatorTable
-                                .getSelectedRows()
-                                .filter(
-                                    (row) =>
-                                        row.getData().type != 'directory' &&
-                                        this.checkFileType(row.getData(), this.allowedMimeTypes)
-                                ).length === 0
-                                ? i18n.t('nextcloud-file-picker.select-files')
-                                : i18n.t('nextcloud-file-picker.select-files-btn', {
-                                      count: this.tabulatorTable
-                                          ? this.tabulatorTable.getSelectedRows().length
-                                          : 0,
-                                  })}
+                                    .getSelectedRows()
+                                    .filter(
+                                            (row) =>
+                                                    row.getData().type != 'directory' &&
+                                                    this.checkFileType(row.getData(), this.allowedMimeTypes)
+                                    ).length === 0
+                                    ? i18n.t('nextcloud-file-picker.select-files')
+                                    : i18n.t('nextcloud-file-picker.select-files-btn', {
+                                        count: this.tabulatorTable
+                                                ? this.tabulatorTable.getSelectedRows().length
+                                                : 0,
+                                    })}
                         </button>
                         <button
-                            id="abortButton"
-                            class="button select-button hidden ${classMap({
-                                visible:
-                                    this.directoriesOnly && this.forAll && this.abortUploadButton,
-                            })}"
-                            title="${i18n.t('nextcloud-file-picker.abort')}"
-                            @click="${() => {
-                                this.abortUpload = true;
-                            }}">
+                                id="abortButton"
+                                class="button select-button hidden ${classMap({
+                                    visible:
+                                            this.directoriesOnly && this.forAll && this.abortUploadButton,
+                                })}"
+                                title="${i18n.t('nextcloud-file-picker.abort')}"
+                                @click="${() => {
+                                    this.abortUpload = true;
+                                }}">
                             ${i18n.t('nextcloud-file-picker.abort')}
                         </button>
 
                         <div class="block info-box ${classMap({hidden: this.statusText === ''})}">
                             <dbp-mini-spinner
-                                class="spinner ${classMap({
-                                    hidden: this.loading === false,
-                                })}"></dbp-mini-spinner>
+                                    class="spinner ${classMap({
+                                        hidden: this.loading === false,
+                                    })}"></dbp-mini-spinner>
                             <span>${this.statusText}</span>
                         </div>
                     </div>
@@ -3381,23 +3344,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             <div class="modal micromodal-slide" id="replace-modal" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-2" data-micromodal-close>
                     <div
-                        class="modal-container"
-                        id="replace-modal-box"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="replace-modal-title">
+                            class="modal-container"
+                            id="replace-modal-box"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="replace-modal-title">
                         <header class="modal-header">
                             <button
-                                title="${i18n.t('file-sink.modal-close')}"
-                                class="modal-close"
-                                aria-label="Close modal"
-                                @click="${() => {
-                                    this.closeDialog();
-                                }}">
-                                <dbp-icon
                                     title="${i18n.t('file-sink.modal-close')}"
-                                    name="close"
-                                    class="close-icon"></dbp-icon>
+                                    class="modal-close"
+                                    aria-label="Close modal"
+                                    @click="${() => {
+                                        this.closeDialog();
+                                    }}">
+                                <dbp-icon
+                                        title="${i18n.t('file-sink.modal-close')}"
+                                        name="close"
+                                        class="close-icon"></dbp-icon>
                             </button>
                             <h2 id="replace-modal-title">
                                 ${i18n.t('nextcloud-file-picker.replace-title-1')}
@@ -3413,23 +3376,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                         ${i18n.t('nextcloud-file-picker.replace-new_name')}:
                                     </span>
                                     <input
-                                        type="radio"
-                                        id="replace-new-name"
-                                        class="radio-btn"
-                                        name="replacement"
-                                        value="new-name"
-                                        checked
-                                        @click="${() => {
-                                            this.setInputFieldVisibility();
-                                        }}" />
+                                            type="radio"
+                                            id="replace-new-name"
+                                            class="radio-btn"
+                                            name="replacement"
+                                            value="new-name"
+                                            checked
+                                            @click="${() => {
+                                                this.setInputFieldVisibility();
+                                            }}"/>
                                     <span class="radiobutton"></span>
                                     <input
-                                        type="text"
-                                        id="replace-filename"
-                                        class="input"
-                                        name="replace-filename"
-                                        value=""
-                                        onClick="this.select();" />
+                                            type="text"
+                                            id="replace-filename"
+                                            class="input"
+                                            name="replace-filename"
+                                            value=""
+                                            onClick="this.select();"/>
                                 </label>
                             </div>
 
@@ -3437,13 +3400,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <label class="button-container">
                                     <span>${i18n.t('nextcloud-file-picker.replace-replace')}</span>
                                     <input
-                                        type="radio"
-                                        id="replace-replace"
-                                        name="replacement"
-                                        value="replace"
-                                        @click="${() => {
-                                            this.setInputFieldVisibility();
-                                        }}" />
+                                            type="radio"
+                                            id="replace-replace"
+                                            name="replacement"
+                                            value="replace"
+                                            @click="${() => {
+                                                this.setInputFieldVisibility();
+                                            }}"/>
                                     <span class="radiobutton"></span>
                                 </label>
                             </div>
@@ -3451,13 +3414,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <label class="button-container">
                                     <span>${i18n.t('nextcloud-file-picker.replace-skip')}</span>
                                     <input
-                                        type="radio"
-                                        class="radio-btn"
-                                        name="replacement"
-                                        value="ignore"
-                                        @click="${() => {
-                                            this.setInputFieldVisibility();
-                                        }}" />
+                                            type="radio"
+                                            class="radio-btn"
+                                            name="replacement"
+                                            value="ignore"
+                                            @click="${() => {
+                                                this.setInputFieldVisibility();
+                                            }}"/>
                                     <span class="radiobutton"></span>
                                 </label>
                             </div>
@@ -3465,19 +3428,19 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         <footer class="modal-footer">
                             <div class="modal-footer-btn">
                                 <button
-                                    class="button"
-                                    data-micromodal-close
-                                    aria-label="Close this dialog window"
-                                    @click="${() => {
-                                        this.cancelOverwrite();
-                                    }}">
+                                        class="button"
+                                        data-micromodal-close
+                                        aria-label="Close this dialog window"
+                                        @click="${() => {
+                                            this.cancelOverwrite();
+                                        }}">
                                     ${this.getCancelText()}
                                 </button>
                                 <button
-                                    class="button select-button is-primary"
-                                    @click="${() => {
-                                        this.uploadFileAfterConflict();
-                                    }}">
+                                        class="button select-button is-primary"
+                                        @click="${() => {
+                                            this.uploadFileAfterConflict();
+                                        }}">
                                     OK
                                 </button>
                             </div>
@@ -3485,13 +3448,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <label class="button-container">
                                     ${i18n.t('nextcloud-file-picker.replace-mode-all')}
                                     <input
-                                        type="checkbox"
-                                        id="replace_mode_all"
-                                        name="replace_mode_all"
-                                        value="replace_mode_all"
-                                        @click="${() => {
-                                            this.setRepeatForAllConflicts();
-                                        }}" />
+                                            type="checkbox"
+                                            id="replace_mode_all"
+                                            name="replace_mode_all"
+                                            value="replace_mode_all"
+                                            @click="${() => {
+                                                this.setRepeatForAllConflicts();
+                                            }}"/>
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
@@ -3503,23 +3466,23 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             <div class="modal micromodal-slide" id="new-folder-modal" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-2" data-micromodal-close>
                     <div
-                        class="modal-container"
-                        id="new-folder-modal-box"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="new-folder-modal-title">
+                            class="modal-container"
+                            id="new-folder-modal-box"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="new-folder-modal-title">
                         <header class="modal-header">
                             <button
-                                title="${i18n.t('file-sink.modal-close')}"
-                                class="modal-close"
-                                aria-label="Close modal"
-                                @click="${() => {
-                                    this.deleteNewFolderEntry();
-                                }}">
-                                <dbp-icon
                                     title="${i18n.t('file-sink.modal-close')}"
-                                    name="close"
-                                    class="close-icon"></dbp-icon>
+                                    class="modal-close"
+                                    aria-label="Close modal"
+                                    @click="${() => {
+                                        this.deleteNewFolderEntry();
+                                    }}">
+                                <dbp-icon
+                                        title="${i18n.t('file-sink.modal-close')}"
+                                        name="close"
+                                        class="close-icon"></dbp-icon>
                             </button>
                             <h3 id="new-folder-modal-title">
                                 ${i18n.t('nextcloud-file-picker.new-folder-dialog-title')}
@@ -3531,32 +3494,34 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <div>
                                 <input
-                                    type="text"
-                                    class="input"
-                                    name="tf-new-folder-dialog"
-                                    id="tf-new-folder-dialog"
-                                    value="${i18n.t('nextcloud-file-picker.new-folder-dialog-default-name')}"
-                                    @input="${() => {this._atChangeInput();}}"
+                                        type="text"
+                                        class="input"
+                                        name="tf-new-folder-dialog"
+                                        id="tf-new-folder-dialog"
+                                        value="${i18n.t('nextcloud-file-picker.new-folder-dialog-default-name')}"
+                                        @input="${() => {
+                                            this._atChangeInput();
+                                        }}"
                                 />
                             </div>
                         </main>
                         <footer class="modal-footer">
                             <div class="modal-footer-btn">
                                 <button
-                                    class="button"
-                                    data-micromodal-close
-                                    aria-label="Close this dialog window"
-                                    @click="${() => {
-                                        this.deleteNewFolderEntry();
-                                    }}">
+                                        class="button"
+                                        data-micromodal-close
+                                        aria-label="Close this dialog window"
+                                        @click="${() => {
+                                            this.deleteNewFolderEntry();
+                                        }}">
                                     ${i18n.t('nextcloud-file-picker.new-folder-dialog-button-cancel')}
                                 </button>
                                 <button
-                                    class="button select-button is-primary"
-                                    id="new-folder-confirm-btn"
-                                    @click="${() => {
-                                        this.addNewFolder();
-                                    }}">
+                                        class="button select-button is-primary"
+                                        id="new-folder-confirm-btn"
+                                        @click="${() => {
+                                            this.addNewFolder();
+                                        }}">
                                     ${i18n.t('nextcloud-file-picker.new-folder-dialog-button-ok')}
                                 </button>
                             </div>
