@@ -44,7 +44,7 @@
         "auth-info": "Eine neue Seite wird geöffnet, um Ihr Konto zu verbinden.",
         "connect-nextcloud": "{{name}} verbinden",
         "no-data": "In diesem Ordner befinden sich keine Dateien.",
-        "no-data-type": "In diesem Ordner befinden sich keine Daten vom benötigten Typ.",
+        "no-data-type": "In diesem Ordner befinden sich keine Dateien vom benötigten Typ.",
         "no-favorites": "Es wurden keine Favoriten des entsprechenden Typs gefunden. Definieren Sie Dateien und Ordner in Ihrer {{name}} als Favoriten, um diese hier anzuzeigen.",
         "no-recent-files": "Es wurden keine entsprechenden Dateien und Ordner innerhalb der letzten 3 Monate gefunden.",
         "webdav-error": "Etwas ist schief gelaufen: {{error}}",

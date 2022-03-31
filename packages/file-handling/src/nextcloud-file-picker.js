@@ -137,6 +137,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         this._('#select_all_wrapper').classList.add('button-container');
                         this._('#select_all_wrapper').classList.remove('hidden');
                     }
+                    break;
             }
         });
 
@@ -824,16 +825,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         {column: "type", dir: "asc"},
                     ]);
 
-                    if (
-                        this._('#directory-content-table').querySelector(
-                            'div.tabulator-tableHolder > div.tabulator-placeholder > span'
-                        )
-                    ) {
-                        this._('#directory-content-table').querySelector(
-                            'div.tabulator-tableHolder > div.tabulator-placeholder > span'
-                        ).innerText = i18n.t('nextcloud-file-picker.no-favorites', {
-                            name: this.nextcloudName,
-                        });
+                    if (this._('.tabulator-placeholder-contents')) {
+                        this._('.tabulator-placeholder-contents').innerText = 
+                            i18n.t('nextcloud-file-picker.no-favorites', {
+                                name: this.nextcloudName,
+                            });
                     }
 
                     this.isPickerActive = true;
@@ -992,14 +988,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.setData(dataObject);
                     this.tabulatorTable.setSort([{column: 'lastmod', dir: 'desc'}]);
 
-                    if (
-                        this._('#directory-content-table').querySelector(
-                            'div.tabulator-tableHolder > div.tabulator-placeholder > span'
-                        )
-                    ) {
-                        this._('#directory-content-table').querySelector(
-                            'div.tabulator-tableHolder > div.tabulator-placeholder > span'
-                        ).innerText = i18n.t('nextcloud-file-picker.no-recent-files');
+                    if (this._('.tabulator-placeholder-contents')) {
+                        this._('.tabulator-placeholder-contents').innerText = 
+                            i18n.t('nextcloud-file-picker.no-recent-files', {
+                                name: this.nextcloudName,
+                            });
                     }
 
                     this.isPickerActive = true;
@@ -1161,14 +1154,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.setData(dataObject);
                     this.tabulatorTable.setSort([{column: 'lastmod', dir: 'desc'}]);
 
-                    if (
-                        this._('#directory-content-table').querySelector(
-                            'div.tabulator-tableHolder > div.tabulator-placeholder > span'
-                        )
-                    ) {
-                        this._('#directory-content-table').querySelector(
-                            'div.tabulator-tableHolder > div.tabulator-placeholder > span'
-                        ).innerText = i18n.t('nextcloud-file-picker.no-recent-files');
+                    if (this._('.tabulator-placeholder-contents')) {
+                        this._('.tabulator-placeholder-contents').innerText = 
+                            i18n.t('nextcloud-file-picker.no-recent-files', {
+                                name: this.nextcloudName,
+                            });
                     }
 
                     this.isPickerActive = true;
@@ -2401,7 +2391,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
         const menu = this.shadowRoot.querySelector('ul.extended-menu');
-        if (menu && !menu.classList.contains('hidden')) this.toggleMoreMenu();
+        if (menu && !menu.classList.contains('hidden')) {
+            this.toggleMoreMenu();
+        }
     }
 
     _atChangeInput(event) {
@@ -2488,7 +2480,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                max-width: 130px;
             }
 
             .nextcloud-nav a.home-link {
@@ -2613,11 +2604,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding-left: 4px;
             }
 
-            .extended-menu li {
-                padding: 7px;
-                padding-right: 46px;
-            }
-
             .extended-menu a.inactive {
                 color: var(--dbp-muted);
                 pointer-events: none;
@@ -2625,7 +2611,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
 
             .extended-menu a {
-                padding: 8px;
+                padding: 7px 54px 7px 15px;
+                display: block;
             }
 
             .extended-menu {
@@ -3237,7 +3224,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                             this.disableRowClick,
                                 })}">
                                     <a class=""
-                                       @click="${() => {
+                                        @click="${() => {
                                            this.addOpenFolderTableEntry();
                                        }}">
                                         ${i18n.t('nextcloud-file-picker.add-folder')}
@@ -3246,12 +3233,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <li
                                         class="${classMap({hidden: !this.storeSession})}"
                                         title="${i18n.t('nextcloud-file-picker.log-out')}">
-                                    <a
-                                            class=""
-                                            @click="${() => {
-                                                this.logOut();
-                                                this.hideAdditionalMenu();
-                                            }}">
+                                    <a 
+                                        class=""
+                                        @click="${() => {
+                                            this.logOut();
+                                            this.hideAdditionalMenu();
+                                        }}">
                                         ${i18n.t('nextcloud-file-picker.log-out')}
                                     </a>
                                 </li>
