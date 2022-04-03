@@ -7960,10 +7960,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-tabulator-tables@^4.8.4:
-  version "4.9.3"
-  resolved "https://registry.yarnpkg.com/tabulator-tables/-/tabulator-tables-4.9.3.tgz#89ea8f9bffc11ba9a789369b5165ac82da26f4f0"
-  integrity sha512-iwwQqAEGGxlgrBpcmJJvMJrfjGLcCXOB3AOb/DGkXqBy1YKoYA36hIl7qXGp6Jo8dSkzFAlDT6pKLZgyhs9OnQ==
+tabulator-tables@^5.1.7:
+  version "5.1.8"
+  resolved "https://registry.yarnpkg.com/tabulator-tables/-/tabulator-tables-5.1.8.tgz#0d2b576ed75099c426d756153e369fb476d678d3"
+  integrity sha512-5ah2ftxNEKiSF5QaAETA4gX49OHiv+kFZLaD+s++LOx2oSvH0J0CujxH570Ou4Bo4Zq6MmI4T7idRS0jhq/VfA==
 
 tar@^4.4.12:
   version "4.4.19"
