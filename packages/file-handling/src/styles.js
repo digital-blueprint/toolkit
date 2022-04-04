@@ -120,7 +120,7 @@ export function getFileHandlingCss() {
             height: 20px;
             width: 20px;
             left: 10px;
-            top: 7px;
+            top: 8px;
         }
         
         .button-container .checkmark::after {
