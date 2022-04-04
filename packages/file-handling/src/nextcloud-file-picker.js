@@ -3011,7 +3011,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 .extended-menu {
-                    top: 0px;
+                    top: 38px;
                 }
 
                 .additional-menu {
