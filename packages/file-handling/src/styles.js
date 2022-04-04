@@ -119,8 +119,8 @@ export function getFileHandlingCss() {
         .checkmark {
             height: 20px;
             width: 20px;
-            left: 14px;
-            top: 5px;
+            left: 10px;
+            top: 7px;
         }
         
         .button-container .checkmark::after {
@@ -163,6 +163,13 @@ export function getFileHandlingCss() {
             width: 100%;
             white-space: nowrap;
         }
+
+
+        .select-all-icon {
+            height: 40px;
+            position: absolute;
+            top: -34px;
+        }
         
         @media only screen and (orientation: portrait) and (max-width: 768px) {
             .tabulator .tabulator-tableHolder {
@@ -174,6 +181,8 @@ export function getFileHandlingCss() {
                 height: 100%;
                 max-width: 100%;
             }
+            
+
         }
 
         /**************************\\

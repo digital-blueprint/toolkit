@@ -1453,9 +1453,13 @@ export function getTabulatorStyles() {
             padding-bottom: 10px;
         }
 
-            /* Toggle Button Styles */
+        /* Toggle Button Styles */
         .tabulator-row .tabulator-responsive-collapse {
             border: none;
+        }
+
+        .tabulator-row .tabulator-cell.tabulator-row-handle{
+            padding: 0px;
         }
 
         .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle {

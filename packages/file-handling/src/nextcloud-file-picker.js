@@ -198,7 +198,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                         field: 'type',
                         hozAlign: 'center',
-                        width: 50,
+                        width: 40,
                         headerSort: false,
                         responsive: 1,
                         formatter: (cell, formatterParams, onRendered) => {
@@ -2879,11 +2879,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 width: 100%;
             }
 
-
-            .select-all-icon {
-                height: 30px;
-            }
-
             .remember-container {
                 display: inline-block;
                 line-height: 28px;
@@ -2892,6 +2887,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             .remember-container .checkmark {
                 left: 7px;
+                top: 3px;
             }
 
             .more-menu {
@@ -3074,10 +3070,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 .hidden {
                     display: none;
-                }
-
-                .select-all-icon {
-                    height: 32px;
                 }
             }
         `;

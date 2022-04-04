@@ -153,7 +153,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             '</label>',
                         field: 'type',
                         hozAlign: 'center',
-                        width: 50,
+                        width: 40,
                         headerSort: false,
                         responsive: 1,
                         formatter: (cell, formatterParams, onRendered) => {
@@ -930,10 +930,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 position: relative;
             }
 
-            .select-all-icon {
-                height: 30px;
-            }
-
             .clipboard-footer {
                 background-color: var(--dbp-base);
                 width: 100%;
@@ -1006,9 +1002,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     height: 15px;
                 }
 */
-                .select-all-icon {
-                    height: 32px;
-                }
 
                 .btn-flex-container-mobile {
                     flex-direction: column;
