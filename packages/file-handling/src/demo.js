@@ -1,9 +1,8 @@
 import {createInstance} from './i18n';
 import {html, LitElement} from 'lit';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {FileSource} from './file-source.js';
-import {FileSink} from './file-sink.js';
+import {FileSource} from './file-source';
+import {FileSink} from './file-sink';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
 export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
@@ -102,7 +101,6 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
             <section class="section">
                 <div class="content">
                     <h1 class="title">${i18n.t('demo-title')}</h1>
-                    <!-- <p>${unsafeHTML(i18n.t('required-server', {url: this.url}))}</p> -->
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Selected files</h2>

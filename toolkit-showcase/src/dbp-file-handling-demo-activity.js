@@ -1,14 +1,14 @@
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {FileSourceDemo} from '@dbp-toolkit/file-handling/src/demo';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/file-handling/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
-class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+export class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
         this.lang = 'en';
@@ -17,7 +17,7 @@ class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitElement)
 
     static get scopedElements() {
         return {
-            'dbp-file-handling-demo': FileSourceDemo,
+            'dbp-file-source-demo': FileSourceDemo,
         };
     }
 
@@ -60,10 +60,10 @@ class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitElement)
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-file-handling-demo
+            <dbp-file-source-demo
                 id="demo"
                 lang="${this.lang}"
-                entry-point-url="${this.entryPointUrl}"></dbp-file-handling-demo>
+                entry-point-url="${this.entryPointUrl}"></dbp-file-source-demo>
         `;
     }
 }
