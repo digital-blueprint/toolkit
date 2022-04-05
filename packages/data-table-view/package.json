@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/data-table-view",
     "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/data-table-view",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -35,8 +35,8 @@
         "rollup-plugin-terser": "^7.0.2"
     },
     "dependencies": {
-        "@dbp-toolkit/auth": "^0.2.2",
-        "@dbp-toolkit/common": "^0.2.2",
+        "@dbp-toolkit/auth": "^0.3.0",
+        "@dbp-toolkit/common": "^0.3.0",
         "@open-wc/scoped-elements": "^2.0.0",
         "datatables.net-buttons": "^2.0.0",
         "datatables.net-buttons-dt": "^2.0.0",

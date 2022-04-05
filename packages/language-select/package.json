@@ -1,7 +1,7 @@
 {
   "name": "@dbp-toolkit/language-select",
   "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/language-select",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "main": "src/index.js",
   "license": "LGPL-2.1-or-later",
   "repository": {
@@ -33,7 +33,7 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "@dbp-toolkit/common": "^0.2.2",
+    "@dbp-toolkit/common": "^0.3.0",
     "@open-wc/scoped-elements": "^2.0.0",
     "lit": "^2.0.0"
   },
