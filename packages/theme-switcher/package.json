@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/theme-switcher",
     "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/theme-switcher",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
