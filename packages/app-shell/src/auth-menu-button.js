@@ -150,8 +150,8 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .menu a.selected {
-                color: var(--dbp-secondary-text);
-                background-color: var(--dbp-secondary-base);
+                color: var(--dbp-on-secondary-surface);
+                background-color: var(--dbp-secondary-surface);
             }
 
             .dropdown-item {

@@ -931,7 +931,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             }
 
             .clipboard-footer {
-                background-color: var(--dbp-base);
+                background-color: var(--dbp-background);
                 width: 100%;
                 padding-top: 10px;
                 display: flex;
