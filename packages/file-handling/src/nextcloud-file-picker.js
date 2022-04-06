@@ -26,6 +26,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.auth = {};
         this.authUrl = '';
         this.webDavUrl = '';
+        this.fullWebDavUrl  = '';
         this.nextcloudName = 'Nextcloud';
         this.nextcloudFileURL = '';
         this.loginWindow = null;
@@ -95,6 +96,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             auth: {type: Object},
             authUrl: {type: String, attribute: 'auth-url'},
             webDavUrl: {type: String, attribute: 'web-dav-url'},
+            fullWebDavUrl: {type: String, attribute: false},
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
             isPickerActive: {type: Boolean, attribute: false},
@@ -492,7 +494,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             for (let key of Object.keys(localStorage)) {
                 if (
                     key.includes('nextcloud-webdav-username-') ||
-                    key.includes('nextcloud-webdav-password-')
+                    key.includes('nextcloud-webdav-password-') || 
+                    key.includes('nextcloud-webdav-url-')
                 ) {
                     localStorage.removeItem(key);
                 }
@@ -507,7 +510,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.storeSession &&
             sessionId &&
             localStorage.getItem('nextcloud-webdav-username-' + publicId) &&
-            localStorage.getItem('nextcloud-webdav-password-' + publicId)
+            localStorage.getItem('nextcloud-webdav-password-' + publicId) &&
+            localStorage.getItem('nextcloud-webdav-url-' + publicId)
         ) {
             try {
                 const userName = await decrypt(
@@ -517,6 +521,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 const password = await decrypt(
                     sessionId,
                     localStorage.getItem('nextcloud-webdav-password-' + publicId)
+                );
+                this.fullWebDavUrl = await decrypt(
+                    sessionId,
+                    localStorage.getItem('nextcloud-webdav-url-' + publicId)
                 );
                 this.webDavClient = createClient(this.webDavUrl + '/' + userName, {
                     username: userName,
@@ -530,6 +538,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             } catch (e) {
                 localStorage.removeItem('nextcloud-webdav-username-' + publicId);
                 localStorage.removeItem('nextcloud-webdav-password-' + publicId);
+                localStorage.removeItem('nextcloud-webdav-url-' + publicId)
                 return;
             }
         }
@@ -603,6 +612,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     }
                 );
 
+                this.fullWebDavUrl = data.webdavUrl;
+
                 if (
                     this.storeSession &&
                     this.isLoggedIn() &&
@@ -615,11 +626,13 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     if (sessionId) {
                         const encrytedName = await encrypt(sessionId, data.loginName);
                         const encrytedToken = await encrypt(sessionId, data.token);
+                        const encryptedUrl = await encrypt(sessionId, data.webdavUrl);
                         localStorage.setItem('nextcloud-webdav-username-' + publicId, encrytedName);
                         localStorage.setItem(
                             'nextcloud-webdav-password-' + publicId,
                             encrytedToken
                         );
+                        localStorage.setItem('nextcloud-webdav-url-' + publicId, encryptedUrl);
                     }
                 }
 
@@ -947,9 +960,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     '           </d:select>' +
                     '           <d:from>' +
                     '               <d:scope>' +
-                    '                   <d:href>/files/' +
-                    this.userName +
-                    '/</d:href>' +
+                    '                   <d:href>' +
+                    this.fullWebDavUrl +
+                    '</d:href>' +
                     '                   <d:depth>infinity</d:depth>' +
                     '               </d:scope>' +
                     '           </d:from>' +
@@ -1110,9 +1123,9 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     '           </d:select>' +
                     '           <d:from>' +
                     '               <d:scope>' +
-                    '                   <d:href>/files/' +
-                    this.userName +
-                    '/</d:href>' +
+                    '                   <d:href>' +
+                    this.fullWebDavUrl  +
+                    '</d:href>' +
                     '                   <d:depth>infinity</d:depth>' +
                     '               </d:scope>' +
                     '           </d:from>' +
@@ -2111,6 +2124,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             const publicId = this.auth['person-id'];
             localStorage.removeItem('nextcloud-webdav-username' + publicId);
             localStorage.removeItem('nextcloud-webdav-password' + publicId);
+            localStorage.removeItem('nextcloud-webdav-url-' + publicId)
         }
     }
 
