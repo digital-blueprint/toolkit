@@ -157,7 +157,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             this._('nav.modal-nav').addEventListener('scroll', this.handleScroll.bind(this));
 
             if(this.enabledTargets.split(',').length > 1) {
-                console.log(this.enabledTargets.split(','));
                 this._('.right-paddle').addEventListener(
                     'click',
                     this.handleScrollRight.bind(this, this._('nav.modal-nav'))
@@ -539,7 +538,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 <dbp-clipboard
                     id="clipboard-file-picker"
                     mode="file-source"
-                    subscribe="clipboard-files:clipboard-files"
+                    subscribe="clipboard-files:clipboard-files,store-nextcloud-session"
                     lang="${this.lang}"
                     auth-url="${this.nextcloudAuthUrl}"
                     enabled-targets="${this.enabledTargets}"

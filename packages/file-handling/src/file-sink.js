@@ -84,7 +84,6 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
 
             if(this.enabledTargets.split(',') > 1) {
-                console.log(this.enabledTargets.split(','));
                 this._('.right-paddle').addEventListener(
                     'click',
                     this.handleScrollRight.bind(this, this._('nav.modal-nav'))
