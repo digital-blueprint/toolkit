@@ -3165,17 +3165,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                     </div>
                                 </div>
                             </div>
-                            <button class="button ${classMap({hidden: this.storeSession})}"
-                                    title="${i18n.t('nextcloud-file-picker.add-folder-open')}"
-                                    @click="${() => {
-                                        this.openAddFolderDialogue();
-                                    }}">
-                                <dbp-icon name="plus" class="nextcloud-add-folder" id="add-folder-button"></dbp-icon>
-                            </button>
                         </div>
 
 
-                        <div class="additional-menu ${classMap({hidden: !this.storeSession})}">
+                        <div class="additional-menu">
                             <a
                                     class="extended-menu-link"
                                     @click="${() => {
