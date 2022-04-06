@@ -156,15 +156,24 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
             this._('nav.modal-nav').addEventListener('scroll', this.handleScroll.bind(this));
 
-            this._('.right-paddle').addEventListener(
-                'click',
-                this.handleScrollRight.bind(this, this._('nav.modal-nav'))
-            );
+            if(this.enabledTargets.split(',').length > 1) {
+                console.log(this.enabledTargets.split(','));
+                this._('.right-paddle').addEventListener(
+                    'click',
+                    this.handleScrollRight.bind(this, this._('nav.modal-nav'))
+                );
 
-            this._('.left-paddle').addEventListener(
-                'click',
-                this.handleScrollLeft.bind(this, this._('nav.modal-nav'))
-            );
+                this._('.left-paddle').addEventListener(
+                    'click',
+                    this.handleScrollLeft.bind(this, this._('nav.modal-nav'))
+                );
+            } else {
+                const paddles = this._('.paddles');
+                if(paddles) {
+                    paddles.classList.add('hidden');
+                }
+            }
+
         });
     }
 
@@ -677,6 +686,10 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             @media only screen and (orientation: portrait) and (max-width: 340px) {
                 .paddles {
                     display: inherit;
+                }
+                
+                .paddles.hidden {
+                    display: none
                 }
             }
         `;

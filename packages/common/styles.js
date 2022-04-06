@@ -889,6 +889,17 @@ export function getRadioAndCheckboxCss() {
                 width: 10px;
                 height: 19px;
             }
+
+            .button-container input[type="checkbox"]:checked ~ .checkmark::after{
+                top: 1px;
+                left: 6px;
+                width: 5px;
+                height: 11px;
+            }
+            
+            .button-container{
+                line-height: 1em;
+            }
         }
     `;
 }
