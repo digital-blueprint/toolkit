@@ -1481,7 +1481,7 @@ export function getTabulatorStyles() {
             background-color: var(--dbp-content);
             -webkit-mask-repeat: no-repeat;
             mask-repeat: no-repeat;
-            -webkit-mask-position: center -2px;
+            -webkit-mask-position: center center;
             mask-position: center center;
             margin: 0 0 0 4px;
             padding: 0 0 0.25% 0;
