@@ -1,7 +1,7 @@
 {
-  "de": "Deutsch",
-  "en": "Englisch",
-  "de-action": "Auf Deutsch anzeigen",
-  "en-action": "Auf Englisch anzeigen",
-  "demo": "Hallo Welt"
+    "de": "Deutsch",
+    "de-action": "Auf Deutsch anzeigen",
+    "demo": "Hallo Welt",
+    "en": "Englisch",
+    "en-action": "Auf Englisch anzeigen"
 }
