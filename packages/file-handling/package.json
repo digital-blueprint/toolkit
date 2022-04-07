@@ -36,7 +36,7 @@
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.0",
-        "@open-wc/scoped-elements": "^2.0.0",
+        "@open-wc/scoped-elements": "^2.1.0",
         "file-saver": "^2.0.2",
         "i18next": "^21.4.2",
         "jose": "^4.0.0",

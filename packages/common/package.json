@@ -42,7 +42,7 @@
         "lint": "eslint ."
     },
     "dependencies": {
-        "@open-wc/scoped-elements": "^2.0.0",
+        "@open-wc/scoped-elements": "^2.1.0",
         "i18next": "^21.4.2",
         "lit": "^2.0.0"
     }
