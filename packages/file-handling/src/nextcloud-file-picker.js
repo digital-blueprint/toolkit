@@ -2,7 +2,7 @@ import {createInstance} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {Icon, MiniSpinner, getShadowRootDocument} from '@dbp-toolkit/common';
+import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {createClient, parseXML} from 'webdav/web';
@@ -216,7 +216,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 cell.getValue() === 'directory'
                                     ? `<${icon_tag} name="folder" class="nextcloud-picker-icon"></${icon_tag}>`
                                     : icon;
-                            let div = getShadowRootDocument(this).createElement('div');
+                            let div = this.createScopedElement('div');
                             div.innerHTML = html;
                             return div;
                         },
@@ -229,7 +229,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         field: 'basename',
                         sorter: 'alphanum',
                         formatter: (cell) => {
-                            let div = getShadowRootDocument(this).createElement('div');
+                            let div = this.createScopedElement('div');
                             div.classList.add('filename');
                             div.innerHTML = cell.getValue();
                             return div;

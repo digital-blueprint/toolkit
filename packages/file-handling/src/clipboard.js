@@ -4,7 +4,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as fileHandlingStyles from '@dbp-toolkit/file-handling/src/styles';
-import {Icon, getShadowRootDocument} from '@dbp-toolkit/common';
+import {Icon} from '@dbp-toolkit/common';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
@@ -161,7 +161,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             let icon =
                                 `<${icon_tag} name="empty-file" class="nextcloud-picker-icon ` +
                                 `"></${icon_tag}>`;
-                            let div = getShadowRootDocument(this).createElement('div');
+                            let div = this.createScopedElement('div');
                             div.innerHTML = icon;
                             return div;
 
@@ -175,7 +175,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         field: 'name',
                         sorter: 'alphanum',
                         formatter: (cell) => {
-                            let div = getShadowRootDocument(this).createElement('div');
+                            let div = this.createScopedElement('div');
                             div.classList.add('filename');
                             div.innerHTML = cell.getValue();
                             return div;
