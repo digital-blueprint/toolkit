@@ -1,9 +1,9 @@
 {
     "person-profile": {
-        "profile-caption": "Profile for",
-        "given-name": "Given name",
-        "family-name": "Family name",
         "email": "Email",
-        "none-selected": "No person selected"
+        "family-name": "Family name",
+        "given-name": "Given name",
+        "none-selected": "No person selected",
+        "profile-caption": "Profile for"
     }
 }
