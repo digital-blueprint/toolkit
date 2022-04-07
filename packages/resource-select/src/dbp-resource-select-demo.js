@@ -78,17 +78,15 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        let buildUrl = (event) => {
-            let select = event.target;
-            let url = new URL(select.resourcePath, select.entryPointUrl).href;
+        let buildUrl = (select, url) => {
             url += '/' + encodeURIComponent(select.auth['person-id']);
             url += '/organizations';
             url += '?' + new URLSearchParams({lang: select.lang}).toString();
-            event.detail.url = url;
+            return url;
         };
 
-        let formatResource = (event) => {
-            event.detail.text = event.detail.object.name;
+        let formatResource = (select, resource) => {
+            return resource['name'];
         };
 
         let change = (event) => {
@@ -113,8 +111,8 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                                     entry-point-url="${this.entryPointUrl}"
                                     resource-path="base/people"
                                     @change="${change}"
-                                    @build-url="${buildUrl}"
-                                    @format-resource="${formatResource}"></dbp-resource-select>
+                                    .buildUrl="${buildUrl}"
+                                    .formatResource="${formatResource}"></dbp-resource-select>
                             </div>
                         </div>
                     </form>

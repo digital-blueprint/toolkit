@@ -39,13 +39,15 @@ Or directly via CDN:
     - example auth property: `{token: "THE_BEARER_TOKEN"}`
     - note: most often this should be a property that is not set directly, but subscribed at a provider
 
+## Override Properties
+
+- `buildUrl` - A function which takes the select and the base URL, can return a
+  different URL for fetching the list of resources.
+- `formatResource` - A function which takes the select and a resource, should
+  return the text used for displaying the resource.
+
 ## Events
 
 - `change` - Gets dispatched when either `value` or `valueObject` change.
   - `event.detail.value` - Same as the `value` property
   - `event.detail.object` - Same as the `valueObject` property
-- `build-url` - Gets dispatched when during URL building.
-  - `event.detail.url` - Set this to the URL representing the collection endpoint
-- `format-resource` - Gets dispatched when creating the display test for earch resource.
-  - `event.detail.object` - The resource that which should be represented by the text
-  - `event.detail.text` - Set this to the text that should be displayed

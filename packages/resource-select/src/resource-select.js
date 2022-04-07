@@ -86,6 +86,14 @@ export class ResourceSelect extends AdapterLitElement {
         }
     }
 
+    buildUrl(select, url) {
+        return url;
+    }
+
+    formatResource(select, resource) {
+        return resource.name ?? resource['@id'];
+    }
+
     _getUrl() {
         if (this.entryPointUrl === null) {
             return null;
@@ -94,26 +102,12 @@ export class ResourceSelect extends AdapterLitElement {
         if (this.resourcePath !== null) {
             url = new URL(this.resourcePath, this.entryPointUrl).href;
         }
-        let detail = {
-            url: url,
-        };
-        const event = new CustomEvent('build-url', {
-            detail: detail,
-        });
-        this.dispatchEvent(event);
-        return detail.url;
+        url = this.buildUrl(this, url);
+        return url;
     }
 
     _getText(resource) {
-        let detail = {
-            text: resource.name ?? null,
-            object: resource,
-        };
-        const event = new CustomEvent('format-resource', {
-            detail: detail,
-        });
-        this.dispatchEvent(event);
-        return detail.text;
+        return this.formatResource(this, resource);
     }
 
     _setValue(value) {
