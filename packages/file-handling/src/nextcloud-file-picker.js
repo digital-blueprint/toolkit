@@ -526,7 +526,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     sessionId,
                     localStorage.getItem('nextcloud-webdav-url-' + publicId)
                 );
-                this.webDavClient = createClient(this.webDavUrl + '/' + userName, {
+                this.webDavClient = createClient(this.fullWebDavUrl, {
                     username: userName,
                     password: password,
                 });
