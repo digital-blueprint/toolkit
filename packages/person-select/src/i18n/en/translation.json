@@ -1,6 +1,6 @@
 {
     "person-select": {
-        "placeholder": "Please select a person",
-        "login-required": "Login required"
+        "login-required": "Login required",
+        "placeholder": "Please select a person"
     }
 }
