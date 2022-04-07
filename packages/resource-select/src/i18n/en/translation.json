@@ -1,6 +1,6 @@
 {
     "select": {
-        "placeholder": "Please select an entry",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "placeholder": "Please select an entry"
     }
 }

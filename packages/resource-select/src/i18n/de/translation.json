@@ -1,6 +1,6 @@
 {
     "select": {
-        "placeholder": "Bitte wählen Sie einen Eintrag aus",
-        "loading": "Wird geladen..."
+        "loading": "Wird geladen...",
+        "placeholder": "Bitte wählen Sie einen Eintrag aus"
     }
 }
