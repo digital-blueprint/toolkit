@@ -27,10 +27,5 @@
     "lerna": "^4.0.0"
   },
   "dependencies": {
-    "@dbp-toolkit/app-shell": "0.3.0",
-    "@dbp-toolkit/language-select": "0.3.0",
-    "@dbp-toolkit/matomo": "0.2.5",
-    "@dbp-toolkit/organization-select": "0.2.4",
-    "webdav": "4.8.0"
   }
 }
