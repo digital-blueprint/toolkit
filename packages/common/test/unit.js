@@ -1,7 +1,7 @@
 import {expect, assert} from '@esm-bundle/chai';
 import * as utils from '../utils';
 import * as styles from '../styles';
-import {combineURLs, getShadowRootDocument} from '../';
+import {combineURLs} from '../';
 import '../jsonld.js';
 
 suite('utils', () => {
@@ -32,16 +32,6 @@ suite('utils', () => {
         assert.isTrue(res);
         res = utils.defineCustomElement('test-some-element-2', SomeElement2);
         assert.isTrue(res);
-    });
-
-    test('getShadowRootDocument', () => {
-        class SomeElement3 extends HTMLElement {}
-        let res = utils.defineCustomElement('test-some-element-3', SomeElement3);
-        assert.isTrue(res);
-        let elm = new SomeElement3();
-        elm.attachShadow({mode: 'open'});
-        let doc = getShadowRootDocument(elm);
-        assert.isFunction(doc.createElement);
     });
 
     test('getAssetURL', () => {
