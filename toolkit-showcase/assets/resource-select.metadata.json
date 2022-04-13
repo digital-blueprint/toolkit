@@ -1,0 +1,18 @@
+{
+    "element": "dbp-resource-select-demo-activity",
+    "module_src": "dbp-resource-select-demo-activity.js",
+    "routing_name": "resource-select",
+    "name": {
+        "de": "Ressourcenauswahl",
+        "en": "Resource select"
+    },
+    "short_name": {
+        "de": "Ressourcenauswahl",
+        "en": "Resource select"
+    },
+    "description": {
+        "de": "Erlaubt die Auswahl von Resourcen",
+        "en": "Allows selection of resources"
+    },
+    "subscribe": "lang,entry-point-url"
+}

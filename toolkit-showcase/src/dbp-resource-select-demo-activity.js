@@ -1,10 +1,10 @@
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {OrganizationSelectDemo} from '@dbp-toolkit/organization-select/src/dbp-organization-select-demo';
+import {ResourceSelectDemo} from '@dbp-toolkit/resource-select/src/dbp-resource-select-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import readme from '@dbp-toolkit/organization-select/README.md';
+import readme from '@dbp-toolkit/resource-select/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
 
@@ -17,7 +17,7 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
 
     static get scopedElements() {
         return {
-            'dbp-organization-select-demo': OrganizationSelectDemo,
+            'dbp-resource-select-demo': ResourceSelectDemo,
         };
     }
 
@@ -60,16 +60,16 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-organization-select-demo
+            <dbp-resource-select-demo
                 id="demo"
                 lang="${this.lang}"
                 entry-point-url="${this.entryPointUrl}"
-                no-auth></dbp-organization-select-demo>
+                no-auth></dbp-resource-select-demo>
         `;
     }
 }
 
 commonUtils.defineCustomElement(
-    'dbp-organization-select-demo-activity',
+    'dbp-resource-select-demo-activity',
     DbpOrganizationSelectDemoActivity
 );
