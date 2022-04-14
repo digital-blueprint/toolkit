@@ -942,53 +942,59 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 headers: {'Content-Type': 'text/xml'},
                 details: true,
                 data:
-                    '<?xml version="1.0" encoding=\'UTF-8\'?>' +
-                    '   <d:searchrequest xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">' +
-                    '       <d:basicsearch>' +
-                    '           <d:select>' +
-                    '               <d:prop>' +
-                    '                   <d:getlastmodified />' +
-                    '                   <d:resourcetype />' +
-                    '                   <d:getcontenttype />' +
-                    '                   <d:getcontentlength />' +
-                    '                   <d:getetag />' +
-                    '                   <oc:permissions />' +
-                    '                   <oc:size/>' +
-                    '                   <oc:owner-id/>' +
-                    '                   <oc:owner-display-name/>' +
-                    '               </d:prop>' +
-                    '           </d:select>' +
-                    '           <d:from>' +
-                    '               <d:scope>' +
-                    '                   <d:href>' +
-                    this.fullWebDavUrl +
-                    '</d:href>' +
-                    '                   <d:depth>infinity</d:depth>' +
-                    '               </d:scope>' +
-                    '           </d:from>' +
-                    '           <d:where> ' +
-                    '               <d:gte>' +
-                    '                   <d:prop>' +
-                    '                      <d:getlastmodified/>' +
-                    '                   </d:prop>' +
-                    '                   <d:literal>' +
-                    searchDate +
-                    '</d:literal>' +
-                    '               </d:gte>' +
-                    '           </d:where>' +
-                    '           <d:orderby>' +
-                    '               <d:order>' +
-                    '                   <d:prop>' +
-                    '                       <d:getlastmodified/>' +
-                    '                   </d:prop>' +
-                    '                   <d:descending/>' +
-                    '               </d:order>' +
-                    '           </d:orderby>' +
-                    '           <d:limit>' +
-                    '               <d:nresults>15</d:nresults>' +
-                    '           </d:limit>' +
-                    '       </d:basicsearch>' +
-                    '   </d:searchrequest>',
+                '<?xml version="1.0" encoding=\'UTF-8\'?>' +
+                '   <d:searchrequest xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">' +
+                '       <d:basicsearch>' +
+                '           <d:select>' +
+                '               <d:prop>' +
+                '                   <d:getlastmodified />' +
+                '                   <d:resourcetype />' +
+                '                   <d:getcontenttype />' +
+                '                   <d:getcontentlength />' +
+                '                   <d:getetag />' +
+                '                   <oc:permissions />' +
+                '                   <oc:size/>' +
+                '                   <oc:owner-id/>' +
+                '                   <oc:owner-display-name/>' +
+                '               </d:prop>' +
+                '           </d:select>' +
+                '           <d:from>' +
+                '               <d:scope>' +
+                '                   <d:href>' +
+                this.fullWebDavUrl  +
+                '</d:href>' +
+                '                   <d:depth>infinity</d:depth>' +
+                '               </d:scope>' +
+                '           </d:from>' +
+                '           <d:where> ' +
+                '               <d:gte>' +
+                '                   <d:prop>' +
+                '                      <d:getlastmodified/>' +
+                '                   </d:prop>' +
+                '                   <d:literal>' +
+                searchDate +
+                '</d:literal>' +
+                '               </d:gte>' +
+                '           </d:where>' +
+                '           <d:where>' +
+                '               <d:or>' +
+                this.getMimeTypes() +
+                '               </d:or>' +
+                '           </d:where>' +
+                '           <d:orderby>' +
+                '               <d:order>' +
+                '                   <d:prop>' +
+                '                       <d:getlastmodified/>' +
+                '                   </d:prop>' +
+                '                   <d:descending/>' +
+                '               </d:order>' +
+                '           </d:orderby>' +
+                '           <d:limit>' +
+                '               <d:nresults>15</d:nresults>' +
+                '           </d:limit>' +
+                '       </d:basicsearch>' +
+                '   </d:searchrequest>',
+                
             })
             .then((contents) => {
                 parseXML(contents.data).then((davResp) => {
@@ -1051,6 +1057,64 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             });
     }
 
+    getMimeTypes() {
+        let mimePart = '';
+        
+        if (this.allowedMimeTypes && this.allowedMimeTypes !== 0 && this.allowedMimeTypes !== '*/*') {
+            const mimeTypes = this.allowedMimeTypes.split(',');
+                
+            mimeTypes.forEach((str) => {
+                mimePart += 
+                    '               <d:like>'
+                    '                  <d:prop>' +
+                    '                      <d:getcontenttype/>' +
+                    '                  </d:prop>' + 
+                    '                  <d:literal>' + str + '</d:literal>' + 
+                    '               </d:like>';
+            });
+        } else {
+                mimePart = 
+                    '               <d:like>' +
+                    '                   <d:prop>' +
+                    '                       <d:getcontenttype/>' +
+                    '                   </d:prop>' +
+                    '                   <d:literal>application/%</d:literal>' +
+                    '               </d:like>' +
+                    '               <d:like>' +
+                    '                   <d:prop>' +
+                    '                       <d:getcontenttype/>' +
+                    '                   </d:prop>' +
+                    '                   <d:literal>text/%</d:literal>' +
+                    '               </d:like>' +
+                    '               <d:like>' +
+                    '                   <d:prop>' +
+                    '                       <d:getcontenttype/>' +
+                    '                   </d:prop>' +
+                    '                   <d:literal>image/%</d:literal>' +
+                    '               </d:like>' +
+                    '               <d:like>' +
+                    '                   <d:prop>' +
+                    '                       <d:getcontenttype/>' +
+                    '                   </d:prop>' +
+                    '                   <d:literal>video/%</d:literal>' +
+                    '               </d:like>' +
+                    '               <d:like>' +
+                    '                   <d:prop>' +
+                    '                       <d:getcontenttype/>' +
+                    '                   </d:prop>' +
+                    '                   <d:literal>audio/%</d:literal>' +
+                    '               </d:like>' +
+                    '               <d:like>' +
+                    '                   <d:prop>' +
+                    '                       <d:getcontenttype/>' +
+                    '                   </d:prop>' +
+                    '                   <d:literal>font/%</d:literal>' +
+                    '               </d:like>';
+        }
+
+        return mimePart;
+    }
+
     /**
      * Loads recent files and folders from WebDAV
      *
@@ -1105,53 +1169,58 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 headers: {'Content-Type': 'text/xml'},
                 details: true,
                 data:
-                    '<?xml version="1.0" encoding=\'UTF-8\'?>' +
-                    '   <d:searchrequest xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">' +
-                    '       <d:basicsearch>' +
-                    '           <d:select>' +
-                    '               <d:prop>' +
-                    '                   <d:getlastmodified />' +
-                    '                   <d:resourcetype />' +
-                    '                   <d:getcontenttype />' +
-                    '                   <d:getcontentlength />' +
-                    '                   <d:getetag />' +
-                    '                   <oc:permissions />' +
-                    '                   <oc:size/>' +
-                    '                   <oc:owner-id/>' +
-                    '                   <oc:owner-display-name/>' +
-                    '               </d:prop>' +
-                    '           </d:select>' +
-                    '           <d:from>' +
-                    '               <d:scope>' +
-                    '                   <d:href>' +
-                    this.fullWebDavUrl  +
-                    '</d:href>' +
-                    '                   <d:depth>infinity</d:depth>' +
-                    '               </d:scope>' +
-                    '           </d:from>' +
-                    '           <d:where> ' +
-                    '               <d:gte>' +
-                    '                   <d:prop>' +
-                    '                      <d:getlastmodified/>' +
-                    '                   </d:prop>' +
-                    '                   <d:literal>' +
-                    searchDate +
-                    '</d:literal>' +
-                    '               </d:gte>' +
-                    '           </d:where>' +
-                    '           <d:orderby>' +
-                    '               <d:order>' +
-                    '                   <d:prop>' +
-                    '                       <d:getlastmodified/>' +
-                    '                   </d:prop>' +
-                    '                   <d:descending/>' +
-                    '               </d:order>' +
-                    '           </d:orderby>' +
-                    '           <d:limit>' +
-                    '               <d:nresults>15</d:nresults>' +
-                    '           </d:limit>' +
-                    '       </d:basicsearch>' +
-                    '   </d:searchrequest>',
+                '<?xml version="1.0" encoding=\'UTF-8\'?>' +
+                '   <d:searchrequest xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">' +
+                '       <d:basicsearch>' +
+                '           <d:select>' +
+                '               <d:prop>' +
+                '                   <d:getlastmodified />' +
+                '                   <d:resourcetype />' +
+                '                   <d:getcontenttype />' +
+                '                   <d:getcontentlength />' +
+                '                   <d:getetag />' +
+                '                   <oc:permissions />' +
+                '                   <oc:size/>' +
+                '                   <oc:owner-id/>' +
+                '                   <oc:owner-display-name/>' +
+                '               </d:prop>' +
+                '           </d:select>' +
+                '           <d:from>' +
+                '               <d:scope>' +
+                '                   <d:href>' +
+                this.fullWebDavUrl  +
+                '</d:href>' +
+                '                   <d:depth>infinity</d:depth>' +
+                '               </d:scope>' +
+                '           </d:from>' +
+                '           <d:where> ' +
+                '               <d:gte>' +
+                '                   <d:prop>' +
+                '                      <d:getlastmodified/>' +
+                '                   </d:prop>' +
+                '                   <d:literal>' +
+                searchDate +
+                '</d:literal>' +
+                '               </d:gte>' +
+                '           </d:where>' +
+                '           <d:where>' +
+                '               <d:or>' +
+                this.getMimeTypes() +
+                '               </d:or>' +
+                '           </d:where>' +
+                '           <d:orderby>' +
+                '               <d:order>' +
+                '                   <d:prop>' +
+                '                       <d:getlastmodified/>' +
+                '                   </d:prop>' +
+                '                   <d:descending/>' +
+                '               </d:order>' +
+                '           </d:orderby>' +
+                '           <d:limit>' +
+                '               <d:nresults>15</d:nresults>' +
+                '           </d:limit>' +
+                '       </d:basicsearch>' +
+                '   </d:searchrequest>',
             })
             .then((contents) => {
                 parseXML(contents.data).then((davResp) => {
