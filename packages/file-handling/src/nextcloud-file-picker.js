@@ -1065,7 +1065,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 
             mimeTypes.forEach((str) => {
                 mimePart += 
-                    '               <d:like>'
+                    '               <d:like>' +
                     '                  <d:prop>' +
                     '                      <d:getcontenttype/>' +
                     '                  </d:prop>' + 
