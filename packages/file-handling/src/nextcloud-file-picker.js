@@ -967,6 +967,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 '               </d:scope>' +
                 '           </d:from>' +
                 '           <d:where> ' +
+                '           <d:and>' +
                 '               <d:gte>' +
                 '                   <d:prop>' +
                 '                      <d:getlastmodified/>' +
@@ -975,11 +976,12 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 searchDate +
                 '</d:literal>' +
                 '               </d:gte>' +
-                '           </d:where>' +
-                '           <d:where>' +
+
+                
                 '               <d:or>' +
                 this.getMimeTypes() +
                 '               </d:or>' +
+                '           </d:and>' +
                 '           </d:where>' +
                 '           <d:orderby>' +
                 '               <d:order>' +
@@ -1194,6 +1196,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 '               </d:scope>' +
                 '           </d:from>' +
                 '           <d:where> ' +
+                '           <d:and>' +
                 '               <d:gte>' +
                 '                   <d:prop>' +
                 '                      <d:getlastmodified/>' +
@@ -1202,11 +1205,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 searchDate +
                 '</d:literal>' +
                 '               </d:gte>' +
-                '           </d:where>' +
-                '           <d:where>' +
                 '               <d:or>' +
                 this.getMimeTypes() +
                 '               </d:or>' +
+                '           </d:and>' +
                 '           </d:where>' +
                 '           <d:orderby>' +
                 '               <d:order>' +
