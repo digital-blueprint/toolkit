@@ -142,8 +142,14 @@ export class ResourceSelect extends AdapterLitElement {
 
     async _updateAll() {
         this._setValue(this.value);
-        if (!this.auth.token) {
+
+        // Show a dummy loading variant initially
+        const $select = this._getSelect2();
+        if (!this._IsSelect2Initialized($select)) {
             await this._setSelect2Loading();
+        }
+
+        if (!this.auth.token) {
             return;
         }
         await this._updateResources();
