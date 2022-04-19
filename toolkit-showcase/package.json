@@ -21,7 +21,7 @@
         "eslint": "^8.0.0",
         "eslint-plugin-jsdoc": "^39.0.0",
         "find-cache-dir": "^3.3.1",
-        "glob": "^7.1.6",
+        "glob": "^8.0.0",
         "karma": "^6.0.0",
         "karma-chrome-launcher": "^3.1.0",
         "karma-firefox-launcher": "^2.1.0",
