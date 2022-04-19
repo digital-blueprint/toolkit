@@ -9,6 +9,10 @@ export function getBuildInfo(build) {
     let remote = child_process.execSync('git config --get remote.origin.url').toString().trim();
     let commit = child_process.execSync('git rev-parse --short HEAD').toString().trim();
 
+    if (remote.indexOf('git@') === 0) {
+        remote = remote.replace(':', '/').replace('git@', 'https://');
+    }
+
     let parsed = url.parse(remote);
     let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.'));
     let newUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commit;
