@@ -3,6 +3,7 @@ import JSONLD from '@dbp-toolkit/common/jsonld';
 import {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
 import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {send} from '@dbp-toolkit/common/notification';
 
 /**
  * Keycloak auth web component
@@ -219,17 +220,28 @@ export class AuthKeycloak extends AdapterLitElement {
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 
         const handleLogin = async () => {
-            if (this.forceLogin || this._kcwrapper.isLoggingIn()) {
-                this._setLoginStatus(LoginStatus.LOGGING_IN);
-                await this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
-            } else if (this.tryLogin) {
-                this._setLoginStatus(LoginStatus.LOGGING_IN);
-                await this._kcwrapper.tryLogin();
-                if (!this._authenticated) {
+            try {
+                if (this.forceLogin || this._kcwrapper.isLoggingIn()) {
+                    this._setLoginStatus(LoginStatus.LOGGING_IN);
+                    await this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
+                } else if (this.tryLogin) {
+                    this._setLoginStatus(LoginStatus.LOGGING_IN);
+                    await this._kcwrapper.tryLogin();
+                    if (!this._authenticated) {
+                        this._setLoginStatus(LoginStatus.LOGGED_OUT);
+                    }
+                } else {
                     this._setLoginStatus(LoginStatus.LOGGED_OUT);
                 }
-            } else {
+            } catch (error) {
+                // In case the keycloak server is offline for example
                 this._setLoginStatus(LoginStatus.LOGGED_OUT);
+                send({
+                    summary: this._i18n.t('login-failed'),
+                    type: 'danger',
+                    timeout: 5,
+                });
+                throw error;
             }
         };
 

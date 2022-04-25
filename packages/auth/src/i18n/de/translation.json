@@ -1,4 +1,5 @@
 {
     "login": "Anmelden",
+    "login-failed": "Kommunikation mit dem Anmeldeserver fehlgeschlagen",
     "logout": "Abmelden"
 }
