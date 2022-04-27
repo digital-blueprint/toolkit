@@ -79,9 +79,8 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         let buildUrl = (select, url) => {
-            url += '/' + encodeURIComponent(select.auth['person-id']);
-            url += '/organizations';
-            url += '?' + new URLSearchParams({lang: select.lang}).toString();
+            url += '?person=' + encodeURIComponent(select.auth['person-id']);
+            url += '&' + new URLSearchParams({lang: select.lang}).toString();
             return url;
         };
 
@@ -109,7 +108,7 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                                     subscribe="auth"
                                     lang="${this.lang}"
                                     entry-point-url="${this.entryPointUrl}"
-                                    resource-path="base/people"
+                                    resource-path="base/organizations"
                                     @change="${change}"
                                     .buildUrl="${buildUrl}"
                                     .formatResource="${formatResource}"></dbp-resource-select>

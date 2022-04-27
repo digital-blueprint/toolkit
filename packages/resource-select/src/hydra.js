@@ -12,7 +12,6 @@ export async function getCollection(url, token) {
     });
 
     if (!response.ok) {
-        console.log("url", url);
         throw new Error(response.statusText);
     }
 
