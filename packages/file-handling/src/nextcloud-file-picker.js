@@ -1422,6 +1422,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     `;
                     this.loading = false;
                     this.statusText = reloadButton;
+                    this.sendSetPropertyEvent('analytics-event', {
+                        category: 'FileHandlingNextcloud',
+                        action: 'WebdavClientError',
+                    });
                 }
             });
     }
