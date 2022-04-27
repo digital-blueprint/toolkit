@@ -548,7 +548,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                     nextcloud-file-url="${this.nextcloudFileURL}"
                     allowed-mime-types="${this.allowedMimeTypes}"
                     @dbp-clipboard-file-picker-file-downloaded="${(event) => {
-                        this.sendFileEvent(event.detail.file);
+                        this.sendFileEvent(event.detail.file, event.detail.maxUpload);
                     }}"></dbp-clipboard>
             `;
         }

@@ -237,7 +237,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             this.tabulatorTable.on("tableBuilt", this.tableBuiltFunction.bind(this));
             this.tabulatorTable.on("rowClick", this.rowClickFunction.bind(this));
             this.tabulatorTable.on("rowSelectionChanged", this.rowSelectionChangedFunction.bind(this));
-            this.tabulatorTable.on("dataLoaded", this.dataLoadedFunction.bind(this));
+            this.tabulatorTable.on("dataChanged", this.dataChangedFunction.bind(this));
         });
 
         //Register only one beforeunload Event for the clipboard warning
@@ -292,7 +292,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-    dataLoadedFunction() {
+    dataChangedFunction() {
         if (this.tabulatorTable !== null) {
 
             const that = this;
@@ -328,7 +328,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         this.tabulatorTable.off("tableBuilt");
         this.tabulatorTable.off("rowClick");
         this.tabulatorTable.off("rowSelectionChanged");
-        this.tabulatorTable.off("dataLoaded");
+        this.tabulatorTable.off("dataChanged");
     }
 
     /**
@@ -409,7 +409,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
     /**
      * If clipboard files and the tabulator table exists, then clear the table and sets the new data
-     *
+     *s
      */
     generateClipboardTable() {
         this.numberOfSelectedFiles = 0;
@@ -428,10 +428,20 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             this.tabulatorTable.clearData();
             this.tabulatorTable.setData(data);
 
+            if(this.clipboardFiles.files.length > 0) {
+                let placeholders = this._a(".tabulator-placeholder");
+                if(placeholders)
+                    placeholders.forEach(placeholder => placeholder.style.display = "none");
+            } else {
+                let placeholders = this._a(".tabulator-placeholder");
+                if(placeholders)
+                    placeholders.forEach(placeholder => placeholder.style.display = "inherit");
+            }
         }
         if (this._('#select_all')) {
             this._('#select_all').checked = false;
         }
+
     }
 
     /**
@@ -442,7 +452,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     async sendClipboardFiles(files) {
         const i18n = this._i18n;
         for (let i = 0; i < files.length; i++) {
-            await this.sendFileEvent(files[i].file);
+            await this.sendFileEvent(files[i].file, files.length);
         }
         this.tabulatorTable.deselectRow();
         send({
@@ -453,8 +463,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         });
     }
 
-    async sendFileEvent(file) {
-        const data = {file: file, data: file};
+    async sendFileEvent(file, maxFiles) {
+        const data = {file: file, data: file, maxUpload: maxFiles};
         const event = new CustomEvent('dbp-clipboard-file-picker-file-downloaded', {
             detail: data,
             bubbles: true,
@@ -517,6 +527,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         } else {
             files = files.concat(event.detail.file);
         }
+
         this.filesToSave = files;
         if (files && files.length !== 0) {
             data = {files: files};
@@ -908,24 +919,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 justify-content: space-between;
             }
 
-            .tabulator .tabulator-tableHolder .tabulator-placeholder span {
-                margin: initial;
-            }
-/*
-            .checkmark {
-                height: 20px;
-                width: 20px;
-                left: 11px;
-                top: 4px;
-            }
-
-            .button-container .checkmark::after {
-                left: 8px;
-                top: 3px;
-                width: 4px;
-                height: 11px;
-            }*/
-
             .table-wrapper {
                 position: relative;
             }
@@ -986,22 +979,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 .flex-container {
                     display: block;
                 }
-
-            /*    .checkmark {
-                    height: 25px;
-                    width: 25px;
-                    left: 9px;
-                    top: 2px;
-                }
-
-
-                .button-container .checkmark::after {
-                    left: 8px;
-                    top: 2px;
-                    width: 8px;
-                    height: 15px;
-                }
-*/
 
                 .btn-flex-container-mobile {
                     flex-direction: column;
