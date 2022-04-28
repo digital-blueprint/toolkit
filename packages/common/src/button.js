@@ -20,6 +20,17 @@ export class Button extends ScopedElementsMixin(LitElement) {
         this.spinner = false;
         this.noSpinnerOnClick = false;
         this.disabled = false;
+
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=1061240#c12
+        this.addEventListener('click', (e) => {
+            if (this.disabled) {
+                e.stopImmediatePropagation();
+            }
+
+            if (!this.noSpinnerOnClick) {
+                this.start();
+            }
+        });
     }
 
     static get scopedElements() {
@@ -40,12 +51,6 @@ export class Button extends ScopedElementsMixin(LitElement) {
             noSpinnerOnClick: {type: Boolean, attribute: 'no-spinner-on-click'},
             disabled: {type: Boolean, reflect: true},
         };
-    }
-
-    clickHandler() {
-        if (!this.noSpinnerOnClick) {
-            this.start();
-        }
     }
 
     start() {
@@ -77,7 +82,6 @@ export class Button extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <button
-                @click="${this.clickHandler}"
                 class="button ${this.type}"
                 ?disabled="${this.disabled}">
                 ${this.value}
