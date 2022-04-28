@@ -62,6 +62,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this._roles = [];
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this._extra = [];
 
         this.matomoUrl = '';
         this.matomoSiteId = -1;
@@ -179,6 +180,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     return {
                         lang: this.lang,
                         component: '',
+                        extra: [],
                     };
                 },
             },
@@ -191,18 +193,20 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                             return {
                                 lang: params.lang,
                                 component: '',
+                                extra: [],
                             };
                         },
                     },
                     {
                         name: 'mainRoute',
-                        path: '/:component',
+                        path: ['/:component', '/:component/(.*)'],
                         action: (context, params) => {
-                            // remove the additional parameters added by Keycloak
-                            let componentTag = params.component.toLowerCase().replace(/&.+/, '');
+                            let componentTag = params.component.toLowerCase();
+                            let extra = params[0] ? params[0].split('/') : [];
                             return {
                                 lang: params.lang,
                                 component: componentTag,
+                                extra: extra,
                             };
                         },
                     },
@@ -218,17 +222,20 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     let state = {
                         component: this.activeView,
                         lang: this.lang,
+                        extra: this._extra,
                     };
                     return state;
                 },
                 setState: (state) => {
                     this.updateLangIfChanged(state.lang);
                     this.switchComponent(state.component);
+                    this._extra = state.extra;
                 },
                 getDefaultState: () => {
                     return {
                         lang: 'de',
                         component: this.routes[0],
+                        extra: [],
                     };
                 },
             },
@@ -270,8 +277,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     connectedCallback() {
         super.connectedCallback();
 
-        if (this.src) this.fetchMetadata(this.src);
         this.initRouter();
+        if (this.src) {
+            this.fetchMetadata(this.src);
+        }
     }
 
     /**

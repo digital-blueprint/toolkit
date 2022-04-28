@@ -1,6 +1,10 @@
 import UniversalRouter from 'universal-router';
 import generateUrls from 'universal-router/generateUrls';
 
+function stateMatches(a, b) {
+    return JSON.stringify(a, Object.keys(a).sort()) === JSON.stringify(b, Object.keys(b).sort());
+}
+
 /**
  * A wrapper around UniversalRouter which adds history integration
  */
@@ -31,38 +35,30 @@ export class Router {
 
         window.addEventListener('popstate', (event) => {
             this.setStateFromCurrentLocation();
-            this.dispatchLocationChanged();
+            this._dispatchLocationChanged();
         });
+    }
+
+    async _getStateForPath(pathname) {
+        let isBasePath = pathname.replace(/\/$/, '') === this.router.baseUrl.replace(/\/$/, '');
+        if (isBasePath) {
+            return this.getDefaultState();
+        }
+        return this.router.resolve({pathname: pathname});
     }
 
     /**
      * In case something else has changed the location, update the app state accordingly.
      */
     setStateFromCurrentLocation() {
-        const oldPathName = location.pathname;
-
-        this.router
-            .resolve({pathname: oldPathName})
+        this._getStateForPath(location.pathname)
             .then((page) => {
-                const newPathname = this.getPathname(page);
-                // In case of a router redirect, set the new location
-                if (newPathname !== oldPathName) {
-                    const referrerUrl = location.href;
-                    window.history.replaceState({}, '', newPathname);
-                    this.dispatchLocationChanged(referrerUrl);
-                } else if (this.isBasePath(oldPathName)) {
-                    page = this.getDefaultState();
-                }
                 this.setState(page);
             })
             .catch((e) => {
                 // In case we can't resolve the location, just leave things as is.
                 // This happens when a user enters a wrong URL or when testing with karma.
             });
-    }
-
-    isBasePath(pathname) {
-        return pathname.replace(/\/$/, '') === this.router.baseUrl.replace(/\/$/, '');
     }
 
     /**
@@ -72,18 +68,21 @@ export class Router {
         // Queue updates so we can call this multiple times when changing state
         // without it resulting in multiple location changes
         setTimeout(() => {
-            const newPathname = this.getPathname();
-            const oldPathname = location.pathname;
-            if (newPathname === oldPathname) return;
-
-            const defaultPathname = this.getPathname(this.getDefaultState());
-            if (newPathname === defaultPathname && this.isBasePath(oldPathname)) {
-                return;
-            }
-
-            const referrerUrl = location.href;
-            window.history.pushState({}, '', newPathname);
-            this.dispatchLocationChanged(referrerUrl);
+            this._getStateForPath(location.pathname)
+                .then((page) => {
+                    const newState = this.getState();
+                    // if the state has changed we update
+                    if (!stateMatches(newState, page)) {
+                        const newPathname = this.getPathname();
+                        const referrerUrl = location.href;
+                        window.history.pushState({}, '', newPathname);
+                        this._dispatchLocationChanged(referrerUrl);
+                    }
+                })
+                .catch((e) => {
+                    // In case we can't resolve the location, just leave things as is.
+                    // This happens when a user enters a wrong URL or when testing with karma.
+                });
         });
     }
 
@@ -93,14 +92,15 @@ export class Router {
      * @param {string} pathname
      */
     updateFromPathname(pathname) {
-        this.router
-            .resolve({pathname: pathname})
+        this._getStateForPath(pathname)
             .then((page) => {
-                if (location.pathname === pathname) return;
-                const referrerUrl = location.href;
-                window.history.pushState({}, '', pathname);
-                this.setState(page);
-                this.dispatchLocationChanged(referrerUrl);
+                const oldState = this.getState();
+                if (!stateMatches(oldState, page)) {
+                    const referrerUrl = location.href;
+                    window.history.pushState({}, '', pathname);
+                    this.setState(page);
+                    this._dispatchLocationChanged(referrerUrl);
+                }
             })
             .catch((err) => {
                 throw new Error(`Route not found: ${pathname}: ${err}`);
@@ -117,7 +117,9 @@ export class Router {
      */
     getPathname(partialState) {
         const currentState = this.getState();
-        if (partialState === undefined) partialState = {};
+        if (partialState === undefined) {
+            partialState = {};
+        }
         let combined = {...currentState, ...partialState};
 
         try {
@@ -128,7 +130,7 @@ export class Router {
         }
     }
 
-    dispatchLocationChanged(referrerUrl = '') {
+    _dispatchLocationChanged(referrerUrl = '') {
         // fire a locationchanged event
         window.dispatchEvent(
             new CustomEvent('locationchanged', {
