@@ -61,7 +61,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
                 cursor: pointer;
                 text-decoration: none;
             }
-            
+
             h2 a {
                 white-space: nowrap;
             }
