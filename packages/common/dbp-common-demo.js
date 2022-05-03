@@ -113,7 +113,10 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
               `;
     }
 
-    buttonClickHandler() {
+    buttonClickHandler(e) {
+        // add class to button to end2end test if button was clicked
+        e.target.classList.add('button-clicked');
+
         setTimeout(() => {
             const scopedTagName = this.getScopedTagName('dbp-button');
             this.shadowRoot.querySelector(scopedTagName).stop();
