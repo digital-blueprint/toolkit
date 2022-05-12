@@ -1,12 +1,3 @@
 {
-    "error": {
-        "connection-to-server-refused": "Connection to server refused!",
-        "summary": "An error occurred"
-    },
-    "jsonld": {
-        "api-documentation-server": "Connection to apiDocumentation server {{apiDocUrl}} failed!",
-        "error-api-server": "Connection to api server {{apiUrl}} failed!",
-        "error-hydra-documentation-url-not-set": "Hydra apiDocumentation url was not set for server {{apiUrl}}!"
-    },
     "toolkit-showcase": "This text will be translated to german using i18n with a user defined language file when the language is changed to german."
 }
