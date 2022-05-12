@@ -7,6 +7,7 @@ import {
     MiniSpinner,
     Spinner,
     Translated,
+    Translation
 } from './index';
 
 commonUtils.defineCustomElement('dbp-mini-spinner', MiniSpinner);
@@ -16,3 +17,4 @@ commonUtils.defineCustomElement('dbp-button', Button);
 commonUtils.defineCustomElement('dbp-loading-button', LoadingButton);
 commonUtils.defineCustomElement('dbp-inline-notification', InlineNotification);
 commonUtils.defineCustomElement('dbp-translated', Translated);
+commonUtils.defineCustomElement('dbp-translation', Translation);

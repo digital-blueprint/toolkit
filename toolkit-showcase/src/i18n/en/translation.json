@@ -8,5 +8,5 @@
         "error-api-server": "Connection to api server {{apiUrl}} failed!",
         "error-hydra-documentation-url-not-set": "Hydra apiDocumentation url was not set for server {{apiUrl}}!"
     },
-    "toolkit-showcase": "This text will be translated to german using i18n when the user changes the language to german."
+    "toolkit-showcase": "This text will be translated to german using i18n with a user defined language file when the language is changed to german."
 }
