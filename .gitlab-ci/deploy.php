@@ -1,60 +1,61 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Deployer;
 
-require 'recipe/common.php';
-require 'recipe/rsync.php';
+import('recipe/common.php');
+import('contrib/rsync.php');
 
-// Global config
-set('allow_anonymous_stats', false);
+$PROJECT_ROOT = dirname(__DIR__).'/toolkit-showcase';
 
-set('rsync',[
-    'exclude'      => [
-        '.git',
-        'deploy.php',
-    ],
+$RSYNC_CONFIG = [
+    'exclude' => [],
     'exclude-file' => false,
-    'include'      => [],
+    'include' => [],
     'include-file' => false,
-    'filter'       => [],
-    'filter-file'  => false,
-    'filter-perdir'=> false,
-    'flags'        => 'rz',
-    'options'      => ['delete'],
-    'timeout'      => 60,
-]);
-
-set('rsync_src', __DIR__ . '/../toolkit-showcase/dist');
-set('rsync_dest','{{release_path}}');
+    'filter' => [],
+    'filter-file' => false,
+    'filter-perdir' => false,
+    'flags' => 'rz',
+    'options' => ['delete', 'links'],
+    'timeout' => 60,
+];
 
 // Hosts
 host('demo')
-    ->stage('demo')
-    ->hostname('mw@vpu01-demo.tugraz.at')
+    ->set('labels', ['stage' => 'demo'])
+    ->setHostname('mw@vpu01-demo.tugraz.at')
+    ->set('rsync', $RSYNC_CONFIG)
+    ->set('rsync_src', $PROJECT_ROOT.'/dist')
     ->set('deploy_path', '/home/mw/demo/deploy/apps/demo');
 
 host('development')
-    ->stage('development')
-    ->hostname('mw@mw01-dev.tugraz.at')
+    ->set('labels', ['stage' => 'development'])
+    ->setHostname('mw@mw01-dev.tugraz.at')
+    ->set('rsync', $RSYNC_CONFIG)
+    ->set('rsync_src', $PROJECT_ROOT.'/dist')
     ->set('deploy_path', '/home/mw/dev/deploy/apps/demo');
 
-task('build', function () {
-    $stage = get('stage');
-    runLocally("yarn install --frozen-lockfile");
-    runLocally("APP_ENV=$stage yarn run build");
+task('build', function () use ($PROJECT_ROOT) {
+    $options = ['cwd' => $PROJECT_ROOT];
+    $stage = get('labels')['stage'];
+    runLocally("yarn install --frozen-lockfile", $options);
+    runLocally("APP_ENV=$stage yarn run build", $options);
 });
 
 // Deploy task
 task('deploy', [
     'deploy:info',
     'build',
-    'deploy:prepare',
+    'deploy:setup',
     'deploy:lock',
     'deploy:release',
     'rsync',
     'deploy:shared',
     'deploy:symlink',
     'deploy:unlock',
-    'cleanup',
-    'success',
+    'deploy:cleanup',
+    'deploy:success',
 ]);
 after('deploy:failed', 'deploy:unlock');
