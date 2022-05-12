@@ -35,6 +35,7 @@ the version number in its `package.json` is higher than the version number on np
 | `unsubscribe`                 | Reserved for future use                                                           |
 | `auth`                        | Authentication information, set by the authentication component                   |
 | `lang`                        | Currently selected language, set by the language selector                         |
+| `lang-file`                   | Location of the i18n language file where all required i18n translations are       |
 | `entry-point-url`             | Entry point url for all api requests                                              |
 | `requested-login-status`      | Used by the login buttons to trigger a login in auth components                   |
 | `initial-file-handling-state` | Used by the file-handling component to sync file source/sink at first time open   |
