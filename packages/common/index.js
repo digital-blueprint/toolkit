@@ -6,6 +6,7 @@ import {Button, LoadingButton} from './src/button.js';
 import {Spinner} from './src/spinner.js';
 import {InlineNotification} from './src/inline-notification.js';
 import {Translated} from './src/translated';
+import {Translation} from './src/translation';
 import {AdapterLitElement} from './src/adapter-lit-element.js';
 
 export {EventBus, createLinkedAbortController, createTimeoutAbortSignal};
@@ -14,7 +15,7 @@ export {MiniSpinner};
 export {Button, LoadingButton};
 export {Spinner};
 export {InlineNotification};
-export {Translated};
+export {Translated, Translation};
 export * from './src/logger.js';
 export * from './src/utils.js';
 export {AdapterLitElement};

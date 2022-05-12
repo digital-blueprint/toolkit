@@ -11,7 +11,7 @@
 
     <!-- PWA manifest file -->
     <link rel="manifest" href="<%= getUrl(name + '.manifest.json') %>">
-    
+
     <!-- PWA iphone -->
     <link rel="apple-touch-icon" sizes="180x180" href="<%= getPrivateUrl('apple-touch-icon.png') %>">
     <link rel="icon" type="image/png" sizes="32x32" href="<%= getPrivateUrl('icon-32x32.png') %>">
@@ -113,6 +113,7 @@
 <<%= name %>
     provider-root
     lang="de"
+    lang-file="<%= getUrl('/src/i18n/') %>"
     entry-point-url="<%= entryPointURL %>"
     nextcloud-auth-url="<%= nextcloudWebAppPasswordURL %>"
     nextcloud-web-dav-url="<%= nextcloudWebDavURL %>"

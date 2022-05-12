@@ -13,6 +13,7 @@ class DbpCommonDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
         super();
         this.lang = 'en';
         this.entryPointUrl = '';
+        this.langFile = '';
     }
 
     static get scopedElements() {
@@ -25,6 +26,7 @@ class DbpCommonDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            langFile: {type: String, attribute: 'lang-file'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
@@ -63,6 +65,7 @@ class DbpCommonDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
             <dbp-common-demo
                 id="demo"
                 lang="${this.lang}"
+                lang-file="${this.langFile}"
                 entry-point-url="${this.entryPointUrl}"></dbp-common-demo>
         `;
     }
