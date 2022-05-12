@@ -1,5 +1,4 @@
 import {css, html} from 'lit';
-import {classMap} from 'lit/directives/class-map.js';
 import {until} from 'lit/directives/until.js';
 import DBPLitElement from '../dbp-lit-element';
 import {createInstanceAsync} from './i18n.js';
@@ -36,10 +35,11 @@ export class Translation extends DBPLitElement {
     }
 
     update(changedProperties) {
+        let lang = this.lang;
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    let lang = this.lang;
+
                     this._i18n.then(function(response) {
                       response.changeLanguage(lang);
                     });

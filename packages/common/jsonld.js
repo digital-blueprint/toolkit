@@ -297,7 +297,7 @@ export default class JSONLD {
     }
 }
 
-JSONLD._i18n = await createInstance();
+JSONLD._i18n = createInstance();
 JSONLD.instances = {};
 JSONLD.successFunctions = {};
 JSONLD.failureFunctions = {};
