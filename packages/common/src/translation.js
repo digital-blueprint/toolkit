@@ -9,6 +9,7 @@ export class Translation extends DBPLitElement {
         this.key = '';
         this.lang = '';
         this.langFile = '';
+        this.interpolation = '';
     }
 
     static get properties() {
@@ -17,6 +18,7 @@ export class Translation extends DBPLitElement {
             key: {type: String},
             lang: {type: String},
             langFile: {type: String, attribute: 'lang-file'},
+            interpolation: {type: Object, attribute: 'var'},
         };
     }
 
@@ -39,7 +41,6 @@ export class Translation extends DBPLitElement {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-
                     this._i18n.then(function(response) {
                       response.changeLanguage(lang);
                     });
@@ -53,13 +54,17 @@ export class Translation extends DBPLitElement {
     render() {
         // save global key in local variable for async use
         let key = this.key;
+        let interpolation = this.interpolation;
 
         // async request to i18n translation
         const translation = this._i18n.then(function(response){
-          return response.t(key);
+          if (interpolation)
+            return response.t(key, interpolation);
+          else
+            return response.t(key);
         });
 
-        // load translation text when available, otherweise display "Loading.."
+        // load translation text when available, otherwise display "Loading.."
         return html`
             ${until(translation, html`<span>Loading..</span>`)}
         `;
