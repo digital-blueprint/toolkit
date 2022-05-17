@@ -31,6 +31,12 @@ export default class DBPLitElement extends AdapterLitElement {
             : this.shadowRoot.querySelector(selector);
     }
 
+    _a(selector) {
+        return this.shadowRoot === null
+            ? this.querySelectorAll(selector)
+            : this.shadowRoot.querySelectorAll(selector);
+    }
+
     firstUpdated() {
         super.firstUpdated();
         this._renderDone = true;
