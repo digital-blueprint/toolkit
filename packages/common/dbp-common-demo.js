@@ -303,6 +303,7 @@ html {
                     </div>
                     <div class="control" id="dbp-translation-demo">
                         <dbp-translation key="toolkit-showcase" subscribe="lang, lang-files"></dbp-translation>
+                        <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-files" unsafe></dbp-translation>
                     </div>
                 </div>
             </section>

@@ -1,3 +1,4 @@
 {
-    "toolkit-showcase": "Dieser Text wird mithilfe von i18n aus einer benutzerdefinierten Sprachdatei gelesen und ins Englische übersetzt wenn man die Sprache auf Englisch stellt."
+    "toolkit-showcase": "Dieser Text wird mithilfe von i18n aus einer benutzerdefinierten Sprachdatei gelesen und ins Englische übersetzt wenn man die Sprache auf Englisch stellt.",
+    "toolkit-showcase-link": "Es können sogar links mittels <a href=\"{{- link1}}\">interpolation</a> und escaping dargestellt werden."
 }
