@@ -155,6 +155,29 @@ export class MatomoElement extends DBPLitElement {
                 that.pushEvent(['trackEvent', 'UnhandledRejection', name]);
             });
 
+            // https://developer.mozilla.org/en-US/docs/Web/API/Element/securitypolicyviolation_event
+            window.addEventListener('securitypolicyviolation', (e) => {
+                let attrs = [
+                    'blockedURI',
+                    'columnNumber',
+                    'disposition',
+                    'documentURI',
+                    'effectiveDirective',
+                    'lineNumber',
+                    'originalPolicy',
+                    'referrer',
+                    'sample',
+                    'sourceFile',
+                    'statusCode',
+                    'violatedDirective',
+                ];
+                let payload = {};
+                for (let attr of attrs) {
+                    payload[attr] = e[attr];
+                }
+                this.pushEvent(['trackEvent', 'SecurityPolicyViolation', JSON.stringify(payload)]);
+            });
+
             this.isRunning = true;
             if (this.lastEvent.length > 0) {
                 console.log(
