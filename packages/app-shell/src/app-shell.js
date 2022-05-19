@@ -74,7 +74,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.initateOpenMenu = false;
 
         this.auth = {};
-        this.langFile = '';
+        this.langFiles = '';
     }
 
     static get scopedElements() {
@@ -272,7 +272,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             buildTime: {type: String, attribute: 'build-time'},
             env: {type: String},
             auth: {type: Object},
-            langFile: {type: String, attribute: 'lang-file'},
+            langFiles: {type: String, attribute: 'lang-files'},
         };
     }
 

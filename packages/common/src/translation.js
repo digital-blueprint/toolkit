@@ -8,7 +8,7 @@ export class Translation extends DBPLitElement {
         super();
         this.key = '';
         this.lang = '';
-        this.langFile = '';
+        this.langFiles = '';
         this.interpolation = '';
     }
 
@@ -17,7 +17,7 @@ export class Translation extends DBPLitElement {
             ...super.properties,
             key: {type: String},
             lang: {type: String},
-            langFile: {type: String, attribute: 'lang-file'},
+            langFiles: {type: String, attribute: 'lang-files'},
             interpolation: {type: Object, attribute: 'var'},
         };
     }
@@ -33,7 +33,7 @@ export class Translation extends DBPLitElement {
 
     connectedCallback() {
       super.connectedCallback();
-      this._i18n = createInstanceAsync(this.langFile);
+      this._i18n = createInstanceAsync(this.langFiles);
     }
 
     update(changedProperties) {
