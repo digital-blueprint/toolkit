@@ -1,5 +1,6 @@
 import {css, html} from 'lit';
 import {until} from 'lit/directives/until.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
 import {createInstanceAsync} from './i18n.js';
 
@@ -19,6 +20,7 @@ export class Translation extends DBPLitElement {
             lang: {type: String},
             langFiles: {type: String, attribute: 'lang-files'},
             interpolation: {type: Object, attribute: 'var'},
+            unsafe: {type: Boolean, attribute: 'unsafe'},
         };
     }
 
@@ -55,10 +57,13 @@ export class Translation extends DBPLitElement {
         // save global key in local variable for async use
         let key = this.key;
         let interpolation = this.interpolation;
+        let unsafe = this.unsafe;
 
         // async request to i18n translation
         const translation = this._i18n.then(function(response){
-          if (interpolation)
+          if (interpolation && unsafe)
+            return unsafeHTML(response.t(key, interpolation));
+          else if (interpolation)
             return response.t(key, interpolation);
           else
             return response.t(key);
@@ -66,7 +71,7 @@ export class Translation extends DBPLitElement {
 
         // load translation text when available, otherwise display "Loading.."
         return html`
-            ${until(translation, html`<span>Loading..</span>`)}
+            ${until(translation, html`Loading..`)}
         `;
     }
 }
