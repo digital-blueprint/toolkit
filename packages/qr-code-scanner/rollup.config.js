@@ -67,10 +67,6 @@ export default async () => {
                         src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
                         dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
                     },
-                    {
-                        src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'),
-                        dest: 'dist/' + (await getDistPath(pkg.name)),
-                    },
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

@@ -46,10 +46,6 @@ after loaded. This attribute is also used to stop the QR code reader or if you d
 - `'code-detected'`: Outgoing Event which is fired if a QR code is detected. The data of the detected QR code is in `event.detail`.
 - `'scan-started`: Fired after the first image is drawn. Can be used to scrolling or other layout dependent tasks.
 
-## Assets
-
-- `qr-scanner/qr-scanner-worker.*` -> `dist/local/@dbp-toolkit/qr-code-scanner/`
-
 ## Local development
 
 ```bash
@@ -71,6 +67,13 @@ yarn run build
 ```
 
 Jump to <http://localhost:8002> and you should get a demo page.
+
+## Content Security Policy
+
+The QR code detection worker is loaded via `blob:`, so your CSP needs to allow
+`worker-src blob:`. Since Safari does not support this you also have to set
+`child-src blob:`. Since `child-src` also affects other things make sure this
+doesn't break things.
 
 ## Camera for local development
 

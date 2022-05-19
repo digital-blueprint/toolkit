@@ -5,9 +5,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import {Mutex} from 'async-mutex';
-import {name as pkgName} from './../package.json';
 import {getIconSVGURL} from '@dbp-toolkit/common';
 
 /**
@@ -128,22 +126,17 @@ class QRScanner {
     async scan(canvas, x, y, width, height) {
         if (this._scanner === null) {
             this._scanner = (await import('qr-scanner')).default;
-            this._scanner.WORKER_PATH = commonUtils.getAssetURL(
-                pkgName,
-                'qr-scanner-worker.min.js'
-            );
         }
         if (this._engine === null) {
-            this._engine = await this._scanner.createQrEngine(this._scanner.WORKER_PATH);
+            this._engine = await this._scanner.createQrEngine();
         }
         try {
             return {
-                data: await this._scanner.scanImage(
-                    canvas,
-                    {x: x, y: y, width: width, height: height},
-                    this._engine,
-                    this._canvas
-                ),
+                data: await this._scanner.scanImage(canvas, {
+                    scanRegion: {x: x, y: y, width: width, height: height},
+                    qrEngine: this._engine,
+                    canvas: this._canvas,
+                }),
             };
         } catch (e) {
             return null;
@@ -315,17 +308,18 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                             lastCode = code;
 
                             if (code) {
-                                if (lastSentData !== code.data) {
-                                    this._outputData = code.data;
+                                let currentData = code.data.data;
+                                if (lastSentData !== currentData) {
+                                    this._outputData = currentData;
                                     this.dispatchEvent(
                                         new CustomEvent('code-detected', {
                                             bubbles: true,
                                             composed: true,
-                                            detail: {code: code.data},
+                                            detail: {code: currentData},
                                         })
                                     );
                                 }
-                                lastSentData = code.data;
+                                lastSentData = currentData;
                             } else {
                                 this._outputData = null;
                                 lastSentData = null;
@@ -333,7 +327,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                         });
                 }
 
-                let matched = lastCode ? lastCode.data.match(this.matchRegex) !== null : false;
+                let matched = lastCode ? lastCode.data.data.match(this.matchRegex) !== null : false;
 
                 //draw mask
                 canvas.beginPath();
