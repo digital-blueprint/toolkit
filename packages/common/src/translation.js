@@ -11,6 +11,7 @@ export class Translation extends DBPLitElement {
         this.lang = '';
         this.langFiles = '';
         this.interpolation = '';
+        this.namespace = '';
     }
 
     static get properties() {
@@ -21,6 +22,7 @@ export class Translation extends DBPLitElement {
             langFiles: {type: String, attribute: 'lang-files'},
             interpolation: {type: Object, attribute: 'var'},
             unsafe: {type: Boolean, attribute: 'unsafe'},
+            namespace: {type: String, attribute: 'ns'},
         };
     }
 
@@ -35,7 +37,11 @@ export class Translation extends DBPLitElement {
 
     connectedCallback() {
       super.connectedCallback();
-      this._i18n = createInstanceAsync(this.langFiles);
+      if (this.namespace == '')
+        this._i18n = createInstanceAsync(this.langFiles);
+      else {
+        this._i18n = createInstanceAsync(this.langFiles, this.namespace);
+      }
     }
 
     update(changedProperties) {
