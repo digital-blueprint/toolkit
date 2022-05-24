@@ -80,15 +80,37 @@ Or you can include the JS files directly via CDN:
 <script type="module" src="https://unpkg.com/@dbp-toolkit/theme-switcher@0.0.1/dist/theme-switcher.js"></script>
 ```
 
-## Theme Switcher
-
-### Usage
+## Usage
 
 ```html
 <dbp-theme-switcher></dbp-theme-switcher>
 ```
 
-### Attributes
+## Usage in an application with appshell
+If you want to use multiple themes in the appshell, then you have to define the classes inside the `<head>` tag inside the `<style>` tag.
+
+Then add the themes attribute with your themes to the application tag in the `<body>` tag.
+
+### Themes attribute
+
+The themes attribute is organized as an array with objects. The objects have following properties: class(name of the class added to the style tag), 
+icon (name of an icon, which is displayed infront of the Theme name) and name(Friendly name of your theme).
+
+Attention! Currently we don't support translation of the friendly name, so choose an across languages name.
+
+```html
+
+        themes='[{"class": "name-of-your-class", "icon": "name-of-the-icon", "name": "Friendly name of your theme"}, 
+        {"class": "name-of-another-class", "icon": "name-of-the-icon", "name": "Friendly name of another theme"}]'
+
+```
+
+### Example
+A full example can be found in each application in the `index.html` of the `app-template` folder. (E.g. [Greenlight app-template](https://gitlab.tugraz.at/dbp/greenlight/greenlight/-/blob/main/app-template/index.html))
+
+
+
+## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-file-source lang="de"></dbp-file-source>`
@@ -108,7 +130,7 @@ Or you can include the JS files directly via CDN:
          detects if the browser uses the dark mode and handles the given string as dark mode class
       
 
-### Note
+## Note
 The classes should be defined outside of the body tag.
 
 ## Local development
