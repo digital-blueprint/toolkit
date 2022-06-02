@@ -15,13 +15,14 @@ import {
     Translation,
 } from './index.js';
 
+
+
 export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.noAuth = false;
-        this.langFiles = '';
     }
 
     static get scopedElements() {
@@ -47,7 +48,6 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         return {
             lang: {type: String},
             noAuth: {type: Boolean, attribute: 'no-auth'},
-            langFiles: {type: String, attribute: 'lang-files'},
         };
     }
 
@@ -302,8 +302,10 @@ html {
                         </dbp-translated>
                     </div>
                     <div class="control" id="dbp-translation-demo">
-                        <dbp-translation key="toolkit-showcase" subscribe="lang, lang-files"></dbp-translation>
-                        <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-files" unsafe></dbp-translation>
+                        <p><dbp-translation key="toolkit-showcase" subscribe="lang, lang-files"></dbp-translation></p>
+                        <p><dbp-translation key="toolkit-showcase" subscribe="lang, lang-files, override-files"></dbp-translation></p>
+                        <p><dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-files" unsafe></dbp-translation></p>
+                        <p><dbp-translation key="toolkit-showcase-link" var='{"link1": "https://dbp-demo.tugraz.at/"}' subscribe="lang, lang-files, override-files" unsafe></dbp-translation></p>
                     </div>
                 </div>
             </section>

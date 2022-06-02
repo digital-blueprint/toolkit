@@ -75,6 +75,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         this.auth = {};
         this.langFiles = '';
+        this.overrideFiles = '';
     }
 
     static get scopedElements() {
@@ -273,6 +274,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             env: {type: String},
             auth: {type: Object},
             langFiles: {type: String, attribute: 'lang-files'},
+            overrideFiles: {type: String, attribute: 'override-files'},
         };
     }
 
