@@ -1,18 +1,15 @@
 import {css, html} from 'lit';
-import {until} from 'lit/directives/until.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
-import {createInstanceAsync, setOverridesByFile} from './i18n.js';
+import {createInstanceGivenResources, setOverridesByFile} from './i18n.js';
 
 export class Translation extends DBPLitElement {
     constructor() {
         super();
         this.key = '';
         this.lang = '';
-        this.langFiles = '';
         this.interpolation = '';
-        this.namespace = '';
-        this.overrideFiles = '';
+        this.langDir = '';
     }
 
     static get properties() {
@@ -20,11 +17,9 @@ export class Translation extends DBPLitElement {
             ...super.properties,
             key: {type: String},
             lang: {type: String},
-            langFiles: {type: String, attribute: 'lang-files'},
             interpolation: {type: Object, attribute: 'var'},
             unsafe: {type: Boolean, attribute: 'unsafe'},
-            namespace: {type: String, attribute: 'ns'},
-            overrideFiles: {type: String, attribute: 'override-files'},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
@@ -39,22 +34,21 @@ export class Translation extends DBPLitElement {
 
     connectedCallback() {
       super.connectedCallback();
-      if (this.namespace == '') {
-        this._i18n = createInstanceAsync(this.langFiles);
-      }
-      else {
-        this._i18n = createInstanceAsync(this.langFiles, this.namespace);
-      }
 
+      // init objects with empty string as value for key
+      const de = {};
+      const en = {};
+      de[this.key] = "";
+      en[this.key] = "";
+
+      // create i18n instance with given translations
+      this._i18n = createInstanceGivenResources(en, de);
+
+      // after init of overrides rerender page
       let local = this;
-      let overrideFiles = this.overrideFiles;
-
-      if (this.overrideFiles) {
-        this._i18n.then(function(response) {
-          setOverridesByFile(response, local, overrideFiles).then(function(response) {
-              local._i18n = response;
-              local.requestUpdate();
-          });
+      if (this.langDir) {
+        setOverridesByFile(this._i18n, this, this.langDir).then(function(response) {
+            local.requestUpdate();
         });
       }
     }
@@ -64,9 +58,7 @@ export class Translation extends DBPLitElement {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    Promise.resolve(this._i18n).then(function(response) {
-                      response.changeLanguage(lang);
-                    });
+                    this._i18n.changeLanguage(lang);
                     break;
             }
         });
@@ -75,24 +67,19 @@ export class Translation extends DBPLitElement {
     }
 
     render() {
-        // save global key in local variable for async use
-        let key = this.key;
-        let interpolation = this.interpolation;
-        let unsafe = this.unsafe;
-
-        // async request to i18n translation
-        const translation = Promise.resolve(this._i18n).then(function(response){
-          if (interpolation && unsafe)
-            return unsafeHTML(response.t(key, interpolation));
-          else if (interpolation)
-            return response.t(key, interpolation);
+        // request to i18n translation
+        const translation = (() => {
+          if (this.interpolation && this.unsafe)
+            return unsafeHTML(this._i18n.t(this.key, this.interpolation));
+          else if (this.interpolation)
+            return this._i18n.t(this.key, this.interpolation);
           else
-            return response.t(key);
-        });
+            return this._i18n.t(this.key);
+        })();
 
-        // load translation text when available, otherwise display "Loading.."
+        // load translation text
         return html`
-            ${until(translation, html`Loading..`)}
+            ${translation}
         `;
     }
 }

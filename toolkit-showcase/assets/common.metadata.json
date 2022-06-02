@@ -14,5 +14,5 @@
         "de": "Gemeinsame Web Components",
         "en": "Common web components"
     },
-    "subscribe": "lang,entry-point-url,lang-files"
+    "subscribe": "lang,entry-point-url"
 }

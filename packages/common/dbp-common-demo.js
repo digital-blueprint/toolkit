@@ -302,10 +302,8 @@ html {
                         </dbp-translated>
                     </div>
                     <div class="control" id="dbp-translation-demo">
-                        <p><dbp-translation key="toolkit-showcase" subscribe="lang, lang-files"></dbp-translation></p>
-                        <p><dbp-translation key="toolkit-showcase" subscribe="lang, lang-files, override-files"></dbp-translation></p>
-                        <p><dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-files" unsafe></dbp-translation></p>
-                        <p><dbp-translation key="toolkit-showcase-link" var='{"link1": "https://dbp-demo.tugraz.at/"}' subscribe="lang, lang-files, override-files" unsafe></dbp-translation></p>
+                        <dbp-translation key="toolkit-showcase" subscribe="lang, lang-dir"></dbp-translation>
+                        <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-dir" unsafe></dbp-translation>
                     </div>
                 </div>
             </section>

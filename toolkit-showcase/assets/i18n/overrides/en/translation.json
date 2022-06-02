@@ -1,6 +1,0 @@
-{
-    "dbp-translation": {
-      "toolkit-showcase": "Overriden i18n toolkit-showcase text",
-      "toolkit-showcase-link": "Overriden i18n toolkit-showcase-link text with a <a href=\"{{- link1}}\">test link</a>"
-    }
-}
