@@ -9,7 +9,7 @@ export function createInstance() {
 
 export async function createInstanceAsync(langFile, namespace) {
     if (namespace == undefined)
-      namespace = 'translation'
+      namespace = 'translation';
     // check if a path to language files is given
     if(langFile) {
 

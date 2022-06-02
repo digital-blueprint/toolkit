@@ -141,7 +141,7 @@ async function fetchOverridesByLanguage(overrides, lng) {
  *
  * @param {i18next.i18n} i18n - The i18next instance
  * @param {HTMLElement} element - The element at which the overrides are targeted
- * @param {String} overridesFile - Path to the translation file containing the overrides
+ * @param {string} overridesFile - Path to the translation file containing the overrides
  */
 export async function setOverridesByFile(i18n, element, overridesFile) {
     // We add a special namespace which gets used with priority and falls back

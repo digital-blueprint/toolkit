@@ -4,19 +4,6 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
 import {createInstanceAsync, setOverridesByFile} from './i18n.js';
 
-let OVERRIDE = {
-  'de': {
-    'dbp-translation': {
-      'toolkit-showcase': 'testText'
-    }
-  },
-  'en': {
-    'dbp-translation': {
-      'toolkit-showcase': 'testText2'
-    }
-  }
-}
-
 export class Translation extends DBPLitElement {
     constructor() {
         super();
@@ -68,7 +55,7 @@ export class Translation extends DBPLitElement {
               local._i18n = response;
               local.requestUpdate();
           });
-        })
+        });
       }
     }
 
