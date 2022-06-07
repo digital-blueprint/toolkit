@@ -2316,15 +2316,6 @@
   resolved "https://registry.yarnpkg.com/@webcomponents/scoped-custom-element-registry/-/scoped-custom-element-registry-0.0.5.tgz#96377f6a5587c76479b90d13deb7674b51b82603"
   integrity sha512-vtlIyf+b657A1MWY69uTTJaGYwqUS3Lnm0+n2vLyuVf5MYOwSOB3Mx42AyBxz/6t9gw+IDelm1HQFOiA1xZCEQ==
 
-"@yarn-tool/resolve-package@^1.0.40":
-  version "1.0.47"
-  resolved "https://registry.yarnpkg.com/@yarn-tool/resolve-package/-/resolve-package-1.0.47.tgz#8ec25f291a316280a281632331e88926a66fdf19"
-  integrity sha512-Zaw58gQxjQceJqhqybJi1oUDaORT8i2GTgwICPs8v/X/Pkx35FXQba69ldHVg5pQZ6YLKpROXgyHvBaCJOFXiA==
-  dependencies:
-    pkg-dir "< 6 >= 5"
-    tslib "^2"
-    upath2 "^3.1.13"
-
 JSONStream@^1.0.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.5.tgz#3208c1f08d3a4d99261ab64f92302bc15e111ca0"
@@ -4202,7 +4193,7 @@ find-cache-dir@^3.3.1, find-cache-dir@^3.3.2:
     make-dir "^3.0.2"
     pkg-dir "^4.1.0"
 
-find-up@5.0.0, find-up@^5.0.0:
+find-up@5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-5.0.0.tgz#4c92819ecb7083561e4f4a240a86be5198f536fc"
   integrity sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==
@@ -6830,13 +6821,6 @@ path-is-absolute@^1.0.0:
   resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
   integrity sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==
 
-path-is-network-drive@^1.0.15:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/path-is-network-drive/-/path-is-network-drive-1.0.15.tgz#305630eebb2c1324c2a94f098a99213bbe7eb4a3"
-  integrity sha512-bJGs1SxUne+q29P1xCLMkNBhMetku+vPN+yVQu8FGL/7diHesCSSIKoF4Wq42tcbwm7rK72XrGfK8FUXN00LLQ==
-  dependencies:
-    tslib "^2"
-
 path-key@^3.0.0, path-key@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/path-key/-/path-key-3.1.1.tgz#581f6ade658cbba65a0d3380de7753295054f375"
@@ -6851,13 +6835,6 @@ path-posix@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/path-posix/-/path-posix-1.0.0.tgz#06b26113f56beab042545a23bfa88003ccac260f"
   integrity sha512-1gJ0WpNIiYcQydgg3Ed8KzvIqTsDpNwq+cjBCssvBtuTWjEqY1AW+i+OepiEMqDCzyro9B2sLAe4RBPajMYFiA==
-
-path-strip-sep@^1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/path-strip-sep/-/path-strip-sep-1.0.12.tgz#e395568764c3a21eb7e879d7573a6eb4619e8bcf"
-  integrity sha512-EJZSC5WBjVlA9XHLCiluiyisYg6yzeMJ4nY3BQVCuedyEHA/I2crcHWdwuQ74h3V599U9nEbEZUTvvSxOK3vbQ==
-  dependencies:
-    tslib "^2"
 
 path-to-regexp@^6.2.0:
   version "6.2.1"
@@ -6905,13 +6882,6 @@ pify@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-5.0.0.tgz#1f5eca3f5e87ebec28cc6d54a0e4aaf00acc127f"
   integrity sha512-eW/gHNMlxdSP6dmG6uJip6FXN0EQBwm2clYYd8Wul42Cwu/DK8HEftzsapcNdYe2MfLiIwZqsDk2RDEsTE79hA==
-
-"pkg-dir@< 6 >= 5":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-5.0.0.tgz#a02d6aebe6ba133a928f74aec20bafdfe6b8e760"
-  integrity sha512-NPE8TDbzl/3YQYY7CSS228s3g2ollTFnc+Qi3tqmqJp9Vg2ovUpixcJEo2HJScN2Ez+kEaal6y70c0ehqJBJeA==
-  dependencies:
-    find-up "^5.0.0"
 
 pkg-dir@^4.1.0, pkg-dir@^4.2.0:
   version "4.2.0"
@@ -7506,17 +7476,16 @@ rollup-plugin-terser@^7.0.2:
     serialize-javascript "^4.0.0"
     terser "^5.0.0"
 
-rollup-plugin-typescript2@^0.31.0:
-  version "0.31.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.31.2.tgz#463aa713a7e2bf85b92860094b9f7fb274c5a4d8"
-  integrity sha512-hRwEYR1C8xDGVVMFJQdEVnNAeWRvpaY97g5mp3IeLnzhNXzSVq78Ye/BJ9PAaUfN4DXa/uDnqerifMOaMFY54Q==
+rollup-plugin-typescript2@^0.32.0:
+  version "0.32.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.32.0.tgz#eb5da04c69e1bb7d98fbb7a134df938b37c7e94b"
+  integrity sha512-sIiCObzETQagImlNa/xVZY2aKB/7w77EzKAzpmVkXZbDuso6PrW2hdQv6m4/UuMqnzqTFWGF4FPLbVuQISeYZw==
   dependencies:
     "@rollup/pluginutils" "^4.1.2"
-    "@yarn-tool/resolve-package" "^1.0.40"
     find-cache-dir "^3.3.2"
     fs-extra "^10.0.0"
     resolve "^1.20.0"
-    tslib "^2.3.1"
+    tslib "^2.4.0"
 
 rollup-pluginutils@^2.6.0, rollup-pluginutils@^2.8.2:
   version "2.8.2"
@@ -8293,7 +8262,7 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2, tslib@^2.0.3, tslib@^2.3.1, tslib@^2.4.0:
+tslib@^2.0.3, tslib@^2.3.1, tslib@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
@@ -8484,16 +8453,6 @@ unset-value@^1.0.0:
   dependencies:
     has-value "^0.3.1"
     isobject "^3.0.0"
-
-upath2@^3.1.13:
-  version "3.1.13"
-  resolved "https://registry.yarnpkg.com/upath2/-/upath2-3.1.13.tgz#18dd1b99789e51d76a0124490e9020e66e0c3aa4"
-  integrity sha512-M88uBoqgzrkXvXrF/+oSIPsTmL21uRwGhPVJKODrl+3lXkQ5NPKrTYuSBZVa+lgPGFoI6qYyHlSKACFHO0AoNw==
-  dependencies:
-    "@types/node" "*"
-    path-is-network-drive "^1.0.15"
-    path-strip-sep "^1.0.12"
-    tslib "^2"
 
 upath@^2.0.1:
   version "2.0.1"
