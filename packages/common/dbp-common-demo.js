@@ -304,6 +304,7 @@ html {
                     <div class="control" id="dbp-translation-demo">
                         <dbp-translation key="toolkit-showcase" subscribe="lang, lang-dir"></dbp-translation>
                         <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-dir" unsafe></dbp-translation>
+                        <dbp-translation key="abc" subscribe="lang, lang-dir"></dbp-translation>
                     </div>
                 </div>
             </section>

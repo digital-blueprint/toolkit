@@ -10,6 +10,7 @@ export class Translation extends DBPLitElement {
         this.lang = '';
         this.interpolation = '';
         this.langDir = '';
+        this.unsafe = false;
     }
 
     static get properties() {
@@ -44,7 +45,7 @@ export class Translation extends DBPLitElement {
       // create i18n instance with given translations
       this._i18n = createInstanceGivenResources(en, de);
 
-      // after init of overrides rerender page
+      // after init of overrides re-render page
       let local = this;
       if (this.langDir) {
         setOverridesByFile(this._i18n, this, this.langDir).then(function(response) {
@@ -77,8 +78,17 @@ export class Translation extends DBPLitElement {
             return this._i18n.t(this.key);
         })();
 
+        // if translation == "", key was not found
+        let key = "";
+        if (translation != "") {
+          key = unsafeHTML("<!-- key: " + this.key + "-->");
+        } else {
+          key = unsafeHTML("<!-- key: " + this.key + " not found! -->");
+        }
+
         // load translation text
         return html`
+            ${key}
             ${translation}
         `;
     }
