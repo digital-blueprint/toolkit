@@ -23,6 +23,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.noAuth = false;
+        this.langFile = '';
     }
 
     static get scopedElements() {
@@ -48,6 +49,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         return {
             lang: {type: String},
             noAuth: {type: Boolean, attribute: 'no-auth'},
+            langFile: {type: String, attribute: 'lang-file'},
         };
     }
 

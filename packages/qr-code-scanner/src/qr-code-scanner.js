@@ -5,10 +5,9 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import {Mutex} from 'async-mutex';
-import {name as pkgName} from './../package.json';
 import {getIconSVGURL} from '@dbp-toolkit/common';
+import {QrCodeScannerEngine, ScanResult} from './engine.js';
 
 /**
  * Returns the ID for the most important device
@@ -116,39 +115,6 @@ async function createVideoElement(deviceId) {
     }
 
     return null;
-}
-
-class QRScanner {
-    constructor() {
-        this._engine = null;
-        this._canvas = document.createElement('canvas');
-        this._scanner = null;
-    }
-
-    async scan(canvas, x, y, width, height) {
-        if (this._scanner === null) {
-            this._scanner = (await import('qr-scanner')).default;
-            this._scanner.WORKER_PATH = commonUtils.getAssetURL(
-                pkgName,
-                'qr-scanner-worker.min.js'
-            );
-        }
-        if (this._engine === null) {
-            this._engine = await this._scanner.createQrEngine(this._scanner.WORKER_PATH);
-        }
-        try {
-            return {
-                data: await this._scanner.scanImage(
-                    canvas,
-                    {x: x, y: y, width: width, height: height},
-                    this._engine,
-                    this._canvas
-                ),
-            };
-        } catch (e) {
-            return null;
-        }
-    }
 }
 
 export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
@@ -272,10 +238,11 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         }
         this._askPermission = false;
 
+        /** @type {?ScanResult} */
         let lastCode = null;
         let lastSentData = null;
 
-        let detector = new QRScanner();
+        let detector = new QrCodeScannerEngine();
         let detectorRunning = false;
 
         const tick = () => {
@@ -307,7 +274,12 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                 if (!detectorRunning) {
                     detectorRunning = true;
                     detector
-                        .scan(canvasElement, maskStartX, maskStartY, maskWidth, maskHeight)
+                        .scanImage(canvasElement, {
+                            x: maskStartX,
+                            y: maskStartY,
+                            width: maskWidth,
+                            height: maskHeight,
+                        })
                         .then((code) => {
                             detectorRunning = false;
                             // if we got restarted then the video element is new, so stop then.
@@ -315,17 +287,18 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                             lastCode = code;
 
                             if (code) {
-                                if (lastSentData !== code.data) {
-                                    this._outputData = code.data;
+                                let currentData = code.data;
+                                if (lastSentData !== currentData) {
+                                    this._outputData = currentData;
                                     this.dispatchEvent(
                                         new CustomEvent('code-detected', {
                                             bubbles: true,
                                             composed: true,
-                                            detail: {code: code.data},
+                                            detail: {code: currentData},
                                         })
                                     );
                                 }
-                                lastSentData = code.data;
+                                lastSentData = currentData;
                             } else {
                                 this._outputData = null;
                                 lastSentData = null;

@@ -1,3 +1,2 @@
-import {QrCodeScanner} from './qr-code-scanner.js';
-
-export {QrCodeScanner};
+export {QrCodeScanner} from './qr-code-scanner.js';
+export {QrCodeScannerEngine, ScanResult} from './engine.js';

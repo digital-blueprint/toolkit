@@ -66,7 +66,7 @@ export class Translation extends DBPLitElement {
       const en = {};
       de[this.key] = "";
       en[this.key] = "";
-      
+
       // create i18n instance with given translations
       this._i18n = createInstanceGivenResources(en, de);
 
