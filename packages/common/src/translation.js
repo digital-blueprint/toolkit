@@ -35,7 +35,6 @@ export class Translation extends DBPLitElement {
 
     connectedCallback() {
       super.connectedCallback();
-
       // init objects with empty string as value for key
       const de = {};
       const en = {};
@@ -44,13 +43,14 @@ export class Translation extends DBPLitElement {
 
       // create i18n instance with given translations
       this._i18n = createInstanceGivenResources(en, de);
-
-      // after init of overrides re-render page
       let local = this;
       if (this.langDir) {
-        setOverridesByFile(this._i18n, this, this.langDir).then(function(response) {
+
+        // after init of overrides re-render page
+        setOverridesByFile(this._i18n, this, this.langDir, this.key).then(function(response) {
             local.requestUpdate();
         });
+
       }
     }
 
@@ -78,12 +78,12 @@ export class Translation extends DBPLitElement {
             return this._i18n.t(this.key);
         })();
 
-        // if translation == "", key was not found
+        // if translation == "" key was not found
         let key = "";
         if (translation != "") {
           key = unsafeHTML("<!-- key: " + this.key + "-->");
         } else {
-          key = unsafeHTML("<!-- key: " + this.key + " not found! -->");
+          key = unsafeHTML("<!-- key \"" + this.key + "\" not found! -->");
         }
 
         // load translation text
