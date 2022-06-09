@@ -125,35 +125,17 @@ export function setOverrides(i18n, element, overrides) {
     i18n.setDefaultNamespace(hasOverrides ? overrideNamespace : namespace);
 }
 
-async function fetchOverridesByLanguage(overrides, lng) {
-  let result = await
-      fetch(overrides + lng +'/translation.json', {
-          headers: {'Content-Type': 'application/json'},
-      });
-  let json = await result.json();
-  return json;
-}
-
-export async function fetchOverridestoSessionStorage(overridesFile, lng) {
-  // use local cache for translation file
-  if (sessionStorage.getItem("translation-overrides-" + lng) === null) {
-    // get translation.json for each lang
-    let response = await fetchOverridesByLanguage(overridesFile, lng);
-    sessionStorage.setItem("translation-overrides-" + lng, JSON.stringify(response));
-
-  }
-}
-
 /**
  * Sets translation overrides for the given i18next instance. Any previously
  * applied overrides will be removed first. So calling this with an empty overrides
  * object is equal to removing all overrides.
+ * Expects overrides as promise and requests update after overrides have been set.
  *
  * @param {i18next.i18n} i18n - The i18next instance
  * @param {HTMLElement} element - The element at which the overrides are targeted
- * @param {string} overridesFile - Path to the translation file containing the overrides
+ * @param {object} overrides - The override data as promise
  */
-export async function setOverridesByFile(i18n, element, overridesFile, keyName) {
+export async function setOverridesByPromise(i18n, element, overrides) {
     // We add a special namespace which gets used with priority and falls back
     // to the original one. This way we an change the overrides at runtime
     // and can even remove them.
@@ -164,24 +146,13 @@ export async function setOverridesByFile(i18n, element, overridesFile, keyName) 
     let overrideNamespace = getOverrideNamespace(namespace);
     let hasOverrides = false;
     for (let lng of i18n.languages) {
-
-        await fetchOverridestoSessionStorage(overridesFile, lng);
-
-        let response = JSON.parse(sessionStorage.getItem("translation-overrides-" + lng));
-
-        // remove old language
+        overrides[lng] = await overrides[lng];
         i18n.removeResourceBundle(lng, overrideNamespace);
-        // if no new translation is available, skip
-        if (response === undefined || response[tagName] === undefined) return;
-        // get new translation
-        let resource = {};
-        resource[keyName] = response[tagName][keyName];
+        if (overrides[lng] === undefined || overrides[lng][tagName] === undefined) continue;
+        let resources = overrides[lng][tagName];
         hasOverrides = true;
-
-        // set new translation
-        i18n.addResourceBundle(lng, overrideNamespace, resource);
+        i18n.addResourceBundle(lng, overrideNamespace, resources);
     }
-
     i18n.setDefaultNamespace(hasOverrides ? overrideNamespace : namespace);
-    return i18n;
+    element.requestUpdate();
 }

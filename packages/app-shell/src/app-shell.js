@@ -1,4 +1,4 @@
-import {createInstance, fetchOverridestoSessionStorage} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
@@ -167,11 +167,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         // this also triggers a rebuilding of the menu
         this.metadata = metadata;
         this.routes = routes;
-
-        // fetch translations
-        for(let lng of this._i18n.languages) {
-          fetchOverridestoSessionStorage(this.langDir, lng);
-        }
 
         // Switch to the first route if none is selected
         if (!this.activeView) this.switchComponent(routes[0]);
