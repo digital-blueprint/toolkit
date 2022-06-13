@@ -15,13 +15,15 @@ import {
     Translation,
 } from './index.js';
 
+
+
 export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.noAuth = false;
-        this.langFile = '';
+        this.langDir = '';
     }
 
     static get scopedElements() {
@@ -47,7 +49,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         return {
             lang: {type: String},
             noAuth: {type: Boolean, attribute: 'no-auth'},
-            langFile: {type: String, attribute: 'lang-file'},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
@@ -302,7 +304,9 @@ html {
                         </dbp-translated>
                     </div>
                     <div class="control" id="dbp-translation-demo">
-                        <dbp-translation key="toolkit-showcase" subscribe="lang, lang-file"></dbp-translation>
+                        <dbp-translation key="toolkit-showcase" subscribe="lang, lang-dir"></dbp-translation>
+                        <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-dir" unsafe></dbp-translation>
+                        <dbp-translation key="abc" subscribe="lang, lang-dir"></dbp-translation>
                     </div>
                 </div>
             </section>

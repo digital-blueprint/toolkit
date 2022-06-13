@@ -124,3 +124,35 @@ export function setOverrides(i18n, element, overrides) {
     }
     i18n.setDefaultNamespace(hasOverrides ? overrideNamespace : namespace);
 }
+
+/**
+ * Sets translation overrides for the given i18next instance. Any previously
+ * applied overrides will be removed first. So calling this with an empty overrides
+ * object is equal to removing all overrides.
+ * Expects overrides as promise and requests update after overrides have been set.
+ *
+ * @param {i18next.i18n} i18n - The i18next instance
+ * @param {HTMLElement} element - The element at which the overrides are targeted
+ * @param {object} overrides - The override data as promise
+ */
+export async function setOverridesByPromise(i18n, element, overrides) {
+    // We add a special namespace which gets used with priority and falls back
+    // to the original one. This way we an change the overrides at runtime
+    // and can even remove them.
+
+    // The scoped mixin saves the real tag name under data-tag-name
+    let tagName = ((element.dataset && element.dataset.tagName) || element.tagName).toLowerCase();
+    let namespace = i18n.options.fallbackNS;
+    let overrideNamespace = getOverrideNamespace(namespace);
+    let hasOverrides = false;
+    for (let lng of i18n.languages) {
+        overrides[lng] = await overrides[lng];
+        i18n.removeResourceBundle(lng, overrideNamespace);
+        if (overrides[lng] === undefined || overrides[lng][tagName] === undefined) continue;
+        let resources = overrides[lng][tagName];
+        hasOverrides = true;
+        i18n.addResourceBundle(lng, overrideNamespace, resources);
+    }
+    i18n.setDefaultNamespace(hasOverrides ? overrideNamespace : namespace);
+    element.requestUpdate();
+}

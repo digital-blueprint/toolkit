@@ -1,14 +1,42 @@
 import {css, html} from 'lit';
-import {until} from 'lit/directives/until.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
-import {createInstanceAsync} from './i18n.js';
+import {createInstanceGivenResources, setOverridesByPromise} from './i18n.js';
+
+// global variable as cache for translations
+const translationCache = {};
+
+// fetches overrides for given language
+async function fetchOverridesByLanguage(overrides, lng) {
+  let result = await
+      fetch(overrides + lng +'/translation.json', {
+          headers: {'Content-Type': 'application/json'},
+      });
+  let json = await result.json();
+  return json;
+}
+
+// handles translation cache promises
+async function cacheOverrides(overridesFile, lng) {
+  // use global var as cache
+  if (translationCache[lng] === undefined) {
+    // get translation.json for each lang
+    let response = fetchOverridesByLanguage(overridesFile, lng);
+    translationCache[lng] = response;
+    return response;
+  } else {
+    return translationCache[lng];
+  }
+}
 
 export class Translation extends DBPLitElement {
     constructor() {
         super();
         this.key = '';
         this.lang = '';
-        this.langFile = '';
+        this.interpolation = '';
+        this.langDir = '';
+        this.unsafe = false;
     }
 
     static get properties() {
@@ -16,7 +44,9 @@ export class Translation extends DBPLitElement {
             ...super.properties,
             key: {type: String},
             lang: {type: String},
-            langFile: {type: String, attribute: 'lang-file'},
+            interpolation: {type: Object, attribute: 'var'},
+            unsafe: {type: Boolean, attribute: 'unsafe'},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
@@ -31,7 +61,21 @@ export class Translation extends DBPLitElement {
 
     connectedCallback() {
       super.connectedCallback();
-      this._i18n = createInstanceAsync(this.langFile);
+      // init objects with empty string as value for key
+      const de = {};
+      const en = {};
+      de[this.key] = "";
+      en[this.key] = "";
+
+      // create i18n instance with given translations
+      this._i18n = createInstanceGivenResources(en, de);
+
+      if (this.langDir) {
+        for(let lng of this._i18n.languages) {
+          cacheOverrides(this.langDir, lng);
+          setOverridesByPromise(this._i18n, this, translationCache);
+        }
+      }
     }
 
     update(changedProperties) {
@@ -39,10 +83,7 @@ export class Translation extends DBPLitElement {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-
-                    this._i18n.then(function(response) {
-                      response.changeLanguage(lang);
-                    });
+                    this._i18n.changeLanguage(lang);
                     break;
             }
         });
@@ -51,17 +92,28 @@ export class Translation extends DBPLitElement {
     }
 
     render() {
-        // save global key in local variable for async use
-        let key = this.key;
+        // request to i18n translation
+        const translation = (() => {
+          if (this.interpolation && this.unsafe)
+            return unsafeHTML(this._i18n.t(this.key, this.interpolation));
+          else if (this.interpolation)
+            return this._i18n.t(this.key, this.interpolation);
+          else
+            return this._i18n.t(this.key);
+        })();
 
-        // async request to i18n translation
-        const translation = this._i18n.then(function(response){
-          return response.t(key);
-        });
+        // if translation == "" key was not found
+        let key = "";
+        if (translation != "") {
+          key = unsafeHTML("<!-- key: " + this.key + "-->");
+        } else {
+          key = unsafeHTML("<!-- key \"" + this.key + "\" not found! -->");
+        }
 
-        // load translation text when available, otherweise display "Loading.."
+        // load translation text
         return html`
-            ${until(translation, html`<span>Loading..</span>`)}
+            ${key}
+            ${translation}
         `;
     }
 }
