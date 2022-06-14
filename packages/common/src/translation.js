@@ -1,33 +1,7 @@
 import {css, html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
-import {createInstanceGivenResources, setOverridesByPromise} from './i18n.js';
-
-// global variable as cache for translations
-const translationCache = {};
-
-// fetches overrides for given language
-async function fetchOverridesByLanguage(overrides, lng) {
-  let result = await
-      fetch(overrides + lng +'/translation.json', {
-          headers: {'Content-Type': 'application/json'},
-      });
-  let json = await result.json();
-  return json;
-}
-
-// handles translation cache promises
-async function cacheOverrides(overridesFile, lng) {
-  // use global var as cache
-  if (translationCache[lng] === undefined) {
-    // get translation.json for each lang
-    let response = fetchOverridesByLanguage(overridesFile, lng);
-    translationCache[lng] = response;
-    return response;
-  } else {
-    return translationCache[lng];
-  }
-}
+import {createInstanceGivenResources, setOverridesByGlobalCache} from './i18n.js';
 
 export class Translation extends DBPLitElement {
     constructor() {
@@ -72,8 +46,7 @@ export class Translation extends DBPLitElement {
 
       if (this.langDir) {
         for(let lng of this._i18n.languages) {
-          cacheOverrides(this.langDir, lng);
-          setOverridesByPromise(this._i18n, this, translationCache);
+          setOverridesByGlobalCache(this._i18n, this);
         }
       }
     }
