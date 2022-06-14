@@ -101,7 +101,7 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
                     <p>${i18n.t('intro')}</p>
                 </div>
                 <div class="content">
-                    <dbp-theme-switcher
+                    <dbp-theme-switcher subscribe="lang, lang-dir"
                         themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"}, {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'></dbp-theme-switcher>
                 </div>
             </section>
