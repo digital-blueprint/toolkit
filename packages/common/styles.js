@@ -15,10 +15,10 @@ export function getThemeCSS() {
                     var(--dbp-override-background, #ffffff
             );
             --dbp-content: 
-                    var(--dbp-override-content, #000000
+                    var(--dbp-override-content, #222120
             );
             --dbp-content-surface: 
-                    var(--dbp-override-content-surface, 
+                    var(--dbp-override-content-surface,
                     var(--dbp-content)
             );
             --dbp-on-content-surface: 
@@ -26,13 +26,13 @@ export function getThemeCSS() {
                     var(--dbp-background)
             );
             --dbp-border: 
-                    var(--dbp-override-border, 1px solid #000000
+                    var(--dbp-override-border, 1px solid #222120
             );
             --dbp-border-radius: 
                     var(--dbp-override-border-radius, 0px
             );
             --dbp-primary: 
-                    var(--dbp-override-primary,  #2a4491
+                    var(--dbp-override-primary,  #3775c1
             );
             --dbp-primary-surface:
                     var(--dbp-override-primary-surface, 
@@ -47,7 +47,7 @@ export function getThemeCSS() {
                     var(--dbp-primary)
             );
             --dbp-secondary: 
-                    var(--dbp-override-secondary, var(--dbp-content)
+                    var(--dbp-override-secondary, #222120
             );
             --dbp-secondary-surface:
                     var(--dbp-override-secondary-surface,
@@ -59,16 +59,16 @@ export function getThemeCSS() {
             );
             --dbp-secondary-surface-border-color: 
                     var(--dbp-override-secondary-surface-border-color,
-                    var(--dbp-secondary)            
+                    var(--dbp-secondary)
             );
             --dbp-muted: 
                     var(--dbp-override-muted, #767676
             );
-            --dbp-muted-surface: 
+            --dbp-muted-surface:
                     var(--dbp-override-muted-surface,
                     var(--dbp-muted)
             );
-            --dbp-on-muted-surface: 
+            --dbp-on-muted-surface:
                     var(--dbp-override-on-muted-surface,
                     var(--dbp-on-content-surface)
             );
@@ -76,14 +76,14 @@ export function getThemeCSS() {
                     var(--dbp-override-muted-surface-border-color,
                     var(--dbp-muted)
             );
-            --dbp-accent: 
-                    var(--dbp-override-accent, #c24f68
+            --dbp-accent:
+                    var(--dbp-override-accent, #9e1e4d
             );
-            --dbp-accent-surface: 
+            --dbp-accent-surface:
                     var(--dbp-override-accent-surface,
                     var(--dbp-accent)
             );
-            --dbp-on-accent-surface: 
+            --dbp-on-accent-surface:
                     var(--dbp-override-on-accent-surface,
                     var(--dbp-on-content-surface)
             );
@@ -91,8 +91,8 @@ export function getThemeCSS() {
                     var(--dbp-override-accent-surface-border-color,
                     var(--dbp-accent)
             );
-            --dbp-info: var(
-                    --dbp-override-info, #2a4491
+            --dbp-info:
+                    var(--dbp-override-info, #38808a
             );
             --dbp-info-surface:
                     var(--dbp-override-info-surface,
@@ -106,8 +106,8 @@ export function getThemeCSS() {
                     var(--dbp-override-info-surface-border-color,
                     var(--dbp-info)
             );
-            --dbp-success: 
-                    var(--dbp-override-success, #188018
+            --dbp-success:
+                    var(--dbp-override-success, #338555
             );
             --dbp-success-surface:
                     var(--dbp-override-success-surface,
@@ -121,8 +121,8 @@ export function getThemeCSS() {
                     var(--dbp-override-success-surface-border-color,
                     var(--dbp-success)
             );
-            --dbp-warning: 
-                    var(--dbp-override-warning, #c15500
+            --dbp-warning:
+                    var(--dbp-override-warning, #bf8808
             );
             --dbp-warning-surface:
                     var(--dbp-override-warning-surface,
@@ -136,8 +136,8 @@ export function getThemeCSS() {
                     var(--dbp-override-warning-surface-border-color,
                     var(--dbp-warning)
             );
-            --dbp-danger: 
-                    var(--dbp-override-danger, #de3535
+            --dbp-danger:
+                    var(--dbp-override-danger, #cc3232
             );
             --dbp-danger-surface:
                     var(--dbp-override-danger-surface,
@@ -151,10 +151,10 @@ export function getThemeCSS() {
                     var(--dbp-override-danger-surface-border-color,
                     var(--dbp-danger)
             );
-            --dbp-hover-background-color: 
+            --dbp-hover-background-color:
                     var(--dbp-override-hover-background-color
             );
-            --dbp-hover-color: 
+            --dbp-hover-color:
                     var(--dbp-override-hover-color
             );
         }
