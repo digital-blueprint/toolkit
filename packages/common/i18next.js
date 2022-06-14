@@ -172,7 +172,6 @@ export async function setOverridesByGlobalCache(i18n, element) {
     let namespace = i18n.options.fallbackNS;
     let overrideNamespace = getOverrideNamespace(namespace);
     let hasOverrides = false;
-    console.log(element.langDir);
     for (let lng of i18n.languages) {
         cacheOverrides(element.langDir, lng);
         translationCache[lng] = await translationCache[lng];
