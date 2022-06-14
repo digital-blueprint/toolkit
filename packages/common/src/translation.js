@@ -45,9 +45,7 @@ export class Translation extends DBPLitElement {
       this._i18n = createInstanceGivenResources(en, de);
 
       if (this.langDir) {
-        for(let lng of this._i18n.languages) {
-          setOverridesByGlobalCache(this._i18n, this);
-        }
+        setOverridesByGlobalCache(this._i18n, this);
       }
     }
 

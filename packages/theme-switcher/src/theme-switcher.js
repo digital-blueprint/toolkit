@@ -58,9 +58,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             this.detectInitialMode();
         });
         if (this.langDir) {
-          for(let lng of this._i18n.languages) {
-            setOverridesByGlobalCache(this._i18n, this);
-          }
+          setOverridesByGlobalCache(this._i18n, this);
         }
     }
 

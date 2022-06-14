@@ -159,7 +159,6 @@ export function setOverrides(i18n, element, overrides) {
  *
  * @param {i18next.i18n} i18n - The i18next instance
  * @param {HTMLElement} element - The element at which the overrides are targeted
- * @param {object} overrides - The override data as promise
  */
 export async function setOverridesByGlobalCache(i18n, element) {
     // We add a special namespace which gets used with priority and falls back
