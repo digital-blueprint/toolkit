@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {ThemeSwitcher} from './theme-switcher';
@@ -12,6 +12,7 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
         this.url = '';
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
+        this.langDir = '';
     }
 
     static get scopedElements() {
@@ -23,11 +24,15 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String, attribute: "lang-dir"},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
+        if (this.langDir) {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     update(changedProperties) {

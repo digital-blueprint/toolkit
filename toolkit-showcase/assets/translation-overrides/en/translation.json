@@ -2,9 +2,14 @@
     "dbp-translation": {
       "toolkit-showcase": "This text will be translated to german using i18n with a user defined language file when the language is changed to german.",
       "toolkit-showcase-link": "Furthermore its possible to display links through <a href=\"{{- link1}}\">interpolation</a> and escaping.",
-      "color-mode": "This text is not supposed to be displayed. It is only here for testing."
+      "color-mode": "This text is not supposed to be displayed. It is only here for testing.",
+      "intro": "This text is not supposed to be displayed. It is only here for testing."
     },
     "dbp-theme-switcher": {
-      "color-mode": "Change theme"
+      "color-mode": "Change theme",
+      "intro": "This text is not supposed to be displayed. It is only here for testing."
+    },
+    "dbp-theme-switcher-demo": {
+      "intro": "With the theme-switcher you can switch between multiple themes. For example, between Light Mode and Dark Mode."
     }
 }
