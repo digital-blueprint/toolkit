@@ -44,7 +44,7 @@ export function getThemeCSS() {
             );
             --dbp-primary-surface-border-color: 
                     var(--dbp-override-primary-surface-border-color, 
-                    var(--dbp-primary-surface)
+                    var(--dbp-primary)
             );
             --dbp-secondary: 
                     var(--dbp-override-secondary, var(--dbp-content)
@@ -59,7 +59,7 @@ export function getThemeCSS() {
             );
             --dbp-secondary-surface-border-color: 
                     var(--dbp-override-secondary-surface-border-color,
-                    var(--dbp-secondary-surface)            
+                    var(--dbp-secondary)            
             );
             --dbp-muted: 
                     var(--dbp-override-muted, #767676
@@ -74,7 +74,7 @@ export function getThemeCSS() {
             );
             --dbp-muted-surface-border-color:
                     var(--dbp-override-muted-surface-border-color,
-                    var(--dbp-muted-surface)
+                    var(--dbp-muted)
             );
             --dbp-accent: 
                     var(--dbp-override-accent, #c24f68
@@ -89,7 +89,7 @@ export function getThemeCSS() {
             );
             --dbp-accent-surface-border-color:
                     var(--dbp-override-accent-surface-border-color,
-                    var(--dbp-accent-surface)
+                    var(--dbp-accent)
             );
             --dbp-info: var(
                     --dbp-override-info, #2a4491
@@ -104,7 +104,7 @@ export function getThemeCSS() {
             );
             --dbp-info-surface-border-color:
                     var(--dbp-override-info-surface-border-color,
-                    var(--dbp-info-surface)
+                    var(--dbp-info)
             );
             --dbp-success: 
                     var(--dbp-override-success, #188018
@@ -119,7 +119,7 @@ export function getThemeCSS() {
             );
             --dbp-success-surface-border-color:
                     var(--dbp-override-success-surface-border-color,
-                    var(--dbp-success-surface)
+                    var(--dbp-success)
             );
             --dbp-warning: 
                     var(--dbp-override-warning, #c15500
@@ -134,7 +134,7 @@ export function getThemeCSS() {
             );
             --dbp-warning-surface-border-color:
                     var(--dbp-override-warning-surface-border-color,
-                    var(--dbp-warning-surface)
+                    var(--dbp-warning)
             );
             --dbp-danger: 
                     var(--dbp-override-danger, #de3535
@@ -149,7 +149,7 @@ export function getThemeCSS() {
             );
             --dbp-danger-surface-border-color:
                     var(--dbp-override-danger-surface-border-color,
-                    var(--dbp-danger-surface)
+                    var(--dbp-danger)
             );
             --dbp-hover-background-color: 
                     var(--dbp-override-hover-background-color
