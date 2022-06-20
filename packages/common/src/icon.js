@@ -58,8 +58,11 @@ export class Icon extends LitElement {
                 background-color: currentColor;
                 mask-repeat: no-repeat;
                 mask-position: center;
+                mask-size: 100% 100%;
                 -webkit-mask-repeat: no-repeat;
                 -webkit-mask-position: center;
+                -webkit-mask-size: 100% 100%;
+                
             }
         `;
     }
