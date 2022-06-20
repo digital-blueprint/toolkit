@@ -81,8 +81,8 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
                 mask-position: center center;
                 margin: 0 2px 0 0px;
                 padding: 0;
-                -webkit-mask-size: 90%;
-                mask-size: 90%;
+                -webkit-mask-size: 100%;
+                mask-size: 100%;
             }
 
             h2 a:hover::after {
