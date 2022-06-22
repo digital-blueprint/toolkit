@@ -161,23 +161,23 @@ Dependencies:
             copy({
                 targets: [
                     {src: 'assets/*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: 'assets/*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/*.metadata.json', dest: 'dist'},
                     {src: 'assets/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/htaccess-shared', dest: 'dist/shared/', rename: '.htaccess'},
-                    {src: 'assets/icon-*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: 'assets/apple-*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: 'assets/safari-*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/translation-overrides', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {
-                        src: 'assets/manifest.json',
-                        dest: 'dist',
-                        rename: pkg.name + '.manifest.json',
-                    },
+                    {src: 'assets/favicons/*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
+                    {src: 'assets/favicons/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
+                    {src: 'assets/favicons/*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
+                    {src: 'assets/favicons/site.webmanifest', dest: 'dist', rename: pkg.name + '.webmanifest'},
+                    {src: 'assets/favicons/browserconfig.xml', dest: 'dist', rename: pkg.name + '_browserconfig.xml'},
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
                     {
                         src: await getPackagePath('@dbp-toolkit/font-source-sans-pro', 'files/*'),
                         dest: 'dist/' + (await getDistPath(pkg.name, 'fonts/source-sans-pro')),
+                    },
+                    {
+                        src: await getPackagePath('@fontsource/nunito-sans', '*'),
+                        dest: 'dist/' + (await getDistPath(pkg.name, 'fonts/nunito-sans')),
                     },
                     {
                         src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
