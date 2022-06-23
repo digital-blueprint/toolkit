@@ -6,7 +6,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/theme-switcher/README.md';
 import * as demoStyles from './styles';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 
 export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {

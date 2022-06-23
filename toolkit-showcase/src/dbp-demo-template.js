@@ -6,7 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 // import readme from '@dbp-toolkit/class-name/README.md'; TODO
 import * as demoStyles from './styles';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 
 export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     //TODO

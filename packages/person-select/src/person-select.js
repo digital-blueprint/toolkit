@@ -12,7 +12,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from '@dbp-toolkit/common/error';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 
 const personContext = {
     '@id': '@id',

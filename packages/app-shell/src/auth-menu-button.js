@@ -4,7 +4,7 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Icon} from '@dbp-toolkit/common';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 import {LoginStatus} from '@dbp-toolkit/auth/src/util';
 
 export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {

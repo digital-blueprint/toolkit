@@ -4,7 +4,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {MiniSpinner} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 
 /**
  * KnowledgeBaseWebPageElementView web component

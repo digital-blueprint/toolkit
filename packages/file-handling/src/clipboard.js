@@ -9,7 +9,7 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
 import {send} from '@dbp-toolkit/common/notification';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 
 const MODE_TABLE_ONLY = 'table-only';

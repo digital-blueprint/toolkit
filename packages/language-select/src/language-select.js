@@ -1,7 +1,7 @@
 import {html, css} from 'lit';
 import {createInstance} from './i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {AdapterLitElement} from "@dbp-toolkit/provider/src/adapter-lit-element";
+import {AdapterLitElement} from '@dbp-toolkit/common';
 
 
 /**

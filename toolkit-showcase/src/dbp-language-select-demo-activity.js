@@ -6,7 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/language-select/README.md';
 import * as demoStyles from './styles';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 
 class DbpLanguageSelectDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {

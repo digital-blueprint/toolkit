@@ -7,7 +7,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2LangDe from '@dbp-toolkit/resource-select/src/i18n/de/select2';
 import select2LangEn from '@dbp-toolkit/resource-select/src/i18n/en/select2';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 import * as hydra from './hydra.js';
 
 export class ResourceSelect extends AdapterLitElement {

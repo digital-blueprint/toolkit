@@ -2,7 +2,7 @@ import {createInstance} from './i18n.js';
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
-import {AdapterLitElement} from '@dbp-toolkit/provider/src/adapter-lit-element';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 import {send} from '@dbp-toolkit/common/notification';
 
 /**
