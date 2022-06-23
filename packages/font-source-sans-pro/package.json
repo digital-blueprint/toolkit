@@ -1,6 +1,6 @@
 {
   "name": "@dbp-toolkit/font-source-sans-pro",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "author": "",
   "license": "OFL-1.1",
   "repository": {
@@ -11,6 +11,5 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
-  },
-  "devDependencies": {}
+  }
 }
