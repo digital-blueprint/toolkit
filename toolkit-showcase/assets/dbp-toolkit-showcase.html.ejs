@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="white"/>
+    <meta name="theme-color" content="#ffffff">
 
     <!-- Favicons -->
     <link rel="shortcut icon" type="image/x-icon" href="<%= getPrivateUrl('favicon.ico') %>">
-    <link rel="icon" type="image/svg+xml" href="<%= getPrivateUrl('favicon.svg') %>" sizes="any">
-
-    <!-- PWA manifest file -->
-    <link rel="manifest" href="<%= getUrl(name + '.manifest.json') %>">
-
-    <!-- PWA iphone -->
+    <link rel="icon" type="image/svg+xml" href="<%= getPrivateUrl('favicon.svg') %>">
     <link rel="apple-touch-icon" sizes="180x180" href="<%= getPrivateUrl('apple-touch-icon.png') %>">
-    <link rel="icon" type="image/png" sizes="32x32" href="<%= getPrivateUrl('icon-32x32.png') %>">
-    <link rel="icon" type="image/png" sizes="16x16" href="<%= getPrivateUrl('icon-16x16.png') %>">
-    <link rel="mask-icon" href="<%= getPrivateUrl('safari-pinned-tab.svg') %>" color="#e4154b">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= getPrivateUrl('favicon-32x32.png') %>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= getPrivateUrl('favicon-16x16.png') %>">
+    <link rel="manifest" href="<%= getUrl(name + '.webmanifest') %>">
+    <link rel="mask-icon" href="<%= getPrivateUrl('safari-pinned-tab.svg') %>" color="#3775c1">
     <meta name="apple-mobile-web-app-status-bar-style" content="white">
 
     <!-- Loading spinner -->
@@ -33,74 +29,68 @@
 
     <!-- Font related CSS -->
     <style>
-        @import "<%= getPrivateUrl('fonts/source-sans-pro/300.css') %>";
-        @import "<%= getPrivateUrl('fonts/source-sans-pro/400.css') %>";
-        @import "<%= getPrivateUrl('fonts/source-sans-pro/600.css') %>";
+
+        @import "<%= getPrivateUrl('fonts/nunito-sans/300.css') %>";
+        @import "<%= getPrivateUrl('fonts/nunito-sans/300-italic.css') %>";
+        @import "<%= getPrivateUrl('fonts/nunito-sans/600.css') %>";
+        @import "<%= getPrivateUrl('fonts/nunito-sans/600-italic.css') %>";
+
 
         body {
-            font-family: 'Source Sans Pro', 'Calibri', 'Arial', 'sans-serif';
-            font-weight: 300;
+            font-family: 'Nunito Sans', 'Calibri', 'Arial', 'sans-serif';
+            line-height: 1.4em;
+            font-weight: 400;
             margin: 0;
         }
 
-        /* TU-Graz style override */
         html {
-            --dbp-override-primary-bg-color: #245b78;
-            --dbp-override-primary-button-border: solid 1px #245b78;
-            --dbp-override-info-bg-color: #245b78;
-            --dbp-override-danger-bg-color: #e4154b;
-            --dbp-override-warning-bg-color: #ffe183;
-            --dbp-override-warning-text-color: black;
-            --dbp-override-success-bg-color: #259207;
         }
 
         .light-theme{
             --dbp-override-background: white;
-            --dbp-override-content: black;
+            --dbp-override-content: #222120;
 
-            --dbp-override-primary: #2a4491;
-            --dbp-override-secondary: black;
+            --dbp-override-primary: #3775c1;
+            --dbp-override-secondary: #222120;
             --dbp-override-secondary-surface: white;
-            --dbp-override-on-secondary-surface: black;
-            --dbp-override-secondary-surface-border-color: black;
+            --dbp-override-on-secondary-surface: #222120;
+            --dbp-override-secondary-surface-border-color: #222120;
 
             --dbp-override-muted: #767676;
-            --dbp-override-accent: #c24f68;
-            --dbp-override-info: #2a4491;
-            --dbp-override-success: #188018;
-            --dbp-override-warning: #c15500;
-            --dbp-override-warning-surface: #ffad4d;
-            --dbp-override-on-warning-surface: black;
-            --dbp-override-danger: #de3535;
+            --dbp-override-accent: #9e1e4d;
+            --dbp-override-info: #38808a;
+            --dbp-override-success: #338555;
+            --dbp-override-success-surface: #5ec189;
+            --dbp-override-on-success-surface: #222120;
+            --dbp-override-warning: #bf8808;
+            --dbp-override-warning-surface: #f9cc66;
+            --dbp-override-on-warning-surface: #222120;
+            --dbp-override-danger: #cc3232;
 
-            --dbp-override-border: 1px solid black;
-
-            --dbp-override-hover-background-color: black;
-            --dbp-override-hover-color: white;
+            --dbp-override-border: 1px solid #222120;
         }
 
         .dark-theme{
-            --dbp-override-background: #151515;
+            --dbp-override-background: #222120;
             --dbp-override-content: white;
 
-            --dbp-override-primary: #8ca4eb;
+            --dbp-override-primary: #3775c1;
             --dbp-override-secondary: white;
-            --dbp-override-secondary-surface: #151515;
+            --dbp-override-secondary-surface: #222120;
             --dbp-override-on-secondary-surface: white;
-            --dbp-override-secondary-surface-border-color: #151515;
+            --dbp-override-secondary-surface-border-color: white;
 
-            --dbp-override-muted: #666666;
-            --dbp-override-accent: #c24f68;
-            --dbp-override-info: #8ca4eb;
-            --dbp-override-success: #7acc79;
-            --dbp-override-warning: #f99a41;
-            --dbp-override-on-warning-surface: black;
-            --dbp-override-danger: #de3535;
+            --dbp-override-muted: #767676;
+            --dbp-override-accent: #C13F6F;
+            --dbp-override-info: #38808a;
+            --dbp-override-success: #5ec189;
+            --dbp-override-success-surface: #5ec189;
+            --dbp-override-on-success-surface: #222120;
+            --dbp-override-warning: #f9cc66;
+            --dbp-override-danger: #cc3232;
 
             --dbp-override-border: 1px solid white;
 
-            --dbp-override-hover-background-color: white;
-            --dbp-override-hover-color: #151515;
         }
     </style>
 
@@ -128,7 +118,37 @@
     build-url='<%= buildInfo.url %>'
     build-time='<%= buildInfo.time %>'
     env='<%= buildInfo.env %>'
+    themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"},
+            {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'
+    html-overrides="global-override"
 ><dbp-loading-spinner></dbp-loading-spinner></<%= name %>>
+
+
+<template id="global-override">
+    <template id="<%= name %>">
+        <div slot="name">
+            <style>
+
+                .logo-dark, .light-theme .logo-dark, .dark-theme .logo-light{
+                    display: none;
+                }
+
+                .logo-light, .light-theme .logo-light, .dark-theme .logo-dark{
+                    display: block;
+                }
+            </style>
+            <img class="logo-light" style="height: 100px" src="<%= getPrivateUrl('dbp_logo_on_white.svg') %>" alt="Digital Blueprint - A University toolbox logo">
+            <img class="logo-dark" style="height: 100px" src="<%= getPrivateUrl('dbp_logo_on_black.svg') %>" alt="Digital Blueprint - A University toolbox logo">
+        </div>
+        <div slot="title" style="margin-top:40px;line-height: 23px;">
+            <span style="text-transform: lowercase;letter-spacing: 3px"><span style="font-weight: bold">toolkit</span> <br><span style="margin-left: 136px;font-size: 0.8em;">showcase</span></span>
+        </div>
+        <div slot="logo">
+            <div>
+            </div>
+        </div>
+    </template>
+</template>
 
 <!-- Error handling for too old browsers -->
 <script src="<%= getPrivateUrl('browser-check.js') %>" defer></script>
