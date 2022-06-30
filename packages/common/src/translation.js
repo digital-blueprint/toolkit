@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
+import * as commonStyles from '../styles.js';
 import {createInstanceGivenResources, setOverridesByGlobalCache} from './i18n.js';
 
 export class Translation extends DBPLitElement {
@@ -26,20 +27,25 @@ export class Translation extends DBPLitElement {
 
     static get styles() {
         // language=css
-        return css`
-            .hidden {
-                display: none;
-            }
-            .links  {
-                border-bottom: var(--dbp-border);
-                border-color: var(--dbp-content);
-                padding: 0;
-                transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
-                color: var(--dbp-content);
-                cursor: pointer;
-                text-decoration: none;
-            }
-        `;
+        return [
+
+              commonStyles.getThemeCSS(),
+              commonStyles.getGeneralCSS(),
+              css`
+                .hidden {
+                    display: none;
+                }
+                .links  {
+                    border-bottom: var(--dbp-border);
+                    border-color: var(--dbp-content);
+                    padding: 0;
+                    transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
+                    color: var(--dbp-content);
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+            `,
+          ];
     }
 
     connectedCallback() {
