@@ -30,6 +30,15 @@ export class Translation extends DBPLitElement {
             .hidden {
                 display: none;
             }
+            .links  {
+                border-bottom: var(--dbp-border);
+                border-color: var(--dbp-content);
+                padding: 0;
+                transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
+                color: var(--dbp-content);
+                cursor: pointer;
+                text-decoration: none;
+            }
         `;
     }
 
