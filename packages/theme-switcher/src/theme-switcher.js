@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {html, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AdapterLitElement, Icon} from '@dbp-toolkit/common';
@@ -15,6 +15,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.boundCloseAdditionalMenuHandler = this.hideModeMenu.bind(this);
         this.detectBrowserDarkMode = false;
         this.darkModeClass = 'dark-theme';
+        this.langDir = '';
     }
 
     static get properties() {
@@ -23,6 +24,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             lang: {type: String},
             themes: {type: Array, attribute: 'themes'},
             darkModeThemeOverride: {type: String, attribute: 'dark-mode-theme-override'},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
@@ -55,6 +57,9 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             this.loadTheme('light-theme');
             this.detectInitialMode();
         });
+        if (this.langDir) {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     detectInitialMode() {
@@ -158,8 +163,8 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
-           
-            
+
+
             mode-button, button.button {
                 border: none;
             }

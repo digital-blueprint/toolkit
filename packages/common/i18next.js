@@ -1,5 +1,31 @@
 import i18next from 'i18next';
 
+// global variable as cache for translations
+const translationCache = {};
+
+// fetches overrides for given language
+async function fetchOverridesByLanguage(overrides, lng) {
+  let result = await
+      fetch(overrides + lng +'/translation.json', {
+          headers: {'Content-Type': 'application/json'},
+      });
+  let json = await result.json();
+  return json;
+}
+
+// handles translation cache promises
+async function cacheOverrides(overridesFile, lng) {
+  // use global var as cache
+  if (translationCache[lng] === undefined) {
+    // get translation.json for each lang
+    let response = fetchOverridesByLanguage(overridesFile, lng);
+    translationCache[lng] = response;
+    return response;
+  } else {
+    return translationCache[lng];
+  }
+}
+
 /**
  * Like Intl.DateTimeFormat().format() but uses the current language as locale.
  *
@@ -133,12 +159,13 @@ export function setOverrides(i18n, element, overrides) {
  *
  * @param {i18next.i18n} i18n - The i18next instance
  * @param {HTMLElement} element - The element at which the overrides are targeted
- * @param {object} overrides - The override data as promise
  */
-export async function setOverridesByPromise(i18n, element, overrides) {
+export async function setOverridesByGlobalCache(i18n, element) {
     // We add a special namespace which gets used with priority and falls back
     // to the original one. This way we an change the overrides at runtime
     // and can even remove them.
+
+
 
     // The scoped mixin saves the real tag name under data-tag-name
     let tagName = ((element.dataset && element.dataset.tagName) || element.tagName).toLowerCase();
@@ -146,10 +173,11 @@ export async function setOverridesByPromise(i18n, element, overrides) {
     let overrideNamespace = getOverrideNamespace(namespace);
     let hasOverrides = false;
     for (let lng of i18n.languages) {
-        overrides[lng] = await overrides[lng];
+        cacheOverrides(element.langDir, lng);
+        translationCache[lng] = await translationCache[lng];
         i18n.removeResourceBundle(lng, overrideNamespace);
-        if (overrides[lng] === undefined || overrides[lng][tagName] === undefined) continue;
-        let resources = overrides[lng][tagName];
+        if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined) continue;
+        let resources = translationCache[lng][tagName];
         hasOverrides = true;
         i18n.addResourceBundle(lng, overrideNamespace, resources);
     }
