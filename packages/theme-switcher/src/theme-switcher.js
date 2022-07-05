@@ -16,6 +16,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.detectBrowserDarkMode = false;
         this.darkModeClass = 'dark-theme';
         this.langDir = '';
+        this.dropdownRight = false;
     }
 
     static get properties() {
@@ -24,6 +25,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             lang: {type: String},
             themes: {type: Array, attribute: 'themes'},
             darkModeThemeOverride: {type: String, attribute: 'dark-mode-theme-override'},
+            dropdownRight: {type: Boolean, attribute: 'dropdown-right'},
             langDir: {type: String, attribute: 'lang-dir'},
         };
     }
@@ -223,6 +225,16 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             .icon {
                 margin-right: 10px;
             }
+            
+            #theme-menu{
+                position: relative;
+            }
+            
+         
+            .ul-right{
+                right: 0px;
+            };
+
         `;
     }
 
@@ -230,7 +242,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         const i18n = this._i18n;
 
         return html`
-            <div class="${classMap({hidden: this.themes.length <= 1})}">
+            <div id="theme-menu" class="${classMap({hidden: this.themes.length <= 1})}">
                 <a
                     class="mode-button"
                     title="${i18n.t('color-mode')}"
@@ -239,7 +251,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                     }}">
                     <dbp-icon name="contrast"></dbp-icon>
                 </a>
-                <ul class="extended-menu hidden">
+                <ul class="extended-menu hidden ${classMap({'ul-right':this.dropdownRight})}">
                     ${this.themes.map(
                         (theme) => html`
                             <li class="" id="${theme.class}">

@@ -121,13 +121,15 @@ A full example can be found in each application in the `index.html` of the `app-
         themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"},
         {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'>
         </dbp-theme-switcher>` 
-- `darkModeThemeOverride` (optional)
+- `dark-mode-theme-override` (optional)
     - Options:
-      - `darkModeThemeOverride` not set: the theme switcher detects if the browser uses the dark mode and add 
+      - `dark-mode-theme-override` not set: the theme switcher detects if the browser uses the dark mode and add 
          the `dark-theme` class automatically to the body if it is in the themes array and no user preference is set
-      - `darkModeThemeOverride` is set: the theme switcher not detects the browser color mode
-      - `darkModeThemeOverride` is set with a string: e.g.: `darkModeThemeOverride="dunkles-theme`, the theme switcher
+      - `dark-mode-theme-override` is set: the theme switcher not detects the browser color mode
+      - `dark-mode-theme-override` is set with a string: e.g.: `dark-mode-theme-override="dunkles-theme`, the theme switcher
          detects if the browser uses the dark mode and handles the given string as dark mode class
+- `dropdown-right` (optional, default: `false`): boolean which indicates that you want the dropdown from the theme menu on the right side, default on the left side
+  - example: `<dbp-file-source dropdown-right></dbp-file-source>`
       
 
 ## Note
