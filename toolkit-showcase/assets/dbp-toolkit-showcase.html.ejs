@@ -41,9 +41,13 @@
             line-height: 1.4em;
             font-weight: 400;
             margin: 0;
+            margin-top: 40px;
         }
 
-        html {
+        @media (max-width: 768px) {
+            body{
+                margin-top: 0px;
+            }
         }
 
         .light-theme{
@@ -51,6 +55,7 @@
             --dbp-override-content: #222120;
 
             --dbp-override-primary: #3775c1;
+            --dbp-override-on-primary-surface: white;
             --dbp-override-secondary: #222120;
             --dbp-override-secondary-surface: white;
             --dbp-override-on-secondary-surface: #222120;
@@ -75,6 +80,7 @@
             --dbp-override-content: white;
 
             --dbp-override-primary: #3775c1;
+            --dbp-override-on-primary-surface: white;
             --dbp-override-secondary: white;
             --dbp-override-secondary-surface: #222120;
             --dbp-override-on-secondary-surface: white;
@@ -124,31 +130,57 @@
 ><dbp-loading-spinner></dbp-loading-spinner></<%= name %>>
 
 
+
 <template id="global-override">
     <template id="<%= name %>">
         <div slot="name">
             <style>
 
-                .logo-dark, .light-theme .logo-dark, .dark-theme .logo-light{
+                .logo-dark, .dbp-light-theme .logo-dark, .dbp-dark-theme .logo-light{
                     display: none;
                 }
 
-                .logo-light, .light-theme .logo-light, .dark-theme .logo-dark{
+                .logo-light, .dbp-light-theme .logo-light, .dbp-dark-theme .logo-dark{
                     display: block;
                 }
+
+                .wrapper{
+                    position: absolute;
+                    left: 0px;
+                    width: 100%;
+                }
+
+                .logo-section{
+                    margin: auto;
+                    max-width: 1400px;
+                }
+
+
             </style>
-            <img class="logo-light" style="height: 100px" src="<%= getPrivateUrl('dbp_logo_on_white.svg') %>" alt="Digital Blueprint - A University toolbox logo">
-            <img class="logo-dark" style="height: 100px" src="<%= getPrivateUrl('dbp_logo_on_black.svg') %>" alt="Digital Blueprint - A University toolbox logo">
-        </div>
-        <div slot="title" style="margin-top:40px;line-height: 23px;">
-            <span style="text-transform: lowercase;letter-spacing: 3px"><span style="font-weight: bold">toolkit</span> <br><span style="margin-left: 136px;font-size: 0.8em;">showcase</span></span>
-        </div>
-        <div slot="logo">
-            <div>
+            <div class="wrapper">
+                <div class="logo-section">
+                    <img class="logo-light" style="height: 100px" src="<%= getPrivateUrl('dbp_logo_on_white.svg') %>" alt="Digital Blueprint - A University toolbox logo">
+                    <img class="logo-dark" style="height: 100px" src="<%= getPrivateUrl('dbp_logo_on_black.svg') %>" alt="Digital Blueprint - A University toolbox logo">
+                </div>
             </div>
+        </div>
+        <div slot="title" style="margin-top:40px;">
+            <span>digital blueprint playground</span>
+
+        </div>
+        <div slot="logo"  style="width: 100%;
+                    position: absolute;
+                    color: var(--dbp-override-background);
+                    background: var(--dbp-override-primary);
+                    left: 0px;
+                    top: 0px;
+                    text-align: center;
+                    padding: 10px 0;">
+            <a style="color: var(--dbp-override-on-primary-surface);" href="mailto:hello@digital-blueprint.org" target="_blank">Get demo account now!</a> &nbsp;&nbsp;&nbsp; <a href="https://dbp-demo.tugraz.at/site/" style="color: var(--dbp-override-on-primary-surface);">Install this app!</a>
         </div>
     </template>
 </template>
+
 
 <!-- Error handling for too old browsers -->
 <script src="<%= getPrivateUrl('browser-check.js') %>" defer></script>
