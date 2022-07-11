@@ -1,5 +1,6 @@
 import {LitElement} from 'lit';
 import {Logger} from './logger';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 
 export class AdapterLitElement extends LitElement {
     constructor() {
@@ -13,6 +14,10 @@ export class AdapterLitElement extends LitElement {
         // default values
         this.subscribe = '';
         this.unsubscribe = '';
+
+        // dir and i18next instance of translation overrides
+        this._i18n = createInstance();
+        this.langDir = '';
 
         this.callbackStore = [];
 
@@ -78,6 +83,11 @@ export class AdapterLitElement extends LitElement {
         }
 
         this.connected = true;
+
+        // use translation overrides if path is given
+        if(this.langDir) {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
 
         const that = this;
 
@@ -325,6 +335,7 @@ export class AdapterLitElement extends LitElement {
             subscribe: {type: String},
             unsubscribe: {type: String},
             providerRoot: {type: Boolean, attribute: 'provider-root'},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
