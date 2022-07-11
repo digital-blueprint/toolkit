@@ -864,6 +864,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${commonStyles.getTabulatorStyles()}
             ${fileHandlingStyles.getFileHandlingCss()}
+
+            
             a {
                 border-bottom: var(--dbp-border);
                 padding: 0;
