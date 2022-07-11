@@ -9,8 +9,14 @@ async function fetchOverridesByLanguage(overrides, lng) {
       fetch(overrides + lng +'/translation.json', {
           headers: {'Content-Type': 'application/json'},
       });
-  let json = await result.json();
-  return json;
+
+  // throw error if response is not json
+  try {
+    let json = await result.json();
+    return json;
+  } catch(e) {
+    throw new Error("Could not parse response as json: " + e);
+  }
 }
 
 // handles translation cache promises
@@ -165,21 +171,26 @@ export async function setOverridesByGlobalCache(i18n, element) {
     // to the original one. This way we an change the overrides at runtime
     // and can even remove them.
 
-
-
     // The scoped mixin saves the real tag name under data-tag-name
     let tagName = ((element.dataset && element.dataset.tagName) || element.tagName).toLowerCase();
     let namespace = i18n.options.fallbackNS;
     let overrideNamespace = getOverrideNamespace(namespace);
     let hasOverrides = false;
     for (let lng of i18n.languages) {
-        cacheOverrides(element.langDir, lng);
-        translationCache[lng] = await translationCache[lng];
-        i18n.removeResourceBundle(lng, overrideNamespace);
-        if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined) continue;
-        let resources = translationCache[lng][tagName];
-        hasOverrides = true;
-        i18n.addResourceBundle(lng, overrideNamespace, resources);
+        // check if cacheOverrides throws error
+        try {
+          cacheOverrides(element.langDir, lng);
+          translationCache[lng] = await translationCache[lng];
+          i18n.removeResourceBundle(lng, overrideNamespace);
+          if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined) continue;
+          let resources = translationCache[lng][tagName];
+          hasOverrides = true;
+          i18n.addResourceBundle(lng, overrideNamespace, resources);
+        } catch(e) {
+          // leave loop and use default translations if error is thrown
+          hasOverrides = false;
+          break;
+        }
     }
     i18n.setDefaultNamespace(hasOverrides ? overrideNamespace : namespace);
     element.requestUpdate();
