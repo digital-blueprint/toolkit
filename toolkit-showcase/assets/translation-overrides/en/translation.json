@@ -1,7 +1,7 @@
 {
     "dbp-translation": {
       "toolkit-showcase": "This text will be translated to german using i18n with a user defined language file when the language is changed to german.",
-      "toolkit-showcase-link": "Furthermore its possible to display links through <a href=\"{{- link1}}\" class=\"links\">interpolation</a> and escaping.",
+      "toolkit-showcase-link": "Furthermore its possible to display links through <a href=\"{{- link1}}\" class=\"link\">interpolation</a> and escaping.",
       "color-mode": "This text is not supposed to be displayed. It is only here for testing.",
       "intro": "This text is not supposed to be displayed. It is only here for testing."
     },

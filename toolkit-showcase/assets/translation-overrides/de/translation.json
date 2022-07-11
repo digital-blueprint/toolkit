@@ -1,7 +1,7 @@
 {
     "dbp-translation": {
       "toolkit-showcase": "Dieser Text wird mithilfe von i18n aus einer benutzerdefinierten Sprachdatei gelesen und ins Englische übersetzt wenn man die Sprache auf Englisch stellt.",
-      "toolkit-showcase-link": "Es können sogar links mittels <a href=\"{{- link1}}\" class=\"links\">interpolation</a> und escaping dargestellt werden.",
+      "toolkit-showcase-link": "Es können sogar links mittels <a href=\"{{- link1}}\" class=\"link\">interpolation</a> und escaping dargestellt werden.",
       "color-mode": "Sollte nicht angezeigt werden. Dieser Text ist nur als test vorhanden.",
       "intro": "Sollte nicht angezeigt werden. Dieser Text ist nur als test vorhanden."
     },

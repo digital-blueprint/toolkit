@@ -10,7 +10,6 @@ export class Translation extends DBPLitElement {
         this.key = '';
         this.lang = '';
         this.interpolation = '';
-        this.langDir = '';
         this.unsafe = false;
     }
 
@@ -21,47 +20,32 @@ export class Translation extends DBPLitElement {
             lang: {type: String},
             interpolation: {type: Object, attribute: 'var'},
             unsafe: {type: Boolean, attribute: 'unsafe'},
-            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
     static get styles() {
         // language=css
         return [
-
               commonStyles.getThemeCSS(),
               commonStyles.getGeneralCSS(),
-              css`
-                .hidden {
-                    display: none;
-                }
-                .links  {
-                    border-bottom: var(--dbp-border);
-                    border-color: var(--dbp-content);
-                    padding: 0;
-                    transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
-                    color: var(--dbp-content);
-                    cursor: pointer;
-                    text-decoration: none;
-                }
-            `,
+              commonStyles.getLinkCss(),
           ];
     }
 
     connectedCallback() {
-      super.connectedCallback();
+
       // init objects with empty string as value for key
       const de = {};
       const en = {};
       de[this.key] = "";
       en[this.key] = "";
 
-      // create i18n instance with given translations
+      // create i18n instance with empty translations as default
       this._i18n = createInstanceGivenResources(en, de);
 
-      if (this.langDir) {
-        setOverridesByGlobalCache(this._i18n, this);
-      }
+      // supercall after default i18n init to override translations only
+      // if a override with this tagname is given
+      super.connectedCallback();
     }
 
     update(changedProperties) {

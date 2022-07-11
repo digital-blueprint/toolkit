@@ -1,4 +1,4 @@
-import {createInstance, setOverridesByGlobalCache} from './i18n.js';
+import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AdapterLitElement, Icon} from '@dbp-toolkit/common';
@@ -15,7 +15,6 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.boundCloseAdditionalMenuHandler = this.hideModeMenu.bind(this);
         this.detectBrowserDarkMode = false;
         this.darkModeClass = 'dark-theme';
-        this.langDir = '';
         this.dropdownRight = false;
     }
 
@@ -26,7 +25,6 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             themes: {type: Array, attribute: 'themes'},
             darkModeThemeOverride: {type: String, attribute: 'dark-mode-theme-override'},
             dropdownRight: {type: Boolean, attribute: 'dropdown-right'},
-            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
@@ -59,9 +57,6 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             this.loadTheme('light-theme');
             this.detectInitialMode();
         });
-        if (this.langDir) {
-          setOverridesByGlobalCache(this._i18n, this);
-        }
     }
 
     detectInitialMode() {
@@ -225,12 +220,12 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             .icon {
                 margin-right: 10px;
             }
-            
+
             #theme-menu{
                 position: relative;
             }
-            
-         
+
+
             .ul-right{
                 right: 0px;
             };
