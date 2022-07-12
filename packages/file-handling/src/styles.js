@@ -168,7 +168,15 @@ export function getFileHandlingCss() {
         .select-all-icon {
             height: 40px;
             position: absolute;
-            top: -34px;
+            top: -18px;
+        }
+
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
+            padding-top: 4px;
+            padding-bottom: 4px;
+            font-weight: normal;
+            font-size: 1rem;
         }
         
         @media only screen and (orientation: portrait) and (max-width: 768px) {

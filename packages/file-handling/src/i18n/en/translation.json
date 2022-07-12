@@ -135,7 +135,10 @@
         "size": "Size",
         "something-went-wrong": "Something went wrong. Please reload.",
         "upload-to": "Uploading to {{- path}} ...",
-        "webdav-error": "Something went wrong"
+        "webdav-error": "Something went wrong",
+        "file-error": "The file format is not supported or the file is corrupt and could not be uploaded.",
+        "forbidden": "You don't have permissions to perform this action in this folder.",
+        "file-upload-error": "Sorry, something went wrong. Please try again later."
     },
     "upload-label": "Select some files"
 }

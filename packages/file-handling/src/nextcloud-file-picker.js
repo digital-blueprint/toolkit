@@ -1637,7 +1637,32 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     }
                 })
                 .catch((error) => {
-                    throw error;
+                    this.loading = false;
+                    if(error.response && error.response.status) {
+                        switch (error.response.status) {
+                            case 403:
+                                this.statusText =  i18n.t('nextcloud-file-picker.forbidden');
+                                return;
+                            case 415:
+                                this.statusText =  i18n.t('nextcloud-file-picker.file-error');
+                                this.sendSetPropertyEvent('analytics-event', {
+                                    category: 'FileHandlingNextcloud',
+                                    action: 'UploadFilesPutfilesError',
+                                    name: "415",
+                                });
+                                return;
+                            default:
+                                break;
+                        }
+                    }
+
+                    this.statusText =  i18n.t('nextcloud-file-picker.file-upload-error');
+                    this.sendSetPropertyEvent('analytics-event', {
+                        category: 'FileHandlingNextcloud',
+                        action: 'UploadFilesPutfilesError',
+                        name: error,
+                    });
+                    console.error(error);
                 });
         } else {
             this.loadDirectory(this.directoryPath);
@@ -2959,8 +2984,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             #replace-modal .checkmark {
                 height: 20px;
                 width: 20px;
-                left: 15px;
-                top: 5px;
+                left: 0px;
+                top: 1px;
             }
             
             .table-wrapper {
