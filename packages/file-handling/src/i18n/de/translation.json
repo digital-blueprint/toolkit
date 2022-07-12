@@ -136,7 +136,9 @@
         "something-went-wrong": "Etwas ist schief gelaufen. Bitte verbinden Sie sich erneut.",
         "upload-to": "Es wird nach {{- path}} hochgeladen ...",
         "webdav-error": "Etwas ist schief gelaufen: {{error}}",
-        "file-error": "Die Datei \"{{file}}\" ist fehlerhaft und konnte nicht hochgeladen werden."
+        "file-error": "Das Dateiformat wird nicht unterstützt oder die Datei ist fehlerhaft und konnte nicht hochgeladen werden.",
+        "forbidden": "Sie sind nicht berechtigt, diese Aktion in diesem Ordner auszuführen.",
+        "file-upload-error": "Entschuldigung, etwas ist schief gelaufen. Bitte versuchen Sie es später noch einmal."
     },
     "upload-label": "Dateiauswahl"
 }
