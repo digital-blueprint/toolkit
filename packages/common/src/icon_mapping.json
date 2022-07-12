@@ -4,7 +4,7 @@
   "chevron-left": "icons_dbp/chevron-left",
   "chevron-right": "icons_dbp/chevron-right",
   "reload": "icons_iconoir/refresh-double",
-  "close": "icons_iconoir/cancel",
+  "close": "icons_dbp/close",
   "bolt": "icons_iconoir/thunderstorm",
   "empty-file": "icons_iconoir/empty-page",
   "folder": "icons_iconoir/folder",
@@ -25,5 +25,7 @@
   "source_icons_align-justify": "icons_dbp/source_icons_align-justify",
   "source_icons_eye-empty": "icons_dbp/source_icons_eye-empty",
   "source_icons_eye-off": "icons_dbp/source_icons_eye-off",
-  "warning-high": "icons_dbp/warning-high"
+  "warning-high": "icons_dbp/warning-high",
+
+  "cloud": "icons_iconoir/cloud"
 }

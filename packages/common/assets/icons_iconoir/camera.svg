@@ -1,13 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_2_1_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
-<g>
-	<path d="M97.1,29.5c-0.9-1.1-2.3-1.8-3.9-1.8H73.6v-3.1c0-2.8-2.2-4.9-4.9-4.9H31.4c-2.8,0-4.9,2.2-4.9,4.9v3.1H6.9
-		c-2.8,0-4.9,2.2-4.9,4.9v42.7c0,2.8,2.2,4.9,4.9,4.9h86.3c2.8,0,4.9-2.2,4.9-4.9V32.9C98.2,31.7,97.9,30.5,97.1,29.5z M92.5,74.8
-		H7.4V33.2h21.7c1.6,0,2.9-1.2,2.9-2.9v-5.1h36.1v5.1c0,1.6,1.2,2.9,2.9,2.9h21.5V74.8z"/>
-	<path d="M50,36.7c-7.7,0-14,6.3-14,14c0,7.8,6.2,13.9,14,13.9c7.7,0,14-6.2,14-13.9C64,43,57.7,36.7,50,36.7z M50,59
-		c-4.8,0-8.5-3.7-8.5-8.4c0-4.7,3.8-8.5,8.5-8.5c4.7,0,8.5,3.8,8.5,8.5C58.5,55.3,54.7,59,50,59z"/>
-	<circle cx="14.9" cy="40" r="2.2"/>
-</g>
+<svg width="24" height="24" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2 19V9C2 7.89543 2.89543 7 4 7H4.5C5.12951 7 5.72229 6.70361 6.1 6.2L8.32 3.24C8.43331 3.08892 8.61115 3 8.8 3H15.2C15.3889 3 15.5667 3.08892 15.68 3.24L17.9 6.2C18.2777 6.70361 18.8705 7 19.5 7H20C21.1046 7 22 7.89543 22 9V19C22 20.1046 21.1046 21 20 21H4C2.89543 21 2 20.1046 2 19Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 17C14.2091 17 16 15.2091 16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 15.2091 9.79086 17 12 17Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
