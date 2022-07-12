@@ -187,8 +187,8 @@ Dependencies:
                         dest: 'dist/' + (await getDistPath(pkg.name)),
                     },
                     {
-                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
+                        src: await getPackagePath('@dbp-toolkit/common', 'assets/*'),
+                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common')),
                     },
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),

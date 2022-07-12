@@ -1,9 +1,25 @@
 import {html, LitElement, css} from 'lit';
 import * as commonUtils from '../utils.js';
 import {name as pkgName} from './../package.json';
+import nameMapping from './icon_mapping.json';
 
-export function getIconSVGURL(name) {
-    return commonUtils.getAssetURL(pkgName, 'icons/' + encodeURI(name) + '.svg');
+export function getIconSVGURL(name, iconSet) {
+    console.log("+++++++++++", name, iconSet);
+    if(iconSet !== '' && iconSet !== undefined) {
+        return commonUtils.getAssetURL(pkgName, 'icons_' + encodeURI(iconSet) + '/' + encodeURI(name) + '.svg');
+    }
+    let mapped = mapName(name);
+    return commonUtils.getAssetURL(pkgName, encodeURI(mapped) + '.svg');
+}
+
+export function mapName(name) {
+    let mappedPath = nameMapping[name];
+    console.log("---------------------", mappedPath);
+    if (mappedPath !== undefined && mappedPath !== '') {
+        return mappedPath;
+    }
+    console.warn("Icon name '" + name + "' is not mapped, please add a mapping!");
+    return 'icons_lineicons/' + name; // fallback to lineicons should be removed in the future
 }
 
 export function getIconCSS(name) {
@@ -31,11 +47,13 @@ export class Icon extends LitElement {
     constructor() {
         super();
         this.name = 'bolt';
+        this.iconSet = '';
     }
 
     static get properties() {
         return {
             name: {type: String},
+            iconSet: {type: String, attribute: "icon-set"},
         };
     }
 
@@ -68,7 +86,7 @@ export class Icon extends LitElement {
     }
 
     render() {
-        const iconURL = getIconSVGURL(this.name);
+        const iconURL = getIconSVGURL(this.name, this.iconSet);
         const iconPart = this.name.trim().split(' ').join('');
 
         return html`

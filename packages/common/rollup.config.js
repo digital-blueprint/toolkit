@@ -5,7 +5,7 @@ import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
-import {getDistPath} from '../../rollup.utils.js';
+import {getDistPath, getPackagePath} from '../../rollup.utils.js';
 
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
@@ -32,8 +32,8 @@ export default (async () => {
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {
-                        src: 'assets/icons/*.svg',
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'icons')),
+                        src: 'assets/*',
+                        dest: 'dist/' + pkg.name
                     },
                 ],
             }),
