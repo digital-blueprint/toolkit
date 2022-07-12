@@ -1,8 +1,8 @@
-import {css, html} from 'lit';
+import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
 import * as commonStyles from '../styles.js';
-import {createInstanceGivenResources, setOverridesByGlobalCache} from './i18n.js';
+import {createInstanceGivenResources} from './i18n.js';
 
 export class Translation extends DBPLitElement {
     constructor() {
