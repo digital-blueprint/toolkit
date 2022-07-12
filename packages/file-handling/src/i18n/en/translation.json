@@ -135,7 +135,8 @@
         "size": "Size",
         "something-went-wrong": "Something went wrong. Please reload.",
         "upload-to": "Uploading to {{- path}} ...",
-        "webdav-error": "Something went wrong"
+        "webdav-error": "Something went wrong",
+        "file-error": "The file \"{{file}}\" is corrupt and could not be uploaded."
     },
     "upload-label": "Select some files"
 }
