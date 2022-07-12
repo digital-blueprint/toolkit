@@ -1638,6 +1638,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 })
                 .catch((error) => {
                     this.statusText =  i18n.t('nextcloud-file-picker.file-error', {file: file.name});
+                    this.sendSetPropertyEvent('analytics-event', {
+                        category: 'FileHandlingNextcloud',
+                        action: 'UploadFilesPutfilesError',
+                        name: "",
+                    });
                     this.loading = false;
                     throw error;
                 });
