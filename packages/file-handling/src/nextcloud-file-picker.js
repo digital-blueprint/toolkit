@@ -2966,8 +2966,8 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             #replace-modal .checkmark {
                 height: 20px;
                 width: 20px;
-                left: 15px;
-                top: 5px;
+                left: 0px;
+                top: 1px;
             }
             
             .table-wrapper {
