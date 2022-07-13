@@ -4,7 +4,6 @@ import {name as pkgName} from './../package.json';
 import nameMapping from './icon_mapping.json';
 
 export function getIconSVGURL(name, iconSet) {
-    console.log("+++++++++++", name, iconSet);
     if(iconSet !== '' && iconSet !== undefined) {
         return commonUtils.getAssetURL(pkgName, 'icons_' + encodeURI(iconSet) + '/' + encodeURI(name) + '.svg');
     }
@@ -14,7 +13,6 @@ export function getIconSVGURL(name, iconSet) {
 
 export function mapName(name) {
     let mappedPath = nameMapping[name];
-    console.log("---------------------", mappedPath);
     if (mappedPath !== undefined && mappedPath !== '') {
         return mappedPath;
     }
