@@ -11,57 +11,57 @@ export function getThemeCSS() {
     return css`
         :host {
             /* new new variables */
-            --dbp-background: 
+            --dbp-background:
                     var(--dbp-override-background, #ffffff
             );
-            --dbp-content: 
+            --dbp-content:
                     var(--dbp-override-content, #222120
             );
-            --dbp-content-surface: 
+            --dbp-content-surface:
                     var(--dbp-override-content-surface,
                     var(--dbp-content)
             );
-            --dbp-on-content-surface: 
+            --dbp-on-content-surface:
                     var(--dbp-override-on-content-surface,
                     var(--dbp-background)
             );
-            --dbp-border: 
+            --dbp-border:
                     var(--dbp-override-border, 1px solid #222120
             );
-            --dbp-border-radius: 
+            --dbp-border-radius:
                     var(--dbp-override-border-radius, 0px
             );
-            --dbp-primary: 
+            --dbp-primary:
                     var(--dbp-override-primary,  #3775c1
             );
             --dbp-primary-surface:
-                    var(--dbp-override-primary-surface, 
+                    var(--dbp-override-primary-surface,
                     var(--dbp-primary)
             );
-            --dbp-on-primary-surface: 
-                    var(--dbp-override-on-primary-surface, 
+            --dbp-on-primary-surface:
+                    var(--dbp-override-on-primary-surface,
                     var(--dbp-on-content-surface)
             );
-            --dbp-primary-surface-border-color: 
-                    var(--dbp-override-primary-surface-border-color, 
+            --dbp-primary-surface-border-color:
+                    var(--dbp-override-primary-surface-border-color,
                     var(--dbp-primary)
             );
-            --dbp-secondary: 
+            --dbp-secondary:
                     var(--dbp-override-secondary, #222120
             );
             --dbp-secondary-surface:
                     var(--dbp-override-secondary-surface,
                     var(--dbp-secondary)
             );
-            --dbp-on-secondary-surface: 
+            --dbp-on-secondary-surface:
                     var(--dbp-override-on-secondary-surface,
                     var(--dbp-on-content-surface)
             );
-            --dbp-secondary-surface-border-color: 
+            --dbp-secondary-surface-border-color:
                     var(--dbp-override-secondary-surface-border-color,
                     var(--dbp-secondary)
             );
-            --dbp-muted: 
+            --dbp-muted:
                     var(--dbp-override-muted, #767676
             );
             --dbp-muted-surface:
@@ -212,11 +212,11 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
 
     // language=css
     return css`
-        
+
         h2 {
             font-weight: 300;
         }
-        
+
         h3{
             font-weight: 300;
             margin-top: 0px;
@@ -251,7 +251,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         input::-moz-focus-inner { border: 0; }
-        
+
         :focus-visible{
             outline:none !important;
             outline-width: 0 !important;
@@ -725,18 +725,18 @@ export function getButtonCSS() {
 export function getRadioAndCheckboxCss() {
     // language=css
     return css`
-        /* 
+        /*
         Radiobutton:
             <label class="button-container">
                 Labeltext
                 <input type="radio" name="myradiobutton">
                 <span class="radiobutton"></span>
             </label>
-            
+
         Checkbox:
             <label class="button-container">
                 Labeltext
-                <input type="checkbox" name="mycheckbox"> 
+                <input type="checkbox" name="mycheckbox">
                 <span class="checkmark"></span>
             </label>
          */
@@ -879,11 +879,11 @@ export function getRadioAndCheckboxCss() {
             .button-container{
                 line-height: 40px;
             }
-            
+
             .button-container {
                 padding-left: 40px;
             }
-            
+
             .button-container .checkmark::after {
                 left: 10px;
                 width: 10px;
@@ -896,7 +896,7 @@ export function getRadioAndCheckboxCss() {
                 width: 5px;
                 height: 11px;
             }
-            
+
             .button-container{
                 line-height: 1em;
             }
@@ -1304,8 +1304,8 @@ export function getModalDialogCSS() {
                 height: 100%;
                 width: 100%;
             }
-            
-           
+
+
         }
 
         @media only screen and (max-width: 768px) {
@@ -1405,6 +1405,31 @@ export function getLinkCss() {
         .int-link-internal:hover::after,
         .link:hover::after {
             background-color: var(--dbp-hover-color, var(--dbp-content));
+        }
+
+        .footer-links {
+            margin-top: 0.5em;
+        }
+
+        .footer-link {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            padding: 0;
+            margin-left: 1em;
+            transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
+            color: var(--dbp-muted);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        input::-moz-focus-inner { border: 0; }
+
+        :focus-visible{
+            outline:none !important;
+            outline-width: 0 !important;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+            box-shadow: 0px 0px 4px 2px var(--dbp-accent);
         }
     `;
 }
@@ -1547,8 +1572,8 @@ export function getTabulatorStyles() {
             border-bottom: none;
             border-top: 6px solid var(--dbp-accent);
             color: var(--dbp-accent);
-        }        
-        
+        }
+
         .tabulator-row, .tabulator-row.tabulator-row-even, .tabulator-row.tabulator-row-odd{
             padding-top: 0px;
             padding-bottom: 0px;
@@ -1600,11 +1625,10 @@ export function getTabulatorStyles() {
         .tabulator .tabulator-tableholder{
             overflow: inherit;
         }
-        
+
         @media only screen and (orientation: portrait) and (max-width: 768px) {
-            
+
         }
-       
+
     `;
 }
-
