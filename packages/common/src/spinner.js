@@ -8,7 +8,7 @@ export class Spinner extends HTMLElement {
         shadowRoot.innerHTML = `
 <style>
 :host {
-    display: inline-block;
+    display: block;
 }
 
 #all-spinner {
