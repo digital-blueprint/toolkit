@@ -1641,10 +1641,18 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     if(error.response && error.response.status) {
                         switch (error.response.status) {
                             case 403:
-                                this.statusText =  i18n.t('nextcloud-file-picker.forbidden');
+                                this.statusText =  html`
+                                    <span class="error">
+                                        <dbp-icon name="warning-high"></dbp-icon>
+                                        ${i18n.t('nextcloud-file-picker.forbidden')}
+                                    </span>`;
                                 return;
                             case 415:
-                                this.statusText =  i18n.t('nextcloud-file-picker.file-error');
+                                this.statusText =  html`
+                                    <span class="error">
+                                        <dbp-icon name="warning-high"></dbp-icon>
+                                        ${i18n.t('nextcloud-file-picker.file-error')}
+                                    </span>`;
                                 this.sendSetPropertyEvent('analytics-event', {
                                     category: 'FileHandlingNextcloud',
                                     action: 'UploadFilesPutfilesError',
@@ -1656,7 +1664,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         }
                     }
 
-                    this.statusText =  i18n.t('nextcloud-file-picker.file-upload-error');
+                    this.statusText =  html`
+                                    <span class="error">
+                                        <dbp-icon name="warning-high"></dbp-icon>
+                                        ${i18n.t('nextcloud-file-picker.file-upload-error')}
+                                        </span>`;
                     this.sendSetPropertyEvent('analytics-event', {
                         category: 'FileHandlingNextcloud',
                         action: 'UploadFilesPutfilesError',

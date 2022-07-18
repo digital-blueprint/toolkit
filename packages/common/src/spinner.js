@@ -10,108 +10,70 @@ export class Spinner extends HTMLElement {
 :host {
     display: block;
 }
-#all-spinner-tuglogo {
-  width:130px;
+
+#all-spinner {
+    width:130px;
     height:130px;
-      position:relative;
-        background-color:transparent;
-          margin:0 auto;
+    position:relative;
+    background-color:transparent;
+    margin:0 auto;
 }
 
-.all-spinner-tuglogo-box {
-  width:20%;
-    height:20%;
-     background-color:var(--dbp-accent-surface);
-        position:absolute;
-          top:50%;
-            left:50%;
-          animation-duration: 1.6s;
-            animation-direction:alternate;
-              animation-iteration-count:infinite;
-    animation-fill-mode:both;
-      animation-timing-function:ease;
-        transition: transform 0.5s, background-color 0.2s 0.5s;
+.all-box {
+    width:50%;
+    height:50%;
+    /* Use a fallback color, in case this is used standalone */
+    background-color:var(--dbp-accent-surface, #9E1E4D);
+    position:absolute;
+    top:50%;
+    left:50%;
+    animation-duration: 1.6s;
+    animation-direction:alternate-reverse;
+    animation-iteration-count:infinite;
 }
 
-#all-spinner-tuglogo-box-1 {
+#box-1 {
       animation-name: box1;
-        transform:translateX(-160%) translateY(-50%);
 }
 
-#all-spinner-tuglogo-box-2 {
-      transform-origin:0 0;
+#box-2 {
       animation-name: box2;
-transform:scale(1) translateX(-50%) translateY(-50%);
 }
 
-#all-spinner-tuglogo-box-3 {
-
+#box-3 {
       animation-name: box3;
-        animation-delay:0.3s;
-          transform:translateX(60%) translateY(-50%); visibility:visible;
-}
-
-#all-spinner-tuglogo-box-4 {
-
-      animation-name: box4;
-        animation-delay:0.1s;
-transform:translateX(0%) translateY(-100%);  visibility:visible;
-}
-
-#all-spinner-tuglogo-box-5 {
-
-      animation-name: box5;
-        animation-delay:0.2s;
-transform:translateX(-100%) translateY(0%);  visibility:visible;
 }
 
 @keyframes box1 {
-    0% { transform:translateX(-50%) translateY(-50%); visibility:hidden; }
-    50% { transform:translateX(-50%) translateY(-50%); visibility:hidden; }
-    70% { transform:translateX(-170%) translateY(-50%); visibility:visible;}
-    80% { transform:translateX(-160%) translateY(-50%); visibility:visible;}
-  100%  { transform:translateX(-160%) translateY(-50%); visibility:visible;}
+    0% { transform:translateX(-50%) translateY(-50%) rotate(45deg); opacity: 0.5;  }
+    30% { transform:translateX(-70%) translateY(-50%) rotate(45deg);  opacity: 0.4; }
+    70% { transform:translateX(-70%) translateY(-50%) rotate(45deg);  opacity: 0.5; }
+  90%  { transform:translateX(-70%) translateY(-50%) rotate(45deg);  opacity: 0.4; }
+  100%  { transform:translateX(-70%) translateY(-50%) rotate(45deg); opacity: 0.5;}
 }
 
 @keyframes box2 {
-    0% { transform:scale(0) translateX(-50%) translateY(-50%);}
-    5% { transform:scale(0) translateX(-50%) translateY(-50%);}
-    30% { transform:scale(1.2) translateX(-50%) translateY(-50%);}
-    35% { transform:scale(1) translateX(-50%) translateY(-50%);}
-  100% { transform:scale(1) translateX(-50%) translateY(-50%);}
+    0% { transform:translateX(-50%) translateY(-50%) rotate(45deg); opacity: 0.6; }
+    30% { transform:translateX(-50%) translateY(-50%) rotate(45deg); opacity: 0.7;}
+    70% { transform:translateX(-50%) translateY(-50%) rotate(45deg); opacity: 0.6;}
+  90% { transform:translateX(-50%) translateY(-50%) rotate(45deg); opacity: 0.7;}
+  100% { transform:translateX(-50%) translateY(-50%) rotate(45deg);  opacity: 0.6;}
 
 }
 
 @keyframes box3 {
-    0% { transform:translateX(-50%) translateY(-50%); visibility:hidden; }
-    50% { transform:translateX(-50%) translateY(-50%); visibility:hidden; }
-    70% { transform:translateX(70%) translateY(-50%); visibility:visible;}
-    80% { transform:translateX(60%) translateY(-50%); visibility:visible;}
-  100%  { transform:translateX(60%) translateY(-50%); visibility:visible;}
-}
-
-@keyframes box4 {
-    0%  { transform:translateX(-50%) translateY(-50%);  visibility:hidden; }
-    50% { transform:translateX(-50%) translateY(-50%);  visibility:hidden; }
-    70% { transform:translateX(10%) translateY(-110%);  visibility:visible;}
-    80% { transform:translateX(0%) translateY(-100%);  visibility:visible;}
-  100%  { transform:translateX(0%) translateY(-100%);  visibility:visible;}
-}
-@keyframes box5 {
-    0%  { transform:translateX(-50%) translateY(-50%);  visibility:hidden; }
-    50% { transform:translateX(-50%) translateY(-50%);  visibility:hidden; }
-    70% { transform:translateX(-110%) translateY(10%);  visibility:visible;}
-    80% { transform:translateX(-100%) translateY(0%);  visibility:visible;}
-  100%  { transform:translateX(-100%) translateY(0%);  visibility:visible;}
+    0% { transform:translateX(-50%) translateY(-50%) rotate(45deg);opacity: 0.9;  }
+    30% { transform:translateX(-30%) translateY(-50%) rotate(45deg);  opacity: 0.7;}
+    70% { transform:translateX(-30%) translateY(-50%) rotate(45deg);  opacity: 0.9;}
+  90%  { transform:translateX(-30%) translateY(-50%) rotate(45deg);  opacity: 0.7;}
+  100%  { transform:translateX(-30%) translateY(-50%) rotate(45deg); opacity: 0.9;}
 }
 </style>
 
-<div id="all-spinner-tuglogo">
-  <div id="all-spinner-tuglogo-box-1" class="all-spinner-tuglogo-box"></div>
-  <div id="all-spinner-tuglogo-box-2" class="all-spinner-tuglogo-box"></div>
-  <div id="all-spinner-tuglogo-box-3" class="all-spinner-tuglogo-box"></div>
-  <div id="all-spinner-tuglogo-box-4" class="all-spinner-tuglogo-box"></div>
-  <div id="all-spinner-tuglogo-box-5" class="all-spinner-tuglogo-box"></div>
+<div id="all-spinner">
+  <div id="box-1" class="all-box"></div>
+  <div id="box-2" class="all-box"></div>
+  <div id="box-3" class="all-box"></div>
 </div>`;
     }
 }
