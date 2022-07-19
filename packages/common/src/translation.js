@@ -2,7 +2,7 @@ import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
 import * as commonStyles from '../styles.js';
-import {createInstanceGivenResources} from './i18n.js';
+import {getOverrideNamespace} from './i18n.js';
 
 export class Translation extends DBPLitElement {
     constructor() {
@@ -33,16 +33,6 @@ export class Translation extends DBPLitElement {
     }
 
     connectedCallback() {
-
-      // init objects with empty string as value for key
-      const de = {};
-      const en = {};
-      de[this.key] = "";
-      en[this.key] = "";
-
-      // create i18n instance with empty translations as default
-      this._i18n = createInstanceGivenResources(en, de);
-
       // supercall after default i18n init to override translations only
       // if a override with this tagname is given
       super.connectedCallback();
@@ -62,8 +52,14 @@ export class Translation extends DBPLitElement {
     }
 
     render() {
+        // get name of overridenamespace
+        let overrideNamespace =
+          this._i18n.options.fallbackNS.slice(0,2) == "--" ?
+          this._i18n.options.fallbackNS :
+          getOverrideNamespace(this._i18n.options.fallbackNS);
+
         // request to i18n translation
-        const translation = (() => {
+        let translation = (() => {
           if (this.interpolation && this.unsafe)
             return unsafeHTML(this._i18n.t(this.key, this.interpolation));
           else if (this.interpolation)
@@ -72,12 +68,18 @@ export class Translation extends DBPLitElement {
             return this._i18n.t(this.key);
         })();
 
-        // if translation == "" key was not found
+        // check if overrides have been loaded with overrideNamespace
+        // and then check if given key exists
         let key = "";
-        if (translation != "") {
+        if (this._i18n.exists(this.key) && this._i18n.hasResourceBundle(this.lang, overrideNamespace)) {
           key = unsafeHTML("<!-- key: " + this.key + "-->");
+        } else if (this._i18n.hasResourceBundle(this.lang, overrideNamespace)){
+          key = unsafeHTML("<!-- key '" + this.key + "' not found! -->");
+          translation = "";
+          console.error("Key '" + this.key + "' not found!");
         } else {
-          key = unsafeHTML("<!-- key \"" + this.key + "\" not found! -->");
+          key = unsafeHTML("<!-- key '" + this.key + "' and namespace '" + overrideNamespace + "' not found! -->");
+          translation = "";
         }
 
         // load translation text

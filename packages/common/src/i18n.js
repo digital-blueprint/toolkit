@@ -1,4 +1,4 @@
-import {createInstance as _createInstance, setOverridesByGlobalCache} from '../i18next.js';
+import {createInstance as _createInstance, setOverridesByGlobalCache, getOverrideNamespace} from '../i18next.js';
 
 import de from './i18n/de/translation.json';
 import en from './i18n/en/translation.json';
@@ -11,4 +11,4 @@ export function createInstanceGivenResources(en, de) {
     return _createInstance({en: en, de: de}, 'de', 'en');
 }
 
-export {setOverridesByGlobalCache};
+export {setOverridesByGlobalCache, getOverrideNamespace};

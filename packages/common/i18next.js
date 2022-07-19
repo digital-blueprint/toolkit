@@ -78,7 +78,7 @@ export function humanFileSize(bytes, si = false) {
  * @param {string} namespace The namespace to override
  * @returns {string} The new namespace name
  */
-function getOverrideNamespace(namespace) {
+export function getOverrideNamespace(namespace) {
     // This just needs to be different to the namespace, make it special
     // so it's clear what it is used for in case it ends up in some error
     // message or something
