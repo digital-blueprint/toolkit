@@ -168,7 +168,7 @@ export function getFileHandlingCss() {
         .select-all-icon {
             height: 40px;
             position: absolute;
-            top: -18px;
+            top: -35px;
         }
 
 
