@@ -8,7 +8,9 @@ export class Spinner extends HTMLElement {
         shadowRoot.innerHTML = `
 <style>
 :host {
-    display: block;
+    height: 100vh;
+    display: flex;
+    align-items: center;
 }
 
 #all-spinner {
@@ -23,7 +25,7 @@ export class Spinner extends HTMLElement {
     width:50%;
     height:50%;
     /* Use a fallback color, in case this is used standalone */
-    background-color:var(--dbp-accent-surface, #9E1E4D);
+    background-color:var(--dbp-primary-surface, #3775c1);
     position:absolute;
     top:50%;
     left:50%;
