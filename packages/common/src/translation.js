@@ -2,7 +2,7 @@ import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
 import * as commonStyles from '../styles.js';
-import {getOverrideNamespace} from './i18n.js';
+import {getOverrideNamespace, setOverridesByGlobalCache} from './i18n.js';
 
 export class Translation extends DBPLitElement {
     constructor() {
@@ -33,6 +33,10 @@ export class Translation extends DBPLitElement {
     }
 
     connectedCallback() {
+
+      // get overrides everytime
+      setOverridesByGlobalCache(this._i18n, this);
+
       // supercall after default i18n init to override translations only
       // if a override with this tagname is given
       super.connectedCallback();
@@ -64,27 +68,31 @@ export class Translation extends DBPLitElement {
             return unsafeHTML(this._i18n.t(this.key, this.interpolation));
           else if (this.interpolation)
             return this._i18n.t(this.key, this.interpolation);
+          else if (this.unsafe)
+            return unsafeHTML(this._i18n.t(this.key));
           else
             return this._i18n.t(this.key);
         })();
 
+
+
         // check if overrides have been loaded with overrideNamespace
-        // and then check if given key exists
-        let key = "";
-        if (this._i18n.exists(this.key) && this._i18n.hasResourceBundle(this.lang, overrideNamespace)) {
-          key = unsafeHTML("<!-- key: " + this.key + "-->");
+        // and then check if given key exists in overrideNS
+        let keyComment = "";
+        if (this._i18n.exists(overrideNamespace + ":" + this.key) && this._i18n.hasResourceBundle(this.lang, overrideNamespace)) {
+          keyComment = unsafeHTML("<!-- key: " + this.key + "-->");
         } else if (this._i18n.hasResourceBundle(this.lang, overrideNamespace)){
-          key = unsafeHTML("<!-- key '" + this.key + "' not found! -->");
+          keyComment = unsafeHTML("<!-- key '" + this.key + "' not found! -->");
           translation = "";
-          console.error("Key '" + this.key + "' not found!");
+          console.error("Key '" + this.key + "' not found! " + this._i18n.t(this.key));
         } else {
-          key = unsafeHTML("<!-- key '" + this.key + "' and namespace '" + overrideNamespace + "' not found! -->");
+          keyComment = unsafeHTML("<!-- key '" + this.key + "' and namespace '" + overrideNamespace + "' not found! -->");
           translation = "";
         }
 
         // load translation text
         return html`
-            ${key}
+            ${keyComment}
             ${translation}
         `;
     }

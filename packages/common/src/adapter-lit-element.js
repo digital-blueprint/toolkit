@@ -85,7 +85,7 @@ export class AdapterLitElement extends LitElement {
         this.connected = true;
 
         // use translation overrides if path is given
-        if(this.langDir) {
+        if(this.langDir != '') {
           setOverridesByGlobalCache(this._i18n, this);
         }
 
@@ -275,6 +275,10 @@ export class AdapterLitElement extends LitElement {
                             ' = ' +
                             value
                     );
+
+                    if(this.langDir) {
+                      setOverridesByGlobalCache(this._i18n, this);
+                    }
 
                     // If value is an object set it directly as property
                     if (typeof value === 'object' && value !== null) {

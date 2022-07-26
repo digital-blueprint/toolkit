@@ -189,6 +189,7 @@ export async function setOverridesByGlobalCache(i18n, element) {
         } catch(e) {
           // leave loop and use default translations if error is thrown
           hasOverrides = false;
+          console.warn(lng + ' overrides for tag ' + tagName + " could not be loaded!");
           break;
         }
     }
