@@ -30,9 +30,11 @@ linting:
 
 publish:
   stage: deploy
+  environment:
+    name: deploy
+    url: https://www.npmjs.com/search?q=%40dbp-toolkit
   only:
     refs:
-      - deploy
       - master
   script:
     # https://www.npmjs.com/settings/dbp-deploy/tokens
