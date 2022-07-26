@@ -20,9 +20,6 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.lis
 RUN apt-get update && apt-get install -y \
     nodejs \
     yarn \
-    composer \
-    php-zip \
-    php-curl \
     rsync \
     sudo \
     && rm -rf /var/lib/apt/lists/*

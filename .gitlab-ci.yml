@@ -4,6 +4,10 @@ cache:
   key: ${CI_PROJECT_PATH}
   paths:
     - _yarn_cache
+    - _playwright_cache
+
+variables:
+  PLAYWRIGHT_BROWSERS_PATH: "$CI_PROJECT_DIR/_playwright_cache"
 
 before_script:
   - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
@@ -11,7 +15,6 @@ before_script:
 stages:
   - test
   - deploy
-  - e2e
 
 test:
   stage: test
@@ -27,9 +30,11 @@ linting:
 
 publish:
   stage: deploy
+  environment:
+    name: deploy
+    url: https://www.npmjs.com/search?q=%40dbp-toolkit
   only:
     refs:
-      - deploy
       - master
   script:
     # https://www.npmjs.com/settings/dbp-deploy/tokens
@@ -40,56 +45,20 @@ publish:
     - yarn run build
     - yarn run publish
 
-.deploy_defaults: &deploy_defaults
+deploy:
+  stage: deploy
   except:
     - schedules
-  stage: deploy
-  script:
-    # Add ssh key
-    - mkdir -p ~/.ssh
-    - echo "${DEPLOY_KEY}" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -t rsa "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
-    # Deploy
-    - cd .gitlab-ci
-    - export DO_NOT_TRACK=1
-    - composer install
-    - composer exec -- deployer.phar deploy "stage=${CI_ENVIRONMENT_NAME}"
-    - echo "Deployed to ${CI_ENVIRONMENT_URL}"
-    # Simple health check
-    - curl --max-time 10 --retry 3 --output /dev/null --silent --show-error --fail --location "${CI_ENVIRONMENT_URL}"
-
-deploy_demo:
   only:
     refs:
+      - master
       - demo
-  environment:
-    name: demo
-    url: https://dbp-demo.tugraz.at/apps/demo
+  inherit:
+    variables: false
   variables:
-    DEPLOY_HOST: vpu01-demo.tugraz.at
-    DEPLOY_KEY: "$DEPLOY_SSH_KEY"
-  <<: *deploy_defaults
-
-deploy_development:
-  only:
-    refs:
-      - master
-  environment:
-    name: development
-    url: https://dbp-dev.tugraz.at/apps/demo
-  variables:
-    DEPLOY_HOST: mw01-dev.tugraz.at
-    DEPLOY_KEY: "$DEPLOY_SSH_KEY"
-  <<: *deploy_defaults
-
-e2e_tests:
-  only:
-    refs:
-      - master
-  variables:
-    E2E_PROJECT: toolkit-showcase
-  stage: e2e
+    UPSTREAM_PROJECT_PATH: ${CI_PROJECT_PATH}
+    UPSTREAM_COMMIT_BRANCH: ${CI_COMMIT_BRANCH}
+    UPSTREAM_COMMIT_SHA: ${CI_COMMIT_SHA}
   trigger:
-    project: dbp/e2e-tests
+    project: dbp/deployer
     strategy: depend

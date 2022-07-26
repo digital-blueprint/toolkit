@@ -14,7 +14,7 @@ export function getBuildInfo(build) {
     }
 
     let parsed = url.parse(remote);
-    let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.'));
+    let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.') > -1 ? parsed.path.lastIndexOf('.') : undefined);
     let newUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commit;
 
     return {

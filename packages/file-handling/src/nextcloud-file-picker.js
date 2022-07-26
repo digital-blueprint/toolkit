@@ -1637,44 +1637,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     }
                 })
                 .catch((error) => {
-                    this.loading = false;
-                    if(error.response && error.response.status) {
-                        switch (error.response.status) {
-                            case 403:
-                                this.statusText =  html`
-                                    <span class="error">
-                                        <dbp-icon name="warning-high"></dbp-icon>
-                                        ${i18n.t('nextcloud-file-picker.forbidden')}
-                                    </span>`;
-                                return;
-                            case 415:
-                                this.statusText =  html`
-                                    <span class="error">
-                                        <dbp-icon name="warning-high"></dbp-icon>
-                                        ${i18n.t('nextcloud-file-picker.file-error')}
-                                    </span>`;
-                                this.sendSetPropertyEvent('analytics-event', {
-                                    category: 'FileHandlingNextcloud',
-                                    action: 'UploadFilesPutfilesError',
-                                    name: "415",
-                                });
-                                return;
-                            default:
-                                break;
-                        }
-                    }
-
-                    this.statusText =  html`
-                                    <span class="error">
-                                        <dbp-icon name="warning-high"></dbp-icon>
-                                        ${i18n.t('nextcloud-file-picker.file-upload-error')}
-                                        </span>`;
-                    this.sendSetPropertyEvent('analytics-event', {
-                        category: 'FileHandlingNextcloud',
-                        action: 'UploadFilesPutfilesError',
-                        name: error,
-                    });
-                    console.error(error);
+                    this.uploadError(error);
                 });
         } else {
             this.loadDirectory(this.directoryPath);
@@ -1693,6 +1656,48 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             this.abortUploadButton = false;
             this.dispatchEvent(event);
         }
+    }
+
+    uploadError(error) {
+        const i18n = this._i18n;
+        this.loading = false;
+        if(error.response && error.response.status) {
+            switch (error.response.status) {
+                case 403:
+                    this.statusText =  html`
+                                    <span class="error">
+                                        <dbp-icon name="warning-high"></dbp-icon>
+                                        ${i18n.t('nextcloud-file-picker.forbidden')}
+                                    </span>`;
+                    return;
+                case 415:
+                    this.statusText =  html`
+                                    <span class="error">
+                                        <dbp-icon name="warning-high"></dbp-icon>
+                                        ${i18n.t('nextcloud-file-picker.file-error')}
+                                    </span>`;
+                    this.sendSetPropertyEvent('analytics-event', {
+                        category: 'FileHandlingNextcloud',
+                        action: 'UploadFilesPutfilesError',
+                        name: "415",
+                    });
+                    return;
+                default:
+                    break;
+            }
+        }
+
+        this.statusText =  html`
+                                    <span class="error">
+                                        <dbp-icon name="warning-high"></dbp-icon>
+                                        ${i18n.t('nextcloud-file-picker.file-upload-error')}
+                                        </span>`;
+        this.sendSetPropertyEvent('analytics-event', {
+            category: 'FileHandlingNextcloud',
+            action: 'UploadFilesPutfilesError',
+            name: error,
+        });
+        console.error(error);
     }
 
     /**
@@ -1766,7 +1771,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         this.replaceModalDialog(file, directory);
                     }
                 } else {
-                    throw error;
+                    this.uploadError(error);
                 }
             });
 
