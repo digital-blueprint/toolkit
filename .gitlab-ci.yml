@@ -4,6 +4,10 @@ cache:
   key: ${CI_PROJECT_PATH}
   paths:
     - _yarn_cache
+    - _playwright_cache
+
+variables:
+  PLAYWRIGHT_BROWSERS_PATH: "$CI_PROJECT_DIR/_playwright_cache"
 
 before_script:
   - yarn config set cache-folder "$CI_PROJECT_DIR/_yarn_cache"
