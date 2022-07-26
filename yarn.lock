@@ -928,18 +928,6 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dbp-toolkit/theme-switcher@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@dbp-toolkit/theme-switcher/-/theme-switcher-0.0.4.tgz#4cfdb47640ba616d70b6cfca5d18aefb6510dc4d"
-  integrity sha512-9E4aCAQBrpSlr8iipH2FXWD0YFE1gdcZIyLM72mkffY3x/nxhDy+QSRyVuN9xxSf+JaZrek9ANVGe7DfyUURuQ==
-  dependencies:
-    "@dbp-toolkit/common" "^0.3.3"
-    "@open-wc/scoped-elements" "^2.1.0"
-    i18next "^21.4.2"
-    jszip "^3.5.0"
-    lit "^2.0.0"
-    material-design-icons-svg "^3.0.0"
-
 "@es-joy/jsdoccomment@~0.31.0":
   version "0.31.0"
   resolved "https://registry.yarnpkg.com/@es-joy/jsdoccomment/-/jsdoccomment-0.31.0.tgz#dbc342cc38eb6878c12727985e693eaef34302bc"
