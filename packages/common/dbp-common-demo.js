@@ -303,10 +303,17 @@ html {
                             </div>
                         </dbp-translated>
                     </div>
-                    <div class="control" id="dbp-translation-demo">
+                    <div class="control" id="dbp-translation-text">
                         <dbp-translation key="toolkit-showcase" subscribe="lang, lang-dir"></dbp-translation>
                         <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-dir" unsafe></dbp-translation>
                         <dbp-translation key="abc" subscribe="lang, lang-dir"></dbp-translation>
+                    </div>
+                </div>
+                <div class="content">
+                    <h2>Translation Demo</h2>
+                    <div class="control" id="dbp-translation-demo">
+                        <dbp-translation subscribe="lang, lang-dir" key="test"></dbp-translation><br/>
+                        <dbp-translation subscribe="lang, lang-dir" key="link" var='{"linkDE": "https://www.tugraz.at/home/", "linkEN": "https://www.tugraz.at/en/home/"}' unsafe></dbp-translation>
                     </div>
                 </div>
             </section>

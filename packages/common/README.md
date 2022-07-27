@@ -37,7 +37,58 @@ You can use this web component to show translated html.
 </dbp-translated>
 ```
 
-The English or German text will be shown according to the `lang` attribute. 
+The English or German text will be shown according to the `lang` attribute.
+
+## Translation Web Component
+
+You can use this web component to translate text with i18next.
+The English or German text will be shown according to the subscribed `lang` attribute.
+Additionally, this component subscribes the `lang-dir` attribute to retrieve the directory where the i18n translation files are located.
+To get the translation of the key `test`, the component can be used like this:
+```html
+<dbp-translation subscribe="lang, lang-dir" key="test"></dbp-translation>
+```
+The i18next translation files are namespaced with the tag name of the component which requests translations. In this case the tag name is `dbp-translation`.
+Thus, the translation files for english and german will look like this:
+```json
+{
+  "dbp-translation": {
+    "test": "Hallo"
+  }
+}
+```
+```json
+{
+  "dbp-translation": {
+    "test": "Hello"
+  }
+}
+```
+Furthermore, the component allows interpolation and unsafe translations. Thus, HTML can be injected, if the unsafe attribute is set. **Therefore, this feature has to be used with caution!**
+
+To use the component to display a link, interpolation and unsafe can be used like this:
+```html
+<dbp-translation subscribe="lang, lang-dir" key="link" var='{"linkDE": "https://www.tugraz.at/home/", "linkEN": "https://www.tugraz.at/en/home/"}' unsafe></dbp-translation>
+```
+Where the translation files for english and german will look like this:
+```json
+{
+  "dbp-translation": {
+    "test": "Hallo",
+    "link": "Hier ist ein klickbarer <a class=\"link\" href=\"{{- linkDE}}\">Link</a>"
+  }
+}
+```
+```json
+{
+  "dbp-translation": {
+    "test": "Hello",
+    "link": "Here is a clickable <a class=\"link\" href=\"{{- linkEN}}\">link</a>"
+  }
+}
+```
+
+The resulting translations can be seen in the section Translation Demo further down the page.
 
 ## Overriding slots in nested web components
 
