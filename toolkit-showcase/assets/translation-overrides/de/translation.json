@@ -13,5 +13,11 @@
     },
     "dbp-theme-switcher-demo": {
       "intro": "Mit dem Theme-Switcher können Sie zwischen unterschiedlichen Farb-Themes umschalten, wie z.B. zwischen Light- und Dark Mode."
+    },
+    "dbp-common-demo": {
+      "themes": {
+        "dark-mode": "Neuer dunkler Modus",
+        "light-mode": "Neuer heller Modus"
+      }
     }
 }

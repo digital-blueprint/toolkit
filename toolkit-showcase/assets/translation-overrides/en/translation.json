@@ -13,5 +13,11 @@
     },
     "dbp-theme-switcher-demo": {
       "intro": "With the theme-switcher you can switch between multiple themes. For example, between Light Mode and Dark Mode."
+    },
+    "dbp-common-demo": {
+      "themes": {
+        "dark-mode": "New dark mode",
+        "light-mode": "New light mode"
+      }
     }
 }

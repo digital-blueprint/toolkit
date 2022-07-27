@@ -39,11 +39,12 @@ You can use this web component to show translated html.
 
 The English or German text will be shown according to the `lang` attribute.
 
-## Translation Web Component
+## Translation Web Component and translation overrides
 
-You can use this web component to translate text with i18next.
+You can use the `dbp-translation` web component to translate text using i18next.
 The English or German text will be shown according to the subscribed `lang` attribute.
 Additionally, this component subscribes the `lang-dir` attribute to retrieve the directory where the i18n translation files are located.
+If the component does not subscribe to `lang-dir`, the default translations are used!
 To get the translation of the key `test`, the component can be used like this:
 ```html
 <dbp-translation subscribe="lang, lang-dir" key="test"></dbp-translation>
@@ -87,8 +88,57 @@ Where the translation files for english and german will look like this:
   }
 }
 ```
+Moreover, already exisiting translations using i18next can be overriden by the same engine.
+To do this, the tag name of the component where the translations should be overridden is used in the translation.json file.
+To override the `dbp-theme-switcher` component, add the tag name and the keys that should be overriden to the translation files.
+Namespaces can also be overriden. They have to be added to the tag of the component using them.
+Furthermore, the default translations can still be used, however they are in a different i18n namespace.
+The default namespace is called `translation` and the override namespace is called `--translation-override`. The override namespace is set as default, when overrides are set.
+To use translations from another namespace, the namespace has to be defined by using the name of the namespace as a prefix to the key, joined with a colon in between (`ns:key`).
+Therefore, two `dbp-theme-switcher` components, one with overrides and one without, can be displayed using the following code:
+```html
+<dbp-theme-switcher subscribe="lang, lang-dir"
+    themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('themes.dark-mode')}"}]'></dbp-theme-switcher>
+<dbp-theme-switcher subscribe="lang"
+    themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('translation:themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('translation:themes.dark-mode')}"}]'></dbp-theme-switcher>
+```
+with the following translation files:
+```json
+{
+  "dbp-translation": {
+    "test": "Hallo",
+    "link": "Hier ist ein klickbarer <a class=\"link\" href=\"{{- linkDE}}\">Link</a>"
+  },
+  "dbp-theme-switcher": {
+    "color-mode": "Theme ändern"
+  },
+  "dbp-common-demo": {
+    "themes": {
+      "dark-mode": "Neuer dunkler Modus",
+      "light-mode": "Neuer heller Modus"
+    }
+  }
+}
+```
+```json
+{
+  "dbp-translation": {
+    "test": "Hello",
+    "link": "Here is a clickable <a class=\"link\" href=\"{{- linkEN}}\">link</a>"
+  },
+  "dbp-theme-switcher": {
+    "color-mode": "Change theme"
+  },
+  "dbp-common-demo": {
+    "themes": {
+      "dark-mode": "New dark mode",
+      "light-mode": "New light mode"
+    }
+  }
+}
+```
 
-The resulting translations can be seen in the section Translation Demo further down the page.
+The resulting translations example can be seen in the section Translation Demo further down the page.
 
 ## Overriding slots in nested web components
 

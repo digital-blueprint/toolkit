@@ -1,4 +1,4 @@
-import {createInstance} from './src/i18n.js';
+import {createInstance, setOverridesByGlobalCache, getOverrideNamespace} from './src/i18n.js';
 import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from './utils.js';
@@ -20,6 +20,8 @@ import {
 export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
+
+        // necessary because activity does not extend adapter
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.noAuth = false;
@@ -56,6 +58,11 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     connectedCallback() {
         super.connectedCallback();
         this._i18n.changeLanguage(this.lang);
+
+        // necessary because activity does not extend adapter
+        if (this.langDir) {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
 
         this.updateComplete.then(() => {});
     }
@@ -314,6 +321,10 @@ html {
                     <div class="control" id="dbp-translation-demo">
                         <dbp-translation subscribe="lang, lang-dir" key="test"></dbp-translation><br/>
                         <dbp-translation subscribe="lang, lang-dir" key="link" var='{"linkDE": "https://www.tugraz.at/home/", "linkEN": "https://www.tugraz.at/en/home/"}' unsafe></dbp-translation>
+                        <dbp-theme-switcher subscribe="lang, lang-dir"
+                            themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('themes.dark-mode')}"}]'></dbp-theme-switcher>
+                        <dbp-theme-switcher subscribe="lang"
+                            themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('translation:themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('translation:themes.dark-mode')}"}]'></dbp-theme-switcher>
                     </div>
                 </div>
             </section>
