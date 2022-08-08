@@ -777,8 +777,8 @@ export function getRadioAndCheckboxCss() {
             position: absolute;
             top: 0;
             left: 0;
-            height: 20px;
-            width: 20px;
+            height: 21px;
+            width: 21px;
             background-color: var(--dbp-background);
             border: solid;
             border-radius: 100%;
