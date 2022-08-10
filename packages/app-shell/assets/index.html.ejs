@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        :root {
+            font-family: sans-serif;
+            font-weight: 300;
+            font-size: 11pt;
+        }
+
+        body {
+            margin: 0;
+        }
+    </style>
+
+    <script type="module" src="<%= getUrl(name + '.js') %>"></script>
+</head>
+
+<body>
+
+<dbp-app-shell
+    auth
+    requested-login-status
+    entry-point-url="<%= entryPointURL %>"
+    keycloak-config='{"url": "<%= keyCloakBaseURL %>", "realm": "<%= keyCloakRealm %>", "clientId": "<%= keyCloakClientId %>", "silentCheckSsoRedirectUri": "<%= getUrl('silent-check-sso.html') %>"}'
+    src="<%= getUrl('example.topic.metadata.json') %>">
+</dbp-app-shell>
+
+</body>
+</html>
