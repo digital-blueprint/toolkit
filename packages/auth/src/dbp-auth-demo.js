@@ -86,7 +86,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
             : html`
                   <div class="container">
                       <dbp-auth-keycloak
-                          subscribe="requested-login-status,silent-check-sso-redirect-uri,url,realm,client-id,entry-point-url"
+                          subscribe="requested-login-status,silent-check-sso-redirect-uri,url,realm,client-id"
                           lang="${this.lang}"
                           entry-point-url="${this.entryPointUrl}"
                           try-login></dbp-auth-keycloak>

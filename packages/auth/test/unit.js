@@ -47,6 +47,9 @@ suite('dbp-auth-demo basics', () => {
 
     setup(async () => {
         node = document.createElement('dbp-auth-demo');
+        node.setAttribute('url', 'someurl');
+        node.setAttribute('realm', 'somerealm');
+        node.setAttribute('client-id', 'someId');
         document.body.appendChild(node);
         await node.updateComplete;
     });
