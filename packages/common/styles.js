@@ -344,6 +344,21 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             color: var(--dbp-on-primary-surface);
             background: var(--dbp-primary-surface);
         }
+
+        .validity-icon {
+            margin-right: 4px;
+            font-size: 18px;
+            color: var(--dbp-success);
+        }
+
+        .validity-items {
+            display: grid;
+            grid-template-columns: 22px auto;
+        }
+
+        .gray {
+            color: #595959;
+        }
     `;
 }
 
