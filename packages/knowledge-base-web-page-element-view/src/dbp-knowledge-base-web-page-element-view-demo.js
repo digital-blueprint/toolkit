@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
@@ -12,6 +12,7 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBP
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.entryPointUrl = '';
         this.noAuth = false;
     }
@@ -31,6 +32,15 @@ export class KnowledgeBaseWebPageElementViewDemo extends ScopedElementsMixin(DBP
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             noAuth: {type: Boolean, attribute: 'no-auth'},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      // set translation overrides if requested
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {

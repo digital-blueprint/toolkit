@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html, unsafeCSS} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -122,6 +122,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
 
         this._askPermission = false;
         this._loading = false;
@@ -174,6 +175,10 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         if (!this.stopScan) {
             await this.startScanning();
+        }
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
         }
     }
 
@@ -446,7 +451,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getSelect2CSS()}
             ${commonStyles.getButtonCSS()}
-            
+
             #loadingMessage {
                 text-align: center;
                 padding: 40px;

@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -22,6 +22,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.context = '';
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
         this.nextcloudName = 'Nextcloud';
@@ -101,6 +102,10 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             }
 
         });
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     async downloadCompressedFiles() {

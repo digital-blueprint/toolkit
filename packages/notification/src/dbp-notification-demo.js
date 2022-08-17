@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -11,6 +11,7 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
     }
 
     static get scopedElements() {
@@ -23,6 +24,15 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
         return {
             lang: {type: String},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      // use translation overrides if path is given
+      if(this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {

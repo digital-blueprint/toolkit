@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {MiniSpinner} from '@dbp-toolkit/common';
@@ -14,6 +14,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.value = '';
         this.html = '';
         this.entryPointUrl = '';
@@ -129,6 +130,13 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
             .catch();
     }
 
+    connectedCallback() {
+      super.connectedCallback();
+
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
+    }
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === 'lang') {

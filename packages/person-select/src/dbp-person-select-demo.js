@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {PersonSelect} from './person-select.js';
@@ -11,6 +11,7 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
+        this.langDir = '';
         this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.noAuth = false;
@@ -47,6 +48,15 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                 }
             `,
         ];
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      // set translation overrides if requested
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {

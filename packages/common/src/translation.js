@@ -2,7 +2,7 @@ import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import DBPLitElement from '../dbp-lit-element';
 import * as commonStyles from '../styles.js';
-import {getOverrideNamespace, setOverridesByGlobalCache} from './i18n.js';
+import {getOverrideNamespace, setOverridesByGlobalCache, createInstance} from './i18n.js';
 
 export class Translation extends DBPLitElement {
     constructor() {
@@ -11,6 +11,11 @@ export class Translation extends DBPLitElement {
         this.lang = '';
         this.interpolation = '';
         this.unsafe = false;
+
+        // dir and i18next instance of translation overrides
+        this._i18n = createInstance();
+        this.langDir = '';
+
     }
 
     static get properties() {
@@ -36,6 +41,11 @@ export class Translation extends DBPLitElement {
 
       // get overrides everytime
       setOverridesByGlobalCache(this._i18n, this);
+
+      // use translation overrides if path is given
+      //if(this.langDir != '') {
+      //  setOverridesByGlobalCache(this._i18n, this);
+      //}
 
       // supercall after default i18n init to override translations only
       // if a override with this tagname is given
@@ -84,7 +94,7 @@ export class Translation extends DBPLitElement {
         } else if (this._i18n.hasResourceBundle(this.lang, overrideNamespace)){
           keyComment = unsafeHTML("<!-- key '" + this.key + "' not found! -->");
           translation = "";
-          console.error("Key '" + this.key + "' not found! " + this._i18n.t(this.key));
+          console.error("Key '" + this.key + "' not found!");
         } else {
           keyComment = unsafeHTML("<!-- key '" + this.key + "' and namespace '" + overrideNamespace + "' not found! -->");
           translation = "";

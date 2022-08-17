@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {createUUID} from './utils';
 import {css, html} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -11,6 +11,7 @@ export class Notification extends DBPLitElement {
     constructor() {
         super();
         this._i18n = createInstance();
+        this.langDir = '';
         this.lang = this._i18n.language;
     }
 
@@ -64,6 +65,10 @@ export class Notification extends DBPLitElement {
             // mark the event as handled
             e.preventDefault();
         });
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     removeMessageId(messageElementId) {

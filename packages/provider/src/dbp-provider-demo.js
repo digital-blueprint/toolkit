@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
@@ -14,6 +14,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
     }
 
     static get scopedElements() {
@@ -32,6 +33,14 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -146,7 +155,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                         </div>
                     </dbp-provider>
                 </dbp-provider>
-                
+
                 <h2> DBP Provider Adapter</h2>
                 <p> The dbp-provider is for third party webcomponents, which we want to configure with a provider.</p>
                 <pre>&lt;dbp-provider  id="demoadapter"  dbp-style-red="color:red;" dbp-style-green="color:green;" >&lt;/dbp-provider&gt;</pre>

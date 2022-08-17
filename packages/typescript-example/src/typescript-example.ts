@@ -1,20 +1,32 @@
 import {html, LitElement} from 'lit';
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 
 export class TypeScriptExample extends LitElement {
     private _i18n;
+    private langDir;
 
     constructor() {
         super();
 
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
     }
 
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      // set translation overrides if requested
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {

@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -22,6 +22,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
 
         this.auth = {};
         this.authUrl = '';
@@ -323,6 +324,11 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
             window.addEventListener('resize', this.boundRefreshOnWindowSizeChange);
         });
+
+        // set translation overrides if requested
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     tableBuiltFunction() {
@@ -494,7 +500,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             for (let key of Object.keys(localStorage)) {
                 if (
                     key.includes('nextcloud-webdav-username-') ||
-                    key.includes('nextcloud-webdav-password-') || 
+                    key.includes('nextcloud-webdav-password-') ||
                     key.includes('nextcloud-webdav-url-')
                 ) {
                     localStorage.removeItem(key);
@@ -839,7 +845,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     ]);
 
                     if (this._('.tabulator-placeholder-contents')) {
-                        this._('.tabulator-placeholder-contents').innerText = 
+                        this._('.tabulator-placeholder-contents').innerText =
                             i18n.t('nextcloud-file-picker.no-favorites', {
                                 name: this.nextcloudName,
                             });
@@ -977,7 +983,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 '</d:literal>' +
                 '               </d:gte>' +
 
-                
+
                 '               <d:or>' +
                 this.getMimeTypes() +
                 '               </d:or>' +
@@ -996,7 +1002,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 '           </d:limit>' +
                 '       </d:basicsearch>' +
                 '   </d:searchrequest>',
-                
+
             })
             .then((contents) => {
                 parseXML(contents.data).then((davResp) => {
@@ -1010,7 +1016,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.setSort([{column: 'lastmod', dir: 'desc'}]);
 
                     if (this._('.tabulator-placeholder-contents')) {
-                        this._('.tabulator-placeholder-contents').innerText = 
+                        this._('.tabulator-placeholder-contents').innerText =
                             i18n.t('nextcloud-file-picker.no-recent-files', {
                                 name: this.nextcloudName,
                             });
@@ -1061,21 +1067,21 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     getMimeTypes() {
         let mimePart = '';
-        
+
         if (this.allowedMimeTypes && this.allowedMimeTypes !== 0 && this.allowedMimeTypes !== '*/*') {
             const mimeTypes = this.allowedMimeTypes.split(',');
-                
+
             mimeTypes.forEach((str) => {
-                mimePart += 
+                mimePart +=
                     '               <d:like>' +
                     '                  <d:prop>' +
                     '                      <d:getcontenttype/>' +
-                    '                  </d:prop>' + 
-                    '                  <d:literal>' + str + '</d:literal>' + 
+                    '                  </d:prop>' +
+                    '                  <d:literal>' + str + '</d:literal>' +
                     '               </d:like>';
             });
         } else {
-                mimePart = 
+                mimePart =
                     '               <d:like>' +
                     '                   <d:prop>' +
                     '                       <d:getcontenttype/>' +
@@ -1239,7 +1245,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.setSort([{column: 'lastmod', dir: 'desc'}]);
 
                     if (this._('.tabulator-placeholder-contents')) {
-                        this._('.tabulator-placeholder-contents').innerText = 
+                        this._('.tabulator-placeholder-contents').innerText =
                             i18n.t('nextcloud-file-picker.no-recent-files', {
                                 name: this.nextcloudName,
                             });
@@ -3004,7 +3010,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 left: 0px;
                 top: 1px;
             }
-            
+
             .table-wrapper {
                 max-width: 100%;
                 width: 100%;
@@ -3349,7 +3355,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                                 <li
                                         class="${classMap({hidden: !this.storeSession})}"
                                         title="${i18n.t('nextcloud-file-picker.log-out')}">
-                                    <a 
+                                    <a
                                         class=""
                                         @click="${() => {
                                             this.logOut();

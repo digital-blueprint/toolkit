@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -21,6 +21,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
+
         this.allowedMimeTypes = '';
         this.clipboardFiles = {files: ''};
         this.clipboardSelectBtnDisabled = true;
@@ -109,6 +111,11 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                     break;
             }
         });
+
+        if(this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
+
         super.update(changedProperties);
     }
 
@@ -865,7 +872,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             ${commonStyles.getTabulatorStyles()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
-            
+
             a {
                 border-bottom: var(--dbp-border);
                 padding: 0;

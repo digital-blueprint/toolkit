@@ -1,6 +1,6 @@
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html} from 'lit';
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
@@ -9,6 +9,7 @@ export class PersonProfile extends DBPLitElement {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.entryPointUrl = '';
         this.jsonld = null;
         this.value = '';
@@ -25,6 +26,14 @@ export class PersonProfile extends DBPLitElement {
             person: {type: Object, attribute: false},
             auth: {type: Object},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {

@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -38,6 +38,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         super();
         this.context = '';
         this._i18n = createInstance();
+        this.langDir = '';
         this.lang = this._i18n.language;
         this.nextcloudAuthUrl = '';
         this.nextcloudName = 'Nextcloud';
@@ -174,6 +175,10 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             }
 
         });
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     disconnectedCallback() {
@@ -595,8 +600,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
-           
-            
+
+
             p {
                 margin-top: 0;
             }
@@ -686,7 +691,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 .paddles {
                     display: inherit;
                 }
-                
+
                 .paddles.hidden {
                     display: none
                 }

@@ -7,7 +7,7 @@ import bttn from 'datatables.net-buttons-dt';
 import bttn2 from 'datatables.net-buttons';
 import bttnHtml5 from 'datatables.net-buttons/js/buttons.html5.js';
 import bttnPrint from 'datatables.net-buttons/js/buttons.print.js';
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html, unsafeCSS} from 'lit';
 import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
@@ -30,6 +30,7 @@ export class DataTableView extends AdapterLitElement {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         // datatable properties
         this.table = null;
         this.responsive = null;
@@ -246,6 +247,11 @@ export class DataTableView extends AdapterLitElement {
         this.updateComplete.then(this.set_datatable(this.data, languageChange)).catch((e) => {
             console.log(e);
         });
+
+        if(this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
+
         super.update(changedProperties);
     }
 

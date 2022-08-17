@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import select2 from 'select2';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {css, html} from 'lit';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -21,6 +21,7 @@ export class ResourceSelect extends AdapterLitElement {
 
         this.auth = {};
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.entryPointUrl = null;
         this.resourcePath = null;
         this.value = null;
@@ -57,6 +58,11 @@ export class ResourceSelect extends AdapterLitElement {
         super.connectedCallback();
         document.addEventListener('click', this._onDocumentClicked);
         this._updateAll();
+
+        // set translation overrides if requested
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     disconnectedCallback() {

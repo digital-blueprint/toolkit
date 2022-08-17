@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
@@ -12,6 +12,8 @@ export class MatomoDemo extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
+
         this.entryPointUrl = '';
         this.matomoUrl = '';
         this.matomoSiteId = -1;
@@ -35,6 +37,15 @@ export class MatomoDemo extends ScopedElementsMixin(DBPLitElement) {
             matomoSiteId: {type: Number, attribute: 'matomo-site-id'},
             noAuth: {type: Boolean, attribute: 'no-auth'},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      // use translation overrides if path is given
+      if(this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {

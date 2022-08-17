@@ -1,5 +1,5 @@
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -14,6 +14,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.entryPointUrl = '';
         this.person = '';
         this.selectedPerson = '';
@@ -74,6 +75,10 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
                 that.selectedPerson = $(this).data('object').identifier;
             };
         });
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     static get styles() {

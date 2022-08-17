@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -13,6 +13,7 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
     }
 
     static get scopedElements() {
@@ -28,6 +29,15 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      // set translation overrides if requested
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {
