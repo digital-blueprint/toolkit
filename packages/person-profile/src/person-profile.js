@@ -20,6 +20,7 @@ export class PersonProfile extends DBPLitElement {
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String},
             active: {type: Boolean, attribute: false},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             value: {type: String},

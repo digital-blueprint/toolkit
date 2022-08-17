@@ -1,4 +1,4 @@
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {FileSource} from './file-source';
@@ -10,6 +10,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.url = '';
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
@@ -25,6 +26,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String},
             url: {type: String},
             selectedFiles: {type: Array, attribute: false},
             selectedFilesCount: {type: Number, attribute: false},
@@ -43,6 +45,10 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
                 );
             });
         });
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     update(changedProperties) {

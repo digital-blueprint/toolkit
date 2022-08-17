@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AuthKeycloak} from './auth-keycloak.js';
@@ -15,6 +15,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
         this.noAuth = false;
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
     }
 
     static get scopedElements() {
@@ -28,10 +29,19 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             auth: {type: Object},
             noAuth: {type: Boolean, attribute: 'no-auth'},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {

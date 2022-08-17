@@ -80,6 +80,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             ...super.properties,
             context: {type: String, attribute: 'context'},
             lang: {type: String},
+            langDir: {type: String},
             allowedMimeTypes: {type: String, attribute: 'allowed-mime-types'},
             enabledTargets: {type: String, attribute: 'enabled-targets'},
             nextcloudAuthUrl: {type: String, attribute: 'nextcloud-auth-url'},

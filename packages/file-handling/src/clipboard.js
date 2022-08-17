@@ -66,6 +66,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String},
             allowedMimeTypes: {type: String, attribute: 'allowed-mime-types'},
             clipboardSelectBtnDisabled: {type: Boolean},
             clipboardFiles: {type: Object, attribute: 'clipboard-files'},

@@ -1,6 +1,6 @@
 import {html, css} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
 export class TUGrazLogo extends AdapterLitElement {
@@ -9,13 +9,23 @@ export class TUGrazLogo extends AdapterLitElement {
 
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
     }
 
     static get properties() {
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     update(changedProperties) {

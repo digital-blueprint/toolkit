@@ -23,6 +23,7 @@ export class Translation extends DBPLitElement {
             ...super.properties,
             key: {type: String},
             lang: {type: String},
+            langDir: {type: String},
             interpolation: {type: Object, attribute: 'var'},
             unsafe: {type: Boolean, attribute: 'unsafe'},
         };

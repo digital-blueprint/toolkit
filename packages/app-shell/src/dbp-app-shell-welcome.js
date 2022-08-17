@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -9,6 +9,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
 
         this._onVisibilityChanged = this._onVisibilityChanged.bind(this);
     }
@@ -16,6 +17,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String},
         };
     }
 
@@ -99,6 +101,10 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
 
         const app = AppShellWelcome._app;
         app.addEventListener('visibility-changed', this._onVisibilityChanged);
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     disconnectedCallback() {

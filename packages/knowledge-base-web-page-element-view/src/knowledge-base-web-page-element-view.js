@@ -47,6 +47,7 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String},
             value: {type: String},
             html: {type: String, attribute: false},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},

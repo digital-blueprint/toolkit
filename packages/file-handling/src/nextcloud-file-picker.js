@@ -94,6 +94,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String},
             auth: {type: Object},
             authUrl: {type: String, attribute: 'auth-url'},
             webDavUrl: {type: String, attribute: 'web-dav-url'},

@@ -63,6 +63,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String},
             active: {type: Boolean, attribute: false},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             value: {type: String},

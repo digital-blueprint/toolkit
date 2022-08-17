@@ -28,6 +28,7 @@ export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String},
         };
     }
 

@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {html, css} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -56,6 +56,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.auth = {};
     }
 
@@ -68,12 +69,17 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String},
             auth: {type: Object},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     disconnectedCallback() {

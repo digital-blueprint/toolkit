@@ -1,5 +1,5 @@
 import {html, css} from 'lit';
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
@@ -12,6 +12,7 @@ export class LanguageSelect extends AdapterLitElement {
     constructor() {
         super();
         this._lang = 'de';
+        this.langDir = '';
         this.languages = ['de', 'en'];
 
         this._i18n = createInstance();
@@ -41,9 +42,18 @@ export class LanguageSelect extends AdapterLitElement {
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String},
             next: {type: String},
             languages: {type: Array},
         };
+    }
+
+    connectedCallback() {
+      super.connectedCallback();
+
+      if (this.langDir != '') {
+        setOverridesByGlobalCache(this._i18n, this);
+      }
     }
 
     set lang(value) {
@@ -108,7 +118,7 @@ export class LanguageSelect extends AdapterLitElement {
                 -webkit-box-shadow: none;
                 box-shadow: 0px 0px 4px 2px var(--dbp-primary);
             }
-            
+
             `
         ;
     }

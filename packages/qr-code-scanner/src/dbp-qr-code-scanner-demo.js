@@ -22,6 +22,7 @@ export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
     static get properties() {
         return {
             lang: {type: String},
+            langDir: {type: String},
         };
     }
 

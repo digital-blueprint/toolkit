@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {html, css} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -12,6 +12,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
         this.auth = {};
 
         this.closeDropdown = this.closeDropdown.bind(this);
@@ -28,6 +29,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String},
             auth: {type: Object},
         };
     }
@@ -41,6 +43,10 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
         window.addEventListener('resize', this.onWindowResize);
         document.addEventListener('click', this.closeDropdown);
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     disconnectedCallback() {

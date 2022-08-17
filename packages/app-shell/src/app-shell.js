@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {html, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
@@ -282,6 +282,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.initRouter();
         if (this.src) {
             this.fetchMetadata(this.src);
+        }
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
         }
     }
 

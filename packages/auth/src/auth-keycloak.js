@@ -1,4 +1,4 @@
-import {createInstance} from './i18n.js';
+import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import JSONLD from '@dbp-toolkit/common/jsonld';
 import {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
@@ -32,6 +32,7 @@ export class AuthKeycloak extends AdapterLitElement {
         this.requestedLoginStatus = LoginStatus.UNKNOWN;
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.langDir = '';
 
         // Keycloak config
         this.keycloakUrl = null;
@@ -185,6 +186,7 @@ export class AuthKeycloak extends AdapterLitElement {
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String},
             forceLogin: {type: Boolean, attribute: 'force-login'},
             tryLogin: {type: Boolean, attribute: 'try-login'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
@@ -246,6 +248,10 @@ export class AuthKeycloak extends AdapterLitElement {
         };
 
         handleLogin();
+
+        if (this.langDir != '') {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
     }
 
     disconnectedCallback() {

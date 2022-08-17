@@ -59,7 +59,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         super.connectedCallback();
         this._i18n.changeLanguage(this.lang);
 
-        // necessary because activity does not extend adapter
+        // set translation overrides if requested
         if (this.langDir) {
           setOverridesByGlobalCache(this._i18n, this);
         }
