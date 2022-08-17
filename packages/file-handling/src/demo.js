@@ -26,7 +26,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
     static get properties() {
         return {
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             url: {type: String},
             selectedFiles: {type: Array, attribute: false},
             selectedFilesCount: {type: Number, attribute: false},

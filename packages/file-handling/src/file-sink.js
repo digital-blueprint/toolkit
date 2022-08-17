@@ -59,7 +59,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             ...super.properties,
             context: {type: String, attribute: 'context'},
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             filename: {type: String},
             files: {type: Array, attribute: false},
             enabledTargets: {type: String, attribute: 'enabled-targets'},

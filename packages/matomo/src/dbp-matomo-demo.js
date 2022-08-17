@@ -32,7 +32,7 @@ export class MatomoDemo extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             matomoUrl: {type: String, attribute: 'matomo-url'},
             matomoSiteId: {type: Number, attribute: 'matomo-site-id'},

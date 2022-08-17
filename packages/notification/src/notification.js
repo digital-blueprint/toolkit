@@ -22,7 +22,7 @@ export class Notification extends DBPLitElement {
         return {
             ...super.properties,
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 

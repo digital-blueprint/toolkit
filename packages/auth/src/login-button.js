@@ -69,7 +69,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
     static get properties() {
         return {
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             auth: {type: Object},
         };
     }

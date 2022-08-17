@@ -24,7 +24,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             themes: {type: Array, attribute: 'themes'},
             darkModeThemeOverride: {type: String, attribute: 'dark-mode-theme-override'},
             dropdownRight: {type: Boolean, attribute: 'dropdown-right'},
@@ -64,6 +64,8 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         if(this.langDir != '') {
           setOverridesByGlobalCache(this._i18n, this);
         }
+
+        console.log(this.langDir);
     }
 
     detectInitialMode() {

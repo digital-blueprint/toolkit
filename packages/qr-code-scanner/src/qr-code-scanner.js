@@ -153,7 +153,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             showOutput: {type: Boolean, attribute: 'show-output'},
             stopScan: {type: Boolean, attribute: 'stop-scan'},
             matchRegex: {type: String, attribute: 'match-regex'},

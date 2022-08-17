@@ -54,7 +54,7 @@ export class DataTableView extends AdapterLitElement {
         return {
             ...super.properties,
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             table: {type: Object, attribute: false},
             paging: {type: Boolean},
             searching: {type: Boolean},

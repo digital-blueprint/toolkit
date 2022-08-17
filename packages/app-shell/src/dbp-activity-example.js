@@ -13,7 +13,7 @@ class ActivityExample extends LitElement {
     static get properties() {
         return {
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 

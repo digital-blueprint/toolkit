@@ -29,7 +29,7 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             auth: {type: Object},
             noAuth: {type: Boolean, attribute: 'no-auth'},

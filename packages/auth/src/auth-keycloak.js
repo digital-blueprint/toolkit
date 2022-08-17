@@ -186,7 +186,7 @@ export class AuthKeycloak extends AdapterLitElement {
         return {
             ...super.properties,
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             forceLogin: {type: Boolean, attribute: 'force-login'},
             tryLogin: {type: Boolean, attribute: 'try-login'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},

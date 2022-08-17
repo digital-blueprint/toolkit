@@ -42,7 +42,7 @@ export class LanguageSelect extends AdapterLitElement {
     static get properties() {
         return {
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             next: {type: String},
             languages: {type: Array},
         };

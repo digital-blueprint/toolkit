@@ -35,7 +35,7 @@ export class PersonProfileDemo extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            langDir: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             person: {type: String, attribute: false},
             selectedPerson: {type: String, attribute: false},
