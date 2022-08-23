@@ -200,10 +200,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     },
                     {
                         name: 'mainRoute',
-                        path: ['/:component', '/:component/(.*)'],
+                        path: ['/:component/:extra*'],
                         action: (context, params) => {
                             let componentTag = params.component.toLowerCase();
-                            let extra = params[0] ? params[0].split('/') : [];
+                            let extra = params.extra ?? [];
                             return {
                                 lang: params.lang,
                                 component: componentTag,
@@ -958,12 +958,19 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         // build the menu
         let menuTemplates = [];
         for (let routingName of this.visibleRoutes) {
+            let partialState = {
+                component: routingName,
+            };
+            // clear the extra state for everything but the current activity
+            if (this.activeView !== routingName) {
+                partialState['extra'] = [];
+            }
             menuTemplates.push(
                 html`
                     <li>
                         <a
                             @click="${(e) => this.onMenuItemClick(e)}"
-                            href="${this.router.getPathname({component: routingName})}"
+                            href="${this.router.getPathname(partialState)}"
                             data-nav
                             class="${getSelectClasses(routingName)}"
                             title="${this.metaDataText(routingName, 'description')}">
