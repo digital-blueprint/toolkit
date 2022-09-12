@@ -16,7 +16,7 @@
         "@esm-bundle/chai": "^4.2.0",
         "@rollup/plugin-commonjs": "^22.0.0",
         "@rollup/plugin-json": "^4.1.0",
-        "@rollup/plugin-node-resolve": "^13.0.0",
+        "@rollup/plugin-node-resolve": "^14.0.0",
         "@types/mocha": "^9.0.0",
         "@typescript-eslint/eslint-plugin": "^5.0.0-alpha.42",
         "@typescript-eslint/parser": "^5.0.0-alpha.42",
