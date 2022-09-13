@@ -633,6 +633,14 @@ export function getButtonCSS() {
             border-radius: calc(var(--dbp-border-radius) / 2);
             font-size: 0.75rem;
         }
+        
+        button.button.is-icon, .button.is-icon {
+            border: none;
+            font-size: 1.5rem;
+            padding: 0px;
+            width: 40px;
+            height: 40px;
+        }
 
         button.button.is-primary,
         .button.is-primary {
