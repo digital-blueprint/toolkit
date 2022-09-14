@@ -325,6 +325,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         select:not(.select), .dropdown-menu {
             -moz-appearance: none;
             -webkit-appearance: none;
+            background-color: var(--dbp-background);
             background: calc(100% - 0.2rem) center no-repeat url("${unsafeCSS(
                 getIconSVGURL('chevron-down')
             )}");
@@ -636,10 +637,17 @@ export function getButtonCSS() {
         
         button.button.is-icon, .button.is-icon {
             border: none;
+            background: none;
             font-size: 1.5rem;
             padding: 0px;
             width: 40px;
             height: 40px;
+        }
+
+        button.button.is-icon:hover:enabled,
+        .button.is-icon:hover:enabled {
+            background-color: var(--dbp-hover-background-color, unset);
+            color: var(--dbp-hover-color, var(--dbp-content));
         }
 
         button.button.is-primary,
