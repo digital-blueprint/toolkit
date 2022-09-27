@@ -638,7 +638,7 @@ export function getButtonCSS() {
         button.button.is-icon, .button.is-icon {
             border: none;
             background: none;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             padding: 0px;
             width: 40px;
             height: 40px;
