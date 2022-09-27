@@ -642,6 +642,13 @@ export function getButtonCSS() {
             padding: 0px;
             width: 40px;
             height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button.button.is-icon dbp-icon, .button.is-icon dbp-icon{
+            top: 0px;
         }
 
         button.button.is-icon:hover:enabled,
