@@ -43,11 +43,6 @@ export class Translation extends DBPLitElement {
       // get overrides everytime
       setOverridesByGlobalCache(this._i18n, this);
 
-      // use translation overrides if path is given
-      //if(this.langDir != '') {
-      //  setOverridesByGlobalCache(this._i18n, this);
-      //}
-
       // supercall after default i18n init to override translations only
       // if a override with this tagname is given
       super.connectedCallback();
@@ -55,10 +50,14 @@ export class Translation extends DBPLitElement {
 
     update(changedProperties) {
         let lang = this.lang;
+        let tagName = ((this.dataset && this.dataset.tagName) || this.tagName).toLowerCase();
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
                     this._i18n.changeLanguage(lang);
+                    break;
+                case 'key':
+                    this.key = tagName + "." + this.key;
                     break;
             }
         });

@@ -183,7 +183,7 @@ export async function setOverridesByGlobalCache(i18n, element) {
           translationCache[lng] = await translationCache[lng];
           i18n.removeResourceBundle(lng, overrideNamespace);
           if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined) continue;
-          let resources = translationCache[lng][tagName];
+          let resources = translationCache[lng];
           hasOverrides = true;
           i18n.addResourceBundle(lng, overrideNamespace, resources);
         } catch(e) {
