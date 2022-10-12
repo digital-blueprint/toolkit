@@ -182,7 +182,10 @@ export async function setOverridesByGlobalCache(i18n, element) {
           cacheOverrides(element.langDir, lng);
           translationCache[lng] = await translationCache[lng];
           i18n.removeResourceBundle(lng, overrideNamespace);
-          if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined) continue;
+          if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined) {
+            console.warn("Object with tagname " + tagName + " does not exist!");
+            //continue;
+          }
           let resources = translationCache[lng];
           hasOverrides = true;
           i18n.addResourceBundle(lng, overrideNamespace, resources);
