@@ -88,8 +88,10 @@ export class Translation extends DBPLitElement {
 
         // check if overrides have been loaded with overrideNamespace
         // and then check if given key exists in overrideNS
+        // if in debug mode, show keys without errors and warning
         let keyComment = "";
-        if (this._i18n.exists(overrideNamespace + ":" + this.key) && this._i18n.hasResourceBundle(this.lang, overrideNamespace)) {
+        if ((this._i18n.exists(overrideNamespace + ":" + this.key) && this._i18n.hasResourceBundle(this.lang, overrideNamespace))
+              || window.location.hash.includes('debug')) {
           keyComment = unsafeHTML("<!-- key: " + this.key + "-->");
         } else if (this._i18n.hasResourceBundle(this.lang, overrideNamespace)){
           keyComment = unsafeHTML("<!-- key '" + this.key + "' not found! -->");

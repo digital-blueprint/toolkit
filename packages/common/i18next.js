@@ -179,12 +179,18 @@ export async function setOverridesByGlobalCache(i18n, element) {
     for (let lng of i18n.languages) {
         // check if cacheOverrides throws error
         try {
-          cacheOverrides(element.langDir, lng);
-          translationCache[lng] = await translationCache[lng];
+          // in debug mode, remove all translations
+          if (window.location.hash.includes('debug')) {
+            i18n.removeResourceBundle(lng, namespace);
+          }
+          // else only add new override translations and remove old overrides
+          else {
+            cacheOverrides(element.langDir, lng);
+            translationCache[lng] = await translationCache[lng];
+          }
           i18n.removeResourceBundle(lng, overrideNamespace);
-          if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined) {
-            console.warn("Object with tagname " + tagName + " does not exist!");
-            //continue;
+          if (translationCache[lng] === undefined) {
+            console.warn("Translations for language " + lng + " do not exist!");
           }
           let resources = translationCache[lng];
           hasOverrides = true;
