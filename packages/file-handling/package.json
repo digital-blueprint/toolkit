@@ -38,7 +38,7 @@
         "@dbp-toolkit/common": "^0.3.3",
         "@open-wc/scoped-elements": "^2.1.0",
         "file-saver": "^2.0.2",
-        "i18next": "^21.4.2",
+        "i18next": "^22.0.0",
         "jose": "^4.0.0",
         "jszip": "^3.5.0",
         "lit": "^2.0.0",
