@@ -36,7 +36,7 @@
         "rollup-plugin-license": "^3.0.0",
         "rollup-plugin-md": "^1.0.0",
         "rollup-plugin-serve": "^2.0.0",
-        "rollup-plugin-terser": "^7.0.2",
+        "@rollup/plugin-terser": "^0.1.0",
         "selfsigned": "^2.0.0"
     },
     "dependencies": {
