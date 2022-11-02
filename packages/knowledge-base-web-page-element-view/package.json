@@ -49,16 +49,16 @@
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
         "clean": "rm dist/*",
-        "build": "npm run build-local",
+        "build": "yarn run build-local",
         "build-local": "rollup --bundleConfigAsCjs -c",
         "build-dev": "rollup --bundleConfigAsCjs -c --environment BUILD:development",
         "build-prod": "rollup --bundleConfigAsCjs -c --environment BUILD:production",
         "build-demo": "rollup --bundleConfigAsCjs -c --environment BUILD:demo",
         "build-test": "rollup --bundleConfigAsCjs -c --environment BUILD:test",
-        "watch": "npm run watch-local",
+        "watch": "yarn run watch-local",
         "watch-local": "rollup --bundleConfigAsCjs -c --watch",
         "watch-dev": "rollup --bundleConfigAsCjs -c --watch --environment BUILD:development",
-        "test": "npm run build-test && karma start --singleRun",
+        "test": "yarn run build-test && karma start --singleRun",
         "lint": "eslint ."
     }
 }

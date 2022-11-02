@@ -37,7 +37,7 @@
         "clean": "rm dist/*",
         "build": "rollup --bundleConfigAsCjs -c",
         "build-test": "rollup --bundleConfigAsCjs -c --environment BUILD:test",
-        "test": "npm run build-test && karma start --singleRun",
+        "test": "yarn run build-test && karma start --singleRun",
         "watch": "rollup --bundleConfigAsCjs -c --watch",
         "lint": "eslint ."
     },
