@@ -17,6 +17,7 @@
         "@rollup/plugin-commonjs": "^23.0.0",
         "@rollup/plugin-json": "^5.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
+        "@rollup/plugin-terser": "^0.1.0",
         "@types/mocha": "^10.0.0",
         "@typescript-eslint/eslint-plugin": "^5.0.0-alpha.42",
         "@typescript-eslint/parser": "^5.0.0-alpha.42",
@@ -28,11 +29,10 @@
         "mocha": "^10.0.0",
         "playwright-core": "^1.20.2",
         "prettier": "^2.5.1",
-        "rollup": "^2.33.3",
+        "rollup": "^3.2.5",
         "rollup-plugin-copy": "^3.1.0",
         "rollup-plugin-delete": "^2.0.0",
         "rollup-plugin-serve": "^2.0.0",
-        "@rollup/plugin-terser": "^0.1.0",
         "rollup-plugin-typescript2": "^0.34.0",
         "ts-lit-plugin": "^1.2.1",
         "tslib": "^2.0.3",
@@ -48,9 +48,9 @@
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
         "clean": "rm dist/*",
-        "build": "rollup -c",
-        "watch": "rollup -c --watch",
-        "test": "rollup -c --environment BUILD:test && karma start --singleRun",
+        "build": "rollup --bundleConfigAsCjs -c",
+        "watch": "rollup --bundleConfigAsCjs -c --watch",
+        "test": "rollup --bundleConfigAsCjs -c --environment BUILD:test && karma start --singleRun",
         "lint": "eslint . --ext .js,.ts"
     }
 }

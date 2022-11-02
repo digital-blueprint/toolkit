@@ -16,6 +16,7 @@
         "@rollup/plugin-commonjs": "^23.0.0",
         "@rollup/plugin-json": "^5.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
+        "@rollup/plugin-terser": "^0.1.0",
         "@rollup/plugin-url": "^8.0.0",
         "chokidar": "^3.4.0",
         "eslint": "^8.0.0",
@@ -29,14 +30,13 @@
         "mocha": "^10.0.0",
         "playwright-core": "^1.20.2",
         "prettier": "^2.5.1",
-        "rollup": "^2.18.1",
+        "rollup": "^3.2.5",
         "rollup-plugin-copy": "^3.3.0",
         "rollup-plugin-delete": "^2.0.0",
         "rollup-plugin-emit-ejs": "^3.1.0",
         "rollup-plugin-license": "^3.0.0",
         "rollup-plugin-md": "^1.0.0",
         "rollup-plugin-serve": "^2.0.0",
-        "@rollup/plugin-terser": "^0.1.0",
         "selfsigned": "^2.0.0"
     },
     "dependencies": {
@@ -58,14 +58,14 @@
         "lit": "^2.0.0"
     },
     "scripts": {
-        "build": "rollup -c",
+        "build": "rollup --bundleConfigAsCjs -c",
         "format": "yarn run format:eslint && yarn run format:prettier",
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
-        "watch": "rollup -c --watch",
+        "watch": "rollup --bundleConfigAsCjs -c --watch",
         "watch-local": "yarn run watch",
-        "watch-full": "rollup -c --watch --environment FORCE_FULL",
-        "watch-bs": "rollup -c --watch --environment APP_ENV:bs",
+        "watch-full": "rollup --bundleConfigAsCjs -c --watch --environment FORCE_FULL",
+        "watch-bs": "rollup --bundleConfigAsCjs -c --watch --environment APP_ENV:bs",
         "lint": "eslint ."
     }
 }

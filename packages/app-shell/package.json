@@ -29,7 +29,7 @@
         "mocha": "^10.0.0",
         "playwright-core": "^1.20.2",
         "prettier": "^2.5.1",
-        "rollup": "^2.33.3",
+        "rollup": "^3.2.5",
         "rollup-plugin-copy": "^3.1.0",
         "rollup-plugin-delete": "^2.0.0",
         "rollup-plugin-emit-ejs": "^3.1.0",
@@ -54,10 +54,10 @@
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
         "build": "npm run build-local",
-        "build-local": "rollup -c",
-        "build-test": "rollup -c --environment BUILD:test",
+        "build-local": "rollup --bundleConfigAsCjs -c",
+        "build-test": "rollup --bundleConfigAsCjs -c --environment BUILD:test",
         "watch": "npm run watch-local",
-        "watch-local": "rollup -c --watch",
+        "watch-local": "rollup --bundleConfigAsCjs -c --watch",
         "test": "npm run build-test && karma start --singleRun",
         "lint": "eslint ."
     }
