@@ -125,16 +125,19 @@ export function createInstance(languages, lng, fallback, namespace) {
     i18n.init(options);
     console.assert(i18n.isInitialized);
 
-    const translate = i18n.t;
-    const that = i18n;
+    // if debug mode is activated, override i18n.t() to print errors if keys are missing
+    if (window.location.hash.includes('debug')) {
+        const translate = i18n.t;
+        const that = i18n;
 
-    i18n.t = function (keys, options) {
-        if (!that.exists(keys)) {
-            console.error("Error: Translation key " + keys + " does not exist!");
-        }
+        i18n.t = function (keys, options) {
+            if (!that.exists(keys)) {
+                console.error("Error: Translation key " + keys + " does not exist!");
+            }
 
-        return translate(keys, options);
-    };
+            return translate(keys, options);
+        };
+    }
 
     return i18n;
 }
