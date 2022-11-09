@@ -134,7 +134,7 @@ export function createInstance(languages, lng, fallback, namespace) {
         }
 
         return translate(keys, options);
-    }
+    };
 
     return i18n;
 }
