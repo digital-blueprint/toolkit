@@ -1,6 +1,8 @@
 {
-    "person-select": {
-        "login-required": "Anmeldung erforderlich",
-        "placeholder": "Bitte wählen Sie eine Person aus"
+    "dbp": {
+        "person-select": {
+            "login-required": "Anmeldung erforderlich",
+            "placeholder": "Bitte wählen Sie eine Person aus"
+        }
     }
 }

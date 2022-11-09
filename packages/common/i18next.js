@@ -125,6 +125,17 @@ export function createInstance(languages, lng, fallback, namespace) {
     i18n.init(options);
     console.assert(i18n.isInitialized);
 
+    const translate = i18n.t;
+    const that = i18n;
+
+    i18n.t = function (keys, options) {
+        if (!that.exists(keys)) {
+            console.error("Error: Translation key " + keys + " does not exist!");
+        }
+
+        return translate(keys, options);
+    }
+
     return i18n;
 }
 
@@ -189,6 +200,7 @@ export async function setOverridesByGlobalCache(i18n, element) {
             translationCache[lng] = await translationCache[lng];
           }
           i18n.removeResourceBundle(lng, overrideNamespace);
+
           if (translationCache[lng] === undefined) {
             console.warn("Translations for language " + lng + " do not exist!");
           }

@@ -1,14 +1,16 @@
 {
-    "back-camera": "Rückseitige Kamera",
-    "camera": "Kamera ",
-    "check-access": "Bitte stellen Sie sicher, dass eine Webcam oder Kamera aktiviert ist und überprüfen Sie ob Ihr Browser die notwendigen Berechtigungen besitzt.",
-    "data": "Inhalt",
-    "front-camera": "Vordere Kamera",
-    "loading-video": "Video laden ...",
-    "no-camera-access": "Zugriff auf Kamera nicht möglich.",
-    "no-ios-support": "Ihr Browser unterstützt keine Videoaufnahmen. Bitte verwenden Sie Safari.",
-    "no-qr-detected": "Kein QR-Code erkannt.",
-    "no-support": "Ihr Browser unterstützt keine Videoaufnahmen.",
-    "start-scan": "Scannen starten",
-    "stop-scan": "Scannen stoppen"
+    "dbp": {
+        "back-camera": "Rückseitige Kamera",
+        "camera": "Kamera ",
+        "check-access": "Bitte stellen Sie sicher, dass eine Webcam oder Kamera aktiviert ist und überprüfen Sie ob Ihr Browser die notwendigen Berechtigungen besitzt.",
+        "data": "Inhalt",
+        "front-camera": "Vordere Kamera",
+        "loading-video": "Video laden ...",
+        "no-camera-access": "Zugriff auf Kamera nicht möglich.",
+        "no-ios-support": "Ihr Browser unterstützt keine Videoaufnahmen. Bitte verwenden Sie Safari.",
+        "no-qr-detected": "Kein QR-Code erkannt.",
+        "no-support": "Ihr Browser unterstützt keine Videoaufnahmen.",
+        "start-scan": "Scannen starten",
+        "stop-scan": "Scannen stoppen"
+    }
 }

@@ -102,8 +102,8 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
 
             <section class="section">
                 <div class="content">
-                    <h1 class="title">${i18n.t('demo-title')}</h1>
-                    <p>${i18n.t('intro')}</p>
+                    <h1 class="title">${i18n.t('dbp.theme-switcher.demo-title')}</h1>
+                    <p>${i18n.t('dbp.theme-switcher.intro')}</p>
                 </div>
                 <div class="content">
                     <dbp-theme-switcher subscribe="lang, lang-dir"

@@ -1,9 +1,11 @@
 {
-    "person-profile": {
-        "email": "Email",
-        "family-name": "Family name",
-        "given-name": "Given name",
-        "none-selected": "No person selected",
-        "profile-caption": "Profile for"
+    "dbp": {
+        "person-profile": {
+            "email": "Email",
+            "family-name": "Family name",
+            "given-name": "Given name",
+            "none-selected": "No person selected",
+            "profile-caption": "Profile for"
+        }
     }
 }

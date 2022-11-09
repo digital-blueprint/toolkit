@@ -1,5 +1,9 @@
 {
-    "color-mode": "Farbmodus ändern",
-    "demo-title": "Theme Switcher Demo",
-    "intro": "Mit dem Theme-Switcher können Sie zwischen unterschiedlichen Farb-Themes umschalten."
+    "dbp": {
+        "theme-switcher": {
+            "color-mode": "Farbmodus ändern",
+            "demo-title": "Theme Switcher Demo",
+            "intro": "Mit dem Theme-Switcher können Sie zwischen unterschiedlichen Farb-Themes umschalten."
+        }
+    }
 }

@@ -1,6 +1,8 @@
 {
-    "column-search-placeholder": "Nach {{fieldName}} suchen",
-    "export-csv": "CSV Export",
-    "export-excel": "Excel Export",
-    "print": "Drucken"
+    "dbp": {
+        "column-search-placeholder": "Nach {{fieldName}} suchen",
+        "export-csv": "CSV Export",
+        "export-excel": "Excel Export",
+        "print": "Drucken"
+    }
 }

@@ -46,7 +46,7 @@ class LanguageSelectDisplay extends AdapterLitElement {
     }
 
     render() {
-        return html`<b>${this.lang}: ${this._i18n.t('demo')}</b>`;
+        return html`<b>${this.lang}: ${this._i18n.t('dbp.demo-text')}</b>`;
     }
 }
 

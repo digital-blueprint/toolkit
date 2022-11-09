@@ -103,31 +103,31 @@ export class PersonProfile extends DBPLitElement {
             ${this.person !== null
                 ? html`
                       <h3>
-                          ${i18n.t('person-profile.profile-caption')} ${this.person.givenName}
+                          ${i18n.t('dbp.person-profile.profile-caption')} ${this.person.givenName}
                           ${this.person.familyName}
                       </h3>
                       <table class="profile">
                           <thead></thead>
                           <tbody>
                               <tr>
-                                  <td class="td-profile">${i18n.t('person-profile.given-name')}</td>
+                                  <td class="td-profile">${i18n.t('dbp.person-profile.given-name')}</td>
                                   <td>${this.person.givenName}</td>
                               </tr>
                               <tr>
                                   <td class="td-profile">
-                                      ${i18n.t('person-profile.family-name')}
+                                      ${i18n.t('dbp.person-profile.family-name')}
                                   </td>
                                   <td>${this.person.familyName}</td>
                               </tr>
                               <tr>
-                                  <td class="td-profile">${i18n.t('person-profile.email')}</td>
+                                  <td class="td-profile">${i18n.t('dbp.person-profile.email')}</td>
                                   <td>${this.person.email}</td>
                               </tr>
                           </tbody>
                           <tfoot></tfoot>
                       </table>
                   `
-                : i18n.t('person-profile.none-selected')}
+                : i18n.t('dbp.person-profile.none-selected')}
         `;
     }
 }

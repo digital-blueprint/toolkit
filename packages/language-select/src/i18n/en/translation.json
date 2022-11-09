@@ -1,7 +1,9 @@
 {
-    "de": "German",
-    "de-action": "Switch to German",
-    "demo": "Hello World",
-    "en": "English",
-    "en-action": "Switch to English"
+    "dbp": {
+        "de": "German",
+        "de-action": "Switch to German",
+        "demo-text": "Hello World",
+        "en": "English",
+        "en-action": "Switch to English"
+    }
 }

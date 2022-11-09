@@ -31,7 +31,7 @@ const importNotify = async (i18n, promise) => {
     } catch (error) {
         console.log(error);
         notify({
-            body: i18n.t('page-updated-needs-reload'),
+            body: i18n.t('dbp.page-updated-needs-reload'),
             type: 'info',
             icon: 'warning',
         });
@@ -1117,8 +1117,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     <main>
                         <div
                             style="display: ${!this.metadata[this.activeView] ? 'block' : 'none'};">
-                            <h2>${i18n.t('page-not-found')}</h2>
-                            <p>${i18n.t('choose-from-menu')}</p>
+                            <h2>${i18n.t('dbp.page-not-found')}</h2>
+                            <p>${i18n.t('dbp.choose-from-menu')}</p>
                         </div>
                         <p class="description">${this.description}</p>
                         ${this._renderActivity()}
@@ -1128,13 +1128,13 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                         <slot name="footer">
                             <slot name="footer-links">
                                 <a rel="noopener" class="" href="#use-your-privacy-policy-link">
-                                    ${i18n.t('privacy-policy')}
+                                    ${i18n.t('dbp.privacy-policy')}
                                 </a>
                                 <a rel="noopener" class="" href="#use-your-imprint-link">
-                                    ${i18n.t('imprint')}
+                                    ${i18n.t('dbp.imprint')}
                                 </a>
                                 <a rel="noopener" class="" href="#use-your-imprint-link">
-                                    ${i18n.t('contact')}
+                                    ${i18n.t('dbp.contact')}
                                 </a>
                             </slot>
                             <dbp-build-info

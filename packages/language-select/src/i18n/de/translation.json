@@ -1,7 +1,9 @@
 {
-    "de": "Deutsch",
-    "de-action": "Auf Deutsch anzeigen",
-    "demo": "Hallo Welt",
-    "en": "Englisch",
-    "en-action": "Auf Englisch anzeigen"
+    "dbp": {
+        "de": "Deutsch",
+        "de-action": "Auf Deutsch anzeigen",
+        "demo-text": "Hallo Welt",
+        "en": "Englisch",
+        "en-action": "Auf Englisch anzeigen"
+    }
 }

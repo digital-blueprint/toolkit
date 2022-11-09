@@ -77,9 +77,9 @@ export class TUGrazLogo extends AdapterLitElement {
         return html`
             <a href="https://www.tugraz.at" title="TU Graz Home" target="_blank" rel="noopener">
                 <div id="claim">
-                    <div class="int-header-logo-claim-single">${i18n.t('logo.word1')}</div>
-                    <div class="int-header-logo-claim-single">${i18n.t('logo.word2')}</div>
-                    <div class="int-header-logo-claim-single">${i18n.t('logo.word3')}</div>
+                    <div class="int-header-logo-claim-single">${i18n.t('dbp.logo.word1')}</div>
+                    <div class="int-header-logo-claim-single">${i18n.t('dbp.logo.word2')}</div>
+                    <div class="int-header-logo-claim-single">${i18n.t('dbp.logo.word3')}</div>
                 </div>
                 <svg
                     id="img"

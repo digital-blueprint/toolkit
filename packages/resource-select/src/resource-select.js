@@ -176,7 +176,7 @@ export class ResourceSelect extends AdapterLitElement {
         $select.select2({
             width: '100%',
             language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
-            placeholder: i18n.t('select.loading'),
+            placeholder: i18n.t('dbp.select.loading'),
             data: [],
             disabled: true,
         });
@@ -214,7 +214,7 @@ export class ResourceSelect extends AdapterLitElement {
             .select2({
                 width: '100%',
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
-                placeholder: i18n.t('select.placeholder'),
+                placeholder: i18n.t('dbp.select.placeholder'),
                 dropdownParent: this._$('#select-resource-dropdown'),
                 data: data,
                 disabled: false,

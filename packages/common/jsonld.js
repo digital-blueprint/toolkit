@@ -110,7 +110,7 @@ export default class JSONLD {
                         } else {
                             JSONLD._executeFailureFunctions(
                                 apiUrl,
-                                i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl})
+                                i18n.t('dbp.jsonld.api-documentation-server', {apiUrl: apiDocUrl})
                             );
                         }
                     };
@@ -119,13 +119,13 @@ export default class JSONLD {
                 } else {
                     JSONLD._executeFailureFunctions(
                         apiUrl,
-                        i18n.t('jsonld.error-hydra-documentation-url-not-set', {apiUrl: apiUrl})
+                        i18n.t('dbp.jsonld.error-hydra-documentation-url-not-set', {apiUrl: apiUrl})
                     );
                 }
             } else {
                 JSONLD._executeFailureFunctions(
                     apiUrl,
-                    i18n.t('jsonld.error-api-server', {apiUrl: apiUrl})
+                    i18n.t('dbp.jsonld.error-api-server', {apiUrl: apiUrl})
                 );
             }
         };
@@ -192,7 +192,7 @@ export default class JSONLD {
 
         if (message !== '') {
             notify({
-                summary: i18n.t('error.summary'),
+                summary: i18n.t('dbp.error.summary'),
                 body: message,
                 type: 'danger',
             });

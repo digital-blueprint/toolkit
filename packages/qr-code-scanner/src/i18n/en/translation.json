@@ -1,14 +1,16 @@
 {
-    "back-camera": "Backcamera",
-    "camera": "Camera ",
-    "check-access": "Please make sure that a webcam or camera is activated and check whether your browser has the necessary authorizations.",
-    "data": "Data",
-    "front-camera": "Frontcamera",
-    "loading-video": "⌛ Loading video...",
-    "no-camera-access": "Unable to access video stream.",
-    "no-ios-support": "Your browser does not support video recording. Please use Safari.",
-    "no-qr-detected": "No QR code detected.",
-    "no-support": "Your browser does not support video recording.",
-    "start-scan": "Start scan",
-    "stop-scan": "Stop scan"
+    "dbp": {
+        "back-camera": "Backcamera",
+        "camera": "Camera ",
+        "check-access": "Please make sure that a webcam or camera is activated and check whether your browser has the necessary authorizations.",
+        "data": "Data",
+        "front-camera": "Frontcamera",
+        "loading-video": "⌛ Loading video...",
+        "no-camera-access": "Unable to access video stream.",
+        "no-ios-support": "Your browser does not support video recording. Please use Safari.",
+        "no-qr-detected": "No QR code detected.",
+        "no-support": "Your browser does not support video recording.",
+        "start-scan": "Start scan",
+        "stop-scan": "Stop scan"
+    }
 }

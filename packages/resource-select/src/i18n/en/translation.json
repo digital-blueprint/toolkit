@@ -1,6 +1,8 @@
 {
-    "select": {
-        "loading": "Loading...",
-        "placeholder": "Please select an entry"
+    "dbp": {
+        "select": {
+            "loading": "Loading...",
+            "placeholder": "Please select an entry"
+        }
     }
 }

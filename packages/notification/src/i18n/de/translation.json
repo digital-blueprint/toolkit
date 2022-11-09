@@ -1,3 +1,5 @@
 {
-    "send": "senden"
+    "dbp": {
+        "send": "senden"
+    }
 }

@@ -1,13 +1,15 @@
 {
-    "consumer": {
-        "item": "Bezeichnung",
-        "price": "Preis",
-        "sum": "Summe"
-    },
-    "demo": {
-        "consumer": "Verbraucher",
-        "consumer_description": "Verbraucher \"{{id}}\" abonniert nur {{subscriptions}}",
-        "provider": "Anbieter",
-        "provider_description": "Anbieter \"{{id}}\" {{description}}"
+    "dbp": {
+        "consumer": {
+            "item": "Bezeichnung",
+            "price": "Preis",
+            "sum": "Summe"
+        },
+        "demo": {
+            "consumer": "Verbraucher",
+            "consumer_description": "Verbraucher \"{{id}}\" abonniert nur {{subscriptions}}",
+            "provider": "Anbieter",
+            "provider_description": "Anbieter \"{{id}}\" {{description}}"
+        }
     }
 }

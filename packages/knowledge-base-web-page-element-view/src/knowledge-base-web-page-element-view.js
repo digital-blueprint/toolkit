@@ -89,18 +89,18 @@ export class KnowledgeBaseWebPageElementView extends ScopedElementsMixin(Adapter
                     let status_msg;
                     switch (res.status) {
                         case 403:
-                            status_msg = i18n.t('is-forbidden');
+                            status_msg = i18n.t('dbp.is-forbidden');
                             break;
                         case 404:
-                            status_msg = i18n.t('was-not-found');
+                            status_msg = i18n.t('dbp.was-not-found');
                             break;
                         case 500:
-                            status_msg = i18n.t('troubled-server');
+                            status_msg = i18n.t('dbp.troubled-server');
                             break;
                         default:
-                            status_msg = i18n.t('unknown-problems');
+                            status_msg = i18n.t('dbp.unknown-problems');
                     }
-                    const error_head = i18n.t('error-head');
+                    const error_head = i18n.t('dbp.error-head');
                     that.error = html`
                         <p>
                             ${error_head} "

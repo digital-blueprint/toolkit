@@ -58,12 +58,12 @@ async function getVideoDevices(i18n) {
                         navigator.userAgent
                     )
                 ) {
-                    devices_map.set('environment', i18n.t('back-camera'));
-                    devices_map.set('user', i18n.t('front-camera'));
+                    devices_map.set('environment', i18n.t('dbp.back-camera'));
+                    devices_map.set('user', i18n.t('dbp.front-camera'));
                 } else {
                     devices_map.set(
                         id ? id : true,
-                        device.label || i18n.t('camera') + (devices_map.size + 1)
+                        device.label || i18n.t('dbp.camera') + (devices_map.size + 1)
                     );
                 }
             }
@@ -234,9 +234,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
         this._askPermission = true;
         this._loadingMessage = html`
-            ${i18n.t('no-camera-access')}
+            ${i18n.t('dbp.no-camera-access')}
             <br />
-            ${i18n.t('check-access')}
+            ${i18n.t('dbp.check-access')}
         `;
         let video = await createVideoElement(this._activeCamera);
         if (video !== null) {
@@ -398,7 +398,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
             console.assert(this._requestID === null);
             this._videoElement = video;
             this._loading = true;
-            this._loadingMessage = i18n.t('loading-video');
+            this._loadingMessage = i18n.t('dbp.loading-video');
             this._requestID = requestAnimationFrame(tick);
         }
     }
@@ -539,8 +539,8 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         let hasDevices = this._devices.size > 0;
         let showCanvas = this._videoRunning && !this._askPermission && !this._loading;
         let noSupportString = checkIosMobileSupport(this._devices)
-            ? i18n.t('no-ios-support')
-            : i18n.t('no-support');
+            ? i18n.t('dbp.no-ios-support')
+            : i18n.t('dbp.no-support');
 
         return html`
             <div class="columns">
@@ -552,16 +552,16 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                                     hidden: this._videoRunning,
                                 })}"
                                 @click="${() => this.startScanning()}"
-                                title="${i18n.t('start-scan')}">
-                                ${i18n.t('start-scan')}
+                                title="${i18n.t('dbp.start-scan')}">
+                                ${i18n.t('dbp.start-scan')}
                             </button>
                             <button
                                 class="stop button is-primary ${classMap({
                                     hidden: !this._videoRunning,
                                 })}"
                                 @click="${() => this.stopScanning()}"
-                                title="${i18n.t('stop-scan')}">
-                                ${i18n.t('stop-scan')}
+                                title="${i18n.t('dbp.stop-scan')}">
+                                ${i18n.t('dbp.stop-scan')}
                             </button>
 
                             <select id="videoSource" class="button" @change=${this._onUpdateSource}>
@@ -589,12 +589,12 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                             ${this._outputData !== null
                                 ? html`
                                       <div>
-                                          <b>${i18n.t('data')}:</b>
+                                          <b>${i18n.t('dbp.data')}:</b>
                                           <span>${this._outputData}</span>
                                       </div>
                                   `
                                 : html`
-                                      <div>${i18n.t('no-qr-detected')}</div>
+                                      <div>${i18n.t('dbp.no-qr-detected')}</div>
                                   `}
                         </div>
                     </div>

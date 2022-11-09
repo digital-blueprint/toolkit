@@ -279,7 +279,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
                     <div class="dropdown-content" @blur="${this.closeDropdown}">
                         <div class="menu">
                             <a href="#" @click="${this.onLogoutClicked}" class="dropdown-item">
-                                ${i18n.t('logout')}
+                                ${i18n.t('dbp.logout')}
                             </a>
                         </div>
                     </div>
@@ -315,7 +315,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
             <a href="#" @click="${this.onLoginClicked}">
                 <div class="login-box login-button">
                     <div class="icon">${unsafeHTML(loginSVG)}</div>
-                    <div class="label">${i18n.t('login')}</div>
+                    <div class="label">${i18n.t('dbp.login')}</div>
                 </div>
             </a>
         `;

@@ -247,7 +247,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             <div id="theme-menu" class="${classMap({hidden: this.themes.length <= 1})}">
                 <a
                     class="mode-button"
-                    title="${i18n.t('color-mode')}"
+                    title="${i18n.t('dbp.theme-switcher.color-mode')}"
                     @click="${() => {
                         this.toggleModeMenu();
                     }}">

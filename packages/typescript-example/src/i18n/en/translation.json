@@ -1,3 +1,5 @@
 {
-    "hello-world": "Hello World"
+    "dbp": {
+        "hello-world": "Hello World"
+    }
 }

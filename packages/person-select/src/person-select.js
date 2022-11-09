@@ -173,8 +173,8 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
                 minimumInputLength: 2,
                 placeholder: this.authenticated()
-                    ? i18n.t('person-select.placeholder')
-                    : i18n.t('person-select.login-required'),
+                    ? i18n.t('dbp.person-select.placeholder')
+                    : i18n.t('dbp.person-select.login-required'),
                 dropdownParent: this.$('#person-select-dropdown'),
                 ajax: {
                     delay: 500,
@@ -436,7 +436,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                             ${!this.authenticated()
                                 ? html`
                                       <option value="" disabled selected>
-                                          ${i18n.t('person-select.login-required')}
+                                          ${i18n.t('dbp.person-select.login-required')}
                                       </option>
                                   `
                                 : ''}

@@ -1,21 +1,23 @@
 {
-    "activity-example": {
-        "hello-world": "Hallo Welt"
-    },
-    "choose-from-menu": "Bitte wählen Sie eine Aktivität aus dem Menu.",
-    "contact": "Kontakt",
-    "imprint": "Impressum",
-    "login": "Anmelden",
-    "logo": {
-        "word1": "Wissen",
-        "word2": "Technik",
-        "word3": "Leidenschaft"
-    },
-    "logout": "Abmelden",
-    "page-not-found": "Die gewünschte Seite wurde nicht gefunden",
-    "page-updated-needs-reload": "Die Applikation wurde aktualisiert. Bitte laden Sie die Seite neu.",
-    "privacy-policy": "Datenschutz",
-    "welcome": {
-        "headline": "Willkommen bei der Applikation '{{appname}}'."
+    "dbp": {
+        "activity-example": {
+            "hello-world": "Hallo Welt"
+        },
+        "choose-from-menu": "Bitte wählen Sie eine Aktivität aus dem Menu.",
+        "contact": "Kontakt",
+        "imprint": "Impressum",
+        "login": "Anmelden",
+        "logo": {
+            "word1": "Wissen",
+            "word2": "Technik",
+            "word3": "Leidenschaft"
+        },
+        "logout": "Abmelden",
+        "page-not-found": "Die gewünschte Seite wurde nicht gefunden",
+        "page-updated-needs-reload": "Die Applikation wurde aktualisiert. Bitte laden Sie die Seite neu.",
+        "privacy-policy": "Datenschutz",
+        "welcome": {
+            "headline": "Willkommen bei der Applikation '{{appname}}'."
+        }
     }
 }

@@ -1,21 +1,23 @@
 {
-    "activity-example": {
-        "hello-world": "Hello World"
-    },
-    "choose-from-menu": "Please choose an activity from the menu.",
-    "contact": "Contact",
-    "imprint": "Legal Notice",
-    "login": "Login",
-    "logo": {
-        "word1": "Science",
-        "word2": "Passion",
-        "word3": "Technology"
-    },
-    "logout": "Logout",
-    "page-not-found": "Requested Page Not Found",
-    "page-updated-needs-reload": "The application has been updated. Please reload the page.",
-    "privacy-policy": "Privacy Policy",
-    "welcome": {
-        "headline": "Welcome to the '{{appname}}' application."
+    "dbp": {
+        "activity-example": {
+            "hello-world": "Hello World"
+        },
+        "choose-from-menu": "Please choose an activity from the menu.",
+        "contact": "Contact",
+        "imprint": "Legal Notice",
+        "login": "Login",
+        "logo": {
+            "word1": "Science",
+            "word2": "Passion",
+            "word3": "Technology"
+        },
+        "logout": "Logout",
+        "page-not-found": "Requested Page Not Found",
+        "page-updated-needs-reload": "The application has been updated. Please reload the page.",
+        "privacy-policy": "Privacy Policy",
+        "welcome": {
+            "headline": "Welcome to the '{{appname}}' application."
+        }
     }
 }

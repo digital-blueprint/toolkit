@@ -327,8 +327,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 `mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`
             );
             send({
-                summary: i18n.t('file-source.mime-type-title'),
-                body: i18n.t('file-source.mime-type-body'),
+                summary: i18n.t('dbp.file-source.mime-type-title'),
+                body: i18n.t('dbp.file-source.mime-type-body'),
                 type: 'danger',
                 timeout: 5,
             });
@@ -341,8 +341,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         const i18n = this._i18n;
         if (this.maxFileSize !== '' && this.maxFileSize * 1000 <= file.size) {
             send({
-                summary: i18n.t('file-source.too-big-file-title'),
-                body: i18n.t('file-source.too-big-file-body', {
+                summary: i18n.t('dbp.file-source.too-big-file-title'),
+                body: i18n.t('dbp.file-source.too-big-file-body', {
                     size: humanFileSize(this.maxFileSize * 1000, true),
                 }),
                 type: 'danger',
@@ -416,8 +416,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             console.error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
             //throw new Error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
             send({
-                summary: i18n.t('file-source.no-usable-files-in-zip'),
-                body: i18n.t('file-source.no-usable-files-hint') + this.allowedMimeTypes,
+                summary: i18n.t('dbp.file-source.no-usable-files-in-zip'),
+                body: i18n.t('dbp.file-source.no-usable-files-hint') + this.allowedMimeTypes,
                 type: 'danger',
                 timeout: 0,
             });
@@ -736,7 +736,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 ?disabled="${this.disabled}"
                 @click="${() => {
                 this.openDialog();
-            }}">${i18n.t('file-source.open-menu')}</button>
+            }}">${i18n.t('dbp.file-source.open-menu')}</button>
 -->
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-1" data-micromodal-close>
@@ -748,7 +748,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                         <div class="nav-wrapper modal-nav">
                             <nav class="modal-nav">
                                 <div
-                                    title="${i18n.t('file-source.nav-local')}"
+                                    title="${i18n.t('dbp.file-source.nav-local')}"
                                     @click="${() => {
                                         this.activeTarget = 'local';
                                     }}"
@@ -757,7 +757,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                         hidden: !this.hasEnabledSource('local'),
                                     })}">
                                     <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
-                                    <p>${i18n.t('file-source.nav-local')}</p>
+                                    <p>${i18n.t('dbp.file-source.nav-local')}</p>
                                 </div>
                                 <div
                                     title="Nextcloud"
@@ -775,7 +775,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <p>${this.nextcloudName}</p>
                                 </div>
                                 <div
-                                    title="${i18n.t('file-source.clipboard')}"
+                                    title="${i18n.t('dbp.file-source.clipboard')}"
                                     @click="${() => {
                                         this.activeTarget = 'clipboard';
                                     }}"
@@ -784,7 +784,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                         hidden: !this.hasEnabledSource('clipboard'),
                                     })}">
                                     <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                                    <p>${i18n.t('file-source.clipboard')}</p>
+                                    <p>${i18n.t('dbp.file-source.clipboard')}</p>
                                 </div>
                             </nav>
                             <div class="paddles">
@@ -800,7 +800,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                         </div>
                         <div class="modal-header">
                             <button
-                                title="${i18n.t('file-source.modal-close')}"
+                                title="${i18n.t('dbp.file-source.modal-close')}"
                                 class="modal-close"
                                 aria-label="Close modal"
                                 @click="${() => {
@@ -818,7 +818,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                 })}">
                                 <div id="dropArea">
                                     <div class="block">
-                                        <p>${i18n.t('intro')}</p>
+                                        <p>${i18n.t('dbp.intro')}</p>
                                     </div>
 
                                     ${inputFile}
@@ -826,7 +826,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                         class="button is-primary"
                                         for="fileElem"
                                         ?disabled="${this.disabled}">
-                                        ${this.buttonLabel || i18n.t('upload-label')}
+                                        ${this.buttonLabel || i18n.t('dbp.upload-label')}
                                     </label>
                                 </div>
                             </div>

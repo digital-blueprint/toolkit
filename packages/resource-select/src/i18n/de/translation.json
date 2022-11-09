@@ -1,6 +1,8 @@
 {
-    "select": {
-        "loading": "Wird geladen...",
-        "placeholder": "Bitte wählen Sie einen Eintrag aus"
+    "dbp": {
+        "select": {
+            "loading": "Wird geladen...",
+            "placeholder": "Bitte wählen Sie einen Eintrag aus"
+        }
     }
 }

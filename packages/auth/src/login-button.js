@@ -177,7 +177,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
                 <a href="#" @click="${this._onLogoutClicked}">
                     <div class="login-box login-button">
                         <div class="icon">${unsafeHTML(logoutSVG)}</div>
-                        <div class="label">${i18n.t('logout')}</div>
+                        <div class="label">${i18n.t('dbp.logout')}</div>
                     </div>
                 </a>
             `;
@@ -186,7 +186,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
                 <a href="#" @click="${this._onLoginClicked}">
                     <div class="login-box login-button">
                         <div class="icon">${unsafeHTML(loginSVG)}</div>
-                        <div class="label">${i18n.t('login')}</div>
+                        <div class="label">${i18n.t('dbp.login')}</div>
                     </div>
                 </a>
             `;

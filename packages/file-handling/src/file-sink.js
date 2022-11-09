@@ -199,8 +199,8 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         MicroModal.close(this._('#modal-picker'));
         if (event.detail > 0) {
             send({
-                summary: i18n.t('file-sink.upload-success-title'),
-                body: i18n.t('file-sink.upload-success-body', {
+                summary: i18n.t('dbp.file-sink.upload-success-title'),
+                body: i18n.t('dbp.file-sink.upload-success-body', {
                     name: this.nextcloudName,
                     count: event.detail,
                 }),
@@ -335,7 +335,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                     })}"
                     directories-only
                     max-selected-items="1"
-                    select-button-text="${i18n.t('file-sink.select-directory')}"
+                    select-button-text="${i18n.t('dbp.file-sink.select-directory')}"
                     ?disabled="${this.disabled}"
                     lang="${this.lang}"
                     subscribe="html-overrides,auth"
@@ -453,7 +453,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                         <div class="nav-wrapper modal-nav">
                             <nav class="modal-nav">
                                 <div
-                                    title="${i18n.t('file-sink.nav-local')}"
+                                    title="${i18n.t('dbp.file-sink.nav-local')}"
                                     @click="${() => {
                                         this.activeTarget = 'local';
                                     }}"
@@ -462,7 +462,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                         hidden: !this.hasEnabledDestination('local'),
                                     })}">
                                     <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
-                                    <p>${i18n.t('file-source.nav-local')}</p>
+                                    <p>${i18n.t('dbp.file-source.nav-local')}</p>
                                 </div>
                                 <div
                                     title="${this.nextcloudName}"
@@ -481,7 +481,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <p>${this.nextcloudName}</p>
                                 </div>
                                 <div
-                                    title="${i18n.t('file-sink.clipboard')}"
+                                    title="${i18n.t('dbp.file-sink.clipboard')}"
                                     @click="${() => {
                                         this.activeTarget = 'clipboard';
                                     }}"
@@ -490,7 +490,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                         hidden: !this.hasEnabledDestination('clipboard'),
                                     })}">
                                     <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                                    <p>${i18n.t('file-sink.clipboard')}</p>
+                                    <p>${i18n.t('dbp.file-sink.clipboard')}</p>
                                 </div>
                             </nav>
                             <div class="paddles">
@@ -507,14 +507,14 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
                         <div class="modal-header">
                             <button
-                                title="${i18n.t('file-sink.modal-close')}"
+                                title="${i18n.t('dbp.file-sink.modal-close')}"
                                 class="modal-close"
                                 aria-label="Close modal"
                                 @click="${() => {
                                     this.closeDialog();
                                 }}">
                                 <dbp-icon
-                                    title="${i18n.t('file-sink.modal-close')}"
+                                    title="${i18n.t('dbp.file-sink.modal-close')}"
                                     name="close"
                                     class="close-icon"></dbp-icon>
                             </button>
@@ -528,7 +528,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                 })}">
                                 <div id="zip-download-block">
                                     <div class="block">
-                                        ${i18n.t('file-sink.local-intro', {
+                                        ${i18n.t('dbp.file-sink.local-intro', {
                                             count: this.files.length,
                                         })}
                                     </div>
@@ -538,7 +538,7 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                         @click="${() => {
                                             this.downloadCompressedFiles();
                                         }}">
-                                        ${i18n.t('file-sink.local-button', {
+                                        ${i18n.t('dbp.file-sink.local-button', {
                                             count: this.files.length,
                                         })}
                                     </button>

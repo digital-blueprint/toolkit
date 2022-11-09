@@ -1,6 +1,6 @@
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import {DataTableView} from './data-table-view.js';
-import {createInstance} from './i18n';
+import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -37,6 +37,10 @@ export class DataTableViewDemo extends ScopedElementsMixin(DBPLitElement) {
     connectedCallback() {
         super.connectedCallback();
         const that = this;
+
+        if (this.langDir) {
+          setOverridesByGlobalCache(this._i18n, this);
+        }
 
         this.updateComplete.then(() => {
             /*

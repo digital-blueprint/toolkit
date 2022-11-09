@@ -92,13 +92,13 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
         const i18n = this._i18n;
         return html`
             <section class="section">
-                <p>${i18n.t('demo.provider_description', {
+                <p>${i18n.t('dbp.demo.provider_description', {
                     id: 'root',
                     description: 'is the top most in hierarchy',
                 })}</p>
                 <pre>&lt;dbp-provider  id="root"  root="1" availability="global" >&lt;/dbp-provider&gt;</pre>
                 <div class="container">
-                    <h1 class="title">${i18n.t('demo.provider')}-Demo</h1>
+                    <h1 class="title">${i18n.t('dbp.demo.provider')}-Demo</h1>
                 </div>
                 <div class="container">
                     <dbp-auth-keycloak subscribe="requested-login-status" lang="${
@@ -115,38 +115,38 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                                   foo="9"
                                   bar="20">
                         <div class="container">
-                            <h2>${i18n.t('demo.provider')}</h2>
-                            <p>${i18n.t('demo.provider_description', {
+                            <h2>${i18n.t('dbp.demo.provider')}</h2>
+                            <p>${i18n.t('dbp.demo.provider_description', {
                                 id: 'demo',
                                 description: 'has only "border-color" to offer',
                             })}</p>                            <pre>&lt;dbp-provider  id="demo"  bc="blue" &gt;&lt;/dbp-provider&gt;</pre>
-                            <p>${i18n.t('demo.provider_description', {
+                            <p>${i18n.t('dbp.demo.provider_description', {
                                 id: 'foo-bar',
                                 description: 'has some values in its store',
                             })}</p>
                             <pre>&lt;dbp-provider  id="foo-bar"  foo="9" bar="20" &gt;&lt;/dbp-provider&gt;</pre>
 
-                            <h2>${i18n.t('demo.consumer')}</h2>
-                            <p>${i18n.t('demo.consumer_description', {
+                            <h2>${i18n.t('dbp.demo.consumer')}</h2>
+                            <p>${i18n.t('dbp.demo.consumer_description', {
                                 id: 'c1',
                                 subscriptions: 'border-color',
                             })}</p>
                             <pre>&lt;dbp-consumer  id="c1"  subscribe="border-color:bc" &gt;&lt;/dbp-consumer&gt;</pre>
                             <dbp-consumer id="c1" subscribe="border-color:bc,lang"></dbp-consumer>
-                            <p>${i18n.t('demo.consumer_description', {
+                            <p>${i18n.t('dbp.demo.consumer_description', {
                                 id: 'c2',
                                 subscriptions: 'foo',
                             })}</p>
                             <pre>&lt;dbp-consumer  id="c2"  subscribe="foo:foo" &gt;&lt;/dbp-consumer&gt;</pre>
                             <dbp-consumer id="c2" subscribe="foo:foo,lang"></dbp-consumer>
-                            <p>${i18n.t('demo.consumer_description', {
+                            <p>${i18n.t('dbp.demo.consumer_description', {
                                 id: 'c3',
                                 subscriptions: 'availability:status',
                             })}</p>
                             <p>Local <em>status</em> is provided as <em>availability</em></p>
                             <pre>&lt;dbp-consumer  id="c3"  subscribe="status:availability"  border-color="orange" &gt;&lt;/dbp-consumer&gt;</pre>
                             <dbp-consumer id="c3" subscribe="status:availability,lang" border-color="orange"></dbp-consumer>
-                            <p>${i18n.t('demo.consumer_description', {
+                            <p>${i18n.t('dbp.demo.consumer_description', {
                                 id: 'c4',
                                 subscriptions: 'unknown-name:status',
                             })}</p>
@@ -274,8 +274,8 @@ class DemoConsumer extends DBPLitElement {
             <div style="border: ${this['border-color']} dotted; padding: 10px;">
                 <table style="width:200px;">
                     <tr style="background-color: #aaa;">
-                        <th style="text-align: left;">${i18n.t('consumer.item')}</th>
-                        <th style="text-align: right;">${i18n.t('consumer.price')}</th>
+                        <th style="text-align: left;">${i18n.t('dbp.consumer.item')}</th>
+                        <th style="text-align: right;">${i18n.t('dbp.consumer.price')}</th>
                     </tr>
                     <tr>
                         <td>foo</td>
@@ -286,7 +286,7 @@ class DemoConsumer extends DBPLitElement {
                         <td style="text-align: right;">${this.bar}</td>
                     </tr>
                     <tr>
-                        <td>${i18n.t('consumer.sum')}</td>
+                        <td>${i18n.t('dbp.consumer.sum')}</td>
                         <td style="text-align: right;">${sum}</td>
                     </tr>
                 </table>

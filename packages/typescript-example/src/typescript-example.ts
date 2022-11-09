@@ -38,7 +38,7 @@ export class TypeScriptExample extends LitElement {
 
     render() {
         return html`
-            <h3>${this._i18n.t('hello-world')}</h3>
+            <h3>${this._i18n.t('dbp.hello-world')}</h3>
         `;
     }
 }

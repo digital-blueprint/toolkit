@@ -17,10 +17,10 @@ export class LanguageSelect extends AdapterLitElement {
 
         this._i18n = createInstance();
         // for the i18next scanner
-        this._i18n.t('de');
-        this._i18n.t('de-action');
-        this._i18n.t('en');
-        this._i18n.t('en-action');
+        this._i18n.t('dbp.de');
+        this._i18n.t('dbp.de-action');
+        this._i18n.t('dbp.en');
+        this._i18n.t('dbp.en-action');
     }
 
     _getNextLanguage(lang) {
@@ -129,7 +129,7 @@ export class LanguageSelect extends AdapterLitElement {
     }
 
     render() {
-        var linkTitle = this._i18n.t(this.next + '-action');
+        var linkTitle = this._i18n.t("dbp." + this.next + '-action');
         return html`
             <a href="#" title="${linkTitle}" @click=${this.onClick}>${this.next.toUpperCase()}</a>
         `;

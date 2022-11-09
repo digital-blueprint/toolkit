@@ -71,11 +71,11 @@ export const errorMixin = {
 
         // if the server is not reachable at all
         if (jqXHR.status === 0) {
-            body = i18n.t('error.connection-to-server-refused');
+            body = i18n.t('dbp.error.connection-to-server-refused');
         }
 
         notify({
-            summary: i18n.t('error.summary'),
+            summary: i18n.t('dbp.error.summary'),
             body: escapeHTML(stripHTML(body)),
             icon: icon,
             type: 'danger',
@@ -128,12 +128,12 @@ export const errorMixin = {
                 body =
                     error.message !== ''
                         ? error.message
-                        : i18n.t('error.connection-to-server-refused');
+                        : i18n.t('dbp.error.connection-to-server-refused');
             }
         }
 
         notify({
-            summary: summary === '' ? i18n.t('error.summary') : summary,
+            summary: summary === '' ? i18n.t('dbp.error.summary') : summary,
             body: escapeHTML(stripHTML(body)),
             icon: icon,
             type: 'danger',

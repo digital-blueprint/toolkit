@@ -239,7 +239,7 @@ export class AuthKeycloak extends AdapterLitElement {
                 // In case the keycloak server is offline for example
                 this._setLoginStatus(LoginStatus.LOGGED_OUT);
                 send({
-                    summary: this._i18n.t('login-failed'),
+                    summary: this._i18n.t('dbp.login-failed'),
                     type: 'danger',
                     timeout: 5,
                 });

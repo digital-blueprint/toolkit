@@ -147,7 +147,7 @@ class AppShellWelcome extends ScopedElementsMixin(LitElement) {
 
         return html`
             <p>
-                ${i18n.t('welcome.headline', {appname: app.topic.name[this.lang]})}
+                ${i18n.t('dbp.welcome.headline', {appname: app.topic.name[this.lang]})}
                 ${app.topic.description[this.lang]}
             </p>
             <br />

@@ -138,7 +138,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             this.tabulatorTable = new Tabulator(this._('#clipboard-content-table'), {
                 layout: 'fitColumns',
                 selectable: true,
-                placeholder: i18n.t('clipboard.no-data'),
+                placeholder: i18n.t('dbp.clipboard.no-data'),
                 responsiveLayout: 'collapse',
                 responsiveLayoutCollapseStartOpen: false,
                 columnHeaderVertAlign: 'middle',
@@ -176,7 +176,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         },
                     },
                     {
-                        title: i18n.t('clipboard.file-name'),
+                        title: i18n.t('dbp.clipboard.file-name'),
                         responsive: 0,
                         widthGrow: 5,
                         minWidth: 150,
@@ -190,7 +190,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         },
                     },
                     {
-                        title: i18n.t('clipboard.file-size'),
+                        title: i18n.t('dbp.clipboard.file-size'),
                         responsive: 4,
                         widthGrow: 1,
                         minWidth: 84,
@@ -200,7 +200,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         },
                     },
                     {
-                        title: i18n.t('clipboard.file-type'),
+                        title: i18n.t('dbp.clipboard.file-type'),
                         responsive: 2,
                         widthGrow: 1,
                         minWidth: 58,
@@ -214,7 +214,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         },
                     },
                     {
-                        title: i18n.t('clipboard.file-mod'),
+                        title: i18n.t('dbp.clipboard.file-mod'),
                         responsive: 3,
                         widthGrow: 1,
                         minWidth: 150,
@@ -295,8 +295,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
 
         if (this._('#select_all_checkmark')) {
             this._('#select_all_checkmark').title = this.checkAllSelected()
-                ? i18n.t('clipboard.select-nothing')
-                : i18n.t('clipboard.select-all');
+                ? i18n.t('dbp.clipboard.select-nothing')
+                : i18n.t('dbp.clipboard.select-all');
         }
     }
 
@@ -464,8 +464,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         }
         this.tabulatorTable.deselectRow();
         send({
-            summary: i18n.t('clipboard.saved-files-title', {count: files.length}),
-            body: i18n.t('clipboard.saved-files-body', {count: files.length}),
+            summary: i18n.t('dbp.clipboard.saved-files-title', {count: files.length}),
+            body: i18n.t('dbp.clipboard.saved-files-body', {count: files.length}),
             type: 'success',
             timeout: 5,
         });
@@ -497,8 +497,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         // we need to handle custom events ourselves
         if (event.target && event.target.activeElement && event.target.activeElement.nodeName) {
             send({
-                summary: i18n.t('clipboard.file-warning'),
-                body: i18n.t('clipboard.file-warning-body', {
+                summary: i18n.t('dbp.clipboard.file-warning'),
+                body: i18n.t('dbp.clipboard.file-warning-body', {
                     count: this.clipboardFiles.files.length,
                 }),
                 type: 'warning',
@@ -581,8 +581,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             });
             this.dispatchEvent(event);
             send({
-                summary: i18n.t('clipboard.saved-files-title', {count: this.filesToSave.length}),
-                body: i18n.t('clipboard.saved-files-body', {count: this.filesToSave.length}),
+                summary: i18n.t('dbp.clipboard.saved-files-title', {count: this.filesToSave.length}),
+                body: i18n.t('dbp.clipboard.saved-files-body', {count: this.filesToSave.length}),
                 type: 'success',
                 timeout: 5,
             });
@@ -597,8 +597,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     finishedSaveFilesToClipboard(event) {
         const i18n = this._i18n;
         send({
-            summary: i18n.t('clipboard.saved-files-title', {count: event.detail.count}),
-            body: i18n.t('clipboard.saved-files-body', {count: event.detail.count}),
+            summary: i18n.t('dbp.clipboard.saved-files-title', {count: event.detail.count}),
+            body: i18n.t('dbp.clipboard.saved-files-body', {count: event.detail.count}),
             type: 'success',
             timeout: 5,
         });
@@ -649,8 +649,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             this.tabulatorTable.getRows().forEach((row) => data.files.push(row.getData().file));
             this.sendSetPropertyEvent('clipboard-files', data);
             send({
-                summary: i18n.t('clipboard.clear-count-clipboard-title', {count: count}),
-                body: i18n.t('clipboard.clear-count-clipboard-body', {count: count}),
+                summary: i18n.t('dbp.clipboard.clear-count-clipboard-title', {count: count}),
+                body: i18n.t('dbp.clipboard.clear-count-clipboard-body', {count: count}),
                 type: 'success',
                 timeout: 5,
             });
@@ -659,8 +659,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             let data = {files: []};
             this.sendSetPropertyEvent('clipboard-files', data);
             send({
-                summary: i18n.t('clipboard.clear-clipboard-title'),
-                body: i18n.t('clipboard.clear-clipboard-body'),
+                summary: i18n.t('dbp.clipboard.clear-clipboard-title'),
+                body: i18n.t('dbp.clipboard.clear-clipboard-body'),
                 type: 'success',
                 timeout: 5,
             });
@@ -690,10 +690,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             class="button ${classMap({
                                 hidden: this.mode === MODE_FILE_SINK || this.mode === MODE_FILE_SOURCE,
                             })}"
-                            title="${i18n.t('clipboard.add-files')}"
+                            title="${i18n.t('dbp.clipboard.add-files')}"
                             ?disabled="${this.buttonsDisabled}">
                         <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                        ${i18n.t('clipboard.add-files-btn')}
+                        ${i18n.t('dbp.clipboard.add-files-btn')}
                     </button>
                     <button
                             id="clipboard-remove-files-button"
@@ -702,14 +702,14 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             }}"
                             class="button"
                             title="${this.numberOfSelectedFiles > 0
-                                    ? i18n.t('clipboard.remove-count', {count: this.numberOfSelectedFiles})
-                                    : i18n.t('clipboard.remove-all')}"
+                                    ? i18n.t('dbp.clipboard.remove-count', {count: this.numberOfSelectedFiles})
+                                    : i18n.t('dbp.clipboard.remove-all')}"
                             ?disabled="${buttonsAreDisabled}">
                         ${this.numberOfSelectedFiles > 0
-                                ? i18n.t('clipboard.remove-count-btn', {
+                                ? i18n.t('dbp.clipboard.remove-count-btn', {
                                     count: this.numberOfSelectedFiles,
                                 })
-                                : i18n.t('clipboard.remove-all-btn')}
+                                : i18n.t('dbp.clipboard.remove-all-btn')}
                     </button>
                 </div>
                 <div class="btn-flex-container-mobile">
@@ -721,19 +721,19 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             ?disabled="${buttonsAreDisabled}"
                             class="button"
                             title="${this.numberOfSelectedFiles > 0
-                                    ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles})
-                                    : i18n.t('clipboard.save-all')}">
+                                    ? i18n.t('dbp.clipboard.save-count', {count: this.numberOfSelectedFiles})
+                                    : i18n.t('dbp.clipboard.save-all')}">
                         ${this.numberOfSelectedFiles > 0
-                                ? i18n.t('clipboard.save-count-btn', {
+                                ? i18n.t('dbp.clipboard.save-count-btn', {
                                     count: this.numberOfSelectedFiles,
                                 })
-                                : i18n.t('clipboard.save-all-btn')}
+                                : i18n.t('dbp.clipboard.save-all-btn')}
                     </button>
                 </div>
             </div>
             <dbp-file-source
                     id="file-source-clipboard"
-                    context="${i18n.t('clipboard.add-files')}"
+                    context="${i18n.t('dbp.clipboard.add-files')}"
                     allowed-mime-types="${this.allowedMimeTypes}"
                     nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
                     nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
@@ -746,8 +746,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                             : this.enabledTargets.replace('clipboard', '')}"
                     decompress-zip
                     lang="${this.lang}"
-                    text="${i18n.t('clipboard.upload-area-text')}"
-                    button-label="${i18n.t('clipboard.upload-button-label')}"
+                    text="${i18n.t('dbp.clipboard.upload-area-text')}"
+                    button-label="${i18n.t('dbp.clipboard.upload-button-label')}"
                     @dbp-file-source-file-selected="${this.saveFilesToClipboardEvent}"
                     @dbp-nextcloud-file-picker-number-files="${this.finishedSaveFilesToClipboard}"
                     @dbp-file-source-file-upload-finished="${this
@@ -755,8 +755,8 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             <dbp-file-sink
                     id="file-sink-clipboard"
                     context="${this.numberOfSelectedFiles > 0
-                            ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles})
-                            : i18n.t('clipboard.save-all')}"
+                            ? i18n.t('dbp.clipboard.save-count', {count: this.numberOfSelectedFiles})
+                            : i18n.t('dbp.clipboard.save-all')}"
                     filename="clipboard-documents.zip"
                     allowed-mime-types="${this.allowedMimeTypes}"
                     enabled-targets="${this.allowNesting
@@ -786,10 +786,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         return html`
             <div class="wrapper">
                 <div class="content">
-                    <h3>${i18n.t('clipboard.sink-title')}</h3>
+                    <h3>${i18n.t('dbp.clipboard.sink-title')}</h3>
                     <div class="warning-container">
                         <dbp-icon name="warning-high" class="warning-icon"></dbp-icon>
-                        <p>${i18n.t('clipboard.warning')}</p>
+                        <p>${i18n.t('dbp.clipboard.warning')}</p>
                     </div>
                     <div>
                         ${this.getAdditionalButtons()}
@@ -802,12 +802,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                 <div class="clipboard-footer">
                     <button
                             class="button select-button is-primary"
-                            title="${i18n.t('clipboard.sink-btn', {count: this.filesToSave.length})}"
+                            title="${i18n.t('dbp.clipboard.sink-btn', {count: this.filesToSave.length})}"
                             @click="${() => {
                                 this.saveFilesToClipboard();
                             }}">
                         <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                        ${i18n.t('clipboard.sink-btn', {count: this.filesToSave.length})}
+                        ${i18n.t('dbp.clipboard.sink-btn', {count: this.filesToSave.length})}
                     </button>
                 </div>
             </div>
@@ -828,10 +828,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
         return html`
             <div class="wrapper">
                 <div class="content">
-                    <h3>${i18n.t('clipboard.source-title')}</h3>
+                    <h3>${i18n.t('dbp.clipboard.source-title')}</h3>
                     <div class="warning-container">
                         <dbp-icon name="warning-high" class="warning-icon"></dbp-icon>
-                        <p>${i18n.t('clipboard.warning')}</p>
+                        <p>${i18n.t('dbp.clipboard.warning')}</p>
                     </div>
                     <div>
                         ${this.getAdditionalButtons()}
@@ -849,12 +849,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                                 this.sendClipboardFiles(this.tabulatorTable.getSelectedData());
                             }}">
                         ${this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0
-                                ? i18n.t('clipboard.source-btn', {
+                                ? i18n.t('dbp.clipboard.source-btn', {
                                     count: this.tabulatorTable
                                             ? this.tabulatorTable.getSelectedRows().length
                                             : 0,
                                 })
-                                : i18n.t('clipboard.source-btn-none')}
+                                : i18n.t('dbp.clipboard.source-btn-none')}
                     </button>
                 </div>
             </div>

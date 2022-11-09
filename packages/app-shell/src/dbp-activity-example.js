@@ -40,12 +40,12 @@ class ActivityExample extends LitElement {
     render() {
         const i18n = this._i18n;
         return html`
-            <h3>${i18n.t('activity-example.hello-world')}</h3>
+            <h3>${i18n.t('dbp.activity-example.hello-world')}</h3>
             <ul>
                 ${Array.from(Array(100).keys()).map(
                     (i) =>
                         html`
-                            <li>${i18n.t('activity-example.hello-world') + ' ' + i}</li>
+                            <li>${i18n.t('dbp.activity-example.hello-world') + ' ' + i}</li>
                         `
                 )}
             </ul>

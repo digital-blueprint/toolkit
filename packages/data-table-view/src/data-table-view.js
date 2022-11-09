@@ -131,7 +131,7 @@ export class DataTableView extends AdapterLitElement {
                         input.type = 'text';
                         input.className = 'column-search-line';
                         input.id = 'input-col-' + index;
-                        input.placeholder = i18n.t('column-search-placeholder', {
+                        input.placeholder = i18n.t('dbp.column-search-placeholder', {
                             fieldName: element.title,
                         });
                         th.appendChild(input);
@@ -156,14 +156,14 @@ export class DataTableView extends AdapterLitElement {
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    text: i18n.t('export-excel'),
+                    text: i18n.t('dbp.export-excel'),
                     title: this.exportName,
                     filename: this.exportName,
                     className: 'button is-small',
                 },
                 {
                     extend: 'csvHtml5',
-                    text: i18n.t('export-csv'),
+                    text: i18n.t('dbp.export-csv'),
                     title: this.exportName,
                     filename: this.exportName,
                     className: 'button is-small',
@@ -173,7 +173,7 @@ export class DataTableView extends AdapterLitElement {
                 },
                 {
                     extend: 'print',
-                    text: i18n.t('print'),
+                    text: i18n.t('dbp.print'),
                     title: this.exportName,
                     className: 'button is-small',
                 },

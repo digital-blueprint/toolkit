@@ -67,7 +67,7 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
                     <div class="columns is-vcentered">
                         <div class="column">
                             <button id="send-button" @click="${this.send}" class="button">
-                                ${i18n.t('send')}
+                                ${i18n.t('dbp.send')}
                             </button>
                         </div>
                     </div>

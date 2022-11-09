@@ -1,6 +1,8 @@
 {
-    "person-select": {
-        "login-required": "Login required",
-        "placeholder": "Please select a person"
+    "dbp": {
+        "person-select": {
+            "login-required": "Login required",
+            "placeholder": "Please select a person"
+        }
     }
 }

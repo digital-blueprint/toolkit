@@ -98,9 +98,9 @@ To use translations from another namespace, the namespace has to be defined by u
 Therefore, two `dbp-theme-switcher` components, one with overrides and one without, can be displayed using the following code:
 ```html
 <dbp-theme-switcher subscribe="lang, lang-dir"
-    themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('themes.dark-mode')}"}]'></dbp-theme-switcher>
+    themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('dbp.themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('dbp.themes.dark-mode')}"}]'></dbp-theme-switcher>
 <dbp-theme-switcher subscribe="lang"
-    themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('translation:themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('translation:themes.dark-mode')}"}]'></dbp-theme-switcher>
+    themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('translation:dbp.themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('translation:dbp.themes.dark-mode')}"}]'></dbp-theme-switcher>
 ```
 with the following translation files:
 ```json

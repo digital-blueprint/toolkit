@@ -106,7 +106,7 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
 
             <section class="section">
                 <div class="content">
-                    <h1 class="title">${i18n.t('demo-title')}</h1>
+                    <h1 class="title">${i18n.t('dbp.demo-title')}</h1>
                 </div>
                 <div class="content">
                     <h2 class="subtitle">Selected files</h2>
