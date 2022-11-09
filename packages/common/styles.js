@@ -638,7 +638,6 @@ export function getButtonCSS() {
         button.button.is-icon, .button.is-icon {
             border: none;
             background: none;
-            font-size: 1.2rem;
             padding: 0px;
             width: 40px;
             height: 40px;
@@ -647,8 +646,9 @@ export function getButtonCSS() {
             align-items: center;
         }
 
-        button.button.is-icon dbp-icon, .button.is-icon dbp-icon{
+        button.button.is-icon dbp-icon, .button.is-icon dbp-icon, dbp-button-icon{
             top: 0px;
+            font-size: 1.2em;
         }
 
         button.button.is-icon:hover:enabled,
