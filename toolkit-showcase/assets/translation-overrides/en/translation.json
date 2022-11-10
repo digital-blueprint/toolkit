@@ -2,11 +2,13 @@
     "dbp-translation": {
         "toolkit-showcase": "This text will be translated to german using i18n with a user defined language file when the language is changed to german.",
         "toolkit-showcase-link": "Furthermore its possible to display links through <a href=\"{{- link1}}\" class=\"link\">interpolation</a> and escaping.",
-        "link": "Here is a clickable <a class=\"link\" href=\"{{- linkEN}}\">link</a>"
+        "link": "Here is a clickable <a class=\"link\" href=\"{{- linkEN}}\">link</a>",
+        "theme-switcher-demo": "The theme-switcher tooltip should be overwritten: "
     },
     "dbp": {
         "theme-switcher": {
-            "intro": "With the theme-switcher you can switch between multiple themes. For example, between Light Mode and Dark Mode."
+            "intro": "With the theme-switcher you can switch between multiple themes. For example, between Light Mode and Dark Mode.",
+            "color-mode": "Change theme"
         }
     }
 }

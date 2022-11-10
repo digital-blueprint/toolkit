@@ -310,21 +310,17 @@ html {
                             </div>
                         </dbp-translated>
                     </div>
-                    <div class="control" id="dbp-translation-text">
-                        <dbp-translation key="toolkit-showcase" subscribe="lang, lang-dir"></dbp-translation>
-                        <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-dir" unsafe></dbp-translation>
-                        <dbp-translation key="abc" subscribe="lang, lang-dir"></dbp-translation>
-                    </div>
                 </div>
                 <div class="content">
                     <h2>Translation Demo</h2>
                     <div class="control" id="dbp-translation-demo">
-                        <dbp-translation subscribe="lang, lang-dir" key="test"></dbp-translation><br/>
-                        <dbp-translation subscribe="lang, lang-dir" key="link" var='{"linkDE": "https://www.tugraz.at/home/", "linkEN": "https://www.tugraz.at/en/home/"}' unsafe></dbp-translation>
+                        <dbp-translation subscribe="lang, lang-dir" key="link" var='{"linkDE": "https://www.tugraz.at/home/", "linkEN": "https://www.tugraz.at/en/home/"}' unsafe></dbp-translation><br/>
+                        <dbp-translation subscribe="lang, lang-dir" key="theme-switcher-demo"></dbp-translation>
                         <dbp-theme-switcher subscribe="lang, lang-dir"
                             themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('dbp.themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('dbp.themes.dark-mode')}"}]'></dbp-theme-switcher>
-                        <dbp-theme-switcher subscribe="lang"
-                            themes='[{"class": "light-theme", "icon": "sun", "name": "${this._i18n.t('translation:dbp.themes.light-mode')}"}, {"class": "dark-theme", "icon": "night", "name": "${this._i18n.t('translation:dbp.themes.dark-mode')}"}]'></dbp-theme-switcher>
+                        <dbp-translation key="toolkit-showcase" subscribe="lang, lang-dir"></dbp-translation>
+                        <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-dir" unsafe></dbp-translation>
+                        <dbp-translation key="abc" subscribe="lang, lang-dir"></dbp-translation>
                     </div>
                 </div>
             </section>
