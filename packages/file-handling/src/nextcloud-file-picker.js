@@ -3000,6 +3000,10 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                 padding: 0px;
                 align-items: baseline;
             }
+            
+            #replace-modal-content div{
+                width: 100%;
+            }
 
             #replace-modal-box .modal-header h2 {
                 text-align: left;

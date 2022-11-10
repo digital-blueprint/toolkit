@@ -325,6 +325,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         select:not(.select), .dropdown-menu {
             -moz-appearance: none;
             -webkit-appearance: none;
+            background-color: var(--dbp-background);
             background: calc(100% - 0.2rem) center no-repeat url("${unsafeCSS(
                 getIconSVGURL('chevron-down')
             )}");
@@ -649,6 +650,29 @@ export function getButtonCSS() {
             font-size: 0.75rem;
         }
 
+        button.button.is-icon, .button.is-icon {
+            border: none;
+            background: none;
+            padding: 0px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: currentColor;
+        }
+
+        button.button.is-icon dbp-icon, .button.is-icon dbp-icon, dbp-button-icon{
+            top: 0px;
+            font-size: 1.2em;
+        }
+
+        button.button.is-icon:hover:enabled,
+        .button.is-icon:hover:enabled {
+            background-color: var(--dbp-hover-background-color, unset);
+            color: var(--dbp-hover-color, currentColor);
+        }
+
         button.button.is-primary,
         .button.is-primary {
             background-color: var(--dbp-primary-surface);
@@ -792,8 +816,8 @@ export function getRadioAndCheckboxCss() {
             position: absolute;
             top: 0;
             left: 0;
-            height: 20px;
-            width: 20px;
+            height: 19px;
+            width: 19px;
             background-color: var(--dbp-background);
             border: solid;
             border-radius: 100%;
@@ -1509,6 +1533,10 @@ export function getTabulatorStyles() {
             color: var(--dbp-hover-color, var(--dbp-on-content-surface));
         }
 
+        .tabulator-selected .tabulator-responsive-collapse-toggle, .tabulator-row.tabulator-selected .tabulator-cell .tabulator-responsive-collapse-toggle{
+            background-color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+        }
+
         .tabulator-row,
         .tabulator-row.tabulator-row-even {
             border-top: 1px solid #eee;
@@ -1536,19 +1564,22 @@ export function getTabulatorStyles() {
         .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle {
             height: 100%;
             width: 100%;
-            background-color: unset;
         }
 
         .tabulator-responsive-collapse-toggle-open,
         .tabulator-responsive-collapse-toggle-close {
             content: none;
             visibility: hidden;
+            display: none;
         }
 
+        .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle:hover{
+            opacity: 1;
+        }
 
-        .tabulator-responsive-collapse-toggle-open::after,
-        .tabulator-responsive-collapse-toggle-close::after {
-            content: '\\00a0\\00a0\\00a0\\00a0\\00a0';
+        .tabulator-responsive-collapse-toggle, .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle{
+            -webkit-mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M388%2c380.5c-0.2%2c0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2c0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1 c0.3-0.3%2c0.8-0.4%2c1.1-0.1l13.1%2c11.5c0.2%2c0.2%2c0.3%2c0.4%2c0.3%2c0.6s-0.1%2c0.5-0.3%2c0.6l-13.1%2c11.5C388.4%2c380.4%2c388.2%2c380.5%2c388%2c380.5z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+            mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M388%2c380.5c-0.2%2c0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2c0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1 c0.3-0.3%2c0.8-0.4%2c1.1-0.1l13.1%2c11.5c0.2%2c0.2%2c0.3%2c0.4%2c0.3%2c0.6s-0.1%2c0.5-0.3%2c0.6l-13.1%2c11.5C388.4%2c380.4%2c388.2%2c380.5%2c388%2c380.5z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");            content: '';
             background-color: var(--dbp-content);
             -webkit-mask-repeat: no-repeat;
             mask-repeat: no-repeat;
@@ -1557,37 +1588,12 @@ export function getTabulatorStyles() {
             margin: 0 0 0 4px;
             padding: 0 0 0.25% 0;
             -webkit-mask-size: 100%;
-            mask-size: 100%;
-            visibility: visible;
+            mask-size: 40%;
         }
 
-        .tabulator-responsive-collapse-toggle-open::after {
-            -webkit-mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M388%2c380.5c-0.2%2c0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2c0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1 c0.3-0.3%2c0.8-0.4%2c1.1-0.1l13.1%2c11.5c0.2%2c0.2%2c0.3%2c0.4%2c0.3%2c0.6s-0.1%2c0.5-0.3%2c0.6l-13.1%2c11.5C388.4%2c380.4%2c388.2%2c380.5%2c388%2c380.5z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
-            mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M388%2c380.5c-0.2%2c0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2c0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1 c0.3-0.3%2c0.8-0.4%2c1.1-0.1l13.1%2c11.5c0.2%2c0.2%2c0.3%2c0.4%2c0.3%2c0.6s-0.1%2c0.5-0.3%2c0.6l-13.1%2c11.5C388.4%2c380.4%2c388.2%2c380.5%2c388%2c380.5z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
-            margin-left: -9px;
-        }
-
-        .tabulator-responsive-collapse-toggle-close::after {
+        .tabulator-responsive-collapse-toggle.open, .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle.open{
             -webkit-mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M382.2%2c361.7c0-0.2%2c0.1-0.4%2c0.3-0.6c0.3-0.3%2c0.8-0.3%2c1.1%2c0.1l10.9%2c12.5l10.9-12.5c0.3-0.3%2c0.8-0.4%2c1.1-0.1 c0.3%2c0.3%2c0.4%2c0.8%2c0.1%2c1.1l-11.5%2c13.1c-0.2%2c0.2-0.4%2c0.3-0.6%2c0.3s-0.5-0.1-0.6-0.3l-11.5-13.1C382.3%2c362.1%2c382.2%2c361.9%2c382.2%2c361.7z '/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
             mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M382.2%2c361.7c0-0.2%2c0.1-0.4%2c0.3-0.6c0.3-0.3%2c0.8-0.3%2c1.1%2c0.1l10.9%2c12.5l10.9-12.5c0.3-0.3%2c0.8-0.4%2c1.1-0.1 c0.3%2c0.3%2c0.4%2c0.8%2c0.1%2c1.1l-11.5%2c13.1c-0.2%2c0.2-0.4%2c0.3-0.6%2c0.3s-0.5-0.1-0.6-0.3l-11.5-13.1C382.3%2c362.1%2c382.2%2c361.9%2c382.2%2c361.7z '/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
-            margin-left: -8px;
-        }
-
-        .tabulator-responsive-collapse-toggle-open:hover::after,
-        .tabulator-responsive-collapse-toggle-close:hover::after {
-            background-color: var(--dbp-hover-color, var(--dbp-content));
-        }
-
-        .tabulator-selected .tabulator-responsive-collapse-toggle-open::after,
-        .tabulator-selected .tabulator-responsive-collapse-toggle-close::after {
-            background-color: var(--dbp-hover-color, var(--dbp-on-content-surface));
-        }
-
-        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles .tabulator-responsive-collapse-toggle-close::after,
-        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles:hover .tabulator-responsive-collapse-toggle-close::after,
-        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles .tabulator-responsive-collapse-toggle-open::after,
-        .tabulator-row.tabulator-selectable.tabulator-selected.no-select-styles:hover .tabulator-responsive-collapse-toggle-open::after {
-            background-color: var(--dbp-content);
         }
 
         /* Define the style when the column is not sorted */
@@ -1659,6 +1665,10 @@ export function getTabulatorStyles() {
 
         .tabulator .tabulator-tableholder{
             overflow: inherit;
+        }
+
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable.tabulator-col-sorter-element:hover{
+            background-color: unset;
         }
 
         @media only screen and (orientation: portrait) and (max-width: 768px) {

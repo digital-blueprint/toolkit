@@ -11,9 +11,9 @@
     },
     "devDependencies": {
         "@esm-bundle/chai": "^4.2.0",
-        "@rollup/plugin-commonjs": "^22.0.0",
-        "@rollup/plugin-json": "^4.1.0",
-        "@rollup/plugin-node-resolve": "^13.0.0",
+        "@rollup/plugin-commonjs": "^23.0.0",
+        "@rollup/plugin-json": "^5.0.0",
+        "@rollup/plugin-node-resolve": "^15.0.0",
         "eslint": "^8.0.0",
         "eslint-plugin-jsdoc": "^39.0.0",
         "i18next-parser": "^6.3.0",
@@ -24,7 +24,7 @@
         "mocha": "^10.0.0",
         "playwright-core": "^1.20.2",
         "prettier": "^2.5.1",
-        "rollup": "^2.33.3",
+        "rollup": "^3.2.5",
         "rollup-plugin-copy": "^3.1.0",
         "rollup-plugin-delete": "^2.0.0",
         "rollup-plugin-serve": "^2.0.0"
@@ -35,15 +35,15 @@
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
         "clean": "rm dist/*",
-        "build": "rollup -c",
-        "build-test": "rollup -c --environment BUILD:test",
-        "test": "npm run build-test && karma start --singleRun",
-        "watch": "rollup -c --watch",
+        "build": "rollup --bundleConfigAsCjs -c",
+        "build-test": "rollup --bundleConfigAsCjs -c --environment BUILD:test",
+        "test": "yarn run build-test && karma start --singleRun",
+        "watch": "rollup --bundleConfigAsCjs -c --watch",
         "lint": "eslint ."
     },
     "dependencies": {
         "@open-wc/scoped-elements": "^2.1.0",
-        "i18next": "^21.4.2",
+        "i18next": "^22.0.0",
         "lit": "^2.0.0"
     }
 }
