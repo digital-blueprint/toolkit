@@ -33,6 +33,13 @@ export default (async () => {
             format: 'esm',
             sourcemap: true,
         },
+        onwarn: function (warning, warn) {
+            // keycloak bundled code uses eval
+            if (warning.code === 'EVAL' && warning.id.includes('sha256.js')) {
+                return;
+            }
+            warn(warning);
+        },
         plugins: [
             del({
                 targets: 'dist/*',
