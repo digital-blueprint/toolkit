@@ -4851,10 +4851,10 @@ hosted-git-info@^5.0.0:
   dependencies:
     lru-cache "^7.5.1"
 
-hot-patcher@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/hot-patcher/-/hot-patcher-0.5.0.tgz#9d401424585aaf3a91646b816ceff40eb6a916b9"
-  integrity sha512-2Uu2W0s8+dnqXzdlg0MRsRzPoDCs1wVjOGSyMRRaMzLDX4bgHw6xDYKccsWafXPPxQpkQfEjgW6+17pwcg60bw==
+hot-patcher@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/hot-patcher/-/hot-patcher-1.0.0.tgz#7124d2dc4ca71bcb58b1551603cd13e4fc3fcecd"
+  integrity sha512-3H8VH0PreeNsKMZw16nTHbUp4YoHCnPlawpsPXGJUR4qENDynl79b6Xk9CIFvLcH1qungBsCuzKcWyzoPPalTw==
 
 htmlparser2@^8.0.1:
   version "8.0.1"
@@ -4952,9 +4952,9 @@ i18next@^21.2.0:
     "@babel/runtime" "^7.17.2"
 
 i18next@^22.0.0:
-  version "22.0.5"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.0.5.tgz#81f29574b19d1c00e76523c3b45b91e3f9223ee3"
-  integrity sha512-N2AXKCLHzv1ClfLqiwbAPJHClovfRv9iplySiZ/S3LfQ7PNjkVEkVpFbhCXDsPhQd6kLp6DKjbzpowniE8Mdiw==
+  version "22.0.6"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.0.6.tgz#d7029912f8aa74ff295c0d9afd1b7dea45859b49"
+  integrity sha512-RlreNGoPIdDP4QG+qSA9PxZKGwlzmcozbI9ObI6+OyUa/Rp0EjZZA9ubyBjw887zVNZsC+7FI3sXX8oiTzAfig==
   dependencies:
     "@babel/runtime" "^7.17.2"
 
@@ -8757,16 +8757,16 @@ web-component-analyzer@~1.1.1:
     yargs "^15.3.1"
 
 webdav@^4.8.0:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/webdav/-/webdav-4.11.0.tgz#21678153e442dcd3c5f74a50e1fedb10af13a8e4"
-  integrity sha512-vQ2EFL8cef9F/Nvua1NPcw3z9CWAnnc22mn+sym72W2WFW4Q7doTIhItRzxpgU+tUCc3V10VB0I+eBdgU5wKTQ==
+  version "4.11.2"
+  resolved "https://registry.yarnpkg.com/webdav/-/webdav-4.11.2.tgz#49cde29e33538bc9f3d3a0a4da0f3d16215f5794"
+  integrity sha512-Ht9TPD5EB7gYW0YmhRcE5NW0/dn/HQfyLSPQY1Rw1coQ5MQTUooAQ9Bpqt4EU7QLw0b95tX4cU59R+SIojs9KQ==
   dependencies:
     axios "^0.27.2"
     base-64 "^1.0.0"
     byte-length "^1.0.2"
     fast-xml-parser "^3.19.0"
     he "^1.2.0"
-    hot-patcher "^0.5.0"
+    hot-patcher "^1.0.0"
     layerr "^0.1.2"
     md5 "^2.3.0"
     minimatch "^5.1.0"
