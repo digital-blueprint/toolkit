@@ -14,6 +14,8 @@ export class Modal extends DBPLitElement {
         this.lang = this._i18n.language;
         this.modalId = 'dbp-modal-id';
         this.title = "Modal Title";
+
+        // TODO add with/height
     }
 
     static get properties() {
@@ -37,6 +39,10 @@ export class Modal extends DBPLitElement {
                 // TODO get from parent maybe notify parent with event
             },
         });
+    }
+
+    close() {
+        MicroModal.close(this._('#' + this.modalId));
     }
 
     static get styles() {
@@ -93,9 +99,7 @@ export class Modal extends DBPLitElement {
                                 title="${i18n.t('dbp-modal.close')}"
                                 class="modal-close"
                                 aria-label="Close modal"
-                                @click="${() => {
-                                    MicroModal.close(this._('#' + this.modalId));
-                                }}">
+                                @click="${() => {this.close()}}">
                                 <dbp-icon
                                     title="${i18n.t('dbp-modal.close')}"
                                     name="close"
