@@ -7,5 +7,9 @@
         "api-documentation-server": "Connection to apiDocumentation server {{apiDocUrl}} failed!",
         "error-api-server": "Connection to api server {{apiUrl}} failed!",
         "error-hydra-documentation-url-not-set": "Hydra apiDocumentation url was not set for server {{apiUrl}}!"
+    },
+
+    "dbp-modal": {
+        "close": "close"
     }
 }

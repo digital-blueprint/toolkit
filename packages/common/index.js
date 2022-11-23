@@ -8,6 +8,7 @@ import {InlineNotification} from './src/inline-notification.js';
 import {Translated} from './src/translated';
 import {Translation} from './src/translation';
 import {AdapterLitElement} from './src/adapter-lit-element.js';
+import {Modal} from "./src/modal";
 
 export {EventBus, createLinkedAbortController, createTimeoutAbortSignal};
 export {getIconSVGURL, getIconCSS, Icon};
@@ -19,3 +20,4 @@ export {Translated, Translation};
 export * from './src/logger.js';
 export * from './src/utils.js';
 export {AdapterLitElement};
+export {Modal};
