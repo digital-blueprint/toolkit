@@ -1,4 +1,4 @@
-import {html, LitElement, css} from 'lit';
+import {html, css} from 'lit';
 import {createInstance} from './i18n';
 import * as commonStyles from '../styles.js';
 import {Icon} from "./icon";
@@ -99,7 +99,7 @@ export class Modal extends DBPLitElement {
                                 title="${i18n.t('dbp-modal.close')}"
                                 class="modal-close"
                                 aria-label="Close modal"
-                                @click="${() => {this.close()}}">
+                                @click="${() => {this.close();}}">
                                 <dbp-icon
                                     title="${i18n.t('dbp-modal.close')}"
                                     name="close"
