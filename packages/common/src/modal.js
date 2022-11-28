@@ -1,10 +1,12 @@
-import {html, css} from 'lit';
+import {html, css
+} from 'lit';
 import {createInstance} from './i18n';
 import * as commonStyles from '../styles.js';
-import {Icon} from "./icon";
-import {MiniSpinner} from "./mini-spinner";
+import {Icon} from './icon';
+import {MiniSpinner} from './mini-spinner';
 import MicroModal from './micromodal.es';
-import DBPLitElement from "../dbp-lit-element";
+import DBPLitElement from '../dbp-lit-element';
+import {styleMap} from 'lit/directives/style-map.js';
 
 
 export class Modal extends DBPLitElement {
@@ -13,16 +15,38 @@ export class Modal extends DBPLitElement {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.modalId = 'dbp-modal-id';
-        this.title = "Modal Title";
+        this.title = "";
 
-        // TODO add with/height
+        this.width = 'inherit';
+        this.height = 'inherit';
+        this.minWidth = 'inherit';
+        this.minHeight = 'inherit';
+
+        this.size = {
+            width: this.width,
+            height: this.height,
+            minWidth: this.minWidth,
+            minHeight: this.minHeight};
     }
 
     static get properties() {
         return {
             modalId: {type: String, attribute: 'modal-id'},
             title: {type: String},
+            width: {type: String},
+            height: {type: String},
+            minWidth: {type: String, attribute: 'min-width'},
+            minHeight: {type: String, attribute: 'min-height'},
         };
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.size = {
+            width: this.width,
+            height: this.height,
+            minWidth: this.minWidth,
+            minHeight: this.minHeight};
     }
 
     static get scopedElements() {
@@ -64,9 +88,10 @@ export class Modal extends DBPLitElement {
             }
             
             .modal-header{
-                padding: 0px;
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
+                padding: 0 0 20px 0;
             }
             
             .modal-content{
@@ -77,6 +102,10 @@ export class Modal extends DBPLitElement {
                 gap: 1em;
                 flex-direction: column;
                 height: 100%;
+            }
+            
+            footer{
+                padding-top: 20px;
             }
         `;
     }
@@ -90,7 +119,8 @@ export class Modal extends DBPLitElement {
                     <div class="modal-container"
                          role="dialog"
                          aria-modal="true"
-                         aria-labelledby="show-recipient-modal-title">
+                         aria-labelledby="show-recipient-modal-title"
+                         style=${styleMap(this.size)}>
                         <header class="modal-header">
                             <h3 class="modal-title">
                                 ${this.title}
