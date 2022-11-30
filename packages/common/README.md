@@ -37,7 +37,48 @@ You can use this web component to show translated html.
 </dbp-translated>
 ```
 
-The English or German text will be shown according to the `lang` attribute. 
+## Modal Web Component
+
+You can use this web component to show content in a modal. 
+This webcomponent has two function which can be called from outside: `open()` - which opens the modal and `close()` 
+- which closes the modal. 
+
+```html
+<script type="module" src="https://unpkg.com/@dbp-toolkit/common@0.2.8/dist/components.js"></script>
+<dbp-translated subscribe="lang">
+    <div slot="de">
+        Dieser Text ist Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.
+    </div>
+    <div slot="en">
+        This text is English and will be German if the language is changed to German.
+    </div>
+</dbp-translated>
+```
+
+### Attributes
+
+- `lang` (optional, default: `de`): set to `de` or `en` for German or English
+    - example `<dbp-modal lang="de"></dbp-modal>`
+- `modal-id`(default: `modal-id`, should unique): this is the modal css selector id
+    - example `<dbp-modal modal-id="my-modal-123"></dbp-modal>`
+- `title` (optional): sets the modal title
+    - example `<dbp-modal title="This is my modal"></dbp-modal>`
+- `width`, `height`, `min-width`, `min-height` (optional): set the size of a modal
+    - example `<dbp-modal width="15px" height="100%"></dbp-modal>`
+
+### Callable functions
+
+- `open()` opens a specific modal
+  - `this._('#my-modal-webcomponent-id').open();`
+- `close()` closes a specific modal
+  - `this._('#my-modal-webcomponent-id').close();`
+
+### Events
+
+- `dbp-modal-closed` a event which is triggered if the modal is closed. in the detail attribute there is the modal-id of the closed modal.
+  - `<dbp-modal @dbp-modal-closed="${(event) => {
+    this.doSomething(event);
+    }}"></dbp-modal>`
 
 ## Overriding slots in nested web components
 
