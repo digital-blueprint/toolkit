@@ -60,7 +60,12 @@ export class Modal extends DBPLitElement {
         MicroModal.show(this._('#' + this.modalId), {
             disableScroll: true,
             onClose: (modal) => {
-                // TODO get from parent maybe notify parent with event
+                const event = new CustomEvent('dbp-modal-closed', {
+                    detail: {id: this.modalId},
+                    bubbles: true,
+                    composed: true,
+                });
+                this.dispatchEvent(event);
             },
         });
     }
