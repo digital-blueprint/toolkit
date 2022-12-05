@@ -1,6 +1,6 @@
 {
     "name": "@dbp-toolkit/knowledge-base-web-page-element-view",
-    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/knowledge-base-web-page-element-view",
+    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/knowledge-base-web-page-element-view",
     "version": "0.2.5",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",

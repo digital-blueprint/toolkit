@@ -83,7 +83,7 @@ This webcomponent has two function which can be called from outside: `open()` - 
 ## Overriding slots in nested web components
 
 If slots are used in web components then it is best to derive your component class from
-[DBPLitElement](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/blob/master/packages/common/dbp-lit-element.js)
+[DBPLitElement](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/blob/main/packages/common/dbp-lit-element.js)
 and subscribe to the attribute `html-overrides` everywhere you use it with `subscribe="html-overrides"`.
 
 This way integrators who are using topics or activities are able to globally override these slots

@@ -35,7 +35,7 @@ publish:
     url: https://www.npmjs.com/search?q=%40dbp-toolkit
   only:
     refs:
-      - master
+      - main
   script:
     # https://www.npmjs.com/settings/dbp-deploy/tokens
     # NPM_TOKEN needs to be a "Publish" token with 2FA disabled!
@@ -51,7 +51,7 @@ deploy:
     - schedules
   only:
     refs:
-      - master
+      - main
       - demo
   inherit:
     variables: false

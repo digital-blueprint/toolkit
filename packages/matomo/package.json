@@ -1,6 +1,6 @@
 {
     "name": "@dbp-toolkit/matomo",
-    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/matomo",
+    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/matomo",
     "version": "0.2.6",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",

@@ -23,7 +23,7 @@ Or directly via CDN:
 ```
 
 You need Keycloak to be in place to make use of the auth component.
-Best take a look on examples like [index.html](https://gitlab.tugraz.at/dbp/esign/signature/-/blob/master/examples/dbp-signature/index.html)
+Best take a look on examples like [index.html](https://gitlab.tugraz.at/dbp/esign/signature/-/blob/main/examples/dbp-signature/index.html)
 for more explanation.
 
 ### Attributes

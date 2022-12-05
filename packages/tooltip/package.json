@@ -1,6 +1,6 @@
 {
     "name": "@dbp-toolkit/tooltip",
-    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/tooltip",
+    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/tooltip",
     "version": "0.0.3",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",

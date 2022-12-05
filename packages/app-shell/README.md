@@ -24,7 +24,7 @@ Or directly via CDN:
 ```
 
 You need Keycloak and other parts to be in place to really make full use of the AppShell.
-Best take a look on examples like [index.html](https://gitlab.tugraz.at/dbp/esign/signature/-/blob/master/examples/dbp-signature/index.html)
+Best take a look on examples like [index.html](https://gitlab.tugraz.at/dbp/esign/signature/-/blob/main/examples/dbp-signature/index.html)
 for more explanation.
 
 ## Attributes

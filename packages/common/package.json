@@ -1,6 +1,6 @@
 {
     "name": "@dbp-toolkit/common",
-    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/common",
+    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/common",
     "version": "0.3.4",
     "module": "index.js",
     "license": "LGPL-2.1-or-later",
