@@ -1,0 +1,64 @@
+{
+    "name": "@dbp-toolkit/tabulator-table",
+    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/tabulator-table",
+    "version": "0.0.1",
+    "main": "src/index.js",
+    "license": "LGPL-2.1-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+        "directory": "packages/tabulator-table"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "devDependencies": {
+        "@esm-bundle/chai": "^4.2.0",
+        "@rollup/plugin-commonjs": "^23.0.0",
+        "@rollup/plugin-json": "^5.0.0",
+        "@rollup/plugin-node-resolve": "^15.0.0",
+        "@rollup/plugin-terser": "^0.1.0",
+        "eslint": "^8.0.0",
+        "eslint-plugin-jsdoc": "^39.0.0",
+        "i18next-parser": "^7.0.0",
+        "karma": "^6.0.0",
+        "karma-chrome-launcher": "^3.0.0",
+        "karma-firefox-launcher": "^2.1.0",
+        "karma-mocha": "^2.0.0",
+        "mocha": "^10.0.0",
+        "playwright-core": "^1.20.2",
+        "prettier": "^2.5.1",
+        "rollup": "^3.2.5",
+        "rollup-plugin-copy": "^3.1.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-serve": "^2.0.0"
+    },
+    "dependencies": {
+        "@dbp-toolkit/common": "^0.3.3",
+        "@open-wc/scoped-elements": "^2.1.0",
+        "i18next": "^22.0.0",
+        "jszip": "^3.5.0",
+        "lit": "^2.0.0",
+        "material-design-icons-svg": "^3.0.0",
+        "tabulator-tables": "^5.4.3"
+    },
+    "scripts": {
+        "clean": "rm dist/*",
+        "format": "yarn run format:eslint && yarn run format:prettier",
+        "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
+        "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
+        "build": "yarn run build-local",
+        "build-local": "rollup --bundleConfigAsCjs -c",
+        "build-dev": "rollup --bundleConfigAsCjs -c --environment BUILD:development",
+        "build-prod": "rollup --bundleConfigAsCjs -c --environment BUILD:production",
+        "build-demo": "rollup --bundleConfigAsCjs -c --environment BUILD:demo",
+        "build-test": "rollup --bundleConfigAsCjs -c --environment BUILD:test",
+        "i18next": "i18next",
+        "watch": "yarn run watch-local",
+        "watch-local": "rollup --bundleConfigAsCjs -c --watch",
+        "watch-dev": "rollup --bundleConfigAsCjs -c --watch --environment BUILD:development",
+        "test": "yarn run build-test && karma start --singleRun",
+        "lint": "eslint ."
+    }
+}
