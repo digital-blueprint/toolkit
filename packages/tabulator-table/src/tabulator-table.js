@@ -320,7 +320,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 }
                 
                 button[data-page="prev"]::after, button[data-page="next"]::after, button[data-page="first"]::after, button[data-page="last"]::after {
-                  content: "    ";
+                  content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
                   background-color: var(--dbp-content);
                   mask-repeat: no-repeat;
                   mask-position: center center;
@@ -329,7 +329,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 button[data-page="first"]::after {
-                    content: "       ";
+                    content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
                     mask-image: url("${unsafeCSS(iconPath)}angle-double-left.svg");
                 }
                 
@@ -342,7 +342,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 button[data-page="last"]::after {
-                    content: "       ";
+                    content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
                     mask-image: url("${unsafeCSS(iconPath)}angle-double-right.svg");
                 }
             }
