@@ -133,7 +133,7 @@ A full example can be found in each application in the `index.html` of the `app-
       
 
 ## Note
-The classes should be defined outside of the body tag.
+The classes should be defined outside the body tag.
 
 ## Local development
 
