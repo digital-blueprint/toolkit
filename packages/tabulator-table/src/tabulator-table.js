@@ -25,6 +25,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.paginationEnabled = false;
         this.paginationSize = 10;
         this.selectAllEnabled = false;
+        this.tableReady = false;
+        this.initalization = true;
     }
 
     static get properties() {
@@ -53,6 +55,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.setLocale(this.lang);
                 }
             }
+            else if (propName === 'options' && this.options !== null && !this.tableReady
+            && !this.initalization) {
+                this.buildTable();
+            }
         });
         super.update(changedProperties);
     }
@@ -61,47 +67,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         super.connectedCallback();
 
         this.updateComplete.then(() => {
-            if (this.paginationEnabled) {
-                let paginationElement = this._('.tabulator-paginator');
-                this.options['pagination'] = 'local';
-                this.options['paginationSize'] = this.paginationSize;
-                this.options['paginationSizeSelector'] = true;
-                this.options['paginationElement'] = paginationElement;
-                this.options['langs'] = {
-                    'en': {
-                        'pagination': {
-                            'page_size': 'Page size',
-                                'page_size_title': 'Page size',
-                                'first': '<span class="mobile-hidden">First</span>',
-                                'first_title': 'First Page',
-                                'last': '<span class="mobile-hidden">Last</span>',
-                                'last_title': 'Last Page',
-                                'prev': '<span class="mobile-hidden">Prev</span>',
-                                'prev_title': 'Prev Page',
-                                'next': '<span class="mobile-hidden">Next</span>',
-                                'next_title': 'Next Page'
-                        }
-                    },
-                    'de': {
-                        'pagination': {
-                            'page_size': 'Einträge pro Seite',
-                                'page_size_title': 'Einträge pro Seite',
-                                'first': '<span class="mobile-hidden">Erste</span>',
-                                'first_title': 'Erste Seite',
-                                'last': '<span class="mobile-hidden">Letzte</span>',
-                                'last_title': 'Letzte Seite',
-                                'prev': '<span class="mobile-hidden">Vorherige</span>',
-                                'prev_title': 'Vorherige Seite',
-                                'next': '<span class="mobile-hidden">Nächste</span>',
-                                'next_title': 'Nächste Seite'
-                        }
-                    }
-                };
-            }
-
-            this.tabulatorTable = new Tabulator(this._("#" + this.identifier), this.options);
-            this.tabulatorTable.on("tableBuilt", this.tableBuildFunctions.bind(this));
-            this.tabulatorTable.on("rowClick", this.rowClickFunction.bind(this));
+            this.initalization = false;
         });
     }
 
@@ -112,7 +78,54 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         super.disconnectedCallback();
     }
 
+    buildTable() {
+        if (this.paginationEnabled) {
+            let paginationElement = this._('.tabulator-paginator');
+            this.options['pagination'] = 'local';
+            this.options['paginationSize'] = this.paginationSize;
+            this.options['paginationSizeSelector'] = true;
+            this.options['paginationElement'] = paginationElement;
+            this.options['langs'] = {
+                'en': {
+                    'pagination': {
+                        'page_size': 'Page size',
+                        'page_size_title': 'Page size',
+                        'first': '<span class="mobile-hidden">First</span>',
+                        'first_title': 'First Page',
+                        'last': '<span class="mobile-hidden">Last</span>',
+                        'last_title': 'Last Page',
+                        'prev': '<span class="mobile-hidden">Prev</span>',
+                        'prev_title': 'Prev Page',
+                        'next': '<span class="mobile-hidden">Next</span>',
+                        'next_title': 'Next Page'
+                    }
+                },
+                'de': {
+                    'pagination': {
+                        'page_size': 'Einträge pro Seite',
+                        'page_size_title': 'Einträge pro Seite',
+                        'first': '<span class="mobile-hidden">Erste</span>',
+                        'first_title': 'Erste Seite',
+                        'last': '<span class="mobile-hidden">Letzte</span>',
+                        'last_title': 'Letzte Seite',
+                        'prev': '<span class="mobile-hidden">Vorherige</span>',
+                        'prev_title': 'Vorherige Seite',
+                        'next': '<span class="mobile-hidden">Nächste</span>',
+                        'next_title': 'Nächste Seite'
+                    }
+                }
+            };
+        }
+
+        this.tabulatorTable = new Tabulator(this._("#" + this.identifier), this.options);
+        this.tabulatorTable.on("tableBuilt", this.tableBuildFunctions.bind(this));
+        this.tabulatorTable.on("rowClick", this.rowClickFunction.bind(this));
+        this.tableReady = true;
+    }
+
     tableBuildFunctions() {
+        if (!this.tabulatorTable)
+            return;
         this.tabulatorTable.setLocale(this.lang);
         this.tabulatorTable.setData(this.data);
 
@@ -182,6 +195,13 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             }
         }
         return false;
+    }
+
+    setData(data) {
+        if (!this.tabulatorTable)
+            return;
+        this.data = data;
+        this.tabulatorTable.setData(this.data);
     }
 
     static get styles() {
