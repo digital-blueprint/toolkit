@@ -3,11 +3,11 @@ import {assert} from '@esm-bundle/chai';
 import '../src/dbp-theme-switcher';
 import '../src/demo';
 
-suite('dbp-theme-switcher basics', () => {
+suite('dbp-tabulator-table basics', () => {
     let node;
 
     setup(async () => {
-        node = document.createElement('dbp-theme-switcher');
+        node = document.createElement('dbp-tabulator-table');
         document.body.appendChild(node);
         await node.updateComplete;
     });
@@ -25,7 +25,7 @@ suite('dbp-theme-switcher demo', () => {
     let node;
 
     setup(async () => {
-        node = document.createElement('dbp-theme-switcher-demo');
+        node = document.createElement('dbp-tabulator-table-demo');
         document.body.appendChild(node);
         await node.updateComplete;
     });
