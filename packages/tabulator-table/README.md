@@ -60,6 +60,10 @@ You can set this attribute with the css selector. (e.g.: `this._('#my-table-comp
 
 Set data only works if the options are set before.
 
+## Requirements
+`dbp-tabulator-table` needs the `tabulator-tables/css/tabulator.min.css` in the package path and
+the icons in `@dbp-toolkit/common/icons/` imported.
+
 ## Local development
 
 ```bash
