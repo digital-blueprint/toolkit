@@ -52,7 +52,7 @@ Or you can include the JS files directly via CDN:
 
 ## Important functions
 - `setData(data)`: This function sets data of the tabulator table.
-  - `data` is an array of datas which should be shown in the table.
+  - `data` is an array of data which should be shown in the table.
 
 ## Note
 In best practice `options` is set if the dom is already rendered. 
