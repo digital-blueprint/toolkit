@@ -35,9 +35,30 @@ Or you can include the JS files directly via CDN:
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-tabulator-table lang="de"></dbp-tabulator-table>`
-      
+- `identifier` (optional string, default: `table`): set the css selector id of the table element
+  - example `<dbp-tabulator-table identifier="my-table-id"></dbp-tabulator-table>`
+- `options` (optional object, can be set later, default: `{
+  layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator table
+  - example `<dbp-tabulator-table otions="{'myoption': 'a'}"></dbp-tabulator-table>`
+- `data` (optional array, can be set later or can be updated): set the data for the tabulator table
+  - example `<dbp-tabulator-table data="[{a: 123, b: 123}, {a: 234, b: 234}]"></dbp-tabulator-table>`
+- `pagination-enabled` (optional bool, default: `false`): set to true if you want a pagination shown
+  - example `<dbp-tabulator-table pagination-enabled></dbp-tabulator-table>`
+- `pagination-size` (optional number, default: `10`): sets the pagination size, if pagination is enabled
+  - example `<dbp-tabulator-table pagination-size="20"></dbp-tabulator-table>`
+- `select-all-enabled` (optional bool, default: `false`): enables a select all button in the left upper corner
+  - example `<dbp-tabulator-table select-all-enabled></dbp-tabulator-table>`
+
+
+## Important functions
+- `setData(data)`: This function sets data of the tabulator table.
+  - `data` is an array of datas which should be shown in the table.
 
 ## Note
+In best practice `options` is set if the dom is already rendered. 
+You can set this attribute with the css selector. (e.g.: `this._('#my-table-component).options = myoptions`)
+
+Set data only works if the options are set before.
 
 ## Local development
 

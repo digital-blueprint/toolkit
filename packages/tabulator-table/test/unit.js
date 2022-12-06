@@ -1,6 +1,6 @@
 import {assert} from '@esm-bundle/chai';
 
-import '../src/dbp-theme-switcher';
+import '../src/dbp-tabulator-table';
 import '../src/demo';
 
 suite('dbp-tabulator-table basics', () => {
@@ -21,7 +21,7 @@ suite('dbp-tabulator-table basics', () => {
     });
 });
 
-suite('dbp-theme-switcher demo', () => {
+suite('dbp-tabulator-table demo', () => {
     let node;
 
     setup(async () => {
