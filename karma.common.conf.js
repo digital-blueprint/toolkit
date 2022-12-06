@@ -6,7 +6,7 @@ module.exports = async function(config) {
 
   config.set({
     basePath: 'dist',
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'source-map-support'],
     client: {
       mocha: {
         ui: 'tdd',
@@ -15,7 +15,7 @@ module.exports = async function(config) {
     },
     files: [
       {pattern: './*.js', included: true, watched: true, served: true, type: 'module'},
-      {pattern: './**/*', included: false, watched: true, served: true},
+      {pattern: './**/*', included: false, watched: true, served: true, nocache: true},
     ],
     autoWatch: true,
     browsers: [
