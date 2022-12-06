@@ -17,7 +17,10 @@ export default (async () => {
     return {
         input:
             build !== 'test'
-                ? ['src/demo.js', 'src/dbp-tabulator-table.js']
+                ? [
+                    'src/demo.js',
+                    'src/dbp-tabulator-table.js'
+                ]
                 : glob.sync('test/**/*.js'),
         output: {
             dir: 'dist',

@@ -66,8 +66,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     disconnectedCallback() {
-        this.tabulatorTable.off("tableBuilt");
-        this.tabulatorTable.off("rowClick");
+        if (this.tabulatorTable) {
+            this.tabulatorTable.off("tableBuilt");
+            this.tabulatorTable.off("rowClick");
+        }
 
         super.disconnectedCallback();
     }
