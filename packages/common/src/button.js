@@ -183,12 +183,14 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this.iconName = '';
+        this.disabled = false;
     }
 
     static get properties() {
         return {
             ...super.properties,
             iconName: {type: String, attribute: 'icon-name'},
+            disabled: {type: Boolean, reflect: true},
         };
     }
 
