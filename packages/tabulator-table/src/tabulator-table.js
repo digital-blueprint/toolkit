@@ -145,10 +145,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
                     if (allSelected) {
                         this.tabulatorTable.deselectRow();
-                        this._('#select_all').checked = false;
                     } else {
                         this.tabulatorTable.selectRow("visible");
-                        this._('#select_all').checked = true;
+                    }
+                    if (this._('#select_all')) {
+                        this._('#select_all').checked = !allSelected;
                     }
                     e.preventDefault();
                 },
@@ -157,13 +158,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     rowClickFunction(e, row) {
-        if (this.tabulatorTable !== null &&
-            this.tabulatorTable.getSelectedRows().length ===
-            this.tabulatorTable.getRows("visible").length) {
-            this._('#select_all').checked = true;
-        } else {
-            this._('#select_all').checked = false;
-        }
+        if (!this._('#select_all') || !this.tabulatorTable)
+            return;
+
+        const check = this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows("visible").length;
+        this._('#select_all').checked = check;
     }
 
     /**
@@ -195,6 +194,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     setData(data) {
         if (!this.tabulatorTable)
             return;
+
         this.data = data;
         this.tabulatorTable.setData(this.data);
     }
