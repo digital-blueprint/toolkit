@@ -184,6 +184,7 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
         super();
         this.iconName = '';
         this.disabled = false;
+        this.loading = false;
     }
 
     static get properties() {
@@ -191,7 +192,18 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
             ...super.properties,
             iconName: {type: String, attribute: 'icon-name'},
             disabled: {type: Boolean, reflect: true},
+            loading: {type: Boolean},
         };
+    }
+
+    start() {
+        this.loading = true;
+        this.disabled = true;
+    }
+
+    stop() {
+        this.loading = false;
+        this.disabled = false;
     }
 
     static get styles() {
@@ -248,7 +260,10 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
             ? 'is-not-loading'
             : ''}"
                 ?disabled="${this.disabled}">
-                <slot><dbp-icon class="dbp-button-icon" name="${this.iconName}"></dbp-icon></slot>
+                <slot><dbp-icon 
+                        class="dbp-button-icon"
+                        name="${this.iconName}"
+                        style="display: ${this.loading ? 'none' : 'inline'}"></dbp-icon></slot>
                 <dbp-mini-spinner
                     class="spinner"
                     style="display: ${this.loading ? 'inline' : 'none'}"></dbp-mini-spinner>
