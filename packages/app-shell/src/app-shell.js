@@ -940,12 +940,16 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         const slotClassMap = classMap({hidden: !appHidden});
 
         if (!appHidden) {
+            // if app is loaded correctly, remove spinner
             this.updateComplete.then(() => {
-                // XXX: Safari 11 doesn't like CSS being applied to slots or via HTML,
-                // so we have to remove the slot instead of hiding it
-                // select slots with no name attribute
                 const slot = this.shadowRoot.querySelector('slot:not([name])');
-                if (slot) slot.remove();
+                if (slot) slot.style.display = 'none';
+            });
+        } else {
+            // if app is not loaded correctly, show spinner
+            this.updateComplete.then(() => {
+                const slot = this.shadowRoot.querySelector('slot:not([name])');
+                if (slot) slot.style.display = '';
             });
         }
 
