@@ -15,6 +15,7 @@ export class Translation extends DBPLitElement {
         // dir and i18next instance of translation overrides
         this._i18n = createInstance();
         this.langDir = '';
+        this.innerText = '';
 
     }
 
@@ -72,17 +73,25 @@ export class Translation extends DBPLitElement {
           this._i18n.options.fallbackNS :
           getOverrideNamespace(this._i18n.options.fallbackNS);
 
+        let translation = "";
+
         // request to i18n translation
-        let translation = (() => {
-          if (this.interpolation && this.unsafe)
-            return unsafeHTML(this._i18n.t(this.key, this.interpolation));
-          else if (this.interpolation)
-            return this._i18n.t(this.key, this.interpolation);
-          else if (this.unsafe)
-            return unsafeHTML(this._i18n.t(this.key));
-          else
-            return this._i18n.t(this.key);
-        })();
+        if (this.interpolation && this.unsafe) {
+            this.innerText = this._i18n.t(this.key, this.interpolation);
+            translation = unsafeHTML(this._i18n.t(this.key, this.interpolation));
+        }
+        else if (this.interpolation) {
+            this.innerText = this._i18n.t(this.key, this.interpolation);
+            translation = this._i18n.t(this.key, this.interpolation);
+        }
+        else if (this.unsafe) {
+            this.innerText = this._i18n.t(this.key);
+            translation = unsafeHTML(this._i18n.t(this.key));
+        }
+        else {
+            this.innerText = this._i18n.t(this.key);
+            translation = this._i18n.t(this.key);
+        }
 
 
 
@@ -92,16 +101,18 @@ export class Translation extends DBPLitElement {
         let keyComment = "";
         if ((this._i18n.exists(overrideNamespace + ":" + this.key) && this._i18n.hasResourceBundle(this.lang, overrideNamespace))
               || window.location.hash.includes('debug')) {
-          keyComment = unsafeHTML("<!-- key: " + this.key + "-->");
+            keyComment = unsafeHTML("<!-- key: " + this.key + "-->");
         } else if (this._i18n.hasResourceBundle(this.lang, overrideNamespace)){
-          keyComment = unsafeHTML("<!-- key '" + this.key + "' not found! -->");
-          translation = "";
-          console.error("Key '" + this.key + "' not found!");
+            this.innerText = "";
+            translation = "";
+            keyComment = unsafeHTML("<!-- key '" + this.key + "' not found! -->");
+            console.error("Key '" + this.key + "' not found!");
         } else {
-          keyComment = unsafeHTML("<!-- key '" + this.key + "' and namespace '" + overrideNamespace + "' not found! -->");
-          translation = "";
+            this.innerText = "";
+            translation = "";
+            keyComment = unsafeHTML("<!-- key '" + this.key + "' and namespace '" + overrideNamespace + "' not found! -->");
+            console.error("Key '" + this.key + "' and namespace '" + overrideNamespace + "' not found!");
         }
-
         // load translation text
         return html`
             ${keyComment}
