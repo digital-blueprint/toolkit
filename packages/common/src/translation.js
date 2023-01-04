@@ -15,7 +15,6 @@ export class Translation extends DBPLitElement {
         // dir and i18next instance of translation overrides
         this._i18n = createInstance();
         this.langDir = '';
-        this.innerText = '';
 
     }
 
@@ -77,19 +76,15 @@ export class Translation extends DBPLitElement {
 
         // request to i18n translation
         if (this.interpolation && this.unsafe) {
-            this.innerText = this._i18n.t(this.key, this.interpolation);
             translation = unsafeHTML(this._i18n.t(this.key, this.interpolation));
         }
         else if (this.interpolation) {
-            this.innerText = this._i18n.t(this.key, this.interpolation);
             translation = this._i18n.t(this.key, this.interpolation);
         }
         else if (this.unsafe) {
-            this.innerText = this._i18n.t(this.key);
             translation = unsafeHTML(this._i18n.t(this.key));
         }
         else {
-            this.innerText = this._i18n.t(this.key);
             translation = this._i18n.t(this.key);
         }
 
@@ -103,12 +98,10 @@ export class Translation extends DBPLitElement {
               || window.location.hash.includes('debug')) {
             keyComment = unsafeHTML("<!-- key: " + this.key + "-->");
         } else if (this._i18n.hasResourceBundle(this.lang, overrideNamespace)){
-            this.innerText = "";
             translation = "";
             keyComment = unsafeHTML("<!-- key '" + this.key + "' not found! -->");
             console.error("Key '" + this.key + "' not found!");
         } else {
-            this.innerText = "";
             translation = "";
             keyComment = unsafeHTML("<!-- key '" + this.key + "' and namespace '" + overrideNamespace + "' not found! -->");
             console.error("Key '" + this.key + "' and namespace '" + overrideNamespace + "' not found!");
