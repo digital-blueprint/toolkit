@@ -3658,7 +3658,7 @@ datatables.net-responsive@>=2.2.9, "datatables.net-responsive@^2.3.0 <2.4":
     datatables.net ">=1.11.3"
     jquery ">=1.7"
 
-datatables.net@>=1.11.3:
+datatables.net@>=1.11.3, "datatables.net@^1.12.1 <1.13":
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.12.1.tgz#3e625e49a3341f605b0efb519fae94e37b278f24"
   integrity sha512-e6XAMUoV41JdQPS/r9YRfRcmTPcCVvyZbWI+xog1Zg+kjVliMQbEkvWK5XFItmi64Cvwg+IqsZbTUJ1KSY3umA==
