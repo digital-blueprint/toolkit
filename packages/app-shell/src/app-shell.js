@@ -340,11 +340,14 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                         this._updateVisibleRoutes();
 
                         const loginStatus = this.auth['login-status'];
+
                         if (loginStatus !== this._loginStatus) {
                             console.log('Login status: ' + loginStatus);
                         }
 
-                        this._loginStatus = loginStatus;
+                        if (loginStatus !== undefined) {
+                            this._loginStatus = loginStatus;
+                        }
 
                         // Clear the session storage when the user logs out
                         if (this._loginStatus === 'logging-out') {
@@ -943,13 +946,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             // if app is loaded correctly, remove spinner
             this.updateComplete.then(() => {
                 const slot = this.shadowRoot.querySelector('slot:not([name])');
-                if (slot) slot.style.display = 'none';
-            });
-        } else {
-            // if app is not loaded correctly, show spinner
-            this.updateComplete.then(() => {
-                const slot = this.shadowRoot.querySelector('slot:not([name])');
-                if (slot) slot.style.display = '';
+
+                // remove for safari 12 support. safari 13+ supports display: none on slots.
+                if (slot) slot.remove();
             });
         }
 
