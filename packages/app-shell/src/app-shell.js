@@ -73,7 +73,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.boundCloseMenuHandler = this.hideMenu.bind(this);
         this.initateOpenMenu = false;
 
-        this.auth = {};
+        this.auth = null;
         this.langDir = '';
     }
 
@@ -332,6 +332,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     break;
                 case 'auth':
                     {
+                        // kill event if auth gets default
+                        if (this.auth === null) {
+                            break;
+                        }
+
                         if (this.auth.person) {
                             this._roles = this.auth.person['roles'];
                         } else {
