@@ -67,7 +67,7 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                           subscribe="requested-login-status"
                           lang="${this.lang}"
                           entry-point-url="${this.entryPointUrl}"
-                          silent-check-sso-redirect-uri="/dist/silent-check-sso.html"
+                          silent-check-sso-redirect-uri="/silent-check-sso.html"
                           url="https://auth-dev.tugraz.at/auth"
                           realm="tugraz-vpu"
                           client-id="auth-dev-mw-frontend-local"

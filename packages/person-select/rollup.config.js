@@ -48,6 +48,7 @@ export default (async () => {
             build !== 'local' && build !== 'test' ? terser() : false,
             copy({
                 targets: [
+                    {src: 'assets/silent-check-sso.html', dest: 'dist'},
                     {src: 'assets/index.html', dest: 'dist'},
                     {
                         src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
