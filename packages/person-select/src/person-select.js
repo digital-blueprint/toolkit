@@ -14,13 +14,6 @@ import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from '@dbp-toolkit/common/error';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
-const personContext = {
-    '@id': '@id',
-    givenName: 'http://schema.org/givenName',
-    familyName: 'http://schema.org/familyName',
-    email: 'http://schema.org/email',
-};
-
 select2(window, $);
 
 export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
@@ -185,9 +178,9 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                         that.$('#person-select-dropdown').addClass('select2-bug');
 
                         that.lastResult = data;
-                        let transformed = that.jsonld.transformMembers(data, personContext);
+                        let members = data['hydra:member'];
                         const results = [];
-                        transformed.forEach((person) => {
+                        members.forEach((person) => {
                             results.push({
                                 id: person['@id'],
                                 text: that.formatPerson(that, person),
@@ -258,14 +251,10 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                 })
                 .then((person) => {
                     that.object = person;
-                    const transformed = that.jsonld.compactMember(
-                        that.jsonld.expandMember(person),
-                        personContext
-                    );
-                    const identifier = transformed['@id'];
+                    const identifier = person['@id'];
 
                     const option = new Option(
-                        that.formatPerson(this, transformed),
+                        that.formatPerson(this, person),
                         identifier,
                         true,
                         true
