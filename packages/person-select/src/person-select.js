@@ -14,8 +14,6 @@ import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from '@dbp-toolkit/common/error';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
-select2(window, $);
-
 export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
@@ -39,6 +37,8 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         this.showDetails = false;
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
+
+        select2(window, $);
     }
 
     static get scopedElements() {
