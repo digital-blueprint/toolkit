@@ -44,6 +44,13 @@ Or directly via CDN:
     - example auth property: `{token: "THE_BEARER_TOKEN"}`
     - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 
+## Override Properties
+
+- `buildUrlData` - A function which gets passed the select and the current search context and
+  should return the query parameters used for searching.
+- `formatPerson` - A function which takes the select and a person object and should
+  return the text representation displayed to the user.
+
 ## Local development
 
 ```bash

@@ -178,10 +178,8 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                         jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
                         that.isSearching = true;
                     },
-                    data: function (params) {
-                        return {
-                            search: params.term.trim(),
-                        };
+                    data: (params) => {
+                        return this.buildUrlData(this, params);
                     },
                     processResults: function (data) {
                         that.$('#person-select-dropdown').addClass('select2-bug');
@@ -192,7 +190,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                         transformed.forEach((person) => {
                             results.push({
                                 id: person['@id'],
-                                text: that.generateOptionText(person),
+                                text: that.formatPerson(that, person),
                             });
                         });
 
@@ -267,7 +265,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                     const identifier = transformed['@id'];
 
                     const option = new Option(
-                        that.generateOptionText(transformed),
+                        that.formatPerson(this, transformed),
                         identifier,
                         true,
                         true
@@ -295,7 +293,29 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         return true;
     }
 
-    generateOptionText(person) {
+    /**
+     * Gets passed the select2 params (https://select2.org/data-sources/ajax#jquery-ajax-options)
+     * and should return an object containing the query parameters send to the server.
+     *
+     * @param {object} select
+     * @param {object} params
+     * @returns {object}
+     */
+    buildUrlData(select, params) {
+        return {
+            search: params.term.trim(),
+        };
+    }
+
+    /**
+     * Gets passed a person object and should return a string representation that will
+     * will be shown to the user.
+     *
+     * @param {object} select
+     * @param {object} person
+     * @returns {string}
+     */
+    formatPerson(select, person) {
         let text = person['givenName'] ?? '';
         if (person['familyName']) {
             text += ` ${person['familyName']}`;
