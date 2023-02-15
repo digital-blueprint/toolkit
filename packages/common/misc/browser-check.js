@@ -94,6 +94,18 @@ Example usage:
         return true;
     }
 
+    // check for globalThis support, required by lit
+    // https://caniuse.com/mdn-javascript_builtins_globalthis
+    function supportsGlobalThis() {
+        try {
+            eval('globalThis !== undefined')
+        } catch(e) {
+            return false;
+        }
+
+        return true;
+    }
+
     function isBrowserSupported() {
         if (!supportsEval()) {
             console.log('Eval support disabled, skipping browser feature detection.');
@@ -137,6 +149,11 @@ Example usage:
 
         if (!supportsResizeObserver()) {
             console.log('ResizeObserver not supported');
+            return false;
+        }
+
+        if (!supportsGlobalThis()) {
+            console.log('globalThis not supported');
             return false;
         }
 
