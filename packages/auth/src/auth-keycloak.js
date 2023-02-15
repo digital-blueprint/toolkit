@@ -166,9 +166,11 @@ export class AuthKeycloak extends AdapterLitElement {
             person: this._user,
         };
 
-        // inject a window.DBPAuth variable for cypress
-        if (window.Cypress) {
+        // inject a window.DBPAuth variable for Cypress/Playwright
+        console.log("window", window);
+        if (window.Cypress || window.playwright) {
             window.DBPAuth = auth;
+            console.log("Cypress/Playwright detected");
         }
 
         this.sendSetPropertyEvent('auth', auth);
