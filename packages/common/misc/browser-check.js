@@ -82,6 +82,18 @@ Example usage:
         return !!window.AbortController && Request.prototype.hasOwnProperty('signal');
     }
 
+    // check for safari 13.1+ and safari on iOS 13.4+
+    // https://caniuse.com/resizeobserver
+    function supportsResizeObserver() {
+        try {
+            eval('new ResizeObserver(items => {})');
+        } catch (e) {
+            return false;
+        }
+
+        return true;
+    }
+
     function isBrowserSupported() {
         if (!supportsEval()) {
             console.log('Eval support disabled, skipping browser feature detection.');
@@ -120,6 +132,11 @@ Example usage:
 
         if (!supportsAbortController()) {
             console.log('AbortController not supported');
+            return false;
+        }
+
+        if (!supportsResizeObserver()) {
+            console.log('ResizeObserver not supported');
             return false;
         }
 
