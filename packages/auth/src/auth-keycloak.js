@@ -42,6 +42,11 @@ export class AuthKeycloak extends AdapterLitElement {
         this.idpHint = '';
 
         this._onKCChanged = this._onKCChanged.bind(this);
+
+        // inject a data-testid attribute for Playwright
+        if (window.playwright) {
+            this.setAttribute("data-testid", "dbp-auth-keycloak");
+        }
     }
 
     update(changedProperties) {
