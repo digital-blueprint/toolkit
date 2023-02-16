@@ -1025,6 +1025,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                             <div class="hd1-middle"></div>
                             <div class="hd1-right">
                                 <dbp-auth-menu-button
+                                    data-testid="dbp-auth-menu-button"
                                     subscribe="auth"
                                     class="auth-button"
                                     lang="${this.lang}"></dbp-auth-menu-button>
