@@ -96,9 +96,9 @@ jobs:
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
           yarn install --frozen-lockfile
           yarn run build
-          yarn run publish
+          #yarn run publish
           # yarn always reports "https://registry.yarnpkg.com/@dbp-topics%2fsignature - Not found", so we are using npm directly
-          #npm run publish
+          npm run publish
 
       - name: Deploy
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo'
