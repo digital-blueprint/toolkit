@@ -1,6 +1,6 @@
 # Provider Web Components
 
-[GitLab Repository](https://gitlab.tugraz.at/dbp/web-components/toolkit)
+[GitLab Repository](https://github.com/digital-blueprint/toolkit)
 
 You can install this component via npm:
 
@@ -12,7 +12,7 @@ npm i @dbp-toolkit/provider
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
+git clone git@github.com:digital-blueprint/toolkit.git
 cd toolkit/packages/provider
 
 # install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)

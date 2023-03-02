@@ -64,7 +64,7 @@ this.sendSetPropertyEvent('analytics-event', {'category': 'my category', 'action
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
+git clone git@github.com:digital-blueprint/toolkit.git
 cd toolkit/packages/matomo
 
 # install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)

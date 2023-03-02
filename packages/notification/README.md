@@ -42,7 +42,7 @@ send({
 
 ```bash
 # get the source
-git clone git@gitlab.tugraz.at:dbp/web-components/toolkit.git
+git clone git@github.com:digital-blueprint/toolkit.git
 cd toolkit/packages/notification
 
 # install dependencies
