@@ -4,6 +4,8 @@
 [Toolkit Showcase Development](https://dbp-dev.tugraz.at/apps/demo) |
 [Toolkit Showcase Demo](https://dbp-demo.tugraz.at/apps/demo)
 
+[![Build, Test and Publish](https://github.com/digital-blueprint/toolkit/actions/workflows/build-test-publish.yml/badge.svg)](https://github.com/digital-blueprint/toolkit/actions/workflows/build-test-publish.yml)
+
 ## Overview
 
 This repository uses [yarn 1.x](https://classic.yarnpkg.com) workspaces to link
