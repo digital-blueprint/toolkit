@@ -1,12 +1,12 @@
 {
     "name": "@dbp-toolkit/file-handling",
-    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/file-handling",
+    "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/file-handling",
     "version": "0.3.5",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
         "type": "git",
-        "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+        "url": "https://github.com/digital-blueprint/toolkit.git",
         "directory": "packages/file-handling"
     },
     "publishConfig": {

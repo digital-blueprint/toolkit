@@ -1,12 +1,12 @@
 {
     "name": "@dbp-toolkit/tabulator-table",
-    "homepage": "https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/master/packages/tabulator-table",
+    "homepage": "https://github.com/digital-blueprint/toolkit/-/tree/master/packages/tabulator-table",
     "version": "0.0.1",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
         "type": "git",
-        "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+        "url": "https://github.com/digital-blueprint/toolkit.git",
         "directory": "packages/tabulator-table"
     },
     "publishConfig": {

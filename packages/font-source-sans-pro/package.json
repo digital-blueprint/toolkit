@@ -5,7 +5,7 @@
   "license": "OFL-1.1",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.tugraz.at/dbp/web-components/toolkit.git",
+    "url": "https://github.com/digital-blueprint/toolkit.git",
     "directory": "packages/font-source-sans-pro"
   },
   "publishConfig": {
