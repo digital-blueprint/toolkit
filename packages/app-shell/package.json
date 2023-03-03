@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/app-shell",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/app-shell",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -37,13 +37,13 @@
         "rollup-plugin-serve": "^2.0.0"
     },
     "dependencies": {
-        "@dbp-toolkit/auth": "^0.3.1",
-        "@dbp-toolkit/common": "^0.3.3",
-        "@dbp-toolkit/language-select": "^0.3.1",
-        "@dbp-toolkit/matomo": "^0.2.6",
-        "@dbp-toolkit/notification": "^0.3.1",
-        "@dbp-toolkit/person-profile": "^0.2.5",
-        "@dbp-toolkit/theme-switcher": "^0.0.5",
+        "@dbp-toolkit/auth": "^0.3.2",
+        "@dbp-toolkit/common": "^0.3.5",
+        "@dbp-toolkit/language-select": "^0.3.2",
+        "@dbp-toolkit/matomo": "^0.2.7",
+        "@dbp-toolkit/notification": "^0.3.2",
+        "@dbp-toolkit/person-profile": "^0.2.6",
+        "@dbp-toolkit/theme-switcher": "^0.0.6",
         "@open-wc/scoped-elements": "^2.1.0",
         "i18next": "^22.0.0",
         "lit": "^2.0.0",

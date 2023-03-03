@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/theme-switcher",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/theme-switcher",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -36,7 +36,7 @@
         "rollup-plugin-serve": "^2.0.0"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.3",
+        "@dbp-toolkit/common": "^0.3.5",
         "@open-wc/scoped-elements": "^2.1.0",
         "i18next": "^22.0.0",
         "jszip": "^3.5.0",
