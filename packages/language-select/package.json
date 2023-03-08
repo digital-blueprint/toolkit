@@ -28,6 +28,7 @@
     "karma-mocha": "^2.0.1",
     "karma-source-map-support": "^1.4.0",
     "mocha": "^10.0.0",
+    "glob": "^9.0.0",
     "playwright-core": "^1.20.2",
     "rollup": "^3.2.5",
     "rollup-plugin-copy": "^3.1.0",

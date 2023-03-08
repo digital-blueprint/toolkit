@@ -1,4 +1,4 @@
-import glob from 'glob';
+import {globSync} from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
@@ -21,7 +21,7 @@ export default (async () => {
         input:
             build !== 'test'
                 ? ['src/demo.js', 'src/dbp-theme-switcher.js']
-                : glob.sync('test/**/*.js'),
+                : globSync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',

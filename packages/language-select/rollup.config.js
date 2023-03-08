@@ -1,4 +1,4 @@
-import glob from 'glob';
+import {globSync} from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
@@ -11,7 +11,7 @@ const build = (typeof process.env.BUILD !== 'undefined') ? process.env.BUILD : '
 console.log("build: " + build);
 
 export default {
-    input: (build != 'test') ? ['src/dbp-language-select.js', 'src/dbp-language-select-demo.js'] : glob.sync('test/**/*.js'),
+    input: (build != 'test') ? ['src/dbp-language-select.js', 'src/dbp-language-select-demo.js'] : globSync('test/**/*.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',

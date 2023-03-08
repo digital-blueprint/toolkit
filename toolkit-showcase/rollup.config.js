@@ -1,6 +1,6 @@
 import path from 'path';
 import url from 'url';
-import glob from 'glob';
+import {globSync} from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
@@ -74,7 +74,7 @@ img-src * blob: data:`;
 export default (async () => {
     let privatePath = await getDistPath(pkg.name);
     return {
-        input: appEnv != 'test' ? glob.sync('src/dbp-*.js') : glob.sync('test/**/*.js'),
+        input: appEnv != 'test' ? globSync('src/dbp-*.js') : globSync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
