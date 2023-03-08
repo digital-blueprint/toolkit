@@ -28,6 +28,10 @@
     {
       "matchPackageNames": ["datatables.net-responsive", "datatables.net-responsive-dt"],
       "allowedVersions": "<2.4"
+    },
+    {
+      "matchPackageNames": ["find-cache-dir"],
+      "allowedVersions": "<4"
     }
   ]
 }
