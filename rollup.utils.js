@@ -35,6 +35,7 @@ export function getBuildInfo(build) {
         let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.') > -1 ? parsed.path.lastIndexOf('.') : undefined);
         commitUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commitHash;
     } else {
+        console.warn('No git information available, commit hash and commit url will be missing');
         commitHash = '';
         commitUrl = '';
     }
