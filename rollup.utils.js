@@ -5,24 +5,46 @@ import child_process from 'child_process';
 import selfsigned from 'selfsigned';
 import findCacheDir from 'find-cache-dir';
 
-export function getBuildInfo(build) {
-    let remote = child_process.execSync('git config --get remote.origin.url').toString().trim();
-    let commit = child_process.execSync('git rev-parse --short HEAD').toString().trim();
-
-    if (remote.indexOf('git@') === 0) {
-        remote = remote.replace(':', '/').replace('git@', 'https://');
+/**
+ * Returns true if git is installed and we are inside a git working tree
+ *
+ * @returns {boolean} if git can be used
+ */
+function canUseGit() {
+    try {
+        // This fails if there is no git installed, or if we aren't inside a git checkout
+        child_process.execSync('git rev-parse --is-inside-work-tree', {stderr : 'pipe', stdio : 'pipe'});
+    } catch (error) {
+        return false;
     }
+    return true;
+}
 
-    let parsed = url.parse(remote);
-    let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.') > -1 ? parsed.path.lastIndexOf('.') : undefined);
-    let newUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commit;
+export function getBuildInfo(build) {
+    let commitHash, commitUrl;
+
+    if (canUseGit()) {
+        let remote = child_process.execSync('git config --get remote.origin.url').toString().trim();
+        commitHash = child_process.execSync('git rev-parse --short HEAD').toString().trim();
+
+        if (remote.indexOf('git@') === 0) {
+            remote = remote.replace(':', '/').replace('git@', 'https://');
+        }
+
+        let parsed = url.parse(remote);
+        let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.') > -1 ? parsed.path.lastIndexOf('.') : undefined);
+        commitUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commitHash;
+    } else {
+        commitHash = '';
+        commitUrl = '';
+    }
 
     return {
-        info: commit,
-        url: newUrl,
+        info: commitHash,
+        url: commitUrl,
         time: new Date().toISOString(),
         env: build
-    }
+    };
 }
 
 export async function getDistPath(packageName, assetPath) {
