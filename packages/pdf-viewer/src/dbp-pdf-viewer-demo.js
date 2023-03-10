@@ -44,7 +44,7 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
     }
 
     render() {
-        const i18n = this._i18n;
+        // const i18n = this._i18n;
 
         return html`
             <section class="section">
