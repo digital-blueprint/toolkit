@@ -479,9 +479,13 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     }
 
     updatePageTitle() {
-        document.title = `${this.topicMetaDataText('name')} - ${this.activeMetaDataText(
-            'short_name'
-        )}`;
+        let title;
+        if (this.activeView === 'welcome') {
+            title = `${this.topicMetaDataText('short_name')}`;
+        } else {
+            title = `${this.activeMetaDataText('short_name')} - ${this.topicMetaDataText('short_name')}`;
+        }
+        document.title = title;
     }
 
     toggleMenu() {
