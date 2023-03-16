@@ -32,6 +32,10 @@
     {
       "matchPackageNames": ["find-cache-dir"],
       "allowedVersions": "<4"
+    },
+    {
+      "matchPackageNames": ["pdfjs-dist"],
+      "allowedVersions": "<3"
     }
   ]
 }
