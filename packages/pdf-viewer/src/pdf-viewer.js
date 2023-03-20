@@ -7,8 +7,9 @@ import {MiniSpinner, Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 // import pdfjs from '@pdfjs-dist/build/pdf';
-import pdfjs from '@pdfjs-dist/legacy/build/pdf';
+import pdfjs from 'pdfjs-dist/legacy/build/pdf.js';
 import {name as pkgName} from './../package.json';
+import {readBinaryFileContent} from './utils.js';
 // import {createUUID} from './utils';
 
 /**
@@ -29,7 +30,6 @@ export class PdfViewer extends DBPLitElement {
         this.isShowPlacement = true;
         this.canvas = null;
         this.annotationLayer = null;
-        this.fabricCanvas = null;
         this.canvasToPdfScale = 1.0;
         this.currentPageOriginalHeight = 0;
         this.placeholder = '';
@@ -86,10 +86,6 @@ export class PdfViewer extends DBPLitElement {
     }
 
     disconnectedCallback() {
-        if (this.fabricCanvas !== null) {
-            this.fabricCanvas.removeListeners();
-            this.fabricCanvas = null;
-        }
         window.removeEventListener('resize', this._onWindowResize);
         super.disconnectedCallback();
     }
@@ -106,65 +102,10 @@ export class PdfViewer extends DBPLitElement {
 
         this.updateComplete.then(async () => {
             that.annotationLayer = that._('#annotation-layer');
-            const fabric = (await import('fabric')).fabric;
             that.canvas = that._('#pdf-canvas');
 
             // this._('#upload-pdf-input').addEventListener('change', function() {
             //     that.showPDF(this.files[0]);
-            // });
-
-            // add fabric.js canvas for signature positioning
-            // , {stateful : true}
-            // selection is turned off because it makes troubles on mobile devices
-            this.fabricCanvas = new fabric.Canvas(this._('#fabric-canvas'), {
-                selection: false,
-                allowTouchScrolling: true,
-            });
-
-            // add signature image
-            fabric.Image.fromURL(this.placeholder, function (image) {
-                // add a red border around the signature placeholder
-                image.set({
-                    stroke: '#e4154b',
-                    strokeWidth: that.border_width,
-                    strokeUniform: true,
-                    centeredRotation: true,
-                });
-
-                // disable controls, we currently don't want resizing and do rotation with a button
-                image.hasControls = false;
-
-                // we will resize the image when the initial pdf page is loaded
-                that.fabricCanvas.add(image);
-            });
-
-            this.fabricCanvas.on({
-                'object:moving': function (e) {
-                    e.target.opacity = 0.5;
-                },
-                'object:modified': function (e) {
-                    e.target.opacity = 1;
-                },
-            });
-
-            // this.fabricCanvas.on("object:moved", function(opt){ console.log(opt); });
-
-            // disallow moving of signature outside of canvas boundaries
-            this.fabricCanvas.on('object:moving', function (e) {
-                let obj = e.target;
-                obj.setCoords();
-                that.enforceCanvasBoundaries(obj);
-            });
-
-            // TODO: prevent scaling the signature in a way that it is crossing the canvas boundaries
-            // it's very hard to calculate the way back from obj.scaleX and obj.translateX
-            // obj.getBoundingRect() will not be updated in the object:scaling event, it is only updated after the scaling is done
-            // this.fabricCanvas.observe('object:scaling', function (e) {
-            //     let obj = e.target;
-            //
-            //     console.log(obj);
-            //     console.log(obj.scaleX);
-            //     console.log(obj.translateX);
             // });
         });
     }
@@ -267,10 +208,6 @@ export class PdfViewer extends DBPLitElement {
         await this.showPage(page);
     }
 
-    getSignatureRect() {
-        return this.fabricCanvas.item(0);
-    }
-
     /**
      * Load and render specific page of the PDF
      *
@@ -295,7 +232,6 @@ export class PdfViewer extends DBPLitElement {
                 this.currentPageOriginalHeight = originalViewport.height;
 
                 // set the canvas width to the width of the container (minus the borders)
-                this.fabricCanvas.setWidth(this._('#pdf-main-container').clientWidth - 2);
                 this.canvas.width = this._('#pdf-main-container').clientWidth - 2;
 
                 // as the canvas is of a fixed width we need to adjust the scale of the viewport where page is rendered
@@ -308,7 +244,6 @@ export class PdfViewer extends DBPLitElement {
                 const viewport = page.getViewport({scale: this.canvasToPdfScale});
 
                 // set canvas height same as viewport height
-                this.fabricCanvas.setHeight(viewport.height);
                 this.canvas.height = viewport.height;
 
                 // setting page loader height for smooth experience
@@ -446,48 +381,6 @@ export class PdfViewer extends DBPLitElement {
         }
     }
 
-    sendAcceptEvent() {
-        const item = this.getSignatureRect();
-        let left = item.get('left');
-        let top = item.get('top');
-        const angle = item.get('angle');
-
-        // fabricjs includes the stroke in the image position
-        // and we have to remove it
-        const border_offset = this.border_width / 2;
-        if (angle === 0) {
-            left += border_offset;
-            top += border_offset;
-        } else if (angle === 90) {
-            left -= border_offset;
-            top += border_offset;
-        } else if (angle === 180) {
-            left -= border_offset;
-            top -= border_offset;
-        } else if (angle === 270) {
-            left += border_offset;
-            top -= border_offset;
-        }
-
-        const data = {
-            currentPage: this.currentPage,
-            scaleX: item.get('scaleX') / this.canvasToPdfScale,
-            scaleY: item.get('scaleY') / this.canvasToPdfScale,
-            width: (item.get('width') * item.get('scaleX')) / this.canvasToPdfScale,
-            height: (item.get('height') * item.get('scaleY')) / this.canvasToPdfScale,
-            left: left / this.canvasToPdfScale,
-            top: top / this.canvasToPdfScale,
-            bottom: this.currentPageOriginalHeight - top / this.canvasToPdfScale,
-            angle: item.get('angle'),
-        };
-        const event = new CustomEvent('dbp-pdf-preview-accept', {
-            detail: data,
-            bubbles: true,
-            composed: true,
-        });
-        this.dispatchEvent(event);
-    }
-
     sendCancelEvent() {
         const event = new CustomEvent('dbp-pdf-preview-cancel', {
             detail: {},
@@ -612,11 +505,6 @@ export class PdfViewer extends DBPLitElement {
                 padding: 15px;
             }
 
-            #canvas-wrapper canvas#fabric-canvas,
-            #canvas-wrapper canvas.upper-canvas {
-                border: unset;
-            }
-
             input[type='number'] {
                 background-color: var(--dbp-background);
             }
@@ -735,9 +623,6 @@ export class PdfViewer extends DBPLitElement {
                         class="${classMap({hidden: this.isPageRenderingInProgress})}">
                         <canvas id="pdf-canvas"></canvas>
                         <div id="annotation-layer"></div>
-                        <canvas
-                            id="fabric-canvas"
-                            class="${classMap({hidden: !this.isShowPlacement})}"></canvas>
                     </div>
                     <div class="${classMap({hidden: !this.isPageRenderingInProgress})}">
                         <dbp-mini-spinner id="page-loader"></dbp-mini-spinner>
@@ -747,5 +632,3 @@ export class PdfViewer extends DBPLitElement {
         `;
     }
 }
-
-import {readBinaryFileContent} from './utils.js';
