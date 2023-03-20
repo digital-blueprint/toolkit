@@ -42,7 +42,7 @@
     "@dbp-toolkit/common": "^0.3.5",
     "@open-wc/scoped-elements": "^2.1.0",
     "lit": "^2.0.0",
-    "pdfjs-dist": "^3.4.120"
+    "pdfjs-dist": "^2.12.313"
   },
   "scripts": {
     "clean": "rm dist/*",
