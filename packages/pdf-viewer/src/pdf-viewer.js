@@ -61,7 +61,6 @@ export class PdfViewer extends DBPLitElement {
             isPageRenderingInProgress: {type: Boolean, attribute: false},
             isPageLoaded: {type: Boolean, attribute: false},
             showErrorMessage: {type: Boolean, attribute: false},
-            isShowPlacement: {type: Boolean, attribute: false},
             placeholder: {type: String, attribute: 'signature-placeholder-image-src'},
             signature_width: {type: Number, attribute: 'signature-width'},
             signature_height: {type: Number, attribute: 'signature-height'},
@@ -153,34 +152,12 @@ export class PdfViewer extends DBPLitElement {
      * Initialize and load the PDF
      *
      * @param file
-     * @param isShowPlacement
      * @param placementData
      */
-    async showPDF(file, isShowPlacement = false, placementData = {}) {
-        let item = this.getSignatureRect();
+    async showPDF(file, placementData = {}) {
         this.isPageLoaded = false; // prevent redisplay of previous pdf
         this.showErrorMessage = false;
 
-        // move signature if placementData was set
-        if (item !== undefined) {
-            if (placementData['scaleX'] !== undefined) {
-                item.set('scaleX', placementData['scaleX'] * this.canvasToPdfScale);
-            }
-            if (placementData['scaleY'] !== undefined) {
-                item.set('scaleY', placementData['scaleY'] * this.canvasToPdfScale);
-            }
-            if (placementData['left'] !== undefined) {
-                item.set('left', placementData['left'] * this.canvasToPdfScale);
-            }
-            if (placementData['top'] !== undefined) {
-                item.set('top', placementData['top'] * this.canvasToPdfScale);
-            }
-            if (placementData['angle'] !== undefined) {
-                item.set('angle', placementData['angle']);
-            }
-        }
-
-        this.isShowPlacement = isShowPlacement;
         this.isShowPage = true;
 
         const data = await readBinaryFileContent(file);
@@ -255,53 +232,6 @@ export class PdfViewer extends DBPLitElement {
                     canvasContext: this.canvas.getContext('2d'),
                     viewport: viewport,
                 };
-
-                let signature = this.getSignatureRect();
-
-                // set the initial position of the signature
-                if (initSignature) {
-                    const sigSizeMM = {width: this.signature_width, height: this.signature_height};
-                    const sigPosMM = {top: 5, left: 5};
-
-                    const inchPerMM = 0.03937007874;
-                    const DPI = 72;
-                    const pointsPerMM = inchPerMM * DPI;
-                    const documentSizeMM = {
-                        width: originalViewport.width / pointsPerMM,
-                        height: originalViewport.height / pointsPerMM,
-                    };
-
-                    const sigSize = signature.getOriginalSize();
-                    const scaleX =
-                        (this.canvas.width / sigSize.width) *
-                        (sigSizeMM.width / documentSizeMM.width);
-                    const scaleY =
-                        (this.canvas.height / sigSize.height) *
-                        (sigSizeMM.height / documentSizeMM.height);
-                    const offsetTop = sigPosMM.top * pointsPerMM;
-                    const offsetLeft = sigPosMM.left * pointsPerMM;
-
-                    signature.set({
-                        scaleX: scaleX,
-                        scaleY: scaleY,
-                        angle: 0,
-                        top: offsetTop,
-                        left: offsetLeft,
-                        lockUniScaling: true, // lock aspect ratio when resizing
-                    });
-                } else {
-                    // adapt signature scale to new scale
-                    const scaleAdapt = this.canvasToPdfScale / oldScale;
-
-                    signature.set({
-                        scaleX: signature.get('scaleX') * scaleAdapt,
-                        scaleY: signature.get('scaleY') * scaleAdapt,
-                        left: signature.get('left') * scaleAdapt,
-                        top: signature.get('top') * scaleAdapt,
-                    });
-
-                    signature.setCoords();
-                }
 
                 // render the page contents in the canvas
                 try {
@@ -388,20 +318,6 @@ export class PdfViewer extends DBPLitElement {
             composed: true,
         });
         this.dispatchEvent(event);
-    }
-
-    /**
-     * Rotates the signature clock-wise in 90? steps
-     */
-    async rotateSignature() {
-        let signature = this.getSignatureRect();
-        let angle = (signature.get('angle') + 90) % 360;
-        signature.rotate(angle);
-        signature.setCoords();
-        this.enforceCanvasBoundaries(signature);
-
-        // update page to show rotated signature
-        await this.showPage(this.currentPage);
     }
 
     static get styles() {

@@ -43,6 +43,24 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
         `;
     }
 
+    _(selector) {
+        return this.shadowRoot === null
+            ? this.querySelector(selector)
+            : this.shadowRoot.querySelector(selector);
+    }
+
+    async openFile(e) {
+        if (e.target.files.length === 0) {
+            return;
+        }
+
+        let file = e.target.files[0];
+        console.log("file", file);
+
+        const previewTag = this.getScopedTagName('dbp-pdf-viewer');
+        await this._(previewTag).showPDF(file);
+    }
+
     render() {
         // const i18n = this._i18n;
 
@@ -54,7 +72,7 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
                 <div class="container">
                     <div class="columns is-vcentered">
                         <div class="column">
-                            TODO
+                            <input @change=${this.openFile} type="file" />
                         </div>
                     </div>
                 </div>
