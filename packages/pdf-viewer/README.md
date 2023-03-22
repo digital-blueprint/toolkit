@@ -3,6 +3,9 @@
 [GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/pdf-viewer) |
 [NPM](https://www.npmjs.com/package/@dbp-toolkit/pdf-viewer)
 
+This component is a wrapper around the [pdf.js](https://mozilla.github.io/pdf.js/)
+library to display PDF files in the browser.
+
 You can install this component via npm:
 
 ```bash
