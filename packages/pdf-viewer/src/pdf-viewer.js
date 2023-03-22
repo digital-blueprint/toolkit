@@ -31,11 +31,6 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         this.annotationLayer = null;
         this.canvasToPdfScale = 1.0;
         this.currentPageOriginalHeight = 0;
-        this.placeholder = '';
-        this.signature_width = 42;
-        this.signature_height = 42;
-        this.border_width = 2;
-        this.allowSignatureRotation = false;
 
         this._onWindowResize = this._onWindowResize.bind(this);
     }
@@ -60,10 +55,6 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
             isPageRenderingInProgress: {type: Boolean, attribute: false},
             isPageLoaded: {type: Boolean, attribute: false},
             showErrorMessage: {type: Boolean, attribute: false},
-            placeholder: {type: String, attribute: 'signature-placeholder-image-src'},
-            signature_width: {type: Number, attribute: 'signature-width'},
-            signature_height: {type: Number, attribute: 'signature-height'},
-            allowSignatureRotation: {type: Boolean, attribute: 'allow-signature-rotation'},
         };
     }
 
