@@ -1,5 +1,8 @@
 # PdfViewer Web Component
 
+[GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/pdf-viewer) |
+[NPM](https://www.npmjs.com/package/@dbp-toolkit/pdf-viewer)
+
 You can install this component via npm:
 
 ```bash
@@ -17,7 +20,7 @@ Or directly via CDN:
 
 ```html
 <dbp-pdf-viewer></dbp-pdf-viewer>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.2.2/dist/dbp-pdf-viewer.js"></script>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.2/dist/dbp-pdf-viewer.js"></script>
 ```
 
 ## Attributes
@@ -25,18 +28,37 @@ Or directly via CDN:
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-pdf-viewer lang="de" client-id="my-client-id"></dbp-pdf-viewer>`
 
-## Sending pdfViewers 
+## Methods
 
-```javascript
-import { send } from './pdf-viewer';
+- `showPDF(file: File)`: Opens a PDF file. The file must be a `File` object.
+    - example `document.querySelector('dbp-pdf-viewer').showPDF(file);`
 
-send({
-    "summary": "Item deleted",
-    "body": "Item foo was deleted!",
-    "type": "info",
-    "timeout": 5,
-});
-``` 
+## Screenshot
+
+![screenshot](screenshot.png)
+
+## Opening a PDF file
+
+You can use the `showPDF` method to open a PDF file. This method accepts a `File` object as parameter.
+
+```html
+<input @change=${this.openFile} type="file" />
+<dbp-pdf-viewer lang="en"></dbp-pdf-viewer>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.2/dist/dbp-pdf-viewer.js"></script>
+
+<script>
+  document.querySelector('input').addEventListener('change', function(e) {
+    if (e.target.files[0]) {
+      let file = e.target.files[0];
+
+      console.log('You selected ' + file.name);
+      document.querySelector('dbp-pdf-viewer').showPDF(file);
+    }
+  });
+</script>
+```
+
+See [example/index.html](example/index.html) for a working example.
 
 ## Local development
 
