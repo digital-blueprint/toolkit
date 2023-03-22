@@ -21,6 +21,7 @@ You can then open <http://127.0.0.1:8001/>.
 3) Reference in `assets/*.metadata.json` file in the `activities` part of `assets/dbp-toolkit-showcase.topic.metadata.json.ejs`
 
 ## Importing demo activities
+
 - imported demo activity has to be a `export class`
 - Add the line`import readme from 'path-to-activity/README.md';`
     - example: `import readme from '@dbp-toolkit/person-select/README.md';`
