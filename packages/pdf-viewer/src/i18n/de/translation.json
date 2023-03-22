@@ -1,3 +1,11 @@
 {
-    "send": "senden"
+    "pdf-viewer": {
+        "continue": "Platzierung bestätigen",
+        "error-message": "Fehler: Dieses Dokument ist beschädigt.",
+        "first-page": "Erste Seite",
+        "last-page": "Letzte Seite",
+        "next-page": "Nächste Seite",
+        "page-count": "von {{totalPages}}",
+        "previous-page": "Vorherige Seite"
+    }
 }

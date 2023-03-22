@@ -1,3 +1,11 @@
 {
-    "send": "send"
+    "pdf-viewer": {
+        "continue": "Confirm placement",
+        "error-message": "Error: This document is incorrect.",
+        "first-page": "First page",
+        "last-page": "Last page",
+        "next-page": "Next page",
+        "page-count": "of {{totalPages}}",
+        "previous-page": "Previous page"
+    }
 }

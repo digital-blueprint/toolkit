@@ -2,20 +2,19 @@ import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
 import {live} from 'lit/directives/live.js';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {MiniSpinner, Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-// import pdfjs from 'pdfjs-dist/build/pdf';
 import pdfjs from 'pdfjs-dist/legacy/build/pdf';
 import {name as pkgName} from './../package.json';
 import {readBinaryFileContent} from './utils.js';
-// import {createUUID} from './utils';
 
 /**
  * PdfViewer web component
  */
-export class PdfViewer extends DBPLitElement {
+export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -212,7 +211,6 @@ export class PdfViewer extends DBPLitElement {
                 this.canvas.width = this._('#pdf-main-container').clientWidth - 2;
 
                 // as the canvas is of a fixed width we need to adjust the scale of the viewport where page is rendered
-                const oldScale = this.canvasToPdfScale;
                 this.canvasToPdfScale = this.canvas.width / originalViewport.width;
 
                 console.log('this.canvasToPdfScale: ' + this.canvasToPdfScale);
@@ -312,7 +310,7 @@ export class PdfViewer extends DBPLitElement {
     }
 
     sendCancelEvent() {
-        const event = new CustomEvent('dbp-pdf-preview-cancel', {
+        const event = new CustomEvent('dbp-pdf-viewer-cancel', {
             detail: {},
             bubbles: true,
             composed: true,
@@ -434,7 +432,6 @@ export class PdfViewer extends DBPLitElement {
     }
 
     render() {
-        const isRotationHidden = !this.allowSignatureRotation;
         const i18n = this._i18n;
 
         return html`
@@ -452,26 +449,15 @@ export class PdfViewer extends DBPLitElement {
                     class="error-message ${classMap({
             hidden: !this.showErrorMessage || this.isPageLoaded,
         })}">
-                    ${i18n.t('pdf-preview.error-message')}
+                    ${i18n.t('pdf-viewer.error-message')}
                 </div>
                 <div class="${classMap({hidden: !this.isPageLoaded})}">
                     <div id="pdf-meta">
                         <div class="buttons ${classMap({hidden: !this.isPageLoaded})}">
-                            <button
-                                class="button ${classMap({
-            hidden: !this.isShowPlacement || isRotationHidden,
-        })}"
-                                title="${i18n.t('pdf-preview.rotate-signature')}"
-                                @click="${() => {
-            this.rotateSignature();
-        }}"
-                                ?disabled="${this.isPageRenderingInProgress}">
-                                &#10227; ${i18n.t('pdf-preview.rotate')}
-                            </button>
                             <div class="nav-buttons">
                                 <button
                                     class="button is-icon"
-                                    title="${i18n.t('pdf-preview.first-page')}"
+                                    title="${i18n.t('pdf-viewer.first-page')}"
                                     @click="${async () => {
             await this.showPage(1);
         }}"
@@ -481,7 +467,7 @@ export class PdfViewer extends DBPLitElement {
                                 </button>
                                 <button
                                     class="button is-icon"
-                                    title="${i18n.t('pdf-preview.previous-page')}"
+                                    title="${i18n.t('pdf-viewer.previous-page')}"
                                     @click="${async () => {
             if (this.currentPage > 1)
                 await this.showPage(--this.currentPage);
@@ -497,13 +483,13 @@ export class PdfViewer extends DBPLitElement {
                                     @input="${this.onPageNumberChanged}"
                                     .value="${live(this.currentPage)}" />
                                 <div class="page-info">
-                                    ${i18n.t('pdf-preview.page-count', {
+                                    ${i18n.t('pdf-viewer.page-count', {
             totalPages: this.totalPages,
         })}
                                 </div>
                                 <button
                                     class="button is-icon"
-                                    title="${i18n.t('pdf-preview.next-page')}"
+                                    title="${i18n.t('pdf-viewer.next-page')}"
                                     @click="${async () => {
             if (this.currentPage < this.totalPages)
                 await this.showPage(++this.currentPage);
@@ -514,7 +500,7 @@ export class PdfViewer extends DBPLitElement {
                                 </button>
                                 <button
                                     class="button is-icon"
-                                    title="${i18n.t('pdf-preview.last-page')}"
+                                    title="${i18n.t('pdf-viewer.last-page')}"
                                     @click="${async () => {
             await this.showPage(this.totalPages);
         }}"
@@ -523,15 +509,6 @@ export class PdfViewer extends DBPLitElement {
                                     <dbp-icon name="angle-double-right"></dbp-icon>
                                 </button>
                             </div>
-                            <button
-                                class="button is-primary ${classMap({
-            hidden: !this.isShowPlacement,
-        })}"
-                                @click="${() => {
-            this.sendAcceptEvent();
-        }}">
-                                ${i18n.t('pdf-preview.continue')}
-                            </button>
                         </div>
                     </div>
                     <div

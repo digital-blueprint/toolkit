@@ -58,6 +58,18 @@ export default (async () => {
                         src: await getPackagePath('pdfjs-dist', 'cmaps/*'),
                         dest: 'dist/' + (await getDistPath(pkg.name, 'pdfjs')),
                     }, // do we want all map files?
+                    {
+                        src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
+                        dest: 'dist/' + (await getDistPath(pkg.name)),
+                    },
+                    {
+                        src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
+                        dest: 'dist/' + (await getDistPath(pkg.name)),
+                    },
+                    {
+                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
+                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
+                    },
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'
