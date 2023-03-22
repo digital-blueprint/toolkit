@@ -1,0 +1,18 @@
+{
+    "element": "dbp-pdf-viewer-demo-activity",
+    "module_src": "dbp-pdf-viewer-demo-activity.js",
+    "routing_name": "pdf-viewer",
+    "name": {
+        "de": "PDF Viewer",
+        "en": "PDF Viewer"
+    },
+    "short_name": {
+        "de": "PDF Viewer",
+        "en": "PDF Viewer"
+    },
+    "description": {
+        "de": "PDF Viewer Web Komponente.",
+        "en": "PDF Viewer web component."
+    },
+    "subscribe": "lang"
+}

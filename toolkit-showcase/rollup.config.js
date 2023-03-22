@@ -223,6 +223,15 @@ Dependencies:
                         src: await getPackagePath('datatables.net-buttons-dt', 'css'),
                         dest: 'dist/' + (await getDistPath('@dbp-toolkit/data-table-view')),
                     },
+                    {
+                        // src: await getPackagePath('pdfjs-dist', 'build/pdf.worker.js'),
+                        src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.js'),
+                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/pdf-viewer', 'pdfjs')),
+                    },
+                    {
+                        src: await getPackagePath('pdfjs-dist', 'cmaps/*'),
+                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/pdf-viewer', 'pdfjs')),
+                    }, // do we want all map files?
                 ],
             }),
             replace({
