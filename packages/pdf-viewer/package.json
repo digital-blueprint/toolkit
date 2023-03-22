@@ -1,7 +1,7 @@
 {
   "name": "@dbp-toolkit/pdf-viewer",
   "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/pdf-viewer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "PDF Viewer Web Component",
   "main": "src/index.js",
   "repository": {
