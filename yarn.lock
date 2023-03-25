@@ -1080,6 +1080,16 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
+"@dbp-toolkit/pdf-viewer@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@dbp-toolkit/pdf-viewer/-/pdf-viewer-0.0.2.tgz#3e717c0d1c476617e8c2f19d2617c4b24a7fcfed"
+  integrity sha512-TPFsdruNtuPGriMDqkBgc5FcJj5072Z+k0nQLlo8HPaApPUmC8T9MKR82bKWoRD/takEfHQTlXt2lgeD410sMA==
+  dependencies:
+    "@dbp-toolkit/common" "^0.3.5"
+    "@open-wc/scoped-elements" "^2.1.0"
+    lit "^2.0.0"
+    pdfjs-dist "^2.12.313"
+
 "@es-joy/jsdoccomment@~0.37.0":
   version "0.37.0"
   resolved "https://registry.yarnpkg.com/@es-joy/jsdoccomment/-/jsdoccomment-0.37.0.tgz#aaafb4bb6c88288aa7899aef0f3b1b851c36f908"
@@ -4749,9 +4759,9 @@ i18next-parser@^7.0.0:
     vue-template-compiler "^2.6.11"
 
 i18next@^22.0.0, i18next@^22.0.4:
-  version "22.4.12"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.4.12.tgz#fde322c186501ea1adcdfac41b2d2552b26eab42"
-  integrity sha512-2lE+vRXxQ3lGLub1CVbwgO0IfkLHmUSDVOAVdPh22CsxttMXi+35n2qgxh2wZIkKl6t/NMzPfgFPRDiFQOmiCg==
+  version "22.4.13"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-22.4.13.tgz#02e291ab0056eab13b7d356fb454ff991923eaa0"
+  integrity sha512-GX7flMHRRqQA0I1yGLmaZ4Hwt1JfLqagk8QPDPZsqekbKtXsuIngSVWM/s3SLgNkrEXjA+0sMGNuOEkkmyqmWg==
   dependencies:
     "@babel/runtime" "^7.20.6"
 
@@ -7011,9 +7021,9 @@ prelude-ls@^1.2.1:
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
 prettier@^2.5.1:
-  version "2.8.4"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
-  integrity sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==
+  version "2.8.7"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.7.tgz#bb79fc8729308549d28fe3a98fce73d2c0656450"
+  integrity sha512-yPngTo3aXUUmyuTjeTUT75txrf+aMh9FiD7q9ZE/i6r0bPb22g4FsE6Y338PQX1bmfy08i9QQCB7/rcUAVntfw==
 
 proc-log@^2.0.0, proc-log@^2.0.1:
   version "2.0.1"
