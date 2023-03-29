@@ -50,7 +50,7 @@
         "@dbp-toolkit/person-profile": "^0.2.6",
         "@dbp-toolkit/person-select": "^0.3.2",
         "@dbp-toolkit/resource-select": "^0.1.2",
-        "@dbp-toolkit/pdf-viewer": "^0.0.2",
+        "@dbp-toolkit/pdf-viewer": "^0.0.3",
         "@fontsource/nunito-sans": "^4.5.8",
         "@open-wc/scoped-elements": "^2.1.0",
         "@rollup/plugin-replace": "^5.0.0",

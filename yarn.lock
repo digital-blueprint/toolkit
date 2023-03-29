@@ -1080,16 +1080,6 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dbp-toolkit/pdf-viewer@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@dbp-toolkit/pdf-viewer/-/pdf-viewer-0.0.2.tgz#3e717c0d1c476617e8c2f19d2617c4b24a7fcfed"
-  integrity sha512-TPFsdruNtuPGriMDqkBgc5FcJj5072Z+k0nQLlo8HPaApPUmC8T9MKR82bKWoRD/takEfHQTlXt2lgeD410sMA==
-  dependencies:
-    "@dbp-toolkit/common" "^0.3.5"
-    "@open-wc/scoped-elements" "^2.1.0"
-    lit "^2.0.0"
-    pdfjs-dist "^2.12.313"
-
 "@es-joy/jsdoccomment@~0.37.0":
   version "0.37.0"
   resolved "https://registry.yarnpkg.com/@es-joy/jsdoccomment/-/jsdoccomment-0.37.0.tgz#aaafb4bb6c88288aa7899aef0f3b1b851c36f908"
