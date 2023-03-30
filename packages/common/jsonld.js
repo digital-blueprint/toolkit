@@ -110,7 +110,7 @@ export default class JSONLD {
                         } else {
                             JSONLD._executeFailureFunctions(
                                 apiUrl,
-                                i18n.t('jsonld.api-documentation-server', {apiUrl: apiDocUrl})
+                                i18n.t('jsonld.api-documentation-server', {apiDocUrl: apiDocUrl})
                             );
                         }
                     };
