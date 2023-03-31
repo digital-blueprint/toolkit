@@ -252,7 +252,7 @@ export async function asyncObjectForEach(array, callback) {
 }
 
 /**
- * Doing a async foreach for non-linear integer keys with a copy of the array
+ * Doing an async foreach for non-linear integer keys with a copy of the array
  *
  * @param array
  * @param callback
