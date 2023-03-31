@@ -140,7 +140,7 @@ export const makeId = (length) => {
 };
 
 /**
- * Pads a number with a 0 so it has two digits
+ * Pads a number with a 0, so it has two digits
  *
  * @param n
  * @returns {string}
@@ -236,7 +236,7 @@ export const pollFunc = (fn, timeout, interval) => {
 };
 
 /**
- * Doing a async foreach for non-linear integer keys
+ * Doing an async foreach for non-linear integer keys
  *
  * @param array
  * @param callback
@@ -269,7 +269,7 @@ export async function asyncCopyObjectForEach(array, callback) {
 }
 
 /**
- * Doing a async foreach for linear integer keys
+ * Doing an async foreach for linear integer keys
  *
  * @param array
  * @param callback
@@ -282,7 +282,7 @@ export async function asyncArrayForEach(array, callback) {
 }
 
 /**
- * Attempts to determine the mime type of a file or blob
+ * Attempts to determine the mime-type of a file or blob
  *
  * @param file
  * @returns {Promise<string>}
