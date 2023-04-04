@@ -8,10 +8,9 @@ import bttn2 from 'datatables.net-buttons';
 import bttnHtml5 from 'datatables.net-buttons/js/buttons.html5.js';
 import bttnPrint from 'datatables.net-buttons/js/buttons.print.js';
 import {createInstance} from './i18n';
-import {css, html, unsafeCSS} from 'lit';
+import {css, html} from 'lit';
 import de from '../assets/datatables/i18n/German';
 import en from '../assets/datatables/i18n/English';
-import {getIconSVGURL} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {name as pkgName} from './../package.json';
@@ -252,8 +251,8 @@ export class DataTableView extends AdapterLitElement {
     static get styles() {
         // language=css
         const orderExpandIconOverrides = css`
-            table.dataTable.dtr-inline.collapsed > tbody > tr[role='row'] > td:first-child::before,
-            table.dataTable.dtr-inline.collapsed > tbody > tr[role='row'] > th:first-child::before {
+            table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control::before,
+            table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control::before {
                 all: initial;
                 top: 0.7em;
                 left: 0.4em;
@@ -274,25 +273,7 @@ export class DataTableView extends AdapterLitElement {
             table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::before,
             table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before {
                 content: '-';
-            }
-
-            table.dataTable thead .sorting {
-                background-image: url('${unsafeCSS(getIconSVGURL('chevron-up'))}'),
-                    url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
-                background-position: 100% 40%, 100% 60%;
-                background-size: 0.5em, 0.5em;
-            }
-
-            table.dataTable thead .sorting_desc {
-                background-image: url('${unsafeCSS(getIconSVGURL('chevron-up'))}');
-                background-position: 100% 50%;
-                background-size: 0.8em;
-            }
-
-            table.dataTable thead .sorting_asc {
-                background-image: url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
-                background-size: 0.8em;
-                background-position: 100% 50%;
+                background-color: var(--dbp-primary-surface);
             }
         `;
 
