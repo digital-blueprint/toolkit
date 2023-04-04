@@ -216,6 +216,9 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                 this._('#page-loader').style.height = this.canvas.height + 'px';
                 this._('#page-loader').style.lineHeight = this.canvas.height + 'px';
 
+                // setting page loader height for smooth experience
+                this._('#canvas-wrapper').style.height = this.canvas.height + 'px';
+
                 // page is rendered on <canvas> element
                 const render_context = {
                     canvasContext: this.canvas.getContext('2d'),
@@ -334,13 +337,13 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
 
             #canvas-wrapper {
                 position: relative;
+                border: var(--dbp-border);
             }
 
             #canvas-wrapper canvas {
                 position: absolute;
                 top: 0;
                 left: 0;
-                border: var(--dbp-border);
             }
 
             #annotation-layer {
@@ -396,7 +399,6 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                 border: var(--dbp-border);
                 padding: 0.54em;
                 border-bottom-width: 0;
-                border-top-width: 0;
             }
 
             .button.is-cancel {
