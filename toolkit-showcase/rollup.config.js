@@ -208,22 +208,6 @@ Dependencies:
                         dest: 'dist/' + (await getDistPath('@dbp-toolkit/qr-code-scanner')),
                     },
                     {
-                        src: await getPackagePath('datatables.net-dt', 'css'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/data-table-view')),
-                    },
-                    {
-                        src: await getPackagePath('datatables.net-dt', 'images'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/data-table-view')),
-                    },
-                    {
-                        src: await getPackagePath('datatables.net-responsive-dt', 'css'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/data-table-view')),
-                    },
-                    {
-                        src: await getPackagePath('datatables.net-buttons-dt', 'css'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/data-table-view')),
-                    },
-                    {
                         // src: await getPackagePath('pdfjs-dist', 'build/pdf.worker.js'),
                         src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.js'),
                         dest: 'dist/' + (await getDistPath('@dbp-toolkit/pdf-viewer', 'pdfjs')),
