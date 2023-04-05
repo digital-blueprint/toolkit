@@ -164,7 +164,6 @@ Dependencies:
                 emitFiles: true,
                 fileName: 'shared/[name].[hash][extname]',
             }),
-            useTerser ? terser() : false,
             copy({
                 targets: [
                     {src: 'assets/*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
@@ -239,6 +238,8 @@ Dependencies:
                         ],
                     ],
                 }),
+            // the terser must be used AFTER babel, otherwise it will cause pdfjs to not show SVGs (or other images?)
+            useTerser ? terser() : false,
             watch
                 ? serve({
                       contentBase: '.',
