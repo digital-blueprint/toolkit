@@ -217,7 +217,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                 this._('#page-loader').style.lineHeight = this.canvas.height + 'px';
 
                 // setting wrapper height, so that the absolute positions of the pdf-canvas and
-                // the annotation-layer don't desturb the page layout
+                // the annotation-layer don't disturb the page layout
                 this._('#canvas-wrapper').style.height = this.canvas.height + 'px';
 
                 // page is rendered on <canvas> element
