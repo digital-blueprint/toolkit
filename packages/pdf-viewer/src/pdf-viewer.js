@@ -31,6 +31,11 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         this.annotationLayer = null;
         this.canvasToPdfScale = 1.0;
         this.currentPageOriginalHeight = 0;
+        this.currentPageOriginalWidth = 0;
+        this.pdfMainContainer = null;
+        this.initialClientWidth = 0;
+        this.initialClientHeight = 0;
+        this.isFirstRendering = true;
 
         this._onWindowResize = this._onWindowResize.bind(this);
     }
@@ -49,6 +54,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            autoResize: {type: Boolean, attribute: 'auto-resize'},
             currentPage: {type: Number, attribute: false},
             totalPages: {type: Number, attribute: false},
             isShowPage: {type: Boolean, attribute: false},
@@ -92,6 +98,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         this.updateComplete.then(async () => {
             that.annotationLayer = that._('#annotation-layer');
             that.canvas = that._('#pdf-canvas');
+            that.pdfMainContainer = that._('#pdf-main-container');
 
             // this._('#upload-pdf-input').addEventListener('change', function() {
             //     that.showPDF(this.files[0]);
@@ -167,7 +174,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
 
         // show the first page
         // if the placementData has no values we want to initialize the signature position
-        await this.showPage(page, placementData['scaleX'] === undefined);
+        await this.showPage(page);
 
         this.isPageLoaded = true;
 
@@ -179,9 +186,8 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
      * Load and render specific page of the PDF
      *
      * @param pageNumber
-     * @param initSignature
      */
-    async showPage(pageNumber, initSignature = false) {
+    async showPage(pageNumber) {
         // we need to wait until the last rendering is finished
         if (this.isPageRenderingInProgress || this.pdfDoc === null) {
             return;
@@ -194,23 +200,58 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         try {
             // get handle of page
             await this.pdfDoc.getPage(pageNumber).then(async (page) => {
+                if (that.isFirstRendering) {
+                    that.isFirstRendering = false;
+
+                    // we weren't able to get the initial width and height of the container in the connectedCallback (this.updateComplete)
+                    // clientWidth and clientHeight were also not set correctly, getBoundingClientRect() was the only way to get the correct values
+                    that.initialClientWidth = that.getBoundingClientRect().width - 2;
+                    that.initialClientHeight = that.getBoundingClientRect().height - 2;
+                    console.log("that._('#pdf-meta').clientHeight", that._('#pdf-meta').clientHeight);
+                    console.log("that._('#pdf-meta')", that._('#pdf-meta'));
+                    console.log("that._('#pdf-meta').getBoundingClientRect().height", that._('#pdf-meta').getBoundingClientRect().height);
+                    console.log("this.initialClientWidth", that.initialClientWidth);
+                    console.log("this.initialClientHeight", that.initialClientHeight);
+                }
+
                 // original width of the pdf page at scale 1
                 const originalViewport = page.getViewport({scale: 1});
                 this.currentPageOriginalHeight = originalViewport.height;
+                this.currentPageOriginalWidth = originalViewport.width;
+                // const proportion = this.currentPageOriginalWidth / this.currentPageOriginalHeight;
 
                 // set the canvas width to the width of the container (minus the borders)
-                this.canvas.width = this._('#pdf-main-container').clientWidth - 2;
+                // let clientWidth = this.pdfMainContainer.clientWidth - 2;
+                // let clientHeight = this.pdfMainContainer.clientHeight - 2;
+                let clientWidth = that.initialClientWidth;
+                let clientHeight = that.initialClientHeight - that._('#pdf-meta').clientHeight;
+                console.log("clientWidth", clientWidth);
+                console.log("clientHeight", clientHeight);
+
+                // let proposedCanvasWidth = clientWidth;
+                // let proposedCanvasHeight = clientHeight;
+                this.canvas.width = clientWidth;
 
                 // as the canvas is of a fixed width we need to adjust the scale of the viewport where page is rendered
-                this.canvasToPdfScale = this.canvas.width / originalViewport.width;
+                this.canvasToPdfScale = clientWidth / originalViewport.width;
 
                 console.log('this.canvasToPdfScale: ' + this.canvasToPdfScale);
 
                 // get viewport to render the page at required scale
-                const viewport = page.getViewport({scale: this.canvasToPdfScale});
+                let viewport = page.getViewport({scale: this.canvasToPdfScale});
+
+                if (viewport.height > clientHeight) {
+                    // this.canvasToPdfScale = this.canvasToPdfScale * (clientHeight / viewport.height);
+                    this.canvasToPdfScale = clientHeight / originalViewport.height;
+                    console.log("viewport.height to high, new this.canvasToPdfScale", this.canvasToPdfScale);
+
+                    // get viewport to render the page at required scale
+                    viewport = page.getViewport({scale: this.canvasToPdfScale});
+                }
 
                 // set canvas height same as viewport height
                 this.canvas.height = viewport.height;
+                this.canvas.width = viewport.width;
 
                 // setting page loader height for smooth experience
                 this._('#page-loader').style.height = this.canvas.height + 'px';
@@ -338,7 +379,15 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
 
             #canvas-wrapper {
                 position: relative;
+                /*align-items: center;*/
+                /*justify-content: center;*/
+                /*display: flex;*/
                 border: var(--dbp-border);
+            }
+
+            #canvas-wrapper-inner {
+                display: block;
+                position: relative;
             }
 
             #canvas-wrapper canvas {
@@ -508,8 +557,10 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                     <div
                         id="canvas-wrapper"
                         class="${classMap({hidden: this.isPageRenderingInProgress})}">
-                        <canvas id="pdf-canvas"></canvas>
-                        <div id="annotation-layer"></div>
+                            <div id="canvas-wrapper-inner">
+                                <canvas id="pdf-canvas"></canvas>
+                                <div id="annotation-layer"></div>
+                            </div>
                     </div>
                     <div class="${classMap({hidden: !this.isPageRenderingInProgress})}">
                         <dbp-mini-spinner id="page-loader"></dbp-mini-spinner>

@@ -40,6 +40,31 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
+
+            dbp-pdf-viewer {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+
+            #modal-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                align-items: center;
+                justify-content: center;
+                display: none;
+            }
+
+            #pdf-container {
+                width: 80%;
+                height: 80%;
+                position: relative;
+                background: #8ca0e8;
+                overflow-y: auto;
+            }
         `;
     }
 
@@ -56,6 +81,8 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
 
         let file = e.target.files[0];
         console.log("file", file);
+
+        this._('#modal-container').style.display = 'flex';
 
         const previewTag = this.getScopedTagName('dbp-pdf-viewer');
         await this._(previewTag).showPDF(file);
@@ -76,8 +103,10 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
                         </div>
                     </div>
                 </div>
-                <div class="container">
-                    <dbp-pdf-viewer lang="${this.lang}"></dbp-pdf-viewer>
+                <div class="container" id="modal-container">
+                    <div class="container" id="pdf-container">
+                        <dbp-pdf-viewer lang="${this.lang}"></dbp-pdf-viewer>
+                    </div>
                 </div>
             </section>
         `;
