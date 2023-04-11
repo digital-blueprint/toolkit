@@ -18,18 +18,6 @@
   },
   "packageRules": [
     {
-      "matchPackageNames": ["datatables.net", "datatables.net-dt"],
-      "allowedVersions": "<1.13"
-    },
-    {
-      "matchPackageNames": ["datatables.net-buttons", "datatables.net-buttons-dt"],
-      "allowedVersions": "<2.3"
-    },
-    {
-      "matchPackageNames": ["datatables.net-responsive", "datatables.net-responsive-dt"],
-      "allowedVersions": "<2.4"
-    },
-    {
       "matchPackageNames": ["find-cache-dir"],
       "allowedVersions": "<4"
     },
