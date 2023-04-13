@@ -34,7 +34,6 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         this.lastResult = {};
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
-        this.showDetails = false;
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
 
@@ -61,7 +60,6 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             object: {type: Object, attribute: false},
             showReloadButton: {type: Boolean, attribute: 'show-reload-button'},
             reloadButtonTitle: {type: String, attribute: 'reload-button-title'},
-            showDetails: {type: Boolean, attribute: 'show-details'},
             auth: {type: Object},
         };
     }
@@ -308,11 +306,6 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         let text = person['givenName'] ?? '';
         if (person['familyName']) {
             text += ` ${person['familyName']}`;
-        }
-
-        // add birth date to name if present
-        if (this.showDetails && person['email'] !== undefined && person['email'] !== null) {
-            text += ` (${person['email']})`;
         }
 
         return text;
