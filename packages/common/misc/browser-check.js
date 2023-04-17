@@ -106,6 +106,25 @@ Example usage:
         return true;
     }
 
+    // check for ::part selector support
+    // https://caniuse.com/mdn-css_selectors_part
+    function supportsCSSpart() {
+        try {
+            let x = document.createElement('div');
+
+            if (x.part == undefined) {
+                x.remove();
+                return false;
+            }
+
+            x.remove();
+        } catch(e) {
+            return false;
+        }
+
+        return true;
+    }
+
     function isBrowserSupported() {
         if (!supportsEval()) {
             console.log('Eval support disabled, skipping browser feature detection.');
@@ -154,6 +173,11 @@ Example usage:
 
         if (!supportsGlobalThis()) {
             console.log('globalThis not supported');
+            return false;
+        }
+
+        if (!supportsCSSpart()) {
+            console.log('CSS ::part not supported');
             return false;
         }
 
