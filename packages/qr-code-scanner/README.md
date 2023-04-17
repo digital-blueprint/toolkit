@@ -54,16 +54,16 @@ git clone git@gitlab.tugraz.at:dbp/web-components/qr-code-scanner.git
 cd qr-code-scanner
 
 # install dependencies
-yarn install
+npm install
 
 # constantly build dist/bundle.js and run a local web-server on port 8002 
-yarn run watch-local
+npm run watch-local
 
 # run tests
-yarn test
+npm test
 
 # build local packages in dist directory
-yarn run build
+npm run build
 ```
 
 Jump to <http://localhost:8002> and you should get a demo page.

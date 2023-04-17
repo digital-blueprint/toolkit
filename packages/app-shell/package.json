@@ -51,15 +51,15 @@
     },
     "scripts": {
         "i18next": "i18next",
-        "format": "yarn run format:eslint && yarn run format:prettier",
+        "format": "npm run format:eslint && npm run format:prettier",
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
-        "build": "yarn run build-local",
+        "build": "npm run build-local",
         "build-local": "rollup --bundleConfigAsCjs -c",
         "build-test": "rollup --bundleConfigAsCjs -c --environment BUILD:test",
-        "watch": "yarn run watch-local",
+        "watch": "npm run watch-local",
         "watch-local": "rollup --bundleConfigAsCjs -c --watch",
-        "test": "yarn run build-test && karma start --singleRun",
+        "test": "npm run build-test && karma start --singleRun",
         "lint": "eslint ."
     }
 }

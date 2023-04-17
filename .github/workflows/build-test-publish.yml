@@ -7,7 +7,7 @@ jobs:
 
     env:
       PLAYWRIGHT_BROWSERS_PATH: /tmp/_playwright_cache
-      YARN_CACHE_PATH: /tmp/_yarn_cache
+      NPM_CACHE_PATH: /tmp/_npm_cache
 
     steps:
       - name: Checkout repository
@@ -19,42 +19,42 @@ jobs:
         run: |
           git config --global --add safe.directory "$(pwd)"
 
-      - name: Set yarn cache path
+      - name: Set npm cache path
         run: |
-          yarn config set cache-folder "$YARN_CACHE_PATH"
+          npm config set cache "$NPM_CACHE_PATH"
 
-      - name: Restore yarn cache
+      - name: Restore npm cache
         uses: actions/cache@v3
         with:
           path: |
-            ${{ env.YARN_CACHE_PATH }}
-          key: yarn-${{ hashFiles('**/yarn.lock') }}
+            ${{ env.NPM_CACHE_PATH }}
+          key: npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            yarn-
+            npm-
 
       - name: Restore playwright cache
         uses: actions/cache@v3
         with:
           path: |
             ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
-          key: playwright-${{ hashFiles('**/yarn.lock') }}
+          key: playwright-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             playwright-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Run build
-        run: APP_ENV=development yarn run build
+        run: APP_ENV=development npm run build
 
       - name: Install test dependencies
         run: ./node_modules/.bin/playwright install-deps
 
       - name: Run tests
-        run: yarn run test
+        run: npm run test
 
       - name: Run lint
-        run: yarn run lint
+        run: npm run lint
 
   deploy:
     runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
     environment: ${{ github.ref_name }}
 
     env:
-      YARN_CACHE_PATH: /tmp/_yarn_cache
+      NPM_CACHE_PATH: /tmp/_npm_cache
 
     steps:
       - name: Checkout repository
@@ -71,18 +71,18 @@ jobs:
         with:
           submodules: true
 
-      - name: Set yarn cache path
+      - name: Set npm cache path
         run: |
-          yarn config set cache-folder "$YARN_CACHE_PATH"
+          npm config set cache "$NPM_CACHE_PATH"
 
-      - name: Restore yarn cache
+      - name: Restore npm cache
         uses: actions/cache@v3
         with:
           path: |
-            ${{ env.YARN_CACHE_PATH }}
-          key: yarn-${{ hashFiles('**/yarn.lock') }}
+            ${{ env.NPM_CACHE_PATH }}
+          key: npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            yarn-
+            npm-
 
       - name: Publish to NPM
         if: github.ref == 'refs/heads/main'
@@ -92,10 +92,8 @@ jobs:
           # https://www.npmjs.com/settings/dbp-deploy/tokens
           # NPM_TOKEN needs to be a "Publish" token with 2FA disabled!
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > ~/.npmrc
-          yarn install --frozen-lockfile
-          yarn run build
-          #yarn run publish
-          # yarn always reports "https://registry.yarnpkg.com/@dbp-topics%2fsignature - Not found", so we are using npm directly
+          npm ci
+          npm run build
           npm run publish
 
       - name: Deploy and wait for completion

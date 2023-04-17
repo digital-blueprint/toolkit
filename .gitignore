@@ -1,5 +1,3 @@
 node_modules
-toolkit-showcase/dist
 .idea
-yarn-error.log
-package-lock.json
+yarn.lock

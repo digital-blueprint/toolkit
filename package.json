@@ -8,6 +8,10 @@
     "packages/*",
     "toolkit-showcase"
   ],
+  "engines": {
+    "node" : ">=16.0.0",
+    "npm" : ">=7.0.0"
+  },
   "scripts": {
     "test": "lerna --no-sort run test",
     "format": "lerna --no-sort run format",
@@ -16,7 +20,6 @@
     "version-patch": "lerna version patch",
     "version-minor": "lerna version minor",
     "version": "lerna version",
-    "yarn-install": "for d in ./packages/*/ ; do (cd \"$d\" && yarn install); done;",
     "rm-dist": "for d in ./packages/*/ ; do (cd \"$d\" && rm dist -Rf); done;",
     "lint": "lerna --no-sort run lint",
     "publish": "lerna --no-sort publish from-package --yes"
