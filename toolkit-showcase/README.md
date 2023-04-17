@@ -3,13 +3,13 @@
 ## Setup
 
 ```bash
-yarn install
+npm install
 ```
 
 ## Local development
 
 ```bash
-yarn run watch-local
+npm run watch-local
 ```
 
 You can then open <http://127.0.0.1:8001/>.

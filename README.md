@@ -8,24 +8,23 @@
 
 ## Overview
 
-This repository uses [yarn 1.x](https://classic.yarnpkg.com) workspaces to link
-multiple separate packages together and to hoist all shared dependencies to the
-top level node_modules.
+This repository uses workspaces to link multiple separate packages together and
+to hoist all shared dependencies to the top level node_modules.
 
-In addition, we use [lerna](https://lerna.js.org/) for running commands for all contained packages (until we switch to yarn 2.x which should support this directly).
+In addition, we use [lerna](https://lerna.js.org/) for running commands for all contained packages.
 
 ## Setup
 
 ```
-yarn install
+npm install
 ```
 
-`cd packges/some-package` and continue development with `yarn run watch` etc.
+`cd packges/some-package` and continue development with `npm run watch` etc.
 
 ## Other commands
 
-* `yarn run test` -  Run test for all packages
-* `yarn run clean` - Removes all `node_modules` directories.
+* `npm run test` -  Run test for all packages
+* `npm run clean` - Removes all `node_modules` directories.
 
 ## Publishing packages to npmjs.com
 

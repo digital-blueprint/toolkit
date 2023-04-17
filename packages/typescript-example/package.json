@@ -46,7 +46,7 @@
         "lit": "^2.0.0"
     },
     "scripts": {
-        "format": "yarn run format:eslint && yarn run format:prettier",
+        "format": "npm run format:eslint && npm run format:prettier",
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
         "clean": "rm dist/*",

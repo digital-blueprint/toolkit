@@ -42,13 +42,13 @@ git clone git@github.com:digital-blueprint/toolkit.git
 cd toolkit/packages/knowledge-base-web-page-element-view
 
 # install dependencies
-yarn install
+npm install
 
 # constantly build dist/bundle.js and run a local web-server on port 8002 
-yarn run watch-local
+npm run watch-local
 
 # build local packages in dist directory
-yarn run build
+npm run build
 ```
 
 Jump to <http://localhost:8002> and you should get a demo page.
