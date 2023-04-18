@@ -9,17 +9,17 @@
     "toolkit-showcase"
   ],
   "scripts": {
-    "test": "lerna run test",
-    "format": "lerna run format",
-    "build": "lerna run build",
-    "i18next": "lerna run i18next",
+    "test": "lerna --no-sort run test",
+    "format": "lerna --no-sort run format",
+    "build": "lerna --no-sort run build",
+    "i18next": "lerna --no-sort run i18next",
     "version-patch": "lerna version patch",
     "version-minor": "lerna version minor",
     "version": "lerna version",
     "yarn-install": "for d in ./packages/*/ ; do (cd \"$d\" && yarn install); done;",
     "rm-dist": "for d in ./packages/*/ ; do (cd \"$d\" && rm dist -Rf); done;",
-    "lint": "lerna run lint",
-    "publish": "lerna publish from-package --yes"
+    "lint": "lerna --no-sort run lint",
+    "publish": "lerna --no-sort publish from-package --yes"
   },
   "author": "",
   "license": "LGPL-2.1-or-later",
