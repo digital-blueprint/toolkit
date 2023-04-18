@@ -30,6 +30,11 @@ Or directly via CDN:
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-pdf-viewer lang="de" client-id="my-client-id"></dbp-pdf-viewer>`
+- `auto-resize` (optional, default: `cover`)
+    - set to `contain` to resize the viewed PDF to fit the container horizontally and vertically
+    - set to `cover` to resize the viewed PDF to fit the container horizontally only,
+      vertically the PDF can exceed the container
+    - example `<dbp-pdf-viewer auto-resize="contain"></dbp-pdf-viewer>
 
 ## Methods
 
