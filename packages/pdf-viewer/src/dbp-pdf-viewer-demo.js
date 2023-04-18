@@ -103,9 +103,16 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
                         </div>
                     </div>
                 </div>
+                <h2>Cover</h2>
                 <div class="container" id="modal-container">
                     <div class="container" id="pdf-container">
-                        <dbp-pdf-viewer lang="${this.lang}"></dbp-pdf-viewer>
+                        <dbp-pdf-viewer lang="${this.lang}" auto-resize="cover"></dbp-pdf-viewer>
+                    </div>
+                </div>
+                <h2>Contain</h2>
+                <div class="container" id="modal-container">
+                    <div class="container" id="pdf-container">
+                        <dbp-pdf-viewer lang="${this.lang}" auto-resize="contain"></dbp-pdf-viewer>
                     </div>
                 </div>
             </section>
