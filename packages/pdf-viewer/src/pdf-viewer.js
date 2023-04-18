@@ -36,6 +36,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         this.initialClientWidth = 0;
         this.initialClientHeight = 0;
         this.isFirstRendering = true;
+        this.autoResize = 'cover';
 
         this._onWindowResize = this._onWindowResize.bind(this);
     }
@@ -54,7 +55,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            autoResize: {type: Boolean, attribute: 'auto-resize'},
+            autoResize: {type: String, attribute: 'auto-resize'},
             currentPage: {type: Number, attribute: false},
             totalPages: {type: Number, attribute: false},
             isShowPage: {type: Boolean, attribute: false},
@@ -240,7 +241,9 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                 // get viewport to render the page at required scale
                 let viewport = page.getViewport({scale: this.canvasToPdfScale});
 
-                if (viewport.height > clientHeight) {
+                // if the height of the viewport is higher than the height of the container and the autoResize is set
+                // to 'contain', then we need to adjust the scale again
+                if (this.autoResize === 'contain' && viewport.height > clientHeight) {
                     // this.canvasToPdfScale = this.canvasToPdfScale * (clientHeight / viewport.height);
                     this.canvasToPdfScale = clientHeight / originalViewport.height;
                     console.log("viewport.height to high, new this.canvasToPdfScale", this.canvasToPdfScale);
