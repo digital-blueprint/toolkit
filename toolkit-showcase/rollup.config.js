@@ -15,7 +15,7 @@ import emitEJS from 'rollup-plugin-emit-ejs';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '../rollup.utils.js';
-import replace from 'rollup-plugin-replace';
+import replace from '@rollup/plugin-replace';
 
 const pkg = require('./package.json');
 const appEnv = typeof process.env.APP_ENV !== 'undefined' ? process.env.APP_ENV : 'local';
@@ -219,6 +219,7 @@ Dependencies:
             }),
             replace({
                 'process.env.NODE_ENV': JSON.stringify('production'),
+                'preventAssignment': true,
             }),
             useBabel &&
                 getBabelOutputPlugin({

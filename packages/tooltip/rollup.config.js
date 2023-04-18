@@ -9,7 +9,7 @@ import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getPackagePath, getDistPath} from '../../rollup.utils.js';
-import replace from 'rollup-plugin-replace';
+import replace from '@rollup/plugin-replace';
 
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
@@ -96,6 +96,7 @@ export default (async () => {
             }),
             replace({
                 'process.env.NODE_ENV': JSON.stringify('production'),
+                'preventAssignment': true
             }),
             process.env.ROLLUP_WATCH === 'true'
                 ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
