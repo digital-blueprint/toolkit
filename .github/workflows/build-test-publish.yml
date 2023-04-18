@@ -7,7 +7,6 @@ jobs:
 
     env:
       PLAYWRIGHT_BROWSERS_PATH: /tmp/_playwright_cache
-      NPM_CACHE_PATH: /tmp/_npm_cache
 
     steps:
       - name: Checkout repository
@@ -15,22 +14,10 @@ jobs:
         with:
           submodules: true
 
-      - name: Set up git config
-        run: |
-          git config --global --add safe.directory "$(pwd)"
-
-      - name: Set npm cache path
-        run: |
-          npm config set cache "$NPM_CACHE_PATH"
-
-      - name: Restore npm cache
-        uses: actions/cache@v3
+      - uses: actions/setup-node@v3
         with:
-          path: |
-            ${{ env.NPM_CACHE_PATH }}
-          key: npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-
+          node-version: 16
+          cache: 'npm'
 
       - name: Restore playwright cache
         uses: actions/cache@v3
@@ -48,7 +35,7 @@ jobs:
         run: APP_ENV=development npm run build
 
       - name: Install test dependencies
-        run: ./node_modules/.bin/playwright install-deps
+        run: ./node_modules/.bin/playwright install-deps chromium firefox
 
       - name: Run tests
         run: npm run test
@@ -62,27 +49,16 @@ jobs:
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo' || github.ref == 'refs/heads/production'
     environment: ${{ github.ref_name }}
 
-    env:
-      NPM_CACHE_PATH: /tmp/_npm_cache
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           submodules: true
 
-      - name: Set npm cache path
-        run: |
-          npm config set cache "$NPM_CACHE_PATH"
-
-      - name: Restore npm cache
-        uses: actions/cache@v3
+      - uses: actions/setup-node@v3
         with:
-          path: |
-            ${{ env.NPM_CACHE_PATH }}
-          key: npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-
+          node-version: 16
+          cache: 'npm'
 
       - name: Publish to NPM
         if: github.ref == 'refs/heads/main'
