@@ -74,6 +74,11 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
             : this.shadowRoot.querySelector(selector);
     }
 
+    /**
+     * TODO: Implement for both, cover and contain
+     * @param e
+     * @returns {Promise<void>}
+     */
     async openFile(e) {
         if (e.target.files.length === 0) {
             return;
