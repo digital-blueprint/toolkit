@@ -40,6 +40,35 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
+
+            #dbp-pdf-viewer-contain {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+
+            #modal-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                align-items: center;
+                justify-content: center;
+                display: none;
+            }
+
+            #pdf-container {
+                width: 80%;
+                height: 80%;
+                position: relative;
+                background: #8ca0e8;
+                overflow-y: auto;
+            }
+
+            .container, p {
+                margin: 20px auto;
+            }
         `;
     }
 
@@ -49,7 +78,11 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
             : this.shadowRoot.querySelector(selector);
     }
 
-    async openFile(e) {
+    /**
+     * @param e
+     * @returns {Promise<void>}
+     */
+    async openFileContain(e) {
         if (e.target.files.length === 0) {
             return;
         }
@@ -57,8 +90,34 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
         let file = e.target.files[0];
         console.log("file", file);
 
-        const previewTag = this.getScopedTagName('dbp-pdf-viewer');
-        await this._(previewTag).showPDF(file);
+        this._('#modal-container').style.display = 'flex';
+
+        await this._('#dbp-pdf-viewer-contain').showPDF(file);
+    }
+
+    /**
+     * @param e
+     * @returns {Promise<void>}
+     */
+    async openFileCover(e) {
+        if (e.target.files.length === 0) {
+            return;
+        }
+
+        let file = e.target.files[0];
+        console.log("file", file);
+
+        await this._('#dbp-pdf-viewer-cover').showPDF(file);
+    }
+
+    async closeModal(e) {
+        if (e.target.id !== 'modal-container') {
+            return;
+        }
+
+        console.log("e", e);
+        this._('#modal-container').style.display = 'none';
+        e.preventDefault();
     }
 
     render() {
@@ -69,15 +128,35 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
                 <div class="container">
                     <h1 class="title">PdfViewer-Demo</h1>
                 </div>
+                <h2>Cover</h2>
                 <div class="container">
                     <div class="columns is-vcentered">
+                        <p>
+                            The PDF will be resized  fit the container horizontally only, vertically the PDF can exceed the container.
+                        </p>
                         <div class="column">
-                            <input @change=${this.openFile} type="file" />
+                            <input @change=${this.openFileCover} type="file" />
                         </div>
                     </div>
                 </div>
                 <div class="container">
-                    <dbp-pdf-viewer lang="${this.lang}"></dbp-pdf-viewer>
+                    <dbp-pdf-viewer id="dbp-pdf-viewer-cover" lang="${this.lang}" auto-resize="cover"></dbp-pdf-viewer>
+                </div>
+                <h2>Contain</h2>
+                <div class="container">
+                    <div class="columns is-vcentered">
+                        <div class="column">
+                            <p>
+                                The PDF will be resized to fit the container horizontally and vertically.
+                            <p>
+                            <input @change=${this.openFileContain} type="file" />
+                        </div>
+                    </div>
+                </div>
+                <div class="container" id="modal-container" @click=${this.closeModal}>
+                    <div class="container" id="pdf-container">
+                        <dbp-pdf-viewer id="dbp-pdf-viewer-contain" lang="${this.lang}" auto-resize="contain"></dbp-pdf-viewer>
+                    </div>
                 </div>
             </section>
         `;
