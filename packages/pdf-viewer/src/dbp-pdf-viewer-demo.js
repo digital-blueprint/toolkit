@@ -62,7 +62,7 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
                 width: 80%;
                 height: 80%;
                 position: relative;
-                background: #8ca0e8;
+                background-color: var(--dbp-primary);
                 overflow-y: auto;
             }
 
