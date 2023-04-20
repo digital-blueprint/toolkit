@@ -209,11 +209,11 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                     // clientWidth and clientHeight were also not set correctly, getBoundingClientRect() was the only way to get the correct values
                     that.initialClientWidth = that.getBoundingClientRect().width - 2;
                     that.initialClientHeight = that.getBoundingClientRect().height - 2;
-                    console.log("that._('#pdf-meta').clientHeight", that._('#pdf-meta').clientHeight);
-                    console.log("that._('#pdf-meta')", that._('#pdf-meta'));
-                    console.log("that._('#pdf-meta').getBoundingClientRect().height", that._('#pdf-meta').getBoundingClientRect().height);
-                    console.log("this.initialClientWidth", that.initialClientWidth);
-                    console.log("this.initialClientHeight", that.initialClientHeight);
+                    // console.log("that._('#pdf-meta').clientHeight", that._('#pdf-meta').clientHeight);
+                    // console.log("that._('#pdf-meta')", that._('#pdf-meta'));
+                    // console.log("that._('#pdf-meta').getBoundingClientRect().height", that._('#pdf-meta').getBoundingClientRect().height);
+                    // console.log("this.initialClientWidth", that.initialClientWidth);
+                    // console.log("this.initialClientHeight", that.initialClientHeight);
                 }
 
                 // original width of the pdf page at scale 1
