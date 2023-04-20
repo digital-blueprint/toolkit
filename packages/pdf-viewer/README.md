@@ -23,7 +23,7 @@ Or directly via CDN:
 
 ```html
 <dbp-pdf-viewer></dbp-pdf-viewer>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.4/dist/dbp-pdf-viewer.js"></script>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.5/dist/dbp-pdf-viewer.js"></script>
 ```
 
 ## Attributes
