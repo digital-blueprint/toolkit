@@ -78,6 +78,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
     }
 
     _onWindowResize() {
+        this.isFirstRendering = true;
         this.showPage(this.currentPage);
     }
 
