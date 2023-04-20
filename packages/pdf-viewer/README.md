@@ -34,7 +34,7 @@ Or directly via CDN:
     - set to `contain` to resize the viewed PDF to fit the container horizontally and vertically
     - set to `cover` to resize the viewed PDF to fit the container horizontally only,
       vertically the PDF can exceed the container
-    - example `<dbp-pdf-viewer auto-resize="contain"></dbp-pdf-viewer>
+    - example `<dbp-pdf-viewer auto-resize="contain"></dbp-pdf-viewer>`
 
 ## Methods
 
