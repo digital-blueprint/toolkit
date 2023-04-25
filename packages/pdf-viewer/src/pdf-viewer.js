@@ -71,6 +71,9 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
                     break;
+                case 'autoResize':
+                    this._onWindowResize();
+                    break;
             }
         });
 
