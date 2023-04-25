@@ -23,7 +23,7 @@ Or directly via CDN:
 
 ```html
 <dbp-pdf-viewer></dbp-pdf-viewer>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.6/dist/dbp-pdf-viewer.js"></script>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.7/dist/dbp-pdf-viewer.js"></script>
 ```
 
 ## Attributes
@@ -52,7 +52,7 @@ You can use the `showPDF` method to open a PDF file. This method accepts a `File
 ```html
 <input @change=${this.openFile} type="file" />
 <dbp-pdf-viewer lang="en"></dbp-pdf-viewer>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.6/dist/dbp-pdf-viewer.js"></script>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.7/dist/dbp-pdf-viewer.js"></script>
 
 <script>
   document.querySelector('input').addEventListener('change', function(e) {
