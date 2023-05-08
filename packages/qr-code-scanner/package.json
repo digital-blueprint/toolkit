@@ -21,7 +21,7 @@
         "@rollup/plugin-terser": "^0.4.0",
         "@rollup/plugin-url": "^8.0.0",
         "eslint": "^8.0.0",
-        "eslint-plugin-jsdoc": "^43.0.0",
+        "eslint-plugin-jsdoc": "^44.0.0",
         "i18next-parser": "^7.0.0",
         "karma": "^6.0.0",
         "karma-chrome-launcher": "^3.0.0",
