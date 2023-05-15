@@ -16,6 +16,7 @@ export class ResourceSelect extends AdapterLitElement {
         this._i18n = createInstance();
         this._resources = [];
         this._url = null;
+        this._lang = null;
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
         this._selectId = 'select-resource-' + commonUtils.makeId(24);
 
@@ -177,12 +178,13 @@ export class ResourceSelect extends AdapterLitElement {
 
     async _updateResources() {
         let url = this._getUrl();
-        if (url === null || url === this._url) {
+        if (url === null || (url === this._url && this.lang === this._lang)) {
             return;
         }
 
         this._resources = await hydra.getCollection(url, this.lang, this.auth.token);
         this._url = url;
+        this._lang = this.lang;
         this._setValue(this.value);
     }
 
