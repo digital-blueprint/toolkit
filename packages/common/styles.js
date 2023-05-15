@@ -315,7 +315,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             background-color: var(--dbp-background);
             border-color: var(--dbp-muted);
             border-radius: var(--dbp-border-radius);
-            color: var(--dbp-muted);
+            color: var(--dbp-content);
         }
 
         *, ::after, ::before {
