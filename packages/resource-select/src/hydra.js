@@ -1,12 +1,14 @@
 /**
  * @param {string} url
+ * @param {string} lang
  * @param {string} token
  * @returns {Array}
  */
-export async function getCollection(url, token) {
+export async function getCollection(url, lang, token) {
     let response = await fetch(url, {
         headers: {
             'Content-Type': 'application/ld+json',
+            'Accept-Language': lang,
             Authorization: 'Bearer ' + token,
         },
     });

@@ -181,7 +181,7 @@ export class ResourceSelect extends AdapterLitElement {
             return;
         }
 
-        this._resources = await hydra.getCollection(url, this.auth.token);
+        this._resources = await hydra.getCollection(url, this.lang, this.auth.token);
         this._url = url;
         this._setValue(this.value);
     }
