@@ -461,6 +461,12 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             type: 'success',
             timeout: 5,
         });
+        const event = new CustomEvent('dbp-file-source-file-upload-finished', {
+            detail: {count: files.length},
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(event);
     }
 
     async sendFileEvent(file, maxFiles) {
