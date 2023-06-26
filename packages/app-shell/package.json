@@ -46,7 +46,7 @@
         "@dbp-toolkit/person-profile": "^0.2.6",
         "@dbp-toolkit/theme-switcher": "^0.0.6",
         "@open-wc/scoped-elements": "^2.1.0",
-        "i18next": "^22.0.0",
+        "i18next": "^23.0.0",
         "lit": "^2.0.0",
         "universal-router": "^9.0.1"
     },
