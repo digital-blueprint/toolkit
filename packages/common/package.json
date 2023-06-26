@@ -46,7 +46,7 @@
     },
     "dependencies": {
         "@open-wc/scoped-elements": "^2.1.0",
-        "i18next": "^22.0.0",
+        "i18next": "^23.0.0",
         "lit": "^2.0.0"
     }
 }
