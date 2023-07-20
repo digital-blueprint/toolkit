@@ -317,6 +317,10 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             border-radius: var(--dbp-border-radius);
             color: var(--dbp-content);
         }
+        
+        .input[disabled] {
+            color: var(--dbp-muted);
+        }
 
         *, ::after, ::before {
             box-sizing: inherit;
