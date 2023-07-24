@@ -31,7 +31,15 @@ const ensureURL = function (urlOrPath) {
  * The "changed" event has the real keycloak instance as "detail"
  */
 export class KeycloakWrapper extends EventTarget {
-    constructor(baseURL, realm, clientId, silentCheckSsoUri, idpHint) {
+    /**
+     * @param {string} baseURL
+     * @param {string} realm
+     * @param {string} clientId
+     * @param {string} silentCheckSsoUri
+     * @param {boolean} checkLoginIframe
+     * @param {string} idpHint
+     */
+    constructor(baseURL, realm, clientId, silentCheckSsoUri, checkLoginIframe, idpHint) {
         super();
 
         this._baseURL = baseURL;
@@ -40,6 +48,7 @@ export class KeycloakWrapper extends EventTarget {
         this._keycloak = null;
         this._initDone = false;
         this._silentCheckSsoUri = silentCheckSsoUri;
+        this._checkLoginIframe = checkLoginIframe;
         this._idpHint = idpHint;
         this._checkId = null;
 
@@ -186,6 +195,7 @@ export class KeycloakWrapper extends EventTarget {
         if (this._silentCheckSsoUri) {
             options['onLoad'] = 'check-sso';
             options['silentCheckSsoRedirectUri'] = ensureURL(this._silentCheckSsoUri);
+            options['checkLoginIframe'] = this._checkLoginIframe;
 
             // When silent-sso-check is active but the iframe doesn't load/work we will
             // never return here, so add a timeout and emit a signal so the app can continue

@@ -38,6 +38,7 @@ export class AuthKeycloak extends AdapterLitElement {
         this.realm = null;
         this.clientId = null;
         this.silentCheckSsoRedirectUri = null;
+        this.noCheckLoginIframe = false;
         this.scope = null;
         this.idpHint = '';
 
@@ -210,6 +211,7 @@ export class AuthKeycloak extends AdapterLitElement {
             scope: {type: String},
             idpHint: {type: String, attribute: 'idp-hint'},
             requestedLoginStatus: {type: String, attribute: 'requested-login-status'},
+            noCheckLoginIframe: {type: Boolean, attribute: 'no-check-login-iframe'},
         };
     }
 
@@ -224,6 +226,7 @@ export class AuthKeycloak extends AdapterLitElement {
             this.realm,
             this.clientId,
             this.silentCheckSsoRedirectUri,
+            !this.noCheckLoginIframe,
             this.idpHint
         );
         this._kcwrapper.addEventListener('changed', this._onKCChanged);

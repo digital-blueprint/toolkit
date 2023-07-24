@@ -1006,6 +1006,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 silent-check-sso-redirect-uri="${kc.silentCheckSsoRedirectUri || ''}"
                 scope="${kc.scope || ''}"
                 idp-hint="${kc.idpHint || ''}"
+                ?no-check-login-iframe="${kc.noCheckLoginIframe ?? false}"
                 ?force-login="${kc.forceLogin}"
                 ?try-login="${!kc.forceLogin}"></dbp-auth-keycloak>
             <dbp-matomo
