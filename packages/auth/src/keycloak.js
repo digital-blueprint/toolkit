@@ -46,7 +46,7 @@ export class KeycloakWrapper extends EventTarget {
         this._realm = realm;
         this._clientId = clientId;
         this._keycloak = null;
-        this._initDone = false;
+        this._initPromise = null;
         this._silentCheckSsoUri = silentCheckSsoUri;
         this._checkLoginIframe = checkLoginIframe;
         this._idpHint = idpHint;
@@ -148,9 +148,7 @@ export class KeycloakWrapper extends EventTarget {
         this._onChanged();
     }
 
-    async _ensureInstance() {
-        if (this._keycloak !== null) return;
-
+    async _init() {
         const Keycloak = (await import('keycloak-js')).default;
 
         this._keycloak = new Keycloak({
@@ -166,22 +164,6 @@ export class KeycloakWrapper extends EventTarget {
         this._keycloak.onAuthSuccess = this._onAuthSuccess.bind(this);
         this._keycloak.onAuthError = this._onChanged.bind(this);
         this._keycloak.onReady = this._onReady.bind(this);
-    }
-
-    async _keycloakInit(options) {
-        // https://gitlab.tugraz.at/dbp/topics/library/issues/41
-        // retry the keycloak init in case it fails, maybe it helps :/
-        try {
-            return await this._keycloak.init(options);
-        } catch (e) {
-            return await this._keycloak.init(options);
-        }
-    }
-
-    async _ensureInit() {
-        await this._ensureInstance();
-        if (this._initDone) return;
-        this._initDone = true;
 
         const options = {
             promiseType: 'native',
@@ -200,13 +182,20 @@ export class KeycloakWrapper extends EventTarget {
 
             // When silent-sso-check is active but the iframe doesn't load/work we will
             // never return here, so add a timeout and emit a signal so the app can continue
-            await promiseTimeout(5000, this._keycloakInit(options)).catch(() => {
+            await promiseTimeout(5000, this._keycloak.init(options)).catch(() => {
                 console.log('Login timed out');
                 this._onChanged();
             });
         } else {
-            await this._keycloakInit(options);
+            await this._keycloak.init(options);
         }
+    }
+
+    async _ensureInit() {
+        if (this._initPromise === null) {
+            this._initPromise = this._init();
+        }
+        return this._initPromise;
     }
 
     /**
