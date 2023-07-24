@@ -192,10 +192,11 @@ export class KeycloakWrapper extends EventTarget {
             options['enableLogging'] = true;
         }
 
+        options['checkLoginIframe'] = this._checkLoginIframe;
+
         if (this._silentCheckSsoUri) {
             options['onLoad'] = 'check-sso';
             options['silentCheckSsoRedirectUri'] = ensureURL(this._silentCheckSsoUri);
-            options['checkLoginIframe'] = this._checkLoginIframe;
 
             // When silent-sso-check is active but the iframe doesn't load/work we will
             // never return here, so add a timeout and emit a signal so the app can continue
