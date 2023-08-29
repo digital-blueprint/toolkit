@@ -2,11 +2,13 @@
 {
     "extends": "../../jsconfig.json",
     "include": [
-        "src"
+        "src",
+        "./*.js"
     ],
     "exclude": [
         "node_modules",
         "dist",
-        "vendor"
+        "vendor",
+        "rollup.config.js"
     ]
 }
