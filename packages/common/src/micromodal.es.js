@@ -1,3 +1,4 @@
+// @ts-nocheck
 // see https://github.com/ghosh/Micromodal/pull/351
 
 function _classCallCheck(instance, Constructor) {

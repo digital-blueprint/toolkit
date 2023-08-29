@@ -23,6 +23,7 @@
         "@rollup/plugin-url": "^8.0.0",
         "eslint": "^8.0.0",
         "eslint-plugin-jsdoc": "^46.0.0",
+        "find-cache-dir": "^3.3.2",
         "i18next-parser": "^8.0.0",
         "karma": "^6.0.0",
         "karma-chrome-launcher": "^3.0.0",
@@ -38,7 +39,7 @@
         "rollup-plugin-delete": "^2.0.0",
         "rollup-plugin-serve": "^2.0.0",
         "selfsigned": "^2.0.0",
-        "find-cache-dir": "^3.3.2"
+        "typescript": "^5.2.2"
     },
     "dependencies": {
         "@dbp-toolkit/auth": "^0.3.2",
@@ -64,6 +65,7 @@
         "watch-local": "rollup --bundleConfigAsCjs -c --watch",
         "watch-dev": "rollup --bundleConfigAsCjs -c --watch --environment BUILD:development",
         "test": "npm run build-test && karma start --singleRun",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "tsc": "tsc -p jsconfig.json"
     }
 }

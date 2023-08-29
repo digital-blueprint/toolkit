@@ -1,0 +1,13 @@
+
+{
+    "compilerOptions": {
+        "checkJs": true,
+        "resolveJsonModule": true,
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "target": "esnext"
+    },
+    "exclude": [
+        "node_modules",
+    ]
+}

@@ -18,6 +18,7 @@
         "@rollup/plugin-commonjs": "^25.0.0",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
+        "@rollup/plugin-replace": "^5.0.0",
         "@rollup/plugin-terser": "^0.4.0",
         "@rollup/plugin-url": "^8.0.0",
         "eslint": "^8.0.0",
@@ -35,8 +36,8 @@
         "rollup": "^3.2.5",
         "rollup-plugin-copy": "^3.1.0",
         "rollup-plugin-delete": "^2.0.0",
-        "@rollup/plugin-replace": "^5.0.0",
-        "rollup-plugin-serve": "^2.0.0"
+        "rollup-plugin-serve": "^2.0.0",
+        "typescript": "^5.2.2"
     },
     "dependencies": {
         "@dbp-toolkit/auth": "^0.3.2",
@@ -61,6 +62,7 @@
         "watch-local": "npm run watch",
         "watch-dev": "rollup --bundleConfigAsCjs -c --watch --environment BUILD:development",
         "test": "rollup --bundleConfigAsCjs -c --environment BUILD:test && karma start --singleRun",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "tsc": "tsc -p jsconfig.json"
     }
 }

@@ -35,7 +35,8 @@
         "rollup": "^3.2.5",
         "rollup-plugin-copy": "^3.1.0",
         "rollup-plugin-delete": "^2.0.0",
-        "rollup-plugin-serve": "^2.0.0"
+        "rollup-plugin-serve": "^2.0.0",
+        "typescript": "^5.2.2"
     },
     "dependencies": {
         "@dbp-toolkit/auth": "^0.3.2",
@@ -61,6 +62,7 @@
         "watch-local": "rollup --bundleConfigAsCjs -c --watch",
         "watch-dev": "rollup --bundleConfigAsCjs -c --watch --environment BUILD:development",
         "test": "npm run build-test && karma start --singleRun",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "tsc": "tsc -p jsconfig.json"
     }
 }

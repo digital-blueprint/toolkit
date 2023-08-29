@@ -22,7 +22,8 @@
     "version": "lerna version",
     "rm-dist": "for d in ./packages/*/ ; do (cd \"$d\" && rm dist -Rf); done;",
     "lint": "lerna --no-sort run lint",
-    "publish": "lerna --no-sort publish from-package --yes"
+    "publish": "lerna --no-sort publish from-package --yes",
+    "tsc": "lerna --no-sort run tsc"
   },
   "author": "",
   "license": "LGPL-2.1-or-later",
