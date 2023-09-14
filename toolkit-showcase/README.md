@@ -12,7 +12,7 @@ npm install
 npm run watch-local
 ```
 
-You can then open <http://127.0.0.1:8001/>.
+You can then open <https://127.0.0.1:8001/>.
 
 ## Adding demo pages
 
