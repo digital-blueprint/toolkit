@@ -181,9 +181,9 @@ Example usage:
             return false;
         }
 
-        if(typeof Intl === 'undefined' || !Intl.PluralRules){
+        /*if(typeof Intl === 'undefined' || !Intl.PluralRules){
             console.log('Safari version older than 13 not supported')
-            return false;
+            return false;*/
         }
 
         return true;
