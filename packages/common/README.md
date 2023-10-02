@@ -8,6 +8,30 @@ npm i @dbp-toolkit/common
 
 ## TODO: add a more detailed explanation on how to add web components and how to play around with CSS attributes
 
+## How to add a Webcomponent
+
+First you need to import the class of the element you want to add, for example Button.
+
+```html
+Import {Button} from '@dbp-toolkit/common';
+```
+
+Then add the new element to scopedElements and give it a name
+```html
+static get scopedElements() {
+    return {
+        ...
+        'dbp-button': Button,
+        ...
+    }
+}
+```
+
+Finally, add it to the render() function inside return html.
+```html
+<dbp-button>...</dbp-button>
+```
+
 ## Icon Web Component
 
 The toolkit icons can be seen in ./toolkit/packages/common/assets.
