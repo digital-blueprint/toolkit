@@ -6,7 +6,11 @@ You can install these components via npm:
 npm i @dbp-toolkit/common
 ```
 
+## TODO: add a more detailed explanation on how to add web components and how to play around with CSS attributes
+
 ## Icon Web Component
+
+The toolkit icons can be seen in ./toolkit/packages/common/assets.
 
 For valid icon names see: [LineIcons](https://lineicons.com/icons/)
 

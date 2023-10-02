@@ -1,4 +1,5 @@
 # Notification Web Component
+# TODO: Add a more detailed explanation on how to add icons
 
 You can install this component via npm:
 
