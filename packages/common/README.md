@@ -151,9 +151,9 @@ the Nextcloud file picker component.
 We are using the `dbp-translated` component to insert translated text at the specified position
 in the Nextcloud file picker.
 
-### CSS Attributes
+### CSS Rules
 
-The css attributes are added to the styles() function in the json file corresponding to a particular activity.
+The css rules are added to the styles() function in the json file corresponding to a particular activity.
 
 ```html
 static get styles() {
