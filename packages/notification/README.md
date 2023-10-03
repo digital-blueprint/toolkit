@@ -1,5 +1,4 @@
 # Notification Web Component
-# TODO: Add a more detailed explanation on how to add notifications
 
 You can install this component via npm:
 
@@ -31,12 +30,30 @@ Or directly via CDN:
 ```javascript
 import { send } from './notification';
 
-send({
-    "summary": "Item deleted",
-    "body": "Item foo was deleted!",
-    "type": "info",
-    "timeout": 5,
-});
+...
+async <your_function_name>(event) {
+    send({
+        "summary": "Item deleted",
+        "body": "Item foo was deleted!",
+        "type": "info",
+        "timeout": 5,
+    });
+}
+
+...
+
+render() {
+        let loggedIn = this.auth && this.auth.token;
+        let i18n = this._i18n;
+        
+        return html`
+            ...
+            <button id="send-button" @click="${this.<your_function_name>}" class ="button">
+                ${i18n.t('<your_text>')}
+            </button>
+            ...
+        `
+}
 ``` 
 
 ## Local development

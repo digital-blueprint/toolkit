@@ -6,8 +6,6 @@ You can install these components via npm:
 npm i @dbp-toolkit/common
 ```
 
-## TODO: add a more detailed explanation on how to add web components and how to play around with CSS attributes
-
 ## How to add a Webcomponent
 
 First you need to import the class of the element you want to add, for example Button.
@@ -152,3 +150,24 @@ the Nextcloud file picker component.
 
 We are using the `dbp-translated` component to insert translated text at the specified position
 in the Nextcloud file picker.
+
+### CSS Attributes
+
+The css attributes are added to the styles() function in the json file corresponding to a particular activity.
+
+```html
+static get styles() {
+        return [
+            commonStyles.getThemeCSS(),
+            css`
+                .hidden {
+                    display: none;
+                }
+                .button-style {
+                    --dbp-override-secondary-surface: #3793A5;
+                }
+
+            `,
+        ];
+    }
+```
