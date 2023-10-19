@@ -117,7 +117,7 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                             </div>
                             <p>
                                 This component doesn't get any notification about user's login and
-                                will become active.
+                                will not become active.
                             </p>
                         </div>
                         <div class="field">
