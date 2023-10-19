@@ -34,6 +34,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         this.lastResult = {};
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
+        this.disabled = false;
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
 
@@ -61,6 +62,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             showReloadButton: {type: Boolean, attribute: 'show-reload-button'},
             reloadButtonTitle: {type: String, attribute: 'reload-button-title'},
             auth: {type: Object},
+            disabled: {type: Boolean, reflect: true},
         };
     }
 
@@ -428,7 +430,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                             id="${this.selectId}"
                             name="person"
                             class="select"
-                            ?disabled=${!this.active}>
+                            ?disabled=${!this.active || this.disabled}>
                             ${!this.authenticated()
                                 ? html`
                                       <option value="" disabled selected>

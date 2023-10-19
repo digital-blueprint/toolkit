@@ -120,6 +120,21 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                                 will become active.
                             </p>
                         </div>
+                        <div class="field">
+                            <label class="label">Person 4 disabled</label>
+                            <div class="control">
+                                <dbp-person-select
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    disabled
+                                    show-reload-button
+                                    reload-button-title="Click me"></dbp-person-select>
+                            </div>
+                            <p>
+                                This component is disabled.
+                            </p>
+                        </div>
                     </form>
                 </div>
             </section>

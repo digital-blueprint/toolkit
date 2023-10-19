@@ -40,6 +40,7 @@ Or directly via CDN:
 - `auth` object: you need to set that object property for the auth token
     - example auth property: `{token: "THE_BEARER_TOKEN"}`
     - note: most often this should be an attribute that is not set directly, but subscribed at a provider
+- `disabled` (optional): if set the component will be disabled
 
 ## Override Properties
 
