@@ -290,6 +290,8 @@ var MicroModal = (function () {
             {
                 key: 'getFocusableNodes',
                 value: function getFocusableNodes() {
+                    // Don't work with shadow DOM!
+                    // https://github.com/salesforce/kagekiri - Shadow DOM-piercing query APIs
                     var nodes = this.modal.querySelectorAll(FOCUSABLE_ELEMENTS);
                     return Array.apply(void 0, _toConsumableArray(nodes));
                 },
@@ -332,10 +334,18 @@ var MicroModal = (function () {
                         return node.offsetParent !== null;
                     }); // if disableFocus is true
 
-                    if (!this.modal.contains(document.activeElement)) {
+                    let activeElement = document.activeElement;
+
+                    /* Check if we are in a shadow DOM and find the shadow DOM activeElement. */
+                    let modalRoot = this.modal.getRootNode();
+                    if (modalRoot instanceof ShadowRoot) {
+                        activeElement = modalRoot.activeElement;
+                    }
+
+                    if (!this.modal.contains(activeElement)) {
                         focusableNodes[0].focus();
                     } else {
-                        var focusedItemIndex = focusableNodes.indexOf(document.activeElement);
+                        var focusedItemIndex = focusableNodes.indexOf(activeElement);
 
                         if (event.shiftKey && focusedItemIndex === 0) {
                             focusableNodes[focusableNodes.length - 1].focus();
