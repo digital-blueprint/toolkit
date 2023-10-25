@@ -740,8 +740,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                         aria-modal="true"
                         aria-labelledby="modal-picker-title">
                         <div class="nav-wrapper modal-nav">
-                            <nav class="modal-nav">
-                                <div
+                            <nav class="modal-nav" role="tablist">
+                                <button role="tab" aria-selected="${(this.activeTarget === 'local')}" aria-controls="select-local"
                                     title="${i18n.t('file-source.nav-local')}"
                                     @click="${() => {
                                         this.activeTarget = 'local';
@@ -752,8 +752,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     })}">
                                     <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
                                     <p>${i18n.t('file-source.nav-local')}</p>
-                                </div>
-                                <div
+                                </button>
+                                <button role="tab" aria-selected="${(this.activeTarget === 'nextcloud')}" aria-controls="select-cloud"
                                     title="Nextcloud"
                                     @click="${() => {
                                         this.activeTarget = 'nextcloud';
@@ -767,8 +767,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     })}">
                                     <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                     <p>${this.nextcloudName}</p>
-                                </div>
-                                <div
+                                </button>
+                                <button role="tab" aria-selected="${(this.activeTarget === 'clipboard')}" aria-controls="select-clipboard"
                                     title="${i18n.t('file-source.clipboard')}"
                                     @click="${() => {
                                         this.activeTarget = 'clipboard';
@@ -779,8 +779,9 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     })}">
                                     <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
                                     <p>${i18n.t('file-source.clipboard')}</p>
-                                </div>
+                                </button>
                             </nav>
+                            
                             <div class="paddles">
                                 <dbp-icon
                                     class="left-paddle paddle hidden"
@@ -803,10 +804,12 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                 <dbp-icon name="close" class="close-icon"></dbp-icon>
                             </button>
 
-                            <p class="modal-context">${this.context}</p>
+                            <p class="modal-context" id="modal-picker-title">${this.context}</p>
                         </div>
                         <main class="modal-content" id="modal-picker-content">
                             <div
+                                id="select-local"
+                                role="tabpanel"
                                 class="source-main ${classMap({
                                     hidden: this.activeTarget !== 'local',
                                 })}">
@@ -814,7 +817,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <div class="block">
                                         <p>${i18n.t('intro')}</p>
                                     </div>
-
                                     ${inputFile}
                                     <label
                                         class="button is-primary"
@@ -825,6 +827,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                 </div>
                             </div>
                             <div
+                                id="select-cloud"
+                                role="tabpanel"
                                 class="source-main ${classMap({
                                     hidden:
                                         this.activeTarget !== 'nextcloud' ||
@@ -834,6 +838,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                 ${this.getNextcloudHtml()}
                             </div>
                             <div
+                                id="select-clipboard"
+                                role="tabpanel"
                                 class="source-main ${classMap({
                                     hidden: this.activeTarget !== 'clipboard',
                                 })}">
