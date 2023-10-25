@@ -244,10 +244,12 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         return html`
             <div id="theme-menu" class="${classMap({hidden: this.themes.length <= 1})}">
                 <a
+                    href="#"
                     class="mode-button"
                     title="${i18n.t('color-mode')}"
-                    @click="${() => {
+                    @click="${(e) => {
                         this.toggleModeMenu();
+                        e.preventDefault();
                     }}">
                     <dbp-icon name="contrast"></dbp-icon>
                 </a>
@@ -256,10 +258,12 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                         (theme) => html`
                             <li class="" id="${theme.class}">
                                 <a
+                                    href="#"
                                     class="button-theme button-${theme.class}"
-                                    @click="${() => {
+                                    @click="${(e) => {
                                         this.loadTheme(theme.class);
                                         this.saveTheme(theme.class);
+                                        e.preventDefault();
                                     }}"
                                     title="${theme.name}">
                                     <dbp-icon class="icon" name="${theme.icon}"></dbp-icon>
