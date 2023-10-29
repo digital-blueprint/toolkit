@@ -42,7 +42,7 @@
         "@open-wc/scoped-elements": "^2.1.0",
         "file-saver": "^2.0.2",
         "i18next": "^23.0.0",
-        "jose": "^4.0.0",
+        "jose": "^5.0.0",
         "jszip": "^3.5.0",
         "lit": "^2.0.0",
         "material-design-icons-svg": "^3.0.0",
