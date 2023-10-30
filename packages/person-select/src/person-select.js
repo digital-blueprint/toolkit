@@ -3,11 +3,10 @@ import {findObjectInApiResults} from './utils.js';
 import select2 from 'select2';
 import select2LangDe from './i18n/de/select2';
 import select2LangEn from './i18n/en/select2';
-import JSONLD from '@dbp-toolkit/common/jsonld';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {createInstance} from './i18n.js';
-import {Icon} from '@dbp-toolkit/common';
+import {Icon, combineURLs} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
@@ -22,7 +21,6 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.entryPointUrl = '';
-        this.jsonld = null;
         this.$select = null;
         this.active = false;
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
@@ -83,8 +81,9 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
         this.updateComplete.then(() => {
             this.$select = this.$('#' + this.selectId);
-            // try an init when user-interface is loaded
-            this.initJSONLD();
+            if (!this.select2IsInitialized) {
+                this.initSelect2();
+            }
         });
     }
 
@@ -103,29 +102,6 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         }
     }
 
-    initJSONLD(ignorePreset = false) {
-        const that = this;
-
-        JSONLD.getInstance(this.entryPointUrl).then(
-            function (jsonld) {
-                that.jsonld = jsonld;
-                that.active = that.authenticated();
-
-                // we need to poll because maybe the user interface isn't loaded yet
-                // Note: we need to call initSelect2() in a different function so we can access "this" inside initSelect2()
-                commonUtils.pollFunc(
-                    () => {
-                        return that.initSelect2(ignorePreset);
-                    },
-                    10000,
-                    100
-                );
-            },
-            {},
-            this.lang
-        );
-    }
-
     /**
      * Initializes the Select2 selector
      *
@@ -136,16 +112,11 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         const that = this;
         const $this = $(this);
 
-        if (this.jsonld === null) {
+        if (this.$select === null || this.entryPointUrl === null) {
             return false;
         }
 
-        // find the correct api url for a person
-        const apiUrl = this.jsonld.getApiUrlForEntityName("BasePerson");
-
-        if (this.$select === null) {
-            return false;
-        }
+        const apiUrl = combineURLs(this.entryPointUrl, '/base/people');
 
         // we need to destroy Select2 and remove the event listeners before we can initialize it again
         if (this.$select && this.$select.hasClass('select2-hidden-accessible')) {
@@ -236,8 +207,8 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         // });
 
         // preset a person
-        if (!ignorePreset && this.value !== '') {
-            const apiUrl = this.entryPointUrl + this.value;
+        if (!ignorePreset && this.value !== '' && this.authenticated()) {
+            const apiUrl = combineURLs(this.entryPointUrl, this.value);
 
             fetch(apiUrl, {
                 headers: {
@@ -333,10 +304,13 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                     break;
                 case 'entryPointUrl':
                     // we don't need to preset the selector if the entry point url changes
-                    this.initJSONLD(true);
+                    this.initSelect2(true);
                     break;
                 case 'auth':
                     this.active = this.authenticated();
+                    if (this.active && !oldValue.token) {
+                        this.initSelect2();
+                    }
                     break;
             }
         });
