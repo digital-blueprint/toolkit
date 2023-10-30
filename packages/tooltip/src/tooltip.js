@@ -59,6 +59,15 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
                 display: inline;
                 color: var(--dbp-content);
             }
+
+            .tippy-box {
+                background-color: var(--dbp-content-surface);
+                color: var(--dbp-on-content-surface);
+            }
+
+            .tippy-arrow {
+                color: var(--dbp-content);
+            }
         `;
     }
 
