@@ -66,19 +66,32 @@ You can use this web component to show translated html.
 ## Modal Web Component
 
 You can use this web component to show content in a modal. 
-This webcomponent has two function which can be called from outside: `open()` - which opens the modal and `close()` 
-- which closes the modal. 
+This webcomponent has two function which can be called from outside: `open()` - which opens the modal and `close()` - which closes the modal. 
 
 ```html
-<script type="module" src="https://unpkg.com/@dbp-toolkit/common@0.2.8/dist/components.js"></script>
-<dbp-translated subscribe="lang">
-    <div slot="de">
-        Dieser Text ist Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.
+<script type="module" src="https://unpkg.com/browse/@dbp-toolkit/common@0.3.5/src/modal.js"></script>
+<dbp-modal id="my-modal-123" modal-id="my-modal-123" title="${i18n.t('modal-title')}" subscribe="lang">
+    <div slot="content">
+        <dbp-translated subscribe="lang">
+            <div slot="de">
+                <p>Dieser Text ist Deutsch und wird Englisch werden wenn man die Sprache auf Englisch stellt.</p>
+            </div>
+            <div slot="en">
+                <p>This text is English and will be German if the language is changed to German.</p>
+            </div>
+        </dbp-translated>
     </div>
-    <div slot="en">
-        This text is English and will be German if the language is changed to German.
+    <div slot="footer" class="modal-footer">
+        <dbp-translated subscribe="lang">
+            <div slot="de">
+                <span>Fußzeile Inhalt Deutsch</span>
+            </div>
+            <div slot="en">
+                <span>Footer content English</span>
+            </div>          
+        </dbp-translated>
     </div>
-</dbp-translated>
+</dbp-modal>
 ```
 
 ### Attributes

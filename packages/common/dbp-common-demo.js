@@ -1,6 +1,8 @@
 import {createInstance} from './src/i18n.js';
 import {css, html, LitElement} from 'lit';
+import DBPLitElement from './dbp-lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {Modal} from '@dbp-toolkit/common/src/modal.js';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
 import {
@@ -17,7 +19,8 @@ import {
 
 
 
-export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
+export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
+// export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -35,7 +38,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
             'dbp-loading-button': LoadingButton,
             'dbp-inline-notification': InlineNotification,
             'dbp-translated': Translated,
-            'dbp-translation': Translation
+            'dbp-translation': Translation,
+            'dbp-modal': Modal
         };
 
         if (customElements.get('dbp-auth')) {
@@ -135,6 +139,14 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         setTimeout(() => {
             button.stop();
         }, 1000);
+    }
+
+    openModal() {
+        const modal = this._('#my-modal-123');
+        // const modal = this.shadowRoot.querySelector('#my-modal-123');
+        if (modal) {
+            modal.open();
+        }
     }
 
     render() {
@@ -309,6 +321,28 @@ html {
                         <dbp-translation key="abc" subscribe="lang, lang-dir"></dbp-translation>
                     </div>
                 </div>
+
+                <div class="content">
+                    <h2>Modal component</h2>
+                    <div class="control" id="dbp-translated-demo">
+
+                        <dbp-button type="is-primary" id="modal-trigger"
+                            value="open modal"
+                            no-spinner-on-click
+                            @click="${this.openModal}"></dbp-button>
+
+                        <dbp-modal id="my-modal-123" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                            <div slot="content">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            </div>
+                            <div slot="footer" class="modal-footer">
+                                <span>Modal footer</span>
+                            </div>
+                        </dbp-modal>
+                    </div>
+                </div>
+
             </section>
         `;
     }
