@@ -119,6 +119,7 @@ export default (async () => {
                     matomoUrl: config.matomoUrl,
                     matomoSiteId: config.matomoSiteId,
                     buildInfo: getBuildInfo(appEnv),
+                    shortName: config.shortName,
                 },
             }),
             resolve({
