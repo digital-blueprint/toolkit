@@ -96,7 +96,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         // Close the popup when clicking outside of select2
         if (!ev.composedPath().includes(this)) {
             const $select = this.$('#' + this.selectId);
-            if ($select.length && this.select2IsInitialized($select)) {
+            if ($select.length && this.select2IsInitialized()) {
                 $select.select2('close');
             }
         }
