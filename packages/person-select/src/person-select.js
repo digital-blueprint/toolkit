@@ -308,7 +308,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                     break;
                 case 'auth':
                     this.active = this.authenticated();
-                    if (this.active && !oldValue.token) {
+                    if (this.active && (!oldValue || !oldValue.token)) {
                         this.initSelect2();
                     }
                     break;
