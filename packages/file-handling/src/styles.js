@@ -23,9 +23,18 @@ export function getFileHandlingCss() {
             grid-area: sidebar;
         }
 
+        .modal-nav > button,
         .modal-nav > div {
             padding: 5px;
             text-align: center;
+            width: 100%;
+            background-color: var(--dbp-background);
+            color: var(--dbp-content);
+            border: 0;
+        }
+
+        .modal-nav > button:focus-visible {
+            box-shadow: inset 0px 0px 3px 1px var(--dbp-primary);
         }
 
         .modal-nav .nav-icon {
@@ -33,9 +42,12 @@ export function getFileHandlingCss() {
             height: 35px;
         }
 
-        .modal-nav .active {
-            background-color: var(--dbp-content-surface);
-            color: var(--dbp-on-content-surface);
+        .modal-nav .active p {
+            font-weight: bold;
+        }
+
+        .modal-nav .active .nav-icon {
+            color: var(--dbp-accent);
         }
 
         .modal-content {
@@ -96,7 +108,21 @@ export function getFileHandlingCss() {
         }
 
         #fileElem {
-            display: none;
+            position: absolute !important;
+            clip: rect(1px, 1px, 1px, 1px);
+            overflow: hidden;
+            height: 1px;
+            width: 1px;
+            word-wrap: normal;
+        }
+
+        #fileElem:focus + label {
+            outline:none !important;
+            outline-width: 0 !important;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+            box-shadow: 0px 0px 5px 1px var(--dbp-primary);
         }
 
         #nextcloud-file-picker.hidden {
