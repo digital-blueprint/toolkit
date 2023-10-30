@@ -44,7 +44,6 @@
         "@dbp-toolkit/language-select": "^0.3.2",
         "@dbp-toolkit/matomo": "^0.2.7",
         "@dbp-toolkit/notification": "^0.3.2",
-        "@dbp-toolkit/person-profile": "^0.2.6",
         "@dbp-toolkit/theme-switcher": "^0.0.6",
         "@open-wc/scoped-elements": "^2.1.0",
         "i18next": "^23.0.0",

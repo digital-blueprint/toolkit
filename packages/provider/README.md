@@ -36,7 +36,6 @@ You can provide attributes (e.g. `global-name`) for components inside the provid
 ```html
 <dbp-provider global-name="value" global-name2="value2">
   <dbp-person-select subscribe="local-name:global-name"></dbp-person-select>
-  <dbp-person-profile subscribe="local-name:global-name,local-name2:global-name2"></dbp-person-profile>
 </dbp-provider>
 <script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
 ```

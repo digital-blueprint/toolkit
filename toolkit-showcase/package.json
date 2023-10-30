@@ -51,7 +51,6 @@
         "@dbp-toolkit/language-select": "^0.3.2",
         "@dbp-toolkit/notification": "^0.3.2",
         "@dbp-toolkit/pdf-viewer": "^0.0.7",
-        "@dbp-toolkit/person-profile": "^0.2.6",
         "@dbp-toolkit/person-select": "^0.3.2",
         "@dbp-toolkit/provider": "^0.2.9",
         "@dbp-toolkit/qr-code-scanner": "^0.3.3",
