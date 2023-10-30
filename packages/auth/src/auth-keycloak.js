@@ -1,8 +1,7 @@
 import {createInstance} from './i18n.js';
-import JSONLD from '@dbp-toolkit/common/jsonld';
 import {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
-import {AdapterLitElement} from '@dbp-toolkit/common';
+import {AdapterLitElement, combineURLs} from '@dbp-toolkit/common';
 import {send} from '@dbp-toolkit/common/notification';
 
 /**
@@ -57,10 +56,6 @@ export class AuthKeycloak extends AdapterLitElement {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
                     break;
-                case 'entryPointUrl':
-                    // for preloading the instance
-                    JSONLD.getInstance(this.entryPointUrl, this.lang);
-                    break;
                 case 'requestedLoginStatus':
                     console.log('requested-login-status changed', this.requestedLoginStatus);
                     switch (this.requestedLoginStatus) {
@@ -89,16 +84,7 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     async _fetchUser(userId) {
-        let jsonld;
-        jsonld = await JSONLD.getInstance(this.entryPointUrl, this.lang);
-        let baseUrl = '';
-        try {
-            baseUrl = jsonld.getApiUrlForEntityName('FrontendUser');
-        } catch (error) {
-            // backwards compat
-            baseUrl = jsonld.getApiUrlForEntityName('Person');
-        }
-        const apiUrl = baseUrl + '/' + encodeURIComponent(userId);
+        const apiUrl = combineURLs(this.entryPointUrl, `/frontend/users/${encodeURIComponent(userId)}`);
 
         let response = await fetch(apiUrl, {
             headers: {
