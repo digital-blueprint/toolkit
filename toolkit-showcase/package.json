@@ -61,7 +61,7 @@
         "@rollup/plugin-replace": "^5.0.0",
         "@webcomponents/scoped-custom-element-registry": "^0.0.9",
         "highlight.js": "^11.0.0",
-        "lit": "^2.0.0"
+        "lit": "^3.0.0"
     },
     "scripts": {
         "build": "rollup --bundleConfigAsCjs -c",
