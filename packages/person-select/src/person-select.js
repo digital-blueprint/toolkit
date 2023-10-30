@@ -208,9 +208,13 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
         // preset a person
         if (!ignorePreset && this.value !== '' && this.authenticated()) {
-            const apiUrl = combineURLs(this.entryPointUrl, this.value);
+            let itemUrl = combineURLs(this.entryPointUrl, this.value);
+            let params = (new URLSearchParams(this.buildUrlData(this, {'term': ''}))).toString();
+            if (params) {
+                itemUrl += `?${params}`;
+            }
 
-            fetch(apiUrl, {
+            fetch(itemUrl, {
                 headers: {
                     'Content-Type': 'application/ld+json',
                     Authorization: 'Bearer ' + this.auth.token,
