@@ -81,7 +81,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
 
         this.updateComplete.then(() => {
             this.$select = this.$('#' + this.selectId);
-            if (!this.select2IsInitialized) {
+            if (!this.select2IsInitialized()) {
                 this.initSelect2();
             }
         });
