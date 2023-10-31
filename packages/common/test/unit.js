@@ -2,7 +2,6 @@ import {expect, assert} from '@esm-bundle/chai';
 import * as utils from '../utils';
 import * as styles from '../styles';
 import {combineURLs} from '../';
-import '../jsonld.js';
 
 suite('utils', () => {
     test('base64EncodeUnicode', () => {
