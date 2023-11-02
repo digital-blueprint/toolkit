@@ -6,7 +6,7 @@ import {CompactEncrypt, compactDecrypt, importJWK, base64url} from 'jose';
  *
  * @param {string} token
  * @param {string} payload
- * @returns {string}
+ * @returns {Promise<string>}
  */
 export async function encrypt(token, payload) {
     const encoder = new TextEncoder();
@@ -24,7 +24,7 @@ export async function encrypt(token, payload) {
  *
  * @param {string} token
  * @param {string} payload
- * @returns {string}
+ * @returns {Promise<string>}
  */
 export async function decrypt(token, payload) {
     const key = await importJWK({kty: 'oct', k: base64url.encode(token)}, 'PBES2-HS256+A128KW');
