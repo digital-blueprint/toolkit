@@ -46,7 +46,7 @@
         "@open-wc/scoped-elements": "^2.1.0",
         "event-target-shim": "^6.0.0",
         "keycloak-js": "^22.0.0 || ^21.0.0",
-        "lit": "^2.0.0"
+        "lit": "^2.7.0 || ^3.0.0"
     },
     "scripts": {
         "clean": "rm dist/*",
