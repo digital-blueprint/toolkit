@@ -503,7 +503,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
         const publicId = this.auth['person-id'];
-        const token = parseJwt(this.auth.token);
+        const token = this.auth.token ? parseJwt(this.auth.token) : null;
         const sessionId = token ? token.sid : '';
 
         if (
@@ -621,7 +621,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this._('#remember-checkbox').checked
                 ) {
                     const publicId = this.auth['person-id'];
-                    const token = parseJwt(this.auth.token);
+                    const token = this.auth.token ? parseJwt(this.auth.token) : null;
                     const sessionId = token ? token.sid : '';
                     if (sessionId) {
                         const encrytedName = await encrypt(sessionId, data.loginName);

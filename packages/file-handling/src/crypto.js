@@ -36,25 +36,20 @@ export async function decrypt(token, payload) {
 
     return secret;
 }
-/*
+
 /**
- * This parses a given json webtoken to its different parts
+ * This parses a given json webtoken and returns the payload.
+ * Note that there is no signature verification.
  *
  * @param {string} token
- * @returns {string}
+ * @returns {object}
  */
 export function parseJwt(token) {
-    if (!token) return null;
-    let base64Url = token.split('.')[1];
-    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    let jsonPayload = decodeURIComponent(
-        atob(base64)
-            .split('')
-            .map(function (c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join('')
-    );
-
-    return JSON.parse(jsonPayload);
+    let parts =  token.split('.');
+    if (parts.length < 2) {
+        throw new Error('invalid JWT');
+    }
+    let payload = parts[1];
+    const bytes = Uint8Array.from(atob(payload), (m) => m.codePointAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
 }
