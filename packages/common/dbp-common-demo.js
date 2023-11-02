@@ -1,5 +1,5 @@
 import {createInstance} from './src/i18n.js';
-import {css, html, LitElement} from 'lit';
+import {css, html} from 'lit';
 import DBPLitElement from './dbp-lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Modal} from '@dbp-toolkit/common/src/modal.js';
@@ -20,7 +20,6 @@ import {
 
 
 export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
-// export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -51,6 +50,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
 
     static get properties() {
         return {
+            ...super.properties,
             lang: {type: String},
             noAuth: {type: Boolean, attribute: 'no-auth'},
             langDir: {type: String, attribute: 'lang-dir'},
@@ -186,7 +186,6 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
 
     openModal() {
         const modal = this._('#my-modal-123');
-        // const modal = this.shadowRoot.querySelector('#my-modal-123');
         if (modal) {
             modal.open();
         }
