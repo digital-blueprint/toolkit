@@ -29,8 +29,8 @@ export async function encrypt(token, payload) {
 export async function decrypt(token, payload) {
     const key = await importJWK({kty: 'oct', k: base64url.encode(token)}, 'PBES2-HS256+A128KW');
     const decryption = await compactDecrypt(payload, key, {
-        alg: 'PBES2-HS256+A128KW',
-        enc: 'A256GCM',
+        keyManagementAlgorithms: ['PBES2-HS256+A128KW'],
+        contentEncryptionAlgorithms: ['A256GCM'],
     });
     const secret = new TextDecoder().decode(decryption.plaintext);
 
