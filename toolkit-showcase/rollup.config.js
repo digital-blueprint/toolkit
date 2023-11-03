@@ -199,9 +199,11 @@ Dependencies:
                     },
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest:
-                            'dist/' +
-                            (await getDistPath('@dbp-toolkit/file-handling', 'tabulator-tables')),
+                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/file-handling', 'tabulator-tables')),
+                    },
+                    {
+                        src: await getPackagePath('tabulator-tables', 'dist/css'),
+                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/tabulator-table', 'tabulator-tables')),
                     },
                     {
                         src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'),
