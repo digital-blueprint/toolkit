@@ -1,6 +1,8 @@
 import {createInstance} from './src/i18n.js';
-import {css, html, LitElement} from 'lit';
+import {css, html} from 'lit';
+import DBPLitElement from './dbp-lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {Modal} from '@dbp-toolkit/common/src/modal.js';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
 import {
@@ -17,7 +19,7 @@ import {
 
 
 
-export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
+export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -35,7 +37,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
             'dbp-loading-button': LoadingButton,
             'dbp-inline-notification': InlineNotification,
             'dbp-translated': Translated,
-            'dbp-translation': Translation
+            'dbp-translation': Translation,
+            'dbp-modal': Modal
         };
 
         if (customElements.get('dbp-auth')) {
@@ -47,6 +50,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
 
     static get properties() {
         return {
+            ...super.properties,
             lang: {type: String},
             noAuth: {type: Boolean, attribute: 'no-auth'},
             langDir: {type: String, attribute: 'lang-dir'},
@@ -77,12 +81,54 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                 background-color: blue;
             }
 
+            .color-demo-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 1rem;
+                padding: 0;
+                list-style: none;
+            }
+
+            .color-demo-list > li {
+                border: 1px solid var(--dbp-override-muted);
+            }
+
             .demoblock {
+                min-height: 150px;
                 position: relative;
-                width: 1.1em;
-                height: 1.1em;
-                display: inline-block;
-                padding: 0px 0px 0px 3px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+            }
+
+            .color-demo-list--examples .demoblock:hover {
+                background: var(--dbp-hover-background-color) !important;
+                color: var(--dbp-hover-color) !important;
+            }
+
+            .demoblock__example {
+                flex-grow: 1;
+                justify-content: center;
+                display: flex;
+                align-items: center;
+            }
+
+            .demoblock__description {
+                padding: 0.5rem 1rem;
+                display: flex;
+                flex-direction: column;
+                background: var(--dbp-override-background);
+                color: var(--dbp-override-content);
+                border-top: 1px solid var(--dbp-override-muted);
+            }
+
+            .demoblock__variable {
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .demoblock__color-role {
+                color: var(--dbp-muted);
             }
 
             /* from BULMA.CSS */
@@ -102,6 +148,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                 color: var(--dbp-content);
                 font-weight: 600;
                 line-height: 1.125;
+                margin-top: 2em;
             }
             .control:not(:last-child) {
                 margin-bottom: 0.5rem;
@@ -135,6 +182,13 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
         setTimeout(() => {
             button.stop();
         }, 1000);
+    }
+
+    openModal() {
+        const modal = this._('#my-modal-123');
+        if (modal) {
+            modal.open();
+        }
     }
 
     render() {
@@ -177,7 +231,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                             <dbp-icon name="cloudnetwork"></dbp-icon>
                             bar
                         </p>
-                        <p style="font-size: 2em; color: orange">
+                        <p style="font-size: 2em; color:var(--dbp-warning);">
                             Foo
                             <dbp-icon name="cloudnetwork"></dbp-icon>
                             bar
@@ -185,7 +239,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                         <span style="background-color: #000">
                             <a href="#" style=" color: #fff">foobar</a>
                         </span>
-                        <p style="font-size: 2em; color: orange">
+                        <p style="font-size: 2em; color:var(--dbp-warning);">
                             Foo
                             <dbp-icon name="information"></dbp-icon>
                             bar
@@ -193,12 +247,11 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                         <br />
 
                         ${new Array(100).fill(0).map(
-                            (i) =>
-                                html`
-                                    <dbp-icon
-                                        style="color: green; width: 50px; height: 50px; border: #000 solid 1px"
-                                        name="happy"></dbp-icon>
-                                `
+                            (i) => html`
+                                <dbp-icon
+                                    style="color:var(--dbp-success); width: 50px; height: 50px; border: #000 solid 1px"
+                                    name="happy"></dbp-icon>
+                            `,
                         )}
                     </div>
                 </div>
@@ -226,28 +279,172 @@ export class DbpCommonDemo extends ScopedElementsMixin(LitElement) {
                 <div class="content">
                     <h2>Theming CSS API</h2>
                     <div class="control">
-                        <ul>
-                            <!-- TODO -->
-                            <!-- old
-                            <li><code>--dbp-primary-bg-color</code>: Primary background color <div class="demoblock" style="background-color: var(--dbp-primary-bg-color)"></div></li>
-                            <li><code>--dbp-primary-text-color</code>: Primary text color <div class="demoblock" style="background-color: var(--dbp-primary-bg-color); color: var(--dbp-primary-text-color)">X</div></li>
-                            <li><code>--dbp-secondary-bg-color</code>: Secondary background color <div class="demoblock" style="background-color: var(--dbp-secondary-bg-color)"></div></li>
-                            <li><code>--dbp-secondary-text-color</code>: Secondary text color <div class="demoblock" style="background-color: var(--dbp-secondary-bg-color); color: var(--dbp-secondary-text-color)">X</div></li>
-                            <li><code>--dbp-info-bg-color</code>: Info background color <div class="demoblock" style="background-color: var(--dbp-info-bg-color)"></div></li>
-                            <li><code>--dbp-info-text-color</code>: Info text color <div class="demoblock" style="background-color: var(--dbp-info-bg-color); color: var(--dbp-info-text-color)">X</div></li>
-                            <li><code>--dbp-success-bg-color</code>: Success background color <div class="demoblock" style="background-color: var(--dbp-success-bg-color)"></div></li>
-                            <li><code>--dbp-success-text-color</code>: Success text color <div class="demoblock" style="background-color: var(--dbp-success-bg-color); color: var(--dbp-success-text-color)">X</div></li>
-                            <li><code>--dbp-warning-bg-color</code>: Warning background color <div class="demoblock" style="background-color: var(--dbp-warning-bg-color)"></div></li>
-                            <li><code>--dbp-warning-text-color</code>: Warning text color <div class="demoblock" style="background-color: var(--dbp-warning-bg-color); color: var(--dbp-warning-text-color)">X</div></li>
-                            <li><code>--dbp-danger-bg-color</code>: Danger background color <div class="demoblock" style="background-color: var(--dbp-danger-bg-color)"></div></li>
-                            <li><code>--dbp-danger-text-color</code>: Danger text color <div class="demoblock" style="background-color: var(--dbp-danger-bg-color); color: var(--dbp-danger-text-color)">X</div></li>
+                        <ul class="color-demo-list">
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-background);">
+                                    <div class="demoblock__example"></div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Background color</span>
+                                        <code class="demoblock__variable">--dbp-background</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-content);">
+                                <div class="demoblock__example"></div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Content color</span>
+                                        <code class="demoblock__variable">--dbp-content</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-primary);">
+                                    <div class="demoblock__example"></div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Primary color</span>
+                                        <code class="demoblock__variable">--dbp-primary</code>    
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-secondary);">
+                                    <div class="demoblock__example"></div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Secondary color</span>
+                                        <code class="demoblock__variable">--dbp-secondary</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-muted);">
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Muted</span>
+                                        <code class="demoblock__variable">--dbp-muted</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-accent);">
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Accent</span>
+                                        <code class="demoblock__variable">--dbp-accent</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-info);">
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Info</span>
+                                        <code class="demoblock__variable">--dbp-info</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-success);">
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Success</span>
+                                        <code class="demoblock__variable">--dbp-success</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-warning);">
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Warning</span>
+                                        <code class="demoblock__variable">--dbp-warning</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-danger);">
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">Danger</span>
+                                        <code class="demoblock__variable">--dbp-danger</code>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
 
-                            <li><code>--dbp-light</code>: Light color <div class="demoblock" style="background-color: var(--dbp-light)"></div></li>
-                            <li><code>--dbp-dark</code>: Dark color <div class="demoblock" style="background-color: var(--dbp-dark)"></div></li>
-                            <li><code>--dbp-muted-text</code>: Muted text color <div class="demoblock" style="color: var(--dbp-muted-text)">X</div></li>
-                            <li><code>--dbp-border-radius</code>: Border-radius <div class="demoblock" style="background-color: var(--dbp-light); border-color: var(--dbp-dark); border-style: solid; border-width: 1px; border-radius: var(--dbp-border-radius)"></div></li>
-                            <li><code>--dbp-border-width</code>: Border-width <div class="demoblock" style="background-color: var(--dbp-light); border-color: var(--dbp-dark); border-style: solid; border-width: var(--dbp-border-width); border-radius: 0px;"></div></li>
-                            -->
+                        <ul class="color-demo-list color-demo-list--examples">
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-primary-surface); color: var(--dbp-on-primary-surface)">
+                                    <div class="demoblock__example">
+                                        <span>Primary</span>
+                                    </div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">On primary surface</span>
+                                        <code class="demoblock__variable">--dbp-primary-surface<br/>--dbp-on-primary-surface</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-secondary-surface); color: var(--dbp-on-secondary-surface)">
+                                    <div class="demoblock__example">
+                                        <span>Secondary</span>
+                                    </div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">On secondary surface</span>
+                                        <code class="demoblock__variable">--dbp-secondary-surface<br/>--dbp-on-secondary-surface</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-info-surface); color: var(--dbp-on-info-surface)">
+                                    <div class="demoblock__example">
+                                        <span>Info</span>
+                                    </div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">On info surface</span>
+                                        <code class="demoblock__variable">--dbp-info-surface<br/>--dbp-on-info-surface</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-success-surface); color: var(--dbp-on-success-surface)">
+                                    <div class="demoblock__example">
+                                        <span>Success</span>
+                                    </div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">On success surface</span>
+                                        <code class="demoblock__variable">--dbp-success-surface<br/>--dbp-on-success-surface</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-warning-surface); color: var(--dbp-on-warning-surface)">
+                                    <div class="demoblock__example">
+                                        <span>Warning</span>
+                                    </div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">On warning surface</span>
+                                        <code class="demoblock__variable">--dbp-warning-surface<br/>--dbp-on-warning-surface</code>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-danger-surface); color: var(--dbp-on-danger-surface)">
+                                    <div class="demoblock__example">
+                                        <span>Danger</span>
+                                    </div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">On danger surface</span>
+                                        <code class="demoblock__variable">--dbp-danger-surface<br/>--dbp-on-danger-surface</code>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="demoblock" style="background-color: var(--dbp-hover-background-color); color: var(--dbp-hover-color)">
+                                    <div class="demoblock__example">
+                                        <span>Hover</span>
+                                    </div>
+                                    <div class="demoblock__description">
+                                        <span class="demoblock__color-role">On hover</span>
+                                        <code class="demoblock__variable">--dbp-hover-background-color<br/>--dbp-hover-color</code>
+                                    </div>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -260,33 +457,39 @@ html {
     --dbp-override-primary-surface: green;
     /* Same for all other variables, prefix with "override" */
 }
-&lt;/style&gt;</pre
-                    >
+&lt;/style&gt;</pre>
                 </div>
                 <div class="content">
                     <h2>Inline Notification</h2>
                     <div class="control">
                         <dbp-inline-notification
+                            summary="Default - no type"
+                            body="Item <b>foo</b> was deleted!"></dbp-inline-notification>
+                        <br/>
+                        <dbp-inline-notification
+                            summary="Primary - Item deleted"
                             body="Item <b>foo</b> was deleted!"
                             type="primary"></dbp-inline-notification>
                         <br />
                         <dbp-inline-notification
-                            summary="Item foo was deleted."></dbp-inline-notification>
+                            summary="Info - Item deleted"
+                            body="Item <b>foo</b> was deleted!"
+                            type="info"></dbp-inline-notification>
                         <br />
                         <dbp-inline-notification
-                            summary="Item deleted"
+                            summary="Success - Item deleted"
                             body="Item <b>foo</b> was deleted!"
                             type="success"></dbp-inline-notification>
                         <br />
                         <dbp-inline-notification
-                            summary="Item deleted"
-                            body="Item <b>foo</b> was deleted!"
-                            type="danger"></dbp-inline-notification>
-                        <br />
-                        <dbp-inline-notification
-                            summary="Item deleted"
+                            summary="Warning - item deleted"
                             body="Item <b>foo</b> was deleted!"
                             type="warning"></dbp-inline-notification>
+                        <br />
+                        <dbp-inline-notification
+                            summary="Danger - item will be deleted"
+                            body="Item <b>foo</b> was deleted!"
+                            type="danger"></dbp-inline-notification>
                     </div>
                 </div>
                 <div class="content">
@@ -309,6 +512,28 @@ html {
                         <dbp-translation key="abc" subscribe="lang, lang-dir"></dbp-translation>
                     </div>
                 </div>
+
+                <div class="content">
+                    <h2>Modal component</h2>
+                    <div class="control" id="dbp-translated-demo">
+
+                        <dbp-button type="is-primary" id="modal-trigger"
+                            value="open modal"
+                            no-spinner-on-click
+                            @click="${this.openModal}"></dbp-button>
+
+                        <dbp-modal id="my-modal-123" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                            <div slot="content">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            </div>
+                            <div slot="footer" class="modal-footer">
+                                <span>Modal footer</span>
+                            </div>
+                        </dbp-modal>
+                    </div>
+                </div>
+
             </section>
         `;
     }

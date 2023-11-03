@@ -3,10 +3,10 @@ import {html, css, unsafeCSS} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
-import * as commonUtils from "@dbp-toolkit/common/utils";
-import {name as pkgName} from "@dbp-toolkit/tabulator-table/package.json";
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
 import {classMap} from 'lit/directives/class-map.js';
-import DBPLitElement from "@dbp-toolkit/common/dbp-lit-element";
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -18,7 +18,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable = null;
         this.identifier = 'table';
         this.options = {
-            layout: "fitColumns",
+            layout: 'fitColumns',
             autoColumns: true,
         };
         this.data = [];
@@ -49,8 +49,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 if (this.tabulatorTable) {
                     this.tabulatorTable.setLocale(this.lang);
                 }
-            } else if (propName === 'options' && this.options !== null && !this.tableReady
-                && !this.initalization) {
+            } else if (
+                propName === 'options' &&
+                this.options !== null &&
+                !this.tableReady &&
+                !this.initalization
+            ) {
                 this.buildTable();
             }
         });
@@ -67,8 +71,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     disconnectedCallback() {
         if (this.tabulatorTable) {
-            this.tabulatorTable.off("tableBuilt");
-            this.tabulatorTable.off("rowClick");
+            this.tabulatorTable.off('tableBuilt');
+            this.tabulatorTable.off('rowClick');
         }
 
         super.disconnectedCallback();
@@ -77,91 +81,98 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     buildTable() {
         if (this.paginationEnabled) {
             let paginationElement = this._('.tabulator-paginator');
-            this.options['pagination'] = 'local';
+            this.options['pagination'] = true;
             this.options['paginationSize'] = this.paginationSize;
             this.options['paginationSizeSelector'] = true;
             this.options['paginationElement'] = paginationElement;
             this.options['langs'] = {
-                'en': {
-                    'pagination': {
-                        'page_size': 'Page size',
-                        'page_size_title': 'Page size',
-                        'first': '<span class="mobile-hidden">First</span>',
-                        'first_title': 'First Page',
-                        'last': '<span class="mobile-hidden">Last</span>',
-                        'last_title': 'Last Page',
-                        'prev': '<span class="mobile-hidden">Prev</span>',
-                        'prev_title': 'Prev Page',
-                        'next': '<span class="mobile-hidden">Next</span>',
-                        'next_title': 'Next Page'
-                    }
+                en: {
+                    pagination: {
+                        page_size: 'Page size',
+                        page_size_title: 'Page size',
+                        first: '<span class="mobile-hidden">First</span>',
+                        first_title: 'First Page',
+                        last: '<span class="mobile-hidden">Last</span>',
+                        last_title: 'Last Page',
+                        prev: '<span class="mobile-hidden">Prev</span>',
+                        prev_title: 'Prev Page',
+                        next: '<span class="mobile-hidden">Next</span>',
+                        next_title: 'Next Page',
+                    },
                 },
-                'de': {
-                    'pagination': {
-                        'page_size': 'Einträge pro Seite',
-                        'page_size_title': 'Einträge pro Seite',
-                        'first': '<span class="mobile-hidden">Erste</span>',
-                        'first_title': 'Erste Seite',
-                        'last': '<span class="mobile-hidden">Letzte</span>',
-                        'last_title': 'Letzte Seite',
-                        'prev': '<span class="mobile-hidden">Vorherige</span>',
-                        'prev_title': 'Vorherige Seite',
-                        'next': '<span class="mobile-hidden">Nächste</span>',
-                        'next_title': 'Nächste Seite'
-                    }
-                }
+                de: {
+                    pagination: {
+                        page_size: 'Einträge pro Seite',
+                        page_size_title: 'Einträge pro Seite',
+                        first: '<span class="mobile-hidden">Erste</span>',
+                        first_title: 'Erste Seite',
+                        last: '<span class="mobile-hidden">Letzte</span>',
+                        last_title: 'Letzte Seite',
+                        prev: '<span class="mobile-hidden">Vorherige</span>',
+                        prev_title: 'Vorherige Seite',
+                        next: '<span class="mobile-hidden">Nächste</span>',
+                        next_title: 'Nächste Seite',
+                    },
+                },
             };
         }
 
-        this.tabulatorTable = new Tabulator(this._("#" + this.identifier), this.options);
-        this.tabulatorTable.on("tableBuilt", this.tableBuildFunctions.bind(this));
-        this.tabulatorTable.on("rowClick", this.rowClickFunction.bind(this));
+        // TODO:make a property to controll this?
+        this.options['selectable'] = true;
+        this.options['selectableRangeMode'] = 'click';
+        // this.options['paginationAddRow'] = 'table';
+        // this.options['printRowRange'] = 'visible';
+
+        this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
+        this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
+        this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
         this.tableReady = true;
     }
 
     tableBuildFunctions() {
-        if (!this.tabulatorTable)
-            return;
+        if (!this.tabulatorTable) return;
         this.tabulatorTable.setLocale(this.lang);
         this.tabulatorTable.setData(this.data);
 
         if (this.selectAllEnabled) {
-            console.log("add select all");
-            this.tabulatorTable.addColumn({
-                title:
-                    '<label id="select_all_wrapper" class="button-container select-all-icon">' +
-                    '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
-                    '<span class="checkmark" id="select_all_checkmark"></span>' +
-                    '</label>',
+            this.tabulatorTable.addColumn(
+                {
+                    title:
+                        '<label id="select_all_wrapper" class="button-container select-all-icon">' +
+                        '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
+                        '<span class="checkmark" id="select_all_checkmark"></span>' +
+                        '</label>',
+                    field: 'empty',
+                    hozAlign: 'center',
+                    width: 40,
+                    headerSort: false,
+                    responsive: 0,
+                    widthGrow: 1,
+                    headerClick: (e) => {
+                        let allSelected = this.checkAllSelected();
 
-                field: 'empty',
-                hozAlign: 'center',
-                width: 40,
-                headerSort: false,
-                responsive: 0,
-                widthGrow: 1,
-                headerClick: (e) => {
-                    let allSelected = this.checkAllSelected();
-
-                    if (allSelected) {
-                        this.tabulatorTable.deselectRow();
-                    } else {
-                        this.tabulatorTable.selectRow("visible");
-                    }
-                    if (this._('#select_all')) {
-                        this._('#select_all').checked = !allSelected;
-                    }
-                    e.preventDefault();
+                        if (allSelected) {
+                            this.tabulatorTable.deselectRow();
+                        } else {
+                            this.tabulatorTable.selectRow('display');
+                        }
+                        if (this._('#select_all')) {
+                            this._('#select_all').checked = !allSelected;
+                        }
+                        e.preventDefault();
+                    },
                 },
-            }, true);
+                true,
+            );
         }
     }
 
     rowClickFunction(e, row) {
-        if (!this._('#select_all') || !this.tabulatorTable)
-            return;
+        if (!this._('#select_all') || !this.tabulatorTable) return;
 
-        const check = this.tabulatorTable.getSelectedRows().length === this.tabulatorTable.getRows("visible").length;
+        const check =
+            this.tabulatorTable.getSelectedRows().length ===
+            this.tabulatorTable.getRows('display').length;
         this._('#select_all').checked = check;
     }
 
@@ -181,7 +192,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     checkAllSelected() {
         if (this.tabulatorTable) {
-            let maxSelected = this.tabulatorTable.getRows("visible").length;
+            let maxSelected = this.tabulatorTable.getRows('display').length;
             let selected = this.tabulatorTable.getSelectedRows().length;
 
             if (selected === maxSelected) {
@@ -192,18 +203,14 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     setData(data) {
-        if (!this.tabulatorTable)
-            return;
+        if (!this.tabulatorTable) return;
 
         this.data = data;
         this.tabulatorTable.setData(this.data);
     }
 
     static get styles() {
-        const iconPath = commonUtils.getAssetURL(
-            '@dbp-toolkit/common',
-            'icons/'
-        );
+        const iconPath = commonUtils.getAssetURL('@dbp-toolkit/common', 'icons/');
 
         // language=css
         return css`
@@ -215,7 +222,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             .select-all-icon {
                 height: 40px;
                 position: absolute;
-                top: -2px;
             }
 
             .checkmark {
@@ -223,6 +229,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 width: 20px;
                 left: 10px;
                 top: 8px;
+            }
+
+            input[type='checkbox']:checked ~ .checkmark::after {
+                top: 2px;
+                left: 7px;
             }
 
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
@@ -255,6 +266,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 flex-direction: row;
                 display: flex;
                 align-items: center;
+                margin-top: 10px;
+            }
+
+            .tabulator .tabulator-footer .tabulator-paginator > label {
+                padding-right: 10px;
             }
 
             .tabulator .tabulator-footer .tabulator-paginator label {
@@ -264,6 +280,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
             .tabulator .tabulator-footer .tabulator-paginator .tabulator-page-size {
                 box-sizing: border-box;
+                color: var(--dbp-content);
+                background-color: var(--dbp-background);
                 border: var(--dbp-border);
                 border-radius: var(--dbp-border-radius);
                 padding: calc(0.5em - 1px) 1.7em calc(0.5em - 1px) 0.75em;
@@ -283,7 +301,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 font-size: inherit;
                 font-weight: bolder;
                 font-family: inherit;
-                transition: all 0.15s ease 0s, color 0.15s ease 0s;
+                transition:
+                    all 0.15s ease 0s,
+                    color 0.15s ease 0s;
                 background: var(--dbp-secondary-surface);
                 color: var(--dbp-on-secondary-surface);
                 border-color: var(--dbp-secondary-surface-border-color);
@@ -299,12 +319,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             }
 
             @media only screen and (orientation: portrait) and (max-width: 768px) {
-
                 .mobile-hidden {
                     display: none;
                 }
 
-                #custom-pagination, .tabulator-footer {
+                #custom-pagination,
+                .tabulator-footer {
                     position: sticky;
                     bottom: 0;
                     z-index: 10;
@@ -318,7 +338,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     border: none;
                 }
 
-                .tabulator .tabulator-footer .tabulator-footer-contents .tabulator-paginator .tabulator-pages {
+                .tabulator
+                    .tabulator-footer
+                    .tabulator-footer-contents
+                    .tabulator-paginator
+                    .tabulator-pages {
                     display: none;
                 }
 
@@ -339,7 +363,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     background-size: auto 40%;
                 }
 
-                button[data-page="prev"]::after, button[data-page="next"]::after, button[data-page="first"]::after, button[data-page="last"]::after {
+                button[data-page='prev']::after,
+                button[data-page='next']::after,
+                button[data-page='first']::after,
+                button[data-page='last']::after {
                     content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
                     background-color: var(--dbp-content);
                     mask-repeat: no-repeat;
@@ -348,22 +375,22 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     mask-size: 1.4rem !important;
                 }
 
-                button[data-page="first"]::after {
+                button[data-page='first']::after {
                     content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
-                    mask-image: url("${unsafeCSS(iconPath)}angle-double-left.svg");
+                    mask-image: url('${unsafeCSS(iconPath)}angle-double-left.svg');
                 }
 
-                button[data-page="prev"]::after {
-                    mask-image: url("${unsafeCSS(iconPath)}chevron-left.svg");
+                button[data-page='prev']::after {
+                    mask-image: url('${unsafeCSS(iconPath)}chevron-left.svg');
                 }
 
-                button[data-page="next"]::after {
-                    mask-image: url("${unsafeCSS(iconPath)}chevron-right.svg");
+                button[data-page='next']::after {
+                    mask-image: url('${unsafeCSS(iconPath)}chevron-right.svg');
                 }
 
-                button[data-page="last"]::after {
+                button[data-page='last']::after {
                     content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
-                    mask-image: url("${unsafeCSS(iconPath)}angle-double-right.svg");
+                    mask-image: url('${unsafeCSS(iconPath)}angle-double-right.svg');
                 }
             }
         `;
@@ -372,18 +399,20 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     render() {
         const tabulatorCss = commonUtils.getAssetURL(
             pkgName,
-            'tabulator-tables/css/tabulator.min.css'
+            'tabulator-tables/css/tabulator.min.css',
         );
 
         return html`
             <div class="wrapper">
-                <link rel="stylesheet" href="${tabulatorCss}"/>
+                <link rel="stylesheet" href="${tabulatorCss}" />
                 <div class="table-wrapper">
                     <div id=${this.identifier}></div>
-                    <div class='tabulator ${classMap({hidden: !this.paginationEnabled})}' id='custom-pagination'>
-                        <div class='tabulator-footer'>
-                            <div class='tabulator-footer-contents'>
-                                <span class='tabulator-paginator'></span>
+                    <div
+                        class="tabulator ${classMap({hidden: !this.paginationEnabled})}"
+                        id="custom-pagination">
+                        <div class="tabulator-footer">
+                            <div class="tabulator-footer-contents">
+                                <span class="tabulator-paginator"></span>
                             </div>
                         </div>
                     </div>

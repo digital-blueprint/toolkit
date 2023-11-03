@@ -10,9 +10,7 @@ You can install these components via npm:
 npm i @dbp-toolkit/tabulator-table
 ```
 
-After you have installed the theme-switcher component via npm you can use this example to get a button
-that opens a dialogue with multiple themes. After you have selected a theme the class of the theme is 
-applied to the body of your html document. To add a style to the specific class you have to 
+After you have installed the tabulator-table component via npm you can use this example to create interactive, sortable tables. This component is a wrapper around [tabulator](https://github.com/olifolkerd/tabulator).
 
 ```html
 <script type="module" src="node_modules/@dbp-toolkit/tabulator-table/dist/dbp-tabulator-table.js"></script>
@@ -39,7 +37,7 @@ Or you can include the JS files directly via CDN:
   - example `<dbp-tabulator-table identifier="my-table-id"></dbp-tabulator-table>`
 - `options` (optional object, can be set later, default: `{
   layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator table
-  - example `<dbp-tabulator-table otions="{'myoption': 'a'}"></dbp-tabulator-table>`
+  - example `<dbp-tabulator-table options="{'myoption': 'a'}"></dbp-tabulator-table>`
 - `data` (optional array, can be set later or can be updated): set the data for the tabulator table
   - example `<dbp-tabulator-table data="[{a: 123, b: 123}, {a: 234, b: 234}]"></dbp-tabulator-table>`
 - `pagination-enabled` (optional bool, default: `false`): set to true if you want a pagination shown
