@@ -47,7 +47,7 @@
         "tsc": "tsc -p jsconfig.json"
     },
     "dependencies": {
-        "@open-wc/scoped-elements": "^2.1.0",
+        "@open-wc/scoped-elements": "^3.0.0",
         "i18next": "^23.0.0",
         "lit": "^2.7.0 || ^3.0.0"
     }

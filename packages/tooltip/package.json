@@ -42,7 +42,7 @@
     "dependencies": {
         "@dbp-toolkit/auth": "^0.3.2",
         "@dbp-toolkit/common": "^0.3.5",
-        "@open-wc/scoped-elements": "^2.1.0",
+        "@open-wc/scoped-elements": "^3.0.0",
         "lit": "^2.7.0 || ^3.0.0",
         "tippy.js": "^6.3.1"
     },
