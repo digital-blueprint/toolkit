@@ -308,7 +308,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
         return html`
             <a href="#" @click="${this.onLoginClicked}">
                 <div class="login-box login-button">
-                    <div class="icon">${unsafeHTML(loginSVG)}</div>
+                    <div class="icon" aria-hidden="true">${unsafeHTML(loginSVG)}</div>
                     <div class="label">${i18n.t('login')}</div>
                 </div>
             </a>

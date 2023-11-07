@@ -158,11 +158,11 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
             // try to keep the layout the same to avoid layout shifts
             return html`
                 <a href="#">
-                    <div class="login-box login-button">
-                        <div class="icon">
+                    <div class="login-box login-button" aria-busy="true">
+                        <div class="icon" aria-hidden="false" aria-label="${i18n.t('logging-in')}">
                             <dbp-mini-spinner class="spinner"></dbp-mini-spinner>
                         </div>
-                        <div class="label">&#8203;</div>
+                        <div class="label" aria-hidden="true">&#8203;</div>
                     </div>
                 </a>
             `;
@@ -170,7 +170,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
             return html`
                 <a href="#" @click="${this._onLogoutClicked}">
                     <div class="login-box login-button">
-                        <div class="icon">${unsafeHTML(logoutSVG)}</div>
+                        <div class="icon" aria-hidden="true">${unsafeHTML(logoutSVG)}</div>
                         <div class="label">${i18n.t('logout')}</div>
                     </div>
                 </a>
@@ -179,7 +179,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
             return html`
                 <a href="#" @click="${this._onLoginClicked}">
                     <div class="login-box login-button">
-                        <div class="icon">${unsafeHTML(loginSVG)}</div>
+                        <div class="icon" aria-hidden="true">${unsafeHTML(loginSVG)}</div>
                         <div class="label">${i18n.t('login')}</div>
                     </div>
                 </a>
