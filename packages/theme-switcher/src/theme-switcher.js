@@ -17,6 +17,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.darkModeClass = 'dark-theme';
         this.langDir = '';
         this.dropdownRight = false;
+        this.darkModeThemeOverride = null;
     }
 
     static get properties() {
@@ -48,7 +49,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     connectedCallback() {
         super.connectedCallback();
         this.updateComplete.then(() => {
-            if (typeof this.darkModeThemeOverride === 'undefined') {
+            if (this.darkModeThemeOverride === null) {
                 this.detectBrowserDarkMode = true;
             } else if (this.darkModeThemeOverride === '') {
                 this.detectBrowserDarkMode = false;

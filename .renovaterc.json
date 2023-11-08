@@ -24,6 +24,10 @@
     {
       "matchPackageNames": ["pdfjs-dist"],
       "allowedVersions": "<3"
+    },
+    {
+      "matchPackageNames": ["@open-wc/scoped-elements"],
+      "allowedVersions": "<3"
     }
   ]
 }
