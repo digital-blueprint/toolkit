@@ -1047,7 +1047,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                             <div class="hd2-right">
                                 <slot name="logo">
                                     <div id="main-logo">
-                                        <div style="width: 80px; height:80px; float:right">
+                                        <div style="width: 80px; height:80px; float:right;">
                                             <svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 400 400">
                                                 <defs>
                                                     <style>
@@ -1281,6 +1281,37 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                                                     <rect id="rect62862" class="cls-22" x="133.56" y="102.74" width="197.49" height="197.49" transform="translate(-74.43 223.27) rotate(-45)"/>
                                                     <rect id="rect62862-7-2" data-name="rect62862-7" class="cls-19" x="133.56" y="102.74" width="197.49" height="197.49" transform="translate(-74.43 223.27) rotate(-45)"/>
                                                 </g>
+                                            </svg>
+                                        </div>
+                                        <div style="width: 80px; height:80px; float:right; display:none;">
+                                            <svg id="Ebene_2" data-name="Ebene 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 402.96 402.96">
+                                                <defs>
+                                                    <style>
+                                                        .cls-1 {
+                                                            fill: url(#Unbenannter_Verlauf_10);
+                                                            opacity: .3;
+                                                        }
+
+                                                        .cls-2 {
+                                                            fill: url(#Unbenannter_Verlauf_10-2);
+                                                            opacity: .5;
+                                                        }
+
+                                                        .cls-3 {
+                                                            fill: url(#Unbenannter_Verlauf_10-3);
+                                                            opacity: .85;
+                                                        }
+                                                    </style>
+                                                    <linearGradient id="Unbenannter_Verlauf_10" data-name="Unbenannter Verlauf 10" x1="170.82" y1="-1500.86" x2="170.82" y2="-1780.18" gradientTransform="translate(-1109.99 1240.71) rotate(45)" gradientUnits="userSpaceOnUse">
+                                                        <stop offset=".01" stop-color="#bfbfbf"/>
+                                                        <stop offset=".7" stop-color="#fff"/>
+                                                    </linearGradient>
+                                                    <linearGradient id="Unbenannter_Verlauf_10-2" data-name="Unbenannter Verlauf 10" x1="201.48" y1="-1500.86" x2="201.48" y2="-1780.18" gradientTransform="translate(-1101.02 1219.03) rotate(45)" xlink:href="#Unbenannter_Verlauf_10"/>
+                                                    <linearGradient id="Unbenannter_Verlauf_10-3" data-name="Unbenannter Verlauf 10" x1="232.13" y1="-1500.86" x2="232.13" y2="-1780.18" gradientTransform="translate(-1092.04 1197.36) rotate(45)" xlink:href="#Unbenannter_Verlauf_10"/>
+                                                </defs>
+                                                <rect class="cls-1" x="72.06" y="102.72" width="197.51" height="197.51" transform="translate(-92.44 179.8) rotate(-45)"/>
+                                                <rect class="cls-2" x="102.72" y="102.72" width="197.51" height="197.51" transform="translate(-83.46 201.48) rotate(-45)"/>
+                                                <rect class="cls-3" x="133.38" y="102.72" width="197.51" height="197.51" transform="translate(-74.48 223.16) rotate(-45)"/>
                                             </svg>
                                         </div>
                                         
