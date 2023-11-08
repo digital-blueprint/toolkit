@@ -2,6 +2,7 @@ import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {ThemeSwitcher} from './theme-switcher';
+import {Themed} from './themed';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
 export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
@@ -18,6 +19,7 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
             'dbp-theme-switcher': ThemeSwitcher,
+            'dbp-themed': Themed,
         };
     }
 
@@ -109,6 +111,8 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
                     <dbp-theme-switcher subscribe="lang, lang-dir"
                         themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"}, {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'></dbp-theme-switcher>
                 </div>
+
+                This is a <b><dbp-themed><span slot="dark">dark</span><span slot="light">light</span></dbp-themed></b> theme.
             </section>
         `;
     }
