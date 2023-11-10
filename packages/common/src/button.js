@@ -57,7 +57,7 @@ class DbpButton extends ScopedElementsMixin(LitElement) {
  * Use the attribute "no-spinner-on-click" to disable the spinner, then you can
  * start it with start() and stop it with stop()
  *
- * Type can be is-primary/is-info/is-success/is-warning/is-danger/is-icon
+ * Type can be is-primary/is-secondary/is-info/is-success/is-warning/is-danger
  */
 export class Button extends DbpButton {
     constructor() {
@@ -256,7 +256,7 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <button
-                class="button ${this.type} is-icon loading-container ${!this.loading
+                class="button is-icon loading-container ${!this.loading
             ? 'is-not-loading'
             : ''}"
                 ?disabled="${this.disabled}">
