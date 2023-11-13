@@ -130,7 +130,17 @@ A full example can be found in each application in the `index.html` of the `app-
          detects if the browser uses the dark mode and handles the given string as dark mode class
 - `dropdown-right` (optional, default: `false`): boolean which indicates that you want the dropdown from the theme menu on the right side, default on the left side
   - example: `<dbp-file-source dropdown-right></dbp-file-source>`
-      
+
+# Themed Component
+
+Allows to show different content based on whether a dark or light theme is active.
+
+```html
+<dbp-themed>
+  <span slot="light">This is shown for a ligth theme</span>
+  <span slot="dark">This is shown for a dark theme</span>
+</dbp-themed>
+```
 
 ## Note
 The classes should be defined outside the body tag.

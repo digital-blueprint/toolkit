@@ -1,5 +1,6 @@
 {
     "login": "Anmelden",
     "login-failed": "Kommunikation mit dem Anmeldeserver fehlgeschlagen",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "logging-in": "Einloggen"
 }
