@@ -47,8 +47,9 @@ export class Themed extends AdapterLitElement {
 
     render() {
         return html`
-            <slot class="${classMap({hidden: !this._dark})}" name="dark"></slot>
             <slot class="${classMap({hidden: this._dark})}" name="light"></slot>
+            <slot class="${classMap({hidden: !this._dark})}" name="dark"></slot>
+            
         `;
     }
 }

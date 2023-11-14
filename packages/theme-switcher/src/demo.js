@@ -112,7 +112,7 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
                         themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"}, {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'></dbp-theme-switcher>
                 </div>
 
-                This is a <b><dbp-themed><span slot="dark">dark</span><span slot="light">light</span></dbp-themed></b> theme.
+                This is a <b><dbp-themed><span slot="light">light</span><span slot="dark">dark</span></dbp-themed></b> theme.
             </section>
         `;
     }
