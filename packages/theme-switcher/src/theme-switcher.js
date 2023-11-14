@@ -215,7 +215,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 padding: 12px 15px;
-                w1idth: 100%;
+                width: 100%;
                 box-sizing: border-box;
                 text-align: left;
                 color: var(--dbp-content);

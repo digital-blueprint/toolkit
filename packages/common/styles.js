@@ -676,6 +676,20 @@ export function getButtonCSS() {
             border-color: var(--dbp-hover-background-color, var(--dbp-primary-surface-border-color));
         }
 
+        button.button.is-secondary,
+        .button.is-secondary {
+            background-color: var(--dbp-secondary-surface);
+            color: var(--dbp-on-secondary-surface);
+            border-color: var(--dbp-secondary-surface-border-color);
+        }
+
+        button.button.is-secondary:hover:enabled,
+        .button.is-secondary:hover:enabled {
+            background-color: var(--dbp-hover-background-color, var(--dbp-secondary-surface));
+            color: var(--dbp-hover-color, var(--dbp-on-secondary-surface));
+            border-color: var(--dbp-hover-background-color, var(--dbp-secondary-surface-border-color));
+        }
+
         button.button.is-info,
         .button.is-info {
             background-color: var(--dbp-info-surface);
