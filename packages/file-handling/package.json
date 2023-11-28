@@ -47,7 +47,7 @@
         "lit": "^2.7.0 || ^3.0.0",
         "material-design-icons-svg": "^3.0.0",
         "tabulator-tables": "^5.4.4",
-        "webdav": "^4.8.0"
+        "webdav": "^5.0.0"
     },
     "scripts": {
         "clean": "rm dist/*",
