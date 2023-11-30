@@ -64,7 +64,7 @@ class DbpTabulatorTableDemoActivity extends ScopedElementsMixin(AdapterLitElemen
                 id="demo"
                 lang="${this.lang}"
                 entry-point-url="${this.entryPointUrl}"
-                no-auth></dbp-person-select-demo>
+                no-auth></dbp-tabulator-table-demo>
         `;
     }
 }
