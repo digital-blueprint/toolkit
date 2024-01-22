@@ -25,7 +25,7 @@ export default (async () => {
             del({
                 targets: 'dist/*',
             }),
-            resolve(),
+            resolve({browser: true}),
             commonjs(),
             json(),
             copy({

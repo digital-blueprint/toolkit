@@ -36,7 +36,7 @@ export default (async () => {
             del({
                 targets: 'dist/*',
             }),
-            resolve(),
+            resolve({browser: true}),
             commonjs(),
             url({
                 limit: 0,

@@ -52,7 +52,7 @@ export default (async () => {
                     keyCloakClientId: config.keyCloakClientId,
                 },
             }),
-            resolve(),
+            resolve({browser: true}),
             commonjs(),
             json(),
             copy({

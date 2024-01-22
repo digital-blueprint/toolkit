@@ -71,7 +71,7 @@ export default (async () => {
                     buildInfo: getBuildInfo(),
                 },
             }),
-            resolve(),
+            resolve({browser: true}),
             commonjs(),
             url({
                 limit: 0,

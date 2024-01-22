@@ -60,7 +60,7 @@ export default (async () => {
                     keyCloakClientId: config.keyCloakClientId,
                 },
             }),
-            resolve(),
+            resolve({browser: true}),
             commonjs(),
             json(),
             build !== 'local' && build !== 'test' ? terser() : false,

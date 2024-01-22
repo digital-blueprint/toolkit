@@ -23,7 +23,7 @@ export default {
         del({
             targets: 'dist/*'
         }),
-        resolve(),
+        resolve({browser: true}),
         commonjs(),
         json(),
         (build !== 'local' && build !== 'test') ? terser() : false,
