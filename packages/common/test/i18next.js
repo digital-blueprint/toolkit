@@ -1,4 +1,4 @@
-import {assert} from '@esm-bundle/chai';
+import {assert} from 'chai';
 import * as i18next from '../i18next.js';
 
 suite('i18next', () => {

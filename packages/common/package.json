@@ -10,7 +10,7 @@
         "directory": "packages/common"
     },
     "devDependencies": {
-        "@esm-bundle/chai": "^4.2.0",
+        "chai": "^5.0.0",
         "@rollup/plugin-commonjs": "^25.0.0",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",

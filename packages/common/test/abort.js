@@ -1,4 +1,4 @@
-import {assert} from '@esm-bundle/chai';
+import {assert} from 'chai';
 import {createLinkedAbortController, createTimeoutAbortSignal} from '../src/abort.js';
 
 suite('abort', () => {

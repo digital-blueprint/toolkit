@@ -1,4 +1,4 @@
-import {assert} from '@esm-bundle/chai';
+import {assert} from 'chai';
 
 import '../src/dbp-auth';
 import '../src/dbp-auth-demo';

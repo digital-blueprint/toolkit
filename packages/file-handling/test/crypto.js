@@ -1,4 +1,4 @@
-import {assert} from '@esm-bundle/chai';
+import {assert} from 'chai';
 import {encrypt, decrypt, parseJwt} from '../src/crypto';
 
 suite('encyptAndDecrypt', () => {
