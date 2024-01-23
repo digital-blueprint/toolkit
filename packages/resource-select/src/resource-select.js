@@ -26,6 +26,7 @@ export class ResourceSelect extends AdapterLitElement {
         this.resourcePath = null;
         this.value = null;
         this.valueObject = null;
+        this.disabled = false;
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
         select2(window, $);
@@ -39,6 +40,7 @@ export class ResourceSelect extends AdapterLitElement {
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             resourcePath: {type: String, attribute: 'resource-path'},
             value: {type: String, reflect: true},
+            disabled: {type: Boolean},
         };
     }
 
@@ -212,7 +214,7 @@ export class ResourceSelect extends AdapterLitElement {
                 placeholder: i18n.t('select.placeholder'),
                 dropdownParent: this._$('#select-resource-dropdown'),
                 data: data,
-                disabled: false,
+                disabled: this.disabled,
             })
             .on('select2:select', () => {
                 let id = $select.select2('data')[0].id;
@@ -238,7 +240,8 @@ export class ResourceSelect extends AdapterLitElement {
             changedProperties.has('value') ||
             changedProperties.has('resourcePath') ||
             changedProperties.has('entryPointUrl') ||
-            changedProperties.has('auth')
+            changedProperties.has('auth') ||
+            changedProperties.has('disabled')
         ) {
             this._updateAll();
         }

@@ -31,6 +31,8 @@ Or directly via CDN:
 - `value` (optional): api path of recource to preload the selector with
     - example `<dbp-resource-select value="/base/people/testuser"></dbp-resource-select>`
     - the `value` will also be set automatically when an organization is chosen in the selector
+- `disabled` (optional): set to disable the selector
+    - example `<dbp-resource-select disabled></dbp-resource-select>`
 
 ## Properties
 
