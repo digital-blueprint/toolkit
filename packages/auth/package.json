@@ -45,7 +45,7 @@
         "@dbp-toolkit/common": "^0.3.5",
         "@open-wc/scoped-elements": "^2.1.0",
         "event-target-shim": "^6.0.0",
-        "keycloak-js": "^23.0.0",
+        "keycloak-js": "^24.0.0",
         "lit": "^2.7.0 || ^3.0.0"
     },
     "scripts": {
