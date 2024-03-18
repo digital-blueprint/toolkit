@@ -45,7 +45,7 @@
         "jszip": "^3.5.0",
         "lit": "^2.7.0 || ^3.0.0",
         "material-design-icons-svg": "^3.0.0",
-        "tabulator-tables": "^5.4.4"
+        "tabulator-tables": "^6.0.0"
     },
     "scripts": {
         "clean": "rm dist/*",
