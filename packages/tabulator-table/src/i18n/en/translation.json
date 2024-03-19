@@ -1,3 +1,6 @@
 {
-    "demo-title": "Tabulator Table Demo"
+    "demo-title": "Tabulator Table Demo",
+    "age": "Age",
+    "col": "Favourite Color",
+    "dob": "Date Of Birth"
 }

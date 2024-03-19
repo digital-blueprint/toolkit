@@ -48,6 +48,11 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
+                this.updateComplete.then(() => {
+                    this._a('.tabulator-table-demo').forEach((table) => {
+                        table.buildTable();
+                    });
+                });
             }
         });
 
@@ -107,9 +112,9 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             layout: 'fitColumns',
             columns: [
                 {title: 'Name', field: 'name', width: 150},
-                {title: 'Age', field: 'age', hozAlign: 'left', formatter: 'progress'},
-                {title: 'Favourite Color', field: 'col'},
-                {title: 'Date Of Birth', field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {title: i18n.t('age'), field: 'age', hozAlign: 'left', formatter: 'progress'},
+                {title: i18n.t('col'), field: 'col'},
+                {title: i18n.t('dob'), field: 'dob', sorter: 'date', hozAlign: 'center'},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
