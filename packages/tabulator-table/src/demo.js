@@ -48,11 +48,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
-                this.updateComplete.then(() => {
-                    this._a('.tabulator-table-demo').forEach((table) => {
-                        table.buildTable();
-                    });
-                });
             }
         });
 
