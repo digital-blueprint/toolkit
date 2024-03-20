@@ -85,35 +85,29 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.options['paginationSize'] = this.paginationSize;
             this.options['paginationSizeSelector'] = true;
             this.options['paginationElement'] = paginationElement;
-            this.options['langs'] = {
-                en: {
-                    pagination: {
-                        page_size: 'Page size',
-                        page_size_title: 'Page size',
-                        first: '<span class="mobile-hidden">First</span>',
-                        first_title: 'First Page',
-                        last: '<span class="mobile-hidden">Last</span>',
-                        last_title: 'Last Page',
-                        prev: '<span class="mobile-hidden">Prev</span>',
-                        prev_title: 'Prev Page',
-                        next: '<span class="mobile-hidden">Next</span>',
-                        next_title: 'Next Page',
-                    },
-                },
-                de: {
-                    pagination: {
-                        page_size: 'Einträge pro Seite',
-                        page_size_title: 'Einträge pro Seite',
-                        first: '<span class="mobile-hidden">Erste</span>',
-                        first_title: 'Erste Seite',
-                        last: '<span class="mobile-hidden">Letzte</span>',
-                        last_title: 'Letzte Seite',
-                        prev: '<span class="mobile-hidden">Vorherige</span>',
-                        prev_title: 'Vorherige Seite',
-                        next: '<span class="mobile-hidden">Nächste</span>',
-                        next_title: 'Nächste Seite',
-                    },
-                },
+            this.options['langs']['de']['pagination'] = {
+                page_size: 'Page size',
+                page_size_title: 'Page size',
+                first: '<span class="mobile-hidden">First</span>',
+                first_title: 'First Page',
+                last: '<span class="mobile-hidden">Last</span>',
+                last_title: 'Last Page',
+                prev: '<span class="mobile-hidden">Prev</span>',
+                prev_title: 'Prev Page',
+                next: '<span class="mobile-hidden">Next</span>',
+                next_title: 'Next Page',
+            };
+            this.options['langs']['de']['pagination'] = {
+                page_size: 'Einträge pro Seite',
+                page_size_title: 'Einträge pro Seite',
+                first: '<span class="mobile-hidden">Erste</span>',
+                first_title: 'Erste Seite',
+                last: '<span class="mobile-hidden">Letzte</span>',
+                last_title: 'Letzte Seite',
+                prev: '<span class="mobile-hidden">Vorherige</span>',
+                prev_title: 'Vorherige Seite',
+                next: '<span class="mobile-hidden">Nächste</span>',
+                next_title: 'Nächste Seite',
             };
         }
 
