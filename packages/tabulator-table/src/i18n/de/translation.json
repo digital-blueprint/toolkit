@@ -1,5 +1,6 @@
 {
     "demo-title": "Tabulator Table Demo",
+    "name": "Name",
     "age": "Alter",
     "col": "Lieblingsfarbe",
     "dob": "Geburtsdatum"

@@ -103,13 +103,34 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             {id: 16, name: 'Rigoberto Fuller', age: '57', col: 'black', dob: '17/01/1999'},
         ];
 
+        // https://tabulator.info/docs/6.0/localize#define
+        let langs = {
+            'en': {
+                columns: {
+                    'name': i18n.t('name', {lng: 'en'}),
+                    'age': i18n.t('age', {lng: 'en'}),
+                    'col': i18n.t('col', {lng: 'en'}),
+                    'dob': i18n.t('dob', {lng: 'en'}),
+                },
+            },
+            'de': {
+                columns: {
+                    'name': i18n.t('name', {lng: 'de'}),
+                    'age': i18n.t('age', {lng: 'de'}),
+                    'col': i18n.t('col', {lng: 'de'}),
+                    'dob': i18n.t('dob', {lng: 'de'}),
+                },
+            },
+        };
+
         let options = {
+            langs: langs,
             layout: 'fitColumns',
             columns: [
-                {title: 'Name', field: 'name', width: 150},
-                {title: i18n.t('age'), field: 'age', hozAlign: 'left', formatter: 'progress'},
-                {title: i18n.t('col'), field: 'col'},
-                {title: i18n.t('dob'), field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {field: 'name', width: 150},
+                {field: 'age', hozAlign: 'left', formatter: 'progress'},
+                {field: 'col'},
+                {field: 'dob', sorter: 'date', hozAlign: 'center'},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
