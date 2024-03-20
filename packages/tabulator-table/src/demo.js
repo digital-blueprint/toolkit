@@ -103,28 +103,19 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             {id: 16, name: 'Rigoberto Fuller', age: '57', col: 'black', dob: '17/01/1999'},
         ];
 
-
-        let langs = {
-
-            'en': {
-                columns: {
-                    'Name': 'Name', width: 150,
-                    'age': i18n.t('age', {lng: 'en'}),  formatter: 'progress',
-                    'col': 'Favorite Color',
-                    'dob': 'Date Of Birth', sorter: 'date',
-                },
+        let options = {
+            layout: 'fitColumns',
+            columns: [
+                {title: 'Name', field: 'name', width: 150},
+                {title: i18n.t('age'), field: 'age', hozAlign: 'left', formatter: 'progress'},
+                {title: i18n.t('col'), field: 'col'},
+                {title: i18n.t('dob'), field: 'dob', sorter: 'date', hozAlign: 'center'},
+            ],
+            columnDefaults: {
+                vertAlign: 'middle',
+                hozAlign: 'left',
+                resizable: false,
             },
-
-            'de': {
-                columns: {
-                    'name': 'Name', width: 150,
-                    'age': i18n.t('age', {lng: 'de'}),  formatter: 'progress',
-                    'col': 'Favorite Color',
-                    'dob': 'Date Of Birth', sorter: 'date',
-                },
-            },
-
-
         };
 
         return html`
@@ -141,7 +132,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         class="tabulator-table-demo"
                         id="tabulator-table-demo-1"
                         data=${JSON.stringify(data)}
-                        langs=${JSON.stringify(langs)}></dbp-tabulator-table>
+                        options=${JSON.stringify(options)}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -152,7 +143,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         id="tabulator-table-demo-2"
                         select-all-enabled
                         data=${JSON.stringify(data)}
-                        langs=${JSON.stringify(langs)}></dbp-tabulator-table>
+                        options=${JSON.stringify(options)}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -165,7 +156,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         pagination-enabled="true"
                         pagination-size="5"
                         data=${JSON.stringify(dataLong)}
-                        langs=${JSON.stringify(langs)}></dbp-tabulator-table>
+                        options=${JSON.stringify(options)}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -177,7 +168,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         pagination-size="10"
                         pagination-enabled="true"
                         data=${JSON.stringify(dataLong)}
-                        langs=${JSON.stringify(langs)}></dbp-tabulator-table>
+                        options=${JSON.stringify(options)}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -192,7 +183,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         id="tabulator-table-demo-5"
                         pagination-size="10"
                         pagination-enabled="true"
-                        langs=${JSON.stringify(langs)}></dbp-tabulator-table>
+                        options=${JSON.stringify(options)}></dbp-tabulator-table>
                 </div>
             </section>
         `;
