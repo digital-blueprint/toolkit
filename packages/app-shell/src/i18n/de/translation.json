@@ -16,6 +16,6 @@
     "page-updated-needs-reload": "Die Applikation wurde aktualisiert. Bitte laden Sie die Seite neu.",
     "privacy-policy": "Datenschutz",
     "welcome": {
-        "headline": "Willkommen bei der Applikation '{{appname}}'."
+        "headline": "Willkommen bei '{{appname}}'."
     }
 }
