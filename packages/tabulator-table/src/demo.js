@@ -56,7 +56,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
     setTableData(data) {
         let table = this._('#tabulator-table-demo-5');
-        console.log(table);
         table.setData(data);
     }
 
