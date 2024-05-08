@@ -3,5 +3,7 @@
     "name": "Name",
     "age": "Age",
     "col": "Favourite Color",
-    "dob": "Date Of Birth"
+    "dob": "Date Of Birth",
+    "edit": "Edit",
+    "delete": "Delete"
 }

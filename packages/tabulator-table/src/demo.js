@@ -54,8 +54,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         super.update(changedProperties);
     }
 
-    setTableData(data) {
-        let table = this._('#tabulator-table-demo-5');
+    setTableData(data, table_id) {
+        let table = this._(table_id);
+        table.setData(data);
+    }
+
+    setTableData2(data) {
+        let table = this._('#tabulator-table-demo-6');
         table.setData(data);
     }
 
@@ -102,6 +107,16 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             {id: 16, name: 'Rigoberto Fuller', age: '57', col: 'black', dob: '17/01/1999'},
         ];
 
+        let btn_edit = this.createScopedElement('button');
+        btn_edit.textContent = 'edit';
+
+        let btn_delete = this.createScopedElement('button');
+        btn_delete.textContent = 'delete';
+
+        let data_edit = [
+            {id: 1, name: 'Oli Bob', age: '12', col: 'red', dob: '', edit: btn_edit, delete: btn_delete},
+        ];
+
         // https://tabulator.info/docs/6.0/localize#define
         let langs = {
             'en': {
@@ -122,6 +137,29 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+        let langs_edit = {
+            'en': {
+                columns: {
+                    'name': i18n.t('name', {lng: 'en'}),
+                    'age': i18n.t('age', {lng: 'en'}),
+                    'col': i18n.t('col', {lng: 'en'}),
+                    'dob': i18n.t('dob', {lng: 'en'}),
+                    'edit': i18n.t('edit', {lng: 'en'}),
+                    'delete': i18n.t('delete', {lng: 'en'}),
+                },
+            },
+            'de': {
+                columns: {
+                    'name': i18n.t('name', {lng: 'de'}),
+                    'age': i18n.t('age', {lng: 'de'}),
+                    'col': i18n.t('col', {lng: 'de'}),
+                    'dob': i18n.t('dob', {lng: 'de'}),
+                    'edit': i18n.t('edit', {lng: 'de'}),
+                    'delete': i18n.t('delete', {lng: 'de'}),
+                },
+            },
+        };
+
         let options = {
             langs: langs,
             layout: 'fitColumns',
@@ -130,6 +168,24 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {field: 'age', hozAlign: 'left', formatter: 'progress'},
                 {field: 'col'},
                 {field: 'dob', sorter: 'date', hozAlign: 'center'},
+            ],
+            columnDefaults: {
+                vertAlign: 'middle',
+                hozAlign: 'left',
+                resizable: false,
+            },
+        };
+
+        let options_edit = {
+            langs: langs_edit,
+            layout: 'fitColumns',
+            columns: [
+                {field: 'name', width: 150},
+                {field: 'age', hozAlign: 'left', formatter: 'progress'},
+                {field: 'col'},
+                {field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {field: 'edit', formatter: 'html'},
+                {field: 'delete', formatter: 'html'},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
@@ -204,6 +260,21 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         pagination-size="10"
                         pagination-enabled="true"
                         options=${JSON.stringify(options)}></dbp-tabulator-table>
+                </div>
+
+                <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - setData()</h3>
+                    <button class="button is-primary" @click="${(e) => {
+                        e.target.disabled = true;
+                        this.setTableData2(data_edit);
+                    }}">Add data</button>
+                    <dbp-tabulator-table
+                            lang="${this.lang}"
+                            class="tabulator-table-demo"
+                            id="tabulator-table-demo-6"
+                            pagination-size="10"
+                            pagination-enabled="true"
+                            options=${JSON.stringify(options_edit)}></dbp-tabulator-table>
                 </div>
             </section>
         `;
