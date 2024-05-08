@@ -208,6 +208,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.deleteRow(row);
     }
 
+    filterRows() {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.setFilter("id", ">", 1);
+    }
+
     static get styles() {
         const iconPath = commonUtils.getAssetURL('@dbp-toolkit/common', 'icons/');
 

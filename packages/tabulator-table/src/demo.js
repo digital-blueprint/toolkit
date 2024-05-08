@@ -69,6 +69,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.deleteRow(row);
     }
 
+    filterTable(){
+        let filter = this._('#searchbar');
+        console.log(filter.value);
+        let table = this._('#tabulator-table-demo-6');
+        table.filterRows();
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -116,16 +123,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
         for (let row = 1; row < 5; row++)
         {
-            let btn_edit = this.createScopedElement('button');
-            btn_edit.textContent = 'edit';
-
             let btn_delete = this.createScopedElement('button');
             btn_delete.addEventListener("click", (event) => {
                 this.deleteTableRow(row);
             });
             btn_delete.textContent = 'delete';
             let current_name = 'Oli Bob ' + row;
-            let element = {id: row, name: current_name, age: '12', col: 'red', dob: '', edit: btn_edit, delete: btn_delete};
+            let element = {id: row, name: current_name, age: '12', col: 'red', dob: '', delete: btn_delete};
             data_edit.push(element);
         }
 
@@ -156,7 +160,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     'age': i18n.t('age', {lng: 'en'}),
                     'col': i18n.t('col', {lng: 'en'}),
                     'dob': i18n.t('dob', {lng: 'en'}),
-                    'edit': i18n.t('edit', {lng: 'en'}),
                     'delete': i18n.t('delete', {lng: 'en'}),
                 },
             },
@@ -166,7 +169,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     'age': i18n.t('age', {lng: 'de'}),
                     'col': i18n.t('col', {lng: 'de'}),
                     'dob': i18n.t('dob', {lng: 'de'}),
-                    'edit': i18n.t('edit', {lng: 'de'}),
                     'delete': i18n.t('delete', {lng: 'de'}),
                 },
             },
@@ -196,7 +198,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {field: 'age', hozAlign: 'left', formatter: 'progress'},
                 {field: 'col'},
                 {field: 'dob', sorter: 'date', hozAlign: 'center'},
-                {field: 'edit', formatter: 'html'},
                 {field: 'delete', formatter: 'html'},
             ],
             columnDefaults: {
@@ -275,6 +276,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
 
                 <div class="container">
+                    <div id="extendable-searchbar">
+                        <input type="text" id="searchbar" placeholder="Suchen">
+                        <button id="search-button"
+                                         @click='${() => {
+                                             this.filterTable();
+                                         }}'>filter table</button>
+                    </div>
                     <h3 class="demo-sub-title">Tabulator table - setData()</h3>
                     <button class="button is-primary" @click="${(e) => {
                         e.target.disabled = true;
