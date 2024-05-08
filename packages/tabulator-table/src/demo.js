@@ -72,10 +72,11 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     filterTable(){
         let filter = this._('#searchbar');
         console.log(filter.value);
+        let operator = this._('#operator-select');
         let column = this._('#column-select');
         console.log(column.value);
         let table = this._('#tabulator-table-demo-6');
-        table.filterRows(column.value, filter.value);
+        table.filterRows(column.value, operator.value, filter.value);
     }
 
     static get styles() {
@@ -131,7 +132,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             });
             btn_delete.textContent = 'delete';
             let current_name = 'Oli Bob ' + row;
-            let element = {id: row, name: current_name, age: '12', col: 'red', dob: '', delete: btn_delete};
+            let element = {id: row, name: current_name, age: '12', col: 'red', dob: '14/05/1982', delete: btn_delete};
             data_edit.push(element);
         }
 
@@ -285,16 +286,32 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                              this.filterTable();
                                          }}'>filter table</button>
                         <div class="search filter">
-                            <label for="pet-select">Select column</label>
+                            <label for="column">Select column</label>
 
                             <select name="column" id="column-select">
                                 <option value="all">all columns</option>
                                 <option value="id">id</option>
                                 <option value="name">name</option>
                                 <option value="age">age</option>
-                                <option value="color">color</option>
+                                <option value="col">color</option>
                                 <option value="dob">date of birth</option>
                             </select>
+                        </div>
+                        <div class="search filter">
+                            <label for="operator">Select operator</label>
+                            <select name="operator" id="operator-select">
+                                <option value="equal">=</option>
+                                <option value="not-equal">!=</option>
+                                <option value="less-than"><</option>
+                                <option value="less-than-or-equal"><=</option>
+                                <option value="greater-than">></option>
+                                <option value="greater-than-or-equal">>=</option>
+                                <option value="like">contains</option>
+                                <option value="keywords">keywords</option>
+                                <option value="starts">starts with</option>
+                                <option value="ends">ends with</option>
+                            </select>
+                            
                         </div>
                     </div>
                     <h3 class="demo-sub-title">Tabulator table - setData()</h3>
