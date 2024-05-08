@@ -20,11 +20,13 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.options = {
             layout: 'fitColumns',
             autoColumns: true,
+            //selectableRows: true,
         };
         this.data = [];
         this.paginationEnabled = false;
         this.paginationSize = 10;
         this.selectAllEnabled = false;
+        this.selectRowsEnabled = false;
         this.tableReady = false;
         this.initalization = true;
     }
@@ -39,6 +41,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
             paginationSize: {type: Number, attribute: 'pagination-size'},
             selectAllEnabled: {type: Boolean, attribute: 'select-all-enabled'},
+            selectRowsEnabled: {type: Boolean, attribute: 'select-rows-enabled'},
         };
     }
 
@@ -112,14 +115,14 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         }
 
         // TODO:make a property to controll this?
-        this.options['selectable'] = true;
-        this.options['selectableRangeMode'] = 'click';
+        //this.options['selectable'] = true;
+        //this.options['selectableRangeMode'] = 'click';
         // this.options['paginationAddRow'] = 'table';
         // this.options['printRowRange'] = 'visible';
-
+        this.options['selectableRows'] = true;
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
-        this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
+        //this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
         this.tableReady = true;
     }
 
@@ -127,6 +130,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         this.tabulatorTable.setLocale(this.lang);
         this.tabulatorTable.setData(this.data);
+
+        if (this.selectRowsEnabled) {
+
+        }
 
         if (this.selectAllEnabled) {
             this.tabulatorTable.addColumn(
