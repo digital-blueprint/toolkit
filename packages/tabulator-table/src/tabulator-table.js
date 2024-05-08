@@ -208,9 +208,17 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.deleteRow(row);
     }
 
-    filterColumns(listOfFilters) {
+    setFilter(listOfFilters) {
         if (!this.tabulatorTable) return;
-        this.tabulatorTable.setFilter(listOfFilters);
+        if(listOfFilters.length === 0)
+            this.tabulatorTable.clearFilter();
+        else
+            this.tabulatorTable.setFilter(listOfFilters);
+    }
+
+    clearFilter() {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.clearFilter();
     }
 
     static get styles() {

@@ -15,6 +15,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
         this.langDir = '';
+        this.boundPressEnterAndSubmitSearchHandler = this.pressEnterAndSubmitSearch.bind(this);
     }
 
     static get scopedElements() {
@@ -40,6 +41,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         this.updateComplete.then(() => {
             this._a('.tabulator-table-demo').forEach((table) => {
                 table.buildTable();
+                document.addEventListener('keyup', this.boundPressEnterAndSubmitSearchHandler);
             });
         });
     }
@@ -52,6 +54,17 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         });
 
         super.update(changedProperties);
+    }
+
+    pressEnterAndSubmitSearch(event) {
+        if (event.keyCode === 13) {
+            console.log('enter detected');
+            const activeElement = this.shadowRoot.activeElement;
+            if (activeElement && activeElement.id === 'searchbar') {
+                event.preventDefault();
+                this.filterTable();
+            }
+        }
     }
 
     setTableData(data) {
@@ -84,7 +97,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         if(column !== 'all')
         {
             let filter_object = {field: column, type: operator, value: filter};
-            table.filterColumns([filter_object]);
+            table.setFilter([filter_object]);
         }
 
         else
@@ -97,8 +110,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 listOfFilters.push(filter_object);
             }
             console.log([listOfFilters]);
-            table.filterColumns([listOfFilters]);
+            table.setFilter([listOfFilters]);
         }
+    }
+
+    removeFilter(){
+        let table = this._('#tabulator-table-demo-6');
+        table.clearFilter();
     }
 
     static get styles() {
@@ -145,6 +163,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         ];
 
         let data_edit = [];
+        let start_age = 12;
 
         for (let row = 1; row < 5; row++)
         {
@@ -154,7 +173,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             });
             btn_delete.textContent = 'delete';
             let current_name = 'Oli Bob ' + row;
-            let element = {id: row, name: current_name, age: '12', col: 'red', dob: '14/05/1982', delete: btn_delete};
+            let element = {id: row, name: current_name, age: start_age + row, col: 'red', dob: '14/05/1982', delete: btn_delete};
             data_edit.push(element);
         }
 
@@ -307,6 +326,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                          @click='${() => {
                                              this.filterTable();
                                          }}'>filter table</button>
+                        <button id="remove-filters-button"
+                                @click='${() => {
+                                    this.removeFilter();
+                                }}'>remove filters</button>
                         <div class="search filter">
                             <label for="column">Select column</label>
 
@@ -344,6 +367,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             lang="${this.lang}"
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-6"
+                            select-all-enabled
                             pagination-size="10"
                             pagination-enabled="true"
                             options=${JSON.stringify(options_edit)}></dbp-tabulator-table>
