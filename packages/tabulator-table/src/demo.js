@@ -72,8 +72,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     filterTable(){
         let filter = this._('#searchbar');
         console.log(filter.value);
+        let column = this._('#column-select');
+        console.log(column.value);
         let table = this._('#tabulator-table-demo-6');
-        table.filterRows();
+        table.filterRows(column.value, filter.value);
     }
 
     static get styles() {
@@ -282,6 +284,18 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                          @click='${() => {
                                              this.filterTable();
                                          }}'>filter table</button>
+                        <div class="search filter">
+                            <label for="pet-select">Select column</label>
+
+                            <select name="column" id="column-select">
+                                <option value="all">all columns</option>
+                                <option value="id">id</option>
+                                <option value="name">name</option>
+                                <option value="age">age</option>
+                                <option value="color">color</option>
+                                <option value="dob">date of birth</option>
+                            </select>
+                        </div>
                     </div>
                     <h3 class="demo-sub-title">Tabulator table - setData()</h3>
                     <button class="button is-primary" @click="${(e) => {

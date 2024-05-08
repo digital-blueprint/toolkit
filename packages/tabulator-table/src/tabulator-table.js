@@ -208,9 +208,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.deleteRow(row);
     }
 
-    filterRows() {
+    filterRows(column, value) {
         if (!this.tabulatorTable) return;
-        this.tabulatorTable.setFilter("id", ">", 1);
+        this.tabulatorTable.setFilter(column, "=", value);
     }
 
     static get styles() {
