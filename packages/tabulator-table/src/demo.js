@@ -74,9 +74,31 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         console.log(filter.value);
         let operator = this._('#operator-select');
         let column = this._('#column-select');
-        console.log(column.value);
+
+        filter = filter.value;
+        operator = operator.value;
+        column = column.value;
+
+        let listOfFilters = [];
         let table = this._('#tabulator-table-demo-6');
-        table.filterRows(column.value, operator.value, filter.value);
+        if(column !== 'all')
+        {
+            let filter_object = {field: column, type: operator, value: filter};
+            table.filterColumns([filter_object]);
+        }
+
+        else
+        {
+            console.log('all columns');
+            const columns = ['name', 'age', 'col', 'dob'];
+
+            for (let col of columns) {
+                let filter_object = {field: col, type: operator, value: filter};
+                listOfFilters.push(filter_object);
+            }
+            console.log([listOfFilters]);
+            table.filterColumns([listOfFilters]);
+        }
     }
 
     static get styles() {
@@ -290,7 +312,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
                             <select name="column" id="column-select">
                                 <option value="all">all columns</option>
-                                <option value="id">id</option>
                                 <option value="name">name</option>
                                 <option value="age">age</option>
                                 <option value="col">color</option>
@@ -300,12 +321,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         <div class="search filter">
                             <label for="operator">Select operator</label>
                             <select name="operator" id="operator-select">
-                                <option value="equal">=</option>
-                                <option value="not-equal">!=</option>
-                                <option value="less-than"><</option>
-                                <option value="less-than-or-equal"><=</option>
-                                <option value="greater-than">></option>
-                                <option value="greater-than-or-equal">>=</option>
+                                <option value="=">=</option>
+                                <option value="!=">!=</option>
+                                <option value="<"><</option>
+                                <option value="<="><=</option>
+                                <option value=">">></option>
+                                <option value=">=">>=</option>
                                 <option value="like">contains</option>
                                 <option value="keywords">keywords</option>
                                 <option value="starts">starts with</option>
@@ -314,7 +335,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             
                         </div>
                     </div>
-                    <h3 class="demo-sub-title">Tabulator table - setData()</h3>
+                    <h3 class="demo-sub-title">Tabulator table - Edit</h3>
                     <button class="button is-primary" @click="${(e) => {
                         e.target.disabled = true;
                         this.setTableData2(data_edit);
