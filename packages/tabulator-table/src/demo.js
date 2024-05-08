@@ -54,14 +54,19 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         super.update(changedProperties);
     }
 
-    setTableData(data, table_id) {
-        let table = this._(table_id);
+    setTableData(data) {
+        let table = this._('#tabulator-table-demo-5');
         table.setData(data);
     }
 
     setTableData2(data) {
         let table = this._('#tabulator-table-demo-6');
         table.setData(data);
+    }
+
+    deleteTableRow(row) {
+        let table = this._('#tabulator-table-demo-6');
+        table.deleteRow(row);
     }
 
     static get styles() {
@@ -107,15 +112,22 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             {id: 16, name: 'Rigoberto Fuller', age: '57', col: 'black', dob: '17/01/1999'},
         ];
 
-        let btn_edit = this.createScopedElement('button');
-        btn_edit.textContent = 'edit';
+        let data_edit = [];
 
-        let btn_delete = this.createScopedElement('button');
-        btn_delete.textContent = 'delete';
+        for (let row = 1; row < 5; row++)
+        {
+            let btn_edit = this.createScopedElement('button');
+            btn_edit.textContent = 'edit';
 
-        let data_edit = [
-            {id: 1, name: 'Oli Bob', age: '12', col: 'red', dob: '', edit: btn_edit, delete: btn_delete},
-        ];
+            let btn_delete = this.createScopedElement('button');
+            btn_delete.addEventListener("click", (event) => {
+                this.deleteTableRow(row);
+            });
+            btn_delete.textContent = 'delete';
+            let current_name = 'Oli Bob ' + row;
+            let element = {id: row, name: current_name, age: '12', col: 'red', dob: '', edit: btn_edit, delete: btn_delete};
+            data_edit.push(element);
+        }
 
         // https://tabulator.info/docs/6.0/localize#define
         let langs = {
