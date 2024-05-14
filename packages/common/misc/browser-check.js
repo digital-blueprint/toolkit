@@ -10,9 +10,29 @@ Example usage:
 */
 
 (function () {
+    // Eval can be disabled through https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+    // Make sure to only call once, to only error once
+    let evalSupported = null;
+    function supportsEval() {
+        if (evalSupported === null) {
+            try {
+                eval('');
+                evalSupported = true;
+            } catch (e) {
+                evalSupported = false;
+            }
+        }
+        return evalSupported;
+    }
+
     // https://caniuse.com/#feat=es6
     function supportsES6() {
         if (typeof Symbol == 'undefined') return false;
+
+        if (!supportsEval()) {
+            // Can't check, assume it works
+            return true;
+        }
 
         try {
             eval('class Foo {}');
@@ -27,6 +47,11 @@ Example usage:
 
     // https://caniuse.com/#feat=es6-module-dynamic-import
     function supportsDynamicImport() {
+        if (!supportsEval()) {
+            // Can't check, assume it works
+            return true;
+        }
+
         try {
             new Function('import("")');
             return true;
@@ -51,6 +76,11 @@ Example usage:
 
     // https://caniuse.com/#feat=async-functions
     function supportsAsyncAwait() {
+        if (!supportsEval()) {
+            // Can't check, assume it works
+            return true;
+        }
+
         try {
             eval('async () => {}');
         } catch (e) {
@@ -65,16 +95,6 @@ Example usage:
         return true;
     }
 
-    // Eval can be disabled through https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-    function supportsEval() {
-        try {
-            eval('');
-        } catch (e) {
-            return false;
-        }
-        return true;
-    }
-
     // https://caniuse.com/abortcontroller
     function supportsAbortController() {
         // AbortController in older Safari is broken, so check for the signal property
@@ -85,25 +105,13 @@ Example usage:
     // check for safari 13.1+ and safari on iOS 13.4+
     // https://caniuse.com/resizeobserver
     function supportsResizeObserver() {
-        try {
-            eval('new ResizeObserver(items => {})');
-        } catch (e) {
-            return false;
-        }
-
-        return true;
+        return !!window.ResizeObserver;
     }
 
     // check for globalThis support, required by lit
     // https://caniuse.com/mdn-javascript_builtins_globalthis
     function supportsGlobalThis() {
-        try {
-            eval('globalThis !== undefined')
-        } catch(e) {
-            return false;
-        }
-
-        return true;
+        return globalThis !== undefined;
     }
 
     // check for ::part selector support
@@ -125,12 +133,17 @@ Example usage:
         return true;
     }
 
-    function isBrowserSupported() {
-        if (!supportsEval()) {
-            console.log('Eval support disabled, skipping browser feature detection.');
-            return true;
+    // Required for newer i18next
+    // https://caniuse.com/intl-pluralrules
+    function supportsIntlPluralRules() {
+        if(typeof Intl === 'undefined' || !Intl.PluralRules){
+            return false;
         }
 
+        return true;
+    }
+
+    function isBrowserSupported() {
         if (!supportsES6()) {
             console.log('ES6 not supported');
             return false;
@@ -181,8 +194,8 @@ Example usage:
             return false;
         }
 
-        if(typeof Intl === 'undefined' || !Intl.PluralRules){
-            console.log('Safari version older than 13 not supported')
+        if(!supportsIntlPluralRules()){
+            console.log('Intl.PluralRules not supported')
             return false;
         }
 
