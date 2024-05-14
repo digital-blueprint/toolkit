@@ -119,6 +119,11 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.clearFilter();
     }
 
+    deleteSelectedRows(){
+        let table = this._('#tabulator-table-demo-6');
+        table.deleteSelectedRows();
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -359,10 +364,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         </div>
                     </div>
                     <h3 class="demo-sub-title">Tabulator table - Edit</h3>
-                    <button class="button is-primary" @click="${(e) => {
-                        e.target.disabled = true;
+                    <button class="button is-primary" @click="${() => {
                         this.setTableData2(data_edit);
                     }}">Add data</button>
+                    <button class="button is-primary" @click="${() => {
+                        this.deleteSelectedRows();
+                    }}">Delete Selected Rows</button>
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
