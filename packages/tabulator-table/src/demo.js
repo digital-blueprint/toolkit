@@ -368,6 +368,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-6"
                             select-all-enabled
+                            select-rows-enabled
                             pagination-size="10"
                             pagination-enabled="true"
                             options=${JSON.stringify(options_edit)}></dbp-tabulator-table>
