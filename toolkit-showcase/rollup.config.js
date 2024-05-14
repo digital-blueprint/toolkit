@@ -84,13 +84,6 @@ export default (async () => {
         },
         treeshake: treeshake,
         preserveEntrySignatures: false,
-        onwarn: function (warning, warn) {
-            // keycloak bundled code uses eval
-            if (warning.code === 'EVAL' && warning.id.includes('sha256.js')) {
-                return;
-            }
-            warn(warning);
-        },
         plugins: [
             del({
                 targets: 'dist/*',
