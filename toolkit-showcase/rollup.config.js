@@ -67,8 +67,7 @@ function getOrigin(url) {
 config.CSP = `default-src 'self' 'unsafe-inline' \
 ${getOrigin(config.matomoUrl)} ${getOrigin(config.keyCloakBaseURL)} ${getOrigin(
     config.entryPointURL
-)} \
-httpbin.org ${getOrigin(config.nextcloudBaseURL)}; \
+)} ${getOrigin(config.nextcloudBaseURL)}; \
 img-src * blob: data:`;
 
 export default (async () => {
