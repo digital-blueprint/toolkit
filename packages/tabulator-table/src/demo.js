@@ -249,14 +249,15 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             langs: langs_edit,
             layout:"fitDataFill",
             responsiveLayout:"collapse",
+            responsiveLayoutCollapseStartOpen: false,
             rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
-                {field: 'name', width: 150, responsive: 0},
-                {field: 'age', hozAlign: 'left', formatter: 'progress', responsive: 0},
-                {field: 'col', responsive: 0},
-                {field: 'dob', sorter: 'date', hozAlign: 'center', responsive: 0},
-                {field: 'delete', formatter: 'html', responsive: 0},
-                {field: 'hidden', width:150, responsive:8},
+                {title: 'name', field: 'name', width: 150, responsive: 0},
+                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress', responsive: 0},
+                {title: 'col', field: 'col', responsive: 0},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center', responsive: 0},
+                {title: 'delete', field: 'delete', formatter: 'html', responsive: 0},
+                {title: 'hidden', field: 'hidden', width:150, responsive:8},
             ]
         };
 
