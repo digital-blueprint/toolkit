@@ -30,6 +30,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.selectedRows = null;
         this.tableReady = false;
         this.initalization = true;
+        this.collapseEnabled = false;
     }
 
     static get properties() {
@@ -44,6 +45,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             selectAllEnabled: {type: Boolean, attribute: 'select-all-enabled'},
             selectedRows: {type: Array},
             selectRowsEnabled: {type: Boolean, attribute: 'select-rows-enabled'},
+            collapseEnabled: {type: Boolean, attribute: 'collapse-enabled'},
         };
     }
 
@@ -84,6 +86,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     buildTable() {
+        if (this.collapseEnabled) {
+            this.options['layout'] = 'fitDataFill';
+            this.options['responsiveLayout'] = 'collapse';
+        }
         if (this.paginationEnabled) {
             this.options['layout'] = 'fitDataFill';
             this.options['responsiveLayout'] = 'collapse';

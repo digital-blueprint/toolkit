@@ -245,6 +245,25 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+        let options_collapse = {
+            langs: langs,
+            layout: 'fitColumns',
+            responsiveLayout: 'collapse',
+            responsiveLayoutCollapseStartOpen: false,
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
+            columns: [
+                {title: 'name', field: 'name', width: 350, responsive:3},
+                {title: 'age', field: 'age', width: 350, hozAlign: 'left', formatter: 'progress'},
+                {title: 'col', field: 'col', width: 350},
+                {title: 'dob', field: 'dob', width: 350, sorter: 'date', hozAlign: 'center'},
+            ],
+            columnDefaults: {
+                vertAlign: 'middle',
+                hozAlign: 'left',
+                resizable: false,
+            },
+        };
+
         let options_edit = {
             langs: langs_edit,
             layout:"fitDataFill",
@@ -384,6 +403,17 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             pagination-size="10"
                             pagination-enabled="true"
                             options=${JSON.stringify(options_edit)}></dbp-tabulator-table>
+                </div>
+
+                <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - Collapsed List</h3>
+                    <dbp-tabulator-table
+                            lang="${this.lang}"
+                            class="tabulator-table-demo"
+                            id="tabulator-table-demo-7"
+                            collapse-enabled="true"
+                            data=${JSON.stringify(data)}
+                            options=${JSON.stringify(options_collapse)}></dbp-tabulator-table>
                 </div>
             </section>
         `;
