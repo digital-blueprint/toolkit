@@ -168,6 +168,15 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         ];
 
         let data_edit = [];
+
+        let data_collapse = [
+            {id: 1, name: 'Oli Bob', age: '12', col: 'red', dob: '', license: 'B'},
+            {id: 2, name: 'Mary May', age: '1', col: 'blue', dob: '14/05/1982', license: 'B'},
+            {id: 3, name: 'Christine Lobowski', age: '42', col: 'green', dob: '22/05/1982', license: 'C1'},
+            {id: 4, name: 'Brendon Philips', age: '95', col: 'orange', dob: '01/08/1980', license: 'B'},
+            {id: 5, name: 'Margret Marmajuke', age: '16', col: 'yellow', dob: '31/01/1999', license: 'A'},
+        ];
+
         let start_age = 12;
 
         for (let row = 1; row < 5; row++)
@@ -179,9 +188,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             btn_delete.textContent = 'delete';
             let current_name = 'Oli Bob ' + row;
 
-
-            let hide = 'hidden';
-            let element = {id: row, name: current_name, age: start_age + row, col: 'red', dob: '14/05/1982', delete: btn_delete, hidden:hide};
+            let element = {id: row, name: current_name, age: start_age + row, col: 'red', dob: '14/05/1982', delete: btn_delete};
             data_edit.push(element);
         }
 
@@ -226,14 +233,34 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+        let langs_collapse = {
+            'en': {
+                columns: {
+                    'name': i18n.t('name', {lng: 'en'}),
+                    'age': i18n.t('age', {lng: 'en'}),
+                    'col': i18n.t('col', {lng: 'en'}),
+                    'dob': i18n.t('dob', {lng: 'en'}),
+                    'delete': i18n.t('delete', {lng: 'en'}),
+                    'license': i18n.t('license', {lng: 'en'}),
+                },
+            },
+            'de': {
+                columns: {
+                    'name': i18n.t('name', {lng: 'de'}),
+                    'age': i18n.t('age', {lng: 'de'}),
+                    'col': i18n.t('col', {lng: 'de'}),
+                    'dob': i18n.t('dob', {lng: 'de'}),
+                    'delete': i18n.t('delete', {lng: 'de'}),
+                    'license': i18n.t('license', {lng: 'de'}),
+                },
+            },
+        };
+
         let options = {
             langs: langs,
             layout: 'fitColumns',
-            responsiveLayout: 'collapse',
-            responsiveLayoutCollapseStartOpen: false,
-            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
-                {title: 'name', field: 'name', width: 350, responsive:3},
+                {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
                 {title: 'col', field: 'col'},
                 {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
@@ -245,39 +272,36 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+        let options_edit = {
+            langs: langs_edit,
+            layout:"fitColumns",
+            columns: [
+                {title: 'name', field: 'name', width: 150},
+                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
+                {title: 'col', field: 'col', responsive: 0},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {title: 'delete', field: 'delete', formatter: 'html'},
+            ]
+        };
+
         let options_collapse = {
-            langs: langs,
+            langs: langs_collapse,
             layout: 'fitColumns',
             responsiveLayout: 'collapse',
             responsiveLayoutCollapseStartOpen: false,
             rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
-                {title: 'name', field: 'name', width: 350, responsive:3},
-                {title: 'age', field: 'age', width: 350, hozAlign: 'left', formatter: 'progress'},
-                {title: 'col', field: 'col', width: 350},
-                {title: 'dob', field: 'dob', width: 350, sorter: 'date', hozAlign: 'center'},
+                {title: 'name', field: 'name', width: 250},
+                {title: 'age', field: 'age', width: 250, hozAlign: 'left', formatter: 'progress'},
+                {title: 'col', field: 'col', width: 250},
+                {title: 'dob', field: 'dob', width: 250, sorter: 'date', hozAlign: 'center'},
+                {title: 'license', field: 'license', width: 250, responsive:3}
             ],
             columnDefaults: {
                 vertAlign: 'middle',
                 hozAlign: 'left',
                 resizable: false,
             },
-        };
-
-        let options_edit = {
-            langs: langs_edit,
-            layout:"fitDataFill",
-            responsiveLayout:"collapse",
-            responsiveLayoutCollapseStartOpen: false,
-            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
-            columns: [
-                {title: 'name', field: 'name', width: 150, responsive: 0},
-                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress', responsive: 0},
-                {title: 'col', field: 'col', responsive: 0},
-                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center', responsive: 0},
-                {title: 'delete', field: 'delete', formatter: 'html', responsive: 0},
-                {title: 'hidden', field: 'hidden', width:150, responsive:8},
-            ]
         };
 
         return html`
@@ -412,7 +436,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-7"
                             collapse-enabled="true"
-                            data=${JSON.stringify(data)}
+                            data=${JSON.stringify(data_collapse)}
                             options=${JSON.stringify(options_collapse)}></dbp-tabulator-table>
                 </div>
             </section>

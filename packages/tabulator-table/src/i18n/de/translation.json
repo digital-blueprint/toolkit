@@ -5,5 +5,6 @@
     "col": "Lieblingsfarbe",
     "dob": "Geburtsdatum",
     "edit": "Bearbeiten",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "license": "Führerschein: "
 }

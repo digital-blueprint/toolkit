@@ -91,8 +91,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.options['responsiveLayout'] = 'collapse';
         }
         if (this.paginationEnabled) {
-            this.options['layout'] = 'fitDataFill';
-            this.options['responsiveLayout'] = 'collapse';
             let paginationElement = this._('.tabulator-paginator');
             this.options['pagination'] = true;
             this.options['paginationSize'] = this.paginationSize;

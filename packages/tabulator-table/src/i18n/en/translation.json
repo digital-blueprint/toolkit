@@ -5,5 +5,6 @@
     "col": "Favourite Color",
     "dob": "Date Of Birth",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "license": "Driving License: "
 }
