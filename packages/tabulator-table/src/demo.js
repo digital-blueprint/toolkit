@@ -178,7 +178,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             });
             btn_delete.textContent = 'delete';
             let current_name = 'Oli Bob ' + row;
-            let element = {id: row, name: current_name, age: start_age + row, col: 'red', dob: '14/05/1982', delete: btn_delete};
+
+
+            let hide = 'hidden';
+            let element = {id: row, name: current_name, age: start_age + row, col: 'red', dob: '14/05/1982', delete: btn_delete, hidden:hide};
             data_edit.push(element);
         }
 
@@ -241,19 +244,15 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
         let options_edit = {
             langs: langs_edit,
-            layout: 'fitColumns',
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
-                {field: 'name', width: 150},
-                {field: 'age', hozAlign: 'left', formatter: 'progress'},
-                {field: 'col'},
-                {field: 'dob', sorter: 'date', hozAlign: 'center'},
-                {field: 'delete', formatter: 'html'},
-            ],
-            columnDefaults: {
-                vertAlign: 'middle',
-                hozAlign: 'left',
-                resizable: false,
-            },
+                {field: 'name', width: 150, responsive: 0},
+                {field: 'age', hozAlign: 'left', formatter: 'progress', responsive: 0},
+                {field: 'col', responsive: 0},
+                {field: 'dob', sorter: 'date', hozAlign: 'center', responsive: 0},
+                {field: 'delete', formatter: 'html', responsive: 0},
+                {field: 'hidden', width:150, responsive:8},
+            ]
         };
 
         return html`

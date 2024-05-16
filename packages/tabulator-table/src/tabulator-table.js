@@ -85,6 +85,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     buildTable() {
         if (this.paginationEnabled) {
+            this.options['layout'] = 'fitDataFill';
+            this.options['responsiveLayout'] = 'collapse';
             let paginationElement = this._('.tabulator-paginator');
             this.options['pagination'] = true;
             this.options['paginationSize'] = this.paginationSize;
@@ -125,6 +127,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (this.selectRowsEnabled) {
             this.options['selectableRows'] = true;
         }
+
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
         //this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
@@ -240,6 +243,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         this.getSelectedRows();
         this.deleteRow(this.selectedRows);
+    }
+
+    appendChild() {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.table.selectRow(1);
     }
 
     static get styles() {
