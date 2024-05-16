@@ -244,6 +244,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
         let options_edit = {
             langs: langs_edit,
+            layout:"fitDataFill",
+            responsiveLayout:"collapse",
             rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
                 {field: 'name', width: 150, responsive: 0},
