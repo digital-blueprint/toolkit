@@ -229,11 +229,14 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let options = {
             langs: langs,
             layout: 'fitColumns',
+            responsiveLayout: 'collapse',
+            responsiveLayoutCollapseStartOpen: false,
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
-                {field: 'name', width: 150},
-                {field: 'age', hozAlign: 'left', formatter: 'progress'},
-                {field: 'col'},
-                {field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {title: 'name', field: 'name', width: 350, responsive:3},
+                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
+                {title: 'col', field: 'col'},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
