@@ -304,6 +304,11 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+        let auto_columns = {
+            autoColumns: true,
+            layout: 'fitColumns',
+        };
+
         return html`
             <section class="section">
                 <div class="container">
@@ -438,6 +443,16 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             collapse-enabled="true"
                             data=${JSON.stringify(data_collapse)}
                             options=${JSON.stringify(options_collapse)}></dbp-tabulator-table>
+                </div>
+
+                <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - Automatic Column Generation</h3>
+                    <dbp-tabulator-table
+                            lang="${this.lang}"
+                            class="tabulator-table-demo"
+                            id="tabulator-table-demo-8"
+                            data=${JSON.stringify(data)}
+                            options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
                 </div>
             </section>
         `;
