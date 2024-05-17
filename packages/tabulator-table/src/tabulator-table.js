@@ -31,6 +31,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tableReady = false;
         this.initalization = true;
         this.collapseEnabled = false;
+        this.expanded = false;
     }
 
     static get properties() {
@@ -46,6 +47,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             selectedRows: {type: Array},
             selectRowsEnabled: {type: Boolean, attribute: 'select-rows-enabled'},
             collapseEnabled: {type: Boolean, attribute: 'collapse-enabled'},
+            expanded: {type: Boolean},
         };
     }
 
@@ -249,9 +251,53 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.deleteRow(this.selectedRows);
     }
 
-    appendChild() {
-        if (!this.tabulatorTable) return;
-        this.tabulatorTable.table.selectRow(1);
+    expandAll() {
+        if(this.expanded === false) {
+            this.tabulatorTable.getRows('visible').forEach((row) => {
+                const item = row.getElement().lastChild;
+
+                if (item.classList.contains('tabulator-responsive-collapse')) {
+                    item.style.display = 'block';
+                }
+                row.getElement()
+                    .getElementsByClassName('tabulator-responsive-collapse-toggle')[0]
+                    .classList.add('open');
+            });
+
+            const that = this;
+
+            setTimeout(function () {
+                that.tabulatorTable.redraw();
+            }, 0);
+
+            this.expanded = true;
+        }
+
+
+    }
+
+    collapseAll() {
+        if(this.expanded === true) {
+            this.tabulatorTable.getRows('visible').forEach((row) => {
+                const item = row.getElement().lastChild;
+
+                if (item.classList.contains('tabulator-responsive-collapse')) {
+                    item.style.display = 'none';
+                }
+                row.getElement()
+                    .getElementsByClassName('tabulator-responsive-collapse-toggle')[0]
+                    .classList.remove('open');
+            });
+
+            const that = this;
+
+            setTimeout(function () {
+                that.tabulatorTable.redraw();
+            }, 0);
+
+            this.expanded = false;
+        }
+
     }
 
     static get styles() {

@@ -123,10 +123,15 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let table = this._('#tabulator-table-demo-7');
         table.deleteSelectedRows();
     }
+//TODO: fix this: after clicking expand all or collapse all you can only collapse or expand single elements respectively only on double click
+    expandAll(){
+        let table = this._('#tabulator-table-demo-8');
+        table.expandAll();
+    }
 
-    toggleAll(){
-        let to_toggle = this._('.tabulator-responsive-collapse-toggle');
-        to_toggle.addClass('open');
+    collapseAll(){
+        let table = this._('#tabulator-table-demo-8');
+        table.collapseAll();
     }
 
     static get styles() {
@@ -477,8 +482,11 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
                 <div class="container">
                     <h3 class="demo-sub-title">Tabulator table - Collapsed Lists</h3>
-                    <button class="button is-primary" @click="${(e) => {
-                        this.toggleAll();
+                    <button class="button is-primary" @click="${() => {
+                        this.expandAll();
+                    }}">Expand All</button>
+                    <button class="button is-primary" @click="${() => {
+                        this.collapseAll();
                     }}">Collapse All</button>
                     <dbp-tabulator-table
                             lang="${this.lang}"
