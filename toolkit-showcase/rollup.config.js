@@ -64,11 +64,10 @@ function getOrigin(url) {
     return '';
 }
 
-config.CSP = `default-src 'self' 'unsafe-eval' 'unsafe-inline' \
+config.CSP = `default-src 'self' 'unsafe-inline' \
 ${getOrigin(config.matomoUrl)} ${getOrigin(config.keyCloakBaseURL)} ${getOrigin(
     config.entryPointURL
-)} \
-httpbin.org ${getOrigin(config.nextcloudBaseURL)}; \
+)} ${getOrigin(config.nextcloudBaseURL)}; \
 img-src * blob: data:`;
 
 export default (async () => {
@@ -84,13 +83,6 @@ export default (async () => {
         },
         treeshake: treeshake,
         preserveEntrySignatures: false,
-        onwarn: function (warning, warn) {
-            // keycloak bundled code uses eval
-            if (warning.code === 'EVAL' && warning.id.includes('sha256.js')) {
-                return;
-            }
-            warn(warning);
-        },
         plugins: [
             del({
                 targets: 'dist/*',
