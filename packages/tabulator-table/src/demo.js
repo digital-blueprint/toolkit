@@ -307,6 +307,14 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let auto_columns = {
             autoColumns: true,
             layout: 'fitColumns',
+            autoColumnsDefinitions:[
+                {field:"id", visible: false}, //add input editor to the name column
+            ],
+            columnDefaults: {
+                vertAlign: 'middle',
+                hozAlign: 'left',
+                resizable: false,
+            },
         };
 
         return html`
@@ -435,7 +443,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
 
                 <div class="container">
-                    <h3 class="demo-sub-title">Tabulator table - Collapsed List</h3>
+                    <h3 class="demo-sub-title">Tabulator table - Collapsed Lists</h3>
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
