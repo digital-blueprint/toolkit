@@ -68,17 +68,17 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     setTableData(data) {
-        let table = this._('#tabulator-table-demo-5');
+        let table = this._('#tabulator-table-demo-6');
         table.setData(data);
     }
 
     setTableData2(data) {
-        let table = this._('#tabulator-table-demo-6');
+        let table = this._('#tabulator-table-demo-7');
         table.setData(data);
     }
 
     deleteTableRow(row) {
-        let table = this._('#tabulator-table-demo-6');
+        let table = this._('#tabulator-table-demo-7');
         table.deleteRow(row);
     }
 
@@ -115,12 +115,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     removeFilter(){
-        let table = this._('#tabulator-table-demo-6');
+        let table = this._('#tabulator-table-demo-7');
         table.clearFilter();
     }
 
     deleteSelectedRows(){
-        let table = this._('#tabulator-table-demo-6');
+        let table = this._('#tabulator-table-demo-7');
         table.deleteSelectedRows();
     }
 
@@ -311,11 +311,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             autoColumns: true,
             layout: 'fitColumns',
             autoColumnsDefinitions:[
-                {field:"id", visible: false}, //add input editor to the name column
-                {title: 'name', field: 'name', width: 350, responsive:3},
-                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
-                {title: 'col', field: 'col'},
-                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {field:"id", visible: false},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
@@ -353,11 +349,23 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
 
                 <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - select-rows-enabled</h3>
+                    <dbp-tabulator-table
+                            lang="${this.lang}"
+                            class="tabulator-table-demo"
+                            id="tabulator-table-demo-3"
+                            select-all-enabled
+                            select-rows-enabled
+                            data=${JSON.stringify(data)}
+                            options=${JSON.stringify(options)}></dbp-tabulator-table>
+                </div>
+
+                <div class="container">
                     <h3 class="demo-sub-title">Tabulator table - pagination-enabled</h3>
                     <dbp-tabulator-table
                         lang="${this.lang}"
                         class="tabulator-table-demo"
-                        id="tabulator-table-demo-3"
+                        id="tabulator-table-demo-4"
                         select-all-enabled
                         pagination-enabled="true"
                         pagination-size="5"
@@ -370,7 +378,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-tabulator-table
                         lang="${this.lang}"
                         class="tabulator-table-demo"
-                        id="tabulator-table-demo-4"
+                        id="tabulator-table-demo-5"
                         pagination-size="10"
                         pagination-enabled="true"
                         data=${JSON.stringify(dataLong)}
@@ -386,7 +394,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-tabulator-table
                         lang="${this.lang}"
                         class="tabulator-table-demo"
-                        id="tabulator-table-demo-5"
+                        id="tabulator-table-demo-6"
                         pagination-size="10"
                         pagination-enabled="true"
                         options=${JSON.stringify(options)}></dbp-tabulator-table>
@@ -441,7 +449,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
-                            id="tabulator-table-demo-6"
+                            id="tabulator-table-demo-7"
                             select-all-enabled
                             select-rows-enabled
                             pagination-size="10"
@@ -454,7 +462,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
-                            id="tabulator-table-demo-7"
+                            id="tabulator-table-demo-8"
                             collapse-enabled="true"
                             data=${JSON.stringify(data_collapse)}
                             options=${JSON.stringify(options_collapse)}></dbp-tabulator-table>
@@ -465,7 +473,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
-                            id="tabulator-table-demo-8"
+                            id="tabulator-table-demo-9"
                             data=${JSON.stringify(data)}
                             options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
                 </div>

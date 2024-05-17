@@ -38,6 +38,11 @@ Or you can include the JS files directly via CDN:
 - `options` (optional object, can be set later, default: `{
   layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator table
   - example `<dbp-tabulator-table options="{'myoption': 'a'}"></dbp-tabulator-table>`
+  - you can set a tabulator to automatically generate its own columns by setting the option `autoColumns: true`
+    and you can edit automatically generated columns by using the function ``autoColumnsDefinitions:[
+    {field:"<field-name>", <property>: value},
+    ...
+    ],``
 - `data` (optional array, can be set later or can be updated): set the data for the tabulator table
   - example `<dbp-tabulator-table data="[{a: 123, b: 123}, {a: 234, b: 234}]"></dbp-tabulator-table>`
 - `pagination-enabled` (optional bool, default: `false`): set to true if you want a pagination shown
@@ -46,11 +51,23 @@ Or you can include the JS files directly via CDN:
   - example `<dbp-tabulator-table pagination-size="20"></dbp-tabulator-table>`
 - `select-all-enabled` (optional bool, default: `false`): enables a select all button in the left upper corner
   - example `<dbp-tabulator-table select-all-enabled></dbp-tabulator-table>`
-
+- `select-rows-enabled` (optional bool, default: `false`): allows the user to select rows by clicking on them
+  - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
+- `collapse-enabled` (optional bool, default: `false`): collapse columns that do not fit into the table into a list of column titles and values
+  - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
+  - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger 
+  than 0 (e.g. `responsive:3`) and to set the columns' width so that they will not all fit into the tabulator
+  
+  
 
 ## Important functions
 - `setData(data)`: This function sets data of the tabulator table.
   - `data` is an array of data which should be shown in the table.
+- `deleteRow(row)`: This function deletes the given row from the specified tabulator table.
+  -`row` represents the id of the row we want to delete.
+- `setFilter(listOfFilters)`: This function filters the tabulator table according to the given list of filters.
+- `removeFilter()`: This function removes the filters set on the tabulator.
+- `deleteSelectedRows()`: This function deletes the selected rows (by clicking) of the tabulator.
 
 ## Note
 In best practice `options` is set if the dom is already rendered. 
