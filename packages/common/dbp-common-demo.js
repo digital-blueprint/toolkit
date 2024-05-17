@@ -227,17 +227,17 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                     <div class="control">
                         <p style="text-decoration: underline">
                             Foo
-                            <dbp-icon name="cloudnetwork"></dbp-icon>
+                            <dbp-icon name="cloudnetwork" aria-label="cloudnetwork icon"></dbp-icon>
                             bar
                         </p>
                         <p style="font-size: 2em;">
                             Foo
-                            <dbp-icon name="cloudnetwork"></dbp-icon>
+                            <dbp-icon name="cloudnetwork" aria-label="cloudnetwork icon"></dbp-icon>
                             bar
                         </p>
                         <p style="font-size: 2em; color:var(--dbp-warning);">
                             Foo
-                            <dbp-icon name="cloudnetwork"></dbp-icon>
+                            <dbp-icon name="cloudnetwork" aria-label="cloudnetwork icon"></dbp-icon>
                             bar
                         </p>
                         <span style="background-color: #000">
@@ -245,7 +245,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                         </span>
                         <p style="font-size: 2em; color:var(--dbp-warning);">
                             Foo
-                            <dbp-icon name="information"></dbp-icon>
+                            <dbp-icon name="information" aria-label="Information icon"></dbp-icon>
                             bar
                         </p>
                         <br />
@@ -253,6 +253,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                         ${new Array(100).fill(0).map(
                             (i) => html`
                                 <dbp-icon
+                                    aria-label="A happy face icon"
                                     style="color:var(--dbp-success); width: 50px; height: 50px; border: #000 solid 1px"
                                     name="happy"></dbp-icon>
                             `,
@@ -314,16 +315,19 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                         <br><br>
                         <dbp-icon-button
                             icon-name="checkmark-circle"
+                            aria-label="Click to approve this changes"
                             title="Enter input"></dbp-icon-button>
                         <dbp-icon-button
                             icon-name="chrome"
+                            aria-label="Select your browser"
                             title="Enter input"></dbp-icon-button>
                         <dbp-icon-button
                             icon-name="steam"
+                            aria-label="Play games by pressing this button"
                             title="Enter input"></dbp-icon-button>
                         <dbp-icon-button
                             icon-name="bug"
-                            title="Enter input"></dbp-icon-button>
+                            title="No aria-label defined"></dbp-icon-button>
                     </div>
                 </div>
                 <div class="content">
@@ -353,7 +357,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                                     <div class="demoblock__example"></div>
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">Primary color</span>
-                                        <code class="demoblock__variable">--dbp-primary</code>    
+                                        <code class="demoblock__variable">--dbp-primary</code>
                                     </div>
                                 </div>
                             </li>
@@ -574,7 +578,7 @@ html {
 
                         <dbp-modal id="my-modal-123" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
                             <div slot="content">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                                 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                             </div>
                             <div slot="footer" class="modal-footer">
