@@ -1,5 +1,6 @@
 import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
+import {classMap} from 'lit/directives/class-map.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {TabulatorTable} from './tabulator-table';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -16,6 +17,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         this.selectedFilesCount = 0;
         this.langDir = '';
         this.boundPressEnterAndSubmitSearchHandler = this.pressEnterAndSubmitSearch.bind(this);
+        this.expandedTabulator = true;
     }
 
     static get scopedElements() {
@@ -29,6 +31,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
+            expandedTabulator: {type: Boolean},
         };
     }
 
@@ -125,11 +128,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 //TODO: fix this: after clicking expand all or collapse all you can only collapse or expand single elements respectively only on double click
     expandAll(){
+        this.expandedTabulator = false;
         let table = this._('#tabulator-table-demo-8');
         table.expandAll();
     }
 
     collapseAll(){
+        this.expandedTabulator = true;
         let table = this._('#tabulator-table-demo-8');
         table.collapseAll();
     }
@@ -482,12 +487,18 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
                 <div class="container">
                     <h3 class="demo-sub-title">Tabulator table - Collapsed Lists</h3>
-                    <button class="button is-primary" @click="${() => {
-                        this.expandAll();
-                    }}">Expand All</button>
-                    <button class="button is-primary" @click="${() => {
-                        this.collapseAll();
-                    }}">Collapse All</button>
+                    <div class="edit-selection-buttons ${classMap({hidden: !this.expandedTabulator})}">
+                        <button class="button is-primary" @click="${() => {
+                            this.expandAll();
+                        }}">Expand All</button>
+                    </div>
+
+                    <div class="edit-selection-buttons ${classMap({hidden: this.expandedTabulator})}">
+                        <button class="button is-primary" @click="${() => {
+                            this.collapseAll();
+                        }}">Collapse All</button>
+                    </div>
+                    
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"

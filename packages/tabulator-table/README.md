@@ -53,7 +53,7 @@ Or you can include the JS files directly via CDN:
   - example `<dbp-tabulator-table select-all-enabled></dbp-tabulator-table>`
 - `select-rows-enabled` (optional bool, default: `false`): allows the user to select rows by clicking on them
   - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
-- `collapse-enabled` (optional bool, default: `false`): collapse columns that do not fit into the table into a list of column titles and values
+- `collapse-enabled` (optional bool, default: `false`): add columns that do not fit into the table into a hidden list of column titles and values
   - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
   - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger 
   than 0 (e.g. `responsive:3`) and to set the columns' width so that they will not all fit into the tabulator
@@ -65,9 +65,11 @@ Or you can include the JS files directly via CDN:
   - `data` is an array of data which should be shown in the table.
 - `deleteRow(row)`: This function deletes the given row from the specified tabulator table.
   -`row` represents the id of the row we want to delete.
+- `deleteSelectedRows()`: This function deletes the selected rows (by clicking) of the tabulator.
 - `setFilter(listOfFilters)`: This function filters the tabulator table according to the given list of filters.
 - `removeFilter()`: This function removes the filters set on the tabulator.
-- `deleteSelectedRows()`: This function deletes the selected rows (by clicking) of the tabulator.
+- `expandAll()`: This function expands all the collapsed columns inside hidden lists of the tabulator table
+- `collapseAll()`: This function collapses all the expanded columns inside hidden lists of the tabulator table
 
 ## Note
 In best practice `options` is set if the dom is already rendered. 
