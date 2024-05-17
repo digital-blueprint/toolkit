@@ -259,6 +259,9 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let options = {
             langs: langs,
             layout: 'fitColumns',
+            responsiveLayout: 'collapse',
+            responsiveLayoutCollapseStartOpen: false,
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
                 {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
@@ -309,6 +312,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             layout: 'fitColumns',
             autoColumnsDefinitions:[
                 {field:"id", visible: false}, //add input editor to the name column
+                {title: 'name', field: 'name', width: 350, responsive:3},
+                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
+                {title: 'col', field: 'col'},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
