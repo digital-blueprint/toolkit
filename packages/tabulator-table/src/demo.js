@@ -124,6 +124,11 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.deleteSelectedRows();
     }
 
+    toggleAll(){
+        let to_toggle = this._('.tabulator-responsive-collapse-toggle');
+        to_toggle.addClass('open');
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -134,6 +139,16 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             .demo-sub-title {
                 margin: 60px 0px 20px;
                 font-size: 24px;
+            }
+
+            #searchbar {
+                box-sizing: border-box;
+                border: var(--dbp-border);
+                padding: calc(0.375em - 1px) 10px;
+                border-radius: var(--dbp-border-radius);
+                min-height: 33px;
+                background-color: var(--dbp-background);
+                color: var(--dbp-content);
             }
         `;
     }
@@ -401,16 +416,25 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
 
                 <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - Edit</h3>
+                    <button class="button is-primary" @click="${() => {
+                        this.setTableData2(data_edit);
+                    }}">Add data</button>
                     <div id="extendable-searchbar">
                         <input type="text" id="searchbar" placeholder="Suchen">
-                        <button id="search-button"
+                        <button  class="button is-secondary"
+                                id="search-button"
                                          @click='${() => {
                                              this.filterTable();
                                          }}'>filter table</button>
-                        <button id="remove-filters-button"
+                        <button  class="button is-secondary"
+                                id="remove-filters-button"
                                 @click='${() => {
                                     this.removeFilter();
                                 }}'>remove filters</button>
+                        <button class="button is-primary" @click="${() => {
+                            this.deleteSelectedRows();
+                        }}">Delete Selected Rows</button>
                         <div class="search filter">
                             <label for="column">Select column</label>
 
@@ -439,13 +463,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             
                         </div>
                     </div>
-                    <h3 class="demo-sub-title">Tabulator table - Edit</h3>
-                    <button class="button is-primary" @click="${() => {
-                        this.setTableData2(data_edit);
-                    }}">Add data</button>
-                    <button class="button is-primary" @click="${() => {
-                        this.deleteSelectedRows();
-                    }}">Delete Selected Rows</button>
+                    
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
@@ -459,6 +477,9 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
                 <div class="container">
                     <h3 class="demo-sub-title">Tabulator table - Collapsed Lists</h3>
+                    <button class="button is-primary" @click="${(e) => {
+                        this.toggleAll();
+                    }}">Collapse All</button>
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
