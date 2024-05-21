@@ -21,6 +21,6 @@
     "filter": "Tabelle filtern",
     "remove-filters": "Filtern entfernen",
     "delete-rows": "Asugewählte Zeilen löschen",
-    "select-column": "Spalte auswählen",
-    "select-operator": "Zeichen auswählen"
+    "select-column": "Spalte auswählen:",
+    "select-operator": "Zeichen auswählen:"
 }

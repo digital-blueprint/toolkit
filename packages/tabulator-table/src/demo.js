@@ -160,6 +160,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 background-color: var(--dbp-background);
                 color: var(--dbp-content);
             }
+
+            .select-container {
+                margin-top: 15px;
+            }
         `;
     }
 
@@ -430,7 +434,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <button class="button is-primary" @click="${() => {
                         this.setTableData2(data_edit);
                     }}">${i18n.t('add-data')}</button>
-                    <div id="extendable-searchbar">
+                    <div  class="select-container" id="extendable-searchbar">
                         <input type="text" id="searchbar" placeholder="${i18n.t('search-bar')}">
                         <button  class="button is-secondary"
                                 id="search-button"
@@ -445,7 +449,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         <button class="button is-primary" @click="${() => {
                             this.deleteSelectedRows();
                         }}">${i18n.t('delete-rows')}</button>
-                        <div class="search filter">
+                        <div class="select-container">
                             <label for="column">${i18n.t('select-column')}</label>
 
                             <select name="column" class="select" id="column-select">
@@ -456,7 +460,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 <option value="dob">${i18n.t('columns.dob')}</option>
                             </select>
                         </div>
-                        <div class="search filter">
+                        <div class="select-container">
                             <label for="operator">${i18n.t('select-operator')}</label>
                             <select name="operator" class="select" id="operator-select">
                                 <option value="=">=</option>

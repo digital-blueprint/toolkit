@@ -21,6 +21,6 @@
     "filter": "Filter table",
     "remove-filters": "Remove filters",
     "delete-rows": "Delete selected rows",
-    "select-column": "Select column",
-    "select-operator": "Select operator"
+    "select-column": "Select column:",
+    "select-operator": "Select operator:"
 }
