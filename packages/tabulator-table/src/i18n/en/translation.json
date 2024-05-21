@@ -1,10 +1,26 @@
 {
     "demo-title": "Tabulator Table Demo",
-    "name": "Name",
-    "age": "Age",
-    "col": "Favourite Color",
-    "dob": "Date Of Birth",
-    "edit": "Edit",
-    "delete": "Delete",
-    "license": "Driving License: "
+    "search-bar": "Search",
+    "columns": {
+        "all": "All columns",
+        "name": "Name",
+        "age": "Age",
+        "col": "Favourite Color",
+        "dob": "Date Of Birth",
+        "edit": "Edit",
+        "delete": "Delete",
+        "license": "Driving License: ",
+        "contains": "contains",
+        "keywords": "keywords",
+        "starts": "starts with",
+        "ends": "ends with"
+    },
+    "add-data": "Add data",
+    "expand-all": "Expand all",
+    "collapse-all": "Collapse all",
+    "filter": "Filter table",
+    "remove-filters": "Remove filters",
+    "delete-rows": "Delete selected rows",
+    "select-column": "Select column",
+    "select-operator": "Select operator"
 }

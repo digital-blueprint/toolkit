@@ -96,7 +96,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         column = column.value;
 
         let listOfFilters = [];
-        let table = this._('#tabulator-table-demo-6');
+        let table = this._('#tabulator-table-demo-7');
         if(column !== 'all')
         {
             let filter_object = {field: column, type: operator, value: filter};
@@ -221,18 +221,18 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let langs = {
             'en': {
                 columns: {
-                    'name': i18n.t('name', {lng: 'en'}),
-                    'age': i18n.t('age', {lng: 'en'}),
-                    'col': i18n.t('col', {lng: 'en'}),
-                    'dob': i18n.t('dob', {lng: 'en'}),
+                    'name': i18n.t('columns.name', {lng: 'en'}),
+                    'age': i18n.t('columns.age', {lng: 'en'}),
+                    'col': i18n.t('columns.col', {lng: 'en'}),
+                    'dob': i18n.t('columns.dob', {lng: 'en'}),
                 },
             },
             'de': {
                 columns: {
-                    'name': i18n.t('name', {lng: 'de'}),
-                    'age': i18n.t('age', {lng: 'de'}),
-                    'col': i18n.t('col', {lng: 'de'}),
-                    'dob': i18n.t('dob', {lng: 'de'}),
+                    'name': i18n.t('columns.name', {lng: 'de'}),
+                    'age': i18n.t('columns.age', {lng: 'de'}),
+                    'col': i18n.t('columns.col', {lng: 'de'}),
+                    'dob': i18n.t('columns.dob', {lng: 'de'}),
                 },
             },
         };
@@ -240,20 +240,20 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let langs_edit = {
             'en': {
                 columns: {
-                    'name': i18n.t('name', {lng: 'en'}),
-                    'age': i18n.t('age', {lng: 'en'}),
-                    'col': i18n.t('col', {lng: 'en'}),
-                    'dob': i18n.t('dob', {lng: 'en'}),
-                    'delete': i18n.t('delete', {lng: 'en'}),
+                    'name': i18n.t('columns.name', {lng: 'en'}),
+                    'age': i18n.t('columns.age', {lng: 'en'}),
+                    'col': i18n.t('columns.col', {lng: 'en'}),
+                    'dob': i18n.t('columns.dob', {lng: 'en'}),
+                    'delete': i18n.t('columns.delete', {lng: 'en'}),
                 },
             },
             'de': {
                 columns: {
-                    'name': i18n.t('name', {lng: 'de'}),
-                    'age': i18n.t('age', {lng: 'de'}),
-                    'col': i18n.t('col', {lng: 'de'}),
-                    'dob': i18n.t('dob', {lng: 'de'}),
-                    'delete': i18n.t('delete', {lng: 'de'}),
+                    'name': i18n.t('columns.name', {lng: 'de'}),
+                    'age': i18n.t('columns.age', {lng: 'de'}),
+                    'col': i18n.t('columns.col', {lng: 'de'}),
+                    'dob': i18n.t('columns.dob', {lng: 'de'}),
+                    'delete': i18n.t('columns.delete', {lng: 'de'}),
                 },
             },
         };
@@ -261,22 +261,22 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let langs_collapse = {
             'en': {
                 columns: {
-                    'name': i18n.t('name', {lng: 'en'}),
-                    'age': i18n.t('age', {lng: 'en'}),
-                    'col': i18n.t('col', {lng: 'en'}),
-                    'dob': i18n.t('dob', {lng: 'en'}),
-                    'delete': i18n.t('delete', {lng: 'en'}),
-                    'license': i18n.t('license', {lng: 'en'}),
+                    'name': i18n.t('columns.name', {lng: 'en'}),
+                    'age': i18n.t('columns.age', {lng: 'en'}),
+                    'col': i18n.t('columns.col', {lng: 'en'}),
+                    'dob': i18n.t('columns.dob', {lng: 'en'}),
+                    'delete': i18n.t('columns.delete', {lng: 'en'}),
+                    'license': i18n.t('columns.license', {lng: 'en'}),
                 },
             },
             'de': {
                 columns: {
-                    'name': i18n.t('name', {lng: 'de'}),
-                    'age': i18n.t('age', {lng: 'de'}),
-                    'col': i18n.t('col', {lng: 'de'}),
-                    'dob': i18n.t('dob', {lng: 'de'}),
-                    'delete': i18n.t('delete', {lng: 'de'}),
-                    'license': i18n.t('license', {lng: 'de'}),
+                    'name': i18n.t('columns.name', {lng: 'de'}),
+                    'age': i18n.t('columns.age', {lng: 'de'}),
+                    'col': i18n.t('columns.col', {lng: 'de'}),
+                    'dob': i18n.t('columns.dob', {lng: 'de'}),
+                    'delete': i18n.t('columns.delete', {lng: 'de'}),
+                    'license': i18n.t('columns.license', {lng: 'de'}),
                 },
             },
         };
@@ -415,7 +415,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <button class="button is-primary" @click="${(e) => {
                         e.target.disabled = true;
                         this.setTableData(dataLong);
-                    }}">Add data</button>
+                    }}">${i18n.t('add-data')}</button>
                     <dbp-tabulator-table
                         lang="${this.lang}"
                         class="tabulator-table-demo"
@@ -429,46 +429,46 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <h3 class="demo-sub-title">Tabulator table - Edit</h3>
                     <button class="button is-primary" @click="${() => {
                         this.setTableData2(data_edit);
-                    }}">Add data</button>
+                    }}">${i18n.t('add-data')}</button>
                     <div id="extendable-searchbar">
-                        <input type="text" id="searchbar" placeholder="Suchen">
+                        <input type="text" id="searchbar" placeholder="${i18n.t('search-bar')}">
                         <button  class="button is-secondary"
                                 id="search-button"
                                          @click='${() => {
                                              this.filterTable();
-                                         }}'>filter table</button>
+                                         }}'>${i18n.t('filter')}</button>
                         <button  class="button is-secondary"
                                 id="remove-filters-button"
                                 @click='${() => {
                                     this.removeFilter();
-                                }}'>remove filters</button>
+                                }}'>${i18n.t('remove-filters')}</button>
                         <button class="button is-primary" @click="${() => {
                             this.deleteSelectedRows();
-                        }}">Delete Selected Rows</button>
+                        }}">${i18n.t('delete-rows')}</button>
                         <div class="search filter">
-                            <label for="column">Select column</label>
+                            <label for="column">${i18n.t('select-column')}</label>
 
-                            <select name="column" id="column-select">
-                                <option value="all">all columns</option>
-                                <option value="name">name</option>
-                                <option value="age">age</option>
-                                <option value="col">color</option>
-                                <option value="dob">date of birth</option>
+                            <select name="column" class="select" id="column-select">
+                                <option value="all">${i18n.t('columns.all')}</option>
+                                <option value="name">${i18n.t('columns.name')}</option>
+                                <option value="age">${i18n.t('columns.age')}</option>
+                                <option value="col">${i18n.t('columns.col')}</option>
+                                <option value="dob">${i18n.t('columns.dob')}</option>
                             </select>
                         </div>
                         <div class="search filter">
-                            <label for="operator">Select operator</label>
-                            <select name="operator" id="operator-select">
+                            <label for="operator">${i18n.t('select-operator')}</label>
+                            <select name="operator" class="select" id="operator-select">
                                 <option value="=">=</option>
                                 <option value="!=">!=</option>
                                 <option value="<"><</option>
                                 <option value="<="><=</option>
                                 <option value=">">></option>
                                 <option value=">=">>=</option>
-                                <option value="like">contains</option>
-                                <option value="keywords">keywords</option>
-                                <option value="starts">starts with</option>
-                                <option value="ends">ends with</option>
+                                <option value="like">${i18n.t('columns.contains')}</option>
+                                <option value="keywords">${i18n.t('columns.keywords')}</option>
+                                <option value="starts">${i18n.t('columns.starts')}</option>
+                                <option value="ends">${i18n.t('columns.ends')}</option>
                             </select>
                             
                         </div>
@@ -490,13 +490,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <div class="edit-selection-buttons ${classMap({hidden: !this.expandedTabulator})}">
                         <button class="button is-primary" @click="${() => {
                             this.expandAll();
-                        }}">Expand All</button>
+                        }}">${i18n.t('expand-all')}</button>
                     </div>
 
                     <div class="edit-selection-buttons ${classMap({hidden: this.expandedTabulator})}">
                         <button class="button is-primary" @click="${() => {
                             this.collapseAll();
-                        }}">Collapse All</button>
+                        }}">${i18n.t('collapse-all')}</button>
                     </div>
                     
                     <dbp-tabulator-table

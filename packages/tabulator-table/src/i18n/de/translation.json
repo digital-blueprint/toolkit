@@ -1,10 +1,26 @@
 {
     "demo-title": "Tabulator Table Demo",
-    "name": "Name",
-    "age": "Alter",
-    "col": "Lieblingsfarbe",
-    "dob": "Geburtsdatum",
-    "edit": "Bearbeiten",
-    "delete": "Löschen",
-    "license": "Führerschein: "
+    "search-bar": "Suchen",
+    "columns": {
+        "all": "Alle spalten",
+        "name": "Name",
+        "age": "Alter",
+        "col": "Lieblingsfarbe",
+        "dob": "Geburtsdatum",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "license": "Führerschein: ",
+        "contains": "enthält",
+        "keywords": "Stichwörter",
+        "starts": "startet mit",
+        "ends": "endet mit"
+    },
+    "add-data": "Daten Hinzufügen",
+    "expand-all": "Alles aufklappen",
+    "collapse-all": "Alles zuklappen",
+    "filter": "Tabelle filtern",
+    "remove-filters": "Filtern entfernen",
+    "delete-rows": "Asugewählte Zeilen löschen",
+    "select-column": "Spalte auswählen",
+    "select-operator": "Zeichen auswählen"
 }
