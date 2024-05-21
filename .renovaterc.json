@@ -23,7 +23,7 @@
     },
     {
       "matchPackageNames": ["pdfjs-dist"],
-      "allowedVersions": "<3"
+      "allowedVersions": "<3.1"
     },
     {
       "matchPackageNames": ["@open-wc/scoped-elements"],
