@@ -1,5 +1,6 @@
 import {html, LitElement, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {MiniSpinner} from './mini-spinner.js';
 import * as commonStyles from '../styles.js';
 
@@ -185,12 +186,14 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
         this.iconName = '';
         this.disabled = false;
         this.loading = false;
+        this.ariaLabel = undefined;
     }
 
     static get properties() {
         return {
             ...super.properties,
             iconName: {type: String, attribute: 'icon-name'},
+            ariaLabel: {type: String, attribute: 'aria-label', reflect: true},
             disabled: {type: Boolean, reflect: true},
             loading: {type: Boolean},
         };
@@ -213,9 +216,10 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
             ${commonStyles.getButtonCSS()}
 
             :host{
+                display: inline-block;
                 font-size: 1.2rem;
             }
-            
+
             .spinner {
                 padding-left: 0.5em;
                 min-width: 16px;
@@ -231,11 +235,6 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
-
-            :host {
-                display: inline-block;
-            }
-            
 
             .button {
                 width: 100%;
@@ -256,16 +255,17 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <button
-                class="button is-icon loading-container ${!this.loading
-            ? 'is-not-loading'
-            : ''}"
-                ?disabled="${this.disabled}">
-                <slot><dbp-icon 
+                class="button is-icon loading-container ${!this.loading ? 'is-not-loading': ''}"
+                ?disabled="${this.disabled}"
+                aria-label="${ifDefined(this.ariaLabel ? this.ariaLabel : undefined)}">
+                <slot><dbp-icon
                         class="dbp-button-icon"
                         name="${this.iconName}"
+                        aria-hidden="true"
                         style="display: ${this.loading ? 'none' : 'inline'}"></dbp-icon></slot>
                 <dbp-mini-spinner
                     class="spinner"
+                    aria-hidden="true"
                     style="display: ${this.loading ? 'inline' : 'none'}"></dbp-mini-spinner>
             </button>
         `;

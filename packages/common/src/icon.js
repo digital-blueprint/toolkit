@@ -1,4 +1,5 @@
 import {html, LitElement, css} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import * as commonUtils from '../utils.js';
 import {name as pkgName} from './../package.json';
 
@@ -31,11 +32,13 @@ export class Icon extends LitElement {
     constructor() {
         super();
         this.name = 'bolt';
+        this.ariaLabel = undefined;
     }
 
     static get properties() {
         return {
             name: {type: String},
+            ariaLabel: {type: String, attribute: 'aria-label', reflect: true},
         };
     }
 
@@ -62,7 +65,6 @@ export class Icon extends LitElement {
                 -webkit-mask-repeat: no-repeat;
                 -webkit-mask-position: center;
                 -webkit-mask-size: 100% 100%;
-                
             }
         `;
     }
@@ -78,7 +80,7 @@ export class Icon extends LitElement {
                     mask-image: var(--dbp-override-icon-${iconPart}, url(${iconURL}));
                 }
             </style>
-            <div id="svg"></div>
+            <div id="svg" aria-label="${ifDefined(this.ariaLabel ? this.ariaLabel : undefined)}"></div>
         `;
     }
 }
