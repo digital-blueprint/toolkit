@@ -253,7 +253,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     expandAll() {
         if(this.expanded === false) {
+
             this.tabulatorTable.getRows('visible').forEach((row) => {
+                let config = row._row.modules.responsiveLayout;
+                config.open = true;
                 const item = row.getElement().lastChild;
 
                 if (item.classList.contains('tabulator-responsive-collapse')) {
@@ -279,6 +282,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     collapseAll() {
         if(this.expanded === true) {
             this.tabulatorTable.getRows('visible').forEach((row) => {
+                let config = row._row.modules.responsiveLayout;
+                config.open = false;
                 const item = row.getElement().lastChild;
 
                 if (item.classList.contains('tabulator-responsive-collapse')) {

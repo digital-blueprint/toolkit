@@ -126,7 +126,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let table = this._('#tabulator-table-demo-7');
         table.deleteSelectedRows();
     }
-//TODO: fix this: after clicking expand all or collapse all you can only collapse or expand single elements respectively only on double click
+
     expandAll(){
         this.expandedTabulator = false;
         let table = this._('#tabulator-table-demo-8');
