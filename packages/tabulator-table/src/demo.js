@@ -537,11 +537,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
                 </div>
                 
-                <div class="content">
-                    <dbp-icon-button
-                            icon-name="checkmark-circle"
-                            title="Enter input"></dbp-icon-button>
-                </div>
             </section>
         `;
     }
