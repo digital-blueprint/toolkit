@@ -1571,7 +1571,12 @@ export function getTabulatorStyles() {
             border-bottom: none;
             border-top: 6px solid var(--dbp-accent);
             color: var(--dbp-accent);
-        }        
+        }
+
+        .tabulator-cell.tabulator-row-header.tabulator-row-handle{
+            background-color: #ffffff;
+            border-style: none;
+        }
         
         .tabulator-row, .tabulator-row.tabulator-row-even, .tabulator-row.tabulator-row-odd{
             padding-top: 0px;
