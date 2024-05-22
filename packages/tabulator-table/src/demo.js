@@ -6,6 +6,18 @@ import {TabulatorTable} from './tabulator-table';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {
+    getIconCSS,
+    Icon,
+    MiniSpinner,
+    Button,
+    IconButton,
+    LoadingButton,
+    Spinner,
+    InlineNotification,
+    Translated,
+    Translation,
+} from '@dbp-toolkit/common/';
 
 export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -23,6 +35,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     static get scopedElements() {
         return {
             'dbp-tabulator-table': TabulatorTable,
+            'dbp-icon-button': IconButton,
         };
     }
 
@@ -210,11 +223,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
         for (let row = 1; row < 5; row++)
         {
-            let btn_delete = this.createScopedElement('button');
+            //let btn_delete = this.createScopedElement('button');
+            let btn_delete = this.createScopedElement('dbp-icon-button');
+            btn_delete.iconName = 'trash';
             btn_delete.addEventListener("click", (event) => {
                 this.deleteTableRow(row);
             });
-            btn_delete.textContent = 'delete';
+
             let current_name = 'Oli Bob ' + row;
 
             let element = {id: row, name: current_name, age: start_age + row, col: 'red', dob: '14/05/1982', delete: btn_delete};
@@ -520,6 +535,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             id="tabulator-table-demo-9"
                             data=${JSON.stringify(data)}
                             options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
+                </div>
+                
+                <div class="content">
+                    <dbp-icon-button
+                            icon-name="checkmark-circle"
+                            title="Enter input"></dbp-icon-button>
                 </div>
             </section>
         `;
