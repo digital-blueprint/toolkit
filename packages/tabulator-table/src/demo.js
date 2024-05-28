@@ -98,6 +98,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.deleteRow(row);
     }
 
+    deleteRow(row) {
+        //let table = this._('#tabulator-table-demo-7');
+        //table.rowClickFunction(e, row);
+        let table = this._('#tabulator-table-demo-7');
+        table.deleteRow(row);
+    }
+
     filterTable(){
         let filter = this._('#searchbar');
         console.log(filter.value);
@@ -226,9 +233,11 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             //let btn_delete = this.createScopedElement('button');
             let btn_delete = this.createScopedElement('dbp-icon-button');
             btn_delete.iconName = 'trash';
-            btn_delete.addEventListener("click", (event) => {
-                this.deleteTableRow(row);
+            btn_delete.addEventListener("click", () => {
+                this.deleteRow(row);
             });
+            btn_delete.setAttribute('id', row.toString());
+            console.log("row " + row);
 
             let current_name = 'Oli Bob ' + row;
 
@@ -327,7 +336,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
                 {title: 'col', field: 'col', responsive: 0},
                 {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
-                {title: 'delete', field: 'delete', formatter: 'html'},
+                {title: 'delete', field: 'delete', formatter:"html", width:40, align:"center"},
             ]
         };
 
@@ -498,7 +507,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-7"
                             select-all-enabled
-                            select-rows-enabled
                             pagination-size="10"
                             pagination-enabled="true"
                             options=${JSON.stringify(options_edit)}></dbp-tabulator-table>

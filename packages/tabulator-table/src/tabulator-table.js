@@ -189,6 +189,16 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this._('#select_all').checked = check;
     }
 
+    deleteRow(row) {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.deselectRow(row);
+        const that = this;
+        setTimeout(function () {
+            that.tabulatorTable.redraw();
+        }, 0);
+        this.tabulatorTable.deleteRow(row);
+    }
+
     /**
      * Select or deselect all files from tabulator table
      *
@@ -220,11 +230,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
         this.data = data;
         this.tabulatorTable.setData(this.data);
-    }
-
-    deleteRow(row) {
-        if (!this.tabulatorTable) return;
-        this.tabulatorTable.deleteRow(row);
     }
 
     setFilter(listOfFilters) {
@@ -277,6 +282,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         }
 
 
+    }
+
+    cellClick(e, cell) {
+        console.log("cell click");
     }
 
     collapseAll() {
