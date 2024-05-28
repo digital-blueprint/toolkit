@@ -191,11 +191,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     deleteRow(row) {
         if (!this.tabulatorTable) return;
-        this.tabulatorTable.deselectRow(row);
-        const that = this;
-        setTimeout(function () {
-            that.tabulatorTable.redraw();
-        }, 0);
         this.tabulatorTable.deleteRow(row);
     }
 
