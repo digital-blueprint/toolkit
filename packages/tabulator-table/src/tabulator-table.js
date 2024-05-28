@@ -189,7 +189,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this._('#select_all').checked = check;
     }
 
-    deleteRow(row) {
+    deleteRow(e, row) {
+        e.stopPropagation();
         if (!this.tabulatorTable) return;
         this.tabulatorTable.deleteRow(row);
     }
