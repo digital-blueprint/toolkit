@@ -74,7 +74,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
     pressEnterAndSubmitSearch(event) {
         if (event.keyCode === 13) {
-            console.log('enter detected');
             const activeElement = this.shadowRoot.activeElement;
             if (activeElement && activeElement.id === 'searchbar') {
                 event.preventDefault();
@@ -108,7 +107,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
     filterTable(){
         let filter = this._('#searchbar');
-        console.log(filter.value);
         let operator = this._('#operator-select');
         let column = this._('#column-select');
 
@@ -126,14 +124,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
         else
         {
-            console.log('all columns');
             const columns = ['name', 'age', 'col', 'dob'];
 
             for (let col of columns) {
                 let filter_object = {field: col, type: operator, value: filter};
                 listOfFilters.push(filter_object);
             }
-            console.log([listOfFilters]);
             table.setFilter([listOfFilters]);
         }
     }
@@ -238,7 +234,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 this.deleteRow(e, row);
             });
             btn_delete.setAttribute('id', row.toString());
-            console.log("row " + row);
 
             let current_name = 'Oli Bob ' + row;
 

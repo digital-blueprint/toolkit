@@ -279,10 +279,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     }
 
-    cellClick(e, cell) {
-        console.log("cell click");
-    }
-
     collapseAll() {
         if(this.expanded === true) {
             this.tabulatorTable.getRows('visible').forEach((row) => {
