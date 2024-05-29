@@ -6,6 +6,7 @@ import {TabulatorTable} from './tabulator-table';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {IconButton} from '@dbp-toolkit/common';
 
 export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -23,6 +24,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     static get scopedElements() {
         return {
             'dbp-tabulator-table': TabulatorTable,
+            'dbp-icon-button': IconButton,
         };
     }
 
@@ -89,6 +91,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         //table.rowClickFunction(e, row);
 
         let table = this._('#tabulator-table-demo-7');
+        e.stopPropagation();
         table.deleteRow(e, row);
     }
 

@@ -190,7 +190,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     deleteRow(e, row) {
-        e.stopPropagation();
         if (!this.tabulatorTable) return;
         this.tabulatorTable.deleteRow(row);
     }
@@ -249,7 +248,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     deleteSelectedRows() {
         if (!this.tabulatorTable) return;
         this.getSelectedRows();
-        this.deleteRow(this.selectedRows);
+        this.tabulatorTable.deleteRow(this.selectedRows);
     }
 
     expandAll() {
