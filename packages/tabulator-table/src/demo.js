@@ -213,9 +213,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             {id: 5, name: 'Margret Marmajuke', age: '16', col: 'yellow', dob: '31/01/1999', license: 'A'},
         ];
 
-        let start_age = 12;
+        const names = ['Oli Bob', 'Mary May', 'Christine Lobowski', 'Brendon Philips', 'Margret Marmajuke'];
+        const ages = ['12', '1', '42', '95', '16'];
+        const colors = ['red', 'blue', 'green', 'orange', 'yellow'];
+        const dobs = ['', '14/05/1982', '22/05/1982', '01/08/1980', '31/01/1999'];
 
-        for (let row = 1; row < 5; row++)
+        for (let row = 1; row < 6; row++)
         {
             //let btn_delete = this.createScopedElement('button');
             let btn_delete = this.createScopedElement('dbp-icon-button');
@@ -225,9 +228,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             });
             btn_delete.setAttribute('id', row.toString());
 
-            let current_name = 'Oli Bob ' + row;
 
-            let element = {id: row, name: current_name, age: start_age + row, col: 'red', dob: '14/05/1982', delete: btn_delete};
+            let element = {id: row, name: names[row-1], age: ages[row-1], col: colors[row-1], dob: dobs[row-1], delete: btn_delete};
             data_edit.push(element);
         }
 

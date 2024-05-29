@@ -249,6 +249,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         this.getSelectedRows();
         this.tabulatorTable.deleteRow(this.selectedRows);
+        if (this.selectAllEnabled) {
+            this.tabulatorTable.updateColumnDefinition('empty', {title:'<label id="select_all_wrapper" class="button-container select-all-icon">' +
+                    '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
+                    '<span class="checkmark" id="select_all_checkmark"></span>' +
+                    '</label>',});
+        }
     }
 
     expandAll() {
