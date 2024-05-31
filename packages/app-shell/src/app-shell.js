@@ -445,6 +445,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 }
             }
             this.updatePageTitle();
+            this.updatePageMetaDescription();
             this.subtitle = this.activeMetaDataText('short_name');
             this.description = this.activeMetaDataText('description');
         };
@@ -485,9 +486,19 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         if (this.activeView === 'welcome') {
             title = `${this.topicMetaDataText('short_name')}`;
         } else {
-            title = `${this.activeMetaDataText('short_name')} - ${this.topicMetaDataText('short_name')}`;
+            title = `${this.activeMetaDataText('short_name')} | ${this.topicMetaDataText('short_name')}`;
         }
         document.title = title;
+    }
+
+    updatePageMetaDescription() {
+        let metaDesc;
+        if (this.activeView === 'welcome') {
+            metaDesc = `${this.topicMetaDataText('description')}`;
+        } else {
+            metaDesc = `${this.activeMetaDataText('description')}`;
+        }
+        document.querySelector('meta[name="description"]').setAttribute("content", metaDesc);
     }
 
     toggleMenu() {
@@ -968,6 +979,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         });
 
         this.updatePageTitle();
+        this.updatePageMetaDescription();
 
         // build the menu
         let menuTemplates = [];
@@ -1317,10 +1329,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                                                 <rect class="cls-3" x="133.38" y="102.72" width="197.51" height="197.51" transform="translate(-74.48 223.16) rotate(-45)"/>
                                             </svg>
                                         </div>
-                                        
+
                                     </dbp-themed>
-                                </slot>    
-                                    
+                                </slot>
+
                             </div>
                         </slot>
                     </header>
