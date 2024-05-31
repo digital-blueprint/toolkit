@@ -498,7 +498,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         } else {
             metaDesc = `${this.activeMetaDataText('description')}`;
         }
-        document.querySelector('meta[name="description"]').setAttribute("content", metaDesc);
+        const metaDescElement = document.querySelector('meta[name="description"]');
+        if (metaDescElement) {
+            metaDescElement.setAttribute("content", metaDesc);
+        }
     }
 
     toggleMenu() {
