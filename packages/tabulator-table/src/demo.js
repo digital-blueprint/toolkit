@@ -76,7 +76,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.setData(data);
     }
 
-    setTableData2(data) {
+    setTableDataForEdit(data) {
         let table = this._('#tabulator-table-demo-7');
         table.setData(data);
     }
@@ -444,7 +444,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 <div class="container">
                     <h3 class="demo-sub-title">Tabulator table - Edit</h3>
                     <button class="button is-primary" @click="${() => {
-                        this.setTableData2(data_edit);
+                        this.setTableDataForEdit(data_edit);
                     }}">${i18n.t('add-data')}</button>
                     <div  class="select-container" id="extendable-searchbar">
                         <input type="text" id="searchbar" placeholder="${i18n.t('search-bar')}">
