@@ -535,7 +535,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
                 this.isPickerActive = true;
                 this.loadDirectory(this.directoryPath);
-            } catch (e) {
+            } catch {
                 localStorage.removeItem('nextcloud-webdav-username-' + publicId);
                 localStorage.removeItem('nextcloud-webdav-password-' + publicId);
                 localStorage.removeItem('nextcloud-webdav-url-' + publicId);

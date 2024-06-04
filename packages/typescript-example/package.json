@@ -13,22 +13,21 @@
         "access": "public"
     },
     "devDependencies": {
-        "chai": "^5.0.0",
         "@rollup/plugin-commonjs": "^25.0.0",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
         "@rollup/plugin-terser": "^0.4.0",
         "@types/mocha": "^10.0.0",
-        "@typescript-eslint/eslint-plugin": "^7.0.0",
-        "@typescript-eslint/parser": "^7.0.0",
-        "eslint": "^8.0.0",
+        "chai": "^5.0.0",
+        "eslint": "^9.1.0",
+        "glob": "^10.0.0",
+        "globals": "^15.3.0",
         "karma": "^6.0.0",
         "karma-chrome-launcher": "^3.0.0",
         "karma-firefox-launcher": "^2.1.0",
         "karma-mocha": "^2.0.1",
         "karma-source-map-support": "^1.4.0",
         "mocha": "^10.0.0",
-        "glob": "^10.0.0",
         "playwright": "^1.34.0",
         "playwright-core": "^1.20.2",
         "prettier": "^3.0.0",
@@ -39,7 +38,8 @@
         "rollup-plugin-typescript2": "^0.36.0",
         "ts-lit-plugin": "^2.0.0",
         "tslib": "^2.0.3",
-        "typescript": "^5.0.0"
+        "typescript": "^5.0.0",
+        "typescript-eslint": "^7.12.0"
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.5",
@@ -54,6 +54,6 @@
         "build": "rollup --bundleConfigAsCjs -c",
         "watch": "rollup --bundleConfigAsCjs -c --watch",
         "test": "rollup --bundleConfigAsCjs -c --environment BUILD:test && karma start --singleRun",
-        "lint": "eslint . --ext .js,.ts"
+        "lint": "eslint ."
     }
 }

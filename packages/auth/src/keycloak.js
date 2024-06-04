@@ -19,7 +19,7 @@ const promiseTimeout = function (ms, promise) {
 const ensureURL = function (urlOrPath) {
     try {
         return new URL(urlOrPath).href;
-    } catch (e) {
+    } catch {
         return new URL(urlOrPath, window.location.href).href;
     }
 };

@@ -434,7 +434,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             await response.json().then((json) => {
                 data.json = json;
             });
-        } catch (e) {
+        } catch {
             //
         }
 

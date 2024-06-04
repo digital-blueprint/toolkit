@@ -11,5 +11,8 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
+  },
+  "devDependencies": {
+    "globals": "^15.3.0"
   }
 }

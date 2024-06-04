@@ -41,7 +41,7 @@ export class QrCodeScannerEngine {
             res.data = tmp.data;
             res.cornerPoints = tmp.cornerPoints;
             return res;
-        } catch (e) {
+        } catch {
             return null;
         }
     }
