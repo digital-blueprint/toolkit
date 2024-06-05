@@ -1,6 +1,7 @@
 {
     "demo-title": "Tabulator Table Demo",
     "search-bar": "Suchen",
+    "new-age": "neue Alter",
     "columns": {
         "all": "Alle spalten",
         "name": "Name",
@@ -22,5 +23,6 @@
     "remove-filters": "Filtern entfernen",
     "delete-rows": "Asugewählte Zeilen löschen",
     "select-column": "Spalte auswählen:",
-    "select-operator": "Zeichen auswählen:"
+    "select-operator": "Zeichen auswählen:",
+    "update-rows": "Zeilen aktualisieren"
 }

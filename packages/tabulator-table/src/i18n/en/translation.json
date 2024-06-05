@@ -1,6 +1,7 @@
 {
     "demo-title": "Tabulator Table Demo",
     "search-bar": "Search",
+    "new-age": "new age",
     "columns": {
         "all": "All columns",
         "name": "Name",
@@ -22,5 +23,6 @@
     "remove-filters": "Remove filters",
     "delete-rows": "Delete selected rows",
     "select-column": "Select column:",
-    "select-operator": "Select operator:"
+    "select-operator": "Select operator:",
+    "update-rows": "Update rows"
 }

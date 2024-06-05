@@ -189,7 +189,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this._('#select_all').checked = check;
     }
 
-    deleteRow(e, row) {
+    deleteRow(row) {
         if (!this.tabulatorTable) return;
         this.tabulatorTable.deleteRow(row);
     }
@@ -255,6 +255,17 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     '<span class="checkmark" id="select_all_checkmark"></span>' +
                     '</label>',});
         }
+    }
+
+    getRows() {
+        if (!this.tabulatorTable) return;
+        let rows = this.tabulatorTable.getRows();
+        return rows;
+    }
+
+    updateRow(row, newData) {
+        if (!this.tabulatorTable) return;
+        row.update(newData);
     }
 
     expandAll() {

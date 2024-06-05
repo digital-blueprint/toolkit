@@ -87,12 +87,36 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     deleteRow(e, row) {
-        //let table = this._('#tabulator-table-demo-7');
-        //table.rowClickFunction(e, row);
-
         let table = this._('#tabulator-table-demo-7');
         e.stopPropagation();
-        table.deleteRow(e, row);
+        table.deleteRow(row);
+    }
+
+    updateRows() {
+        let table = this._('#tabulator-table-demo-9');
+        let newData = this._('#age-input');
+
+
+        //const regex = /[^A-Za-z0-9]/;
+
+        newData = {age: newData.value};
+
+        /*if (regex.test(newData)) {
+            console.log(
+                "String contains special characters"
+            );
+            return;
+        }
+
+
+        else
+            console.log(
+                "String does not contain any special character."
+            );*/
+        let rows = table.getRows();
+
+        for (let row of rows)
+            table.updateRow(row, newData);
     }
 
     filterTable(){
@@ -213,6 +237,25 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             {id: 5, name: 'Margret Marmajuke', age: '16', col: 'yellow', dob: '31/01/1999', license: 'A'},
         ];
 
+        let updatable_table_data = [
+            {id: 1, name: 'Oli Bob', age: '12'},
+            {id: 2, name: 'Mary May', age: '1'},
+            {id: 3, name: 'Christine Lobowski', age: '42'},
+            {id: 4, name: 'Brendon Philips', age: '95'},
+            {id: 5, name: 'Margret Marmajuke', age: '16'},
+            {id: 6, name: 'Emil Barron', age: '24'},
+            {id: 7, name: 'Jewell Price', age: '47'},
+            {id: 8, name: 'Josiah Haley', age: '52'},
+            {id: 9, name: 'Minerva Combs', age: '103'},
+            {id: 10, name: 'Eileen Burnett', age: '14'},
+            {id: 11, name: 'Alvin Guerrero', age: '32'},
+            {id: 12, name: 'Del Gentry', age: '41'},
+            {id: 13, name: 'Christine Lobowski', age: '72'},
+            {id: 14, name: 'Sheldon Hopkins', age: ''},
+            {id: 15, name: 'Mason Peters', age: '18'},
+            {id: 16, name: 'Rigoberto Fuller', age: '57'},
+        ];
+
         const names = ['Oli Bob', 'Mary May', 'Christine Lobowski', 'Brendon Philips', 'Margret Marmajuke'];
         const ages = ['12', '1', '42', '95', '16'];
         const colors = ['red', 'blue', 'green', 'orange', 'yellow'];
@@ -270,6 +313,21 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     'col': i18n.t('columns.col', {lng: 'de'}),
                     'dob': i18n.t('columns.dob', {lng: 'de'}),
                     'delete': i18n.t('columns.delete', {lng: 'de'}),
+                },
+            },
+        };
+
+        let langs_update = {
+            'en': {
+                columns: {
+                    'name': i18n.t('columns.name', {lng: 'en'}),
+                    'age': i18n.t('columns.age', {lng: 'en'}),
+                },
+            },
+            'de': {
+                columns: {
+                    'name': i18n.t('columns.name', {lng: 'de'}),
+                    'age': i18n.t('columns.age', {lng: 'de'}),
                 },
             },
         };
@@ -341,6 +399,20 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {title: 'dob', field: 'dob', width: 250, sorter: 'date', hozAlign: 'center'},
                 {title: 'license', field: 'license', width: 250, responsive:3}
             ],
+            columnDefaults: {
+                vertAlign: 'middle',
+                hozAlign: 'left',
+                resizable: false,
+            },
+        };
+
+        let updatable_table_columns = {
+            langs: langs_update,
+            layout:"fitColumns",
+            columns: [
+                {title: 'name', field: 'name', width: 150},
+                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
+                ],
             columnDefaults: {
                 vertAlign: 'middle',
                 hozAlign: 'left',
@@ -519,9 +591,25 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             lang="${this.lang}"
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-8"
-                            collapse-enabled="true"
+                            collapse-enabled
                             data=${JSON.stringify(data_collapse)}
                             options=${JSON.stringify(options_collapse)}></dbp-tabulator-table>
+                </div>
+
+                <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - Update rows</h3>
+                    <input type="text" id="age-input" placeholder=${i18n.t('new-age')}>
+                    <button  class="button is-primary"
+                             id="update-button"
+                             @click='${() => {
+                                 this.updateRows();
+                             }}'>${i18n.t('update-rows')}</button>
+                    <dbp-tabulator-table
+                            lang="${this.lang}"
+                            class="tabulator-table-demo"
+                            id="tabulator-table-demo-9"
+                            data=${JSON.stringify(updatable_table_data)}
+                            options=${JSON.stringify(updatable_table_columns)}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -529,7 +617,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
-                            id="tabulator-table-demo-9"
+                            id="tabulator-table-demo-10"
                             data=${JSON.stringify(data)}
                             options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
                 </div>

@@ -54,7 +54,7 @@ Or you can include the JS files directly via CDN:
 - `select-rows-enabled` (optional bool, default: `false`): allows the user to select rows by clicking on them
   - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
 - `collapse-enabled` (optional bool, default: `false`): add columns that do not fit into the table into a hidden list of column titles and values
-  - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
+  - example `<dbp-tabulator-table collapse-enabled></dbp-tabulator-table>`
   - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger 
   than 0 (e.g. `responsive:3`) and to set the columns' width so that they will not all fit into the tabulator
   
@@ -63,6 +63,10 @@ Or you can include the JS files directly via CDN:
 ## Important functions
 - `setData(data)`: This function sets data of the tabulator table.
   - `data` is an array of data which should be shown in the table.
+- `getRows()`: returns an array with all the rows of the table.
+- `updateRow(row, newData)`: updates a given row of the tabulator table with new data.
+  -`row` represents the row object we want to update.
+  -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}` 
 - `deleteRow(row)`: This function deletes the given row from the specified tabulator table.
   -`row` represents the id of the row we want to delete.
 - `deleteSelectedRows()`: This function deletes the selected rows (by clicking) of the tabulator.
