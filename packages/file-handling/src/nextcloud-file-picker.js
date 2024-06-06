@@ -173,7 +173,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             // see: http://tabulator.info/docs/5.1
             this.tabulatorTable = new Tabulator(this._('#directory-content-table'), {
                 layout: 'fitColumns',
-                selectable: this.maxSelectedItems,
+                selectableRows: this.maxSelectedItems,
                 placeholder: this.directoriesOnly
                     ? i18n.t('nextcloud-file-picker.no-data')
                     : i18n.t('nextcloud-file-picker.no-data-type'),

@@ -129,7 +129,7 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             // see: http://tabulator.info/docs/4.7
             this.tabulatorTable = new Tabulator(this._('#clipboard-content-table'), {
                 layout: 'fitColumns',
-                selectable: true,
+                selectableRows: true,
                 placeholder: i18n.t('clipboard.no-data'),
                 responsiveLayout: 'collapse',
                 responsiveLayoutCollapseStartOpen: false,
