@@ -1197,8 +1197,9 @@ export function getSelect2CSS() {
             background-color: var(--dbp-background);
         }
 
-        .select2-container--default .select2-selection--single, .select2-dropdown, .select2-container--default .select2-search--dropdown .select2-search__field{
+        .select2-container--default .select2-selection--single, .select2-dropdown, .select2-container--default .select2-search--dropdown .select2-search__field {
             background: var(--dbp-background);
+            color: var(--dbp-content);
             border: var(--dbp-border);
             border-color: var(--dbp-muted);
         }
