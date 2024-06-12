@@ -11,57 +11,57 @@ export function getThemeCSS() {
     return css`
         :host {
             /* new new variables */
-            --dbp-background: 
+            --dbp-background:
                     var(--dbp-override-background, #ffffff
             );
-            --dbp-content: 
+            --dbp-content:
                     var(--dbp-override-content, #222120
             );
-            --dbp-content-surface: 
+            --dbp-content-surface:
                     var(--dbp-override-content-surface,
                     var(--dbp-content)
             );
-            --dbp-on-content-surface: 
+            --dbp-on-content-surface:
                     var(--dbp-override-on-content-surface,
                     var(--dbp-background)
             );
-            --dbp-border: 
+            --dbp-border:
                     var(--dbp-override-border, 1px solid #222120
             );
-            --dbp-border-radius: 
+            --dbp-border-radius:
                     var(--dbp-override-border-radius, 0px
             );
-            --dbp-primary: 
+            --dbp-primary:
                     var(--dbp-override-primary,  #3775c1
             );
             --dbp-primary-surface:
-                    var(--dbp-override-primary-surface, 
+                    var(--dbp-override-primary-surface,
                     var(--dbp-primary)
             );
-            --dbp-on-primary-surface: 
-                    var(--dbp-override-on-primary-surface, 
+            --dbp-on-primary-surface:
+                    var(--dbp-override-on-primary-surface,
                     var(--dbp-on-content-surface)
             );
-            --dbp-primary-surface-border-color: 
-                    var(--dbp-override-primary-surface-border-color, 
+            --dbp-primary-surface-border-color:
+                    var(--dbp-override-primary-surface-border-color,
                     var(--dbp-primary)
             );
-            --dbp-secondary: 
+            --dbp-secondary:
                     var(--dbp-override-secondary, #222120
             );
             --dbp-secondary-surface:
                     var(--dbp-override-secondary-surface,
                     var(--dbp-secondary)
             );
-            --dbp-on-secondary-surface: 
+            --dbp-on-secondary-surface:
                     var(--dbp-override-on-secondary-surface,
                     var(--dbp-on-content-surface)
             );
-            --dbp-secondary-surface-border-color: 
+            --dbp-secondary-surface-border-color:
                     var(--dbp-override-secondary-surface-border-color,
                     var(--dbp-secondary)
             );
-            --dbp-muted: 
+            --dbp-muted:
                     var(--dbp-override-muted, #767676
             );
             --dbp-muted-surface:
@@ -212,11 +212,11 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
 
     // language=css
     return css`
-        
+
         h2 {
             font-weight: 300;
         }
-        
+
         h3{
             font-weight: 300;
             margin-top: 0px;
@@ -251,7 +251,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         }
 
         input::-moz-focus-inner { border: 0; }
-        
+
         :focus-visible{
             outline:none !important;
             outline-width: 0 !important;
@@ -317,7 +317,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             border-radius: var(--dbp-border-radius);
             color: var(--dbp-content);
         }
-        
+
         .input[disabled] {
             color: var(--dbp-muted);
         }
@@ -638,7 +638,7 @@ export function getButtonCSS() {
             border-radius: calc(var(--dbp-border-radius) / 2);
             font-size: 0.75rem;
         }
-        
+
         button.button.is-icon, .button.is-icon {
             border: none;
             background: none;
@@ -767,18 +767,18 @@ export function getButtonCSS() {
 export function getRadioAndCheckboxCss() {
     // language=css
     return css`
-        /* 
+        /*
         Radiobutton:
             <label class="button-container">
                 Labeltext
                 <input type="radio" name="myradiobutton">
                 <span class="radiobutton"></span>
             </label>
-            
+
         Checkbox:
             <label class="button-container">
                 Labeltext
-                <input type="checkbox" name="mycheckbox"> 
+                <input type="checkbox" name="mycheckbox">
                 <span class="checkmark"></span>
             </label>
          */
@@ -921,11 +921,11 @@ export function getRadioAndCheckboxCss() {
             .button-container{
                 line-height: 40px;
             }
-            
+
             .button-container {
                 padding-left: 40px;
             }
-            
+
             .button-container .checkmark::after {
                 left: 10px;
                 width: 10px;
@@ -938,7 +938,7 @@ export function getRadioAndCheckboxCss() {
                 width: 5px;
                 height: 11px;
             }
-            
+
             .button-container{
                 line-height: 1em;
             }
@@ -1346,8 +1346,8 @@ export function getModalDialogCSS() {
                 height: 100%;
                 width: 100%;
             }
-            
-           
+
+
         }
 
         @media only screen and (max-width: 768px) {
@@ -1534,7 +1534,7 @@ export function getTabulatorStyles() {
         .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle:hover{
             opacity: 1;
         }
-        
+
         .tabulator-responsive-collapse-toggle, .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle{
             -webkit-mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M388%2c380.5c-0.2%2c0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2c0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1 c0.3-0.3%2c0.8-0.4%2c1.1-0.1l13.1%2c11.5c0.2%2c0.2%2c0.3%2c0.4%2c0.3%2c0.6s-0.1%2c0.5-0.3%2c0.6l-13.1%2c11.5C388.4%2c380.4%2c388.2%2c380.5%2c388%2c380.5z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
             mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M388%2c380.5c-0.2%2c0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8%2c0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1 c0.3-0.3%2c0.8-0.4%2c1.1-0.1l13.1%2c11.5c0.2%2c0.2%2c0.3%2c0.4%2c0.3%2c0.6s-0.1%2c0.5-0.3%2c0.6l-13.1%2c11.5C388.4%2c380.4%2c388.2%2c380.5%2c388%2c380.5z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");            content: '';
@@ -1548,10 +1548,10 @@ export function getTabulatorStyles() {
             -webkit-mask-size: 40%;
             mask-size: 40%;
         }
-        
+
         .tabulator-responsive-collapse-toggle.open, .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle.open{
             -webkit-mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M382.2%2c361.7c0-0.2%2c0.1-0.4%2c0.3-0.6c0.3-0.3%2c0.8-0.3%2c1.1%2c0.1l10.9%2c12.5l10.9-12.5c0.3-0.3%2c0.8-0.4%2c1.1-0.1 c0.3%2c0.3%2c0.4%2c0.8%2c0.1%2c1.1l-11.5%2c13.1c-0.2%2c0.2-0.4%2c0.3-0.6%2c0.3s-0.5-0.1-0.6-0.3l-11.5-13.1C382.3%2c362.1%2c382.2%2c361.9%2c382.2%2c361.7z '/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
-            mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M382.2%2c361.7c0-0.2%2c0.1-0.4%2c0.3-0.6c0.3-0.3%2c0.8-0.3%2c1.1%2c0.1l10.9%2c12.5l10.9-12.5c0.3-0.3%2c0.8-0.4%2c1.1-0.1 c0.3%2c0.3%2c0.4%2c0.8%2c0.1%2c1.1l-11.5%2c13.1c-0.2%2c0.2-0.4%2c0.3-0.6%2c0.3s-0.5-0.1-0.6-0.3l-11.5-13.1C382.3%2c362.1%2c382.2%2c361.9%2c382.2%2c361.7z '/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");        
+            mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M382.2%2c361.7c0-0.2%2c0.1-0.4%2c0.3-0.6c0.3-0.3%2c0.8-0.3%2c1.1%2c0.1l10.9%2c12.5l10.9-12.5c0.3-0.3%2c0.8-0.4%2c1.1-0.1 c0.3%2c0.3%2c0.4%2c0.8%2c0.1%2c1.1l-11.5%2c13.1c-0.2%2c0.2-0.4%2c0.3-0.6%2c0.3s-0.5-0.1-0.6-0.3l-11.5-13.1C382.3%2c362.1%2c382.2%2c361.9%2c382.2%2c361.7z '/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
         }
 
         /* Define the style when the column is not sorted */
@@ -1577,7 +1577,7 @@ export function getTabulatorStyles() {
             background-color: #ffffff;
             border-style: none;
         }
-        
+
         .tabulator-row, .tabulator-row.tabulator-row-even, .tabulator-row.tabulator-row-odd{
             padding-top: 0px;
             padding-bottom: 0px;
@@ -1633,11 +1633,11 @@ export function getTabulatorStyles() {
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable.tabulator-col-sorter-element:hover{
             background-color: unset;
         }
-        
+
         @media only screen and (orientation: portrait) and (max-width: 768px) {
-            
+
         }
-       
+
     `;
 }
 
