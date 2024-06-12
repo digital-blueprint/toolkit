@@ -1574,7 +1574,7 @@ export function getTabulatorStyles() {
         }
 
         .tabulator-cell.tabulator-row-header.tabulator-row-handle{
-            background-color: #ffffff;
+            background-color: var(--dbp-background-color);
             border-style: none;
         }
 
