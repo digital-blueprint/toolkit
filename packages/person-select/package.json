@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/person-select",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/person-select",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -41,8 +41,8 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@dbp-toolkit/auth": "^0.3.2",
-        "@dbp-toolkit/common": "^0.3.5",
+        "@dbp-toolkit/auth": "^0.3.3",
+        "@dbp-toolkit/common": "^0.3.6",
         "@open-wc/scoped-elements": "^2.1.0",
         "jquery": "^3.4.1",
         "lit": "^2.7.0 || ^3.0.0",

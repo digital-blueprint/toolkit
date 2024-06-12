@@ -1,6 +1,6 @@
 {
     "name": "@dbp-toolkit/typescript-example",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -42,7 +42,7 @@
         "typescript-eslint": "^7.12.0"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.5",
+        "@dbp-toolkit/common": "^0.3.6",
         "@open-wc/scoped-elements": "^2.1.0",
         "lit": "^2.7.0 || ^3.0.0"
     },
