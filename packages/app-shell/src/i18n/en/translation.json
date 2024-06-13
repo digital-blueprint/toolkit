@@ -16,6 +16,6 @@
     "page-updated-needs-reload": "The application has been updated. Please reload the page.",
     "privacy-policy": "Privacy Policy",
     "welcome": {
-        "headline": "Welcome to the '{{appname}}'."
+        "headline": "Welcome."
     }
 }
