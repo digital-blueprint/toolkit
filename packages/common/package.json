@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/common",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/common",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "module": "index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -10,7 +10,7 @@
         "directory": "packages/common"
     },
     "devDependencies": {
-        "@rollup/plugin-commonjs": "^25.0.0",
+        "@rollup/plugin-commonjs": "^26.0.0",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
         "chai": "^5.0.0",
@@ -18,7 +18,7 @@
         "eslint-plugin-jsdoc": "^48.0.0",
         "glob": "^10.0.0",
         "globals": "^15.3.0",
-        "i18next-parser": "^8.0.0",
+        "i18next-parser": "^9.0.0",
         "karma": "^6.0.0",
         "karma-chrome-launcher": "^3.0.0",
         "karma-firefox-launcher": "^2.1.0",

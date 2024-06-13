@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/knowledge-base-web-page-element-view",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/knowledge-base-web-page-element-view",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -14,7 +14,7 @@
         "access": "public"
     },
     "devDependencies": {
-        "@rollup/plugin-commonjs": "^25.0.0",
+        "@rollup/plugin-commonjs": "^26.0.0",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
         "@rollup/plugin-terser": "^0.4.0",
@@ -23,7 +23,7 @@
         "eslint": "^9.1.0",
         "eslint-plugin-jsdoc": "^48.0.0",
         "globals": "^15.3.0",
-        "i18next-parser": "^8.0.0",
+        "i18next-parser": "^9.0.0",
         "karma": "^6.0.0",
         "karma-chrome-launcher": "^3.0.0",
         "karma-firefox-launcher": "^2.1.0",
@@ -40,8 +40,8 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@dbp-toolkit/auth": "^0.3.2",
-        "@dbp-toolkit/common": "^0.3.5",
+        "@dbp-toolkit/auth": "^0.3.3",
+        "@dbp-toolkit/common": "^0.3.6",
         "@open-wc/scoped-elements": "^2.1.0",
         "i18next": "^23.0.0",
         "lit": "^2.7.0 || ^3.0.0",
