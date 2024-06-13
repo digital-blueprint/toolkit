@@ -335,6 +335,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let langs_collapse = {
             'en': {
                 columns: {
+                    'details': 'Details',
                     'name': i18n.t('columns.name', {lng: 'en'}),
                     'age': i18n.t('columns.age', {lng: 'en'}),
                     'col': i18n.t('columns.col', {lng: 'en'}),
@@ -345,6 +346,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
             'de': {
                 columns: {
+                    'details': 'Details',
                     'name': i18n.t('columns.name', {lng: 'de'}),
                     'age': i18n.t('columns.age', {lng: 'de'}),
                     'col': i18n.t('columns.col', {lng: 'de'}),
@@ -388,12 +390,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
         let options_collapse = {
             langs: langs_collapse,
-            layout: 'fitColumns',
+            layout: 'fitDataFill',
             responsiveLayout: 'collapse',
             responsiveLayoutCollapseStartOpen: false,
-            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
-                {title: 'name', field: 'name', width: 250},
+                {title: 'details', field: 'details', width: 100, hozAlign: 'center', formatter:"responsiveCollapse", headerHozAlign:"center"},
+                {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', width: 250, hozAlign: 'left', formatter: 'progress'},
                 {title: 'col', field: 'col', width: 250},
                 {title: 'dob', field: 'dob', width: 250, sorter: 'date', hozAlign: 'center'},

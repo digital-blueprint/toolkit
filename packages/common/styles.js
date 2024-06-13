@@ -1520,8 +1520,8 @@ export function getTabulatorStyles() {
         }
 
         .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle {
-            height: 100%;
-            width: 100%;
+            height: 50%;
+            width: 50%;
         }
 
         .tabulator-responsive-collapse-toggle-open,
@@ -1543,7 +1543,7 @@ export function getTabulatorStyles() {
             mask-repeat: no-repeat;
             -webkit-mask-position: center center;
             mask-position: center center;
-            margin: 0 0 0 4px;
+            margin: 0 0 0;
             padding: 0 0 0.25% 0;
             -webkit-mask-size: 40%;
             mask-size: 40%;
