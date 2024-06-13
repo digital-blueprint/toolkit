@@ -4,6 +4,7 @@
     "new-age": "neue Alter",
     "columns": {
         "all": "Alle spalten",
+        "details": "Details",
         "name": "Name",
         "age": "Alter",
         "col": "Lieblingsfarbe",

@@ -4,6 +4,7 @@
     "new-age": "new age",
     "columns": {
         "all": "All columns",
+        "details": "Details",
         "name": "Name",
         "age": "Age",
         "col": "Favourite Color",

@@ -335,7 +335,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let langs_collapse = {
             'en': {
                 columns: {
-                    'details': 'Details',
+                    'details': i18n.t('columns.details', {lng: 'en'}),
                     'name': i18n.t('columns.name', {lng: 'en'}),
                     'age': i18n.t('columns.age', {lng: 'en'}),
                     'col': i18n.t('columns.col', {lng: 'en'}),
@@ -346,7 +346,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
             'de': {
                 columns: {
-                    'details': 'Details',
+                    'details': i18n.t('columns.details', {lng: 'de'}),
                     'name': i18n.t('columns.name', {lng: 'de'}),
                     'age': i18n.t('columns.age', {lng: 'de'}),
                     'col': i18n.t('columns.col', {lng: 'de'}),

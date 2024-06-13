@@ -1544,7 +1544,7 @@ export function getTabulatorStyles() {
             mask-repeat: no-repeat;
             -webkit-mask-position: center center;
             mask-position: center center;
-            margin: 0 0 0;
+            margin: 0 0 0 -30px;
             padding: 0 0 0.25% 0;
             -webkit-mask-size: 40%;
             mask-size: 40%;
