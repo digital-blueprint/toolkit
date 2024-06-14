@@ -901,6 +901,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.sendSetPropertyEvent('analytics-event', {category: action, action: message}, true);
     }
 
+    // TODO: This maybe could also be done with static html together with unsafeStatic, see https://lit.dev/docs/templates/expressions/#non-literal-statics
+    // Like in https://github.com/digital-blueprint/cabinet-app/commit/8dde8efab6e65a93026289c7ed6b50c0369a55dd
     _renderActivity() {
         const act = this.metadata[this.activeView];
         if (act === undefined) return html``;
