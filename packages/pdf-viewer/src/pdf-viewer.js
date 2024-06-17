@@ -7,7 +7,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {MiniSpinner, Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import pdfjs from 'pdfjs-dist/legacy/build/pdf';
+import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
 import {name as pkgName} from './../package.json';
 import {readBinaryFileContent} from './utils.js';
 
@@ -95,7 +95,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         const that = this;
         pdfjs.GlobalWorkerOptions.workerSrc = commonUtils.getAssetURL(
             pkgName,
-            'pdfjs/pdf.worker.js'
+            'pdfjs/pdf.worker.mjs'
         );
 
         window.addEventListener('resize', this._onWindowResize);

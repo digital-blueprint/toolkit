@@ -50,8 +50,7 @@ export default (async () => {
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
                     {
-                        // src: await getPackagePath('pdfjs-dist', 'build/pdf.worker.js'),
-                        src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.js'),
+                        src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.mjs'),
                         dest: 'dist/' + (await getDistPath(pkg.name, 'pdfjs')),
                     },
                     {
