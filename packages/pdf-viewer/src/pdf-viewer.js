@@ -274,7 +274,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
 
                 // render the page contents in the canvas
                 try {
-                    await page.render(render_context).promise
+                    await page.render(render_context).promise;
                 } catch (error) {
                     console.error(error.message);
                 } finally {
