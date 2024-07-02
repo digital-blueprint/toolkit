@@ -190,6 +190,18 @@ export class ResourceSelect extends AdapterLitElement {
         this._setValue(this.value);
     }
 
+    async updateResources() {
+        let url = this._getUrl();
+        if (url === null || this.lang === null) {
+            return;
+        }
+
+        this._resources = await hydra.getCollection(url, this.lang, this.auth.token);
+        this._url = url;
+        this._setValue(this.value);
+        await this._updateSelect2();
+    }
+
     async _updateSelect2() {
         await this.updateComplete;
         const i18n = this._i18n;
