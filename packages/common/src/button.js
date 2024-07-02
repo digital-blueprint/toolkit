@@ -95,6 +95,14 @@ export class Button extends DbpButton {
             .spinner {
                 margin-left: 0.5em;
             }
+
+            ::slotted(dbp-icon) {
+                transition: transform .25s ease-in-out;
+            }
+
+            button:hover ::slotted(dbp-icon){
+                transform: var(--icon-transform);
+            }
         `;
     }
 
@@ -150,6 +158,14 @@ export class LoadingButton extends DbpButton {
 
             .button {
                 width: 100%;
+            }
+
+            ::slotted(dbp-icon) {
+                transition: transform .25s ease-in-out;
+            }
+
+            button:hover ::slotted(dbp-icon){
+                transform: var(--icon-transform);
             }
 
             @media only screen and (orientation: portrait) and (max-width: 768px) {
@@ -238,6 +254,14 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
 
             .button {
                 width: 100%;
+            }
+
+            ::slotted(dbp-icon) {
+                transition: transform .25s ease-in-out;
+            }
+
+            button:hover ::slotted(dbp-icon){
+                transform: var(--icon-transform);
             }
 
             @media only screen and (orientation: portrait) and (max-width: 768px) {
