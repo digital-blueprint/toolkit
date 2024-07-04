@@ -21,6 +21,9 @@ npm install
 
 `cd packges/some-package` and continue development with `npm run watch` etc.
 
+> [!TIP]
+> Make sure that the `toolkit-showcase` package has your package as dependency!
+
 ## Other commands
 
 * `npm run test` -  Run test for all packages
