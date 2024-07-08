@@ -8,7 +8,9 @@ import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 import path from 'path';
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);

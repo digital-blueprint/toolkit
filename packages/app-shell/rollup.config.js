@@ -9,10 +9,12 @@ import json from '@rollup/plugin-json';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 import config from '../../demo.common.config.js';
+import { createRequire } from "module";
 
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
 
+const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const basePath = '/dist/';
 const appName = 'dbp-app-shell';

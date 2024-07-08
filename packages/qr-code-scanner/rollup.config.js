@@ -9,9 +9,8 @@ import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import fs from 'fs';
 import selfsigned from 'selfsigned';
-import {getPackagePath, getDistPath} from '../../rollup.utils';
+import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 
-const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
 

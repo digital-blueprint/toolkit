@@ -9,7 +9,9 @@ import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getPackagePath, getDistPath} from '../../rollup.utils.js';
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
