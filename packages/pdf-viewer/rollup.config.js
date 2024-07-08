@@ -11,7 +11,9 @@ import {
     getPackagePath,
     getDistPath,
 } from '../../rollup.utils.js';
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);

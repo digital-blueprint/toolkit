@@ -1,6 +1,7 @@
 {
     "name": "dbp-toolkit-showcase",
     "version": "0.2.8",
+    "type": "module",
     "main": "src/toolkit-showcase.js",
     "license": "LGPL-2.1-or-later",
     "private": true,
@@ -65,14 +66,14 @@
         "lit": "^2.7.0 || ^3.0.0"
     },
     "scripts": {
-        "build": "rollup --bundleConfigAsCjs -c",
+        "build": "rollup -c",
         "format": "npm run format:eslint && npm run format:prettier",
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
-        "watch": "rollup --bundleConfigAsCjs -c --watch",
+        "watch": "rollup -c --watch",
         "watch-local": "npm run watch",
-        "watch-full": "rollup --bundleConfigAsCjs -c --watch --environment FORCE_FULL",
-        "watch-bs": "rollup --bundleConfigAsCjs -c --watch --environment APP_ENV:bs",
+        "watch-full": "rollup -c --watch --environment FORCE_FULL",
+        "watch-bs": "rollup -c --watch --environment APP_ENV:bs",
         "lint": "eslint .",
         "tsc": "tsc -p jsconfig.json"
     }

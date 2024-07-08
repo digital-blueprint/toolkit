@@ -7,14 +7,11 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import {getPackagePath, getDistPath} from '../../rollup.utils.js';
-import path from 'path';
 
-const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
 
 let nextcloudBaseURL = 'https://cloud.tugraz.at';
-let nextcloudFileURL = nextcloudBaseURL + '/apps/files/?dir=';
 
 export default (async () => {
     return {

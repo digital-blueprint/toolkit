@@ -4,6 +4,7 @@ import fs from 'fs';
 import child_process from 'child_process';
 import selfsigned from 'selfsigned';
 import findCacheDir from 'find-cache-dir';
+import { createRequire } from "module";
 
 /**
  * Returns true if git is installed and we are inside a git working tree
@@ -58,7 +59,8 @@ export async function getDistPath(packageName, assetPath) {
 
 export async function getPackagePath(packageName, assetPath) {
     let packageRoot;
-    let current = require.resolve('./package.json');
+    const require = createRequire(import.meta.url);
+    let current = require.resolve(path.join(process.cwd(), './package.json'));
     if (require(current).name === packageName) {
         // current package
         packageRoot = path.dirname(current);

@@ -2,6 +2,7 @@
     "name": "@dbp-toolkit/app-shell",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/app-shell",
     "version": "0.3.5",
+    "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -57,11 +58,11 @@
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
         "build": "npm run build-local",
-        "build-local": "rollup --bundleConfigAsCjs -c",
-        "build-test": "rollup --bundleConfigAsCjs -c --environment BUILD:test",
+        "build-local": "rollup -c",
+        "build-test": "rollup -c --environment BUILD:test",
         "watch": "npm run watch-local",
-        "watch-local": "rollup --bundleConfigAsCjs -c --watch",
-        "test": "npm run build-test && karma start --singleRun",
+        "watch-local": "rollup -c --watch",
+        "test": "npm run build-test && karma start karma.conf.cjs --singleRun",
         "lint": "eslint .",
         "tsc": "tsc -p jsconfig.json"
     }

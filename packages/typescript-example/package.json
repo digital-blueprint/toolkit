@@ -1,6 +1,7 @@
 {
     "name": "@dbp-toolkit/typescript-example",
     "version": "0.2.7",
+    "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
@@ -51,9 +52,9 @@
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
         "clean": "rm dist/*",
-        "build": "rollup --bundleConfigAsCjs -c",
-        "watch": "rollup --bundleConfigAsCjs -c --watch",
-        "test": "rollup --bundleConfigAsCjs -c --environment BUILD:test && karma start --singleRun",
+        "build": "rollup -c",
+        "watch": "rollup -c --watch",
+        "test": "rollup -c --environment BUILD:test && karma start karma.conf.cjs --singleRun",
         "lint": "eslint ."
     }
 }

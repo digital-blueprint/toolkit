@@ -1,4 +1,3 @@
-import path from 'path';
 import url from 'url';
 import {globSync} from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
@@ -16,7 +15,9 @@ import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '../rollup.utils.js';
 import replace from '@rollup/plugin-replace';
+import { createRequire } from "module";
 
+const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const appEnv = typeof process.env.APP_ENV !== 'undefined' ? process.env.APP_ENV : 'local';
 const watch = process.env.ROLLUP_WATCH === 'true';
