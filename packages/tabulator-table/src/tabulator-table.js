@@ -136,7 +136,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
-        //this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
+        this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
         this.tableReady = true;
     }
 
