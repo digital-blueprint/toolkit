@@ -243,6 +243,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     getSelectedRows() {
         if (!this.tabulatorTable) return;
         this.selectedRows = this.tabulatorTable.getSelectedRows();
+        return this.selectedRows;
     }
 
     deleteSelectedRows() {
