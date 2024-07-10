@@ -196,7 +196,8 @@ export class ResourceSelect extends AdapterLitElement {
         $select.select2({
             width: '100%',
             language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
-            minimumInputLength: that.useSearch ? 2 : -1,
+            minimumInputLength: that.useSearch ? 1 : -1,
+            minimumResultsForSearch: that.useSearch ? 1 : Infinity,
             disabled: this.disabled,
             placeholder: i18n.t('resource-select.placeholder'),
             dropdownParent: this._$('#select-resource-dropdown'),
@@ -212,11 +213,6 @@ export class ResourceSelect extends AdapterLitElement {
                     return this.buildUrlData(this, params);
                 },
                 processResults: function (data) {
-
-                    // disable search-box if search is not enabled.
-                    /** @type {string} */
-                    const dropdownCssClass = !that.useSearch ? 'no-search' : '';
-                    that._$('.select2-search.select2-search--dropdown').addClass(dropdownCssClass);
 
                     that._$('#select-resource-dropdown').addClass('select2-bug');
 
@@ -333,12 +329,12 @@ export class ResourceSelect extends AdapterLitElement {
             commonStyles.getSelect2CSS(),
             // language=css
             css`
-                .select2-search--dropdown {
-                    display: block;
+                .select2-search--dropdown.use-search {
+                    /* display: block; */
                 }
 
-                .select2-search--dropdown.no-search {
-                    display: none;
+                .select2-search--dropdown {
+                    /* display: none; */
                 }
             `,
         ];
