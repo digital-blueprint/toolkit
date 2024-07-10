@@ -6,7 +6,8 @@ import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
 import {getDistPath} from '../../rollup.utils.js';
-import { createRequire } from "module";
+import { createRequire } from "node:module";
+import process from 'node:process';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');

@@ -7,7 +7,8 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import fs from 'fs';
+import fs from 'node:fs';
+import process from 'node:process';
 import selfsigned from 'selfsigned';
 import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 

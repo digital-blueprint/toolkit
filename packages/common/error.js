@@ -122,7 +122,7 @@ export const errorMixin = {
                 .catch(() => {
                     body = error.statusText !== undefined ? error.statusText : error;
                 });
-        } catch (e) {
+        } catch {
             // a TypeError means the connection to the server was refused most of the times
             if (error.name === 'TypeError') {
                 body =
