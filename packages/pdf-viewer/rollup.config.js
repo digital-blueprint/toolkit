@@ -11,7 +11,8 @@ import {
     getPackagePath,
     getDistPath,
 } from '../../rollup.utils.js';
-import { createRequire } from "module";
+import { createRequire } from "node:module";
+import process from 'node:process';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');

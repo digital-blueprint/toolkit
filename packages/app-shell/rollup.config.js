@@ -1,5 +1,6 @@
 import {globSync} from 'glob';
-import url from 'url';
+import url from 'node:url';
+import process from 'node:process';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
@@ -9,7 +10,7 @@ import json from '@rollup/plugin-json';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getPackagePath, getDistPath} from '../../rollup.utils.js';
 import config from '../../demo.common.config.js';
-import { createRequire } from "module";
+import { createRequire } from "node:module";
 
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
