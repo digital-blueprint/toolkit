@@ -1,23 +1,20 @@
 /**
- * @param {string} url
- * @param {string} lang
- * @param {string} token
- * @returns {Array}
+ * Finds an object in a JSON result by identifier
+ *
+ * @param {string} identifier
+ * @param {object} results
+ * @param {string} identifierAttribute
  */
-export async function getCollection(url, lang, token) {
-    let response = await fetch(url, {
-        headers: {
-            'Content-Type': 'application/ld+json',
-            'Accept-Language': lang,
-            Authorization: 'Bearer ' + token,
-        },
-    });
+export const findObjectInApiResults = (identifier, results, identifierAttribute = '@id') => {
+    const members = results['hydra:member'];
 
-    if (!response.ok) {
-        throw new Error(response.statusText);
+    if (members === undefined) {
+        return;
     }
 
-    let data = await response.json();
-
-    return data['hydra:member'];
-}
+    for (const object of members) {
+        if (object[identifierAttribute] === identifier) {
+            return object;
+        }
+    }
+};

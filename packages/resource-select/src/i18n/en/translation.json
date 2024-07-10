@@ -1,5 +1,6 @@
 {
-    "select": {
+    "resource-select": {
+        "login-required": "Login required",
         "loading": "Loading...",
         "placeholder": "Please select an entry"
     }

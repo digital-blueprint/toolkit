@@ -78,14 +78,13 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+
         let buildUrl = (select, url) => {
-            url += '?person=' + encodeURIComponent(select.auth['person-id']);
-            url += '&' + new URLSearchParams({lang: select.lang}).toString();
             return url;
         };
 
-        let formatResource = (select, resource) => {
-            return resource['name'];
+        let formatResource = (resource) => {
+            return resource.name ?? resource['@id'];
         };
 
         let change = (event) => {
@@ -104,11 +103,43 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                             <label class="label">Organization of the current user</label>
                             <div class="control">
                                 <dbp-resource-select
-                                    id="resource-select-library-manager"
+                                    id="resource-select-organization-manager"
                                     subscribe="auth"
                                     lang="${this.lang}"
                                     entry-point-url="${this.entryPointUrl}"
-                                    resource-path="base/organizations"
+                                    resource-path="/base/organizations"
+                                    use-search
+                                    @change="${change}"
+                                    .buildUrl="${buildUrl}"
+                                    .formatResource="${formatResource}"></dbp-resource-select>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Authorization groups</label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-authorization-group-manager"
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="/authorization/groups"
+                                    use-search
+                                    @change="${change}"
+                                    .buildUrl="${buildUrl}"
+                                    .formatResource="${formatResource}"></dbp-resource-select>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Dispatch groups</label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-dispatch-group-manager"
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="/dispatch/groups"
                                     @change="${change}"
                                     .buildUrl="${buildUrl}"
                                     .formatResource="${formatResource}"></dbp-resource-select>

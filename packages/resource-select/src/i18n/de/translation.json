@@ -1,5 +1,6 @@
 {
-    "select": {
+    "resource-select": {
+        "login-required": "Anmeldung erforderlich",
         "loading": "Wird geladen...",
         "placeholder": "Bitte wählen Sie einen Eintrag aus"
     }
