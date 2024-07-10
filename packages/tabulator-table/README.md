@@ -64,6 +64,7 @@ Or you can include the JS files directly via CDN:
 - `setData(data)`: This function sets data of the tabulator table.
   - `data` is an array of data which should be shown in the table.
 - `getRows()`: returns an array with all the rows of the table.
+- `getSelectedRows()`: returns an array with all the selected rows of the table.
 - `updateRow(row, newData)`: updates a given row of the tabulator table with new data.
   -`row` represents the row object we want to update.
   -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}` 

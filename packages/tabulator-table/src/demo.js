@@ -19,6 +19,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         this.langDir = '';
         this.boundPressEnterAndSubmitSearchHandler = this.pressEnterAndSubmitSearch.bind(this);
         this.expandedTabulator = true;
+        this.selectedRow = this.rowClick.bind(this);
+        this.selected = false;
     }
 
     static get scopedElements() {
@@ -34,6 +36,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
             expandedTabulator: {type: Boolean},
+            selectedRow: {type: Boolean},
+            selected: {type: Boolean},
         };
     }
 
@@ -47,6 +51,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             this._a('.tabulator-table-demo').forEach((table) => {
                 table.buildTable();
                 document.addEventListener('keyup', this.boundPressEnterAndSubmitSearchHandler);
+                if(table.id == 'tabulator-table-demo-7')
+                    table.addEventListener('click', this.selectedRow);
             });
         });
     }
@@ -69,6 +75,16 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 this.filterTable();
             }
         }
+    }
+
+    rowClick(event) {
+        this.selected = true;
+        let deleteButton = this._('#delete-button');
+        let table = this._('#tabulator-table-demo-7');
+        if(table.getSelectedRows().length !== 0)
+            deleteButton.disabled = false;
+        else
+            deleteButton.disabled = true;
     }
 
     setTableData(data) {
@@ -95,26 +111,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     updateRows() {
         let table = this._('#tabulator-table-demo-9');
         let newData = this._('#age-input');
-
-
-        //const regex = /[^A-Za-z0-9]/;
-
         newData = {age: newData.value};
-
-        /*if (regex.test(newData)) {
-            console.log(
-                "String contains special characters"
-            );
-            return;
-        }
-
-
-        else
-            console.log(
-                "String does not contain any special character."
-            );*/
         let rows = table.getRows();
-
         for (let row of rows)
             table.updateRow(row, newData);
     }
@@ -199,6 +197,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+
         const i18n = this._i18n;
         let data = [
             {id: 1, name: 'Oli Bob', age: '12', col: 'red', dob: ''},
@@ -532,7 +531,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 @click='${() => {
                                     this.removeFilter();
                                 }}'>${i18n.t('remove-filters')}</button>
-                        <button class="button is-primary" @click="${() => {
+                        <button class="button is-primary" 
+                                id = "delete-button"
+                                disabled
+                                @click="${() => {
                             this.deleteSelectedRows();
                         }}">${i18n.t('delete-rows')}</button>
                         <div class="select-container">
