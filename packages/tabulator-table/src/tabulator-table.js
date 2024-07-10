@@ -15,7 +15,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
 
-        this.tabulatorTable = null;
         this.identifier = 'table';
         this.options = {
             layout: 'fitColumns',
@@ -27,6 +26,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.paginationSize = 10;
         this.selectAllEnabled = false;
         this.selectRowsEnabled = false;
+        this.rowSelected = false;
         this.selectedRows = null;
         this.tableReady = false;
         this.initalization = true;
@@ -44,6 +44,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
             paginationSize: {type: Number, attribute: 'pagination-size'},
             selectAllEnabled: {type: Boolean, attribute: 'select-all-enabled'},
+            rowSelected: {type: Boolean},
             selectedRows: {type: Array},
             selectRowsEnabled: {type: Boolean, attribute: 'select-rows-enabled'},
             collapseEnabled: {type: Boolean, attribute: 'collapse-enabled'},
@@ -187,6 +188,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable.getSelectedRows().length ===
             this.tabulatorTable.getRows('display').length;
         this._('#select_all').checked = check;
+
+        if(this.tabulatorTable.getSelectedRows().length === 0)
+            this.rowSelected = false;
+        else
+            this.rowSelected = true;
     }
 
     deleteRow(row) {
