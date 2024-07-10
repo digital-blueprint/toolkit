@@ -36,7 +36,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
             expandedTabulator: {type: Boolean},
-            selectedRow: {type: Boolean},
             selected: {type: Boolean},
         };
     }
