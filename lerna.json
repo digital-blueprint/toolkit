@@ -1,6 +1,7 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "toolkit-showcase"
   ],
   "npmClient": "npm",
   "version": "independent"

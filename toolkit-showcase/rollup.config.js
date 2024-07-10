@@ -1,4 +1,5 @@
-import url from 'url';
+import url from 'node:url';
+import process from 'node:process';
 import {globSync} from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -15,7 +16,7 @@ import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '../rollup.utils.js';
 import replace from '@rollup/plugin-replace';
-import { createRequire } from "module";
+import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
