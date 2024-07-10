@@ -508,7 +508,9 @@ var MicroModal = (function () {
      */
 
     var close = function close(targetModal) {
-        targetModal ? activeModal.closeModalById(targetModal) : activeModal.closeModal();
+        if (activeModal) {
+            targetModal ? activeModal.closeModalById(targetModal) : activeModal.closeModal();
+        }
     };
 
     return {
