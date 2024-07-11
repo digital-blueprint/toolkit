@@ -43,6 +43,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             data: {type: Array, attribute: 'data'},
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
             paginationSize: {type: Number, attribute: 'pagination-size'},
+            autoColumnsEnabled: {type: Boolean, attribute: 'auto-columns-enabled'},
             selectAllEnabled: {type: Boolean, attribute: 'select-all-enabled'},
             rowSelected: {type: Boolean},
             selectedRows: {type: Array},
@@ -133,6 +134,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
         if (this.selectRowsEnabled) {
             this.options['selectableRows'] = true;
+        }
+
+        if (this.autoColumnsEnabled) {
+            this.options['autoColumns'] = true;
         }
 
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);

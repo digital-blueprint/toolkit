@@ -621,6 +621,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             lang="${this.lang}"
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-10"
+                            auto-columns-enabled
                             data=${JSON.stringify(data)}
                             options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
                 </div>
