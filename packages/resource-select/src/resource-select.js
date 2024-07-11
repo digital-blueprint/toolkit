@@ -207,6 +207,7 @@ export class ResourceSelect extends AdapterLitElement {
                 contentType: 'application/ld+json',
                 beforeSend: function (jqXHR) {
                     jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
+                    jqXHR.setRequestHeader('Accept-Language', that.lang);
                     that.isSearching = true;
                 },
                 data: (params) => {
