@@ -14,7 +14,7 @@ export class ResourceSelect extends AdapterLitElement {
     constructor() {
         super();
         this._i18n = createInstance();
-        // this._resources = [];
+        this._resources = [];
         /** @type {string | null} */
         this._url = null;
         this._lang = null;
@@ -36,12 +36,10 @@ export class ResourceSelect extends AdapterLitElement {
         this.disabled = false;
         /** @type {boolean} */
         this.useSearch = false;
-        /** @type {boolean} */
-        this.ignoreValueUpdate = false;
-        /** @type {boolean} */
-        this.isSearching = false;
         /** @type {object} */
         this.lastResult = {};
+        /** @type {boolean} */
+        this.ignoreValueUpdate = false;
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
         select2(window, $);
@@ -55,7 +53,7 @@ export class ResourceSelect extends AdapterLitElement {
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             resourcePath: {type: String, attribute: 'resource-path'},
             value: {type: String, reflect: true},
-            disabled: {type: Boolean, reflect: true},
+            disabled: {type: Boolean},
             useSearch: {type: Boolean, attribute: 'use-search'},
         };
     }
@@ -69,23 +67,17 @@ export class ResourceSelect extends AdapterLitElement {
     }
 
     _IsSelect2Initialized(elm) {
-        return elm && elm.hasClass('select2-hidden-accessible');
-    }
-
-    authenticated() {
-        return (this.auth.token || '') !== '';
+        return elm !== null && elm.hasClass('select2-hidden-accessible');
     }
 
     connectedCallback() {
         super.connectedCallback();
         document.addEventListener('click', this._onDocumentClicked);
+        this._updateAll();
+    }
 
-        this.updateComplete.then(() => {
-            this.$select = this._getSelect2();
-            if (this.$select.length && !this._IsSelect2Initialized(this.$select)) {
-                this._initSelect2();
-            }
-        });
+    isAuthenticated() {
+        return (this.auth.token || '') !== '';
     }
 
     disconnectedCallback() {
@@ -96,30 +88,27 @@ export class ResourceSelect extends AdapterLitElement {
     _onDocumentClicked(ev) {
         // Close the popup when clicking outside of select2
         if (!ev.composedPath().includes(this)) {
-            this.$select = this._getSelect2();
-            if (this.$select.length && this._IsSelect2Initialized(this.$select)) {
-                this.$select.select2('close');
+            const $select = this._getSelect2();
+            if ($select.length && this._IsSelect2Initialized($select)) {
+                $select.select2('close');
             }
         }
     }
 
     _clearSelect2() {
+        const $select = this._getSelect2();
+        console.assert($select.length, 'select2 missing');
+
         // we need to destroy Select2 and remove the event listeners before we can initialize it again
-        if (this._IsSelect2Initialized(this.$select)) {
-            this.$select.off('select2:select');
-            this.$select.empty().trigger('change');
-            this.$select.select2('destroy');
-            this.value = null;
-            this.valueObject = null;
+        if (this._IsSelect2Initialized($select)) {
+            $select.off('select2:select');
+            $select.empty().trigger('change');
+            $select.select2('destroy');
+            // this.value = null;
+            // this.valueObject = null;
         }
     }
 
-    /**
-     *
-     * @param {*} select
-     * @param {string} url
-     * @returns {string}
-     */
     buildUrl(select, url) {
         return url;
     }
@@ -133,7 +122,7 @@ export class ResourceSelect extends AdapterLitElement {
      * @returns {object}
      */
     buildUrlData(select, params) {
-        if (this.useSearch) {
+        if (this.useSearch && params.term) {
             return {
                 search: params.term.trim(),
             };
@@ -142,19 +131,10 @@ export class ResourceSelect extends AdapterLitElement {
         }
     }
 
-    /**
-     *
-     * @param {object} resource
-     * @returns {string}
-     */
     formatResource(resource) {
         return resource.name ?? resource['@id'];
     }
 
-    /**
-     *
-     * @returns {string}
-     */
     _getUrl() {
         if (this.entryPointUrl === null) {
             return null;
@@ -167,24 +147,156 @@ export class ResourceSelect extends AdapterLitElement {
         return url;
     }
 
-    /**
-     *
-     * @param {object} resource
-     * @returns {string}
-     */
     _getText(resource) {
         return this.formatResource(resource);
     }
 
+    /**
+     * Sets this.value, this.valueObject and dispatch change event with the value and valueObject.
+     * @param {string} value
+     * @returns {void}
+     */
+    _setValue(value) {
+        let changed = false;
+        changed = this.value !== value;
+        this.value = value;
 
-    async _initSelect2() {
+        let found = null;
+        for (let res of this._resources) {
+            if (res['@id'] === this.value) {
+                found = res;
+                break;
+            }
+        }
+        changed = changed || this.valueObject !== found;
+        this.valueObject = found;
+
+        if (!changed) {
+            return;
+        }
+
+        const event = new CustomEvent('change', {
+            bubbles: true,
+            composed: true,
+            detail: {
+                value: this.value,
+                object: this.valueObject,
+            },
+        });
+        this.dispatchEvent(event);
+    }
+
+    async _updateAll() {
+        this._setValue(this.value);
+
+        // Show a dummy loading variant initially
+        const $select = this._getSelect2();
+        if (!this._IsSelect2Initialized($select)) {
+            await this._setSelect2Loading();
+        }
+
+        if (!this.auth.token) {
+            return;
+        }
+        if (this.useSearch) {
+            await this._updateSelect2WithSearch();
+        } else {
+            await this._updateResources();
+            await this._updateSelect2();
+        }
+    }
+
+    async _setSelect2Loading() {
+        await this.updateComplete;
+        const i18n = this._i18n;
+
+        const $select = this._getSelect2();
+        console.assert($select.length, 'select2 missing');
+
+        // Show an empty select until we load the resources
+        this._clearSelect2();
+
+        $select.select2({
+            width: '100%',
+            language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
+            placeholder: i18n.t('resource-select.loading'),
+            data: [],
+            disabled: true,
+        });
+    }
+
+    async _updateResources() {
+        let url = this._getUrl();
+        if (url === null || (url === this._url && this.lang === this._lang)) {
+            return;
+        }
+
+        this._resources = await hydra.getCollection(url, this.lang, this.auth.token);
+        this._url = url;
+        this._lang = this.lang;
+        this._setValue(this.value);
+    }
+
+    // async updateResources() {
+    //     let url = this._getUrl();
+    //     if (url === null || this.lang === null) {
+    //         return;
+    //     }
+
+    //     this._resources = await hydra.getCollection(url, this.lang, this.auth.token);
+    //     this._url = url;
+    //     this._setValue(this.value);
+    //     await this._updateSelect2();
+    // }
+
+    async _updateSelect2() {
+        await this.updateComplete;
+        const i18n = this._i18n;
+
+        const $select = this._getSelect2();
+        console.assert($select.length, 'select2 missing');
+
+        const data = this._resources.map((item) => {
+            return {id: item['@id'], text: this._getText(item)};
+        });
+
+        data.sort((a, b) => {
+            return a.text < b.text ? -1 : a.text > b.text ? 1 : 0;
+        });
+
+        this._clearSelect2();
+
+        $select
+            .select2({
+                width: '100%',
+                language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
+                placeholder: i18n.t('resource-select.placeholder'),
+                dropdownParent: this._$('#select-resource-dropdown'),
+                data: data,
+                disabled: this.disabled,
+            })
+            .on('select2:select', () => {
+                let id = $select.select2('data')[0].id;
+                this._setValue(id);
+            });
+
+        // If none is selected, default to the first one
+        if (this.value === null && data.length) {
+            this._setValue(data[0].id);
+        }
+
+        // Apply the selection
+        $select.val(this.value).trigger('change');
+    }
+
+    async _updateSelect2WithSearch() {
         const i18n = this._i18n;
         const that = this;
         const $this = $(this);
 
         const $select = this._getSelect2();
 
-        if (!this.authenticated() || this.$select === null || this.entryPointUrl === null) {
+        if (!this.isAuthenticated() || $select === null || this.entryPointUrl === null) {
             return false;
         }
 
@@ -196,11 +308,11 @@ export class ResourceSelect extends AdapterLitElement {
         $select.select2({
             width: '100%',
             language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
-            minimumInputLength: that.useSearch ? 1 : -1,
-            minimumResultsForSearch: that.useSearch ? 1 : Infinity,
+            minimumInputLength: 1,
             disabled: this.disabled,
             placeholder: i18n.t('resource-select.placeholder'),
             dropdownParent: this._$('#select-resource-dropdown'),
+            closeOnSelect: true,
             ajax: {
                 delay: 500,
                 url: this._getUrl(),
@@ -252,6 +364,7 @@ export class ResourceSelect extends AdapterLitElement {
             // set custom element attributes
             /** @type {string} */
             const identifier = e.params.data.id;
+            that.value = identifier;
             that.valueObject = hydra.findObjectInApiResults(identifier, that.lastResult);
             $this.attr('data-object', JSON.stringify(that.valueObject));
             $this.data('object', that.valueObject);
@@ -268,6 +381,7 @@ export class ResourceSelect extends AdapterLitElement {
                             object: that.valueObject,
                         },
                         bubbles: true,
+                        composed: true,
                     })
                 );
             }
@@ -281,43 +395,35 @@ export class ResourceSelect extends AdapterLitElement {
         return true;
     }
 
-    async updateResources() {
-        this._initSelect2();
-    }
-
     update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
+        if (changedProperties.has('lang')) {
+            this._i18n.changeLanguage(this.lang);
+        }
 
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
+        if (
+            changedProperties.has('lang') ||
+            changedProperties.has('resourcePath') ||
+            changedProperties.has('entryPointUrl') ||
+            changedProperties.has('disabled')
+        ) {
+            this._updateAll();
+        }
 
-                    if (this._IsSelect2Initialized(this.$select)) {
-                        // no other way to set an other language at runtime did work
-                        this._initSelect2();
-                    }
-                    break;
-                case 'value':
-                    if (!this.ignoreValueUpdate && this._IsSelect2Initialized(this.$select)) {
-                        this._initSelect2();
-                    }
+        if (changedProperties.has('value')) {
 
-                    this.ignoreValueUpdate = false;
-                    break;
-                case 'entryPointUrl':
-                case 'resourcePath':
-                    // we don't need to preset the selector if the entry point url changes
-                    if (this._IsSelect2Initialized(this.$select)) {
-                        this._initSelect2();
-                    }
-                    break;
-                case 'auth':
-                    if (this.authenticated() && !this._IsSelect2Initialized(this.$select)) {
-                        this._initSelect2();
-                    }
-                    break;
+            if (!this.ignoreValueUpdate) {
+                this._updateAll();
             }
-        });
+            this.ignoreValueUpdate = false;
+        }
+
+        if (changedProperties.has('auth')) {
+            changedProperties.forEach((oldValue, propName) => {
+                if (this.isAuthenticated() && (!oldValue || !oldValue.token)) {
+                    this._updateAll();
+                }
+            });
+        }
 
         super.update(changedProperties);
     }
@@ -329,22 +435,12 @@ export class ResourceSelect extends AdapterLitElement {
             commonStyles.getNotificationCSS(),
             commonStyles.getSelect2CSS(),
             // language=css
-            css`
-                .select2-search--dropdown.use-search {
-                    /* display: block; */
-                }
-
-                .select2-search--dropdown {
-                    /* display: none; */
-                }
-            `,
+            css``,
         ];
     }
 
     render() {
-        const i18n = this._i18n;
         const select2CSS = commonUtils.getAssetURL(select2CSSPath);
-
         return html`
             <link rel="stylesheet" href="${select2CSS}" />
 
@@ -354,15 +450,7 @@ export class ResourceSelect extends AdapterLitElement {
                         id="${this._selectId}"
                         name="select-resources"
                         class="select"
-                        ?disabled=${this.disabled}>
-                        ${!this.authenticated()
-                            ? html`
-                                    <option value="" disabled selected>
-                                        ${i18n.t('resource-select.login-required')}
-                                    </option>
-                                `
-                            : ''}
-                    </select>
+                        style="visibility: hidden;"></select>
                 </div>
                 <div id="select-resource-dropdown"></div>
             </div>

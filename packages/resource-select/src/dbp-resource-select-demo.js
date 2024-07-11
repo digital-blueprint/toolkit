@@ -78,6 +78,11 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        let buildUrlPerson = (select, url) => {
+            url += '?person=' + encodeURIComponent(select.auth['person-id']);
+            url += '&' + new URLSearchParams({lang: select.lang}).toString();
+            return url;
+        };
 
         let buildUrl = (select, url) => {
             return url;
@@ -108,15 +113,14 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                                     lang="${this.lang}"
                                     entry-point-url="${this.entryPointUrl}"
                                     resource-path="/base/organizations"
-                                    use-search
                                     @change="${change}"
-                                    .buildUrl="${buildUrl}"
+                                    .buildUrl="${buildUrlPerson}"
                                     .formatResource="${formatResource}"></dbp-resource-select>
                             </div>
                         </div>
 
                         <div class="field">
-                            <label class="label">Authorization groups</label>
+                            <label class="label">Authorization groups with search</label>
                             <div class="control">
                                 <dbp-resource-select
                                     id="resource-select-authorization-group-manager"
