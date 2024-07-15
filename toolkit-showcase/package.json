@@ -22,7 +22,7 @@
         "chokidar": "^3.4.0",
         "eslint": "^9.1.0",
         "eslint-plugin-jsdoc": "^48.0.0",
-        "find-cache-dir": "^3.3.1",
+        "find-cache-dir": "^5.0.0",
         "glob": "^10.0.0",
         "karma": "^6.0.0",
         "karma-chrome-launcher": "^3.1.0",
