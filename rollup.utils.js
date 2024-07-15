@@ -57,6 +57,25 @@ export async function getDistPath(packageName, assetPath) {
     return path.join('local', packageName, assetPath);
 }
 
+/**
+ * Finds the parent directory of the given path that contains a package.json file.
+ * This is used to find the root directory of a package.
+ *
+ * @param {string} startPath
+ * @returns {string}
+ */
+function findPackageJsonDir(startPath) {
+    const currentPath = path.resolve(startPath);
+    if (fs.existsSync(path.join(currentPath, 'package.json'))) {
+        return currentPath;
+    }
+    const parentPath = path.dirname(currentPath);
+    if (parentPath === currentPath) {
+        throw new Error(`No package.json found in the directory tree of ${startPath}`);
+    }
+    return findPackageJsonDir(parentPath);
+}
+
 export async function getPackagePath(packageName, assetPath) {
     let packageRoot;
     const require = createRequire(import.meta.url);
@@ -66,7 +85,16 @@ export async function getPackagePath(packageName, assetPath) {
         packageRoot = path.dirname(current);
     } else {
         // Other packages from nodes_modules etc.
-        packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
+        try {
+            // For packages that export a package.json
+            // (also non-js like @dbp-toolkit/font-source-sans-pro)
+            packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
+        } catch {
+            // If there is no package.json export we try the default export
+            // and search for a package.json in the parent directories.
+            // That's the case with tabulator-tables for example
+            packageRoot = findPackageJsonDir(require.resolve(packageName));
+        }
     }
     return path.relative(process.cwd(), path.join(packageRoot, assetPath));
 }
