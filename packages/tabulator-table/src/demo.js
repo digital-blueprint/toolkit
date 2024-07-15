@@ -96,11 +96,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.setData(data);
     }
 
-    deleteTableRow(row) {
-        let table = this._('#tabulator-table-demo-7');
-        table.deleteRow(row);
-    }
-
     deleteRow(e, row) {
         let table = this._('#tabulator-table-demo-7');
         e.stopPropagation();
