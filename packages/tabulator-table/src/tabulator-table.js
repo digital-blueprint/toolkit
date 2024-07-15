@@ -41,6 +41,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             identifier: {type: String, attribute: 'identifier'},
             options: {type: Object},
             data: {type: Array, attribute: 'data'},
+            paginationNoLangsEnabled: {type: Boolean, attribute: 'pagination-no-langs-enabled'},
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
             paginationSize: {type: Number, attribute: 'pagination-size'},
             selectAllEnabled: {type: Boolean, attribute: 'select-all-enabled'},
@@ -93,6 +94,19 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.options['layout'] = 'fitDataFill';
             this.options['responsiveLayout'] = 'collapse';
         }
+        if (this.paginationNoLangsEnabled) {
+            let paginationElement = this._('.tabulator-paginator');
+            //this.options['autoColumns'] = true;
+            this.options['pagination'] = true;
+            this.options['paginationSize'] = this.paginationSize;
+            this.options['paginationSizeSelector'] = true;
+            this.options['footerElement'] = '';
+            console.log('pagination element ', this.options['paginationElement']);
+            this.options['paginationElement'] = paginationElement;
+            console.log('pagination element after ', this.options['footer']);
+            console.log('custom pagination element after ', this.options['footerElement']);
+        }
+
         if (this.paginationEnabled) {
             let paginationElement = this._('.tabulator-paginator');
             this.options['pagination'] = true;

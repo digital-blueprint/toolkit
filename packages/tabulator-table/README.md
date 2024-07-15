@@ -39,10 +39,10 @@ Or you can include the JS files directly via CDN:
   layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator table
   - example `<dbp-tabulator-table options="{'myoption': 'a'}"></dbp-tabulator-table>`
   - you can set a tabulator to automatically generate its own columns by setting the option `autoColumns: true`
-    and you can edit automatically generated columns by using the function ``autoColumnsDefinitions:[
+    and you can still automatically edit generated columns by using the function ``autoColumnsDefinitions:[
     {field:"<field-name>", <property>: value},
     ...
-    ],``
+    ],`` or add translations for the header column titles by using `lang`
 - `data` (optional array, can be set later or can be updated): set the data for the tabulator table
   - example `<dbp-tabulator-table data="[{a: 123, b: 123}, {a: 234, b: 234}]"></dbp-tabulator-table>`
 - `pagination-enabled` (optional bool, default: `false`): set to true if you want a pagination shown

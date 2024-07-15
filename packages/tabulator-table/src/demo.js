@@ -421,6 +421,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         };
 
         let auto_columns = {
+            langs: langs,
             autoColumns: true,
             layout: 'fitColumns',
             autoColumnsDefinitions:[
@@ -621,8 +622,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             lang="${this.lang}"
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-10"
-                            data=${JSON.stringify(data)}
-                            options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
+                            data=${JSON.stringify(dataLong)}
+                            options=${JSON.stringify(auto_columns)}
+                            pagination-enabled></dbp-tabulator-table>
+                            
                 </div>
                 
             </section>
