@@ -280,8 +280,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     getColumns() {
         if (!this.tabulatorTable) return;
-        let cols = this.tabulatorTable.getColumns();
-        return cols;
+        let columns = this.tabulatorTable.getColumns();
+        let columns_titles = [];
+        for(let col of columns) {
+            columns_titles.push(col.getField());
+        }
+        return columns_titles;
     }
     getRows() {
         if (!this.tabulatorTable) return;
