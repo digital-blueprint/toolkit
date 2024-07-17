@@ -291,10 +291,17 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         }
         return columns_titles;
     }
+
     getRows() {
         if (!this.tabulatorTable) return;
         let rows = this.tabulatorTable.getRows();
         return rows;
+    }
+
+    getData() {
+        if (!this.tabulatorTable) return;
+        let data = this.tabulatorTable.getData();
+        return data;
     }
 
     updateRow(row, newData) {
