@@ -439,6 +439,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         };
 
         return html`
+            <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
             <section class="section">
                 <div class="container">
                     <h2 class="title">${i18n.t('demo-title')}</h2>

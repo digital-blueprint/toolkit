@@ -10,8 +10,8 @@
     "toolkit-showcase"
   ],
   "engines": {
-    "node" : ">=20.0.0",
-    "npm" : ">=7.0.0"
+    "node": ">=20.0.0",
+    "npm": ">=7.0.0"
   },
   "scripts": {
     "test": "lerna --no-sort run test",
@@ -30,5 +30,10 @@
   "license": "LGPL-2.1-or-later",
   "devDependencies": {
     "lerna": "^8.0.0"
+  },
+  "dependencies": {
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   }
 }

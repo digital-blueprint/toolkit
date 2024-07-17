@@ -9,6 +9,8 @@ import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as XLSX from 'xlsx';
 const { read, utils } = XLSX;
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -357,10 +359,55 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     download(type, dataName) {
         if (!this.tabulatorTable) return;
         this.selectedRows = this.tabulatorTable.getSelectedRows();
-        if(this.selectedRows === 0)
+        if(this.selectedRows === 0) {
+            const data = this.tabulatorTable.getData();
+            switch(type) {
+                case 'csv':
+                case 'json':
+                case 'html':
+                    this.tabulatorTable.download(type, dataName);
+                    break;
+                case 'xlsx':
+                    const ws_name = "Dates";
+                    const worksheet = XLSX.utils.json_to_sheet(data);
+                    const workbook = XLSX.utils.book_new();
+                    /* Add the worksheet to the workbook */
+                    XLSX.utils.book_append_sheet(workbook, worksheet, ws_name);
+                    XLSX.writeFile(workbook, "data.xlsx", { compression: true });
+                    break;
+                case 'pdf':
+                    const doc = new jsPDF()
+                    let columns = this.tabulatorTable.getColumns();
+                    let header = [];
+                    for(let col of columns) {
+                        if(col.getField() !== 'empty' && col.getField() !== 'undefined')
+                            header.push(col.getField());
+                    }
+                    let body = [];
+                    for (let entry of data) {
+                        let entry_array =  [];
+                        Object.values(entry).forEach(value => {
+                            entry_array.push(value);
+                        });
+                        body.push(entry_array);
+                    }
+                    let new_table = {
+                        head: [header],
+                        body: body,
+                    };
+                    console.log(new_table);
+                    autoTable(doc, new_table);
+                    doc.save('data.pdf')
+                    break;
+
+            };
+        }
+
+        /*if(this.selectedRows === 0)
             this.tabulatorTable.download(type, dataName);
         else
-            this.tabulatorTable.download(type, dataName, {}, "selected");
+            this.tabulatorTable.download(type, dataName, {}, "selected");*/
+
     }
 
     static get styles() {
