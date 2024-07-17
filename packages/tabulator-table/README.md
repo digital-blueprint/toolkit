@@ -61,6 +61,7 @@ Or you can include the JS files directly via CDN:
   
 
 ## Important functions
+- `getData()`: returns the tabulator data.
 - `setData(data)`: This function sets data of the tabulator table.
   - `data` is an array of data which should be shown in the table.
 - `getRows()`: returns an array with all the rows of the table.
@@ -75,6 +76,9 @@ Or you can include the JS files directly via CDN:
 - `removeFilter()`: This function removes the filters set on the tabulator.
 - `expandAll()`: This function expands all the collapsed columns inside hidden lists of the tabulator table
 - `collapseAll()`: This function collapses all the expanded columns inside hidden lists of the tabulator table
+- `download(type, dataName)`: downloads the selected rows or the entire tabulator data if none are selected in the specified file format
+  - `type` represents the file format to be downloaded
+  - `dataName` is the name of the file to be downloaded
 
 ## Note
 In best practice `options` is set if the dom is already rendered. 

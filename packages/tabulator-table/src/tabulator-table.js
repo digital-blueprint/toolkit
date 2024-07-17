@@ -381,7 +381,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     const workbook = XLSX.utils.book_new();
                     /* Add the worksheet to the workbook */
                     XLSX.utils.book_append_sheet(workbook, worksheet, ws_name);
-                    XLSX.writeFile(workbook, "data.xlsx", { compression: true });
+                    XLSX.writeFile(workbook, dataName, { compression: true });
                     break;
                 case 'pdf':
                     let columns = this.tabulatorTable.getColumns();
@@ -404,7 +404,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     };
                     const doc = new jsPDF()
                     autoTable(doc, new_table);
-                    doc.save('data.pdf')
+                    doc.save(dataName)
                     break;
 
             };
@@ -426,7 +426,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     const workbook = XLSX.utils.book_new();
                     /* Add the worksheet to the workbook */
                     XLSX.utils.book_append_sheet(workbook, worksheet, ws_name);
-                    XLSX.writeFile(workbook, "data.xlsx", { compression: true });
+                    XLSX.writeFile(workbook, dataName, { compression: true });
                     break;
                 case 'pdf':
                     let columns = this.tabulatorTable.getColumns();
@@ -449,7 +449,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     };
                     const doc = new jsPDF()
                     autoTable(doc, new_table);
-                    doc.save('data.pdf')
+                    doc.save(dataName)
                     break;
             };
         };
