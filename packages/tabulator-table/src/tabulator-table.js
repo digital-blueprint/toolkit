@@ -429,6 +429,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 case 'pdf':
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
+                    let definition = col.getDefinition();
                     for(let col of columns) {
                         if(col.getField() !== 'empty' && col.getField() !== 'undefined' && definition.formatter !== 'html')
                             header.push(col.getField());

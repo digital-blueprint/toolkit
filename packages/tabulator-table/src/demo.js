@@ -77,7 +77,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     download() {
-        let table = this._('#tabulator-table-demo-3');
+        let table = this._('#tabulator-table-demo-7');
         let fileFormat = this._('#file-format-select');
         fileFormat = fileFormat.value;
         let dataName = 'data';
@@ -385,7 +385,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
                 {title: 'col', field: 'col', responsive: 0},
                 {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
-                {title: 'delete', field: 'delete', formatter:"html"},
+                {title: 'delete', field: 'delete', formatter:"html", download:false},
             ]
         };
 
@@ -468,22 +468,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
                 <div class="container">
                     <h3 class="demo-sub-title">Tabulator table - select-rows-enabled</h3>
-                    <div class="select-container">
-                            <label for="file-format">${i18n.t('file-format')}</label>
-                            <select name="file-format" class="select" id="file-format-select">
-                                <option value="csv">CSV</option>
-                                <option value="json">JSON</option>
-                                <option value="xlsx">XLSX</option>
-                                <option value="pdf">PDF</option>
-                                <option value="html">HTML</option>
-                            </select>
-                            <button  class="button is-primary"
-                                 id="dowload-file-button"
-                                 @click='${() => {
-                                     this.download();
-                                 }}'>${i18n.t('download')}</button>
-                    </div>
-                    
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
@@ -584,6 +568,22 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             </select>
                             
                         </div>
+                    </div>
+
+                    <div class="select-container">
+                        <label for="file-format">${i18n.t('file-format')}</label>
+                        <select name="file-format" class="select" id="file-format-select">
+                            <option value="csv">CSV</option>
+                            <option value="json">JSON</option>
+                            <option value="xlsx">XLSX</option>
+                            <option value="pdf">PDF</option>
+                            <option value="html">HTML</option>
+                        </select>
+                        <button  class="button is-primary"
+                                 id="dowload-file-button"
+                                 @click='${() => {
+                                     this.download();
+                                 }}'>${i18n.t('download')}</button>
                     </div>
                     
                     <dbp-tabulator-table
