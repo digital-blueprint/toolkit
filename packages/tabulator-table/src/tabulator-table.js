@@ -7,6 +7,8 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
 import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import * as XLSX from 'xlsx';
+const { read, utils } = XLSX;
 
 export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -350,6 +352,15 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.expanded = false;
         }
 
+    }
+
+    download(type, dataName) {
+        if (!this.tabulatorTable) return;
+        this.selectedRows = this.tabulatorTable.getSelectedRows();
+        if(this.selectedRows === 0)
+            this.tabulatorTable.download(type, dataName);
+        else
+            this.tabulatorTable.download(type, dataName, {}, "selected");
     }
 
     static get styles() {
