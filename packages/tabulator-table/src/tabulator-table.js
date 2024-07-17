@@ -365,9 +365,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     download(type, dataName) {
         if (!this.tabulatorTable) return;
-        this.selectedRows = this.tabulatorTable.getSelectedRows();
-        if(this.selectedRows === 0) {
+        let selected_rows = this.tabulatorTable.getSelectedRows();
+        if(selected_rows.length === 0) {
             const data = this.tabulatorTable.getData();
+            console.log(data);
             switch(type) {
                 case 'csv':
                 case 'json':
@@ -383,7 +384,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     XLSX.writeFile(workbook, "data.xlsx", { compression: true });
                     break;
                 case 'pdf':
-                    const doc = new jsPDF()
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
                     for(let col of columns) {
@@ -402,13 +402,57 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         head: [header],
                         body: body,
                     };
-                    console.log(new_table);
+                    const doc = new jsPDF()
                     autoTable(doc, new_table);
                     doc.save('data.pdf')
                     break;
 
             };
-        }
+        } else {
+            let selected_rows = this.tabulatorTable.getSelectedRows();
+            const selected_data = [];
+            for (let row of selected_rows) {
+                selected_data.push(row.getData());
+            }
+            switch(type) {
+                case 'csv':
+                case 'json':
+                case 'html':
+                    this.tabulatorTable.download(type, dataName, {}, "selected");
+                    break;
+                case 'xlsx':
+                    const ws_name = "Dates";
+                    const worksheet = XLSX.utils.json_to_sheet(selected_data);
+                    const workbook = XLSX.utils.book_new();
+                    /* Add the worksheet to the workbook */
+                    XLSX.utils.book_append_sheet(workbook, worksheet, ws_name);
+                    XLSX.writeFile(workbook, "data.xlsx", { compression: true });
+                    break;
+                case 'pdf':
+                    let columns = this.tabulatorTable.getColumns();
+                    let header = [];
+                    for(let col of columns) {
+                        if(col.getField() !== 'empty' && col.getField() !== 'undefined')
+                            header.push(col.getField());
+                    }
+                    let body = [];
+                    for (let entry of selected_data) {
+                        let entry_array =  [];
+                        Object.values(entry).forEach(value => {
+                            entry_array.push(value);
+                        });
+                        body.push(entry_array);
+                    }
+                    let new_table = {
+                        head: [header],
+                        body: body,
+                    };
+                    const doc = new jsPDF()
+                    autoTable(doc, new_table);
+                    doc.save('data.pdf')
+                    break;
+            };
+        };
 
         /*if(this.selectedRows === 0)
             this.tabulatorTable.download(type, dataName);
