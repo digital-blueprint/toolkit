@@ -105,10 +105,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.options['paginationSize'] = this.paginationSize;
             this.options['paginationSizeSelector'] = true;
             this.options['footerElement'] = '';
-            console.log('pagination element ', this.options['paginationElement']);
             this.options['paginationElement'] = paginationElement;
-            console.log('pagination element after ', this.options['footer']);
-            console.log('custom pagination element after ', this.options['footerElement']);
         }
 
         if (this.paginationEnabled) {
@@ -369,7 +366,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         let selected_rows = this.tabulatorTable.getSelectedRows();
         if(selected_rows.length === 0) {
             const data = this.tabulatorTable.getData();
-            console.log(data);
             switch(type) {
                 case 'csv':
                 case 'json':
@@ -388,7 +384,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
                     for(let col of columns) {
-                        if(col.getField() !== 'empty' && col.getField() !== 'undefined')
+                        let definition = col.getDefinition();
+                        if(col.getField() !== 'empty' && col.getField() !== 'undefined' && definition.formatter !== 'html')
                             header.push(col.getField());
                     }
                     let body = [];
@@ -433,7 +430,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
                     for(let col of columns) {
-                        if(col.getField() !== 'empty' && col.getField() !== 'undefined')
+                        if(col.getField() !== 'empty' && col.getField() !== 'undefined' && definition.formatter !== 'html')
                             header.push(col.getField());
                     }
                     let body = [];

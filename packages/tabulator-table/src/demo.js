@@ -81,7 +81,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let fileFormat = this._('#file-format-select');
         fileFormat = fileFormat.value;
         let dataName = 'data';
-        console.log(fileFormat, ' ', dataName);
         table.download(fileFormat, dataName);
     }
 
