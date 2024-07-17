@@ -25,5 +25,7 @@
     "delete-rows": "Asugewählte Zeilen löschen",
     "select-column": "Spalte auswählen:",
     "select-operator": "Zeichen auswählen:",
-    "update-rows": "Zeilen aktualisieren"
+    "update-rows": "Zeilen aktualisieren",
+    "file-format": "Dateityp: ",
+    "download": "Herunterladen"
 }
