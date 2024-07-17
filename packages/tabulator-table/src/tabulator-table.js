@@ -364,6 +364,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     download(type, dataName) {
+        dataName = dataName + '.' + type;
         if (!this.tabulatorTable) return;
         let selected_rows = this.tabulatorTable.getSelectedRows();
         if(selected_rows.length === 0) {
