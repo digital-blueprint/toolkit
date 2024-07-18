@@ -366,6 +366,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         let selected_rows = this.tabulatorTable.getSelectedRows();
         if(selected_rows.length === 0) {
             const data = this.tabulatorTable.getData();
+            const rows = this.tabulatorTable.getRows();
             switch(type) {
                 case 'csv':
                 case 'json':
@@ -373,20 +374,34 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.download(type, dataName);
                     break;
                 case 'xlsx':
-                    const ws_name = "Dates";
-                    const worksheet = XLSX.utils.json_to_sheet(data);
+                    let entries = [];
+                    for (let row of rows) {
+                        let cells = row.getCells();
+                        let entry = {};
+                        for (let cell of cells) {
+                            let column = cell.getColumn();
+                            let definition = column.getDefinition();
+                            let field = cell.getField();
+                            if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
+                                entry[field] = cell.getValue();
+                            }
+                        }
+                        entries.push(entry);
+                    }
+                    const worksheet = XLSX.utils.json_to_sheet(entries);
                     const workbook = XLSX.utils.book_new();
                     /* Add the worksheet to the workbook */
-                    XLSX.utils.book_append_sheet(workbook, worksheet, ws_name);
+                    XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
                     XLSX.writeFile(workbook, dataName, { compression: true });
                     break;
                 case 'pdf':
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
-                    for(let col of columns) {
-                        let definition = col.getDefinition();
-                        if(col.getField() !== 'empty' && col.getField() !== 'undefined' && definition.formatter !== 'html')
-                            header.push(col.getField());
+                    for(let column of columns) {
+                        let definition = column.getDefinition();
+                        let field = column.getField();
+                        if(field!== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
+                            header.push(column.getField());
                     }
                     let body = [];
                     for (let entry of data) {
@@ -419,20 +434,36 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     this.tabulatorTable.download(type, dataName, {}, "selected");
                     break;
                 case 'xlsx':
-                    const ws_name = "Dates";
-                    const worksheet = XLSX.utils.json_to_sheet(selected_data);
+                    let entries = [];
+                    for (let row of selected_rows) {
+                        let cells = row.getCells();
+                        let entry = {};
+                        for (let cell of cells) {
+                            let column = cell.getColumn();
+                            let definition = column.getDefinition();
+
+                            let field = cell.getField();
+                            if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
+                                entry[field] = cell.getValue();
+                            }
+                        }
+                        entries.push(entry);
+                    }
+                    const worksheet = XLSX.utils.json_to_sheet(entries);
                     const workbook = XLSX.utils.book_new();
                     /* Add the worksheet to the workbook */
-                    XLSX.utils.book_append_sheet(workbook, worksheet, ws_name);
+                    XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
                     XLSX.writeFile(workbook, dataName, { compression: true });
                     break;
                 case 'pdf':
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
-                    let definition = col.getDefinition();
-                    for(let col of columns) {
-                        if(col.getField() !== 'empty' && col.getField() !== 'undefined' && definition.formatter !== 'html')
-                            header.push(col.getField());
+
+                    for(let column of columns) {
+                        let definition = column.getDefinition();
+                        let field = column.getField();
+                        if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
+                            header.push(column.getField());
                     }
                     let body = [];
                     for (let entry of selected_data) {
