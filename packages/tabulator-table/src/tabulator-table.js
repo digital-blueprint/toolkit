@@ -8,9 +8,8 @@ import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
 import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as XLSX from 'xlsx';
-const { read, utils } = XLSX;
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -377,7 +376,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 case 'html':
                     this.tabulatorTable.download(type, dataName);
                     break;
-                case 'xlsx':
+                case 'xlsx': {
                     let entries = [];
                     for (let row of rows) {
                         let cells = row.getCells();
@@ -398,7 +397,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
                     XLSX.writeFile(workbook, dataName, { compression: true });
                     break;
-                case 'pdf':
+                }
+                case 'pdf': {
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
                     for(let column of columns) {
@@ -419,10 +419,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         head: [header],
                         body: body,
                     };
-                    const doc = new jsPDF()
+                    const doc = new jsPDF();
                     autoTable(doc, new_table);
-                    doc.save(dataName)
+                    doc.save(dataName);
                     break;
+                }
 
             };
         } else {
@@ -437,7 +438,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 case 'html':
                     this.tabulatorTable.download(type, dataName, {}, "selected");
                     break;
-                case 'xlsx':
+                case 'xlsx': {
                     let entries = [];
                     for (let row of selected_rows) {
                         let cells = row.getCells();
@@ -459,7 +460,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
                     XLSX.writeFile(workbook, dataName, { compression: true });
                     break;
-                case 'pdf':
+                }
+                case 'pdf': {
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
 
@@ -481,10 +483,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         head: [header],
                         body: body,
                     };
-                    const doc = new jsPDF()
+                    const doc = new jsPDF();
                     autoTable(doc, new_table);
-                    doc.save(dataName)
+                    doc.save(dataName);
                     break;
+                }
             };
         };
 
