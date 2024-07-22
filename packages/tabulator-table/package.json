@@ -47,7 +47,10 @@
         "jszip": "^3.5.0",
         "lit": "^2.7.0 || ^3.0.0",
         "material-design-icons-svg": "^3.0.0",
-        "tabulator-tables": "^6.0.0"
+        "tabulator-tables": "^6.0.0",
+        "jspdf": "^2.5.1",
+        "jspdf-autotable": "^3.5.23",
+        "xlsx": "^0.18.2"
     },
     "scripts": {
         "clean": "rm dist/*",
