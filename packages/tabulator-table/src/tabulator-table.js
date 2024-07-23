@@ -367,9 +367,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         dataName = dataName + '.' + type;
         if (!this.tabulatorTable) return;
         let selected_rows = this.tabulatorTable.getSelectedRows();
+        const active_rows = this.tabulatorTable.getRows('active');
+        if(active_rows.length === 0)
+            return;
         if(selected_rows.length === 0) {
             const data = this.tabulatorTable.getData();
-            const rows = this.tabulatorTable.getRows();
             switch(type) {
                 case 'csv':
                 case 'json':
@@ -378,7 +380,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     break;
                 case 'xlsx': {
                     let entries = [];
-                    for (let row of rows) {
+                    for (let row of active_rows) {
                         let cells = row.getCells();
                         let entry = {};
                         for (let cell of cells) {
@@ -427,7 +429,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
             };
         } else {
-            let selected_rows = this.tabulatorTable.getSelectedRows();
             const selected_data = [];
             for (let row of selected_rows) {
                 selected_data.push(row.getData());
@@ -436,7 +437,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 case 'csv':
                 case 'json':
                 case 'html':
-                    this.tabulatorTable.download(type, dataName, {}, "selected");
+                    this.tabulatorTable.download(type, dataName, {}, 'selected');
                     break;
                 case 'xlsx': {
                     let entries = [];
@@ -446,7 +447,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         for (let cell of cells) {
                             let column = cell.getColumn();
                             let definition = column.getDefinition();
-
                             let field = cell.getField();
                             if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
                                 entry[field] = cell.getValue();
