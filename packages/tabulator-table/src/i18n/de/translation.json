@@ -27,5 +27,8 @@
     "select-operator": "Zeichen auswählen:",
     "update-rows": "Zeilen aktualisieren",
     "file-format": "Dateityp: ",
-    "download": "Herunterladen"
+    "download": "Herunterladen",
+    "column-settings": "Spalteneinstellungen",
+    "reset-settings": "Alle zurücksetzen",
+    "save-settings": "Speichern"
 }

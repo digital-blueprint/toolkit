@@ -810,7 +810,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                  id="open-modal-button"
                                  @click='${() => {
                                      this.openModal();
-                                 }}'>set row order</button>
+                                 }}'>${i18n.t('column-settings')}</button>
                     
                             <dbp-tabulator-table
                                     lang="${this.lang}"
@@ -819,7 +819,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                     data=${JSON.stringify(data)}
                                     options=${JSON.stringify(options)}></dbp-tabulator-table>
                     <div class="control" id="dbp-translated-demo">
-                        <dbp-modal id="my-modal-123" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                        <dbp-modal id="my-modal-123" modal-id="my-modal-123" title=${i18n.t('column-settings')} subscribe="lang">
                             <div slot="content" class="modal-content">
                                 <ul class='headers'>
                                     ${this.editableColumns.map((column, counter) => {
@@ -860,17 +860,17 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 </ul>
                             </div>
                             <div slot="footer" class="modal-footer">
-                                <button  class="button is-primary"
+                                <button  class="button is-secondary"
                                          @click='${() => {
                                              this.resetSettings();
                                          }}'>
-                                    reset
+                                        ${i18n.t('reset-settings')}
                                 </button>
                                 <button  class="button is-primary"
                                          @click='${() => {
                                              this.saveSettings();
                                          }}'>
-                                    save
+                                        ${i18n.t('save-settings')}
                                 </button>
                             </div>
                         </dbp-modal>
