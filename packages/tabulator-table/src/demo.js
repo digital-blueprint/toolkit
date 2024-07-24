@@ -240,13 +240,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     resetSettings() {
         let list = this._('.headers');
         let counter = 0;
-        let table = this._('#tabulator-table-demo-11');
-        let columns = table.getColumns();
-        console.log('columns ', columns);
         for (let li of list.children) {
             let initial_column = this.editableColumns[counter];
-            console.log('definition ', initial_column.title);
-            console.log('visible ', initial_column.visible);
             let div = li.children[0];
             let span = div.children[0];
             if(span.innerHTML !== initial_column.title) {
@@ -254,7 +249,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             }
             let visibility = initial_column.visible;
             let visibility_icon = div.children[1];
-            console.log(visibility_icon);
             if(visibility && (visibility_icon.iconName === 'source_icons_eye-off')) {
                 visibility_icon.iconName = 'source_icons_eye-empty';
             }
@@ -264,6 +258,27 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             counter++;
         }
 
+    }
+
+    saveSettings() {
+        let list = this._('.headers');
+        let counter = 0;
+        let table = this._('#tabulator-table-demo-11');
+        for (let li of list.children) {
+            let initial_column = this.editableColumns[counter];
+            let div = li.children[0];
+            //TODO: switch tabulator columns
+            let visibility = initial_column.visible;
+            let visibility_icon = div.children[1];
+            if(visibility && (visibility_icon.iconName === 'source_icons_eye-off')) {
+                initial_column.visible = false;
+                table.hideColumn(initial_column.title);
+            }
+            else if (!visibility && (visibility_icon.iconName === 'source_icons_eye-empty')) {
+                initial_column.visible = true;
+            }
+            counter++;
+        }
     }
 
     static get styles() {
@@ -851,7 +866,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                          }}'>
                                     reset
                                 </button>
-                                <button  class="button is-primary">save</button>
+                                <button  class="button is-primary"
+                                         @click='${() => {
+                                             this.saveSettings();
+                                         }}'>
+                                    save
+                                </button>
                             </div>
                         </dbp-modal>
                     </div>

@@ -497,11 +497,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             };
         };
 
-        /*if(this.selectedRows === 0)
-            this.tabulatorTable.download(type, dataName);
-        else
-            this.tabulatorTable.download(type, dataName, {}, "selected");*/
+    }
 
+    hideColumn(name) {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.hideColumn(name);
     }
 
     static get styles() {
