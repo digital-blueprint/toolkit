@@ -7,6 +7,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {IconButton} from '@dbp-toolkit/common';
+import {Modal} from '@dbp-toolkit/common/src/modal.js';
 
 export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -21,12 +22,14 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         this.expandedTabulator = true;
         this.selectedRow = this.rowClick.bind(this);
         this.selected = false;
+        this.editableColumns = [];
     }
 
     static get scopedElements() {
         return {
             'dbp-tabulator-table': TabulatorTable,
             'dbp-icon-button': IconButton,
+            'dbp-modal': Modal
         };
     }
 
@@ -37,6 +40,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             langDir: {type: String, attribute: 'lang-dir'},
             expandedTabulator: {type: Boolean},
             selected: {type: Boolean},
+            editableColumns: []
         };
     }
 
@@ -170,6 +174,70 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.collapseAll();
     }
 
+    moveColumns() {
+        let table = this._('#tabulator-table-demo-11');
+        table.moveColumns('name', 'dob');
+    }
+
+    openModal() {
+        let modal = this._('#my-modal-123');
+        if (modal) {
+            modal.open();
+        }
+    }
+
+    changeVisibility(counter) {
+        let id = '#eye-button-' + counter;
+        let visibility = this._(id);
+        if(visibility.iconName === 'source_icons_eye-empty') {
+            visibility.iconName = 'source_icons_eye-off';
+        }
+        else {
+            visibility.iconName = 'source_icons_eye-empty';
+        }
+    }
+
+    moveHeaderUp(title, index) {
+        if (index === 0) return;
+        let list = this._('.headers');
+        for (let li of list.children) {
+            if(li.classList.contains(title)) {
+                let element = li;
+                let swapElem = list.children[index - 1];
+                this.swapHeader(element, swapElem);
+                return;
+            }
+        }
+    }
+
+    moveHeaderDown(title, index) {
+        if (index === (this.editableColumns.length - 1)) return;
+        let list = this._('.headers');
+        for (let li of list.children) {
+            if(li.classList.contains(title)) {
+                let element = li;
+                let swapElem = list.children[index + 1];
+                this.swapHeader(element, swapElem);
+                return;
+            }
+        }
+    }
+
+    swapHeader(elem, swapElem) {
+        let div_1 = elem.children[0];
+        let span_1 = div_1.children[0];
+        let aux = span_1.innerHTML;
+
+        let div_2 = swapElem.children[0];
+        let span_2 = div_2.children[0];
+
+        span_1.innerHTML = span_2.innerHTML;
+        span_2.innerHTML = aux;
+
+    }
+
+
+
     static get styles() {
         // language=css
         return css`
@@ -195,6 +263,29 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             .select-container {
                 margin-top: 15px;
             }
+
+            .headers {
+                display: initial;
+                width: 100%;
+                list-style-type: none;
+            }
+
+            .header-field {
+                align-items: center;
+                height: 50px;
+                border: 1px solid var(--dbp-muted);
+                display: flex;
+                margin-bottom: 5px;
+            }
+
+            .header-title {
+                flex-grow: 2;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                padding-left: 5px;
+                text-align: left;
+            }
+
         `;
     }
 
@@ -377,6 +468,27 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+        this.editableColumns = options.columns;
+
+        let new_options = {
+            langs: langs,
+            layout: 'fitColumns',
+            responsiveLayout: 'collapse',
+            responsiveLayoutCollapseStartOpen: false,
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
+            columns: [
+                {title: 'name', field: 'name', width: 150},
+                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress', visible: false},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {title: 'col', field: 'col'},
+            ],
+            columnDefaults: {
+                vertAlign: 'middle',
+                hozAlign: 'left',
+                resizable: false,
+            },
+        };
+
         let options_edit = {
             langs: langs_edit,
             layout:"fitColumns",
@@ -442,7 +554,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             <section class="section">
                 <div class="container">
                     <h2 class="title">${i18n.t('demo-title')}</h2>
-                    <p>Basic tabulartor table with example data.</p>
+                    <p>Basic tabulator table with example data.</p>
                 </div>
 
                 <div class="container">
@@ -646,6 +758,81 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             options=${JSON.stringify(auto_columns)}
                             pagination-enabled></dbp-tabulator-table>
                             
+                </div>
+                
+
+                <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - update columns</h3>
+                    <dbp-tabulator-table
+                            lang="${this.lang}"
+                            class="tabulator-table-demo"
+                            id="tabulator-table-demo-11"
+                            data=${JSON.stringify(data)}
+                            options=${JSON.stringify(options)}></dbp-tabulator-table>
+                </div>
+
+
+                <div class="content">
+                    <h3 class="demo-sub-title">Tabulator table - edit columns</h3>
+                        <button  class="button is-primary"
+                                 id="open-modal-button"
+                                 @click='${() => {
+                                     this.openModal();
+                                 }}'>set row order</button>
+                    
+                            <dbp-tabulator-table
+                                    lang="${this.lang}"
+                                    class="tabulator-table-demo"
+                                    id="tabulator-table-demo-111"
+                                    data=${JSON.stringify(data)}
+                                    options=${JSON.stringify(options)}></dbp-tabulator-table>
+                    <div class="control" id="dbp-translated-demo">
+                        <dbp-modal id="my-modal-123" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                            <div slot="content" class="modal-content">
+                                <ul class='headers'>
+                                    ${this.editableColumns.map((column, counter) => {
+                                        return html`
+                                            <li class=${column.title}>
+                                                <div class="header-field">
+                                                    <span class="header-title">
+                                                        ${column.title}
+                                                    </span>
+                                                    <dbp-icon-button class='header-button header-visibility-icon' 
+                                                                    id=${'eye-button-' + counter}
+                                                                    @click='${() => {
+                                                                        this.changeVisibility(counter);
+                                                                    }}'
+                                                                icon-name='source_icons_eye-empty'
+                                                                    
+                                                                title='}'
+                                                                aria-label=''></dbp-icon-button>
+                                                                <dbp-icon-button class='header-button'
+                                                                    @click='${() => {
+                                                                        this.moveHeaderUp(column.title, counter);
+                                                                    }}'
+                                                                    icon-name='arrow-up'
+                                                                    title=''
+                                                                    aria-label=''></dbp-icon-button>
+                                                                <dbp-icon-button class='header-button'
+                                                                    @click='${() => {
+                                                                        this.moveHeaderDown(column.title, counter);
+                                                                    }}'
+                                                                    icon-name='arrow-down'
+                                                                    title=''
+                                                                    aria-label=''></dbp-icon-button>
+                                                </div>
+                                            </li>
+                                        `;
+                                        })}
+                                    
+                                </ul>
+                            </div>
+                            <div slot="footer" class="modal-footer">
+                                <button  class="button is-primary">reset</button>
+                                <button  class="button is-primary">save</button>
+                            </div>
+                        </dbp-modal>
+                    </div>
                 </div>
                 
             </section>
