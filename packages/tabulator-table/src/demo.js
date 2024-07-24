@@ -8,6 +8,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {IconButton} from '@dbp-toolkit/common';
 import {Modal} from '@dbp-toolkit/common/src/modal.js';
+import {types} from "mocha/lib/cli/run-option-metadata.js";
 
 export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -236,7 +237,34 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
     }
 
+    resetSettings() {
+        let list = this._('.headers');
+        let counter = 0;
+        let table = this._('#tabulator-table-demo-11');
+        let columns = table.getColumns();
+        console.log('columns ', columns);
+        for (let li of list.children) {
+            let initial_column = this.editableColumns[counter];
+            console.log('definition ', initial_column.title);
+            console.log('visible ', initial_column.visible);
+            let div = li.children[0];
+            let span = div.children[0];
+            if(span.innerHTML !== initial_column.title) {
+                span.innerHTML = initial_column.title;
+            }
+            let visibility = initial_column.visible;
+            let visibility_icon = div.children[1];
+            console.log(visibility_icon);
+            if(visibility && (visibility_icon.iconName === 'source_icons_eye-off')) {
+                visibility_icon.iconName = 'source_icons_eye-empty';
+            }
+            else if (!visibility && (visibility_icon.iconName === 'source_icons_eye-empty')) {
+                visibility_icon.iconName = 'source_icons_eye-off';
+            }
+            counter++;
+        }
 
+    }
 
     static get styles() {
         // language=css
@@ -456,10 +484,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             responsiveLayoutCollapseStartOpen: false,
             rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
-                {title: 'name', field: 'name', width: 150},
-                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
-                {title: 'col', field: 'col'},
-                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {title: 'name', field: 'name', width: 150, visible: true},
+                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress', visible: true},
+                {title: 'col', field: 'col', visible: true},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center', visible: true},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
@@ -759,20 +787,9 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             pagination-enabled></dbp-tabulator-table>
                             
                 </div>
-                
+
 
                 <div class="container">
-                    <h3 class="demo-sub-title">Tabulator table - update columns</h3>
-                    <dbp-tabulator-table
-                            lang="${this.lang}"
-                            class="tabulator-table-demo"
-                            id="tabulator-table-demo-11"
-                            data=${JSON.stringify(data)}
-                            options=${JSON.stringify(options)}></dbp-tabulator-table>
-                </div>
-
-
-                <div class="content">
                     <h3 class="demo-sub-title">Tabulator table - edit columns</h3>
                         <button  class="button is-primary"
                                  id="open-modal-button"
@@ -783,7 +800,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             <dbp-tabulator-table
                                     lang="${this.lang}"
                                     class="tabulator-table-demo"
-                                    id="tabulator-table-demo-111"
+                                    id="tabulator-table-demo-11"
                                     data=${JSON.stringify(data)}
                                     options=${JSON.stringify(options)}></dbp-tabulator-table>
                     <div class="control" id="dbp-translated-demo">
@@ -828,7 +845,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 </ul>
                             </div>
                             <div slot="footer" class="modal-footer">
-                                <button  class="button is-primary">reset</button>
+                                <button  class="button is-primary"
+                                         @click='${() => {
+                                             this.resetSettings();
+                                         }}'>
+                                    reset
+                                </button>
                                 <button  class="button is-primary">save</button>
                             </div>
                         </dbp-modal>
