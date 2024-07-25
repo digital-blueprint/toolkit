@@ -197,26 +197,27 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-    moveHeaderUp(title, index) {
-        if (index === 0) return;
+    moveHeaderUp(index) {
+        if (index === 1) return;
         let list = this._('.headers');
         for (let li of list.children) {
-            if(li.classList.contains(title)) {
+            if(li.id === index.toString()) {
+                console.log('li.id ', li.id);
                 let element = li;
-                let swapElem = list.children[index - 1];
+                let swapElem = list.children[index - 2];
                 this.swapHeader(element, swapElem);
                 return;
             }
         }
     }
 
-    moveHeaderDown(title, index) {
-        if (index === (this.editableColumns.length - 1)) return;
+    moveHeaderDown(index) {
+        if (index === this.editableColumns.length ) return;
         let list = this._('.headers');
         for (let li of list.children) {
-            if(li.classList.contains(title)) {
+            if(li.id === index.toString()) {
                 let element = li;
-                let swapElem = list.children[index + 1];
+                let swapElem = list.children[index];
                 this.swapHeader(element, swapElem);
                 return;
             }
@@ -804,7 +805,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 <ul class='headers'>
                                     ${this.editableColumns.map((column, counter) => {
                                         return html`
-                                            <li class=${column.title}>
+                                            <li id=${(counter + 1).toString()}>
                                                 <div class="header-field">
                                                     <span class="header-title">
                                                         ${column.title}
@@ -820,14 +821,14 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                                                 aria-label=''></dbp-icon-button>
                                                                 <dbp-icon-button class='header-button'
                                                                     @click='${() => {
-                                                                        this.moveHeaderUp(column.title, counter);
+                                                                        this.moveHeaderUp(counter + 1);
                                                                     }}'
                                                                     icon-name='arrow-up'
                                                                     title=''
                                                                     aria-label=''></dbp-icon-button>
                                                                 <dbp-icon-button class='header-button'
                                                                     @click='${() => {
-                                                                        this.moveHeaderDown(column.title, counter);
+                                                                        this.moveHeaderDown(counter + 1);
                                                                     }}'
                                                                     icon-name='arrow-down'
                                                                     title=''
