@@ -8,7 +8,6 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {IconButton} from '@dbp-toolkit/common';
 import {Modal} from '@dbp-toolkit/common/src/modal.js';
-import {types} from "mocha/lib/cli/run-option-metadata.js";
 
 export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -512,25 +511,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         };
 
         this.editableColumns = options.columns;
-
-        let new_options = {
-            langs: langs,
-            layout: 'fitColumns',
-            responsiveLayout: 'collapse',
-            responsiveLayoutCollapseStartOpen: false,
-            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
-            columns: [
-                {title: 'name', field: 'name', width: 150},
-                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress', visible: false},
-                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
-                {title: 'col', field: 'col'},
-            ],
-            columnDefaults: {
-                vertAlign: 'middle',
-                hozAlign: 'left',
-                resizable: false,
-            },
-        };
 
         let options_edit = {
             langs: langs_edit,
