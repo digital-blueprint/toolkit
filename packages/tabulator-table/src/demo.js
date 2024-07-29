@@ -172,11 +172,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.collapseAll();
     }
 
-    moveColumns() {
-        let table = this._('#tabulator-table-demo-11');
-        table.moveColumns('name', 'dob');
-    }
-
     openModal() {
         let modal = this._('#my-modal-123');
         if (modal) {
