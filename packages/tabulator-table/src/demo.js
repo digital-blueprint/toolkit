@@ -212,7 +212,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let table = this._('#tabulator-table-demo-11');
         let columns = table.getColumns();
         if (index === (columns.length - 1)) return;
-        console.log(columns.length);
         let list = this._('.headers');
         for (let li of list.children) {
             if(li.id === index.toString()) {
@@ -244,6 +243,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let columns = table.getColumns();
 
         for (let li of list.children) {
+            //let initial_column = columns[counter].getDefinition();
             let initial_column = columns[counter].getDefinition();
             let div = li.children[0];
             let span = div.children[0];
@@ -509,10 +509,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             responsiveLayoutCollapseStartOpen: false,
             rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
             columns: [
-                {title: 'name', field: 'name', width: 150, visible: true},
-                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress', visible: true},
-                {title: 'col', field: 'col', visible: true},
-                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center', visible: true},
+                {title: 'name', field: 'name', width: 150},
+                {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
+                {title: 'col', field: 'col'},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
@@ -521,7 +521,24 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
-        this.editableColumns = options.columns;
+        let options_basic = {
+            langs: langs,
+            layout: 'fitColumns',
+            responsiveLayout: 'collapse',
+            responsiveLayoutCollapseStartOpen: false,
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
+            columns: [
+                {title: 'name', field: 'name', width: 150},
+                {title: 'age', field: 'age', hozAlign: 'left'},
+                {title: 'col', field: 'col'},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+            ],
+            columnDefaults: {
+                vertAlign: 'middle',
+                hozAlign: 'left',
+                resizable: false,
+            },
+        };
 
         let options_edit = {
             langs: langs_edit,
@@ -809,7 +826,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                     class="tabulator-table-demo"
                                     id="tabulator-table-demo-11"
                                     data=${JSON.stringify(data)}
-                                    options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
+                                    options=${JSON.stringify(options_basic)}></dbp-tabulator-table>
                     <div class="control" id="dbp-translated-demo">
                         <dbp-modal id="my-modal-123" modal-id="my-modal-123" title=${i18n.t('column-settings')} subscribe="lang">
                             <div slot="content" class="modal-content">
