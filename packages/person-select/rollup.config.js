@@ -8,7 +8,7 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import {getPackagePath, getDistPath} from '../../rollup.utils.js';
+import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
 
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);

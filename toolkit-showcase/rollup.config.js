@@ -14,7 +14,7 @@ import md from 'rollup-plugin-md';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
-import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '../rollup.utils.js';
+import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
 import { createRequire } from "node:module";
 

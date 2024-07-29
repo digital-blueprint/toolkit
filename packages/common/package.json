@@ -11,6 +11,7 @@
         "directory": "packages/common"
     },
     "devDependencies": {
+        "@dbp-toolkit/dev-utils": "^0.1.0",
         "@rollup/plugin-commonjs": "^26.0.0",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",

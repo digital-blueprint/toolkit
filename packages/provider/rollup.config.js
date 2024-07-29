@@ -8,7 +8,7 @@ import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getPackagePath, getDistPath} from '../../rollup.utils.js';
+import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
 import { createRequire } from "node:module";
 import process from 'node:process';
 
