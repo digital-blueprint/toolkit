@@ -22,7 +22,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         this.expandedTabulator = true;
         this.selectedRow = this.rowClick.bind(this);
         this.selected = false;
-        this.editableColumns = [];
     }
 
     static get scopedElements() {
@@ -39,8 +38,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
             expandedTabulator: {type: Boolean},
-            selected: {type: Boolean},
-            editableColumns: []
+            selected: {type: Boolean}
         };
     }
 
@@ -202,7 +200,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let list = this._('.headers');
         for (let li of list.children) {
             if(li.id === index.toString()) {
-                //console.log('li.id ', li.id);
                 let element = li;
                 let swapElem = list.children[index - 2];
                 this.swapHeader(element, swapElem);
@@ -212,7 +209,10 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     moveHeaderDown(index) {
-        if (index === this.editableColumns.length ) return;
+        let table = this._('#tabulator-table-demo-11');
+        let columns = table.getColumns();
+        if (index === (columns.length - 1)) return;
+        console.log(columns.length);
         let list = this._('.headers');
         for (let li of list.children) {
             if(li.id === index.toString()) {
@@ -239,15 +239,24 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
     resetSettings() {
         let list = this._('.headers');
-        let counter = 0;
+        let counter = 1;
+        let table = this._('#tabulator-table-demo-11');
+        let columns = table.getColumns();
+
         for (let li of list.children) {
-            let initial_column = this.editableColumns[counter];
+            let initial_column = columns[counter].getDefinition();
             let div = li.children[0];
             let span = div.children[0];
-            if(span.innerHTML !== initial_column.title) {
-                span.innerHTML = initial_column.title;
+            if(span.innerText !== initial_column.title) {
+                span.innerText = initial_column.title;
             }
-            let visibility = initial_column.visible;
+            let visibility;
+            if(!initial_column.hasOwnProperty('visible')) {
+                visibility = true;
+            }
+            else {
+                visibility = initial_column.visible;
+            }
             let visibility_icon = div.children[1];
             if(visibility && (visibility_icon.iconName === 'source_icons_eye-off')) {
                 visibility_icon.iconName = 'source_icons_eye-empty';
@@ -260,27 +269,23 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
     }
 
-    findNewColumnIndex(currentColumn) {
-        let list = this._('.headers');
-        let counter = 0;
-        for (let li of list.children) {
-            let initial_column = this.editableColumns[counter];
-            if(initial_column === currentColumn)
-                return counter;
-            counter++;
-        }
-    }
-
     saveSettings() {
         let table = this._('#tabulator-table-demo-11');
         let list = this._('.headers');
-
         let newColumns = [];
 
         for (let li of list.children) {
             let div = li.children[0];
             let span = div.children[0];
-            let entry = {title: span.innerText, field: span.innerText};
+
+            let visibility_icon = div.children[1];
+            let visibility;
+            if(visibility_icon.iconName === 'source_icons_eye-off') {
+                visibility = false;
+            } else {
+                visibility = true;
+            }
+            let entry = {title: span.innerText, field: span.innerText, visible: visibility};
             newColumns.push(entry);
         }
         table.setColumns(newColumns);
@@ -809,7 +814,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         <dbp-modal id="my-modal-123" modal-id="my-modal-123" title=${i18n.t('column-settings')} subscribe="lang">
                             <div slot="content" class="modal-content">
                                 <ul class='headers'>
-                                    ${this.editableColumns.map((column, counter) => {
+                                    ${options.columns.map((column, counter) => {
                                         return html`
                                             <li id=${(counter + 1).toString()}>
                                                 <div class="header-field">
