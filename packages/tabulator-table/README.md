@@ -62,20 +62,24 @@ Or you can include the JS files directly via CDN:
 
 ## Important functions
 - `getData()`: returns the tabulator data.
-- `setData(data)`: This function sets data of the tabulator table.
+- `setData(data)`: sets data of the tabulator table.
   - `data` is an array of data which should be shown in the table.
-- `getRows()`: returns an array with all the rows of the table.
+- `getRows()`: returns an array with all the row components of the table.
 - `getSelectedRows()`: returns an array with all the selected rows of the table.
 - `updateRow(row, newData)`: updates a given row of the tabulator table with new data.
   -`row` represents the row object we want to update.
   -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}` 
-- `deleteRow(row)`: This function deletes the given row from the specified tabulator table.
+- `deleteRow(row)`: deletes the given row from the specified tabulator table.
   -`row` represents the id of the row we want to delete.
-- `deleteSelectedRows()`: This function deletes the selected rows (by clicking) of the tabulator.
-- `setFilter(listOfFilters)`: This function filters the tabulator table according to the given list of filters.
-- `removeFilter()`: This function removes the filters set on the tabulator.
-- `expandAll()`: This function expands all the collapsed columns inside hidden lists of the tabulator table
-- `collapseAll()`: This function collapses all the expanded columns inside hidden lists of the tabulator table
+- `deleteSelectedRows()`: this function deletes the selected rows (by clicking) of the tabulator.
+- `getColumns()`: returns an array with all the column components of the table. 
+- `setColumns(newColumns)`: sets new columns to the tabulator. 
+  - `newColumns` is an array with the new column definitions.
+- `getColumnsFields()`: returns an array with all the column fields of the table.
+- `setFilter(listOfFilters)`: filters the tabulator table according to the given list of filters.
+- `removeFilter()`: removes the filters set on the tabulator.
+- `expandAll()`: expands all the collapsed columns inside hidden lists of the tabulator table
+- `collapseAll()`: collapses all the expanded columns inside hidden lists of the tabulator table
 - `download(type, dataName)`: downloads the selected rows or the entire tabulator data if none are selected in the specified file format
   - `type` represents the file format to be downloaded
   - `dataName` is the name of the file to be downloaded
