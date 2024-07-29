@@ -283,6 +283,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         return this.tabulatorTable.getColumns();
     }
 
+    setColumns(newColumns) {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.setColumns(newColumns);
+    }
+
     moveColumns(column1, column2) {
         if (!this.tabulatorTable) return;
         this.tabulatorTable.moveColumn(column1, column2, true); //move the name column after the age column

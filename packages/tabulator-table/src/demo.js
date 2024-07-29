@@ -202,7 +202,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let list = this._('.headers');
         for (let li of list.children) {
             if(li.id === index.toString()) {
-                console.log('li.id ', li.id);
+                //console.log('li.id ', li.id);
                 let element = li;
                 let swapElem = list.children[index - 2];
                 this.swapHeader(element, swapElem);
@@ -260,25 +260,30 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
     }
 
-    saveSettings() {
+    findNewColumnIndex(currentColumn) {
         let list = this._('.headers');
         let counter = 0;
-        let table = this._('#tabulator-table-demo-11');
         for (let li of list.children) {
             let initial_column = this.editableColumns[counter];
-            let div = li.children[0];
-            //TODO: switch tabulator columns
-            let visibility = initial_column.visible;
-            let visibility_icon = div.children[1];
-            if(visibility && (visibility_icon.iconName === 'source_icons_eye-off')) {
-                initial_column.visible = false;
-                table.hideColumn(initial_column.title);
-            }
-            else if (!visibility && (visibility_icon.iconName === 'source_icons_eye-empty')) {
-                initial_column.visible = true;
-            }
+            if(initial_column === currentColumn)
+                return counter;
             counter++;
         }
+    }
+
+    saveSettings() {
+        let table = this._('#tabulator-table-demo-11');
+        let list = this._('.headers');
+
+        let newColumns = [];
+
+        for (let li of list.children) {
+            let div = li.children[0];
+            let span = div.children[0];
+            let entry = {title: span.innerText, field: span.innerText};
+            newColumns.push(entry);
+        }
+        table.setColumns(newColumns);
     }
 
     static get styles() {
@@ -573,6 +578,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+
         return html`
             <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
             <section class="section">
@@ -798,7 +804,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                     class="tabulator-table-demo"
                                     id="tabulator-table-demo-11"
                                     data=${JSON.stringify(data)}
-                                    options=${JSON.stringify(options)}></dbp-tabulator-table>
+                                    options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
                     <div class="control" id="dbp-translated-demo">
                         <dbp-modal id="my-modal-123" modal-id="my-modal-123" title=${i18n.t('column-settings')} subscribe="lang">
                             <div slot="content" class="modal-content">
@@ -807,9 +813,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                         return html`
                                             <li id=${(counter + 1).toString()}>
                                                 <div class="header-field">
-                                                    <span class="header-title">
-                                                        ${column.title}
-                                                    </span>
+                                                    <span class="header-title">${column.title}</span>
                                                     <dbp-icon-button class='header-button header-visibility-icon' 
                                                                     id=${'eye-button-' + counter}
                                                                     @click='${() => {
