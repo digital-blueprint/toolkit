@@ -243,20 +243,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         let columns = table.getColumns();
 
         for (let li of list.children) {
-            //let initial_column = columns[counter].getDefinition();
             let initial_column = columns[counter].getDefinition();
             let div = li.children[0];
             let span = div.children[0];
             if(span.innerText !== initial_column.title) {
                 span.innerText = initial_column.title;
             }
-            let visibility;
-            if(!initial_column.hasOwnProperty('visible')) {
-                visibility = true;
-            }
-            else {
-                visibility = initial_column.visible;
-            }
+            let visibility = columns[counter].isVisible();
             let visibility_icon = div.children[1];
             if(visibility && (visibility_icon.iconName === 'source_icons_eye-off')) {
                 visibility_icon.iconName = 'source_icons_eye-empty';
