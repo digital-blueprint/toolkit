@@ -247,6 +247,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.setData(this.data);
     }
 
+    addData(data) {
+        if (!this.tabulatorTable) return;
+
+        this.tabulatorTable.addData(data, false);
+    }
+
     setFilter(listOfFilters) {
         if (!this.tabulatorTable) return;
         if(listOfFilters.length === 0)
@@ -302,6 +308,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         let rows = this.tabulatorTable.getRows();
         return rows;
+    }
+
+    getRowFromPosition(position) {
+        if (!this.tabulatorTable) return;
+        let row = this.tabulatorTable.getRowFromPosition(position);
+        return row;
     }
 
     getData() {
