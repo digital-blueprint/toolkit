@@ -16,7 +16,7 @@
         "globals": "^15.3.0",
         "@eslint/js": "^9.8.0",
         "eslint": "^9.1.0",
-        "eslint-plugin-jsdoc": "^48.0.0"
+        "eslint-plugin-jsdoc": "^50.0.0"
     },
     "dependencies": {
         "find-cache-dir": "^5.0.0",
