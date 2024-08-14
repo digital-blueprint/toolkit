@@ -6,7 +6,6 @@ import {createRequire} from 'node:module';
 import child_process from 'node:child_process';
 import selfsigned from 'selfsigned';
 import findCacheDir from 'find-cache-dir';
-import { createRequire } from "module";
 
 /**
  * Returns true if git is installed and we are inside a git working tree
