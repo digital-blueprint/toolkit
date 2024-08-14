@@ -7,6 +7,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {IconButton} from '@dbp-toolkit/common';
+import {Modal} from '@dbp-toolkit/common/src/modal.js';
 
 export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -27,6 +28,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         return {
             'dbp-tabulator-table': TabulatorTable,
             'dbp-icon-button': IconButton,
+            'dbp-modal': Modal
         };
     }
 
@@ -36,7 +38,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
             expandedTabulator: {type: Boolean},
-            selected: {type: Boolean},
+            selected: {type: Boolean}
         };
     }
 
@@ -76,6 +78,14 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
+    download() {
+        let table = this._('#tabulator-table-demo-7');
+        let fileFormat = this._('#file-format-select');
+        fileFormat = fileFormat.value;
+        let dataName = 'data';
+        table.download(fileFormat, dataName);
+    }
+
     rowClick(event) {
         this.selected = true;
         let deleteButton = this._('#delete-button');
@@ -94,11 +104,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     setTableDataForEdit(data) {
         let table = this._('#tabulator-table-demo-7');
         table.setData(data);
-    }
-
-    deleteTableRow(row) {
-        let table = this._('#tabulator-table-demo-7');
-        table.deleteRow(row);
     }
 
     deleteRow(e, row) {
@@ -135,7 +140,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
         else
         {
-            const columns = ['name', 'age', 'col', 'dob'];
+            const columns = table.getColumnsFields();
 
             for (let col of columns) {
                 let filter_object = {field: col, type: operator, value: filter};
@@ -167,6 +172,113 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         table.collapseAll();
     }
 
+    openModal() {
+        let modal = this._('#my-modal-123');
+        if (modal) {
+            modal.open();
+        }
+    }
+
+    changeVisibility(counter) {
+        let id = '#eye-button-' + counter;
+        let visibility = this._(id);
+        if(visibility.iconName === 'source_icons_eye-empty') {
+            visibility.iconName = 'source_icons_eye-off';
+        }
+        else {
+            visibility.iconName = 'source_icons_eye-empty';
+        }
+    }
+
+    moveHeaderUp(index) {
+        if (index === 1) return;
+        let list = this._('.headers');
+        for (let li of list.children) {
+            if(li.id === index.toString()) {
+                let element = li;
+                let swapElem = list.children[index - 2];
+                this.swapHeader(element, swapElem);
+                return;
+            }
+        }
+    }
+
+    moveHeaderDown(index) {
+        let table = this._('#tabulator-table-demo-11');
+        let columns = table.getColumns();
+        if (index === (columns.length - 1)) return;
+        let list = this._('.headers');
+        for (let li of list.children) {
+            if(li.id === index.toString()) {
+                let element = li;
+                let swapElem = list.children[index];
+                this.swapHeader(element, swapElem);
+                return;
+            }
+        }
+    }
+
+    swapHeader(elem, swapElem) {
+        let div_1 = elem.children[0];
+        let span_1 = div_1.children[0];
+        let aux = span_1.innerHTML;
+
+        let div_2 = swapElem.children[0];
+        let span_2 = div_2.children[0];
+
+        span_1.innerHTML = span_2.innerHTML;
+        span_2.innerHTML = aux;
+
+    }
+
+    resetSettings() {
+        let list = this._('.headers');
+        let counter = 1;
+        let table = this._('#tabulator-table-demo-11');
+        let columns = table.getColumns();
+
+        for (let li of list.children) {
+            let initial_column = columns[counter].getDefinition();
+            let div = li.children[0];
+            let span = div.children[0];
+            if(span.innerText !== initial_column.title) {
+                span.innerText = initial_column.title;
+            }
+            let visibility = columns[counter].isVisible();
+            let visibility_icon = div.children[1];
+            if(visibility && (visibility_icon.iconName === 'source_icons_eye-off')) {
+                visibility_icon.iconName = 'source_icons_eye-empty';
+            }
+            else if (!visibility && (visibility_icon.iconName === 'source_icons_eye-empty')) {
+                visibility_icon.iconName = 'source_icons_eye-off';
+            }
+            counter++;
+        }
+
+    }
+
+    saveSettings() {
+        let table = this._('#tabulator-table-demo-11');
+        let list = this._('.headers');
+        let newColumns = [];
+
+        for (let li of list.children) {
+            let div = li.children[0];
+            let span = div.children[0];
+
+            let visibility_icon = div.children[1];
+            let visibility;
+            if(visibility_icon.iconName === 'source_icons_eye-off') {
+                visibility = false;
+            } else {
+                visibility = true;
+            }
+            let entry = {title: span.innerText, field: span.innerText, visible: visibility};
+            newColumns.push(entry);
+        }
+        table.setColumns(newColumns);
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -192,6 +304,29 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             .select-container {
                 margin-top: 15px;
             }
+
+            .headers {
+                display: initial;
+                width: 100%;
+                list-style-type: none;
+            }
+
+            .header-field {
+                align-items: center;
+                height: 50px;
+                border: 1px solid var(--dbp-muted);
+                display: flex;
+                margin-bottom: 5px;
+            }
+
+            .header-title {
+                flex-grow: 2;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                padding-left: 5px;
+                text-align: left;
+            }
+
         `;
     }
 
@@ -374,6 +509,25 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+        let options_basic = {
+            langs: langs,
+            layout: 'fitColumns',
+            responsiveLayout: 'collapse',
+            responsiveLayoutCollapseStartOpen: false,
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
+            columns: [
+                {title: 'name', field: 'name', width: 150},
+                {title: 'age', field: 'age', hozAlign: 'left'},
+                {title: 'col', field: 'col'},
+                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+            ],
+            columnDefaults: {
+                vertAlign: 'middle',
+                hozAlign: 'left',
+                resizable: false,
+            },
+        };
+
         let options_edit = {
             langs: langs_edit,
             layout:"fitColumns",
@@ -382,7 +536,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
                 {title: 'col', field: 'col', responsive: 0},
                 {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
-                {title: 'delete', field: 'delete', formatter:"html"},
+                {title: 'delete', field: 'delete', formatter:"html", download:false},
             ]
         };
 
@@ -421,6 +575,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         };
 
         let auto_columns = {
+            langs: langs,
             autoColumns: true,
             layout: 'fitColumns',
             autoColumnsDefinitions:[
@@ -433,11 +588,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             },
         };
 
+
         return html`
+            <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
             <section class="section">
                 <div class="container">
                     <h2 class="title">${i18n.t('demo-title')}</h2>
-                    <p>Basic tabulartor table with example data.</p>
+                    <p>Basic tabulator table with example data.</p>
                 </div>
 
                 <div class="container">
@@ -530,7 +687,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 @click='${() => {
                                     this.removeFilter();
                                 }}'>${i18n.t('remove-filters')}</button>
-                        <button class="button is-primary" 
+                        <button class="button is-primary"
                                 id = "delete-button"
                                 disabled
                                 @click="${() => {
@@ -561,10 +718,26 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 <option value="starts">${i18n.t('columns.starts')}</option>
                                 <option value="ends">${i18n.t('columns.ends')}</option>
                             </select>
-                            
+
                         </div>
                     </div>
-                    
+
+                    <div class="select-container">
+                        <label for="file-format">${i18n.t('file-format')}</label>
+                        <select name="file-format" class="select" id="file-format-select">
+                            <option value="csv">CSV</option>
+                            <option value="json">JSON</option>
+                            <option value="xlsx">XLSX</option>
+                            <option value="pdf">PDF</option>
+                            <option value="html">HTML</option>
+                        </select>
+                        <button  class="button is-primary"
+                                 id="dowload-file-button"
+                                 @click='${() => {
+                                     this.download();
+                                 }}'>${i18n.t('download')}</button>
+                    </div>
+
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
@@ -589,7 +762,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             this.collapseAll();
                         }}">${i18n.t('collapse-all')}</button>
                     </div>
-                    
+
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
@@ -621,10 +794,84 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             lang="${this.lang}"
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-10"
-                            data=${JSON.stringify(data)}
-                            options=${JSON.stringify(auto_columns)}></dbp-tabulator-table>
+                            data=${JSON.stringify(dataLong)}
+                            options=${JSON.stringify(auto_columns)}
+                            pagination-enabled></dbp-tabulator-table>
+
                 </div>
-                
+
+
+                <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - edit columns</h3>
+                        <button  class="button is-primary"
+                                 id="open-modal-button"
+                                 @click='${() => {
+                                     this.openModal();
+                                 }}'>${i18n.t('column-settings')}</button>
+
+                            <dbp-tabulator-table
+                                    lang="${this.lang}"
+                                    class="tabulator-table-demo"
+                                    id="tabulator-table-demo-11"
+                                    data=${JSON.stringify(data)}
+                                    options=${JSON.stringify(options_basic)}></dbp-tabulator-table>
+                    <div class="control" id="dbp-translated-demo">
+                        <dbp-modal id="my-modal-123" modal-id="my-modal-123" title=${i18n.t('column-settings')} subscribe="lang">
+                            <div slot="content" class="modal-content">
+                                <ul class='headers'>
+                                    ${options.columns.map((column, counter) => {
+                                        return html`
+                                            <li id=${(counter + 1).toString()}>
+                                                <div class="header-field">
+                                                    <span class="header-title">${column.title}</span>
+                                                    <dbp-icon-button class='header-button header-visibility-icon'
+                                                                    id=${'eye-button-' + counter}
+                                                                    @click='${() => {
+                                                                        this.changeVisibility(counter);
+                                                                    }}'
+                                                                icon-name='source_icons_eye-empty'
+
+                                                                title='}'
+                                                                aria-label=''></dbp-icon-button>
+                                                                <dbp-icon-button class='header-button'
+                                                                    @click='${() => {
+                                                                        this.moveHeaderUp(counter + 1);
+                                                                    }}'
+                                                                    icon-name='arrow-up'
+                                                                    title=''
+                                                                    aria-label=''></dbp-icon-button>
+                                                                <dbp-icon-button class='header-button'
+                                                                    @click='${() => {
+                                                                        this.moveHeaderDown(counter + 1);
+                                                                    }}'
+                                                                    icon-name='arrow-down'
+                                                                    title=''
+                                                                    aria-label=''></dbp-icon-button>
+                                                </div>
+                                            </li>
+                                        `;
+                                        })}
+
+                                </ul>
+                            </div>
+                            <div slot="footer" class="modal-footer">
+                                <button  class="button is-secondary"
+                                         @click='${() => {
+                                             this.resetSettings();
+                                         }}'>
+                                        ${i18n.t('reset-settings')}
+                                </button>
+                                <button  class="button is-primary"
+                                         @click='${() => {
+                                             this.saveSettings();
+                                         }}'>
+                                        ${i18n.t('save-settings')}
+                                </button>
+                            </div>
+                        </dbp-modal>
+                    </div>
+                </div>
+
             </section>
         `;
     }

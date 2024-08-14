@@ -10,7 +10,7 @@ import del from 'rollup-plugin-delete';
 import {
     getPackagePath,
     getDistPath,
-} from '../../rollup.utils.js';
+} from '@dbp-toolkit/dev-utils';
 import { createRequire } from "node:module";
 import process from 'node:process';
 

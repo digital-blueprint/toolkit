@@ -7,6 +7,9 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
 import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -41,6 +44,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             identifier: {type: String, attribute: 'identifier'},
             options: {type: Object},
             data: {type: Array, attribute: 'data'},
+            paginationNoLangsEnabled: {type: Boolean, attribute: 'pagination-no-langs-enabled'},
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
             paginationSize: {type: Number, attribute: 'pagination-size'},
             selectAllEnabled: {type: Boolean, attribute: 'select-all-enabled'},
@@ -93,6 +97,16 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.options['layout'] = 'fitDataFill';
             this.options['responsiveLayout'] = 'collapse';
         }
+        if (this.paginationNoLangsEnabled) {
+            let paginationElement = this._('.tabulator-paginator');
+            //this.options['autoColumns'] = true;
+            this.options['pagination'] = true;
+            this.options['paginationSize'] = this.paginationSize;
+            this.options['paginationSizeSelector'] = true;
+            this.options['footerElement'] = '';
+            this.options['paginationElement'] = paginationElement;
+        }
+
         if (this.paginationEnabled) {
             let paginationElement = this._('.tabulator-paginator');
             this.options['pagination'] = true;
@@ -233,6 +247,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.setData(this.data);
     }
 
+    addData(data) {
+        if (!this.tabulatorTable) return;
+
+        this.tabulatorTable.addData(data, false);
+    }
+
     setFilter(listOfFilters) {
         if (!this.tabulatorTable) return;
         if(listOfFilters.length === 0)
@@ -264,10 +284,42 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
+    getColumns() {
+        if (!this.tabulatorTable) return;
+        return this.tabulatorTable.getColumns();
+    }
+
+    setColumns(newColumns) {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.setColumns(newColumns);
+    }
+
+    getColumnsFields() {
+        if (!this.tabulatorTable) return;
+        let columns = this.tabulatorTable.getColumns();
+        let columns_titles = [];
+        for(let col of columns) {
+            columns_titles.push(col.getField());
+        }
+        return columns_titles;
+    }
+
     getRows() {
         if (!this.tabulatorTable) return;
         let rows = this.tabulatorTable.getRows();
         return rows;
+    }
+
+    getRowFromPosition(position) {
+        if (!this.tabulatorTable) return;
+        let row = this.tabulatorTable.getRowFromPosition(position);
+        return row;
+    }
+
+    getData() {
+        if (!this.tabulatorTable) return;
+        let data = this.tabulatorTable.getData();
+        return data;
     }
 
     updateRow(row, newData) {
@@ -326,6 +378,136 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
             this.expanded = false;
         }
+
+    }
+
+    download(type, dataName) {
+        dataName = dataName + '.' + type;
+        if (!this.tabulatorTable) return;
+        let selected_rows = this.tabulatorTable.getSelectedRows();
+        const active_rows = this.tabulatorTable.getRows('active');
+        if(active_rows.length === 0)
+            return;
+        if(selected_rows.length === 0) {
+            const data = this.tabulatorTable.getData();
+            switch(type) {
+                case 'csv':
+                case 'json':
+                case 'html':
+                    this.tabulatorTable.download(type, dataName);
+                    break;
+                case 'xlsx': {
+                    let entries = [];
+                    for (let row of active_rows) {
+                        let cells = row.getCells();
+                        let entry = {};
+                        for (let cell of cells) {
+                            let column = cell.getColumn();
+                            let definition = column.getDefinition();
+                            let field = cell.getField();
+                            if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
+                                entry[field] = cell.getValue();
+                            }
+                        }
+                        entries.push(entry);
+                    }
+                    const worksheet = XLSX.utils.json_to_sheet(entries);
+                    const workbook = XLSX.utils.book_new();
+                    /* Add the worksheet to the workbook */
+                    XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
+                    XLSX.writeFile(workbook, dataName, { compression: true });
+                    break;
+                }
+                case 'pdf': {
+                    let columns = this.tabulatorTable.getColumns();
+                    let header = [];
+                    for(let column of columns) {
+                        let definition = column.getDefinition();
+                        let field = column.getField();
+                        if(field!== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
+                            header.push(column.getField());
+                    }
+                    let body = [];
+                    for (let entry of data) {
+                        let entry_array =  [];
+                        Object.values(entry).forEach(value => {
+                            entry_array.push(value);
+                        });
+                        body.push(entry_array);
+                    }
+                    let new_table = {
+                        head: [header],
+                        body: body,
+                    };
+                    const doc = new jsPDF();
+                    autoTable(doc, new_table);
+                    doc.save(dataName);
+                    break;
+                }
+
+            };
+        } else {
+            const selected_data = [];
+            for (let row of selected_rows) {
+                selected_data.push(row.getData());
+            }
+            switch(type) {
+                case 'csv':
+                case 'json':
+                case 'html':
+                    this.tabulatorTable.download(type, dataName, {}, 'selected');
+                    break;
+                case 'xlsx': {
+                    let entries = [];
+                    for (let row of selected_rows) {
+                        let cells = row.getCells();
+                        let entry = {};
+                        for (let cell of cells) {
+                            let column = cell.getColumn();
+                            let definition = column.getDefinition();
+                            let field = cell.getField();
+                            if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
+                                entry[field] = cell.getValue();
+                            }
+                        }
+                        entries.push(entry);
+                    }
+                    const worksheet = XLSX.utils.json_to_sheet(entries);
+                    const workbook = XLSX.utils.book_new();
+                    /* Add the worksheet to the workbook */
+                    XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
+                    XLSX.writeFile(workbook, dataName, { compression: true });
+                    break;
+                }
+                case 'pdf': {
+                    let columns = this.tabulatorTable.getColumns();
+                    let header = [];
+
+                    for(let column of columns) {
+                        let definition = column.getDefinition();
+                        let field = column.getField();
+                        if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
+                            header.push(column.getField());
+                    }
+                    let body = [];
+                    for (let entry of selected_data) {
+                        let entry_array =  [];
+                        Object.values(entry).forEach(value => {
+                            entry_array.push(value);
+                        });
+                        body.push(entry_array);
+                    }
+                    let new_table = {
+                        head: [header],
+                        body: body,
+                    };
+                    const doc = new jsPDF();
+                    autoTable(doc, new_table);
+                    doc.save(dataName);
+                    break;
+                }
+            };
+        };
 
     }
 

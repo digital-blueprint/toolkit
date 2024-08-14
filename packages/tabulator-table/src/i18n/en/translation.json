@@ -25,5 +25,10 @@
     "delete-rows": "Delete selected rows",
     "select-column": "Select column:",
     "select-operator": "Select operator:",
-    "update-rows": "Update rows"
+    "update-rows": "Update rows",
+    "file-format": "File format: ",
+    "download": "Download",
+    "column-settings": "Column settings",
+    "reset-settings": "Reset all",
+    "save-settings": "Save"
 }

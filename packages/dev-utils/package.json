@@ -1,0 +1,32 @@
+{
+    "name": "@dbp-toolkit/dev-utils",
+    "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/dev-utils",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "src/index.js",
+    "license": "LGPL-2.1-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/digital-blueprint/toolkit.git",
+        "directory": "packages/dev-utils"
+    },
+    "devDependencies": {
+        "prettier": "^3.0.0",
+        "globals": "^15.3.0",
+        "@eslint/js": "^9.8.0",
+        "eslint": "^9.1.0",
+        "eslint-plugin-jsdoc": "^50.0.0"
+    },
+    "dependencies": {
+        "find-cache-dir": "^5.0.0",
+        "selfsigned": "^2.0.0"
+    },
+    "scripts": {
+        "format": "npm run format:eslint && npm run format:prettier",
+        "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
+        "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
+        "lint": "eslint .",
+        "tsc": "tsc -p jsconfig.json"
+    }
+}

@@ -22,7 +22,7 @@
         "@rollup/plugin-url": "^8.0.0",
         "chai": "^5.0.0",
         "eslint": "^9.1.0",
-        "eslint-plugin-jsdoc": "^48.0.0",
+        "eslint-plugin-jsdoc": "^50.0.0",
         "globals": "^15.3.0",
         "i18next-parser": "^9.0.0",
         "karma": "^6.0.0",
@@ -37,15 +37,14 @@
         "rollup": "^4.0.0",
         "rollup-plugin-copy": "^3.1.0",
         "rollup-plugin-delete": "^2.0.0",
-        "rollup-plugin-serve": "^2.0.0",
-        "selfsigned": "^2.0.0",
+        "rollup-plugin-serve": "^3.0.0",
         "typescript": "^5.2.2"
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.6",
         "@open-wc/scoped-elements": "^2.1.0",
         "async-mutex": "^0.5.0",
-        "lit": "^2.7.0 || ^3.0.0",
+        "lit": "^3.0.0",
         "qr-scanner": "^1.4.1"
     },
     "scripts": {

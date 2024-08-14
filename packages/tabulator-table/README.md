@@ -39,10 +39,10 @@ Or you can include the JS files directly via CDN:
   layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator table
   - example `<dbp-tabulator-table options="{'myoption': 'a'}"></dbp-tabulator-table>`
   - you can set a tabulator to automatically generate its own columns by setting the option `autoColumns: true`
-    and you can edit automatically generated columns by using the function ``autoColumnsDefinitions:[
+    and you can still automatically edit generated columns by using the function ``autoColumnsDefinitions:[
     {field:"<field-name>", <property>: value},
     ...
-    ],``
+    ],`` or add translations for the header column titles by using `lang`
 - `data` (optional array, can be set later or can be updated): set the data for the tabulator table
   - example `<dbp-tabulator-table data="[{a: 123, b: 123}, {a: 234, b: 234}]"></dbp-tabulator-table>`
 - `pagination-enabled` (optional bool, default: `false`): set to true if you want a pagination shown
@@ -55,29 +55,37 @@ Or you can include the JS files directly via CDN:
   - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
 - `collapse-enabled` (optional bool, default: `false`): add columns that do not fit into the table into a hidden list of column titles and values
   - example `<dbp-tabulator-table collapse-enabled></dbp-tabulator-table>`
-  - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger 
+  - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger
   than 0 (e.g. `responsive:3`) and to set the columns' width so that they will not all fit into the tabulator
-  
-  
+
+
 
 ## Important functions
-- `setData(data)`: This function sets data of the tabulator table.
+- `getData()`: returns the tabulator data.
+- `setData(data)`: sets data of the tabulator table.
   - `data` is an array of data which should be shown in the table.
-- `getRows()`: returns an array with all the rows of the table.
+- `getRows()`: returns an array with all the row components of the table.
 - `getSelectedRows()`: returns an array with all the selected rows of the table.
 - `updateRow(row, newData)`: updates a given row of the tabulator table with new data.
   -`row` represents the row object we want to update.
-  -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}` 
-- `deleteRow(row)`: This function deletes the given row from the specified tabulator table.
+  -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}`
+- `deleteRow(row)`: deletes the given row from the specified tabulator table.
   -`row` represents the id of the row we want to delete.
-- `deleteSelectedRows()`: This function deletes the selected rows (by clicking) of the tabulator.
-- `setFilter(listOfFilters)`: This function filters the tabulator table according to the given list of filters.
-- `removeFilter()`: This function removes the filters set on the tabulator.
-- `expandAll()`: This function expands all the collapsed columns inside hidden lists of the tabulator table
-- `collapseAll()`: This function collapses all the expanded columns inside hidden lists of the tabulator table
+- `deleteSelectedRows()`: this function deletes the selected rows (by clicking) of the tabulator.
+- `getColumns()`: returns an array with all the column components of the table.
+- `setColumns(newColumns)`: sets new columns to the tabulator.
+  - `newColumns` is an array with the new column definitions.
+- `getColumnsFields()`: returns an array with all the column fields of the table.
+- `setFilter(listOfFilters)`: filters the tabulator table according to the given list of filters.
+- `removeFilter()`: removes the filters set on the tabulator.
+- `expandAll()`: expands all the collapsed columns inside hidden lists of the tabulator table
+- `collapseAll()`: collapses all the expanded columns inside hidden lists of the tabulator table
+- `download(type, dataName)`: downloads the selected rows or the entire tabulator data if none are selected in the specified file format
+  - `type` represents the file format to be downloaded
+  - `dataName` is the name of the file to be downloaded
 
 ## Note
-In best practice `options` is set if the dom is already rendered. 
+In best practice `options` is set if the dom is already rendered.
 You can set this attribute with the css selector. (e.g.: `this._('#my-table-component).options = myoptions`)
 
 Set data only works if the options are set before.
@@ -96,7 +104,7 @@ cd toolkit/packages/tabulator-table
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch-local
 
 # build local packages in dist directory

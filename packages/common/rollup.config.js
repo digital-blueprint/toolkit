@@ -5,7 +5,7 @@ import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
-import {getDistPath} from '../../rollup.utils.js';
+import {getDistPath} from '@dbp-toolkit/dev-utils';
 import { createRequire } from "node:module";
 import process from 'node:process';
 
