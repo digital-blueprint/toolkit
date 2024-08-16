@@ -354,6 +354,10 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
             commonStyles.getFormAddonsCSS(),
             commonStyles.getSelect2CSS(),
             css`
+                #person-select-dropdown {
+                    position: relative;
+                }
+
                 .select2-control.control {
                     width: 100%;
                 }
