@@ -327,6 +327,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         row.update(newData);
     }
 
+    getPage() {
+        if (!this.tabulatorTable) return;
+        let currentPage = this.tabulatorTable.getPage();
+        return currentPage;
+    }
+
     expandAll() {
         if(this.expanded === false) {
 
