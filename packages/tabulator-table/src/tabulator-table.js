@@ -333,6 +333,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         return currentPage;
     }
 
+    setPage(currentPage) {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.setPage(currentPage);
+    }
+
     expandAll() {
         if(this.expanded === false) {
 
