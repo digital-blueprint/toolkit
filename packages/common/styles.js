@@ -217,7 +217,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             font-weight: 300;
         }
 
-        h3{
+        h3 {
             font-weight: 300;
             margin-top: 0px;
             margin-bottom: 0.75rem;
@@ -1357,6 +1357,220 @@ export function getModalDialogCSS() {
                 height: 40px;
             }
         }
+    `;
+}
+
+export function getNativeModalDialogCSS() {
+    // language=css
+    return css`
+
+        :host {
+            font-size: var(--dbp-modal--font-size, 1rem);
+            --dbp-modal-header-height: 2em;
+            --dbp-modal-footer-height: 2em;
+            --dbp-modal-content-min-height: 20em;
+            --dbp-modal-content-max-height: 70vh;
+            --dbp-modal-animation: mmFadeIn;
+        }
+
+        html.modal-open {
+            overflow-y: hidden;
+        }
+
+        dialog:not([open]) {
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        dialog {
+            max-inline-size: min(90vw, 80ch);
+            max-block-size: min(80vh, 100%);
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 15px 20px 20px;
+            border: 0 none;
+            color: var(--dbp-content);
+            background-color: var(--dbp-background);
+            filter: drop-shadow(rgba(0, 0, 0, 0.3) 2px 4px 8px)
+                    drop-shadow(rgba(0, 0, 0, 0.2) 4px 8px 16px)
+                    drop-shadow(rgba(0, 0, 0, 0.1) 8px 16px 32px);
+                     /* duration | easing-function | delay | iteration-count | direction | fill-mode | play-state | name */
+        }
+
+        dialog[open] {
+            // transition: var(--dbp-modal-transiton)
+            animation-name: var(--dbp-modal-animation);
+            animation-duration: .5s;
+            animation-fill-mode: forwards;
+        }
+
+        .modal-container {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            align-items: start;
+            position: relative;
+        }
+
+        .modal-header {
+            /* height: var(--dbp-modal-header-height); */
+        }
+
+        .modal-content {
+            overflow: hidden auto;
+            /* height: 100%; */
+            max-height: var(--dbp-modal-content-max-height);
+            min-height: var(--dbp-modal-content-min-height);
+            /* display: flex;
+            padding-left: 0px;
+            padding-right: 0px;
+            gap: 1em;
+            flex-direction: column; */
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            margin-bottom: 1em;
+        }
+
+        .modal-footer {
+            height: var(--dbp-modal-footer-height);
+            padding-top: 20px;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dbp-accent);
+            cursor: pointer;
+            padding: 0px;
+        }
+
+        .modal-close .close-icon svg,
+        .close-icon {
+            pointer-events: none;
+        }
+
+        button.modal-close:focus {
+            outline: none;
+        }
+
+        .modal-title {
+            margin: 0;
+            padding: 0.25em 0 0 0;
+            font-weight: 300;
+        }
+
+        ::slotted([slot="header"]) {
+        }
+
+        ::slotted([slot="footer"]) {
+        }
+
+        ::backdrop {
+            backdrop-filter: blur(5px);
+            transition: backdrop-filter .5s ease;
+            background: color-mix(in srgb, var(--dbp-background-color) 60%, transparent);
+        }
+
+        dialog + .backdrop { /* polyfill */
+            backdrop-filter: blur(5px);
+            transition: backdrop-filter .5s ease;
+            background: color-mix(in srgb, var(--dbp-background-color) 60%, transparent);
+        }
+
+        /**************************\\
+          Modal Animation Style
+        \\**************************/
+        @keyframes mmFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes mmFadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes mmSlideIn {
+            from {
+                transform: translateY(15%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes mmSlideOut {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-10%);
+            }
+        }
+
+        /* .micromodal-slide {
+            display: none;
+        }
+
+        .micromodal-slide.is-open {
+            display: block;
+        }
+
+        .micromodal-slide[aria-hidden='false'] .modal-overlay {
+            animation: mmfadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+        }
+
+        .micromodal-slide[aria-hidden='false'] .modal-container {
+            animation: mmslideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+        }
+
+        .micromodal-slide[aria-hidden='true'] .modal-overlay {
+            animation: mmfadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+        }
+
+        .micromodal-slide[aria-hidden='true'] .modal-container {
+            animation: mmslideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+        }
+
+        .micromodal-slide .modal-container,
+        .micromodal-slide .modal-overlay {
+            will-change: transform; */
+        }
+
+        /* @media only screen and (orientation: landscape) and (max-width: 768px) {
+            .modal-container {
+                width: 100%;
+                height: 100%;
+                max-width: 100%;
+            }
+
+            .micromodal-slide .modal-container {
+                height: 100%;
+                width: 100%;
+            }
+
+
+        }
+
+        @media only screen and (max-width: 768px) {
+            .modal-close {
+                width: 40px;
+                height: 40px;
+            }
+        } */
     `;
 }
 

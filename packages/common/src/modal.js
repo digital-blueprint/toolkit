@@ -1,12 +1,14 @@
-import {html, css
+import {
+    html, css
 } from 'lit';
-import {createInstance} from './i18n';
+import { createInstance } from './i18n';
 import * as commonStyles from '../styles.js';
-import {Icon} from './icon';
-import {MiniSpinner} from './mini-spinner';
-import MicroModal from './micromodal.es';
+import { Icon } from './icon';
+import { MiniSpinner } from './mini-spinner';
+// import MicroModal from './micromodal.es';
+import dialogPolyfill from 'dialog-polyfill';
 import DBPLitElement from '../dbp-lit-element';
-import {styleMap} from 'lit/directives/style-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
 
 export class Modal extends DBPLitElement {
@@ -14,29 +16,38 @@ export class Modal extends DBPLitElement {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        /** @type {HTMLDialogElement} */
+        this.modalDialog = null;
+        /** @type {string} */
         this.modalId = 'dbp-modal-id';
+        /** @type {string} */
         this.title = "";
 
-        this.width = 'inherit';
-        this.height = 'inherit';
+        /** @type {string} */
+        this.width = 'fit-content';
+        /** @type {string} */
+        this.height = 'fit-content';
+        /** @type {string} */
         this.minWidth = 'inherit';
+        /** @type {string} */
         this.minHeight = 'inherit';
 
         this.size = {
             width: this.width,
             height: this.height,
             minWidth: this.minWidth,
-            minHeight: this.minHeight};
+            minHeight: this.minHeight
+        };
     }
 
     static get properties() {
         return {
-            modalId: {type: String, attribute: 'modal-id'},
-            title: {type: String},
-            width: {type: String},
-            height: {type: String},
-            minWidth: {type: String, attribute: 'min-width'},
-            minHeight: {type: String, attribute: 'min-height'},
+            modalId: { type: String, attribute: 'modal-id' },
+            title: { type: String },
+            width: { type: String },
+            height: { type: String },
+            minWidth: { type: String, attribute: 'min-width' },
+            minHeight: { type: String, attribute: 'min-height' },
         };
     }
 
@@ -46,7 +57,22 @@ export class Modal extends DBPLitElement {
             width: this.width,
             height: this.height,
             minWidth: this.minWidth,
-            minHeight: this.minHeight};
+            minHeight: this.minHeight
+        };
+    }
+
+    firstUpdated() {
+        this.modalDialog = /** @type {HTMLDialogElement} */ (this._('#' + this.modalId));
+        dialogPolyfill.registerDialog(this.modalDialog);
+
+        this.modalDialog.addEventListener('onClose', () => {
+            const event = new CustomEvent('dbp-modal-closed', {
+                detail: { id: this.modalId },
+                bubbles: true,
+                composed: true,
+            });
+            this.dispatchEvent(event);
+        });
     }
 
     static get scopedElements() {
@@ -57,61 +83,25 @@ export class Modal extends DBPLitElement {
     }
 
     open() {
-        MicroModal.show(this._('#' + this.modalId), {
-            disableScroll: true,
-            onClose: (modal) => {
-                const event = new CustomEvent('dbp-modal-closed', {
-                    detail: {id: this.modalId},
-                    bubbles: true,
-                    composed: true,
-                });
-                this.dispatchEvent(event);
-            },
-        });
+        // Prevent scrolling the page when dialog is open
+        const htmlElement = this._('.modal').ownerDocument.documentElement;
+        htmlElement.style.overflow = 'hidden';
+
+        this.modalDialog.showModal();
     }
 
     close() {
-        MicroModal.close(this._('#' + this.modalId));
+        this.modalDialog.close();
+
+        // Prevent scrolling the page when dialog is open
+        const htmlElement = this._('.modal').ownerDocument.documentElement;
+        htmlElement.style.overflow = 'scroll';
     }
 
     static get styles() {
         // language=css
         return css`
-            ${commonStyles.getModalDialogCSS()}
-
-            .modal-title {
-                margin: 0;
-                padding: 0.25em 0 0 0;
-                font-weight: 300;
-            }
-            
-            .modal-container{
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: 15px 20px 20px;
-            }
-            
-            .modal-header{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0 0 20px 0;
-            }
-            
-            .modal-content{
-                display: flex;
-                padding-left: 0px;
-                padding-right: 0px;
-                overflow: unset;
-                gap: 1em;
-                flex-direction: column;
-                height: 100%;
-            }
-            
-            footer{
-                padding-top: 20px;
-            }
+            ${commonStyles.getNativeModalDialogCSS()}
         `;
     }
 
@@ -119,27 +109,33 @@ export class Modal extends DBPLitElement {
         const i18n = this._i18n;
 
         return html`
-            <div class="modal micromodal-slide" id="${this.modalId}" aria-hidden="true">
-                <div class="modal-overlay" tabindex="-2" data-micromodal-close>
-                    <div class="modal-container"
-                         role="dialog"
-                         aria-modal="true"
-                         aria-labelledby="show-recipient-modal-title"
-                         style=${styleMap(this.size)}>
+            <dialog class="modal"
+                id="${this.modalId}"
+                style=${styleMap(this.size)}
+                autofocus
+                role="dialog"
+                aria-describedby="modal-content"
+                aria-labelledby="modal-title">
+                    <div class="modal-container">
                         <header class="modal-header">
-                            <h3 class="modal-title">
-                                ${this.title}
-                            </h3>
-                            <button
-                                title="${i18n.t('dbp-modal.close')}"
-                                class="modal-close"
-                                aria-label="Close modal"
-                                @click="${() => {this.close();}}">
-                                <dbp-icon
+                            <div class="header-top">
+                                <h3 class="modal-title">
+                                    ${this.title}
+                                </h3>
+                                <button
                                     title="${i18n.t('dbp-modal.close')}"
-                                    name="close"
-                                    class="close-icon"></dbp-icon>
-                            </button>
+                                    class="modal-close"
+                                    aria-label="${i18n.t('dbp-modal.close')}"
+                                    @click="${() => { this.close(); }}">
+                                    <dbp-icon
+                                        title="${i18n.t('dbp-modal.close')}"
+                                        name="close"
+                                        class="close-icon"></dbp-icon>
+                                </button>
+                            </div>
+                            <div class="header-bottom">
+                                <slot name="header"></slot>
+                            </div>
                         </header>
                         <main class="modal-content">
                             <slot name="content"></slot>
@@ -148,8 +144,7 @@ export class Modal extends DBPLitElement {
                             <slot name="footer"></slot>
                         </footer>
                     </div>
-                </div>
-            </div>
+            </dialog>
         `;
     }
 }

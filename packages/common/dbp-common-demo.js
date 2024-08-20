@@ -3,6 +3,8 @@ import {css, html} from 'lit';
 import DBPLitElement from './dbp-lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Modal} from '@dbp-toolkit/common/src/modal.js';
+import {PersonSelect} from '@dbp-toolkit/person-select/src/person-select.js';
+// import {ResourceSelect} from '@dbp-toolkit/resource-select/src/resource-select.js';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
 import {
@@ -26,6 +28,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.noAuth = false;
+        this.entryPointUrl = '';
         this.langDir = '';
     }
 
@@ -40,7 +43,9 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
             'dbp-inline-notification': InlineNotification,
             'dbp-translated': Translated,
             'dbp-translation': Translation,
-            'dbp-modal': Modal
+            'dbp-modal': Modal,
+            'dbp-person-select': PersonSelect,
+            // 'dbp-resource-select': ResourceSelect,
         };
 
         if (customElements.get('dbp-auth')) {
@@ -56,6 +61,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
             lang: {type: String},
             noAuth: {type: Boolean, attribute: 'no-auth'},
             langDir: {type: String, attribute: 'lang-dir'},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
 
@@ -188,8 +194,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
         }, 1000);
     }
 
-    openModal() {
-        const modal = this._('#my-modal-123');
+    openModal(id) {
+        const modal = this._(id);
         if (modal) {
             modal.open();
         }
@@ -504,14 +510,14 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
                 <div class="content">
                     <h2>Theming CSS Override API</h2>
-                    <pre>
+                    <pre><code style="text-wrap: wrap;">
 &lt;style&gt;
 html {
     /* This will override --dbp-primary-surface */
     --dbp-override-primary-surface: green;
     /* Same for all other variables, prefix with "override" */
 }
-&lt;/style&gt;</pre>
+&lt;/style&gt;</code></pre>
                 </div>
                 <div class="content">
                     <h2>Inline Notification</h2>
@@ -570,20 +576,137 @@ html {
                 <div class="content">
                     <h2>Modal component</h2>
                     <div class="control" id="dbp-translated-demo">
+                        <h3>Basic Modal (with fade-in effect)</h3>
+                        <style>
+                            dbp-modal .header {
+                                display: flex;
+                                margin-bottom: 1em;
+                            }
+                            dbp-modal .footer-menu {
+                                margin: 0;
+                                padding: 0;
+                                display: flex;
+                                justify-content: flex-end;
+                                gap: 1em;
+                            }
+                            .modal--basic {
+                                --dbp-modal-content-min-height: 6em;
+                            }
+                            .modal--basic .header h3 {
+                                margin: 0 1em 0 0;
+                            }
+                        </style>
 
                         <dbp-button type="is-primary" id="modal-trigger"
                             value="open modal"
                             no-spinner-on-click
-                            @click="${this.openModal}"></dbp-button>
+                            @click="${() => this._('#my-modal-basic').open() }"></dbp-button>
 
-                        <dbp-modal id="my-modal-123" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                        <dbp-modal id="my-modal-basic" class="modal modal--basic" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                            <div slot="header" class="header">
+                                <h3>Person name</h3><dbp-icon name="cog"></dbp-icon>
+                            </div>
                             <div slot="content">
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                                 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                             </div>
-                            <div slot="footer" class="modal-footer">
-                                <span>Modal footer</span>
+                            <menu slot="footer" class="footer-menu">
+                                <dbp-button @click="${() => { this._('#my-modal-basic').close(); }}">Cancel</dbp-button>
+                                <dbp-button type="is-primary">Submit</dbp-button>
+                            </menu>
+                        </dbp-modal>
+                    </div>
+
+                    <div class="control" id="dbp-translated-demo">
+                        <h3>Modal with long content</h3>
+                        <style>
+
+                        </style>
+
+                        <dbp-button type="is-primary" id="modal-trigger"
+                            value="open modal"
+                            no-spinner-on-click
+                            @click="${() => this._('#my-modal-long').open() }"></dbp-button>
+
+                        <dbp-modal id="my-modal-long" class="modal modal--long" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                            <div slot="header" class="header">
+                                <h3>Person name</h3><dbp-icon name="cog"></dbp-icon>
                             </div>
+                            <div slot="content">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h4>Exercitation</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h4>Consectetur</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h5>Eiusmod</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h4>Incididunt</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h5>Consequat</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+                            </div>
+                            <menu slot="footer" class="footer-menu">
+                                <dbp-button @click="${() => { this._('#my-modal-long').close(); }}">Cancel</dbp-button>
+                                <dbp-button type="is-primary">Submit</dbp-button>
+                            </menu>
+                        </dbp-modal>
+                    </div>
+
+
+                    <div class="control" id="dbp-translated-demo">
+                        <h3>Modal with person selector (with slide-in effect)</h3>
+                        <style>
+                            #my-modal-person {
+                                --dbp-modal-content-min-height: 15em;
+                                --dbp-modal-animation: mmSlideIn;
+                            }
+                        </style>
+
+                        <dbp-button type="is-primary" id="modal-trigger"
+                            value="open modal"
+                            no-spinner-on-click
+                            @click="${() => this._('#my-modal-person').open() }"></dbp-button>
+
+                        <dbp-modal id="my-modal-person" class="modal modal--person"
+                            modal-id="my-modal-123"
+                            title="Person selector modal"
+                            min-width="500px"
+                            min-height="400px"
+                            subscribe="lang">
+                            <div slot="header" class="header">
+                                <h3>Person name</h3><dbp-icon name="cog"></dbp-icon>
+                            </div>
+                            <div slot="content">
+                                <dbp-person-select
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+                            </div>
+                            <menu slot="footer" class="footer-menu">
+                                <dbp-button @click="${() => { this._('#my-modal-person').close(); }}">Cancel</dbp-button>
+                                <dbp-button type="is-primary">Submit</dbp-button>
+                            </menu>
                         </dbp-modal>
                     </div>
                 </div>
