@@ -495,7 +495,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             layout: 'fitColumns',
             responsiveLayout: 'collapse',
             responsiveLayoutCollapseStartOpen: false,
-            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false},
             columns: [
                 {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
@@ -514,7 +514,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             layout: 'fitColumns',
             responsiveLayout: 'collapse',
             responsiveLayoutCollapseStartOpen: false,
-            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false, headerSort:false},
+            rowHeader:{formatter:"responsiveCollapse", width:30, minWidth:30, hozAlign:"center", resizable:false},
             columns: [
                 {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', hozAlign: 'left'},
