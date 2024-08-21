@@ -549,6 +549,17 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 left: 7px;
             }
 
+            .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
+                padding-top: 4px;
+                padding-bottom: 4px;
+                font-weight: normal;
+                font-size: 1rem;
+            }
+
+            .tabulator .tabulator-header .tabulator-col .tabulator-col-title #select_all_checkmark{
+                top: 0px;
+            }
+
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
                 padding-top: 4px;
                 padding-bottom: 4px;
