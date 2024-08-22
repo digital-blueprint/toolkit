@@ -8,7 +8,6 @@
         "error-api-server": "Verbindung zum API Server {{apiUrl}} fehlgeschlagen!",
         "error-hydra-documentation-url-not-set": "Hydra apiDocumentation URL wurden für server {{apiUrl}} nicht gesetzt!"
     },
-
     "dbp-modal": {
         "close": "Schließen"
     }

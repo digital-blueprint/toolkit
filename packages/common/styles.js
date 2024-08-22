@@ -1366,16 +1366,14 @@ export function getNativeModalDialogCSS() {
 
         :host {
             font-size: var(--dbp-modal--font-size, 1rem);
-            --dbp-modal-header-height: 2em;
-            --dbp-modal-footer-height: 2em;
             --dbp-modal-content-min-height: 20em;
-            --dbp-modal-content-max-height: 70vh;
+            --dbp-modal-content-max-height: 50vh;
             --dbp-modal-animation: mmFadeIn;
         }
 
-        html.modal-open {
+        /* html.modal-open {
             overflow-y: hidden;
-        }
+        } */
 
         dialog:not([open]) {
             pointer-events: none;
@@ -1383,10 +1381,13 @@ export function getNativeModalDialogCSS() {
         }
 
         dialog {
-            max-inline-size: min(90vw, 80ch);
-            max-block-size: min(80vh, 100%);
-            overflow-x: hidden;
-            overflow-y: auto;
+            max-width: var(--dbp-modal-max-width, 75vw);
+            min-width: var(--dbp-modal-min-width, 320px);
+
+            max-height: var(--dbp-modal-max-height, 75vh);
+            min-height: var(--dbp-modal-min-height);
+
+            overflow: hidden;
             padding: 15px 20px 20px;
             border: 0 none;
             color: var(--dbp-content);
@@ -1394,11 +1395,15 @@ export function getNativeModalDialogCSS() {
             filter: drop-shadow(rgba(0, 0, 0, 0.3) 2px 4px 8px)
                     drop-shadow(rgba(0, 0, 0, 0.2) 4px 8px 16px)
                     drop-shadow(rgba(0, 0, 0, 0.1) 8px 16px 32px);
-                     /* duration | easing-function | delay | iteration-count | direction | fill-mode | play-state | name */
+        }
+
+        @media only screen and (max-width: 490px) {
+            dialog {
+                max-width: none;
+            }
         }
 
         dialog[open] {
-            // transition: var(--dbp-modal-transiton)
             animation-name: var(--dbp-modal-animation);
             animation-duration: .5s;
             animation-fill-mode: forwards;
@@ -1409,22 +1414,17 @@ export function getNativeModalDialogCSS() {
             grid-template-rows: auto 1fr auto;
             align-items: start;
             position: relative;
+            overflow: hidden;
         }
 
         .modal-header {
-            /* height: var(--dbp-modal-header-height); */
+            height: var(--dbp-modal-header-height);
         }
 
         .modal-content {
             overflow: hidden auto;
-            /* height: 100%; */
             max-height: var(--dbp-modal-content-max-height);
             min-height: var(--dbp-modal-content-min-height);
-            /* display: flex;
-            padding-left: 0px;
-            padding-right: 0px;
-            gap: 1em;
-            flex-direction: column; */
         }
 
         .header-top {
@@ -1450,12 +1450,12 @@ export function getNativeModalDialogCSS() {
         }
 
         .modal-close .close-icon svg,
-        .close-icon {
+        .modal-close .close-icon {
             pointer-events: none;
         }
 
         button.modal-close:focus {
-            outline: none;
+            filter: drop-shadow(rgba(255,255,255,0.5), 1px 2px 4px);
         }
 
         .modal-title {
@@ -1520,57 +1520,6 @@ export function getNativeModalDialogCSS() {
                 transform: translateY(-10%);
             }
         }
-
-        /* .micromodal-slide {
-            display: none;
-        }
-
-        .micromodal-slide.is-open {
-            display: block;
-        }
-
-        .micromodal-slide[aria-hidden='false'] .modal-overlay {
-            animation: mmfadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        .micromodal-slide[aria-hidden='false'] .modal-container {
-            animation: mmslideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        .micromodal-slide[aria-hidden='true'] .modal-overlay {
-            animation: mmfadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        .micromodal-slide[aria-hidden='true'] .modal-container {
-            animation: mmslideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        .micromodal-slide .modal-container,
-        .micromodal-slide .modal-overlay {
-            will-change: transform; */
-        }
-
-        /* @media only screen and (orientation: landscape) and (max-width: 768px) {
-            .modal-container {
-                width: 100%;
-                height: 100%;
-                max-width: 100%;
-            }
-
-            .micromodal-slide .modal-container {
-                height: 100%;
-                width: 100%;
-            }
-
-
-        }
-
-        @media only screen and (max-width: 768px) {
-            .modal-close {
-                width: 40px;
-                height: 40px;
-            }
-        } */
     `;
 }
 

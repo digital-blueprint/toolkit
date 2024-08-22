@@ -5,7 +5,6 @@ import { createInstance } from './i18n';
 import * as commonStyles from '../styles.js';
 import { Icon } from './icon';
 import { MiniSpinner } from './mini-spinner';
-// import MicroModal from './micromodal.es';
 import dialogPolyfill from 'dialog-polyfill';
 import DBPLitElement from '../dbp-lit-element';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -23,21 +22,21 @@ export class Modal extends DBPLitElement {
         /** @type {string} */
         this.title = "";
 
-        /** @type {string} */
-        this.width = 'fit-content';
-        /** @type {string} */
-        this.height = 'fit-content';
-        /** @type {string} */
-        this.minWidth = 'inherit';
-        /** @type {string} */
-        this.minHeight = 'inherit';
+        // /** @type {string} */
+        // this.width = 'fit-content';
+        // /** @type {string} */
+        // this.height = 'fit-content';
+        // /** @type {string} */
+        // this.minWidth = null;
+        // /** @type {string} */
+        // this.minHeight = null;
 
-        this.size = {
-            width: this.width,
-            height: this.height,
-            minWidth: this.minWidth,
-            minHeight: this.minHeight
-        };
+        // this.size = {
+        //     width: this.width,
+        //     height: this.height,
+        //     minWidth: this.minWidth,
+        //     minHeight: this.minHeight
+        // };
     }
 
     static get properties() {
@@ -46,32 +45,46 @@ export class Modal extends DBPLitElement {
             title: { type: String },
             width: { type: String },
             height: { type: String },
-            minWidth: { type: String, attribute: 'min-width' },
-            minHeight: { type: String, attribute: 'min-height' },
+            // minWidth: { type: String, attribute: 'min-width' },
+            // minHeight: { type: String, attribute: 'min-height' },
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
-        this.size = {
-            width: this.width,
-            height: this.height,
-            minWidth: this.minWidth,
-            minHeight: this.minHeight
-        };
+        // this.size = {
+        //     width: this.width,
+        //     height: this.height,
+        //     minWidth: this.minWidth,
+        //     minHeight: this.minHeight
+        // };
+    }
+
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        // this.size = {
+        //     width: this.width,
+        //     height: this.height,
+        //     minWidth: this.minWidth,
+        //     minHeight: this.minHeight
+        // };
     }
 
     firstUpdated() {
         this.modalDialog = /** @type {HTMLDialogElement} */ (this._('#' + this.modalId));
         dialogPolyfill.registerDialog(this.modalDialog);
 
-        this.modalDialog.addEventListener('onClose', () => {
-            const event = new CustomEvent('dbp-modal-closed', {
+        this.modalDialog.addEventListener("close", (event) => {
+            // Re allow scrolling the page when dialog is closed
+            const htmlElement = this.modalDialog.ownerDocument.documentElement;
+            htmlElement.style.removeProperty('overflow');
+
+            const customEvent = new CustomEvent('dbp-modal-closed', {
                 detail: { id: this.modalId },
                 bubbles: true,
                 composed: true,
             });
-            this.dispatchEvent(event);
+            this.dispatchEvent(customEvent);
         });
     }
 
@@ -84,7 +97,7 @@ export class Modal extends DBPLitElement {
 
     open() {
         // Prevent scrolling the page when dialog is open
-        const htmlElement = this._('.modal').ownerDocument.documentElement;
+        const htmlElement = this.modalDialog.ownerDocument.documentElement;
         htmlElement.style.overflow = 'hidden';
 
         this.modalDialog.showModal();
@@ -92,10 +105,6 @@ export class Modal extends DBPLitElement {
 
     close() {
         this.modalDialog.close();
-
-        // Prevent scrolling the page when dialog is open
-        const htmlElement = this._('.modal').ownerDocument.documentElement;
-        htmlElement.style.overflow = 'scroll';
     }
 
     static get styles() {
@@ -111,7 +120,6 @@ export class Modal extends DBPLitElement {
         return html`
             <dialog class="modal"
                 id="${this.modalId}"
-                style=${styleMap(this.size)}
                 autofocus
                 role="dialog"
                 aria-describedby="modal-content"

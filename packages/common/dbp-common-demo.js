@@ -591,6 +591,7 @@ html {
                             }
                             .modal--basic {
                                 --dbp-modal-content-min-height: 6em;
+                                --dbp-modal-max-width: 650px;
                             }
                             .modal--basic .header h3 {
                                 margin: 0 1em 0 0;
@@ -620,7 +621,13 @@ html {
                     <div class="control" id="dbp-translated-demo">
                         <h3>Modal with long content</h3>
                         <style>
-
+                            .modal--long .header h3 {
+                                margin: 0 1em 0 0;
+                            }
+                            .header {
+                                display: flex;
+                                flex-direction: column;
+                            }
                         </style>
 
                         <dbp-button type="is-primary" id="modal-trigger"
@@ -630,7 +637,8 @@ html {
 
                         <dbp-modal id="my-modal-long" class="modal modal--long" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
                             <div slot="header" class="header">
-                                <h3>Person name</h3><dbp-icon name="cog"></dbp-icon>
+                                <div class="top"><h3>Person name</h3><dbp-icon name="cog"></dbp-icon></div>
+                                <div class="bottom"><h4>Ohter Person name</h4><dbp-icon name="ambulance"></dbp-icon></div>
                             </div>
                             <div slot="content">
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -677,9 +685,12 @@ html {
                     <div class="control" id="dbp-translated-demo">
                         <h3>Modal with person selector (with slide-in effect)</h3>
                         <style>
-                            #my-modal-person {
+                            .modal--person {
                                 --dbp-modal-content-min-height: 15em;
                                 --dbp-modal-animation: mmSlideIn;
+                            }
+                            .modal--person .header h3 {
+                                margin: 0 1em 0 0;
                             }
                         </style>
 
