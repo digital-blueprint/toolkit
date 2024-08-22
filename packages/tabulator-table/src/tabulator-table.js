@@ -339,6 +339,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     expandAll() {
+        if (!this.tabulatorTable) return;
         if(this.expanded === false) {
 
             this.tabulatorTable.getRows('visible').forEach((row) => {
