@@ -1371,10 +1371,6 @@ export function getNativeModalDialogCSS() {
             --dbp-modal-animation: mmFadeIn;
         }
 
-        /* html.modal-open {
-            overflow-y: hidden;
-        } */
-
         dialog:not([open]) {
             pointer-events: none;
             opacity: 0;

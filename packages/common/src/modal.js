@@ -7,8 +7,6 @@ import { Icon } from './icon';
 import { MiniSpinner } from './mini-spinner';
 import dialogPolyfill from 'dialog-polyfill';
 import DBPLitElement from '../dbp-lit-element';
-import { styleMap } from 'lit/directives/style-map.js';
-
 
 export class Modal extends DBPLitElement {
     constructor() {
@@ -21,22 +19,6 @@ export class Modal extends DBPLitElement {
         this.modalId = 'dbp-modal-id';
         /** @type {string} */
         this.title = "";
-
-        // /** @type {string} */
-        // this.width = 'fit-content';
-        // /** @type {string} */
-        // this.height = 'fit-content';
-        // /** @type {string} */
-        // this.minWidth = null;
-        // /** @type {string} */
-        // this.minHeight = null;
-
-        // this.size = {
-        //     width: this.width,
-        //     height: this.height,
-        //     minWidth: this.minWidth,
-        //     minHeight: this.minHeight
-        // };
     }
 
     static get properties() {
@@ -45,29 +27,15 @@ export class Modal extends DBPLitElement {
             title: { type: String },
             width: { type: String },
             height: { type: String },
-            // minWidth: { type: String, attribute: 'min-width' },
-            // minHeight: { type: String, attribute: 'min-height' },
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
-        // this.size = {
-        //     width: this.width,
-        //     height: this.height,
-        //     minWidth: this.minWidth,
-        //     minHeight: this.minHeight
-        // };
     }
 
     updated(changedProperties) {
         super.updated(changedProperties);
-        // this.size = {
-        //     width: this.width,
-        //     height: this.height,
-        //     minWidth: this.minWidth,
-        //     minHeight: this.minHeight
-        // };
     }
 
     firstUpdated() {
