@@ -603,13 +603,15 @@ html {
                             no-spinner-on-click
                             @click="${() => this._('#my-modal-basic').open() }"></dbp-button>
 
-                        <dbp-modal id="my-modal-basic" class="modal modal--basic" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                        <dbp-modal id="my-modal-basic" class="modal modal--basic" modal-id="modal-basic" title="The title of the modal" subscribe="lang">
                             <div slot="header" class="header">
                                 <h3>Person name</h3><dbp-icon name="cog"></dbp-icon>
                             </div>
                             <div slot="content">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                nisi ut aliquip ex ea commodo consequat.</p>
                             </div>
                             <menu slot="footer" class="footer-menu">
                                 <dbp-button @click="${() => { this._('#my-modal-basic').close(); }}">Cancel</dbp-button>
@@ -622,14 +624,18 @@ html {
                         <h3>Modal with long content</h3>
                         <style>
                             .modal--long {
-                                --dbp-modal-header-height: 5em;
+                                --dbp-modal-header-height: 110px;
+                                --dbp-modal-footer-height: 30px;
+                                --dbp-modal-max-width: 50vw;
+                                --dbp-modal-max-height: 50vh;
                             }
+                            .modal--long .header h4,
                             .modal--long .header h3 {
                                 margin: 0 1em 0 0;
                             }
                             .header {
                                 display: flex;
-                                flex-direction: column;
+                                align-items: center;
                             }
                         </style>
 
@@ -638,7 +644,7 @@ html {
                             no-spinner-on-click
                             @click="${() => this._('#my-modal-long').open() }"></dbp-button>
 
-                        <dbp-modal id="my-modal-long" class="modal modal--long" modal-id="my-modal-123" title="The title of the modal" subscribe="lang">
+                        <dbp-modal id="my-modal-long" class="modal modal--long" modal-id="modal-long" title="The title of the modal" subscribe="lang">
                             <div slot="header" class="header">
                                 <div class="top"><h3>Person name</h3><dbp-icon name="cog"></dbp-icon></div>
                                 <div class="bottom"><h4>Ohter Person name</h4><dbp-icon name="ambulance"></dbp-icon></div>
@@ -689,7 +695,7 @@ html {
                         <h3>Modal with person selector (with slide-in effect)</h3>
                         <style>
                             .modal--person {
-                                --dbp-modal-content-min-height: 15em;
+                                --dbp-modal-min-height: 25em;
                                 --dbp-modal-animation: mmSlideIn;
                             }
                             .modal--person .header h3 {
@@ -703,7 +709,7 @@ html {
                             @click="${() => this._('#my-modal-person').open() }"></dbp-button>
 
                         <dbp-modal id="my-modal-person" class="modal modal--person"
-                            modal-id="my-modal-123"
+                            modal-id="modal-person"
                             title="Person selector modal"
                             min-width="500px"
                             min-height="400px"
