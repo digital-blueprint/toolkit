@@ -327,7 +327,19 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         row.update(newData);
     }
 
+    getPage() {
+        if (!this.tabulatorTable) return;
+        let currentPage = this.tabulatorTable.getPage();
+        return currentPage;
+    }
+
+    setPage(currentPage) {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.setPage(currentPage);
+    }
+
     expandAll() {
+        if (!this.tabulatorTable) return;
         if(this.expanded === false) {
 
             this.tabulatorTable.getRows('visible').forEach((row) => {
@@ -536,6 +548,17 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             input[type='checkbox']:checked ~ .checkmark::after {
                 top: 2px;
                 left: 7px;
+            }
+
+            .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
+                padding-top: 4px;
+                padding-bottom: 4px;
+                font-weight: normal;
+                font-size: 1rem;
+            }
+
+            .tabulator .tabulator-header .tabulator-col .tabulator-col-title #select_all_checkmark{
+                top: 0px;
             }
 
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
