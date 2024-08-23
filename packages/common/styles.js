@@ -1363,11 +1363,8 @@ export function getModalDialogCSS() {
 export function getNativeModalDialogCSS() {
     // language=css
     return css`
-
         :host {
             font-size: var(--dbp-modal--font-size, 1rem);
-            --dbp-modal-content-min-height: 20em;
-            --dbp-modal-content-max-height: 50vh;
             --dbp-modal-animation: mmFadeIn;
         }
 
@@ -1376,12 +1373,17 @@ export function getNativeModalDialogCSS() {
             opacity: 0;
         }
 
-        dialog {
-            max-width: var(--dbp-modal-max-width, 75vw);
-            min-width: var(--dbp-modal-min-width, 320px);
+        dialog[open] {
+            animation-name: var(--dbp-modal-animation);
+            animation-duration: 0.5s;
+            animation-fill-mode: forwards;
+        }
 
-            max-height: var(--dbp-modal-max-height, 75vh);
+        dialog {
+            min-width: var(--dbp-modal-min-width, 320px);
+            max-width: var(--dbp-modal-max-width, 75vw);
             min-height: var(--dbp-modal-min-height);
+            max-height: var(--dbp-modal-max-height, 90vh);
 
             overflow: hidden;
             padding: 15px 20px 20px;
@@ -1389,28 +1391,16 @@ export function getNativeModalDialogCSS() {
             color: var(--dbp-content);
             background-color: var(--dbp-background);
             filter: drop-shadow(rgba(0, 0, 0, 0.3) 2px 4px 8px)
-                    drop-shadow(rgba(0, 0, 0, 0.2) 4px 8px 16px)
-                    drop-shadow(rgba(0, 0, 0, 0.1) 8px 16px 32px);
-        }
-
-        @media only screen and (max-width: 490px) {
-            dialog {
-                max-width: none;
-            }
-        }
-
-        dialog[open] {
-            animation-name: var(--dbp-modal-animation);
-            animation-duration: .5s;
-            animation-fill-mode: forwards;
+                drop-shadow(rgba(0, 0, 0, 0.2) 4px 8px 16px)
+                drop-shadow(rgba(0, 0, 0, 0.1) 8px 16px 32px);
         }
 
         .modal-container {
             display: grid;
             grid-template-rows: auto 1fr auto;
             align-items: start;
-            position: relative;
-            overflow: hidden;
+            min-height: var(--dbp-modal-min-height);
+            max-height: var(--dbp-modal-max-height, 90vh);
         }
 
         .modal-header {
@@ -1418,9 +1408,13 @@ export function getNativeModalDialogCSS() {
         }
 
         .modal-content {
-            overflow: hidden auto;
-            max-height: var(--dbp-modal-content-max-height);
-            min-height: var(--dbp-modal-content-min-height);
+            position: relative;
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .modal-footer {
+            height: var(--dbp-modal-footer-height);
         }
 
         .header-top {
@@ -1429,11 +1423,6 @@ export function getNativeModalDialogCSS() {
             align-items: center;
             padding: 0;
             margin-bottom: 1em;
-        }
-
-        .modal-footer {
-            height: var(--dbp-modal-footer-height);
-            padding-top: 20px;
         }
 
         .modal-close {
@@ -1451,7 +1440,7 @@ export function getNativeModalDialogCSS() {
         }
 
         button.modal-close:focus {
-            filter: drop-shadow(rgba(255,255,255,0.5), 1px 2px 4px);
+            filter: drop-shadow(rgba(255, 255, 255, 0.5), 1px 2px 4px);
         }
 
         .modal-title {
@@ -1460,22 +1449,29 @@ export function getNativeModalDialogCSS() {
             font-weight: 300;
         }
 
-        ::slotted([slot="header"]) {
+        ::slotted([slot='header']) {
         }
 
-        ::slotted([slot="footer"]) {
+        ::slotted([slot='footer']) {
         }
 
         ::backdrop {
             backdrop-filter: blur(5px);
-            transition: backdrop-filter .5s ease;
+            transition: backdrop-filter 0.5s ease;
             background: color-mix(in srgb, var(--dbp-background-color) 60%, transparent);
         }
 
-        dialog + .backdrop { /* polyfill */
+        dialog + .backdrop {
+            /* polyfill */
             backdrop-filter: blur(5px);
-            transition: backdrop-filter .5s ease;
+            transition: backdrop-filter 0.5s ease;
             background: color-mix(in srgb, var(--dbp-background-color) 60%, transparent);
+        }
+
+        @media only screen and (max-width: 490px) {
+            dialog {
+                max-width: none;
+            }
         }
 
         /**************************\\

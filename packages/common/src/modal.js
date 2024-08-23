@@ -25,8 +25,6 @@ export class Modal extends DBPLitElement {
         return {
             modalId: { type: String, attribute: 'modal-id' },
             title: { type: String },
-            width: { type: String },
-            height: { type: String },
         };
     }
 
@@ -95,7 +93,7 @@ export class Modal extends DBPLitElement {
                     <div class="modal-container">
                         <header class="modal-header">
                             <div class="header-top">
-                                <h3 class="modal-title">
+                                <h3 class="modal-title" id="modal-title">
                                     ${this.title}
                                 </h3>
                                 <button
@@ -113,7 +111,7 @@ export class Modal extends DBPLitElement {
                                 <slot name="header"></slot>
                             </div>
                         </header>
-                        <main class="modal-content">
+                        <main class="modal-content" id="modal-content">
                             <slot name="content"></slot>
                         </main>
                         <footer class="modal-footer">
