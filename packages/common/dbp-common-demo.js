@@ -598,7 +598,7 @@ html {
                             }
                         </style>
 
-                        <dbp-button type="is-primary" id="modal-trigger"
+                        <dbp-button type="is-primary" id="modal-trigger-basic"
                             value="open modal"
                             no-spinner-on-click
                             @click="${() => this._('#my-modal-basic').open() }"></dbp-button>
@@ -621,6 +621,9 @@ html {
                     <div class="control" id="dbp-translated-demo">
                         <h3>Modal with long content</h3>
                         <style>
+                            .modal--long {
+                                --dbp-modal-header-height: 5em;
+                            }
                             .modal--long .header h3 {
                                 margin: 0 1em 0 0;
                             }
@@ -630,7 +633,7 @@ html {
                             }
                         </style>
 
-                        <dbp-button type="is-primary" id="modal-trigger"
+                        <dbp-button type="is-primary" id="modal-trigger-long"
                             value="open modal"
                             no-spinner-on-click
                             @click="${() => this._('#my-modal-long').open() }"></dbp-button>
@@ -694,7 +697,7 @@ html {
                             }
                         </style>
 
-                        <dbp-button type="is-primary" id="modal-trigger"
+                        <dbp-button type="is-primary" id="modal-trigger-person"
                             value="open modal"
                             no-spinner-on-click
                             @click="${() => this._('#my-modal-person').open() }"></dbp-button>
