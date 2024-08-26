@@ -1,4 +1,4 @@
-import '@webcomponents/scoped-custom-element-registry/src/scoped-custom-element-registry.js';
+//import '@webcomponents/scoped-custom-element-registry
 import {AppShell} from '@dbp-toolkit/app-shell';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
