@@ -333,6 +333,12 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         return currentPage;
     }
 
+    getLang() {
+        if (!this.tabulatorTable) return;
+        let currentLang = this.tabulatorTable.getLang();
+        return currentLang;
+    }
+
     setPage(currentPage) {
         if (!this.tabulatorTable) return;
         this.tabulatorTable.setPage(currentPage);

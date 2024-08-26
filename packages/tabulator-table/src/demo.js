@@ -137,7 +137,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             let filter_object = {field: column, type: operator, value: filter};
             table.setFilter([filter_object]);
         }
-
         else
         {
             const columns = table.getColumnsFields();
