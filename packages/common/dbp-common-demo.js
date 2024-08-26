@@ -588,10 +588,12 @@ html {
                                 display: flex;
                                 justify-content: flex-end;
                                 gap: 1em;
+                                padding-top: 1em;
                             }
                             .modal--basic {
                                 --dbp-modal-content-min-height: 6em;
                                 --dbp-modal-max-width: 650px;
+                                /* --dbp-modal-footer-height: 3em; */
                             }
                             .modal--basic .header h3 {
                                 margin: 0 1em 0 0;
@@ -625,9 +627,9 @@ html {
                         <style>
                             .modal--long {
                                 --dbp-modal-header-height: 110px;
-                                --dbp-modal-footer-height: 30px;
+                                --dbp-modal-footer-height: 3em;
                                 --dbp-modal-max-width: 50vw;
-                                --dbp-modal-max-height: 50vh;
+                                --dbp-modal-max-height: 80vh;
                             }
                             .modal--long .header h4,
                             .modal--long .header h3 {
@@ -690,6 +692,74 @@ html {
                         </dbp-modal>
                     </div>
 
+                    <div class="control" id="dbp-translated-demo">
+                        <h3>Modal with sticky footer</h3>
+                        <style>
+                            .modal--sticky {
+                                --dbp-modal-header-height: 110px;
+                                --dbp-modal-footer-height: 3em;
+                                --dbp-modal-max-width: 50vw;
+                                --dbp-modal-max-height: 80vh;
+                            }
+                            .modal--sticky .header h4,
+                            .modal--sticky .header h3 {
+                                margin: 0 1em 0 0;
+                            }
+                            .header {
+                                display: flex;
+                                align-items: center;
+                            }
+                        </style>
+
+                        <dbp-button type="is-primary" id="modal-trigger-sticky"
+                            value="open modal"
+                            no-spinner-on-click
+                            @click="${() => this._('#my-modal-sticky').open() }"></dbp-button>
+
+                        <dbp-modal id="my-modal-sticky" sticky-footer class="modal modal--sticky" modal-id="modal-sticky" title="The title of the modal" subscribe="lang">
+                            <div slot="header" class="header">
+                                <div class="top"><h3>Person name</h3><dbp-icon name="cog"></dbp-icon></div>
+                                <div class="bottom"><h4>Ohter Person name</h4><dbp-icon name="ambulance"></dbp-icon></div>
+                            </div>
+                            <div slot="content">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h4>Exercitation</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h4>Consectetur</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h5>Eiusmod</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h4>Incididunt</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <h5>Consequat</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            </div>
+                            <menu slot="footer" class="footer-menu">
+                                <dbp-button @click="${() => { this._('#my-modal-long').close(); }}">Cancel</dbp-button>
+                                <dbp-button type="is-primary">Submit</dbp-button>
+                            </menu>
+                        </dbp-modal>
+                    </div>
 
                     <div class="control" id="dbp-translated-demo">
                         <h3>Modal with person selector (with slide-in effect)</h3>

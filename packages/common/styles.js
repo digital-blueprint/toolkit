@@ -1397,6 +1397,7 @@ export function getNativeModalDialogCSS() {
 
         .modal-container {
             display: grid;
+            grid-template-columns: 1fr;
             grid-template-rows: auto 1fr auto;
             align-items: start;
             min-height: var(--dbp-modal-min-height);
@@ -1411,6 +1412,8 @@ export function getNativeModalDialogCSS() {
             position: relative;
             overflow-y: auto;
             max-height: 100%;
+            min-height: 100%;
+            height: 100%;
         }
 
         .modal-footer {

@@ -19,12 +19,15 @@ export class Modal extends DBPLitElement {
         this.modalId = 'dbp-modal-id';
         /** @type {string} */
         this.title = "";
+        /** @type {boolean} */
+        this.stickyFooter = false;
     }
 
     static get properties() {
         return {
             modalId: { type: String, attribute: 'modal-id' },
             title: { type: String },
+            stickyFooter: { type: Boolean, attribute: 'sticky-footer' },
         };
     }
 
@@ -87,37 +90,45 @@ export class Modal extends DBPLitElement {
             <dialog class="modal"
                 id="${this.modalId}"
                 autofocus
-                role="dialog"
+                role="alertdialog"
                 aria-describedby="modal-content"
                 aria-labelledby="modal-title">
-                    <div class="modal-container">
-                        <header class="modal-header">
-                            <div class="header-top">
-                                <h3 class="modal-title" id="modal-title">
-                                    ${this.title}
-                                </h3>
-                                <button
+                <div class="modal-container">
+                    <header class="modal-header">
+                        <div class="header-top">
+                            <h3 class="modal-title" id="modal-title">
+                                ${this.title}
+                            </h3>
+                            <button
                                     title="${i18n.t('dbp-modal.close')}"
                                     class="modal-close"
                                     aria-label="${i18n.t('dbp-modal.close')}"
-                                    @click="${() => { this.close(); }}">
-                                    <dbp-icon
+                                    @click="${() => {
+                                        this.close();
+                                    }}">
+                                <dbp-icon
                                         title="${i18n.t('dbp-modal.close')}"
                                         name="close"
                                         class="close-icon"></dbp-icon>
-                                </button>
-                            </div>
-                            <div class="header-bottom">
-                                <slot name="header"></slot>
-                            </div>
-                        </header>
-                        <main class="modal-content" id="modal-content">
-                            <slot name="content"></slot>
-                        </main>
+                            </button>
+                        </div>
+                        <div class="header-bottom">
+                            <slot name="header"></slot>
+                        </div>
+                    </header>
+                    <main class="modal-content" id="modal-content">
+                        <slot name="content"></slot>
+                        ${!this.stickyFooter ? html`
+                            <footer class="modal-footer modal-footer--sticky">
+                                <slot name="footer"></slot>
+                            </footer>
+                        ` : ''}
+                    </main>
+                    ${this.stickyFooter ? html`
                         <footer class="modal-footer">
                             <slot name="footer"></slot>
-                        </footer>
-                    </div>
+                        </footer>` : ''}
+                </div>
             </dialog>
         `;
     }
