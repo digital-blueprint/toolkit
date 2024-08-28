@@ -65,7 +65,10 @@ Or you can include the JS files directly via CDN:
 - `setData(data)`: sets data of the tabulator table.
   - `data` is an array of data which should be shown in the table.
 - `getRows()`: returns an array with all the row components of the table.
+- `selectAllFiles`: selects all rows. If all rows are already selected, it deselects them.
 - `getSelectedRows()`: returns an array with all the selected rows of the table.
+- `checkAllSelected()`: checks if all rows are selected or not.
+- `(deleteSelectedRows)`: deletes the selected rows.
 - `updateRow(row, newData)`: updates a given row of the tabulator table with new data.
   -`row` represents the row object we want to update.
   -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}` 
@@ -83,6 +86,9 @@ Or you can include the JS files directly via CDN:
 - `download(type, dataName)`: downloads the selected rows or the entire tabulator data if none are selected in the specified file format
   - `type` represents the file format to be downloaded
   - `dataName` is the name of the file to be downloaded
+- `getPage()`: returns the current table page.
+- `setPage()`: sets the current table page.
+- `getLang()`: returns the lang parameter.
 
 ## Note
 In best practice `options` is set if the dom is already rendered. 

@@ -215,7 +215,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     /**
-     * Select or deselect all files from tabulator table
+     * Select or deselect all rows from tabulator table
      *
      */
     selectAllFiles() {
@@ -308,12 +308,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         let rows = this.tabulatorTable.getRows();
         return rows;
-    }
-
-    getRowFromPosition(position) {
-        if (!this.tabulatorTable) return;
-        let row = this.tabulatorTable.getRowFromPosition(position);
-        return row;
     }
 
     getData() {
