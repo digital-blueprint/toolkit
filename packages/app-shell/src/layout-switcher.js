@@ -2,7 +2,6 @@ import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {AdapterLitElement, Icon} from '@dbp-toolkit/common';
-import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';
 
 /** constructor function of LayoutSwitcher class for creating and initializing objects instance of this class */
@@ -71,9 +70,6 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             this.loadAlternateLayout();
         }
     });
-    /** if (this.langDir) {
-        setOverridesByGlobalCache(this._i18n, this);
-      }*/
     }
 /** disconnectedCallback lifecycle function used for cleanup when the element is removed from the DOM */
     disconnectedCallback() {
