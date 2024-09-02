@@ -363,7 +363,9 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
             }
 
             input[type='number'] {
+                background-color: var(--dbp-background);
                 border: var(--dbp-border);
+                color: var(--dbp-content);
                 padding: 0 0.3em;
             }
 
@@ -382,10 +384,6 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                 border: 1px solid black;
                 border-top: 0px;
                 padding: 15px;
-            }
-
-            input[type='number'] {
-                background-color: var(--dbp-background);
             }
 
             dbp-mini-spinner {
