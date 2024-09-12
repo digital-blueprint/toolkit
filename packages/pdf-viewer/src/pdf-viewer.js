@@ -182,7 +182,9 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         this.isPageLoaded = true;
 
         // fix width adaption after "this.isPageLoaded = true"
-        await this.showPage(page);
+        setTimeout(() => {
+            this._onWindowResize();
+        }, 100);
     }
 
     /**
