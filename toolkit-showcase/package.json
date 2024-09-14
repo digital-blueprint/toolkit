@@ -19,7 +19,7 @@
         "@rollup/plugin-node-resolve": "^15.0.0",
         "@rollup/plugin-terser": "^0.4.0",
         "@rollup/plugin-url": "^8.0.0",
-        "chokidar": "^3.4.0",
+        "chokidar": "^4.0.0",
         "eslint": "^9.1.0",
         "eslint-plugin-jsdoc": "^50.0.0",
         "glob": "^11.0.0",
