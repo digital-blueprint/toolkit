@@ -19,6 +19,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.lang = this._i18n.language;
 
         this.identifier = 'table';
+        /** @type {import('tabulator-tables').Options} */
         this.options = {
             layout: 'fitColumns',
             autoColumns: true,
@@ -149,6 +150,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.options['selectableRows'] = true;
         }
 
+        /** @type {import('tabulator-tables').Tabulator} */
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
@@ -185,7 +187,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                             this.tabulatorTable.selectRow('display');
                         }
                         if (this._('#select_all')) {
-                            this._('#select_all').checked = !allSelected;
+                            /** @type {HTMLInputElement} */(this._('#select_all')).checked = !allSelected;
                         }
                         e.preventDefault();
                     },
@@ -201,7 +203,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         const check =
             this.tabulatorTable.getSelectedRows().length ===
             this.tabulatorTable.getRows('display').length;
-        this._('#select_all').checked = check;
+        /** @type {HTMLInputElement} */(this._('#select_all')).checked = check;
 
         if(this.tabulatorTable.getSelectedRows().length === 0)
             this.rowSelected = false;
@@ -256,14 +258,14 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     setFilter(listOfFilters) {
         if (!this.tabulatorTable) return;
         if(listOfFilters.length === 0)
-            this.tabulatorTable.clearFilter();
+            this.tabulatorTable.clearFilter(false);
         else
             this.tabulatorTable.setFilter(listOfFilters);
     }
 
     clearFilter() {
         if (!this.tabulatorTable) return;
-        this.tabulatorTable.clearFilter();
+        this.tabulatorTable.clearFilter(false);
     }
 
     getSelectedRows() {
@@ -345,7 +347,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable.getRows('visible').forEach((row) => {
                 let config = row._row.modules.responsiveLayout;
                 config.open = true;
-                const item = row.getElement().lastChild;
+                const item = /** @type {HTMLElement} */(row.getElement().lastChild);
 
                 if (item.classList.contains('tabulator-responsive-collapse')) {
                     item.style.display = 'block';
@@ -372,7 +374,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable.getRows('visible').forEach((row) => {
                 let config = row._row.modules.responsiveLayout;
                 config.open = false;
-                const item = row.getElement().lastChild;
+                const item = /** @type {HTMLElement} */(row.getElement().lastChild);
 
                 if (item.classList.contains('tabulator-responsive-collapse')) {
                     item.style.display = 'none';
@@ -532,7 +534,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getTabulatorStyles()}
             ${commonStyles.getRadioAndCheckboxCss()}
-            
+
             .select-all-icon {
                 height: 40px;
                 position: absolute;
