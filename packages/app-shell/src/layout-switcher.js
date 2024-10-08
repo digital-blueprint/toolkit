@@ -25,7 +25,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         /** @type {string} */
         this.layout = localStorage.getItem('layout');
         /** @type {Boolean} */
-        this.isDefaultLayout = this.layout === 'wide';
+        this.isDefaultLayout = this.layout === 'standard';
         /** @type {string} */
         this.disabledLayout = '';
         /** @type {string} */
@@ -72,13 +72,13 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             }
             if (propName === 'defaultLayout') {
                 /* Set default layout based on:
-                 * 1. Stored layout value, 2. Default layout from attribute, 3. Fallback to 'wide' */
-                this.layout = localStorage.getItem('layout') ? localStorage.getItem('layout') : this.defaultLayout || 'wide' ;
+                 * 1. Stored layout value, 2. Default layout from attribute, 3. Fallback to 'standard' */
+                this.layout = localStorage.getItem('layout') ? localStorage.getItem('layout') : this.defaultLayout || 'standard' ;
             }
             if (propName === 'layout') {
                 localStorage.setItem('layout', this.layout);
                 this.dispatchEvent(new CustomEvent('layout-changed', {detail: this.layout}));
-                if (this.layout === 'wide') {
+                if (this.layout === 'standard') {
                     this.loadDefaultLayout();
                 } else {
                     this.loadAlternateLayout();
@@ -99,7 +99,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 this.isDisabled = true;
                 this.layout = this.layouts.filter((layout) => layout.name !== this.disabledLayout)[0].name;
             }
-            if (this.layout === 'wide') {
+            if (this.layout === 'standard') {
                 this.loadDefaultLayout();
             } else {
                 this.loadAlternateLayout();
@@ -115,11 +115,11 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     loadDefaultLayout() {
-        this.isDefaultLayout=true;
+        this.isDefaultLayout = true;
     }
 
     loadAlternateLayout(){
-        this.isDefaultLayout=false;
+        this.isDefaultLayout = false;
     }
 
     toggleLayout(newLayout) {
@@ -130,7 +130,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     loadLayout() {
-        this.isDefaultLayout = this.layout === 'wide';
+        this.isDefaultLayout = this.layout === 'standard';
     }
 
     /**
