@@ -12,14 +12,27 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         super();
 
         this._i18n = createInstance();
+        /** @type {string} */
         this.lang = this._i18n.language;
+        /** @type {string} */
         this.langDir = '';
+        /** @type {Boolean} */
+        this.isDisabled = false;
+        /** @type {Array} */
         this.layouts = [{name: 'wide'}, {name: 'standard'}];
+        /** @type {string} */
         this.defaultLayout = null;
+        /** @type {string} */
         this.layout = localStorage.getItem('layout');
+        /** @type {Boolean} */
         this.isDefaultLayout = this.layout === 'wide';
+        /** @type {string} */
+        this.disabledLayout = '';
+        /** @type {string} */
         this.defaultModeClass = 'wide-layout';
+        /** @type {string} */
         this.alternateModeClass = 'standard-layout';
+        /** @type {Boolean} */
         this.dropdown = false;
         this.boundCloseAdditionalMenuHandler = this.hideLayoutMenu.bind(this);
     }
@@ -32,11 +45,13 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             ...super.properties,
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
+            isDisabled: {type: Boolean, attribute: 'disabled', reflect: true},
             layout: {type: String},
-            layouts: {type: Array, attribute: 'layouts'},
+            layouts: {type: Array},
             defaultLayout: {type: String, attribute: 'default-layout'},
+            disabledLayout: {type: String, attribute: 'disabled-layout'},
             isDefaultLayout: {type: Boolean},
-            dropdown: {type: Boolean, attribute: 'dropdown'},
+            dropdown: {type: Boolean},
         };
     }
 
@@ -56,6 +71,8 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 this._i18n.changeLanguage(this.lang);
             }
             if (propName === 'defaultLayout') {
+                /* Set default layout based on:
+                 * 1. Stored layout value, 2. Default layout from attribute, 3. Fallback to 'wide' */
                 this.layout = localStorage.getItem('layout') ? localStorage.getItem('layout') : this.defaultLayout || 'wide' ;
             }
             if (propName === 'layout') {
@@ -67,7 +84,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                     this.loadAlternateLayout();
                 }
             }
-    });
+        });
         super.update(changedProperties);
     }
 
@@ -77,6 +94,11 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     connectedCallback() {
         super.connectedCallback();
         this.updateComplete.then(() =>{
+            if (this.disabledLayout) {
+                /** Disable layout switcher if disabledLayout is set and only one layout is available */
+                this.isDisabled = true;
+                this.layout = this.layouts.filter((layout) => layout.name !== this.disabledLayout)[0].name;
+            }
             if (this.layout === 'wide') {
                 this.loadDefaultLayout();
             } else {
@@ -101,9 +123,9 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     toggleLayout(newLayout) {
-        this.layout = newLayout;/**Update the layout property of the component with the new layout. */
-        localStorage.setItem('layout', this.layout);/**Persist the new layout value in the local storage to keep it across sessions. */
-        this.dispatchEvent(new CustomEvent('layout-changed', { detail: this.layout }));/** Dispatch a custom event to inform other parts of the application of the layout change.The new layout state is passed as a detail in the event for use by event listeners. */
+        this.layout = newLayout; /* Update the layout property of the component with the new layout. */
+        localStorage.setItem('layout', this.layout); /* Persist the new layout value in the local storage to keep it across sessions. */
+        this.dispatchEvent(new CustomEvent('layout-changed', { detail: this.layout })); /* Dispatch a custom event to inform other parts of the application of the layout change.The new layout state is passed as a detail in the event for use by event listeners. */
         this.loadLayout();
     }
 
@@ -211,25 +233,27 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         const i18n = this._i18n;
-            return html`
-                <div id="layout-menu">
-                    <a href="#" class=${classMap({'layout-button': true, 'active': this.dropdown})} title="${i18n.t('switch-layout')}"
-                        @click="${this.toggleLayoutMenu}" >
-                        <dbp-icon name="layout"></dbp-icon>
-                    </a>
-                    <ul class="extended-menu" style="display: ${this.dropdown ? 'block' : 'none'};">
-                        ${this.layouts.map((layout) => html`
-                            <li>
-                                <!-- Title for each layout option -->
-                                <a href="#" class="${this.layout === layout.name ? 'active' : ''}"
-                                    title="${layout.name === 'wide' ? i18n.t('switch-to-wide-layout-label') : i18n.t('switch-to-standard-layout-label')}"
-                                    @click="${() => this.toggleLayout(layout.name)}">
-                                    ${layout.name}
-                                </a>
-                            </li>
-                        `)}
-                    </ul>
-                </div>
-            `;
+            if (!this.isDisabled) {
+                return html`
+                    <div id="layout-menu">
+                        <a href="#" class=${classMap({'layout-button': true, 'active': this.dropdown})} title="${i18n.t('switch-layout')}"
+                            @click="${this.toggleLayoutMenu}" >
+                            <dbp-icon name="layout"></dbp-icon>
+                        </a>
+                        <ul class="extended-menu" style="display: ${this.dropdown ? 'block' : 'none'};">
+                            ${this.layouts.map((layout) => html`
+                                <li>
+                                    <!-- Title for each layout option -->
+                                    <a href="#" class="${this.layout === layout.name ? 'active' : ''}"
+                                        title="${layout.name === 'wide' ? i18n.t('switch-to-wide-layout-label') : i18n.t('switch-to-standard-layout-label')}"
+                                        @click="${() => this.toggleLayout(layout.name)}">
+                                        ${layout.name}
+                                    </a>
+                                </li>
+                            `)}
+                        </ul>
+                    </div>
+                `;
+            }
     }
 }
