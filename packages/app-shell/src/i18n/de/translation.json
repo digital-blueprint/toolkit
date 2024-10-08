@@ -17,5 +17,8 @@
     "privacy-policy": "Datenschutz",
     "welcome": {
         "headline": "Willkommen!"
-    }
+    },
+    "switch-layout": "Schalter-Layout",
+    "switch-to-wide-layout-label": "Zu breitem Layout wechseln",
+    "switch-to-standard-layout-label": "Zum Standardlayout wechseln"
 }

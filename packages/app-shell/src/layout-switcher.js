@@ -218,7 +218,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                             <li>
                                 <!-- Title for each layout option -->
                                 <a href="#" class="${this.layout === layout.name ? 'active' : ''}"
-                                title="${layout.name === 'wide' ? i18n.t('Switch to Wide Layout') : i18n.t('Switch to Standard Layout')}"
+                                    title="${layout.name === 'wide' ? i18n.t('switch-to-wide-layout-label') : i18n.t('switch-to-standard-layout-label')}"
                                     @click="${() => this.toggleLayout(layout.name)}">
                                     ${layout.name}
                                 </a>
