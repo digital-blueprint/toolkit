@@ -14,14 +14,14 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.langDir = '';
-        this.layouts = [];
         this.layouts = [{name: 'wide'}, {name: 'standard'}];
-        this.layout = localStorage.getItem('layout') || 'wide';
+        this.defaultLayout = null;
+        this.layout = localStorage.getItem('layout');
         this.isDefaultLayout = this.layout === 'wide';
         this.defaultModeClass = 'wide-layout';
         this.alternateModeClass = 'standard-layout';
         this.dropdown = false;
-        this.boundCloseAdditionalMenuHandler = this.hideLayoutMenu.bind(this); 
+        this.boundCloseAdditionalMenuHandler = this.hideLayoutMenu.bind(this);
     }
 
     /**
@@ -33,8 +33,9 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
             layout: {type: String},
-            layouts: { type: Array, attribute: 'layouts'},
-            isDefaultLayout: { type: Boolean },
+            layouts: {type: Array, attribute: 'layouts'},
+            defaultLayout: {type: String, attribute: 'default-layout'},
+            isDefaultLayout: {type: Boolean},
             dropdown: {type: Boolean, attribute: 'dropdown'},
         };
     }
@@ -54,18 +55,21 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             if (propName === 'lang') {
                 this._i18n.changeLanguage(this.lang);
             }
-        if (propName === 'layout') {
-            localStorage.setItem('layout', this.layout);
-            this.dispatchEvent(new CustomEvent('layout-changed', {detail: this.layout}));
-            if (this.layout === 'wide') {
-                this.loadDefaultLayout();
-            } else {
-                this.loadAlternateLayout();
+            if (propName === 'defaultLayout') {
+                this.layout = localStorage.getItem('layout') ? localStorage.getItem('layout') : this.defaultLayout || 'wide' ;
             }
-        }
+            if (propName === 'layout') {
+                localStorage.setItem('layout', this.layout);
+                this.dispatchEvent(new CustomEvent('layout-changed', {detail: this.layout}));
+                if (this.layout === 'wide') {
+                    this.loadDefaultLayout();
+                } else {
+                    this.loadAlternateLayout();
+                }
+            }
     });
         super.update(changedProperties);
-    } 
+    }
 
     /**
      * connectedCallback lifecycle function is executed whenever a custom element is inserted into the DOM
@@ -73,11 +77,11 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     connectedCallback() {
         super.connectedCallback();
         this.updateComplete.then(() =>{
-                if (this.layout === 'wide') {
-                    this.loadDefaultLayout();
-                } else {
-                    this.loadAlternateLayout();
-                }
+            if (this.layout === 'wide') {
+                this.loadDefaultLayout();
+            } else {
+                this.loadAlternateLayout();
+            }
         });
     }
 

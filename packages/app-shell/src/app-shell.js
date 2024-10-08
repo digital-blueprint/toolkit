@@ -1288,7 +1288,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-theme-switcher
                                     subscribe="themes,dark-mode-theme-override"
                                     lang="${this.lang}"></dbp-theme-switcher>
-                                    <dbp-layout-switcher @layout-changed="${this.handleLayoutChange}"></dbp-layout-switcher>
+                                <dbp-layout-switcher default-layout="standard" @layout-changed="${this.handleLayoutChange}"></dbp-layout-switcher>
                                 <dbp-language-select
                                     id="lang-select"
                                     lang="${this.lang}"></dbp-language-select>
