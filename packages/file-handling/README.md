@@ -62,7 +62,7 @@ files from a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
     - example `<dbp-file-source lang="de"></dbp-file-source>`
 - `allowed-mime-types` (optional): if set accepts only files matching mime types
     - example `<dbp-file-source allowed-mime-types='application/pdf'></dbp-file-source>` ... PDFs only
-    - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all sub types) only
+    - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all subtypes) only
     - example `<dbp-file-source allowed-mime-types='image/png,text/plain'></dbp-file-source>` ... PNGs or TXTs only
     - example `<dbp-file-source allowed-mime-types='*/*'></dbp-file-source>` ... all file types (default)
 - `max-file-size"` (optional): if set accepts only files with maximum of this size (in KB)
@@ -115,7 +115,7 @@ This event is sent if multiple files are selected.
 
 #### `dbp-nextcloud-file-picker-number-files`
 
-This event is sent from nextcloudfilepicker and is send when files are picked and sends the number of selected files
+This event is sent from `nextcloud-file-picker` and is sent when files are picked and sends the number of selected files
 
 **Payload**: `{'file': File}` where [File](https://developer.mozilla.org/en-US/docs/Web/API/File) is the binary file that was selected
 
@@ -198,9 +198,9 @@ This web component depends on:
 
 ### Attributes
 
-- `clipboardFiles` is the object which should be subscribed to the provider to recieve and send the clipboard files
+- `clipboardFiles` is the object which should be subscribed to the provider to receive and send the clipboard files
   to the provider.
-  - exmaple `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name"></dbp-clipboard>`
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name"></dbp-clipboard>`
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
   - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" lang="de"></dbp-clipboard>`
 - `enabled-targets` (optional, default: `local`): sets which destination are enabled
@@ -208,13 +208,13 @@ This web component depends on:
   - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" enabled-targets="local,nextcloud"></dbp-clipboard>`
 - `allowed-mime-types` (optional): if set accepts only files matching mime types
   - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" allowed-mime-types='application/pdf'></dbp-clipboard>` ... PDFs only
-  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" allowed-mime-types='image/*'></dbp-clipboard>` ... images (of all sub types) only
+  - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" allowed-mime-types='image/*'></dbp-clipboard>` ... images (of all subtypes) only
   - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name"e allowed-mime-types='image/png,text/plain'></dbp-clipboard>` ... PNGs or TXTs only
   - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" allowed-mime-types='*/*'></dbp-clipboard>` ... all file types (default)
-- `mode` (optional, default: `MODE_TABLE_ONLY`): the clipboard can used in three different contexts:
+- `mode` (optional, default: `MODE_TABLE_ONLY`): the clipboard can be used in three different contexts:
   only showing the clipboard content, in the file-source context and in the file-sink context.
   - you can use `MODE_TABLE_ONLY`, `MODE_FILE_SINK` or `MODE_FILE_SOURCE`
-  - example `<dbp-clipboard mode="MODE_TABLE_ONLY></dbp-clipboard>` ... only the table will shown
+  - example `<dbp-clipboard mode="MODE_TABLE_ONLY></dbp-clipboard>` ... only the table will be shown
   - example `<dbp-clipboard mode="MODE_FILE_SINK></dbp-clipboard>` ... the file-sink text and functionality is turned on
   - example `<dbp-clipboard mode="MODE_FILE_SOURCE></dbp-clipboard>` ... the file-source text and functionality is turned on
 - `filesToSave` this attribute is used by the `dbp-file-sink` to set the files in an array, 
@@ -266,7 +266,7 @@ maxSelectedItems: {type: Number, attribute: 'max-selected-items'}
   - example `<dbp-file-source lang="de"></dbp-file-source>`
 - `allowed-mime-types` (optional): if set accepts only files matching mime types
   - example `<dbp-file-source allowed-mime-types='application/pdf'></dbp-file-source>` ... PDFs only
-  - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all sub types) only
+  - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all subtypes) only
   - example `<dbp-file-source allowed-mime-types='image/png,text/plain'></dbp-file-source>` ... PNGs or TXTs only
   - example `<dbp-file-source allowed-mime-types='*/*'></dbp-file-source>` ... all file types (default)
 
@@ -283,7 +283,7 @@ maxSelectedItems: {type: Number, attribute: 'max-selected-items'}
 - `diectory-path` (optional): Allows you to set an specific initial path for your nextcloud, 
   if this path isn't found the path is set to default `\`
   - example `<dbp-nextcloud-file-picker directory-path="\your-folder\your-subfolder"></dbp-nextcloud-file-picker>`
-- `directories-only` (optional): A Boolean to specify if you want to select an directory or files
+- `directories-only` (optional): A Boolean to specify if you want to select a directory or files
   Use `directories-only` for fileupload, and without for file selecting
   - example `<dbp-nextcloud-file-picker directories-only></dbp-nextcloud-file-picker>`
 - `max-selected-items` (optional, default: `true`): A number to specify how many files can be selected, 
@@ -299,12 +299,12 @@ This event is sent if one or more files are downloaded, the payload has the numb
 
 #### `dbp-nextcloud-file-picker-file-downloaded` 
 
-This event is sent if one file is downloaded, the payload has the file, filedata and the max number of uploaded files.
+This event is sent if one file is downloaded, the payload has the `file`, `fileData` and the max number of uploaded files.
 **Payload**: `{"file": file, "data": fileData, "maxUpload": maxUpload}`
 
 #### `dbp-nextcloud-file-picker-file-uploaded`
 
-Send the directory to filesink
+Send the directory to `file-sink`
 **Payload**: `{path: path}` 
 
 #### `dbp-nextcloud-file-picker-file-uploaded-finished`
