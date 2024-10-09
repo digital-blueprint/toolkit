@@ -3,6 +3,7 @@ import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as tabulatorStyles from '@dbp-toolkit/tabulator-table/src/tabulator-table-styles';
 import * as fileHandlingStyles from '@dbp-toolkit/file-handling/src/styles';
 import {Icon} from '@dbp-toolkit/common';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
@@ -868,10 +869,10 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
             ${commonStyles.getTextUtilities()}
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
-            ${commonStyles.getTabulatorStyles()}
+            ${tabulatorStyles.getTabulatorStyles()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
-            
+
             a {
                 border-bottom: var(--dbp-border);
                 padding: 0;
