@@ -473,7 +473,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
         const filePicker = this._('#modal-picker');
 
-        // check if element is already^ in the dom (for example if "dialog-open" attribute is set)
+        // check if element is already in the dom (for example if "dialog-open" attribute is set)
         if (filePicker) {
             MicroModal.show(filePicker, {
                 disableScroll: true,
