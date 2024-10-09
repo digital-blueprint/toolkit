@@ -109,6 +109,10 @@ The component emits a `dbp-set-property` event for the attribute `initial-file-h
 
 This event is sent if a file was selected.
 
+#### `dbp-file-source-dialog-closed`
+
+This event is sent if the dialog was closed.
+
 #### `dbp-file-source-file-upload-finished`
 
 This event is sent if multiple files are selected.

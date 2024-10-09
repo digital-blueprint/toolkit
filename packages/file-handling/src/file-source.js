@@ -485,6 +485,14 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                     if (filePicker) {
                         filePicker.selectAllButton = true;
                     }
+
+                    // Send event that dialog is closed
+                    const event = new CustomEvent('dbp-file-source-dialog-closed', {
+                        detail: {},
+                        bubbles: true,
+                        composed: true,
+                    });
+                    this.dispatchEvent(event);
                 },
             });
         }
