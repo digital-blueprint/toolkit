@@ -64,7 +64,16 @@ export class Modal extends DBPLitElement {
         };
     }
 
+    isOpen() {
+        return this.modalDialog.open;
+    }
+
     open() {
+        // Don't open the dialog if it is already open
+        if (this.modalDialog.open) {
+            return;
+        }
+
         // Prevent scrolling the page when dialog is open
         const htmlElement = this.modalDialog.ownerDocument.documentElement;
         htmlElement.style.overflow = 'hidden';
