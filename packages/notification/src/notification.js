@@ -12,6 +12,16 @@ export class Notification extends DBPLitElement {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.notificationBlock = null;
+        this.notifications = {};
+        // notifications = {
+        //     notificationId: {
+        //         id: 'notificationId',
+        //         messageId: '#notificationId',
+        //         progressTimeout: 10,
+        //         progressInterval: 23
+        //     }
+        // };
     }
 
     /**
@@ -28,37 +38,70 @@ export class Notification extends DBPLitElement {
         super.connectedCallback();
         const that = this;
 
+        /**
+         * @param {CustomEvent} e
+         */
         window.addEventListener('dbp-notification-send', (e) => {
-            if (typeof e.detail === 'undefined') {
+            /** @type {CustomEvent} */
+            const customEvent = e;
+            if (typeof customEvent.detail === 'undefined') {
                 return;
             }
 
             that.notificationBlock = that._('#notification');
             const notificationId = `notification-${createUUID()}`;
+            that.notifications[notificationId] = {};
+            that.notifications[notificationId].id = notificationId;
+            that.notifications[notificationId].messageId = `#${notificationId}`;
 
-            const type = typeof e.detail.type !== 'undefined' ? e.detail.type : 'info';
-            const body = typeof e.detail.body !== 'undefined' ? e.detail.body : '';
-            const summary = typeof e.detail.summary !== 'undefined' ? e.detail.summary : '';
-            const timeout = typeof e.detail.timeout !== 'undefined' ? e.detail.timeout : 0;
-            const icon = typeof e.detail.icon !== 'undefined' ? e.detail.icon : '';
+            const type = typeof customEvent.detail.type !== 'undefined' ? customEvent.detail.type : 'info';
+            const body = typeof customEvent.detail.body !== 'undefined' ? customEvent.detail.body : '';
+            const summary = typeof customEvent.detail.summary !== 'undefined' ? customEvent.detail.summary : '';
+            const timeout = typeof customEvent.detail.timeout !== 'undefined' ? customEvent.detail.timeout : 0;
+            const icon = typeof customEvent.detail.icon !== 'undefined' ? customEvent.detail.icon : '';
             const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : '';
             const summaryHTML = summary !== '' ? `<h3>${summary}</h3>` : '';
 
-            that.notificationBlock.innerHTML =
-                `
-                <div id="${notificationId}" class="notification is-${type}">
-                    <button id="${notificationId}-button" onclick="parentNode.parentNode.removeChild(parentNode)" class="delete"></button>
-                    ${summaryHTML}
-                    ${iconHTML} ${body}
-                </div>
-            ` + that.notificationBlock.innerHTML;
+            const STEP = 10;
+            const MAXCOUNT = timeout * 1000 / STEP;
 
-            const messageId = `#${notificationId}`;
+            const progressBarHTML = timeout > 0 ? `<div class="progress-container"><progress class="progress" value="0" max="${MAXCOUNT}"></progress></div>` : '';
+            const progressClass = timeout > 0 ? 'has-progress-bar' : 'no-progress-bar';
+
+            // Create and append notification element
+            const newNotification = document.createElement('div');
+            newNotification.id = notificationId;
+            newNotification.classList.add('notification', `is-${type}`, progressClass);
+            newNotification.innerHTML = `
+                <button id="${notificationId}-button" class="delete"></button>
+                ${summaryHTML}
+                ${iconHTML} ${body}
+                ${progressBarHTML}
+            `;
+            that.notificationBlock.appendChild(newNotification);
+
+            // Add event listener for the delete button
+            const deleteButton = that.notificationBlock.querySelector(`#${notificationId}-button`);
+            deleteButton.addEventListener('click', () => that.removeMessageId(that.notifications[notificationId]));
 
             if (timeout > 0) {
-                setTimeout(() => {
-                    that.removeMessageId(messageId);
+                // Remove notification after timeout
+                that.notifications[notificationId]['progressTimeout'] = setTimeout(() => {
+                    that.removeMessageId(that.notifications[notificationId]);
                 }, timeout * 1000);
+
+                // Update progress bar
+                that.notifications[notificationId]['progressInterval'] = setInterval(() => {
+                    /** @type {HTMLProgressElement} */
+                    const progressElement = this._(`#${notificationId}`).querySelector('.progress');
+                    if (progressElement) {
+                        progressElement.value += 1;
+                        if (progressElement.value >= MAXCOUNT) {
+                            clearInterval(that.notifications[notificationId].progressInterval);
+                            that.notifications[notificationId].progressInterval = null;
+                        }
+                    }
+                }, STEP);
             }
 
             // mark the event as handled
@@ -66,11 +109,30 @@ export class Notification extends DBPLitElement {
         });
     }
 
-    removeMessageId(messageElementId) {
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        for (const notification in this.notifications) {
+            clearInterval(this.notifications[notification].progressInterval);
+            clearTimeout(this.notifications[notification].progressTimeout);
+        }
+    }
+
+    /**
+     * Removes the notification element
+     * @param {object} notification - object with notification data
+     */
+    removeMessageId(notification) {
+        const messageElementId = notification.messageId;
         const element = this._(messageElementId);
 
         if (element) {
-            this.notificationBlock.removeChild(element);
+            element.classList.add('is-removing');
+            setTimeout(() => {
+                this.notificationBlock.removeChild(element);
+            }, 250);
+            clearInterval(this.notifications[notification.id].progressInterval);
+            clearTimeout(this.notifications[notification.id].progressTimeout);
+            delete this.notifications[notification.id];
         }
     }
 
@@ -86,6 +148,7 @@ export class Notification extends DBPLitElement {
             }
 
             .notification h3 {
+                font: inherit;
                 font-weight: bold;
                 margin-bottom: 3px;
             }
@@ -164,12 +227,6 @@ export class Notification extends DBPLitElement {
                 right: 0;
                 z-index: 1000;
                 padding: 0;
-            }
-
-            .notification h3 {
-                margin: 0 0 3px 0;
-                font: inherit;
-                font-weight: bold;
             }
         `;
     }

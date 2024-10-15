@@ -3,6 +3,7 @@ import {send as notify} from '@dbp-toolkit/common/notification';
 import {css, html, LitElement} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Notification} from './notification.js';
+import {getRandomInt} from './utils.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
@@ -61,9 +62,6 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
                         </div>
                     </div>
                 </div>
-                <div class="container">
-                    <dbp-notification lang="${this.lang}"></dbp-notification>
-                </div>
             </section>
         `;
     }
@@ -74,7 +72,7 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
             summary: 'Item deleted',
             body: `Item ${Math.random().toString(36).substring(7)} foo was deleted!`,
             type: types[Math.floor(Math.random() * types.length)],
-            timeout: 0,
+            timeout: getRandomInt(0, 10),
         });
     }
 }

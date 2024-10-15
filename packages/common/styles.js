@@ -529,6 +529,14 @@ export function getNotificationCSS() {
             border: var(--dbp-border);
         }
 
+        .notification.has-progress-bar {
+            padding-bottom: .5rem;
+        }
+
+        .progress {
+            width: 100%;
+        }
+
         .notification a:not(.button):not(.dropdown-item) {
             color: currentColor;
             text-decoration: underline;
@@ -594,6 +602,65 @@ export function getNotificationCSS() {
             background-color: var(--dbp-danger-surface);
             color: var(--dbp-on-danger-surface);
             border-color: var(--dbp-danger-surface-border-color);
+        }
+
+        progress[value] {
+            -webkit-appearance:none;
+            -moz-appearance:none;
+            appearance: none;
+            border: none;
+            height: 10px;
+        }
+
+        /* progress value color */
+        progress::-webkit-progress-value {
+
+        }
+        .notification.is-primary progress[value],
+        .notification.is-primary progress::-webkit-progress-bar {
+            background-color: var(--dbp-primary-surface);
+        }
+
+        .notification.is-info progress[value],
+        .notification.is-info  progress::-webkit-progress-bar {
+            background-color: var(--dbp-info-surface);
+        }
+
+        .notification.is-success progress[value],
+        .notification.is-success  progress::-webkit-progress-bar {
+            background-color: var(--dbp-success-surface);
+        }
+
+        .notification.is-warning progress[value],
+        .notification.is-warning  progress::-webkit-progress-bar {
+            background-color: var(--dbp-warning-surface);
+        }
+
+        .notification.is-danger progress[value],
+        .notification.is-danger  progress::-webkit-progress-bar {
+            background-color: var(--dbp-danger-surface);
+        }
+
+        /* progress bar value */
+        progress[value]::-moz-progress-bar {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        progress[value]::-webkit-progress-value {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .is-removing {
+            animation: fadeOut 0.25s forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-100%);
+            }
         }
     `;
 }
