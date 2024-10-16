@@ -1,8 +1,8 @@
 # Frontend Toolkit
 
 [GitHub](https://github.com/digital-blueprint/toolkit) |
-[Toolkit Showcase Development](https://dbp-dev.tugraz.at/apps/demo) |
-[Toolkit Showcase Demo](https://dbp-demo.tugraz.at/apps/demo)
+[Toolkit Showcase Development](https://dbp-dev.tugraz.at/apps/toolkit-showcase/) |
+[Toolkit Showcase Demo](https://dbp-demo.tugraz.at/apps/toolkit-showcase/)
 
 [![Build, Test and Publish](https://github.com/digital-blueprint/toolkit/actions/workflows/build-test-publish.yml/badge.svg)](https://github.com/digital-blueprint/toolkit/actions/workflows/build-test-publish.yml)
 
