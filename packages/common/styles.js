@@ -530,11 +530,7 @@ export function getNotificationCSS() {
         }
 
         .notification.has-progress-bar {
-            padding-bottom: .5rem;
-        }
-
-        .progress {
-            width: 100%;
+            padding-bottom: 1rem;
         }
 
         .notification a:not(.button):not(.dropdown-item) {
@@ -604,6 +600,11 @@ export function getNotificationCSS() {
             border-color: var(--dbp-danger-surface-border-color);
         }
 
+        .progress-container {
+            width: 100%;
+            margin-top: .5rem;
+        }
+
         progress[value] {
             -webkit-appearance:none;
             -moz-appearance:none;
@@ -613,9 +614,6 @@ export function getNotificationCSS() {
         }
 
         /* progress value color */
-        progress::-webkit-progress-value {
-
-        }
         .notification.is-primary progress[value],
         .notification.is-primary progress::-webkit-progress-bar {
             background-color: var(--dbp-primary-surface);
@@ -647,6 +645,23 @@ export function getNotificationCSS() {
         }
         progress[value]::-webkit-progress-value {
             background: rgba(255, 255, 255, 0.5);
+        }
+
+        .progress {
+            height: 10px;
+            animation: runProgress var(--dbp-progress-timeout, 5s) linear forwards 0.25s;
+        }
+
+        @keyframes runProgress {
+            0% {
+                width: 0%;
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            100% {
+                width: 100%;
+                background: rgba(255, 255, 255, 1);
+            }
         }
 
         .is-removing {

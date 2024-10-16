@@ -62,7 +62,6 @@ export class Notification extends DBPLitElement {
             const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : '';
             const summaryHTML = summary !== '' ? `<h3>${summary}</h3>` : '';
             const replaceId = typeof customEvent.detail.replaceId !== 'undefined' ? customEvent.detail.replaceId : null;
-            that.notifications[notificationId].replaceId = replaceId;
 
             if (replaceId) {
                 // Search for notification in that.notifications with the same replaceId and remove it
@@ -72,11 +71,9 @@ export class Notification extends DBPLitElement {
                     }
                 }
             }
+            that.notifications[notificationId].replaceId = replaceId;
 
-            const STEP = 10;
-            const MAXCOUNT = timeout * 1000 / STEP;
-
-            const progressBarHTML = timeout > 0 ? `<div class="progress-container"><progress class="progress" value="0" max="${MAXCOUNT}"></progress></div>` : '';
+            const progressBarHTML = timeout > 0 ? `<div class="progress-container"><div class="progress" style="--dbp-progress-timeout: ${timeout}s;"></div></div>` : '';
             const progressClass = timeout > 0 ? 'has-progress-bar' : 'no-progress-bar';
 
             // Create and append notification element
@@ -100,19 +97,6 @@ export class Notification extends DBPLitElement {
                 that.notifications[notificationId]['progressTimeout'] = setTimeout(() => {
                     that.removeMessageId(that.notifications[notificationId]);
                 }, timeout * 1000);
-
-                // Update progress bar
-                that.notifications[notificationId]['progressInterval'] = setInterval(() => {
-                    /** @type {HTMLProgressElement} */
-                    const progressElement = this._(`#${notificationId}`).querySelector('.progress');
-                    if (progressElement) {
-                        progressElement.value += 1;
-                        if (progressElement.value >= MAXCOUNT) {
-                            clearInterval(that.notifications[notificationId].progressInterval);
-                            that.notifications[notificationId].progressInterval = null;
-                        }
-                    }
-                }, STEP);
             }
 
             // mark the event as handled
@@ -123,7 +107,6 @@ export class Notification extends DBPLitElement {
     disconnectedCallback() {
         super.disconnectedCallback();
         for (const notification in this.notifications) {
-            clearInterval(this.notifications[notification].progressInterval);
             clearTimeout(this.notifications[notification].progressTimeout);
         }
     }
@@ -141,7 +124,6 @@ export class Notification extends DBPLitElement {
             setTimeout(() => {
                 this.notificationBlock.removeChild(element);
             }, 250);
-            clearInterval(this.notifications[notification.id].progressInterval);
             clearTimeout(this.notifications[notification.id].progressTimeout);
             delete this.notifications[notification.id];
         }

@@ -70,11 +70,12 @@ export class NotificationDemo extends ScopedElementsMixin(LitElement) {
         const types = ['primary', 'info', 'success', 'danger', 'warning'];
         const ids = ['download-event', 'upload-event', 'delete-event', 'error-event'];
         const currentId = ids[Math.floor(Math.random() * ids.length)];
+        const timeout = getRandomInt(5, 15);
         notify({
             summary: 'Item deleted',
-            body: `Item ${Math.random().toString(36).substring(7)} foo was deleted! Even ID: ${currentId}`,
+            body: `Item ${Math.random().toString(36).substring(7)} foo was deleted! <br> Even ID: ${currentId} <span>[${timeout}s]</span>`,
             type: types[Math.floor(Math.random() * types.length)],
-            timeout: getRandomInt(5, 15),
+            timeout: timeout,
             replaceId: currentId,
         });
     }
