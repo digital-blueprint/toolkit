@@ -61,6 +61,17 @@ export class Notification extends DBPLitElement {
             const icon = typeof customEvent.detail.icon !== 'undefined' ? customEvent.detail.icon : '';
             const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : '';
             const summaryHTML = summary !== '' ? `<h3>${summary}</h3>` : '';
+            const replaceId = typeof customEvent.detail.replaceId !== 'undefined' ? customEvent.detail.replaceId : null;
+            that.notifications[notificationId].replaceId = replaceId;
+
+            if (replaceId) {
+                // Search for notification in that.notifications with the same replaceId and remove it
+                for (const notificationId in that.notifications) {
+                    if (that.notifications[notificationId].replaceId === replaceId) {
+                        that.removeMessageId(that.notifications[notificationId]);
+                    }
+                }
+            }
 
             const STEP = 10;
             const MAXCOUNT = timeout * 1000 / STEP;
