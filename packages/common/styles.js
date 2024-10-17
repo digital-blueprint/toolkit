@@ -742,6 +742,7 @@ export function getButtonCSS() {
         .button.is-icon:hover:enabled {
             background-color: var(--dbp-hover-background-color, unset);
             color: var(--dbp-hover-color, currentColor);
+            border: 0 none;
         }
 
         button.button.is-primary,
