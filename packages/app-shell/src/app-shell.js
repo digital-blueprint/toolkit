@@ -64,6 +64,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this._extra = [];
+        this.disableLayouts = false;
 
         this.matomoUrl = '';
         this.matomoSiteId = -1;
@@ -279,6 +280,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             langDir: {type: String, attribute: 'lang-dir'},
             layout: {type: String, attribute: 'layout'},
             currentLayout: {type: String, attribute: false},
+            disableLayouts: {type: Boolean, attribute: 'disable-layouts'},
         };
     }
 
@@ -1288,8 +1290,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-theme-switcher
                                     subscribe="themes,dark-mode-theme-override"
                                     lang="${this.lang}"></dbp-theme-switcher>
-                                <dbp-layout-switcher 
-                                    subscribe="default-layout,disabled-layout" 
+                                <dbp-layout-switcher
+                                    class="${classMap({"hidden": this.disableLayouts})}"
+                                    subscribe="default-layout,disabled-layout"
                                     @layout-changed="${this.handleLayoutChange}"></dbp-layout-switcher>
                                 <dbp-language-select
                                     id="lang-select"
