@@ -640,10 +640,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 gap: 10px;
             }
 
-            header .hd1-left #lang-select {
-                padding-left: 10px;
-            }
-
             header .hd1-middle {
                 grid-area: hd1-middle;
                 background-color: var(--dbp-content);
@@ -1077,10 +1073,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     align-items: center;
                     -webkit-align-items: center;
                     gap: 10px;
-                }
-
-                header .hd1-left #lang-select {
-                    padding-left: 10px;
                 }
 
                 header .hd1-middle {
