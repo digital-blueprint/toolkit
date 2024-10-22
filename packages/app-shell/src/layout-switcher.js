@@ -202,6 +202,8 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 background-color: var(--dbp-background);
                 z-index: 1000;
                 border-radius: var(--dbp-border-radius);
+                margin: 0px;
+                padding: 0px;
             }
             .extended-menu li {
                 text-align: left;
