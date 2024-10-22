@@ -14,12 +14,12 @@ export class Notification extends DBPLitElement {
         this.lang = this._i18n.language;
         this.notificationBlock = null;
         this.notifications = {};
+        this.targetNotificationId = null;
         // notifications = {
         //     notificationId: {
         //         id: 'notificationId',
-        //         messageId: '#notificationId',
+        //         messageSelector: '#notificationId',
         //         progressTimeout: 10,
-        //         progressInterval: 23
         //     }
         // };
     }
@@ -31,28 +31,37 @@ export class Notification extends DBPLitElement {
         return {
             ...super.properties,
             lang: {type: String},
+            inline: {type: Boolean, attribute: 'inline'},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
-        const that = this;
+        // const that = this;
 
         /**
          * @param {CustomEvent} e
          */
         window.addEventListener('dbp-notification-send', (e) => {
-            /** @type {CustomEvent} */
-            const customEvent = e;
+            const customEvent = /** @type {CustomEvent} */ (e);
             if (typeof customEvent.detail === 'undefined') {
                 return;
             }
 
-            that.notificationBlock = that._('#notification');
+            this.targetNotificationId = typeof customEvent.detail.targetNotificationId !== 'undefined' ? customEvent.detail.targetNotificationId : null;            // If targetNotificationId is set, only process notifications for that component
+            if (this.targetNotificationId && this.targetNotificationId !== this.id) {
+                return;
+            }
+            // If targetNotificationId is not set, only process notifications for the default notification component in the app-shell
+            if (!this.targetNotificationId && this.id !== 'dbp-notification') {
+                return;
+            }
+
+            this.notificationBlock = this._('#notification-container');
             const notificationId = `notification-${createUUID()}`;
-            that.notifications[notificationId] = {};
-            that.notifications[notificationId].id = notificationId;
-            that.notifications[notificationId].messageId = `#${notificationId}`;
+            this.notifications[notificationId] = {};
+            this.notifications[notificationId].id = notificationId;
+            this.notifications[notificationId].messageSelector = `#${notificationId}`;
 
             const type = typeof customEvent.detail.type !== 'undefined' ? customEvent.detail.type : 'info';
             const body = typeof customEvent.detail.body !== 'undefined' ? customEvent.detail.body : '';
@@ -64,14 +73,14 @@ export class Notification extends DBPLitElement {
             const replaceId = typeof customEvent.detail.replaceId !== 'undefined' ? customEvent.detail.replaceId : null;
 
             if (replaceId) {
-                // Search for notification in that.notifications with the same replaceId and remove it
-                for (const notificationId in that.notifications) {
-                    if (that.notifications[notificationId].replaceId === replaceId) {
-                        that.removeMessageId(that.notifications[notificationId]);
+                // Search for notification in this.notifications with the same replaceId and remove it
+                for (const notificationId in this.notifications) {
+                      if (this.notifications[notificationId].replaceId === replaceId) {
+                        this.removeMessageById(this.notifications[notificationId]);
                     }
                 }
             }
-            that.notifications[notificationId].replaceId = replaceId;
+            this.notifications[notificationId].replaceId = replaceId;
 
             const progressBarHTML = timeout > 0 ? `<div class="progress-container"><div class="progress" style="--dbp-progress-timeout: ${timeout}s;"></div></div>` : '';
             const progressClass = timeout > 0 ? 'has-progress-bar' : 'no-progress-bar';
@@ -79,23 +88,23 @@ export class Notification extends DBPLitElement {
             // Create and append notification element
             const newNotification = document.createElement('div');
             newNotification.id = notificationId;
-            newNotification.classList.add('notification', `is-${type}`, progressClass);
+            newNotification.classList.add('notification', 'enter-animation', `is-${type}`, progressClass);
             newNotification.innerHTML = `
                 <button id="${notificationId}-button" class="delete"></button>
                 ${summaryHTML}
                 ${iconHTML} ${body}
                 ${progressBarHTML}
             `;
-            that.notificationBlock.appendChild(newNotification);
+            this.notificationBlock.appendChild(newNotification);
 
             // Add event listener for the delete button
-            const deleteButton = that.notificationBlock.querySelector(`#${notificationId}-button`);
-            deleteButton.addEventListener('click', () => that.removeMessageId(that.notifications[notificationId]));
+            const deleteButton = this.notificationBlock.querySelector(`#${notificationId}-button`);
+            deleteButton.addEventListener('click', () => this.removeMessageById(this.notifications[notificationId]));
 
             if (timeout > 0) {
                 // Remove notification after timeout
-                that.notifications[notificationId]['progressTimeout'] = setTimeout(() => {
-                    that.removeMessageId(that.notifications[notificationId]);
+                this.notifications[notificationId]['progressTimeout'] = setTimeout(() => {
+                    this.removeMessageById(this.notifications[notificationId]);
                 }, timeout * 1000);
             }
 
@@ -106,26 +115,46 @@ export class Notification extends DBPLitElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        for (const notification in this.notifications) {
-            clearTimeout(this.notifications[notification].progressTimeout);
+        for (const notification of Object.values(this.notifications)) {
+            clearTimeout(notification.progressTimeout);
         }
     }
 
     /**
      * Removes the notification element
      * @param {object} notification - object with notification data
+     * @param {boolean} noAnimation - if true, the notification will not be animated
      */
-    removeMessageId(notification) {
-        const messageElementId = notification.messageId;
-        const element = this._(messageElementId);
+    removeMessageById(notification, noAnimation = false) {
+        const messageElementId = notification.messageSelector;
+        const messageElement = this._(messageElementId);
 
-        if (element) {
-            element.classList.add('is-removing');
+        if (messageElement) {
+            const animationTimeout = noAnimation ? 0 : 500;
+            // Add animation class
+            messageElement.classList.add('is-removing');
             setTimeout(() => {
-                this.notificationBlock.removeChild(element);
-            }, 250);
+                this.notificationBlock.removeChild(messageElement);
+                // Send event for modal to recalculate padding top and translate y values
+                const customEvent = new CustomEvent('dbp-notification-close', {
+                    detail: {targetNotificationId: this.targetNotificationId},
+                    bubbles: true,
+                    composed: true,
+                });
+                this.dispatchEvent(customEvent);
+            }, animationTimeout);
+
             clearTimeout(this.notifications[notification.id].progressTimeout);
             delete this.notifications[notification.id];
+        }
+    }
+
+    /**
+     * Removes all notifications
+     */
+    removeAllNotifications() {
+        for (const notification of Object.values(this.notifications)) {
+            this.removeMessageById(notification, true);
         }
     }
 
@@ -136,8 +165,35 @@ export class Notification extends DBPLitElement {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getNotificationCSS()}
 
-            .notification:not(:last-child) {
+            :host([inline]) {
+                background-color: red;
+            }
+
+            .notification-container {
+                position: fixed;
+                top: 0;
+                max-width: 500px;
+                margin: 0.75em auto;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                padding: 0;
+            }
+
+            :host([inline]) .notification-container {
+                top: 0;
+                left: 0;
+                right: 0;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+
+            /*.notification:not(:last-child) {
                 margin-bottom: 1.5rem;
+            }*/
+
+            :host([inline]) .notification:not(:last-child) {
+                /* margin-bottom: 1rem; */
             }
 
             .notification h3 {
@@ -210,24 +266,13 @@ export class Notification extends DBPLitElement {
             .modal-close:active {
                 background-color: rgba(10, 10, 10, 0.4);
             }
-
-            #notification {
-                position: fixed;
-                top: 0;
-                max-width: 500px;
-                margin: 0.75em auto;
-                left: 0;
-                right: 0;
-                z-index: 1000;
-                padding: 0;
-            }
         `;
     }
 
     render() {
         return html`
             <div class="columns">
-                <div class="column" id="notification"></div>
+                <div class="column notification-container" id="notification-container"></div>
             </div>
         `;
     }

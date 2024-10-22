@@ -7,6 +7,7 @@ import { Icon } from './icon';
 import { MiniSpinner } from './mini-spinner';
 import dialogPolyfill from 'dialog-polyfill';
 import DBPLitElement from '../dbp-lit-element';
+import { Notification } from '@dbp-toolkit/notification/src/notification';
 
 export class Modal extends DBPLitElement {
     constructor() {
@@ -55,6 +56,36 @@ export class Modal extends DBPLitElement {
             });
             this.dispatchEvent(customEvent);
         });
+
+        window.addEventListener('dbp-notification-send', (e) => {
+            const notificationEvent = /** @type {CustomEvent} */ (e);
+            const notificationId = notificationEvent.detail.targetNotificationId;
+            this.updateModalNotificationPadding(notificationId);
+        });
+
+        this.addEventListener('dbp-notification-close', (e) => {
+            e.stopPropagation();
+            const notificationEvent = /** @type {CustomEvent} */ (e);
+            const notificationId = notificationEvent.detail.targetNotificationId;
+            this.updateModalNotificationPadding(notificationId);
+        });
+    }
+
+    updateModalNotificationPadding(notificationId) {
+        const notificationSlot = this.querySelector('[slot="header"]');
+        const notificationComponent = notificationSlot.querySelector('#' + notificationId);
+        if (!notificationComponent) {
+            return;
+        }
+        /** @type {HTMLElement} */
+        const notificationContainer = notificationComponent.shadowRoot.querySelector('#notification-container');
+        // Get height of notification and add as padding top to the top of the modal
+        if (notificationContainer) {
+            const modalPaddingTop = 15; //parseInt(window.getComputedStyle(this.modalDialog).paddingTop);
+            const notificationContainerHeight = notificationContainer.offsetHeight + modalPaddingTop;
+            this.modalDialog.style.setProperty('--dbp-modal-padding-top', notificationContainerHeight + 'px');
+            this.modalDialog.style.setProperty('--dbp-modal-translate-y', (notificationContainerHeight / -2) + 'px');
+        }
     }
 
     static get scopedElements() {
@@ -83,6 +114,18 @@ export class Modal extends DBPLitElement {
 
     close() {
         this.modalDialog.close();
+        // Remove all notifications if modal is closed
+        const notificationSlot = this.querySelector('[slot="header"]');
+        if (notificationSlot) {
+            /** @type {Notification} */
+            const notificationComponent = notificationSlot.querySelector('dbp-notification');
+            if (notificationComponent) {
+                notificationComponent.removeAllNotifications();
+            }
+        }
+        // Reset modal padding and translation
+        this.modalDialog.style.setProperty('--dbp-modal-padding-top', '0px');
+        this.modalDialog.style.setProperty('--dbp-modal-translate-y', '0px');
     }
 
     static get styles() {

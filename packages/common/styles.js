@@ -613,40 +613,6 @@ export function getNotificationCSS() {
             height: 10px;
         }
 
-        /* progress value color */
-        .notification.is-primary progress[value],
-        .notification.is-primary progress::-webkit-progress-bar {
-            background-color: var(--dbp-primary-surface);
-        }
-
-        .notification.is-info progress[value],
-        .notification.is-info  progress::-webkit-progress-bar {
-            background-color: var(--dbp-info-surface);
-        }
-
-        .notification.is-success progress[value],
-        .notification.is-success  progress::-webkit-progress-bar {
-            background-color: var(--dbp-success-surface);
-        }
-
-        .notification.is-warning progress[value],
-        .notification.is-warning  progress::-webkit-progress-bar {
-            background-color: var(--dbp-warning-surface);
-        }
-
-        .notification.is-danger progress[value],
-        .notification.is-danger  progress::-webkit-progress-bar {
-            background-color: var(--dbp-danger-surface);
-        }
-
-        /* progress bar value */
-        progress[value]::-moz-progress-bar {
-            background: rgba(255, 255, 255, 0.5);
-        }
-        progress[value]::-webkit-progress-value {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
         .progress {
             height: 10px;
             animation: runProgress var(--dbp-progress-timeout, 5s) linear forwards 0.25s;
@@ -664,8 +630,58 @@ export function getNotificationCSS() {
             }
         }
 
+        .enter-animation {
+            animation: slide-up 0.4s cubic-bezier(.25,0,.3,1);
+        }
+
+        @keyframes slide-up {
+            0% {
+                transform: translateY(50%);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(10%);
+                opacity: 0.75;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes scale-up {
+            0% {
+                transform: scale(0.75);
+                opacity: 0.3;
+            }
+            75% {
+                transform: scale(0.9);
+                opacity: 0.75;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
         .is-removing {
-            animation: fadeOut 0.25s forwards;
+            /*animation: fadeOut 0.25s forwards;*/
+            animation: scale-down 2s ease-out; /*cubic-bezier(.25,0,.3,1);*/
+        }
+
+        @keyframes scale-down {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(0.9);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(0.75);
+                opacity: 0.15;
+            }
         }
 
         @keyframes fadeOut {
@@ -1465,17 +1481,20 @@ export function getNativeModalDialogCSS() {
         dialog {
             min-width: var(--dbp-modal-min-width, 320px);
             max-width: var(--dbp-modal-max-width, 75vw);
-            min-height: var(--dbp-modal-min-height);
+            min-height: var(--dbp-modal-min-height, 200px);
             max-height: var(--dbp-modal-max-height, 90vh);
 
             overflow: hidden;
-            padding: 15px 20px 20px;
+            padding: var(--dbp-modal-padding-top, 15px) 20px 20px;
             border: 0 none;
             color: var(--dbp-content);
             background-color: var(--dbp-background);
             filter: drop-shadow(rgba(0, 0, 0, 0.3) 2px 4px 8px)
                 drop-shadow(rgba(0, 0, 0, 0.2) 4px 8px 16px)
                 drop-shadow(rgba(0, 0, 0, 0.1) 8px 16px 32px);
+
+            transition: height 5s ease-in-out;
+            transform: translateY(var(--dbp-modal-translate-y, 0));
         }
 
         .modal-container {

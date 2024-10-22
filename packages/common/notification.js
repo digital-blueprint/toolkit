@@ -9,6 +9,7 @@
  *   "summary": "Item deleted",
  *   "body": "Item foo was deleted!",
  *   "type": "info",
+ *   "icon": "download",
  *   "timeout": 5,
  * }
  *
