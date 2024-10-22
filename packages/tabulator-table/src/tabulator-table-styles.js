@@ -44,7 +44,8 @@ export function getTabulatorStyles() {
             color: var(--dbp-hover-color, var(--dbp-on-content-surface));
         }
 
-        .tabulator-selected .tabulator-responsive-collapse-toggle, .tabulator-row.tabulator-selected .tabulator-cell .tabulator-responsive-collapse-toggle{
+        .tabulator-selected .tabulator-responsive-collapse-toggle,
+        .tabulator-row.tabulator-selected .tabulator-cell .tabulator-responsive-collapse-toggle {
             background-color: var(--dbp-hover-color, var(--dbp-on-content-surface));
         }
 
@@ -73,7 +74,7 @@ export function getTabulatorStyles() {
             border: none;
         }
 
-        .tabulator-row .tabulator-cell.tabulator-row-handle{
+        .tabulator-row .tabulator-cell.tabulator-row-handle {
             padding: 0px;
         }
 
@@ -86,7 +87,7 @@ export function getTabulatorStyles() {
             display: none !important;
         }
 
-        .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle:hover{
+        .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle:hover {
             opacity: 1;
         }
 
@@ -117,35 +118,36 @@ export function getTabulatorStyles() {
         }
 
         /* Define the style when the column is not sorted */
-        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow{
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
             border-top: none;
             border-bottom: 6px solid var(--dbp-muted);
         }
 
         /* Define the style when the column is sorted in ascending order */
-        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow{
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
             border-top: none;
             border-bottom: 6px solid var(--dbp-accent);
         }
 
         /* Define the style when the column is sorted in descending order */
-        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow{
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
             border-bottom: none;
             border-top: 6px solid var(--dbp-accent);
             color: var(--dbp-accent);
         }
 
-        .tabulator-cell.tabulator-row-header.tabulator-row-handle{
+        .tabulator-cell.tabulator-row-header.tabulator-row-handle {
             background-color: var(--dbp-background-color);
             border-style: none;
         }
 
-        .tabulator-row, .tabulator-row.tabulator-row-even, .tabulator-row.tabulator-row-odd{
+        .tabulator-row, .tabulator-row.tabulator-row-even,
+        .tabulator-row.tabulator-row-odd {
             padding-top: 0px;
             padding-bottom: 0px;
         }
 
-        .tabulator-row .tabulator-cell{
+        .tabulator-row .tabulator-cell {
             padding-top: 12px;
             padding-bottom: 12px;
             /* padding-top: 20px;
@@ -185,16 +187,16 @@ export function getTabulatorStyles() {
         .tabulator-row.tabulator-selectable.no-select:hover,
         .tabulator-row.tabulator-selected.no-select-styles:hover,
         .tabulator-row.no-select-styles:hover,
-        .tabulator-row.tabulator-selectable.no-select-styles:hover{
+        .tabulator-row.tabulator-selectable.no-select-styles:hover {
             color: var(--dbp-content);
             background-color: var(--dbp-background);
         }
 
-        .tabulator .tabulator-tableholder{
+        .tabulator .tabulator-tableholder {
             overflow: inherit;
         }
 
-        .tabulator .tabulator-header .tabulator-col.tabulator-sortable.tabulator-col-sorter-element:hover{
+        .tabulator .tabulator-header .tabulator-col.tabulator-sortable.tabulator-col-sorter-element:hover {
             background-color: unset;
         }
 
@@ -203,7 +205,8 @@ export function getTabulatorStyles() {
         /*************************************
          * from the other getTabulatorStyles()
          *************************************/
-        .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right, .tabulator-row .tabulator-frozen.tabulator-frozen-right{
+        .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right,
+        .tabulator-row .tabulator-frozen.tabulator-frozen-right {
             background-color:  var(--dbp-background);
             color: var(--dbp-content);
         }
