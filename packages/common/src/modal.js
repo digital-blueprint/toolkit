@@ -22,6 +22,8 @@ export class Modal extends DBPLitElement {
         this.title = "";
         /** @type {boolean} */
         this.stickyFooter = false;
+        /** @type {number} */
+        this.modalPaddingTopDefault;
     }
 
     static get properties() {
@@ -43,6 +45,9 @@ export class Modal extends DBPLitElement {
     firstUpdated() {
         this.modalDialog = /** @type {HTMLDialogElement} */ (this._('#' + this.modalId));
         dialogPolyfill.registerDialog(this.modalDialog);
+
+        // Save default value of padding top changed when adding/removing notifications
+        this.modalPaddingTopDefault = parseInt(window.getComputedStyle(this.modalDialog).paddingTop);
 
         this.modalDialog.addEventListener("close", (event) => {
             // Re allow scrolling the page when dialog is closed
@@ -81,7 +86,7 @@ export class Modal extends DBPLitElement {
         const notificationContainer = notificationComponent.shadowRoot.querySelector('#notification-container');
         // Get height of notification and add as padding top to the top of the modal
         if (notificationContainer) {
-            const modalPaddingTop = 15; //parseInt(window.getComputedStyle(this.modalDialog).paddingTop);
+            const modalPaddingTop = this.modalPaddingTopDefault;
             const notificationContainerHeight = notificationContainer.offsetHeight + modalPaddingTop;
             this.modalDialog.style.setProperty('--dbp-modal-padding-top', notificationContainerHeight + 'px');
             this.modalDialog.style.setProperty('--dbp-modal-translate-y', (notificationContainerHeight / -2) + 'px');
@@ -124,8 +129,8 @@ export class Modal extends DBPLitElement {
             }
         }
         // Reset modal padding and translation
-        this.modalDialog.style.setProperty('--dbp-modal-padding-top', '0px');
-        this.modalDialog.style.setProperty('--dbp-modal-translate-y', '0px');
+        this.modalDialog.style.setProperty('--dbp-modal-padding-top', this.modalPaddingTopDefault + 'px');
+        this.modalDialog.style.removeProperty('--dbp-modal-translate-y');
     }
 
     static get styles() {
