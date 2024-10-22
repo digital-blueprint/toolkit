@@ -34,7 +34,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.rowSelected = false;
         this.selectedRows = null;
         this.tableReady = false;
-        this.initalization = true;
+        this.initialization = true;
         this.collapseEnabled = false;
         this.expanded = false;
     }
@@ -69,7 +69,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 propName === 'options' &&
                 this.options !== null &&
                 !this.tableReady &&
-                !this.initalization
+                !this.initialization
             ) {
                 this.buildTable();
             }
@@ -81,7 +81,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         super.connectedCallback();
 
         this.updateComplete.then(() => {
-            this.initalization = false;
+            this.initialization = false;
         });
     }
 
