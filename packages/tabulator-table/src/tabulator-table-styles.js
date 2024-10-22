@@ -36,7 +36,7 @@ export function getTabulatorStyles() {
 
         .tabulator-row.tabulator-selectable.tabulator-selected:hover,
         .tabulator-row.tabulator-selected {
-            background-color: var(--dbp-hover-background-color, var(--dbp-content-surface));
+            background-color: var(--dbp-override-muted, var(--dbp-content-surface));
             color: var(--dbp-hover-color, var(--dbp-on-content-surface));
         }
 
