@@ -96,7 +96,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     buildTable() {
         if (this.collapseEnabled) {
-            this.options['layout'] = 'fitDataFill';
+            // this.options['layout'] = 'fitDataFill';
             this.options['responsiveLayout'] = 'collapse';
         }
         if (this.paginationNoLangsEnabled) {
@@ -178,7 +178,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     width: 40,
                     headerSort: false,
                     responsive: 0,
-                    widthGrow: 1,
+                    widthGrow: 0,
                     headerClick: (e) => {
                         let allSelected = this.checkAllSelected();
 
