@@ -18,7 +18,9 @@
     "welcome": {
         "headline": "Willkommen!"
     },
-    "switch-layout": "Schalter-Layout",
-    "switch-to-wide-layout-label": "Zu breitem Layout wechseln",
-    "switch-to-standard-layout-label": "Zum Standardlayout wechseln"
+    "switch-layout": "Layout wechseln",
+    "switch-to-wide-layout-label": "Zum Weiten Layout wechseln",
+    "switch-to-standard-layout-label": "Zum Standardlayout wechseln",
+    "wide-layout-name":"Weites",
+    "standard-layout-name":"Standard"
 }
