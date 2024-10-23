@@ -1285,6 +1285,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                                 <dbp-layout-switcher
                                     class="${classMap({"hidden": this.disableLayouts})}"
                                     subscribe="default-layout"
+                                    lang="${this.lang}"
                                     @layout-changed="${this.handleLayoutChange}"></dbp-layout-switcher>
                                 <dbp-language-select
                                     id="lang-select"
