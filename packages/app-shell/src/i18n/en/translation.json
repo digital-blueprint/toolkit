@@ -20,5 +20,7 @@
     },
     "switch-layout": "Switch layout",
     "switch-to-wide-layout-label": "Switch to Wide Layout",
-    "switch-to-standard-layout-label": "Switch to Standard Layout"
+    "switch-to-standard-layout-label": "Switch to Standard Layout",
+    "wide-layout-name":"Wide",
+    "standard-layout-name":"Standard"
 }
