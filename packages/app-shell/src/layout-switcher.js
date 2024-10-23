@@ -251,7 +251,9 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                                         @click="${() => this.toggleLayout(layout.name)}">
                                         <!-- Icon based on layout-->
                                         <dbp-icon class="icon" name="${layout.name === 'wide' ? 'wide' : 'standard'}"></dbp-icon>
-                                        ${layout.name}
+                                        ${layout.name === 'wide'
+                                    ? i18n.t('wide-layout-name')
+                                    : i18n.t('standard-layout-name')}
                                     </a>
                                 </li>
                             `)}
