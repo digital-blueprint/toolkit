@@ -19,6 +19,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         this.selectedFilesCount = 0;
         this.langDir = '';
         this.boundPressEnterAndSubmitSearchHandler = this.pressEnterAndSubmitSearch.bind(this);
+        this.selectAllTable2 = true;
+        this.selectAllTable7 = true;
         this.expandedTabulator = true;
         this.selectedRow = this.rowClick.bind(this);
         this.selected = false;
@@ -37,6 +39,8 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
+            selectAllTable2: {type: Boolean},
+            selectAllTable7: {type: Boolean},
             expandedTabulator: {type: Boolean},
             selected: {type: Boolean}
         };
@@ -275,6 +279,36 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
             newColumns.push(entry);
         }
         table.setColumns(newColumns);
+    }
+
+    selectAllRowsTable2() {
+        this.selectAllTable2 = false;
+        let table = this._('#tabulator-table-demo-2');
+
+        table.selectAllRows();
+    }
+
+    deselectAllRowsTable2() {
+        this.selectAllTable2 = true;
+        let table = this._('#tabulator-table-demo-2');
+        table.deselectAllRows();
+    }
+
+    selectAllRowsTable7() {
+        this.selectAllTable7 = false;
+        let table = this._('#tabulator-table-demo-7');
+        table.selectAllRows();
+        let deleteButton = this._('#delete-button');
+        deleteButton.disabled = false;
+
+    }
+
+    deselectAllRowsTable7() {
+        this.selectAllTable7 = true;
+        let table = this._('#tabulator-table-demo-7');
+        table.deselectAllRows();
+        let deleteButton = this._('#delete-button');
+        deleteButton.disabled = true;
     }
 
     static get styles() {
@@ -607,11 +641,21 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
 
                 <div class="container">
                     <h3 class="demo-sub-title">Tabulator table - select-all-enabled</h3>
+                    <div class="edit-selection-buttons ${classMap({hidden: !this.selectAllTable2})}">
+                        <button class="button is-primary" @click="${() => {
+                            this.selectAllRowsTable2();
+                        }}">${i18n.t('select-all')}</button>
+                    </div>
+                    <div class="edit-selection-buttons ${classMap({hidden: this.selectAllTable2})}">
+                        <button class="button is-primary" @click="${() => {
+                            this.deselectAllRowsTable2();
+                        }}">${i18n.t('deselect-all')}</button>
+                    </div>
+                    
                     <dbp-tabulator-table
                         lang="${this.lang}"
                         class="tabulator-table-demo"
                         id="tabulator-table-demo-2"
-                        select-all-enabled
                         data=${JSON.stringify(data)}
                         options=${JSON.stringify(options)}></dbp-tabulator-table>
                 </div>
@@ -622,7 +666,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             lang="${this.lang}"
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-3"
-                            select-all-enabled
                             select-rows-enabled
                             data=${JSON.stringify(data)}
                             options=${JSON.stringify(options)}></dbp-tabulator-table>
@@ -634,7 +677,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         lang="${this.lang}"
                         class="tabulator-table-demo"
                         id="tabulator-table-demo-4"
-                        select-all-enabled
                         pagination-enabled="true"
                         pagination-size="5"
                         data=${JSON.stringify(dataLong)}
@@ -685,6 +727,14 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 @click='${() => {
                                     this.removeFilter();
                                 }}'>${i18n.t('remove-filters')}</button>
+                        
+                        <button class="button is-secondary ${classMap({hidden: !this.selectAllTable7})}" @click="${() => {
+                            this.selectAllRowsTable7();
+                        }}">${i18n.t('select-all')}</button>
+                         <button class="button is-secondary ${classMap({hidden: this.selectAllTable7})}" @click="${() => {
+                            this.deselectAllRowsTable7();
+                        }}">${i18n.t('deselect-all')}</button>
+
                         <button class="button is-primary" 
                                 id = "delete-button"
                                 disabled
@@ -736,11 +786,12 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                  }}'>${i18n.t('download')}</button>
                     </div>
                     
+                    
+                    
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-7"
-                            select-all-enabled
                             select-rows-enabled
                             pagination-size="10"
                             pagination-enabled="true"

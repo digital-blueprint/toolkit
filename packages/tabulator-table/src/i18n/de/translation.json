@@ -18,6 +18,8 @@
         "ends": "endet mit"
     },
     "add-data": "Daten Hinzufügen",
+    "select-all": "Alles auswählen",
+    "deselect-all": "Alles abwählen",
     "expand-all": "Alles aufklappen",
     "collapse-all": "Alles zuklappen",
     "filter": "Tabelle filtern",

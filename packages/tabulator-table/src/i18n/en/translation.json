@@ -18,6 +18,8 @@
         "ends": "ends with"
     },
     "add-data": "Add data",
+    "select-all": "Select all",
+    "deselect-all": "Deselect all",
     "expand-all": "Expand all",
     "collapse-all": "Collapse all",
     "filter": "Filter table",

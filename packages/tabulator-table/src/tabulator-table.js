@@ -29,7 +29,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.data = [];
         this.paginationEnabled = false;
         this.paginationSize = 10;
-        this.selectAllEnabled = false;
         this.selectRowsEnabled = false;
         this.rowSelected = false;
         this.selectedRows = null;
@@ -49,7 +48,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             paginationNoLangsEnabled: {type: Boolean, attribute: 'pagination-no-langs-enabled'},
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
             paginationSize: {type: Number, attribute: 'pagination-size'},
-            selectAllEnabled: {type: Boolean, attribute: 'select-all-enabled'},
             rowSelected: {type: Boolean},
             selectedRows: {type: Array},
             selectRowsEnabled: {type: Boolean, attribute: 'select-rows-enabled'},
@@ -162,40 +160,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         this.tabulatorTable.setLocale(this.lang);
         this.tabulatorTable.setData(this.data);
-
-
-
-        if (this.selectAllEnabled) {
-            this.tabulatorTable.addColumn(
-                {
-                    title:
-                        '<label id="select_all_wrapper" class="button-container select-all-icon">' +
-                        '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
-                        '<span class="checkmark" id="select_all_checkmark"></span>' +
-                        '</label>',
-                    field: 'empty',
-                    hozAlign: 'center',
-                    width: 40,
-                    headerSort: false,
-                    responsive: 0,
-                    widthGrow: 0,
-                    headerClick: (e) => {
-                        let allSelected = this.checkAllSelected();
-
-                        if (allSelected) {
-                            this.tabulatorTable.deselectRow();
-                        } else {
-                            this.tabulatorTable.selectRow('display');
-                        }
-                        if (this._('#select_all')) {
-                            /** @type {HTMLInputElement} */(this._('#select_all')).checked = !allSelected;
-                        }
-                        e.preventDefault();
-                    },
-                },
-                true,
-            );
-        }
     }
 
     rowClickFunction(e, row) {
@@ -218,25 +182,45 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     /**
-     * Select or deselect all rows from tabulator table
+     * Select all rows from tabulator table
      *
      */
-    selectAllFiles() {
+    selectAllRows() {
+        if (!this.tabulatorTable) return;
         let allSelected = this.checkAllSelected();
-
-        if (allSelected) {
-            this.tabulatorTable.getSelectedRows().forEach((row) => row.deselect());
-        } else {
+        if (!allSelected) {
             this.tabulatorTable.getRows().forEach((row) => row.select());
         }
     }
 
+    /**
+     * Deselect all rows from tabulator table
+     *
+     */
+    deselectAllRows() {
+        if (!this.tabulatorTable) return;
+        let noneSelected = this.checkNoneSelected();
+        if (!noneSelected) {
+            this.tabulatorTable.getSelectedRows().forEach((row) => row.deselect());
+        }
+    }
     checkAllSelected() {
         if (this.tabulatorTable) {
             let maxSelected = this.tabulatorTable.getRows('display').length;
             let selected = this.tabulatorTable.getSelectedRows().length;
 
             if (selected === maxSelected) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    checkNoneSelected() {
+        if (this.tabulatorTable) {
+            let selected = this.tabulatorTable.getSelectedRows().length;
+
+            if (selected === 0) {
                 return true;
             }
         }

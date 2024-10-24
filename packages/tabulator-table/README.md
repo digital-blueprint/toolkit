@@ -49,8 +49,6 @@ Or you can include the JS files directly via CDN:
   - example `<dbp-tabulator-table pagination-enabled></dbp-tabulator-table>`
 - `pagination-size` (optional number, default: `10`): sets the pagination size, if pagination is enabled
   - example `<dbp-tabulator-table pagination-size="20"></dbp-tabulator-table>`
-- `select-all-enabled` (optional bool, default: `false`): enables a select all button in the left upper corner
-  - example `<dbp-tabulator-table select-all-enabled></dbp-tabulator-table>`
 - `select-rows-enabled` (optional bool, default: `false`): allows the user to select rows by clicking on them
   - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
 - `collapse-enabled` (optional bool, default: `false`): add columns that do not fit into the table into a hidden list of column titles and values
@@ -65,10 +63,11 @@ Or you can include the JS files directly via CDN:
 - `setData(data)`: sets data of the tabulator table.
   - `data` is an array of data which should be shown in the table.
 - `getRows()`: returns an array with all the row components of the table.
-- `selectAllFiles`: selects all rows. If all rows are already selected, it deselects them.
+- `selectAllRows()`: selects all rows.
+- `deselectAllRows()`: deselects all rows.
 - `getSelectedRows()`: returns an array with all the selected rows of the table.
 - `checkAllSelected()`: checks if all rows are selected or not.
-- `(deleteSelectedRows)`: deletes the selected rows.
+- `deleteSelectedRows()`: deletes the selected rows.
 - `updateRow(row, newData)`: updates a given row of the tabulator table with new data.
   -`row` represents the row object we want to update.
   -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}` 
