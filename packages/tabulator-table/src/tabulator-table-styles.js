@@ -93,8 +93,8 @@ export function getTabulatorStyles() {
 
         .tabulator-responsive-collapse-toggle,
         .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle {
-            -webkit-mask-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4;' xml:space='preserve'%3E%3Cg transform='translate(-382.21 -336.98)'%3E%3Cg%3E%3Cpath d='M388,380.5c-0.2,0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8,0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1 c0.3-0.3,0.8-0.4,1.1-0.1l13.1,11.5c0.2,0.2,0.3,0.4,0.3,0.6s-0.1,0.5-0.3,0.6l-13.1,11.5C388.4,380.4,388.2,380.5,388,380.5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            mask-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4;' xml:space='preserve'%3E%3Cg transform='translate(-382.21 -336.98)'%3E%3Cg%3E%3Cpath d='M388,380.5c-0.2,0-0.4-0.1-0.6-0.3c-0.3-0.3-0.3-0.8,0.1-1.1l12.5-10.9l-12.5-10.9c-0.3-0.3-0.4-0.8-0.1-1.1 c0.3-0.3,0.8-0.4,1.1-0.1l13.1,11.5c0.2,0.2,0.3,0.4,0.3,0.6s-0.1,0.5-0.3,0.6l-13.1,11.5C388.4,380.4,388.2,380.5,388,380.5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            -webkit-mask-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg version='1.1' id='Layer_2_1_' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 100 100' style='enable-background:new 0 0 100 100;' xml:space='preserve'%3E%3Cpath d='M2.4,29.6l44.4,44.2c0.9,0.9,2.1,1.3,3.3,1.3c1.2,0,2.4-0.5,3.3-1.3l44.2-44.2c1.1-1.1,1.1-2.8,0-3.9 c-0.5-0.5-1.2-0.8-1.9-0.8c-0.7,0-1.4,0.3-1.9,0.8L50.1,69.3L6.3,25.7c-1.1-1.1-2.8-1.1-3.9,0C1.3,26.8,1.3,28.5,2.4,29.6z'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg version='1.1' id='Layer_2_1_' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 100 100' style='enable-background:new 0 0 100 100;' xml:space='preserve'%3E%3Cpath d='M2.4,29.6l44.4,44.2c0.9,0.9,2.1,1.3,3.3,1.3c1.2,0,2.4-0.5,3.3-1.3l44.2-44.2c1.1-1.1,1.1-2.8,0-3.9 c-0.5-0.5-1.2-0.8-1.9-0.8c-0.7,0-1.4,0.3-1.9,0.8L50.1,69.3L6.3,25.7c-1.1-1.1-2.8-1.1-3.9,0C1.3,26.8,1.3,28.5,2.4,29.6z'/%3E%3C/svg%3E");
             content: '';
             background-color: var(--dbp-content);
             -webkit-mask-repeat: no-repeat;
@@ -105,16 +105,12 @@ export function getTabulatorStyles() {
             padding: 0;
             -webkit-mask-size: 24px;
             mask-size: 24px;
-            transform: rotate(90deg);
+            transform: rotate(0);
         }
 
         .tabulator-responsive-collapse-toggle.open,
         .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle.open {
-            transform: rotate(-90deg);
-            /*
-            -webkit-mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M382.2%2c361.7c0-0.2%2c0.1-0.4%2c0.3-0.6c0.3-0.3%2c0.8-0.3%2c1.1%2c0.1l10.9%2c12.5l10.9-12.5c0.3-0.3%2c0.8-0.4%2c1.1-0.1 c0.3%2c0.3%2c0.4%2c0.8%2c0.1%2c1.1l-11.5%2c13.1c-0.2%2c0.2-0.4%2c0.3-0.6%2c0.3s-0.5-0.1-0.6-0.3l-11.5-13.1C382.3%2c362.1%2c382.2%2c361.9%2c382.2%2c361.7z '/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
-            mask-image: url("data:image/svg+xml,%3c%3fxml version='1.0' encoding='utf-8'%3f%3e %3c!-- Generator: Adobe Illustrator 26.1.0%2c SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3e %3csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 24.6 62.4' style='enable-background:new 0 0 24.6 62.4%3b' xml:space='preserve'%3e%3cg transform='translate(-382.21 -336.98)'%3e%3cg%3e%3cpath d='M382.2%2c361.7c0-0.2%2c0.1-0.4%2c0.3-0.6c0.3-0.3%2c0.8-0.3%2c1.1%2c0.1l10.9%2c12.5l10.9-12.5c0.3-0.3%2c0.8-0.4%2c1.1-0.1 c0.3%2c0.3%2c0.4%2c0.8%2c0.1%2c1.1l-11.5%2c13.1c-0.2%2c0.2-0.4%2c0.3-0.6%2c0.3s-0.5-0.1-0.6-0.3l-11.5-13.1C382.3%2c362.1%2c382.2%2c361.9%2c382.2%2c361.7z '/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
-            */
+            transform: rotate(-180deg);
         }
 
         /* Define the style when the column is not sorted */
