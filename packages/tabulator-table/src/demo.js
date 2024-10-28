@@ -647,16 +647,16 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 <div class="container">
                     <h3 class="demo-sub-title">Tabulator table - select-all-enabled</h3>
                     <div class="edit-selection-buttons ${classMap({hidden: !this.selectAllTable2})}">
-                        <button class="button is-primary" @click="${() => {
+                        <button id="select-all-button" class="button is-primary" @click="${() => {
                             this.selectAllRowsTable2();
                         }}">${i18n.t('select-all')}</button>
                     </div>
                     <div class="edit-selection-buttons ${classMap({hidden: this.selectAllTable2})}">
-                        <button class="button is-primary" @click="${() => {
+                        <button id="deselect-all-button" class="button is-primary" @click="${() => {
                             this.deselectAllRowsTable2();
                         }}">${i18n.t('deselect-all')}</button>
                     </div>
-                    
+
                     <dbp-tabulator-table
                         lang="${this.lang}"
                         class="tabulator-table-demo"
@@ -732,7 +732,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 @click='${() => {
                                     this.removeFilter();
                                 }}'>${i18n.t('remove-filters')}</button>
-                        
+
                         <button class="button is-secondary ${classMap({hidden: !this.selectAllTable7})}" @click="${() => {
                             this.selectAllRowsTable7();
                         }}">${i18n.t('select-all')}</button>
@@ -740,7 +740,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             this.deselectAllRowsTable7();
                         }}">${i18n.t('deselect-all')}</button>
 
-                        <button class="button is-primary" 
+                        <button class="button is-primary"
                                 id = "delete-button"
                                 disabled
                                 @click="${() => {
@@ -771,7 +771,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                 <option value="starts">${i18n.t('columns.starts')}</option>
                                 <option value="ends">${i18n.t('columns.ends')}</option>
                             </select>
-                            
+
                         </div>
                     </div>
 
@@ -790,9 +790,9 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                      this.download();
                                  }}'>${i18n.t('download')}</button>
                     </div>
-                    
-                    
-                    
+
+
+
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
@@ -816,7 +816,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             this.collapseAll();
                         }}">${i18n.t('collapse-all')}</button>
                     </div>
-                    
+
                     <dbp-tabulator-table
                             lang="${this.lang}"
                             class="tabulator-table-demo"
@@ -851,7 +851,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             data=${JSON.stringify(dataLong)}
                             options=${JSON.stringify(auto_columns)}
                             pagination-enabled></dbp-tabulator-table>
-                            
+
                 </div>
 
 
@@ -862,7 +862,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                  @click='${() => {
                                      this.openModal();
                                  }}'>${i18n.t('column-settings')}</button>
-                    
+
                             <dbp-tabulator-table
                                     lang="${this.lang}"
                                     class="tabulator-table-demo"
@@ -878,13 +878,13 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                             <li id=${(counter + 1).toString()}>
                                                 <div class="header-field">
                                                     <span class="header-title">${column.title}</span>
-                                                    <dbp-icon-button class='header-button header-visibility-icon' 
+                                                    <dbp-icon-button class='header-button header-visibility-icon'
                                                                     id=${'eye-button-' + counter}
                                                                     @click='${() => {
                                                                         this.changeVisibility(counter);
                                                                     }}'
                                                                 icon-name='source_icons_eye-empty'
-                                                                    
+
                                                                 title='}'
                                                                 aria-label=''></dbp-icon-button>
                                                                 <dbp-icon-button class='header-button'
@@ -905,7 +905,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                             </li>
                                         `;
                                         })}
-                                    
+
                                 </ul>
                             </div>
                             <div slot="footer" class="modal-footer">
@@ -925,7 +925,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         </dbp-modal>
                     </div>
                 </div>
-                
+
             </section>
         `;
     }
