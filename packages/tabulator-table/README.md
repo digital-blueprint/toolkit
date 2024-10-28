@@ -66,7 +66,8 @@ Or you can include the JS files directly via CDN:
 - `selectAllRows()`: selects all rows.
 - `deselectAllRows()`: deselects all rows.
 - `getSelectedRows()`: returns an array with all the selected rows of the table.
-- `checkAllSelected()`: checks if all rows are selected or not.
+- `checkAllSelected()`: checks if all rows are selected.
+- `checkNoneSelected()`: checks if no row is selected.
 - `deleteSelectedRows()`: deletes the selected rows.
 - `updateRow(row, newData)`: updates a given row of the tabulator table with new data.
   -`row` represents the row object we want to update.

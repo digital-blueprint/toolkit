@@ -94,10 +94,15 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         this.selected = true;
         let deleteButton = this._('#delete-button');
         let table = this._('#tabulator-table-demo-7');
-        if(table.getSelectedRows().length !== 0)
+        if(table.checkNoneSelected()) {
             deleteButton.disabled = false;
-        else
+            this.selectAllTable7 = false;
+        }
+        else {
             deleteButton.disabled = true;
+            this.selectAllTable7 = true;
+        }
+
     }
 
     setTableData(data) {
