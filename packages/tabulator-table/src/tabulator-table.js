@@ -536,6 +536,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 top: 2px;
                 left: 7px;
             }
+            
+            .tabulator :hover {
+                cursor: default;
+            }
 
             .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
                 padding-top: 4px;
