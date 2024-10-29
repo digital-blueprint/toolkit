@@ -144,15 +144,19 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         //this.options['selectableRangeMode'] = 'click';
         // this.options['paginationAddRow'] = 'table';
         // this.options['printRowRange'] = 'visible';
-
         if (this.selectRowsEnabled) {
             this.options['selectableRows'] = true;
         }
+
 
         /** @type {import('tabulator-tables').Tabulator} */
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
+
+        if (this.selectRowsEnabled) {
+            console.log('tabulator ' + this.tabulatorTable);
+        }
         this.tableReady = true;
     }
 
@@ -536,10 +540,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 top: 2px;
                 left: 7px;
             }
-            
-            .tabulator :hover {
-                cursor: default;
-            }
 
             .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
                 padding-top: 4px;
@@ -563,6 +563,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 min-height: 37px;
                 display: flex;
                 align-items: center;
+            }
+
+            .tabulator .tabulator-tableholder :hover {
+                cursor: default;
             }
 
             .tabulator .tabulator-footer .tabulator-paginator .tabulator-page[disabled] {
