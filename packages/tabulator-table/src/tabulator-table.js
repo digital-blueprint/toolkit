@@ -164,7 +164,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
          */
         if(this.selectRowsEnabled) {
             this.tabulatorTable.on("rowMouseOver", function(e, row){
-                this.rowManager.element.classList.add('pointer-mouse')
+                this.rowManager.element.classList.add('pointer-mouse');
             });
         }
     }
