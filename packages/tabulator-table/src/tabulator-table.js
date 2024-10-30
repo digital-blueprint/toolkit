@@ -159,6 +159,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         this.tabulatorTable.setLocale(this.lang);
         this.tabulatorTable.setData(this.data);
+        /**
+         * Change cursor to pointer on hover if rows are selectable
+         */
         if(this.selectRowsEnabled) {
             this.tabulatorTable.on("rowMouseOver", function(e, row){
                 this.rowManager.element.classList.add('pointer-mouse')
