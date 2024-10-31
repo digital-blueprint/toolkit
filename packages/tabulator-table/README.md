@@ -53,10 +53,14 @@ Or you can include the JS files directly via CDN:
   - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
 - `collapse-enabled` (optional bool, default: `false`): add columns that do not fit into the table into a hidden list of column titles and values
   - example `<dbp-tabulator-table collapse-enabled></dbp-tabulator-table>`
-  - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger 
+  - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger
   than 0 (e.g. `responsive:3`) and to set the columns' width so that they will not all fit into the tabulator
-  
-  
+
+## Events
+
+| Event                                   | Description                                            |
+| --------------------------------------- | ------------------------------------------------------ |
+| `dbp-tabulator-table-collapsible-event` | Event to tell if the component is in collapsible state |
 
 ## Important functions
 - `getData()`: returns the tabulator data.
@@ -71,12 +75,12 @@ Or you can include the JS files directly via CDN:
 - `deleteSelectedRows()`: deletes the selected rows.
 - `updateRow(row, newData)`: updates a given row of the tabulator table with new data.
   -`row` represents the row object we want to update.
-  -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}` 
+  -`newData` represents the new data we want to update. it has to be an object `{'column': 'value', ...}`
 - `deleteRow(row)`: deletes the given row from the specified tabulator table.
   -`row` represents the id of the row we want to delete.
 - `deleteSelectedRows()`: this function deletes the selected rows (by clicking) of the tabulator.
-- `getColumns()`: returns an array with all the column components of the table. 
-- `setColumns(newColumns)`: sets new columns to the tabulator. 
+- `getColumns()`: returns an array with all the column components of the table.
+- `setColumns(newColumns)`: sets new columns to the tabulator.
   - `newColumns` is an array with the new column definitions.
 - `getColumnsFields()`: returns an array with all the column fields of the table.
 - `setFilter(listOfFilters)`: filters the tabulator table according to the given list of filters.
@@ -91,7 +95,7 @@ Or you can include the JS files directly via CDN:
 - `getLang()`: returns the lang parameter.
 
 ## Note
-In best practice `options` is set if the dom is already rendered. 
+In best practice `options` is set if the dom is already rendered.
 You can set this attribute with the css selector. (e.g.: `this._('#my-table-component).options = myoptions`)
 
 Set data only works if the options are set before.
@@ -110,7 +114,7 @@ cd toolkit/packages/tabulator-table
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch-local
 
 # build local packages in dist directory

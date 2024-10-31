@@ -36,7 +36,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.initialization = true;
         this.collapseEnabled = false;
         this.expanded = false;
-        this.isCollapsed = false;
+        this.isCollapsible = false;
     }
 
     static get properties() {
@@ -54,6 +54,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             selectRowsEnabled: {type: Boolean, attribute: 'select-rows-enabled'},
             collapseEnabled: {type: Boolean, attribute: 'collapse-enabled'},
             expanded: {type: Boolean},
+            isCollapsible: {type: Boolean, attribute: false},
         };
     }
 
@@ -88,6 +89,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (this.tabulatorTable) {
             this.tabulatorTable.off('tableBuilt');
             this.tabulatorTable.off('rowClick');
+            this.tabulatorTable.off('columnVisibilityChanged');
         }
 
         super.disconnectedCallback();
@@ -159,18 +161,22 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
         this.tabulatorTable.on("columnVisibilityChanged", (column) => {
-            const targetColumn = column._column;
-            if (targetColumn.definition.formatter === 'responsiveCollapse' && targetColumn.visible === true) {
-                this.isCollapsed = true;
-            } else {
-                this.isCollapsed = false;
+            const columnDefinition = column.getDefinition();
+            const columnVisibility = column.isVisible();
+            if (columnDefinition.formatter === 'responsiveCollapse') {
+                if(columnVisibility === true) {
+                    this.isCollapsible = true;
+                } else {
+                    this.isCollapsible = false;
+                }
+
+                const collapseEvent = new CustomEvent('dbp-tabulator-table-collapsible-event', {
+                    detail: {isCollapsible: this.isCollapsible},
+                    bubbles: true,
+                    composed: true,
+                });
+                this.dispatchEvent(collapseEvent);
             }
-            const collapseEvent = new CustomEvent('dbp-tabulator-table-collapse-event', {
-                detail: {isCollapsed: this.isCollapsed},
-                bubbles: true,
-                composed: true,
-            });
-            this.dispatchEvent(collapseEvent);
         });
         this.tableReady = true;
     }
@@ -594,7 +600,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             .tabulator .tabulator-tableholder.pointer-mouse :hover {
                 cursor: pointer;
             }
-            
+
             .tabulator .tabulator-footer .tabulator-paginator .tabulator-page[disabled] {
                 opacity: 0.4;
             }
