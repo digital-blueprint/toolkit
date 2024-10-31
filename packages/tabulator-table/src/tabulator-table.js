@@ -148,6 +148,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.options['selectableRows'] = true;
         }
 
+        // Set this.data if data is provided in the options
+        if (this.options.data) {
+            this.data = this.options.data;
+        }
+
         /** @type {import('tabulator-tables').Tabulator} */
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
