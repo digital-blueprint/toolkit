@@ -36,6 +36,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.initialization = true;
         this.collapseEnabled = false;
         this.expanded = false;
+        this.isCollapsed = false;
     }
 
     static get properties() {
@@ -157,6 +158,20 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
+        this.tabulatorTable.on("columnVisibilityChanged", (column) => {
+            const targetColumn = column._column;
+            if (targetColumn.definition.formatter === 'responsiveCollapse' && targetColumn.visible === true) {
+                this.isCollapsed = true;
+            } else {
+                this.isCollapsed = false;
+            }
+            const collapseEvent = new CustomEvent('dbp-tabulator-table-collapse-event', {
+                detail: {isCollapsed: this.isCollapsed},
+                bubbles: true,
+                composed: true,
+            });
+            this.dispatchEvent(collapseEvent);
+        });
         this.tableReady = true;
     }
 
@@ -241,7 +256,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     setData(data) {
         if (!this.tabulatorTable) return;
-
         this.data = data;
         this.tabulatorTable.setData(this.data);
     }
