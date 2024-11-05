@@ -160,6 +160,19 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
+        this.tabulatorTable.on('rowSelectionChanged', (data, rows, selected, deselected) => {
+            const collapseEvent = new CustomEvent('dbp-tabulator-table-row-selection-changed-event', {
+                detail: {
+                    selected: selected,
+                    deselected: deselected,
+                    rows: rows,
+                    data: data,
+                },
+                bubbles: true,
+                composed: true,
+            });
+            this.dispatchEvent(collapseEvent);
+        });
         this.tabulatorTable.on("columnVisibilityChanged", (column) => {
             const columnDefinition = column.getDefinition();
             const columnVisibility = column.isVisible();

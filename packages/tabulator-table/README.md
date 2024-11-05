@@ -59,8 +59,9 @@ Or you can include the JS files directly via CDN:
 ## Events
 
 | Event                                   | Description                                            |
-| --------------------------------------- | ------------------------------------------------------ |
-| `dbp-tabulator-table-collapsible-event` | Event to tell if the component is in collapsible state |
+| ------------------------------------------------- | ------------------------------------------------------ |
+| `dbp-tabulator-table-collapsible-event`           | Event to tell if the component is in collapsible state |
+| `dbp-tabulator-table-row-selection-changed-event` | Tabulator table `rowSelectionChanged` event            |
 
 ## Important functions
 - `getData()`: returns the tabulator data.
