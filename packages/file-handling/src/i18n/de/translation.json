@@ -69,7 +69,9 @@
       "no-usable-files-in-zip": "ZIP Datei enthält keine verwendbaren Dateien",
       "open-menu": "",
       "too-big-file-body": "Die Datei darf maximal {{size}} haben.",
-      "too-big-file-title": "Datei ist zu groß!"
+      "too-big-file-title": "Datei ist zu groß!",
+      "empty-file-error-title": "Leere Dateien sind nicht erlaubt",
+      "empty-file-error-text": "{{filename}} hat size=0 und wird abgelehnt!"
     },
     "intro": "Sie können in diesem Bereich Dateien per Drag & Drop oder per Direktauswahl hochladen. Die Dateien dürfen sich auch in ZIP-Archiven befinden.",
     "nextcloud-file-picker": {

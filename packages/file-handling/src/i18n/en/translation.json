@@ -69,7 +69,9 @@
       "no-usable-files-in-zip": "ZIP file does not contain any usable files",
       "open-menu": "",
       "too-big-file-body": "The file can have a maximum of {{size}}.",
-      "too-big-file-title": "The file is too big!"
+      "too-big-file-title": "The file is too big!",
+      "empty-file-error-title": "Empty files are not allowed",
+      "empty-file-error-text": "{{filename}} has size=0 and is denied!"
     },
     "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region.",
     "nextcloud-file-picker": {

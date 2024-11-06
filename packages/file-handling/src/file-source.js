@@ -225,6 +225,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
      * @returns {Promise<void>}
      */
     async handleFiles(files) {
+        const i18n = this._i18n;
         // console.log('handleFiles: files.length = ' + files.length);
         // this.dispatchEvent(new CustomEvent("dbp-file-source-selection-start",
         //     { "detail": {}, bubbles: true, composed: true }));
@@ -232,6 +233,12 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         await commonUtils.asyncArrayForEach(files, async (file, index) => {
             if (file.size === 0) {
                 console.log("file '" + file.name + "' has size=0 and is denied!");
+                send({
+                    summary: i18n.t('file-source.empty-file-error-title'),
+                    body: i18n.t('file-source.empty-file-error-text', { filename: file.name}),
+                    type: 'danger',
+                    timeout: 10,
+                });
                 return;
             }
 
@@ -603,8 +610,6 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
-           
-            
             p {
                 margin-top: 0;
             }
@@ -694,7 +699,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 .paddles {
                     display: inherit;
                 }
-                
+
                 .paddles.hidden {
                     display: none
                 }
@@ -789,7 +794,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <p>${i18n.t('file-source.clipboard')}</p>
                                 </button>
                             </nav>
-                            
+
                             <div class="paddles">
                                 <dbp-icon
                                     class="left-paddle paddle hidden"
