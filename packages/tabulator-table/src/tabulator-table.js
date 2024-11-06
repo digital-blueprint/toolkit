@@ -279,6 +279,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.setData(this.data);
     }
 
+    clearData() {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.clearData();
+    }
+
     addData(data) {
         if (!this.tabulatorTable) return;
 
