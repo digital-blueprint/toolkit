@@ -331,6 +331,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.setColumns(newColumns);
     }
 
+    getColumnDefinitions() {
+        if (!this.tabulatorTable) return;
+        return this.tabulatorTable.getColumnDefinitions();
+    }
+
     getColumnsFields() {
         if (!this.tabulatorTable) return;
         let columns = this.tabulatorTable.getColumns();
