@@ -407,13 +407,12 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
 -->
             <div id="pdf-main-container" class="${classMap({hidden: !this.isShowPage})}">
                 <dbp-mini-spinner
-                    class="${classMap({
-            hidden: this.isPageLoaded || this.showErrorMessage,
-        })}"></dbp-mini-spinner>
+                    class="${classMap({hidden: this.isPageLoaded || this.showErrorMessage})}">
+                </dbp-mini-spinner>
                 <div
                     class="error-message ${classMap({
-            hidden: !this.showErrorMessage || this.isPageLoaded,
-        })}">
+                        hidden: !this.showErrorMessage || this.isPageLoaded,
+                    })}">
                     ${i18n.t('pdf-viewer.error-message')}
                 </div>
                 <div class="${classMap({hidden: !this.isPageLoaded})}">
@@ -424,21 +423,19 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                                     class="button is-icon"
                                     title="${i18n.t('pdf-viewer.first-page')}"
                                     @click="${async () => {
-            await this.showPage(1);
-        }}"
-                                    ?disabled="${this.isPageRenderingInProgress ||
-        this.currentPage === 1}">
+                                        await this.showPage(1);
+                                    }}"
+                                    ?disabled="${this.isPageRenderingInProgress || this.currentPage === 1}">
                                     <dbp-icon name="angle-double-left"></dbp-icon>
                                 </button>
                                 <button
                                     class="button is-icon"
                                     title="${i18n.t('pdf-viewer.previous-page')}"
                                     @click="${async () => {
-            if (this.currentPage > 1)
-                await this.showPage(--this.currentPage);
-        }}"
-                                    ?disabled="${this.isPageRenderingInProgress ||
-        this.currentPage === 1}">
+                                        if (this.currentPage > 1)
+                                            await this.showPage(--this.currentPage);
+                                    }}"
+                                    ?disabled="${this.isPageRenderingInProgress || this.currentPage === 1}">
                                     <dbp-icon name="chevron-left"></dbp-icon>
                                 </button>
                                 <input
@@ -449,28 +446,26 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                                     .value="${live(this.currentPage)}" />
                                 <div class="page-info">
                                     ${i18n.t('pdf-viewer.page-count', {
-            totalPages: this.totalPages,
-        })}
+                                        totalPages: this.totalPages,
+                                    })}
                                 </div>
                                 <button
                                     class="button is-icon"
                                     title="${i18n.t('pdf-viewer.next-page')}"
                                     @click="${async () => {
-            if (this.currentPage < this.totalPages)
-                await this.showPage(++this.currentPage);
-        }}"
-                                    ?disabled="${this.isPageRenderingInProgress ||
-        this.currentPage === this.totalPages}">
+                                        if (this.currentPage < this.totalPages)
+                                            await this.showPage(++this.currentPage);
+                                    }}"
+                                    ?disabled="${this.isPageRenderingInProgress || this.currentPage === this.totalPages}">
                                     <dbp-icon name="chevron-right"></dbp-icon>
                                 </button>
                                 <button
                                     class="button is-icon"
                                     title="${i18n.t('pdf-viewer.last-page')}"
                                     @click="${async () => {
-            await this.showPage(this.totalPages);
-        }}"
-                                    ?disabled="${this.isPageRenderingInProgress ||
-        this.currentPage === this.totalPages}">
+                                        await this.showPage(this.totalPages);
+                                    }}"
+                                    ?disabled="${this.isPageRenderingInProgress || this.currentPage === this.totalPages}">
                                     <dbp-icon name="angle-double-right"></dbp-icon>
                                 </button>
                             </div>
