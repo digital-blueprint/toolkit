@@ -7,7 +7,6 @@ import { Icon } from './icon';
 import { MiniSpinner } from './mini-spinner';
 import dialogPolyfill from 'dialog-polyfill';
 import DBPLitElement from '../dbp-lit-element';
-import { Notification } from '@dbp-toolkit/notification/src/notification';
 
 export class Modal extends DBPLitElement {
     constructor() {
@@ -122,7 +121,6 @@ export class Modal extends DBPLitElement {
         // Remove all notifications if modal is closed
         const notificationSlot = this.querySelector('[slot="header"]');
         if (notificationSlot) {
-            /** @type {Notification} */
             const notificationComponent = notificationSlot.querySelector('dbp-notification');
             if (notificationComponent) {
                 notificationComponent.removeAllNotifications();
