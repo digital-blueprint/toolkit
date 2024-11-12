@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/auth",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/auth",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
