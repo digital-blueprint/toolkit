@@ -54,7 +54,7 @@
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
         "clean": "rm dist/*",
-        "build": "npm run build-local",
+        "build": "rollup -c",
         "build-local": "rollup -c",
         "build-dev": "rollup -c --environment BUILD:development",
         "build-prod": "rollup -c --environment BUILD:production",

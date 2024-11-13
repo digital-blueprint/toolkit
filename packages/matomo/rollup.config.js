@@ -5,12 +5,12 @@ import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
 import { createRequire } from "node:module";
 import process from 'node:process';
+import url from 'node:url';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
@@ -80,12 +80,6 @@ export default (async () => {
             }),
             resolve({browser: true}),
             commonjs(),
-            url({
-                limit: 0,
-                include: [await getPackagePath('select2', '**/*.css')],
-                emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]',
-            }),
             json(),
             build !== 'local' && build !== 'test' ? terser() : false,
             copy({

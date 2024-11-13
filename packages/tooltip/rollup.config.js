@@ -80,7 +80,6 @@ export default (async () => {
             url({
                 limit: 0,
                 include: [
-                    await getPackagePath('select2', '**/*.css'),
                     await getPackagePath('tippy.js', '**/*.css'),
                 ],
                 emitFiles: true,

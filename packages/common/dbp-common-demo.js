@@ -3,7 +3,6 @@ import {css, html} from 'lit';
 import DBPLitElement from './dbp-lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Modal} from '@dbp-toolkit/common/src/modal.js';
-import {PersonSelect} from '@dbp-toolkit/person-select/src/person-select.js';
 // import {ResourceSelect} from '@dbp-toolkit/resource-select/src/resource-select.js';
 import * as commonUtils from './utils.js';
 import * as commonStyles from './styles.js';
@@ -44,7 +43,6 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
             'dbp-translated': Translated,
             'dbp-translation': Translation,
             'dbp-modal': Modal,
-            'dbp-person-select': PersonSelect,
             // 'dbp-resource-select': ResourceSelect,
         };
 

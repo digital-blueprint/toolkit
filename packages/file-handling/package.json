@@ -41,6 +41,7 @@
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.6",
+        "@dbp-toolkit/tabulator-table": "^0.1.1",
         "@open-wc/scoped-elements": "^2.1.0",
         "file-saver": "^2.0.2",
         "i18next": "^23.0.0",
@@ -56,7 +57,7 @@
         "format": "npm run format:eslint && npm run format:prettier",
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
-        "build": "npm run build-local",
+        "build": "rollup -c",
         "build-local": "rollup -c",
         "build-dev": "rollup -c --environment BUILD:development",
         "build-prod": "rollup -c --environment BUILD:production",

@@ -6,7 +6,6 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Provider} from '@dbp-toolkit/provider';
 import {Adapter} from '@dbp-toolkit/provider';
-import {LanguageSelect} from '@dbp-toolkit/language-select';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
@@ -20,7 +19,6 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
         return {
             'dbp-auth-keycloak': AuthKeycloak,
             'dbp-login-button': LoginButton,
-            'dbp-language-select': LanguageSelect,
             'dbp-provider': Provider,
             'dbp-provider-adapter': Adapter,
             'dbp-consumer': DemoConsumer,
@@ -97,7 +95,6 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
             this.entryPointUrl
         }" url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu" client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
                     <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
-                    <dbp-language-select></dbp-language-select>
                 </div>
                 <dbp-provider id="demo"
                               bc="blue">

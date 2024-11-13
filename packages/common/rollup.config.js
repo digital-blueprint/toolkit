@@ -5,8 +5,7 @@ import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
-import url from '@rollup/plugin-url';
-import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {getDistPath} from '@dbp-toolkit/dev-utils';
 import { createRequire } from "node:module";
 import process from 'node:process';
 
@@ -31,12 +30,6 @@ export default (async () => {
             }),
             resolve({browser: true}),
             commonjs(),
-            url({
-                limit: 0,
-                include: [await getPackagePath('select2', '**/*.css')],
-                emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]',
-            }),
             json(),
             copy({
                 targets: [
