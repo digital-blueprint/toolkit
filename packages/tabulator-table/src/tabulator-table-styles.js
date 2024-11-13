@@ -5,7 +5,7 @@ export function getTabulatorStyles() {
     return css`
 
         :host {
-            --tabulator-collapse-padding-left: 0;
+            --dbp-tabulator-collapse-padding-left: 0;
         }
 
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
@@ -75,7 +75,7 @@ export function getTabulatorStyles() {
         /* Toggle Button Styles */
         .tabulator-row .tabulator-responsive-collapse {
             border: none;
-            padding-left: var(--tabulator-collapse-padding-left);
+            padding-left: var(--dbp-tabulator-collapse-padding-left);
         }
 
         .tabulator-row .tabulator-cell.tabulator-row-handle {
