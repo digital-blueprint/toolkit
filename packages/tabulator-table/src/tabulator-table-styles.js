@@ -6,6 +6,7 @@ export function getTabulatorStyles() {
 
         :host {
             --dbp-tabulator-collapse-padding-left: 0;
+            --dbp-tabulator-cell-overflow: hidden;
         }
 
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
@@ -65,6 +66,12 @@ export function getTabulatorStyles() {
         .tabulator-header {
             padding-top: 10px;
             padding-bottom: 10px;
+        }
+
+        .tabulator-row .tabulator-cell {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            overflow: var(--dbp-tabulator-cell-overflow);
         }
 
         /* hide first fake column used by select all checkbox in the header */
@@ -145,13 +152,6 @@ export function getTabulatorStyles() {
         .tabulator-row.tabulator-row-odd {
             padding-top: 0px;
             padding-bottom: 0px;
-        }
-
-        .tabulator-row .tabulator-cell {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            /* padding-top: 20px;
-            padding-bottom: 20px; */ /* from the other getTabulatorStyles() */
         }
 
         .tabulator .tabulator-tableholder .tabulator-placeholder .tabulator-placeholder-contents {
