@@ -575,32 +575,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${tabulatorStyles.getTabulatorStyles()}
 
-            .select-all-icon {
-                height: 40px;
-                position: absolute;
-            }
-
-            .checkmark {
-                height: 20px;
-                width: 20px;
-                left: 10px;
-                top: 8px;
-            }
-
-            input[type='checkbox']:checked ~ .checkmark::after {
-                top: 2px;
-                left: 7px;
-            }
-
             .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
                 padding-top: 4px;
                 padding-bottom: 4px;
                 font-weight: normal;
                 font-size: 1rem;
-            }
-
-            .tabulator .tabulator-header .tabulator-col .tabulator-col-title #select_all_checkmark{
-                top: 0px;
             }
 
             .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
