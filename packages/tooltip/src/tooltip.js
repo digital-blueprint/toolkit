@@ -57,16 +57,16 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
 
             .tooltip-icon {
                 display: inline;
-                color: var(--dbp-content);
+                color: var(--dbp-tooltip-icon-color, var(--dbp-content));
             }
 
             .tippy-box {
-                background-color: var(--dbp-content-surface);
-                color: var(--dbp-on-content-surface);
+                background-color: var(--dbp-tooltip-box-bg-color, var(--dbp-content-surface));
+                color: var(--dbp-tooltip-box-font-color, var(--dbp-on-content-surface));
             }
 
             .tippy-arrow {
-                color: var(--dbp-content);
+                color: var(--dbp-tooltip-arrow-color, var(--dbp-content));
             }
         `;
     }
