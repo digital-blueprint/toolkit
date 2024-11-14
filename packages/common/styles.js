@@ -699,6 +699,7 @@ export function getNotificationCSS() {
 export function getButtonCSS() {
     // language=css
     return css`
+
         button.button,
         .button,
         button.dt-button {
@@ -741,8 +742,8 @@ export function getButtonCSS() {
             border: none;
             background: none;
             padding: 0px;
-            width: 40px;
-            height: 40px;
+            width: var(--dbp-button-size, 40px);
+            height: var(--dbp-button-size, 40px);
             display: flex;
             justify-content: center;
             align-items: center;
