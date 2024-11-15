@@ -7,6 +7,7 @@ export function getTabulatorStyles() {
         :host {
             --dbp-tabulator-collapse-padding-left: 0;
             --dbp-tabulator-cell-overflow: hidden;
+            --dbp-tabulator-cell-background-color: var(--dbp-background);
         }
 
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
@@ -72,6 +73,7 @@ export function getTabulatorStyles() {
             padding-top: 12px;
             padding-bottom: 12px;
             overflow: var(--dbp-tabulator-cell-overflow);
+            background-color: var(--dbp-tabulator-cell-background-color);
         }
 
         /* hide first fake column used by select all checkbox in the header */
