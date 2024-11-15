@@ -24,7 +24,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.options = {
             layout: 'fitColumns',
             autoColumns: true,
-            //selectableRows: true,
         };
         this.data = [];
         this.paginationEnabled = false;
@@ -184,7 +183,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 const collapseEvent = new CustomEvent('dbp-tabulator-table-collapsible-event', {
-                    detail: {isCollapsible: this.isCollapsible},
+                    detail: {
+                        tableId: this.identifier,
+                        isCollapsible: this.isCollapsible
+                    },
                     bubbles: true,
                     composed: true,
                 });
