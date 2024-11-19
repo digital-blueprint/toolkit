@@ -1,5 +1,3 @@
-import {EventTarget} from 'event-target-shim'; // Because EventTarget() doesn't exist on Safari
-
 const promiseTimeout = function (ms, promise) {
     let timeout = new Promise((resolve, reject) => {
         let id = setTimeout(() => {

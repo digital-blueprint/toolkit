@@ -143,6 +143,18 @@ Example usage:
         return true;
     }
 
+    // check for EventTarget() constructor
+    // https://caniuse.com/mdn-api_eventtarget_eventtarget
+    function supportsEventTargetConstructor() {
+        try {
+            new EventTarget();
+        } catch(e) {
+            return false;
+        }
+
+        return true;
+    }
+
     function isBrowserSupported() {
         if (!supportsES6()) {
             console.log('ES6 not supported');
@@ -196,6 +208,11 @@ Example usage:
 
         if(!supportsIntlPluralRules()){
             console.log('Intl.PluralRules not supported')
+            return false;
+        }
+
+        if (!supportsEventTargetConstructor()) {
+            console.log('EventTarget() constructor not supported');
             return false;
         }
 
