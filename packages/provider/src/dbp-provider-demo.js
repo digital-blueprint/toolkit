@@ -8,6 +8,126 @@ import {Provider} from '@dbp-toolkit/provider';
 import {Adapter} from '@dbp-toolkit/provider';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
+class DemoConsumer extends DBPLitElement {
+    constructor() {
+        super();
+
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
+        this.entryPointUrl = '';
+        // default values
+        this.foo = 100;
+        this.bar = 900;
+        this.ping = 0;
+        this.borderColor = 'green';
+
+        this.status = 'local';
+
+        console.debug('DemoConsumer constructor()');
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        console.debug('DemoConsumer(' + this.id + ') connectedCallback()');
+        this.render();
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            lang: {type: String},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            foo: {type: String},
+            bar: {type: String},
+            gong: {type: String},
+            borderColor: {type: String, attribute: 'border-color'},
+            ping: {type: String},
+        };
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) {
+            return;
+        }
+
+        console.debug(
+            'DemoConsumer(' +
+                this.id +
+                ') attributeChangesCallback( ' +
+                name +
+                ', ' +
+                oldValue +
+                ', ' +
+                newValue +
+                ')'
+        );
+        switch (name) {
+            case 'lang':
+                this.lang = newValue;
+                this._i18n.changeLanguage(this.lang);
+                break;
+            case 'foo':
+                this.foo = parseInt(newValue);
+                break;
+            case 'bar':
+                this.bar = parseInt(newValue);
+                break;
+            case 'status':
+                this.status = newValue;
+                break;
+            case 'border-color':
+                this['border-color'] = newValue;
+                break;
+            default:
+                super.attributeChangedCallback(name, oldValue, newValue);
+        }
+        this.render();
+    }
+
+    get id() {
+        return this.getAttribute('id');
+    }
+
+    render() {
+        const i18n = this._i18n;
+        if (!this.connected) {
+            return `not connected!`;
+        }
+        console.debug('DemoConsumer(' + this.id + ') render()');
+
+        const sum = this.foo + this.bar;
+        return html`
+            <div style="border: ${this['border-color']} dotted; padding: 10px;">
+                <table style="width:200px;">
+                    <tr style="background-color: #aaa;">
+                        <th style="text-align: left;">${i18n.t('consumer.item')}</th>
+                        <th style="text-align: right;">${i18n.t('consumer.price')}</th>
+                    </tr>
+                    <tr>
+                        <td>foo</td>
+                        <td style="text-align: right;">${this.foo}</td>
+                    </tr>
+                    <tr>
+                        <td>bar</td>
+                        <td style="text-align: right;">${this.bar}</td>
+                    </tr>
+                    <tr>
+                        <td>${i18n.t('consumer.sum')}</td>
+                        <td style="text-align: right;">${sum}</td>
+                    </tr>
+                </table>
+                <p>
+                    Status:
+                    <b>${this.status}</b>
+                </p>
+            </div>
+        `;
+    }
+}
+
+customElements.define('dbp-consumer', DemoConsumer);
+
+
 class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
@@ -166,124 +286,3 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
 }
 
 commonUtils.defineCustomElement('dbp-provider-demo', ProviderDemo);
-
-// =======================================================
-
-class DemoConsumer extends DBPLitElement {
-    constructor() {
-        super();
-
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-        this.entryPointUrl = '';
-        // default values
-        this.foo = 100;
-        this.bar = 900;
-        this.ping = 0;
-        this.borderColor = 'green';
-
-        this.status = 'local';
-
-        console.debug('DemoConsumer constructor()');
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        console.debug('DemoConsumer(' + this.id + ') connectedCallback()');
-        this.render();
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: {type: String},
-            entryPointUrl: {type: String, attribute: 'entry-point-url'},
-            foo: {type: String},
-            bar: {type: String},
-            gong: {type: String},
-            borderColor: {type: String, attribute: 'border-color'},
-            ping: {type: String},
-        };
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue === newValue) {
-            return;
-        }
-
-        console.debug(
-            'DemoConsumer(' +
-                this.id +
-                ') attributeChangesCallback( ' +
-                name +
-                ', ' +
-                oldValue +
-                ', ' +
-                newValue +
-                ')'
-        );
-        switch (name) {
-            case 'lang':
-                this.lang = newValue;
-                this._i18n.changeLanguage(this.lang);
-                break;
-            case 'foo':
-                this.foo = parseInt(newValue);
-                break;
-            case 'bar':
-                this.bar = parseInt(newValue);
-                break;
-            case 'status':
-                this.status = newValue;
-                break;
-            case 'border-color':
-                this['border-color'] = newValue;
-                break;
-            default:
-                super.attributeChangedCallback(name, oldValue, newValue);
-        }
-        this.render();
-    }
-
-    get id() {
-        return this.getAttribute('id');
-    }
-
-    render() {
-        const i18n = this._i18n;
-        if (!this.connected) {
-            return `not connected!`;
-        }
-        console.debug('DemoConsumer(' + this.id + ') render()');
-
-        const sum = this.foo + this.bar;
-        return html`
-            <div style="border: ${this['border-color']} dotted; padding: 10px;">
-                <table style="width:200px;">
-                    <tr style="background-color: #aaa;">
-                        <th style="text-align: left;">${i18n.t('consumer.item')}</th>
-                        <th style="text-align: right;">${i18n.t('consumer.price')}</th>
-                    </tr>
-                    <tr>
-                        <td>foo</td>
-                        <td style="text-align: right;">${this.foo}</td>
-                    </tr>
-                    <tr>
-                        <td>bar</td>
-                        <td style="text-align: right;">${this.bar}</td>
-                    </tr>
-                    <tr>
-                        <td>${i18n.t('consumer.sum')}</td>
-                        <td style="text-align: right;">${sum}</td>
-                    </tr>
-                </table>
-                <p>
-                    Status:
-                    <b>${this.status}</b>
-                </p>
-            </div>
-        `;
-    }
-}
-
-customElements.define('dbp-consumer', DemoConsumer);
