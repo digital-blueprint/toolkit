@@ -8,7 +8,7 @@ import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {getPackagePath, getDistPath, getBuildInfo} from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
 import { createRequire } from "node:module";
 import process from 'node:process';
@@ -18,30 +18,6 @@ const pkg = require('./package.json');
 const basePath = '/dist/';
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
-
-function getBuildInfo() {
-    const child_process = require('child_process');
-    const url = require('url');
-
-    let remote = child_process.execSync('git config --get remote.origin.url').toString().trim();
-    let commit = child_process.execSync('git rev-parse --short HEAD').toString().trim();
-
-    let parsed = url.parse(remote);
-    // convert git urls
-    if (parsed.protocol === null) {
-        parsed = url.parse('git://' + remote.replace(':', '/'));
-        parsed.protocol = 'https:';
-    }
-    let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.'));
-    let newUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commit;
-
-    return {
-        info: commit,
-        url: newUrl,
-        time: new Date().toISOString(),
-        env: build,
-    };
-}
 
 export default (async () => {
     return {
@@ -72,7 +48,7 @@ export default (async () => {
                     },
                     name: pkg.name,
                     environment: build,
-                    buildInfo: getBuildInfo(),
+                    buildInfo: getBuildInfo(build),
                 },
             }),
             resolve({browser: true}),

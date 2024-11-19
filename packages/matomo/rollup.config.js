@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {getPackagePath, getDistPath, getBuildInfo} from '@dbp-toolkit/dev-utils';
 import { createRequire } from "node:module";
 import process from 'node:process';
 import url from 'node:url';
@@ -19,30 +19,6 @@ const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'lo
 console.log('build: ' + build);
 const matomoUrl = 'https://analytics.tugraz.at/';
 const matomoSiteId = 131;
-
-function getBuildInfo() {
-    const child_process = require('child_process');
-    const url = require('url');
-
-    let remote = child_process.execSync('git config --get remote.origin.url').toString().trim();
-    let commit = child_process.execSync('git rev-parse --short HEAD').toString().trim();
-
-    let parsed = url.parse(remote);
-    // convert git urls
-    if (parsed.protocol === null) {
-        parsed = url.parse('git://' + remote.replace(':', '/'));
-        parsed.protocol = 'https:';
-    }
-    let newPath = parsed.path.slice(0, parsed.path.lastIndexOf('.'));
-    let newUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commit;
-
-    return {
-        info: commit,
-        url: newUrl,
-        time: new Date().toISOString(),
-        env: build,
-    };
-}
 
 export default (async () => {
     return {
@@ -75,7 +51,7 @@ export default (async () => {
                     environment: build,
                     matomoUrl: matomoUrl,
                     matomoSiteId: matomoSiteId,
-                    buildInfo: getBuildInfo(),
+                    buildInfo: getBuildInfo(build),
                 },
             }),
             resolve({browser: true}),
