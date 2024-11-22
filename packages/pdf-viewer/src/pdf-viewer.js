@@ -154,7 +154,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
      * @param file
      * @param placementData
      */
-    async showPDF(file, placementData = {}) {
+    async showPDF(file, placementData = {}, fixWidthAdaption = false) {
         this.isPageLoaded = false; // prevent redisplay of previous pdf
         this.showErrorMessage = false;
 
@@ -181,10 +181,12 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
 
         this.isPageLoaded = true;
 
-        // fix width adaption after "this.isPageLoaded = true"
-        setTimeout(() => {
-            this._onWindowResize();
-        }, 100);
+        if (fixWidthAdaption) {
+            // fix width adaption after "this.isPageLoaded = true"
+            setTimeout(() => {
+                this._onWindowResize();
+            }, 100);
+        }
     }
 
     /**
