@@ -165,10 +165,6 @@ export class Notification extends DBPLitElement {
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getNotificationCSS()}
 
-            :host([inline]) {
-                background-color: red;
-            }
-
             .notification-container {
                 position: fixed;
                 top: 0;
@@ -186,11 +182,13 @@ export class Notification extends DBPLitElement {
                 right: 0;
                 max-width: 100%;
                 margin: 0 auto;
+                display: flex;
+                flex-direction: column;
             }
 
-            /*.notification:not(:last-child) {
-                margin-bottom: 1.5rem;
-            }*/
+            :host([inline]) .notification-container--inside {
+                margin-top: 60px;
+            }
 
             :host([inline]) .notification:not(:last-child) {
                 /* margin-bottom: 1rem; */

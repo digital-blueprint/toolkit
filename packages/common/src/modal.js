@@ -85,10 +85,17 @@ export class Modal extends DBPLitElement {
         const notificationContainer = notificationComponent.shadowRoot.querySelector('#notification-container');
         // Get height of notification and add as padding top to the top of the modal
         if (notificationContainer) {
-            const modalPaddingTop = this.modalPaddingTopDefault;
-            const notificationContainerHeight = notificationContainer.offsetHeight + modalPaddingTop;
-            this.modalDialog.style.setProperty('--dbp-modal-padding-top', notificationContainerHeight + 'px');
-            this.modalDialog.style.setProperty('--dbp-modal-translate-y', (notificationContainerHeight / -2) + 'px');
+            const modalPosition = this.modalDialog.getBoundingClientRect();
+            const modalPaddingTopCurrent = parseInt(window.getComputedStyle(this.modalDialog).getPropertyValue('padding-top'));
+            const modalPaddingTopDefault = this.modalPaddingTopDefault;
+            const notificationContainerHeight = notificationContainer.offsetHeight + modalPaddingTopDefault;
+
+            // Until there is more than 1 notification place over the modal add padding top and translate the modal up
+            // If the padding top is greater than the notification container height, reduce the padding top and translate the modal up
+            if (modalPosition.top > 150 || (modalPaddingTopCurrent > notificationContainerHeight)) {
+                this.modalDialog.style.setProperty('--dbp-modal-padding-top', notificationContainerHeight + 'px');
+                this.modalDialog.style.setProperty('--dbp-modal-translate-y', (notificationContainerHeight / -2) + 'px');
+            }
         }
     }
 
