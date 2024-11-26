@@ -105,7 +105,8 @@ export function createInstance(languages, lng, fallback, namespace) {
         ns: [overrideNamespace, namespace],
         defaultNS: namespace,
         fallbackNS: namespace,
-        initImmediate: false, // Don't init async
+        initImmediate: false, // Don't init async (deprecated since v24)
+        initAsync: false, // Don't init async
         resources: {},
         // https://www.i18next.com/misc/migration-guide
         compatibilityJSON: 'v4',
