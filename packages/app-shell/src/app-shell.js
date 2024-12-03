@@ -77,7 +77,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         this.auth = null;
         this.langDir = '';
-        this.currentLayout = localStorage.getItem('layout') || 'wide';
+        this.currentLayout = null; //this._getStoredLayout();
     }
 
     static get scopedElements() {
@@ -292,6 +292,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             this.fetchMetadata(this.src);
         }
     }
+
     handleLayoutChange(event) {
         this.currentLayout = event.detail;
     }
@@ -1284,7 +1285,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                                     lang="${this.lang}"></dbp-theme-switcher>
                                 <dbp-layout-switcher
                                     class="${classMap({"hidden": this.disableLayouts})}"
-                                    subscribe="default-layout"
+                                    subscribe="default-layout,disabled-layout,app-name"
                                     lang="${this.lang}"
                                     @layout-changed="${this.handleLayoutChange}"></dbp-layout-switcher>
                                 <dbp-language-select

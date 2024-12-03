@@ -16,15 +16,17 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.lang = this._i18n.language;
         /** @type {string} */
         this.langDir = '';
-        /** @type {Boolean} */
+        /** @type {boolean} */
         this.isDisabled = false;
+        /** @type {string} */
+        this.appName = '';
         /** @type {Array} */
         this.layouts = [{name: 'wide'}, {name: 'standard'}];
         /** @type {string} */
         this.defaultLayout = null;
         /** @type {string} */
-        this.layout = localStorage.getItem('layout');
-        /** @type {Boolean} */
+        this.layout = '';
+        /** @type {boolean} */
         this.isDefaultLayout = this.layout === 'standard';
         /** @type {string} */
         this.disabledLayout = '';
@@ -32,7 +34,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.defaultModeClass = 'wide-layout';
         /** @type {string} */
         this.alternateModeClass = 'standard-layout';
-        /** @type {Boolean} */
+        /** @type {boolean} */
         this.dropdown = false;
         this.boundCloseAdditionalMenuHandler = this.hideLayoutMenu.bind(this);
     }
@@ -44,6 +46,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            appName: {type: String, attribute: 'app-name'},
             langDir: {type: String, attribute: 'lang-dir'},
             isDisabled: {type: Boolean, attribute: 'disabled', reflect: true},
             layout: {type: String},
@@ -71,12 +74,18 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 this._i18n.changeLanguage(this.lang);
             }
             if (propName === 'defaultLayout') {
-                /* Set default layout based on:
-                 * 1. Stored layout value, 2. Default layout from attribute, 3. Fallback to 'standard' */
-                this.layout = localStorage.getItem('layout') ? localStorage.getItem('layout') : this.defaultLayout || 'standard' ;
+                /* Set default layout based on: */
+                if (this._getStoredLayout()) {
+                    // 1. Stored layout value
+                    this.layout = this._getStoredLayout();
+                } else {
+                    // 2. Default layout from attribute
+                    // 3. Fallback to 'standard'
+                    this.layout = this.defaultLayout || 'standard';
+                    this._setStoredLayout(this.layout);
+                }
             }
             if (propName === 'layout') {
-                localStorage.setItem('layout', this.layout);
                 this.dispatchEvent(new CustomEvent('layout-changed', {detail: this.layout}));
                 if (this.layout === 'standard') {
                     this.loadDefaultLayout();
@@ -98,6 +107,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 /** Disable layout switcher if disabledLayout is set and only one layout is available */
                 this.isDisabled = true;
                 this.layout = this.layouts.filter((layout) => layout.name !== this.disabledLayout)[0].name;
+                this._setStoredLayout(this.layout);
             }
             if (this.layout === 'standard') {
                 this.loadDefaultLayout();
@@ -122,10 +132,34 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.isDefaultLayout = false;
     }
 
+    /**
+     * Gets the stored layout value with namespace
+     * @returns {string}
+     * @private
+     */
+    _getStoredLayout() {
+        if (!this.appName) return '';
+        const key = `${this.appName}:layout`;
+        return localStorage.getItem(key);
+    }
+
+    /**
+     * Sets the stored layout value with namespace
+     * @param {string} value
+     * @private
+     */
+    _setStoredLayout(value) {
+        if (!this.appName) return false;
+        const key = `${this.appName}:layout`;
+        localStorage.setItem(key, value);
+    }
+
     toggleLayout(newLayout) {
-        this.layout = newLayout; /* Update the layout property of the component with the new layout. */
-        localStorage.setItem('layout', this.layout); /* Persist the new layout value in the local storage to keep it across sessions. */
-        this.dispatchEvent(new CustomEvent('layout-changed', { detail: this.layout })); /* Dispatch a custom event to inform other parts of the application of the layout change.The new layout state is passed as a detail in the event for use by event listeners. */
+        /* Update the layout property of the component with the new layout. */
+        this.layout = newLayout;
+        this._setStoredLayout(this.layout);
+        /* Dispatch a custom event to inform other parts of the application of the layout change.The new layout state is passed as a detail in the event for use by event listeners. */
+        this.dispatchEvent(new CustomEvent('layout-changed', { detail: this.layout }));
         this.loadLayout();
     }
 
@@ -135,6 +169,8 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
     /**
      * toggleLayoutMenu to control the visibility of a dropdown menu by toggling its state based on user interactions
+     * @param {object} e
+     * @returns {void}
      */
     toggleLayoutMenu(e) {
         e.preventDefault();
@@ -149,6 +185,8 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
     /**
      * hideLayoutMenu Hides the layout menu if a click occurs outside of it.
+     * @param {object} event
+     * @returns {void}
      */
     hideLayoutMenu(event) {
         const menu = this.shadowRoot.querySelector('.extended-menu');
