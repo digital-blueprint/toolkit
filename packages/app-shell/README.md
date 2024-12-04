@@ -59,6 +59,32 @@ The attribute `lang` is emitted to propagate a language change. Possible values 
 The attribute `requested-login-status` is emitted to propagate whether a user is logged in or not
 Possible values are `logged-in` and `logged-out`.
 
+#### routing-url
+
+The attribute `routing-url` is emitted to propagate a routing change. The value is the new part of URL after the activity name.
+
+For example for the URL `https://myhost.com/en/render-form/accessible-exams-form/demo-form?test=2&test2=7#324` it would
+be `accessible-exams-form/demo-form?test=2&test2=7#324`.
+
+#### routing-data
+
+The attribute `routing-data` is emitted also to propagate a routing change, but with more structured information.
+
+For example for the URL `https://myhost.com/en/render-form/accessible-exams-form/demo-form?test=2&test2=7#324` it would be:
+
+```json
+{
+  "routingUrl": "accessible-exams-form/demo-form?test=2&test2=7#324",
+  "activity": "render-form",
+  "pathParts": [
+    "accessible-exams-form",
+    "demo-form"
+  ],
+  "search": "?test=2&test2=7",
+  "hash": "#324"
+}
+```
+
 ### Emitted events
 
 #### dbp-lang
