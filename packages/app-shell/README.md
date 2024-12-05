@@ -45,6 +45,10 @@ for more explanation.
     - example `<dbp-app-shell matomo-site-id="456789"></dbp-app-shell>`
 - `no-welcome-page` (optional): skips the welcome page and welcome page isn't visible in menu
     - example `<dbp-app-shell no-welcome-page></dbp-app-shell>`
+- `routing-url` (optional): the property can be sent by an activity with `sendSetPropertyEvent` to change the routing
+    - for example if at the URL `https://server.com/en/activity-name` a `routing-url` of `path?query=1#hash` would
+      result in a URL change to `https://server.com/en/activity-name/path?query=1#hash`, this would then in turn
+      trigger a sending out of a `routing-url` and `routing-data` attribute (see below)
 
 ### Emitted attributes
 

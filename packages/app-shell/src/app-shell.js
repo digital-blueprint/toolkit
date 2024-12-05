@@ -256,18 +256,18 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
     sendRoutingData() {
         const routingUrl = this._extra.join('/') + window.location.search + window.location.hash;
-        // console.log('sendRoutingUrl routingUrl', routingUrl);
+        console.log('sendRoutingUrl routingUrl', routingUrl);
         this.sendSetPropertyEvent('routing-url', routingUrl, true);
 
-        const data = {
+        const routingData = {
             routingUrl: routingUrl,
             activity: this.activeView,
             pathParts: this._extra,
             search: window.location.search,
             hash: window.location.hash,
         };
-
-        this.sendSetPropertyEvent('routing-data', data, true);
+        console.log('sendRoutingUrl routingData', routingData);
+        this.sendSetPropertyEvent('routing-data', routingData, true);
     }
 
     static get properties() {
@@ -298,6 +298,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             layout: {type: String, attribute: 'layout'},
             currentLayout: {type: String, attribute: false},
             disableLayouts: {type: Boolean, attribute: 'disable-layouts'},
+            routingUrl: {type: String, attribute: 'routing-url'},
         };
     }
 
@@ -389,10 +390,31 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                         }
                     }
                     break;
+                case 'routingUrl':
+                    this.handleRoutingUrlChange();
+                    break;
             }
         });
 
         super.update(changedProperties);
+    }
+
+    handleRoutingUrlChange() {
+        console.log("handleRoutingUrlChange this.routingUrl", this.routingUrl);
+        let routingUrl = this.routingUrl.startsWith('/') ? this.routingUrl : `/${this.routingUrl}`;
+
+        // Generate a full path from the routingUrl
+        const path = this.basePath + this.lang + '/' + this.activeView + routingUrl;
+        console.log("handleRoutingUrlChange path", path);
+
+        const currentPath = window.location.pathname + window.location.search + window.location.hash;
+        console.log("handleRoutingUrlChange currentPath", currentPath);
+
+        // Update the router if the generated path is different from the current path
+        if (path !== currentPath) {
+            this.router.updateFromPathname(path);
+            this.router.update();
+        }
     }
 
     onMenuItemClick(e) {
