@@ -400,6 +400,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     }
 
     handleRoutingUrlChange() {
+        if (!this.activeView || !this.lang || this.lang === '' || this.routingUrl === undefined) {
+            return;
+        }
+
         console.log("handleRoutingUrlChange this.routingUrl", this.routingUrl);
         let routingUrl = this.routingUrl.startsWith('/') ? this.routingUrl : `/${this.routingUrl}`;
 

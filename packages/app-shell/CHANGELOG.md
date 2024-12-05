@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.8
+
+- Fix broken welcome page because of undefined `activeView`
+
 ## 0.3.7
 
 - Add `routing-url` routing handling
