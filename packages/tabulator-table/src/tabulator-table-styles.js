@@ -10,6 +10,10 @@ export function getTabulatorStyles() {
             --dbp-tabulator-cell-background-color: var(--dbp-background);
         }
 
+        .tabulator.horizontal-scroll-enabled {
+            overflow-x: scroll;
+        }
+
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
             font-weight: normal;
             font-size: 1rem;

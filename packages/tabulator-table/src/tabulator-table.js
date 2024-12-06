@@ -36,6 +36,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.collapseEnabled = false;
         this.expanded = false;
         this.isCollapsible = false;
+        this.horizontalScrollEnabled = false;
     }
 
     static get properties() {
@@ -43,7 +44,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
             identifier: {type: String, attribute: 'identifier'},
-            options: {type: Object},
+            options: {type: Object, attribute: 'options'},
             data: {type: Array, attribute: 'data'},
             paginationNoLangsEnabled: {type: Boolean, attribute: 'pagination-no-langs-enabled'},
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
@@ -54,6 +55,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             collapseEnabled: {type: Boolean, attribute: 'collapse-enabled'},
             expanded: {type: Boolean},
             isCollapsible: {type: Boolean, attribute: false},
+            horizontalScrollEnabled: {type: Boolean, attribute: 'horizontal-scroll-enabled'}
         };
     }
 
@@ -595,8 +597,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
             .tabulator .tabulator-header .tabulator-header-contents .tabulator-headers {
                 min-height: 37px;
-                display: flex;
-                align-items: center;
+                /*display: flex;
+                align-items: center;*/
             }
 
             .tabulator .tabulator-tableholder :hover {
@@ -764,7 +766,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}" />
                 <div class="table-wrapper">
-                    <div id=${this.identifier}></div>
+                    <div id=${this.identifier} class="${classMap({'horizontal-scroll-enabled': this.horizontalScrollEnabled})}"></div>
                     <div
                         class="tabulator ${classMap({hidden: !this.paginationEnabled})}"
                         id="custom-pagination">
