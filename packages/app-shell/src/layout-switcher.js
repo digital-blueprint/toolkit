@@ -37,6 +37,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         /** @type {boolean} */
         this.dropdown = false;
         this.boundCloseAdditionalMenuHandler = this.hideLayoutMenu.bind(this);
+        this.initateOpenLayoutMenu = false;
     }
 
     /**
@@ -173,11 +174,10 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
      * @returns {void}
      */
     toggleLayoutMenu(e) {
-        e.preventDefault();
-        e.stopPropagation();
         this.dropdown = !this.dropdown;
         if (this.dropdown) {
             document.addEventListener('click', this.boundCloseAdditionalMenuHandler);
+            this.initateOpenLayoutMenu = true;
         } else {
             document.removeEventListener('click', this.boundCloseAdditionalMenuHandler);
         }
@@ -189,9 +189,12 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
      * @returns {void}
      */
     hideLayoutMenu(event) {
+        if (this.initateOpenLayoutMenu) {
+            this.initateOpenLayoutMenu = false;
+            return;
+        }
         const menu = this.shadowRoot.querySelector('.extended-menu');
-        /**The 'contains' method checks if the event target (where the click occurred) is not inside the '.extended-menu' element. */
-        if (!menu.contains(event.target)) {
+        if (!menu.classList.contains('hidden')) {
             this.dropdown = false;
             document.removeEventListener('click', this.boundCloseAdditionalMenuHandler);
             this.requestUpdate();
@@ -268,6 +271,9 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             .ul-right{
                 right: 0px;
             }
+            .hidden {
+                display: none;
+            }
         `;
     }
 
@@ -280,7 +286,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                             @click="${this.toggleLayoutMenu}" >
                             <dbp-icon name="layout"></dbp-icon>
                         </a>
-                        <ul class="extended-menu" style="display: ${this.dropdown ? 'block' : 'none'};">
+                        <ul class="extended-menu ${classMap({'hidden': !this.dropdown})}">
                             ${this.layouts.map((layout) => html`
                                 <li>
                                     <!-- Title for each layout option -->
