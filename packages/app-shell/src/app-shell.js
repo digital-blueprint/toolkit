@@ -236,7 +236,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     this.updateLangIfChanged(state.lang);
                     this.switchComponent(state.component);
                     this._extra = state.extra;
-                    this.sendRoutingData();
+                    this.sendRoutingUrl();
                 },
                 getDefaultState: () => {
                     return {
@@ -254,20 +254,9 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.router.setStateFromCurrentLocation();
     }
 
-    sendRoutingData() {
+    sendRoutingUrl() {
         const routingUrl = this._extra.join('/') + window.location.search + window.location.hash;
         console.log('sendRoutingUrl routingUrl', routingUrl);
-        this.sendSetPropertyEvent('routing-url', routingUrl, true);
-
-        const routingData = {
-            routingUrl: routingUrl,
-            activity: this.activeView,
-            pathParts: this._extra,
-            search: window.location.search,
-            hash: window.location.hash,
-        };
-        console.log('sendRoutingUrl routingData', routingData);
-        this.sendSetPropertyEvent('routing-data', routingData, true);
     }
 
     static get properties() {

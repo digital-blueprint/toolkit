@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/app-shell",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/app-shell",
-    "version": "0.3.9",
+    "version": "0.3.10",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
