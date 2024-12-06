@@ -68,7 +68,7 @@ You can use this web component to show translated html.
 You can use this web component to show content in a modal.
 This webcomponent has two function which can be called from outside: `open()` - which opens the modal and `close()` - which closes the modal.
 You can add content to 3 slots: `header`, `content` and `footer`. The `header` and `footer` are optional.
-Slotted content can be styled from ouside with css.
+Slotted content can be styled from outside with css.
 
 ```html
 <script type="module" src="https://unpkg.com/browse/@dbp-toolkit/common@0.3.5/src/modal.js"></script>
