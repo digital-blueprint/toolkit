@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.10
+
+- `DBPLitElement` directly integrates the `routing-url` attribute and `this.getRoutingData()` can be used to get the structured data
+
 ## 0.3.7
 
 - Modal: Add `isOpen` method and only open the modal if it is not already open in `open` method
