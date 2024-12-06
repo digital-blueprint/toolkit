@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.11
+
+- Fix emitting of `routing-url` attribute
+
 ## 0.3.10
 
 - Do more `routing-data` clearing out, since 0.3.9 had still some parts in it

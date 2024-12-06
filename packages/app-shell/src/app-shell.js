@@ -257,6 +257,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     sendRoutingUrl() {
         const routingUrl = this._extra.join('/') + window.location.search + window.location.hash;
         console.log('sendRoutingUrl routingUrl', routingUrl);
+        this.sendSetPropertyEvent('routing-url', routingUrl, true);
     }
 
     static get properties() {
