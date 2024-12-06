@@ -1466,6 +1466,8 @@ export function getNativeModalDialogCSS() {
         :host {
             font-size: var(--dbp-modal--font-size, 1rem);
             --dbp-modal-animation: mmFadeIn;
+            --dbp-modal-title-font-size: 1rem;
+            --dbp-modal-title-font-weight: 300;
         }
 
         dialog:not([open]) {
@@ -1551,8 +1553,10 @@ export function getNativeModalDialogCSS() {
 
         .modal-title {
             margin: 0;
-            padding: 0.25em 0 0 0;
-            font-weight: 300;
+            padding: var(--dbp-modal-title-padding, 0.25em 0 0 0);
+            font-weight: var(--dbp-modal-title-font-weight, 300);
+            font-size: var(--dbp-modal-title-font-size, 1rem);
+            background: var(--dbp-modal-title-background);
         }
 
         ::slotted([slot='header']) {
