@@ -36,7 +36,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.collapseEnabled = false;
         this.expanded = false;
         this.isCollapsible = false;
-        this.horizontalScrollEnabled = false;
     }
 
     static get properties() {
@@ -55,7 +54,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             collapseEnabled: {type: Boolean, attribute: 'collapse-enabled'},
             expanded: {type: Boolean},
             isCollapsible: {type: Boolean, attribute: false},
-            horizontalScrollEnabled: {type: Boolean, attribute: 'horizontal-scroll-enabled'}
         };
     }
 
@@ -143,11 +141,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             };
         }
 
-        // TODO:make a property to controll this?
-        //this.options['selectable'] = true;
-        //this.options['selectableRangeMode'] = 'click';
-        // this.options['paginationAddRow'] = 'table';
-        // this.options['printRowRange'] = 'visible';
         if (this.selectRowsEnabled) {
             this.options['selectableRows'] = true;
         }
@@ -766,7 +759,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}" />
                 <div class="table-wrapper">
-                    <div id=${this.identifier} class="${classMap({'horizontal-scroll-enabled': this.horizontalScrollEnabled})}"></div>
+                    <div id=${this.identifier}></div>
                     <div
                         class="tabulator ${classMap({hidden: !this.paginationEnabled})}"
                         id="custom-pagination">
