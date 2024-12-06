@@ -48,7 +48,7 @@ for more explanation.
 - `routing-url` (optional): the property can be sent by an activity with `sendSetPropertyEvent` to change the routing
     - for example if at the URL `https://server.com/en/activity-name` a `routing-url` of `path?query=1#hash` would
       result in a URL change to `https://server.com/en/activity-name/path?query=1#hash`, this would then in turn
-      trigger a sending out of a `routing-url` and `routing-data` attribute (see below)
+      trigger a sending out of a `routing-url` attribute (see below)
 
 ### Emitted attributes
 
@@ -67,25 +67,27 @@ Possible values are `logged-in` and `logged-out`.
 
 The attribute `routing-url` is emitted to propagate a routing change. The value is the new part of URL after the activity name.
 
-For example for the URL `https://myhost.com/en/render-form/accessible-exams-form/demo-form?test=2&test2=7#324` it would
-be `accessible-exams-form/demo-form?test=2&test2=7#324`.
+For example for the URL `https://myhost.com/en/render-form/demo-form/123?test1=2&test2=7#testHash` it would
+be `demo-form/123?test1=2&test2=7#testHash`.
 
-#### routing-data
+The `routing-url` is integrated directly in `DBPLitElement` and `this.getRoutingData()` can be used to get the structured data.
 
-The attribute `routing-data` is emitted also to propagate a routing change, but with more structured information.
-
-For example for the URL `https://myhost.com/en/render-form/accessible-exams-form/demo-form?test=2&test2=7#324` it would be:
+In this example `this.getRoutingData()` would return:
 
 ```json
 {
-  "routingUrl": "accessible-exams-form/demo-form?test=2&test2=7#324",
-  "activity": "render-form",
-  "pathParts": [
-    "accessible-exams-form",
-    "demo-form"
+  "pathname": "/demo-form/123",
+  "pathSegments": [
+    "demo-form",
+    "123"
   ],
-  "search": "?test=2&test2=7",
-  "hash": "#324"
+  "queryParams": {
+    "test1": "2",
+    "test2": "7"
+  },
+  "queryString": "?test1=2&test2=7",
+  "hash": "#testHash",
+  "fragment": "testHash"
 }
 ```
 
