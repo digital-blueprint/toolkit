@@ -27,7 +27,8 @@ export function _parseUrlComponents(url) {
         // Path segments (split pathname into individual segments)
         pathSegments: parsedUrl.pathname
             .split('/')
-            .filter(segment => segment !== ''),
+            .filter(segment => segment !== '')
+            .map(segment => decodeURIComponent(segment)),
 
         // Query parameters as an object
         queryParams: Object.fromEntries(parsedUrl.searchParams),
