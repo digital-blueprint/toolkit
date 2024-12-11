@@ -78,7 +78,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.auth = null;
         this.langDir = '';
         this.currentLayout = null; //this._getStoredLayout();
-        this.baseUrl = null;
+        this.routingBaseUrl = null;
     }
 
     static get scopedElements() {
@@ -256,8 +256,8 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     }
 
     sendRoutingUrl() {
-        const baseUrl = new URL(this.basePath, window.location.href) + encodeURIComponent(this.lang) + '/' + encodeURIComponent(this.activeView);
-        this.sendSetPropertyEvent('base-url', baseUrl, true);
+        const routingBaseUrl = new URL(this.basePath, window.location.href) + encodeURIComponent(this.lang) + '/' + encodeURIComponent(this.activeView);
+        this.sendSetPropertyEvent('routing-base-url', routingBaseUrl, true);
 
         const routingUrl = this._extra.join('/') + window.location.search + window.location.hash;
         console.log('sendRoutingUrl routingUrl', routingUrl);
@@ -293,7 +293,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             currentLayout: {type: String, attribute: false},
             disableLayouts: {type: Boolean, attribute: 'disable-layouts'},
             routingUrl: {type: String, attribute: 'routing-url'},
-            baseUrl: {type: String, attribute: 'base-url'},
+            routingBaseUrl: {type: String, attribute: 'routing-base-url'},
         };
     }
 

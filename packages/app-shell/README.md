@@ -49,7 +49,8 @@ for more explanation.
     - for example if at the URL `https://server.com/en/activity-name` a `routing-url` of `path?query=1#hash` would
       result in a URL change to `https://server.com/en/activity-name/path?query=1#hash`, this would then in turn
       trigger a sending out of a `routing-url` attribute (see below)
-- `base-url` (optional): the base URL for the activity. Should be an absolute URL which loads the currently active activity.
+- `routing-base-url` (optional): the base URL for the activity. Should be an
+  absolute URL which loads the currently active activity.
 
 ### Emitted attributes
 
@@ -92,9 +93,9 @@ In this example `this.getRoutingData()` would return:
 }
 ```
 
-### base-url
+### routing-base-url
 
-The attribute `routing-url` is emitted to propagate a the base URL for the
+The attribute `routing-base-url` is emitted to propagate a the base URL for the
 activity i.e. the URL which when loaded will lead to the currently active
 activity being loaded. Can be used by the activity to set return/callback URLs
 for API calls. The URL should be an absolute URL.
