@@ -138,7 +138,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         let promises = [];
         for (const activity of result.activities) {
-            const actURL = new URL(activity.path, new URL(topicURL, window.location).href).href;
+            const actURL = new URL(activity.path, new URL(topicURL, window.location.href).href).href;
             promises.push([
                 activity.visible === undefined || activity.visible,
                 actURL,
@@ -247,7 +247,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                 },
             },
             {
-                baseUrl: new URL(this.basePath, window.location).pathname.replace(/\/$/, ''),
+                baseUrl: new URL(this.basePath, window.location.href).pathname.replace(/\/$/, ''),
             }
         );
 
