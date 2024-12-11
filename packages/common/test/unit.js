@@ -2,6 +2,7 @@ import {expect, assert} from 'chai';
 import * as utils from '../utils';
 import * as styles from '../styles';
 import {combineURLs} from '../';
+import {_parseUrlComponents} from '../src/utils.js';
 
 suite('utils', () => {
     test('base64EncodeUnicode', () => {
@@ -68,5 +69,16 @@ suite('utils', () => {
             combineURLs('http://example.org', 'http://other.com/test/'),
             'http://other.com/test/'
         );
+    });
+
+    test('_parseUrlComponents', () => {
+        let url = 'foo/bar%20quux?foo=bar&quux=42&quux=41#hash';
+        assert.deepEqual(_parseUrlComponents(url).pathSegments, ['foo', 'bar%20quux']);
+        assert.equal(_parseUrlComponents(url).pathname, '/foo/bar%20quux');
+        assert.deepEqual(_parseUrlComponents(url).queryParams, { foo: 'bar', quux: '41' });
+        assert.equal(_parseUrlComponents(url).queryString, '?foo=bar&quux=42&quux=41');
+        assert.equal(_parseUrlComponents(url).fragment, 'hash');
+        assert.equal(_parseUrlComponents('/foo').pathname, '/foo');
+        assert.equal(_parseUrlComponents('foo').pathname, '/foo');
     });
 });
