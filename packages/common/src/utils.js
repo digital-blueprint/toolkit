@@ -31,7 +31,7 @@ export function _parseUrlComponents(url) {
             .map(segment => decodeURIComponent(segment)),
 
         // Query parameters as an object
-        queryParams: Object.fromEntries(parsedUrl.searchParams),
+        queryParams: parsedUrl.searchParams,
 
         // Raw query string (including the '?')
         queryString: parsedUrl.search,

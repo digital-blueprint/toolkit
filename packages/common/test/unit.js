@@ -75,7 +75,7 @@ suite('utils', () => {
         let url = 'foo/bar%20quux?foo=bar&quux=42&quux=41#hash';
         assert.deepEqual(_parseUrlComponents(url).pathSegments, ['foo', 'bar quux']);
         assert.equal(_parseUrlComponents(url).pathname, '/foo/bar%20quux');
-        assert.deepEqual(_parseUrlComponents(url).queryParams, { foo: 'bar', quux: '41' });
+        assert.deepEqual(Array.from(_parseUrlComponents(url).queryParams.entries()), [['foo', 'bar'], ['quux', '42'], ['quux', '41']]);
         assert.equal(_parseUrlComponents(url).queryString, '?foo=bar&quux=42&quux=41');
         assert.equal(_parseUrlComponents(url).fragment, 'hash');
         assert.equal(_parseUrlComponents('/foo').pathname, '/foo');
