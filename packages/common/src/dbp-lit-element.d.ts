@@ -1,4 +1,4 @@
-import { AdapterLitElement } from './src/adapter-lit-element.js';
+import { AdapterLitElement } from './adapter-lit-element.js';
 
 export default class DBPLitElement extends AdapterLitElement {
 

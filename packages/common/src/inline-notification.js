@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
-import DBPLitElement from '../dbp-lit-element';
-import * as commonStyles from '../styles';
+import DBPLitElement from './dbp-lit-element.js';
+import * as commonStyles from './styles.js';
 
 /**
  * Inline Notification

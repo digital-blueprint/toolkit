@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {DbpCommonDemo} from '@dbp-toolkit/common/dbp-common-demo';
+import {DbpCommonDemo} from '@dbp-toolkit/common/src/demo.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';

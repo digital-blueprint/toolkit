@@ -1,8 +1,8 @@
 import {expect, assert} from 'chai';
-import * as utils from '../utils';
-import * as styles from '../styles';
-import {combineURLs} from '../';
-import {_parseUrlComponents} from '../src/utils.js';
+import * as utils from '../src/common-utils.js';
+import * as styles from '../src/styles.js';
+import {combineURLs} from '../src/index.js';
+import {_parseUrlComponents} from '../src/internal.js';
 
 suite('utils', () => {
     test('base64EncodeUnicode', () => {

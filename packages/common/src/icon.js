@@ -1,6 +1,6 @@
 import {html, LitElement, css} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import * as commonUtils from '../utils.js';
+import * as commonUtils from './common-utils.js';
 import {name as pkgName} from './../package.json';
 
 export function getIconSVGURL(name) {

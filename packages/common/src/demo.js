@@ -1,10 +1,9 @@
-import {createInstance} from './src/i18n.js';
+import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import DBPLitElement from './dbp-lit-element';
+import DBPLitElement from './dbp-lit-element.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {Modal} from '@dbp-toolkit/common/src/modal.js';
-// import {ResourceSelect} from '@dbp-toolkit/resource-select/src/resource-select.js';
-import * as commonUtils from './utils.js';
+import {Modal} from './modal.js';
+import * as commonUtils from './common-utils.js';
 import * as commonStyles from './styles.js';
 import {
     getIconCSS,
@@ -17,7 +16,7 @@ import {
     InlineNotification,
     Translated,
     Translation,
-} from './src/index.js';
+} from './index.js';
 
 
 

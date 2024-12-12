@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import * as i18next from '../i18next.js';
+import * as i18next from '../src/i18next.js';
 
 suite('i18next', () => {
     test('createInstance', () => {

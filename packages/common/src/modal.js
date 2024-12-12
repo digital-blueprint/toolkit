@@ -2,11 +2,11 @@ import {
     html, css
 } from 'lit';
 import { createInstance } from './i18n';
-import * as commonStyles from '../styles.js';
+import * as commonStyles from './styles.js';
 import { Icon } from './icon';
 import { MiniSpinner } from './mini-spinner';
 import dialogPolyfill from 'dialog-polyfill';
-import DBPLitElement from '../dbp-lit-element';
+import DBPLitElement from './dbp-lit-element';
 
 export class Modal extends DBPLitElement {
     constructor() {

@@ -1,4 +1,4 @@
-import {createInstance as _createInstance, setOverridesByGlobalCache} from '../i18next.js';
+import {createInstance as _createInstance, setOverridesByGlobalCache} from './i18next.js';
 
 import de from './i18n/de/translation.json';
 import en from './i18n/en/translation.json';

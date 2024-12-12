@@ -2,7 +2,7 @@ import {html, LitElement, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {MiniSpinner} from './mini-spinner.js';
-import * as commonStyles from '../styles.js';
+import * as commonStyles from './styles.js';
 
 class DbpButton extends ScopedElementsMixin(LitElement) {
     constructor() {

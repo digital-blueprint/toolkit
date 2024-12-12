@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
-import DBPLitElement from '../dbp-lit-element';
+import DBPLitElement from './dbp-lit-element';
 
 export class Translated extends DBPLitElement {
     constructor() {
