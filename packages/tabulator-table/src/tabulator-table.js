@@ -664,6 +664,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 min-height: 40px;
             }
 
+            .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active {
+                background: var(--dbp-on-secondary-surface);
+                color: var(--dbp-secondary-surface);
+            }
+
             .filename {
                 overflow: hidden;
                 text-overflow: ellipsis;
