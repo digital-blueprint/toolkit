@@ -9,7 +9,7 @@ import {
     Spinner,
     Translated,
     Translation
-} from './index';
+} from './src/index.js';
 
 commonUtils.defineCustomElement('dbp-mini-spinner', MiniSpinner);
 commonUtils.defineCustomElement('dbp-spinner', Spinner);

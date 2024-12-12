@@ -17,7 +17,7 @@ import {
     InlineNotification,
     Translated,
     Translation,
-} from './index.js';
+} from './src/index.js';
 
 
 
