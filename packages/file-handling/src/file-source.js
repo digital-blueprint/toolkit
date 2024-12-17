@@ -263,20 +263,20 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 );
 
                 return;
-            // } else if (this.allowedMimeTypes && !this.checkFileType(file)) {
-            } else if (this.allowedMimeTypes) {
-                const allowedMimeTypes = this.allowedMimeTypes.split(',');
-                const mimeType = await commonUtils.getMimeTypeOfFile(file);
-                if (!allowedMimeTypes.includes(mimeType)) {
-                    send({
-                        summary: i18n.t('file-source.not-allowed-mime-type-file-error-title'),
-                        body: i18n.t('file-source.not-allowed-mime-type-file-error-text', { filename: file.name}),
-                        type: 'danger',
-                        timeout: 10,
-                    });
+            } else if (this.allowedMimeTypes && !this.checkFileType(file)) {
+            // } else if (this.allowedMimeTypes) {
+                // const allowedMimeTypes = this.allowedMimeTypes.split(',');
+                // const mimeType = await commonUtils.getMimeTypeOfFile(file);
+                // if (!allowedMimeTypes.includes(mimeType)) {
+                //     send({
+                //         summary: i18n.t('file-source.not-allowed-mime-type-file-error-title'),
+                //         body: i18n.t('file-source.not-allowed-mime-type-file-error-text', { filename: file.name}),
+                //         type: 'danger',
+                //         timeout: 10,
+                //     });
                     fileCount--;
                     return;
-                }
+                // }
             }
 
             await this.sendFileEvent(file, fileCount);
