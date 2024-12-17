@@ -71,7 +71,9 @@
       "too-big-file-body": "Die Datei darf maximal {{size}} haben.",
       "too-big-file-title": "Datei ist zu groß!",
       "empty-file-error-title": "Leere Dateien sind nicht erlaubt",
-      "empty-file-error-text": "{{filename}} hat size=0 und wird abgelehnt!"
+      "empty-file-error-text": "{{filename}} hat size=0 und wird abgelehnt!",
+      "not-allowed-mime-type-file-error-title": "Nicht erlaubt MIME-Type",
+      "not-allowed-mime-type-file-error-text": "{{filename}} hat nicht erlaubt mime type"
     },
     "intro": "Sie können in diesem Bereich Dateien per Drag & Drop oder per Direktauswahl hochladen. Die Dateien dürfen sich auch in ZIP-Archiven befinden.",
     "nextcloud-file-picker": {

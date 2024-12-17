@@ -71,7 +71,9 @@
       "too-big-file-body": "The file can have a maximum of {{size}}.",
       "too-big-file-title": "The file is too big!",
       "empty-file-error-title": "Empty files are not allowed",
-      "empty-file-error-text": "{{filename}} has size=0 and is denied!"
+      "empty-file-error-text": "{{filename}} has size=0 and is denied!",
+      "not-allowed-mime-type-file-error-title": "Not allowed MIME-Type",
+      "not-allowed-mime-type-file-error-text": "{{filename}} has not allowed MIME-Type"
     },
     "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region.",
     "nextcloud-file-picker": {
