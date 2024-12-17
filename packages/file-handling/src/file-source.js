@@ -239,10 +239,13 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                     type: 'danger',
                     timeout: 10,
                 });
+                fileCount--;
                 return;
             }
 
             if (!this.checkSize(file)) {
+                console.log(`file "${file.name}" has size ${file.size} which is too large and is denied!`);
+                fileCount--;
                 return;
             }
             // check if we want to decompress the zip and queue the contained files
@@ -262,6 +265,9 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 return;
             } else if (this.allowedMimeTypes && !this.checkFileType(file)) {
                 return;
+                    fileCount--;
+                    return;
+                }
             }
 
             await this.sendFileEvent(file, fileCount);
