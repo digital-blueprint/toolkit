@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.12
+
+- Fix `Route not found` errors when the `routing-url` only contains a hash or query
+
 ## 0.3.11
 
 - Fix emitting of `routing-url` attribute

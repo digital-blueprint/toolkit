@@ -259,7 +259,13 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         const routingBaseUrl = new URL(this.basePath, window.location.href) + encodeURIComponent(this.lang) + '/' + encodeURIComponent(this.activeView);
         this.sendSetPropertyEvent('routing-base-url', routingBaseUrl, true);
 
-        const routingUrl = this._extra.join('/') + window.location.search + window.location.hash;
+        let routingUrl = this._extra.join('/') + window.location.search + window.location.hash;
+
+        // Add a leading slash if there is extra routing information
+        if (this._extra.length !== 0) {
+            routingUrl = '/' + routingUrl;
+        }
+
         console.log('sendRoutingUrl routingUrl', routingUrl);
         this.sendSetPropertyEvent('routing-url', routingUrl, true);
     }
@@ -400,20 +406,71 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         }
 
         console.log("handleRoutingUrlChange this.routingUrl", this.routingUrl);
-        let routingUrl = this.routingUrl.startsWith('/') ? this.routingUrl : `/${this.routingUrl}`;
-
         // Generate a full path from the routingUrl
-        const path = this.basePath + this.lang + '/' + this.activeView + routingUrl;
+        const path = this.basePath + this.lang + '/' + this.activeView + this.routingUrl;
         console.log("handleRoutingUrlChange path", path);
 
         const currentPath = window.location.pathname + window.location.search + window.location.hash;
         console.log("handleRoutingUrlChange currentPath", currentPath);
 
         // Update the router if the generated path is different from the current path
-        if (path !== currentPath) {
+        // We need to compare the url parts on a deep level to avoid unnecessary updates with "route not found" errors,
+        // because of slashes at the end of the path
+        if (!AppShell.compareUrlParts(path, currentPath)) {
             this.router.updateFromPathname(path);
             this.router.update();
         }
+    }
+
+    /**
+     * Compares two URL parts on a deep level and returns true if they are equal
+     * @param {string} url1
+     * @param {string} url2
+     * @returns {boolean}
+     */
+    static compareUrlParts(url1, url2) {
+        // Create URL objects to parse the URLs
+        const parsedUrl1 = new URL(url1, 'https://example.com');
+        const parsedUrl2 = new URL(url2, 'https://example.com');
+
+        // Compare pathname (path segments)
+        const path1Segments = parsedUrl1.pathname.split('/').filter(Boolean);
+        const path2Segments = parsedUrl2.pathname.split('/').filter(Boolean);
+
+        // Check if path segments match
+        if (path1Segments.length !== path2Segments.length) {
+            return false;
+        }
+
+        for (let i = 0; i < path1Segments.length; i++) {
+            if (path1Segments[i] !== path2Segments[i]) {
+                return false;
+            }
+        }
+
+        // Compare search parameters
+        const searchParams1 = parsedUrl1.searchParams;
+        const searchParams2 = parsedUrl2.searchParams;
+
+        // Check if number of parameters match
+        if (searchParams1.size !== searchParams2.size) {
+            return false;
+        }
+
+        // Compare each search parameter
+        for (const [key, value] of searchParams1.entries()) {
+            if (!searchParams2.has(key) || searchParams2.get(key) !== value) {
+                return false;
+            }
+        }
+
+        // Compare hash fragments
+        if (parsedUrl1.hash !== parsedUrl2.hash) {
+            return false;
+        }
+
+        // If all checks pass, return true
+        return true;
     }
 
     onMenuItemClick(e) {
