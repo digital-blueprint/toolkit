@@ -44,12 +44,13 @@
         "@dbp-toolkit/common": "^0.3.6",
         "@open-wc/scoped-elements": "^2.1.0",
         "i18next": "^23.0.0 || ^24.0.0",
-        "jszip": "^3.5.0",
-        "lit": "^3.0.0",
-        "material-design-icons-svg": "^3.0.0",
-        "tabulator-tables": "^6.0.0",
         "jspdf": "^2.5.1",
         "jspdf-autotable": "^3.5.23",
+        "jszip": "^3.5.0",
+        "lit": "^3.0.0",
+        "luxon": "^3.5.0",
+        "material-design-icons-svg": "^3.0.0",
+        "tabulator-tables": "^6.0.0",
         "xlsx": "^0.18.2"
     },
     "scripts": {
