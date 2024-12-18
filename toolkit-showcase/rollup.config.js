@@ -85,16 +85,6 @@ export default (async () => {
         },
         treeshake: treeshake,
         preserveEntrySignatures: false,
-        onwarn: (warning, warn) => {
-            // Luxon (used by tabulator table has known circular dependencies)
-            // https://github.com/moment/luxon/issues/193
-            if (warning.code === 'CIRCULAR_DEPENDENCY') {
-                if(warning.message.includes('/luxon/')) {
-                    return;
-                }
-            }
-            warn(warning);
-        },
         plugins: [
             del({
                 targets: 'dist/*',

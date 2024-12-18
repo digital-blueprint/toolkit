@@ -11,7 +11,6 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { DateTime } from "luxon";
 
 export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -150,10 +149,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (this.options.data) {
             this.data = this.options.data;
         }
-
-        this.options['dependencies'] = {
-            DateTime: DateTime,
-        };
 
         /** @type {import('tabulator-tables').Tabulator} */
         this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
