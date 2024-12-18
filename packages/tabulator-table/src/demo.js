@@ -367,6 +367,22 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
         `;
     }
 
+    /**
+     *
+     * @param {string} dateString dd/mm/yyyy format
+     * @returns {number} unix timestamp
+     */
+    parseCustomDate(dateString) {
+        if (!dateString) {
+            return -Infinity;
+        }
+        // Split the date string and rearrange to match ISO format (YYYY-MM-DD)
+        const [day, month, year] = dateString.split('/');
+        const isoDateString = `${year}-${month}-${day}`;
+
+        return Date.parse(isoDateString);
+    }
+
     render() {
 
         const i18n = this._i18n;
@@ -537,7 +553,22 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
                 {title: 'col', field: 'col'},
-                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {
+                    title: 'dob',
+                    field: 'dob',
+                    hozAlign: 'center',
+                    sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
+                        // a, b - the two values being compared
+                        // aRow, bRow - the row components for the values being compared (useful if you need to access additional fields in the row data for the sort)
+                        // column - the column component for the column being sorted
+                        // dir - the direction of the sort ("asc" or "desc")
+                        // sorterParams - sorterParams object from column definition array
+                        const aTimestamp = this.parseCustomDate(a);
+                        const bTimestamp = this.parseCustomDate(b);
+
+                        return aTimestamp - bTimestamp;
+                    },
+                },
             ],
             columnDefaults: {
                 vertAlign: 'middle',
@@ -556,7 +587,17 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', hozAlign: 'left'},
                 {title: 'col', field: 'col'},
-                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {title: 'dob', field: 'dob', hozAlign: 'center', sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
+                    //a, b - the two values being compared
+                    //aRow, bRow - the row components for the values being compared (useful if you need to access additional fields in the row data for the sort)
+                    //column - the column component for the column being sorted
+                    //dir - the direction of the sort ("asc" or "desc")
+                    //sorterParams - sorterParams object from column definition array
+                    const aTimestamp = this.parseCustomDate(a);
+                    const bTimestamp = this.parseCustomDate(b);
+
+                    return aTimestamp - bTimestamp;
+                },},
             ],
             columnDefaults: {
                 vertAlign: 'middle',
@@ -572,7 +613,17 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', hozAlign: 'left', formatter: 'progress'},
                 {title: 'col', field: 'col', responsive: 0},
-                {title: 'dob', field: 'dob', sorter: 'date', hozAlign: 'center'},
+                {title: 'dob', field: 'dob', hozAlign: 'center', sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
+                    //a, b - the two values being compared
+                    //aRow, bRow - the row components for the values being compared (useful if you need to access additional fields in the row data for the sort)
+                    //column - the column component for the column being sorted
+                    //dir - the direction of the sort ("asc" or "desc")
+                    //sorterParams - sorterParams object from column definition array
+                    const aTimestamp = this.parseCustomDate(a);
+                    const bTimestamp = this.parseCustomDate(b);
+
+                    return aTimestamp - bTimestamp;
+                },},
                 {title: 'delete', field: 'delete', formatter:"html", download:false},
             ]
         };
@@ -587,7 +638,17 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                 {title: 'name', field: 'name', width: 150},
                 {title: 'age', field: 'age', width: 250, hozAlign: 'left', formatter: 'progress'},
                 {title: 'col', field: 'col', width: 250},
-                {title: 'dob', field: 'dob', width: 250, sorter: 'date', hozAlign: 'center'},
+                {title: 'dob', field: 'dob', width: 250, hozAlign: 'center', sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
+                    //a, b - the two values being compared
+                    //aRow, bRow - the row components for the values being compared (useful if you need to access additional fields in the row data for the sort)
+                    //column - the column component for the column being sorted
+                    //dir - the direction of the sort ("asc" or "desc")
+                    //sorterParams - sorterParams object from column definition array
+                    const aTimestamp = this.parseCustomDate(a);
+                    const bTimestamp = this.parseCustomDate(b);
+
+                    return aTimestamp - bTimestamp;
+                },},
                 {title: 'license', field: 'license', width: 250, responsive:3}
             ],
             columnDefaults: {
@@ -641,7 +702,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         class="tabulator-table-demo"
                         id="tabulator-table-demo-1"
                         data=${JSON.stringify(data)}
-                        options=${JSON.stringify(options)}></dbp-tabulator-table>
+                        .options=${options}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -662,7 +723,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         class="tabulator-table-demo"
                         id="tabulator-table-demo-2"
                         data=${JSON.stringify(data)}
-                        options=${JSON.stringify(options)}></dbp-tabulator-table>
+                        .options=${options}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -673,7 +734,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             id="tabulator-table-demo-3"
                             select-rows-enabled
                             data=${JSON.stringify(data)}
-                            options=${JSON.stringify(options)}></dbp-tabulator-table>
+                            .options=${options}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -685,7 +746,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         pagination-enabled="true"
                         pagination-size="5"
                         data=${JSON.stringify(dataLong)}
-                        options=${JSON.stringify(options)}></dbp-tabulator-table>
+                        .options=${options}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -697,7 +758,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         pagination-size="10"
                         pagination-enabled="true"
                         data=${JSON.stringify(dataLong)}
-                        options=${JSON.stringify(options)}></dbp-tabulator-table>
+                        .options=${options}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -712,7 +773,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                         id="tabulator-table-demo-6"
                         pagination-size="10"
                         pagination-enabled="true"
-                        options=${JSON.stringify(options)}></dbp-tabulator-table>
+                        .options=${options}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -800,7 +861,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             select-rows-enabled
                             pagination-size="10"
                             pagination-enabled="true"
-                            options=${JSON.stringify(options_edit)}></dbp-tabulator-table>
+                            .options=${options_edit}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -823,7 +884,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             id="tabulator-table-demo-8"
                             collapse-enabled
                             data=${JSON.stringify(data_collapse)}
-                            options=${JSON.stringify(options_collapse)}></dbp-tabulator-table>
+                            .options=${options_collapse}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -839,7 +900,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-9"
                             data=${JSON.stringify(updatable_table_data)}
-                            options=${JSON.stringify(updatable_table_columns)}></dbp-tabulator-table>
+                            .options=${updatable_table_columns}></dbp-tabulator-table>
                 </div>
 
                 <div class="container">
@@ -849,7 +910,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                             class="tabulator-table-demo"
                             id="tabulator-table-demo-10"
                             data=${JSON.stringify(dataLong)}
-                            options=${JSON.stringify(auto_columns)}
+                            .options=${auto_columns}
                             pagination-enabled></dbp-tabulator-table>
 
                 </div>
@@ -868,7 +929,7 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                                     class="tabulator-table-demo"
                                     id="tabulator-table-demo-11"
                                     data=${JSON.stringify(data)}
-                                    options=${JSON.stringify(options_basic)}></dbp-tabulator-table>
+                                    .options=${options_basic}></dbp-tabulator-table>
                     <div class="control" id="dbp-translated-demo">
                         <dbp-modal id="my-modal-123" modal-id="my-modal-123" title=${i18n.t('column-settings')} subscribe="lang">
                             <div slot="content" class="modal-content">
