@@ -162,7 +162,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-        const that = this;
         const i18n = this._i18n;
         this._loginStatus = '';
         this._loginState = [];
@@ -205,17 +204,16 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                         headerSort: false,
                         responsive: 1,
                         formatter: (cell, formatterParams, onRendered) => {
-                            const icon_tag = that.getScopedTagName('dbp-icon');
                             let disabled = this.directoriesOnly
                                 ? 'nextcloud-picker-icon-disabled'
                                 : '';
                             let icon =
-                                `<${icon_tag} name="empty-file" class="nextcloud-picker-icon ` +
+                                `<dbp-icon name="empty-file" class="nextcloud-picker-icon ` +
                                 disabled +
-                                `"></${icon_tag}>`;
+                                `"></dbp-icon>`;
                             let html =
                                 cell.getValue() === 'directory'
-                                    ? `<${icon_tag} name="folder" class="nextcloud-picker-icon"></${icon_tag}>`
+                                    ? `<dbp-icon name="folder" class="nextcloud-picker-icon"></dbp-icon>`
                                     : icon;
                             let div = this.createScopedElement('div');
                             div.innerHTML = html;

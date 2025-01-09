@@ -125,7 +125,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     connectedCallback() {
         const i18n = this._i18n;
         super.connectedCallback();
-        const that = this;
         this.updateComplete.then(() => {
             // see: http://tabulator.info/docs/4.7
             this.tabulatorTable = new Tabulator(this._('#clipboard-content-table'), {
@@ -158,10 +157,9 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
                         headerSort: false,
                         responsive: 1,
                         formatter: (cell, formatterParams, onRendered) => {
-                            const icon_tag = that.getScopedTagName('dbp-icon');
                             let icon =
-                                `<${icon_tag} name="empty-file" class="nextcloud-picker-icon ` +
-                                `"></${icon_tag}>`;
+                                `<dbp-icon name="empty-file" class="nextcloud-picker-icon ` +
+                                `"></dbp-icon>`;
                             let div = this.createScopedElement('div');
                             div.innerHTML = icon;
                             return div;
