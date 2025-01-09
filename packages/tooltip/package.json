@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/tooltip",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/tooltip",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -42,8 +42,8 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@dbp-toolkit/auth": "^0.3.5",
-        "@dbp-toolkit/common": "^0.3.11",
+        "@dbp-toolkit/auth": "^0.3.6",
+        "@dbp-toolkit/common": "^0.3.12",
         "@open-wc/scoped-elements": "^2.1.0",
         "lit": "^3.0.0",
         "tippy.js": "^6.3.1"

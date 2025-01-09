@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/notification",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/notification",
-    "version": "0.3.4",
+    "version": "0.3.5",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -42,7 +42,7 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.11",
+        "@dbp-toolkit/common": "^0.3.12",
         "@open-wc/scoped-elements": "^2.1.0",
         "lit": "^3.0.0"
     },

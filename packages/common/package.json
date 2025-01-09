@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/common",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/common",
-    "version": "0.3.11",
+    "version": "0.3.12",
     "type": "module",
     "module": "src/index.js",
     "license": "LGPL-2.1-or-later",
