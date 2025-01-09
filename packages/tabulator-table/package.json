@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/tabulator-table",
     "homepage": "https://github.com/digital-blueprint/toolkit/-/tree/master/packages/tabulator-table",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -41,15 +41,15 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.6",
+        "@dbp-toolkit/common": "^0.3.11",
         "@open-wc/scoped-elements": "^3.0.5",
         "i18next": "^23.0.0 || ^24.0.0",
+        "jspdf": "^2.5.1",
+        "jspdf-autotable": "^3.5.23",
         "jszip": "^3.5.0",
         "lit": "^3.0.0",
         "material-design-icons-svg": "^3.0.0",
         "tabulator-tables": "^6.0.0",
-        "jspdf": "^2.5.1",
-        "jspdf-autotable": "^3.5.23",
         "xlsx": "^0.18.2"
     },
     "scripts": {

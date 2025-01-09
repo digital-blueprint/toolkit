@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/dev-utils",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/dev-utils",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "private": true,
     "type": "module",
     "main": "src/index.js",
@@ -12,11 +12,11 @@
         "directory": "packages/dev-utils"
     },
     "devDependencies": {
-        "prettier": "^3.0.0",
-        "globals": "^15.3.0",
         "@eslint/js": "^9.8.0",
         "eslint": "^9.1.0",
-        "eslint-plugin-jsdoc": "^50.0.0"
+        "eslint-plugin-jsdoc": "^50.0.0",
+        "globals": "^15.3.0",
+        "prettier": "^3.0.0"
     },
     "dependencies": {
         "find-cache-dir": "^5.0.0",
