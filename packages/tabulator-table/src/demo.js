@@ -1,7 +1,7 @@
 import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {TabulatorTable} from './tabulator-table';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';

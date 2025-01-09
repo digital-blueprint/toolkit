@@ -45,7 +45,7 @@
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.11",
-        "@open-wc/scoped-elements": "^3.0.5",
+        "@open-wc/scoped-elements": "^2.1.0",
         "keycloak-js": "^26.0.0",
         "lit": "^3.0.0"
     },

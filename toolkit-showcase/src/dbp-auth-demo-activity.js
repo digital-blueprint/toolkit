@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {DbpAuthDemo} from '@dbp-toolkit/auth/src/dbp-auth-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';

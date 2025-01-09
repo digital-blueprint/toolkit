@@ -1,7 +1,8 @@
 import {html} from 'lit';
 import {LanguageSelect} from './language-select.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import {AdapterLitElement, ScopedElementsMixin} from '@dbp-toolkit/common';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import {AdapterLitElement} from '@dbp-toolkit/common';
 import {Provider} from "@dbp-toolkit/provider";
 import {createInstance, setOverrides} from './i18n.js';
 

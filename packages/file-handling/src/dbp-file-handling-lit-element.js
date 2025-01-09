@@ -1,4 +1,4 @@
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPLitElement from '../../common/dbp-lit-element';
 
 export default class DbpFileHandlingLitElement extends ScopedElementsMixin(DBPLitElement) {

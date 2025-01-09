@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css, unsafeCSS} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import * as commonUtils from '@dbp-toolkit/common/utils';

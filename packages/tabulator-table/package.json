@@ -42,7 +42,7 @@
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.11",
-        "@open-wc/scoped-elements": "^3.0.5",
+        "@open-wc/scoped-elements": "^2.1.0",
         "i18next": "^23.0.0 || ^24.0.0",
         "jspdf": "^2.5.1",
         "jspdf-autotable": "^3.5.23",

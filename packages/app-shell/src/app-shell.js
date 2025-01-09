@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';

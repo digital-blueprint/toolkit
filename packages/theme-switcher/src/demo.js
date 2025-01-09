@@ -1,6 +1,6 @@
 import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {html, LitElement} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {ThemeSwitcher} from './theme-switcher';
 import {Themed} from './themed';
 import * as commonUtils from '@dbp-toolkit/common/utils';

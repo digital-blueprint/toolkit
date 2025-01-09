@@ -2,7 +2,7 @@ import {createInstance} from './i18n';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {css, html} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {Notification} from './notification.js';
 import {getRandomInt} from './utils.js';
 import {Modal} from '@dbp-toolkit/common/src/modal';
