@@ -1,7 +1,7 @@
 import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {LoginStatus} from './util.js';
 import {AdapterLitElement, MiniSpinner} from '@dbp-toolkit/common';

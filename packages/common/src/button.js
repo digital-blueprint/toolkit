@@ -1,5 +1,5 @@
 import {html, LitElement, css} from 'lit';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {MiniSpinner} from './mini-spinner.js';
 import * as commonStyles from './styles.js';
