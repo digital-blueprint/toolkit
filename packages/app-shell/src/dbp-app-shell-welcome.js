@@ -1,10 +1,11 @@
 import {createInstance} from './i18n.js';
-import {css, html, LitElement} from 'lit';
+import {css, html} from 'lit';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-class AppShellWelcome extends ScopedElementsMixin(LitElement) {
+class AppShellWelcome extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -168,6 +169,7 @@ export const appWelcomeMeta = {
     },
     visible: true,
     required_roles: [],
+    subscribe: 'lang'
 };
 
 commonUtils.defineCustomElement('dbp-app-shell-welcome', AppShellWelcome);
