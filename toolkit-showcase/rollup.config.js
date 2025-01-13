@@ -84,7 +84,6 @@ export default (async () => {
             sourcemap: true,
         },
         treeshake: treeshake,
-        preserveEntrySignatures: false,
         plugins: [
             del({
                 targets: 'dist/*',
