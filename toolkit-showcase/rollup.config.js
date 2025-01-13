@@ -144,7 +144,9 @@ Dependencies:
                         },
                     },
                 }),
-            commonjs(),
+            commonjs({
+                strictRequires: 'auto',
+            }),
             json(),
             md({
                 include: ['../../**/*.md'],
