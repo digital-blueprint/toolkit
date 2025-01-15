@@ -4,11 +4,11 @@ import {
 import { createInstance } from './i18n';
 import * as commonStyles from './styles.js';
 import { Icon } from './icon';
-import { MiniSpinner } from './mini-spinner';
+import {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
 import dialogPolyfill from 'dialog-polyfill';
 import DBPLitElement from './dbp-lit-element';
 
-export class Modal extends DBPLitElement {
+export class Modal extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -101,8 +101,7 @@ export class Modal extends DBPLitElement {
 
     static get scopedElements() {
         return {
-            'dbp-icon': Icon,
-            'dbp-mini-spinner': MiniSpinner,
+            'dbp-icon': Icon
         };
     }
 
