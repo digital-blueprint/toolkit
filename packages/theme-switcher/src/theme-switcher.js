@@ -1,6 +1,6 @@
 import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {html, css} from 'lit';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {AdapterLitElement, Icon} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';

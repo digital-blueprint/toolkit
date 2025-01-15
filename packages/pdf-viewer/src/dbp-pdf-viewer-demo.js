@@ -1,6 +1,6 @@
 import {createInstance} from './i18n';
 import {css, html, LitElement} from 'lit';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {PdfViewer} from './pdf-viewer.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';

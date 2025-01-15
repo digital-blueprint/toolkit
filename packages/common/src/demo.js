@@ -1,7 +1,7 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import DBPLitElement from './dbp-lit-element.js';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
 import {Modal} from './modal.js';
 import * as commonUtils from './common-utils.js';
 import * as commonStyles from './styles.js';

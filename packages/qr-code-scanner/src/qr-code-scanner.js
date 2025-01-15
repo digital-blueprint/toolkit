@@ -2,7 +2,7 @@ import {createInstance} from './i18n';
 import {css, html, unsafeCSS} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 import {Mutex} from 'async-mutex';
