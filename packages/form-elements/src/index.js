@@ -1,4 +1,4 @@
-// TODO: Import all the other form elements here
-import {DbpStringElement} from './string.js';
+// Import form elements
+import {DbpStringElement} from './elements/string.js';
 
 export {DbpStringElement};

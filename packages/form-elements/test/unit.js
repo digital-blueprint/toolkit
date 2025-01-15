@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 
-import '../src/string.js';
+import '../src/elements/string.js';
 
 suite('dbp-form-elements basics', () => {
     let node;
