@@ -2,6 +2,7 @@ import {html, LitElement, css} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {MiniSpinner} from './mini-spinner.js';
+import {Icon} from './icon.js';
 import * as commonStyles from './styles.js';
 
 class DbpButton extends ScopedElementsMixin(LitElement) {
@@ -203,6 +204,13 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
         this.disabled = false;
         this.loading = false;
         this.ariaLabel = undefined;
+    }
+
+    static get scopedElements() {
+        return {
+            'dbp-icon': Icon,
+            'dbp-mini-spinner': MiniSpinner
+        };
     }
 
     static get properties() {
