@@ -1,6 +1,6 @@
 import {createInstance} from './i18n';
 import {html, LitElement} from 'lit';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {FileSource} from './file-source';
 import {FileSink} from './file-sink';
 import * as commonUtils from '@dbp-toolkit/common/utils';

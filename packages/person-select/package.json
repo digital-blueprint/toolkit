@@ -44,7 +44,6 @@
     "dependencies": {
         "@dbp-toolkit/auth": "^0.3.6",
         "@dbp-toolkit/common": "^0.3.12",
-        "@open-wc/scoped-elements": "^2.1.0",
         "jquery": "^3.4.1",
         "lit": "^3.0.0",
         "select2": "^4.0.10"

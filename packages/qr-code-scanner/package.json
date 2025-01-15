@@ -42,7 +42,6 @@
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.12",
-        "@open-wc/scoped-elements": "^2.1.0",
         "async-mutex": "^0.5.0",
         "lit": "^3.0.0",
         "qr-scanner": "^1.4.1"
