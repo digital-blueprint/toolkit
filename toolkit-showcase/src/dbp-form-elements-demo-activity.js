@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {FormElementsDemo} from '@dbp-toolkit/form-elements/src/dbp-form-elements-demo';
+import {FormElementsDemo} from '@dbp-toolkit/form-elements/src/demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
@@ -25,7 +25,6 @@ class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement)
         return {
             ...super.properties,
             lang: {type: String},
-            entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
 
