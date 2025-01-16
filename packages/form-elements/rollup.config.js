@@ -19,14 +19,14 @@ console.log('build: ' + build);
 export default (async () => {
     return {
         input:
-            build != 'test'
+            build !== 'test'
                 ? [
                     'src/elements/checkbox.js',
                     'src/elements/date.js',
                     'src/elements/datetime.js',
                     'src/elements/enum.js',
                     'src/elements/string.js',
-                    'src/dbp-form-elements-demo.js']
+                    'src/demo.js']
                 : globSync('test/**/*.js'),
         output: {
             dir: 'dist',
