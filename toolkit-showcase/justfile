@@ -1,0 +1,11 @@
+# Use `just <recipe>` to run a recipe
+# https://just.systems/man/en/
+
+# By default, run the `--list` command
+default:
+    @just --list
+
+# Open a browser with the application
+[group('dev')]
+open-browser:
+    xdg-open https://127.0.0.1:8001/dist
