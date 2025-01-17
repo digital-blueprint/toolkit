@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base.js';
 
 export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {

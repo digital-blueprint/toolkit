@@ -1,7 +1,7 @@
 import {css, html} from 'lit';
 import {createInstance} from './i18n';
 import {getFieldsetCSS, sanitizeForHtmlId} from './utils.js';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
