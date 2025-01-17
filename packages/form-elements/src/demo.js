@@ -18,6 +18,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         this.mySpecialComponentStringRef = createRef();
         this.myComponentDateTimeRef = createRef();
         this.myComponentEnumRef = createRef();
+        this.data = {};
     }
 
     static get scopedElements() {
@@ -197,7 +198,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     renderResult(data) {
-        if (data) {
+        if (data && Object.keys(data).length > 0) {
             // Show the form data object
             return html`
                 <div class="container">
