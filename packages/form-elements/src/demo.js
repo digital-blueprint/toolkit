@@ -7,6 +7,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {DbpStringElement, DbpDateElement, DbpDateTimeElement, DbpEnumElement, DbpCheckboxElement} from './index.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {classMap} from 'lit/directives/class-map.js';
+import {gatherFormDataFromElement, validateRequiredFields} from "./utils.js";
 
 export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -34,6 +35,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
             saveButtonEnabled: {type: Boolean, attribute: false},
+            data: {type: Object, attribute: false},
         };
     }
 
@@ -82,103 +84,19 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         super.update(changedProperties);
     }
 
-    static getElementWebComponents(formElement) {
-        return Array.from(formElement.getElementsByTagName('*')).filter((el) =>
-            el.tagName.toLowerCase().match(/^dbp-.*-element$/),
-        );
-    }
-
-    gatherFormDataFromElement(formElement) {
-        let customElementValues = {};
-
-        // Gather data from "dbp-.*-element" web components
-        const elementWebComponents = FormElementsDemo.getElementWebComponents(formElement);
-        console.log('gatherFormDataFromElement elementWebComponents', elementWebComponents);
-        elementWebComponents.forEach((element) => {
-            const name = element.getAttribute('name') || element.id;
-            customElementValues[name] = element.value;
-        });
-
-        // Check if any elements have a "data-value" attribute, because we want to use that value instead of the form value
-        const elementsWithDataValue = formElement.querySelectorAll('[data-value]');
-        let dataValues = {};
-        elementsWithDataValue.forEach((element) => {
-            const name = element.getAttribute('name') || element.id;
-            dataValues[name] = element.getAttribute('data-value');
-        });
-
-        console.log('gatherFormDataFromElement dataValues', dataValues);
-        console.log('this.data', this.data);
-
-        const data = {};
-
-        // 1. First, add all custom element values as the base
-        for (let [key, value] of Object.entries(customElementValues)) {
-            this.setNestedValue(data, key, value);
-        }
-
-        // 2. Then process form data, which can override custom element values
-        const formData = new FormData(formElement);
-        for (let [key, value] of formData.entries()) {
-            this.setNestedValue(data, key, value);
-        }
-
-        // 3. Finally, apply dataValues which have the highest priority
-        for (let [key, value] of Object.entries(dataValues)) {
-            this.setNestedValue(data, key, value);
-        }
-
-        console.log('gatherFormDataFromElement data', data);
-
-        return data;
-    }
-
-    setNestedValue(obj, path, value) {
-        const keys = path.replace(/\]/g, '').split('[');
-        let current = obj;
-
-        for (let i = 0; i < keys.length; i++) {
-            const key = keys[i];
-            if (i === keys.length - 1) {
-                // Last key, set the value
-                current[key] = value;
-            } else {
-                // Not the last key, create nested object if it doesn't exist
-                if (!current[key] || typeof current[key] !== 'object') {
-                    current[key] = {};
-                }
-                current = current[key];
-            }
-        }
-    }
-
-    async validateRequiredFields() {
-        const formElement = this.shadowRoot.querySelector('form');
-        const elementWebComponents = FormElementsDemo.getElementWebComponents(formElement);
-        const data = this.gatherFormDataFromElement(formElement);
-
-        const evaluationPromises = elementWebComponents.map((element) => {
-            return new Promise((resolve) => {
-                const event = new CustomEvent('evaluate', {
-                    detail: {
-                        data: data,
-                        respond: resolve, // Pass a callback for the component to use
-                    },
-                });
-                element.dispatchEvent(event);
-            });
-        });
-
-        const responses = await Promise.all(evaluationPromises);
-        return !responses.includes(false); // Return true if no component returned false
-    }
-
     async validate(event) {
         event.preventDefault();
 
+        const formElement = this.shadowRoot.querySelector('form');
+
         // Validate the form before proceeding
-        const validationResult = await this.validateRequiredFields();
+        const validationResult = await validateRequiredFields(formElement);
         console.log('validateAndSendSubmission validationResult', validationResult);
+
+        if (validationResult) {
+            this.data = gatherFormDataFromElement(formElement);
+            console.log('data', this.data);
+        }
     }
 
     getButtonRowHtml() {
@@ -273,8 +191,23 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         ${this.getButtonRowHtml()}
                     </form>
                 </div>
+                ${this.renderResult(this.data)}
             </section>
         `;
+    }
+
+    renderResult(data) {
+        if (data) {
+            // Show the form data object
+            return html`
+                <div class="container">
+                    <h2>Form data</h2>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        return html``;
     }
 }
 
