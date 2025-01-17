@@ -2,8 +2,8 @@ import {css, html} from 'lit';
 import {createInstance} from './i18n';
 import {getFieldsetCSS, sanitizeForHtmlId} from './utils.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import * as commonStyles from '@dbp-toolkit/common/src/styles.js';
-import DBPLitElement from '@dbp-toolkit/common/src/dbp-lit-element.js';
+import * as commonStyles from '@dbp-toolkit/common/styles';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
