@@ -26,7 +26,7 @@ term: term-kill term-run
 # Open a browser with the application
 [group('dev')]
 open-browser:
-    xdg-open https://127.0.0.1:8001/dist
+    xdg-open https://127.0.0.1:8001
 
 # Run the tests in a docker container if playwright doen't work locally
 [group('dev')]
