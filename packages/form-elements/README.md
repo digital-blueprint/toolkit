@@ -15,14 +15,14 @@ npm i @dbp-toolkit/form-elements
 
 ```html
 <dbp-string-element></dbp-string-element>
-<script type="module" src="node_modules/@dbp-toolkit/form-elements/dist/dbp-string-element.js"></script>
+<script type="module" src="node_modules/@dbp-toolkit/form-elements/dist/string.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
 <dbp-string-element></dbp-string-element>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/form-elements@0.0.1/dist/dbp-string-element.js"></script>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/form-elements@0.1.0/dist/string.js"></script>
 ```
 
 ## Attributes
