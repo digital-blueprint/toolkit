@@ -24,7 +24,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     renderInput() {
         return html`
             <select
-                id="${this.id}"
+                id="${this.formElementId}"
                 name="${this.name}"
                 @change="${this.handleInputValue}"
                 ?required=${this.required}>

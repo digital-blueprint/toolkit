@@ -35,7 +35,7 @@ export class DbpDateElement extends ScopedElementsMixin(DbpBaseElement) {
         return html`
             <input
                 type="date"
-                id="${this.id}"
+                id="${this.formElementId}"
                 name="${this.name}"
                 .value="${formattedValue}"
                 @input="${this.handleInputValue}"

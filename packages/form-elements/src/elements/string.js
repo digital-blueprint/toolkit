@@ -22,7 +22,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
             ${this.rows > 1
                 ? html`
                       <textarea
-                          id="${this.id}"
+                          id="${this.formElementId}"
                           name="${this.name}"
                           rows="${this.rows}"
                           @input="${this.handleInputValue}"
@@ -32,7 +32,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                 : html`
                       <input
                           type="text"
-                          id="${this.id}"
+                          id="${this.formElementId}"
                           name="${this.name}"
                           .value="${this.value}"
                           @input="${this.handleInputValue}"

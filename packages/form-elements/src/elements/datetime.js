@@ -59,7 +59,7 @@ export class DbpDateTimeElement extends ScopedElementsMixin(DbpBaseElement) {
         return html`
             <input
                 type="datetime-local"
-                id="${this.id}"
+                id="${this.formElementId}"
                 name="${this.name}"
                 .value="${formattedValue}"
                 @input="${this.handleInputValue}"

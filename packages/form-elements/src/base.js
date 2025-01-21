@@ -10,7 +10,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.id = '';
+        this.formElementId = '';
         this.name = '';
         this.description = '';
         this.label = '';
@@ -117,9 +117,6 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
                     this._i18n.changeLanguage(this.lang);
                     this.handleErrorsIfAny();
                     break;
-                case 'name':
-                    this.id = 'form-input-' + sanitizeForHtmlId(this.name);
-                    break;
             }
         });
 
@@ -136,7 +133,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <fieldset>
-                <label for="${this.id}">
+                <label for="${this.formElementId}">
                     ${this.label}
                     ${this.required
                         ? html`

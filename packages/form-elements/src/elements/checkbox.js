@@ -90,7 +90,7 @@ export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
 
         return html`
             <fieldset>
-                <label for="${this.id}">
+                <label for="${this.formElementId}">
                     ${this.label}
                     ${this.required
                         ? html`
@@ -108,7 +108,7 @@ export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
             <label class="checkboxItem">
                 <input
                     type="checkbox"
-                    id="${this.id}"
+                    id="${this.formElementId}"
                     name="${this.name}"
                     class="checkbox"
                     ?checked="${this.checked}"
