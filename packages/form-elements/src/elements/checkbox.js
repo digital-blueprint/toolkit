@@ -120,4 +120,4 @@ export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-checkbox-element', DbpCheckboxElement);
+commonUtils.defineCustomElement('dbp-form-checkbox-element', DbpCheckboxElement);

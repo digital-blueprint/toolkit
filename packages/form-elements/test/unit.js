@@ -3,11 +3,11 @@ import {assert} from 'chai';
 import '../src/index';
 import '../src/demo';
 
-suite('dbp-checkbox-element', () => {
+suite('dbp-form-checkbox-element', () => {
     let node;
 
     setup(async () => {
-        node = document.createElement('dbp-checkbox-element');
+        node = document.createElement('dbp-form-checkbox-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
@@ -21,11 +21,11 @@ suite('dbp-checkbox-element', () => {
     });
 });
 
-suite('dbp-date-element', () => {
+suite('dbp-form-date-element', () => {
     let node;
 
     setup(async () => {
-        node = document.createElement('dbp-date-element');
+        node = document.createElement('dbp-form-date-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
@@ -39,11 +39,11 @@ suite('dbp-date-element', () => {
     });
 });
 
-suite('dbp-datetime-element', () => {
+suite('dbp-form-datetime-element', () => {
     let node;
 
     setup(async () => {
-        node = document.createElement('dbp-datetime-element');
+        node = document.createElement('dbp-form-datetime-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
@@ -57,11 +57,11 @@ suite('dbp-datetime-element', () => {
     });
 });
 
-suite('dbp-enum-element', () => {
+suite('dbp-form-enum-element', () => {
     let node;
 
     setup(async () => {
-        node = document.createElement('dbp-enum-element');
+        node = document.createElement('dbp-form-enum-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
@@ -75,11 +75,11 @@ suite('dbp-enum-element', () => {
     });
 });
 
-suite('dbp-string-element', () => {
+suite('dbp-form-string-element', () => {
     let node;
 
     setup(async () => {
-        node = document.createElement('dbp-string-element');
+        node = document.createElement('dbp-form-string-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });

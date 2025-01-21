@@ -53,4 +53,4 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-enum-element', DbpEnumElement);
+commonUtils.defineCustomElement('dbp-form-enum-element', DbpEnumElement);

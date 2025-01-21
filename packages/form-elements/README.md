@@ -14,21 +14,21 @@ npm i @dbp-toolkit/form-elements
 ## Usage
 
 ```html
-<dbp-string-element></dbp-string-element>
+<dbp-form-string-element></dbp-form-string-element>
 <script type="module" src="node_modules/@dbp-toolkit/form-elements/dist/string.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
-<dbp-string-element></dbp-string-element>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/form-elements@0.1.0/dist/string.js"></script>
+<dbp-form-string-element></dbp-form-string-element>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/form-elements@0.2.0/dist/string.js"></script>
 ```
 
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<dbp-string-element lang="de"></dbp-string-element>`
+    - example `<dbp-form-string-element lang="de"></dbp-form-string-element>`
 
 ## Methods
 

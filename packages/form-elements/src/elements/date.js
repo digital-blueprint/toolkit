@@ -44,4 +44,4 @@ export class DbpDateElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-date-element', DbpDateElement);
+commonUtils.defineCustomElement('dbp-form-date-element', DbpDateElement);

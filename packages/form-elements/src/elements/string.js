@@ -42,4 +42,4 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-string-element', DbpStringElement);
+commonUtils.defineCustomElement('dbp-form-string-element', DbpStringElement);

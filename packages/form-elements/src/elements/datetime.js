@@ -90,4 +90,4 @@ export class DbpDateTimeElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-datetime-element', DbpDateTimeElement);
+commonUtils.defineCustomElement('dbp-form-datetime-element', DbpDateTimeElement);
