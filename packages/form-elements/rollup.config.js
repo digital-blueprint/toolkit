@@ -53,6 +53,8 @@ export default (async () => {
             build !== 'local' && build !== 'test' ? terser() : false,
             copy({
                 targets: [
+                    {src: 'assets/index.html', dest: 'dist'},
+                    {src: 'assets/favicon.ico', dest: 'dist'},
                     {
                         src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
                         dest: 'dist/' + (await getDistPath(pkg.name)),
