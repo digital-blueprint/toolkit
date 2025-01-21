@@ -44,7 +44,6 @@
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.13",
-        "@open-wc/scoped-elements": "^2.1.0",
         "lit": "^3.0.0"
     },
     "scripts": {
