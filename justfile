@@ -28,11 +28,6 @@ term: term-kill term-run
 open-browser:
     xdg-open https://127.0.0.1:8001
 
-# Run the tests in a docker container if playwright doen't work locally
-[group('dev')]
-ducker-run-tests:
-    docker run --rm -v "$(pwd):/app" -w /app mcr.microsoft.com/playwright:v1.49.1-noble npm run test
-
 # Format all justfiles
 [group('linter')]
 just-format:
