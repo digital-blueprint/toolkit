@@ -149,7 +149,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
 
     renderInput() {
         return html`
-            Please implement renderInput() in your subclass
+            Please implement renderInput() in your subclass!
         `;
     }
 }
