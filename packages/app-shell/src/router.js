@@ -103,7 +103,8 @@ export class Router {
                 }
             })
             .catch((err) => {
-                throw new Error(`Route not found: ${pathname}: ${err}`);
+                // In case we can't resolve the location, just leave things as is.
+                // This happens when a user enters a wrong URL or when testing with karma.
             });
     }
 
