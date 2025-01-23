@@ -10,6 +10,14 @@ export function getTabulatorStyles() {
             --dbp-tabulator-cell-background-color: var(--dbp-background);
         }
 
+        .tabulator {
+            margin-bottom: 1em;
+        }
+
+        .tabulator .tabulator-tableholder {
+            overflow: hidden;
+        }
+
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
             font-weight: normal;
             font-size: 1rem;
@@ -38,6 +46,10 @@ export function getTabulatorStyles() {
             background-color: var(--dbp-background);
             border-top: 1px solid var(--dbp-muted);
             color: var(--dbp-content);
+        }
+
+        .tabulator-row:last-child {
+            border-bottom: 1px solid var(--dbp-muted);
         }
 
         .tabulator-row.tabulator-selectable.tabulator-selectable:hover {
