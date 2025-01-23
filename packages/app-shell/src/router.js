@@ -50,40 +50,45 @@ export class Router {
     /**
      * In case something else has changed the location, update the app state accordingly.
      */
-    setStateFromCurrentLocation() {
-        this._getStateForPath(location.pathname)
-            .then((page) => {
-                this.setState(page);
-            })
-            .catch((e) => {
-                // In case we can't resolve the location, just leave things as is.
-                // This happens when a user enters a wrong URL or when testing with karma.
-            });
+    async setStateFromCurrentLocation() {
+        let page;
+        try {
+            page = await this._getStateForPath(location.pathname);
+        } catch{
+            // In case we can't resolve the location, just leave things as is.
+            // This happens when a user enters a wrong URL or when testing with karma.
+            return;
+        }
+
+        this.setState(page);
     }
 
     /**
      * Update the router after some internal state change.
      */
-    update() {
+    async update() {
         // Queue updates so we can call this multiple times when changing state
         // without it resulting in multiple location changes
-        setTimeout(() => {
-            this._getStateForPath(location.pathname)
-                .then((page) => {
-                    const newState = this.getState();
-                    // if the state has changed we update
-                    if (!stateMatches(newState, page)) {
-                        const newPathname = this.getPathname();
-                        const referrerUrl = location.href;
-                        window.history.pushState({}, '', newPathname);
-                        this._dispatchLocationChanged(referrerUrl);
-                    }
-                })
-                .catch((e) => {
-                    // In case we can't resolve the location, just leave things as is.
-                    // This happens when a user enters a wrong URL or when testing with karma.
-                });
-        });
+        await new Promise(resolve => setTimeout(resolve));
+
+        let page;
+        try {
+            page = await this._getStateForPath(location.pathname);
+        } catch {
+            // In case we can't resolve the location, just leave things as is.
+            // This happens when a user enters a wrong URL or when testing with karma.
+            return;
+        }
+
+        const newState = this.getState();
+
+        // if the state has changed we update
+        if (!stateMatches(newState, page)) {
+            const newPathname = this.getPathname();
+            const referrerUrl = location.href;
+            window.history.pushState({}, '', newPathname);
+            this._dispatchLocationChanged(referrerUrl);
+        }
     }
 
     /**
@@ -91,26 +96,29 @@ export class Router {
      *
      * @param {string} relUrl
      */
-    updateFromUrl(relUrl) {
+    async updateFromUrl(relUrl) {
         // FIXME: we throw out the search and hash part of the URL since the router can't deal with
         // them yet.
         let url = new URL(relUrl, location.href);
         let pathname = url.pathname;
 
-        this._getStateForPath(pathname)
-            .then((page) => {
-                const oldState = this.getState();
-                if (!stateMatches(oldState, page)) {
-                    const referrerUrl = location.href;
-                    window.history.pushState({}, '', pathname);
-                    this.setState(page);
-                    this._dispatchLocationChanged(referrerUrl);
-                }
-            })
-            .catch((err) => {
-                // In case we can't resolve the location, just leave things as is.
-                // This happens when a user enters a wrong URL or when testing with karma.
-            });
+        let page;
+        try {
+            page = await this._getStateForPath(pathname);
+        } catch {
+            // In case we can't resolve the location, just leave things as is.
+            // This happens when a user enters a wrong URL or when testing with karma.
+            return;
+        }
+
+        const oldState = this.getState();
+
+        if (!stateMatches(oldState, page)) {
+            const referrerUrl = location.href;
+            window.history.pushState({}, '', pathname);
+            this.setState(page);
+            this._dispatchLocationChanged(referrerUrl);
+        }
     }
 
     /**
