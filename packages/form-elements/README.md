@@ -27,13 +27,65 @@ Or directly via CDN:
 
 ## Attributes
 
-- `lang` (optional, default: `de`): set to `de` or `en` for German or English
-    - example `<dbp-form-string-element lang="de"></dbp-form-string-element>`
+Best look at [demo.js](./src/demo.js) for the example implementation.
 
-## Methods
+### General Attributes
+
+- `lang` (optional, default: `de`): Language setting
+    - Type: String
+    - Accepts: `de` (German) or `en` (English)
+    - Example: `<element lang="en"></element>`
+- `name`: Element name
+    - Type: String
+    - Used for identifying the form element
+- `description`: Descriptive text for the element
+    - Type: String
+    - Provides additional context or explanation
+- `label`: Display label for the element
+    - Type: String
+    - Text shown alongside or near the form element
+- `value`: Current value of the element
+    - Type: String
+    - Reflects current input state
+- `required`: Indicates if the element is mandatory
+    - Type: Boolean
+    - Determines if the field must be filled
+
+### String Element
+
+- `rows` (optional, default: `1`): Number of rows for the text area (1 means a single-line input)
+    - Type: Number
+    - Example: `<dbp-form-string-element rows="3"></dbp-form-string-element>`
+
+### Checkbox Element
+
+- `checked`: Indicates if the checkbox is checked
+    - Type: Boolean
+    - Example: `<dbp-form-checkbox-element checked></dbp-form-checkbox-element>`
+
+### Enum Element
+
+```html
+<dbp-form-enum-element
+    ${ref(this.myComponentEnumRef)}
+    subscribe="lang"
+    name="myComponentEnum"
+    label="My enum"
+    value=${data.myComponentEnum || ''}
+    required>
+</dbp-form-enum-element>
+```
+
+#### Methods
 
 - `setItems()`: Set the items to be displayed in the enum element
-    - example ``
+
+##### Example
+
+```js
+// Set items for the enum component
+this.myComponentEnumRef.value.setItems({item1: 'Item 1', item2: 'Item 2'});
+```
 
 ## Local development
 
