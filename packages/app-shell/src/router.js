@@ -15,6 +15,7 @@ export class Router {
      * @param {string} options.routeName The main route name
      * @param {Function} options.getState Function which should return the current state
      * @param {Function} options.setState Function which gets passed the new state based on the route
+     * @param {Function} options.getDefaultState Function which should return the default state
      * @param {object} unioptions options passed to UniversalRouter
      */
     constructor(routes, options, unioptions) {
