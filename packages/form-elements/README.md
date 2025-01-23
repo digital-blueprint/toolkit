@@ -1,4 +1,4 @@
-# PdfViewer Web Component
+# Form Element Web Components
 
 [GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/form-elements) |
 [NPM](https://www.npmjs.com/package/@dbp-toolkit/form-elements)
