@@ -51,6 +51,20 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             `,
         ];
     }
+
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case 'items':
+                    if (!this.value) {
+                        this.value = Object.keys(this.items)[0];
+                    }
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
+    }
 }
 
 commonUtils.defineCustomElement('dbp-form-enum-element', DbpEnumElement);
