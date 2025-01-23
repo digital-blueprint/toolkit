@@ -1,6 +1,6 @@
 # Changelog
 
-## Next release
+## 0.2.1
 - The enum element will now set a default value if items were set by the `setItems()` method
 
 ## 0.2.0
