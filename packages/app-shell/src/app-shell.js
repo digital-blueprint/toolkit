@@ -402,18 +402,10 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         console.log("handleRoutingUrlChange this.routingUrl", this.routingUrl);
         let routingUrl = this.routingUrl.startsWith('/') ? this.routingUrl : `/${this.routingUrl}`;
 
-        // Generate a full path from the routingUrl
-        const path = this.basePath + this.lang + '/' + this.activeView + routingUrl;
-        console.log("handleRoutingUrlChange path", path);
-
-        const currentPath = window.location.pathname + window.location.search + window.location.hash;
-        console.log("handleRoutingUrlChange currentPath", currentPath);
-
-        // Update the router if the generated path is different from the current path
-        if (path !== currentPath) {
-            this.router.updateFromPathname(path);
-            this.router.update();
-        }
+        // Generate a full routing URL from the routingUrl
+        const fullUrl = this.basePath + this.lang + '/' + this.activeView + routingUrl;
+        console.log("handleRoutingUrlChange fullUrl", fullUrl);
+        this.router.updateFromUrl(fullUrl);
     }
 
     onMenuItemClick(e) {
@@ -437,7 +429,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
 
         const link = e.composedPath()[0];
         const location = link.getAttribute('href');
-        this.router.updateFromPathname(location);
+        this.router.updateFromUrl(location);
         this.hideMenu();
     }
 

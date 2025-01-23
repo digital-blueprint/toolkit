@@ -87,11 +87,16 @@ export class Router {
     }
 
     /**
-     * Given a new routing path set the location and the app state.
+     * Given a new routing URL set the location and the app state.
      *
-     * @param {string} pathname
+     * @param {string} relUrl
      */
-    updateFromPathname(pathname) {
+    updateFromUrl(relUrl) {
+        // FIXME: we throw out the search and hash part of the URL since the router can't deal with
+        // them yet.
+        let url = new URL(relUrl, location.href);
+        let pathname = url.pathname;
+
         this._getStateForPath(pathname)
             .then((page) => {
                 const oldState = this.getState();
@@ -110,7 +115,7 @@ export class Router {
 
     /**
      * Pass some new router state to get a new router path that can
-     * be passed to updateFromPathname() later on. If nothing is
+     * be passed to updateFromUrl() later on. If nothing is
      * passed the current state is used.
      *
      * @param {object} [partialState] The optional partial new state

@@ -27,7 +27,7 @@ suite('router', () => {
 
         router.setStateFromCurrentLocation();
         router.update();
-        router.updateFromPathname('/');
+        router.updateFromUrl('/?foo=bar#quux');
         assert.equal(router.getPathname(), '/');
     });
 });
