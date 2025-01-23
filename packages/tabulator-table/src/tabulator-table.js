@@ -609,6 +609,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             .tabulator .tabulator-footer {
                 background-color: var(--dbp-background);
                 color: var(--dbp-content);
+                border-top: none;
             }
 
             .tabulator .tabulator-footer .tabulator-footer-contents {
