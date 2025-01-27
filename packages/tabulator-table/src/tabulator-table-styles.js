@@ -15,7 +15,7 @@ export function getTabulatorStyles() {
         }
 
         .tabulator .tabulator-tableholder {
-            overflow: hidden;
+            overflow-y: clip;
         }
 
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
