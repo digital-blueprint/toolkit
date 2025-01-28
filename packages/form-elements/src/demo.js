@@ -15,7 +15,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.saveButtonEnabled = true;
-        this.mySpecialComponentStringRef = createRef();
+        this.mySpecialStringRef = createRef();
         this.myComponentDateTimeRef = createRef();
         this.myComponentEnumRef = createRef();
         this.data = {};
@@ -62,7 +62,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
 
         this.updateComplete.then(() => {
             // Add a custom validation function to the special string component
-            this.mySpecialComponentStringRef.value.customValidationFnc = (value, evaluationData) => {
+            this.mySpecialStringRef.value.customValidationFnc = (value, evaluationData) => {
                 // If the value is empty, return an error message with the evaluation data
                 return value === '' ? ['evaluationData: ' + JSON.stringify(evaluationData)] : [];
             };
@@ -144,12 +144,12 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         </dbp-form-string-element>
 
                         <dbp-form-string-element
-                                ${ref(this.mySpecialComponentStringRef)}
+                                ${ref(this.mySpecialStringRef)}
                                 subscribe="lang"
-                                name="mySpecialComponentString"
+                                name="mySpecialString"
                                 description="Shows the evaluation data in the error message if empty"
                                 label="My special string"
-                                value=${data.mySpecialComponentString || ''}
+                                value=${data.mySpecialString || ''}
                                 required>
                         </dbp-form-string-element>
 
