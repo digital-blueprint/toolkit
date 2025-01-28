@@ -457,6 +457,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         for (let cell of cells) {
                             let column = cell.getColumn();
                             let definition = column.getDefinition();
+                            if (!definition.visible) {
+                                continue;
+                            }
                             let field = cell.getField();
                             if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
                                 entry[field] = cell.getValue();
@@ -476,6 +479,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     let header = [];
                     for(let column of columns) {
                         let definition = column.getDefinition();
+                        if (!definition.visible) {
+                            continue;
+                        }
                         let field = column.getField();
                         if(field!== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
                             header.push(column.getField());
