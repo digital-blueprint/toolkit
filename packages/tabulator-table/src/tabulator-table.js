@@ -475,6 +475,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     break;
                 }
                 case 'pdf': {
+                    //  Get only displayed columns. [respect Column setting modal state]
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
                     for(let column of columns) {
@@ -489,17 +490,35 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     let body = [];
                     for (let entry of data) {
                         let entry_array =  [];
-                        Object.values(entry).forEach(value => {
-                            entry_array.push(value);
+
+                        header.forEach(column => {
+                            let cellValue = entry[column] ? entry[column] : '-';
+                            if (Array.isArray(cellValue)) {
+                                cellValue = cellValue.join(', ');
+                            }
+                            entry_array.push(cellValue);
                         });
                         body.push(entry_array);
                     }
-                    let new_table = {
-                        head: [header],
-                        body: body,
-                    };
-                    const doc = new jsPDF();
-                    autoTable(doc, new_table);
+                    const doc = new jsPDF('l', 'pt');
+                    doc.autoTable(header, body, {
+                        horizontalPageBreak: false,
+                        // horizontalPageBreakBehaviour: 'immediately',
+                        tableWidth: 'auto',
+                        styles: {
+                            overflow: 'linebreak',
+                            valign: 'middle',
+                            cellWidth: 'auto'
+                        },
+                        headStyles: {
+                            // cellWidth: 'auto'
+                        },
+                        bodyStyle: {
+                            // cellWidth: 'auto',
+                            overflow: 'linebreak'
+                        }
+
+                    });
                     doc.save(dataName);
                     break;
                 }
@@ -524,6 +543,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         for (let cell of cells) {
                             let column = cell.getColumn();
                             let definition = column.getDefinition();
+                            if (!definition.visible) {
+                                continue;
+                            }
                             let field = cell.getField();
                             if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
                                 entry[field] = cell.getValue();
@@ -544,6 +566,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
                     for(let column of columns) {
                         let definition = column.getDefinition();
+                        if (!definition.visible) {
+                            continue;
+                        }
                         let field = column.getField();
                         if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
                             header.push(column.getField());
@@ -551,17 +576,35 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     let body = [];
                     for (let entry of selected_data) {
                         let entry_array =  [];
-                        Object.values(entry).forEach(value => {
-                            entry_array.push(value);
+
+                        header.forEach(column => {
+                            let cellValue = entry[column] ? entry[column] : '-';
+                            if (Array.isArray(cellValue)) {
+                                cellValue = cellValue.join(', ');
+                            }
+                            entry_array.push(cellValue);
                         });
                         body.push(entry_array);
                     }
-                    let new_table = {
-                        head: [header],
-                        body: body,
-                    };
-                    const doc = new jsPDF();
-                    autoTable(doc, new_table);
+                    const doc = new jsPDF('l', 'pt');
+                    doc.autoTable(header, body, {
+                        horizontalPageBreak: false,
+                        // horizontalPageBreakBehaviour: 'immediately',
+                        tableWidth: 'auto',
+                        styles: {
+                            overflow: 'linebreak',
+                            valign: 'middle',
+                            cellWidth: 'auto'
+                        },
+                        headStyles: {
+                            // cellWidth: 'auto'
+                        },
+                        bodyStyle: {
+                            // cellWidth: 'auto',
+                            overflow: 'linebreak'
+                        }
+
+                    });
                     doc.save(dataName);
                     break;
                 }
