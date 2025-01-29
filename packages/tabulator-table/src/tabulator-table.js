@@ -501,7 +501,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         body.push(entry_array);
                     }
                     const doc = new jsPDF('l', 'pt');
-                    doc.autoTable(header, body, {
+                    autoTable(doc, {
+                        head: [header],
+                        body: body,
                         horizontalPageBreak: false,
                         // horizontalPageBreakBehaviour: 'immediately',
                         tableWidth: 'auto',
@@ -513,11 +515,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         headStyles: {
                             // cellWidth: 'auto'
                         },
-                        bodyStyle: {
+                        bodyStyles: {
                             // cellWidth: 'auto',
                             overflow: 'linebreak'
                         }
-
                     });
                     doc.save(dataName);
                     break;
@@ -587,7 +588,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         body.push(entry_array);
                     }
                     const doc = new jsPDF('l', 'pt');
-                    doc.autoTable(header, body, {
+                    autoTable(doc, {
+                        head: [header],
+                        body: body,
                         horizontalPageBreak: false,
                         // horizontalPageBreakBehaviour: 'immediately',
                         tableWidth: 'auto',
@@ -599,11 +602,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         headStyles: {
                             // cellWidth: 'auto'
                         },
-                        bodyStyle: {
+                        bodyStyles: {
                             // cellWidth: 'auto',
                             overflow: 'linebreak'
                         }
-
                     });
                     doc.save(dataName);
                     break;
