@@ -23,10 +23,9 @@ export function getTabulatorStyles() {
             font-size: 1rem;
         }
 
-        .tabulator .tabulator-header,
+        .tabulator,
         .tabulator .tabulator-header,
         .tabulator .tabulator-header .tabulator-col,
-        .tabulator,
         .tabulator-row .tabulator-cell,
         .tabulator-row.tabulator-row-even,
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover {
@@ -36,6 +35,24 @@ export function getTabulatorStyles() {
             border: none;
             font-size: 1rem;
         }
+
+        /* sticky hedaer */
+        .tabulator.sticky-header {
+            overflow: unset;
+        }
+
+        .tabulator.sticky-header .tabulator-header {
+            position: sticky;
+            top: 0;
+            z-index: 9;
+            background-color: var(--dbp-background);
+            border-bottom: 1px solid var(--dbp-content);
+        }
+
+        .tabulator.sticky-header .tabulator-row:first-child {
+            border-top: 0 none;
+        }
+        /* sticky hedaer end */
 
         .tabulator-headers + br {
             display: none;

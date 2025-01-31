@@ -28,6 +28,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.data = [];
         this.paginationEnabled = false;
         this.paginationSize = 10;
+        this.stickyHeaderEnabled = false;
         this.selectRowsEnabled = false;
         this.rowSelected = false;
         this.selectedRows = null;
@@ -48,6 +49,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             paginationNoLangsEnabled: {type: Boolean, attribute: 'pagination-no-langs-enabled'},
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
             paginationSize: {type: Number, attribute: 'pagination-size'},
+            stickyHeaderEnabled: {type: Boolean, attribute: 'sticky-header'},
             rowSelected: {type: Boolean},
             selectedRows: {type: Array},
             selectRowsEnabled: {type: Boolean, attribute: 'select-rows-enabled'},
@@ -816,9 +818,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}" />
                 <div class="table-wrapper">
-                    <div id=${this.identifier}></div>
-                    <div
-                        class="tabulator ${classMap({hidden: !this.paginationEnabled})}"
+                    <div id=${this.identifier} class="${classMap({'sticky-header': this.stickyHeaderEnabled})}"></div>
+                    <div class="tabulator ${classMap({hidden: !this.paginationEnabled})}"
                         id="custom-pagination">
                         <div class="tabulator-footer">
                             <div class="tabulator-footer-contents">
