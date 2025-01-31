@@ -207,6 +207,22 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 this.rowManager.element.classList.add('pointer-mouse');
             });
         }
+        // Handle pagination size changes
+        if (this.paginationEnabled) {
+            const paginationSizeDropdown = this._('#custom-pagination .tabulator-page-size');
+
+            const paginationSize = parseInt(localStorage.getItem(`tabulator-${this.identifier}-pagination-size`));
+            if (paginationSize) {
+                this.paginationSize = paginationSize;
+                this.tabulatorTable.setPageSize(this.paginationSize);
+            }
+
+            paginationSizeDropdown.addEventListener('change', (event) => {
+                if (event.target.value) {
+                    localStorage.setItem(`tabulator-${this.identifier}-pagination-size`, event.target.value);
+                }
+            });
+        }
     }
 
     rowClickFunction(e, row) {
