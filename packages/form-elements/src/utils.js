@@ -56,6 +56,11 @@ export const getElementWebComponents = (formElement) => {
     );
 };
 
+/**
+ * Converts an object to a string that can be used as a data-value attribute to support non-primitive values
+ * @param myObject
+ * @returns {string}
+ */
 export const stringifyForDataValue = (myObject) => {
     return JSON.stringify(myObject).replace(/"/g, "&quot;");
 };
@@ -78,7 +83,6 @@ export const gatherFormDataFromElement = (formElement) => {
     elementsWithDataValue.forEach((element) => {
         const name = element.getAttribute('name') || element.id;
         const rawValue = element.getAttribute('data-value');
-        console.log('gatherFormDataFromElement rawValue', rawValue);
         // Reverse encoding before parsing
         const decodedValue = rawValue.replace(/&quot;/g, '"');
 
