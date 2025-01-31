@@ -10,7 +10,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.formElementId = '';
+        this.formElementId = 'form-element';
         this.name = '';
         this.description = '';
         this.label = '';

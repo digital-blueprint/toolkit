@@ -1,5 +1,8 @@
 # Changelog
 
+## Next
+- Fix selection of input elements by label
+
 ## 0.2.2
 - Add documentation and fix title in README
 
