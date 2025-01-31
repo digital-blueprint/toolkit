@@ -1,6 +1,7 @@
 # Changelog
 
 ## Next
+- Add support for attribute `multiple` for enums
 - Fix selection of input elements by label
 
 ## 0.2.2

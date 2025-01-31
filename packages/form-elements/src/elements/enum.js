@@ -29,6 +29,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     renderInput() {
+        // If multiple is true, this.value is an array of selected values!
         return html`
             <select
                 ${ref(this.selectRef)}
@@ -59,6 +60,12 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 }
             `,
         ];
+    }
+
+    handleInputValue(e) {
+        this.value = this.multiple ?
+            Array.from(e.target.selectedOptions).map(option => option.value) :
+            e.target.value;
     }
 
     update(changedProperties) {
