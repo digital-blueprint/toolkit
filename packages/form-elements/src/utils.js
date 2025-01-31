@@ -56,6 +56,10 @@ export const getElementWebComponents = (formElement) => {
     );
 };
 
+export const stringifyForDataValue = (myObject) => {
+    return JSON.stringify(myObject).replace(/"/g, "&quot;");
+};
+
 export const gatherFormDataFromElement = (formElement) => {
     let customElementValues = {};
 
@@ -68,11 +72,22 @@ export const gatherFormDataFromElement = (formElement) => {
     });
 
     // Check if any elements have a "data-value" attribute, because we want to use that value instead of the form value
+    // Objects, that were stringify-ed by stringifyForDataValue are also supported
     const elementsWithDataValue = formElement.querySelectorAll('[data-value]');
     let dataValues = {};
     elementsWithDataValue.forEach((element) => {
         const name = element.getAttribute('name') || element.id;
-        dataValues[name] = element.getAttribute('data-value');
+        const rawValue = element.getAttribute('data-value');
+        console.log('gatherFormDataFromElement rawValue', rawValue);
+        // Reverse encoding before parsing
+        const decodedValue = rawValue.replace(/&quot;/g, '"');
+
+        try {
+            dataValues[name] = JSON.parse(decodedValue);
+            // eslint-disable-next-line no-unused-vars
+        } catch (e) {
+            dataValues[name] = rawValue; // If JSON parsing fails, return the raw string
+        }
     });
 
     console.log('gatherFormDataFromElement dataValues', dataValues);

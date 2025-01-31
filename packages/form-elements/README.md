@@ -72,9 +72,14 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     name="myComponentEnum"
     label="My enum"
     value=${data.myComponentEnum || ''}
+    multiple
     required>
 </dbp-form-enum-element>
 ```
+
+- `multiple` (optional, default: `false`): Indicates if multiple items can be selected
+    - Type: Boolean
+    - Example: `<dbp-form-enum-element multiple></dbp-form-enum-element>`
 
 #### Methods
 
