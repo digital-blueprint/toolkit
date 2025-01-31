@@ -17,26 +17,6 @@ export class DbpDateTimeElement extends ScopedElementsMixin(DbpBaseElement) {
         };
     }
 
-    formatDateValue(val) {
-        if (!val) return '';
-
-        // Check if the value is a number (timestamp)
-        const timestamp = Number(val);
-        if (!isNaN(timestamp)) {
-            // Convert timestamp to Date object
-            const date = new Date(timestamp);
-
-            // Check if it's a valid date
-            if (!isNaN(date.getTime())) {
-                // Format date as YYYY-MM-DD (required format for input type="date")
-                return date.toISOString().split('T')[0];
-            }
-        }
-
-        // If it's not a timestamp or invalid, return the original value
-        return val;
-    }
-
     isoToDatetimeLocal(isoString) {
         const date = new Date(isoString);
 
@@ -73,7 +53,7 @@ export class DbpDateTimeElement extends ScopedElementsMixin(DbpBaseElement) {
         const date = new Date(val);
         if (isNaN(date.getTime())) return ''; // Invalid date
 
-        // Return ISO 8601 string including a timezone, because we want also store the timezone in Blob metadata
+        // Return ISO 8601 string including a timezone for later use (e.g. in Blob metadata)
         return date.toISOString();
     }
 
