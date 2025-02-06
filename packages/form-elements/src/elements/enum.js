@@ -91,8 +91,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     break;
                 case 'value':
                     if (this.multiple) {
-                        const data = Array.from(this.selectRef.value.selectedOptions).map(option => option.value);
-                        this.dataValue = stringifyForDataValue(data);
+                        if (this.selectRef.value) {
+                            const data = Array.from(this.selectRef.value.selectedOptions).map(option => option.value);
+                            this.dataValue = stringifyForDataValue(data);
+                        }
                     } else {
                         this.dataValue = this.value;
                     }
