@@ -492,6 +492,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     const worksheet = XLSX.utils.json_to_sheet(entries);
                     const workbook = XLSX.utils.book_new();
                     /* Add the worksheet to the workbook */
+                    // Exported filen-name must be shorter than 31 chars with extension included
+                    const extension = '.' + type;
+                    const maxlength = 26;
+                    dataName = dataName.replace(extension, '').slice(0, maxlength);
+                    dataName = dataName + extension;
                     XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
                     XLSX.writeFile(workbook, dataName, { compression: true });
                     break;
@@ -583,6 +588,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     const worksheet = XLSX.utils.json_to_sheet(entries);
                     const workbook = XLSX.utils.book_new();
                     /* Add the worksheet to the workbook */
+                    // Exported filen-name must be shorter than 31 chars with extension included
+                    const extension = '.' + type;
+                    const maxlength = 26;
+                    dataName = dataName.replace(extension, '').slice(0, maxlength);
+                    dataName = dataName + extension;
                     XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
                     XLSX.writeFile(workbook, dataName, { compression: true });
                     break;
