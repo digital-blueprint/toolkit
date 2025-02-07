@@ -480,7 +480,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                             }
                             let field = cell.getField();
                             if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
-                                entry[field] = cell.getValue();
+                                let cellValue = cell.getValue();
+                                if (Array.isArray(cellValue)) {
+                                    cellValue = cellValue.join(', ');
+                                }
+                                entry[field] = cellValue;
                             }
                         }
                         entries.push(entry);
@@ -567,7 +571,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                             }
                             let field = cell.getField();
                             if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
-                                entry[field] = cell.getValue();
+                                let cellValue = cell.getValue();
+                                if (Array.isArray(cellValue)) {
+                                    cellValue = cellValue.join(', ');
+                                }
+                                entry[field] = cellValue;
                             }
                         }
                         entries.push(entry);
