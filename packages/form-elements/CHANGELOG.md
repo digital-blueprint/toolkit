@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.4
+- Fix delayed value loading of the enums when `multiple` is set
+
 ## 0.2.3
 - Add support for attribute `multiple` for enums
 - Fix selection of input elements by label

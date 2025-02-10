@@ -40,7 +40,11 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 ?multiple=${this.multiple}>
                 ${Object.keys(this.items).map(
                     (key) => html`
-                        <option value="${key}" ?selected=${this.multiple ? this.value?.includes(key) : key === this.value}>
+                        <option
+                            value="${key}"
+                            ?selected=${this.multiple
+                                ? this.value?.includes(key)
+                                : key === this.value}>
                             ${this.items[key]}
                         </option>
                     `,
@@ -63,47 +67,54 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     handleInputValue(e) {
-        this.value = this.multiple ?
-            Array.from(e.target.selectedOptions).map(option => option.value) :
-            e.target.value;
+        this.value = this.multiple
+            ? Array.from(e.target.selectedOptions).map((option) => option.value)
+            : e.target.value;
+    }
+
+    adaptValueForMultiple() {
+        // if (!this.value) {
+        //     // this.value = this.multiple ? [] : Object.keys(this.items)[0];
+        //     this.value = this.multiple ? [] : '';
+        // }
+
+        if (this.multiple && !Array.isArray(this.value)) {
+            // Convert single value to an array if switching to multiple mode
+            this.value = [this.value];
+        } else if (!this.multiple && Array.isArray(this.value)) {
+            // Convert array to a single value if switching to single mode
+            this.value = this.value[0] || '';
+        }
     }
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'items':
-                    if (!this.value) {
-                        this.value = this.multiple ? [] : Object.keys(this.items)[0];
-                    } else if (this.multiple && !Array.isArray(this.value)) {
-                        // Convert single value to an array if switching to multiple mode
-                        this.value = [this.value];
-                    } else if (!this.multiple && Array.isArray(this.value)) {
-                        // Convert array to a single value if switching to single mode
-                        this.value = this.value[0] || '';
-                    }
-                    break;
                 case 'multiple':
-                    if (this.multiple && !Array.isArray(this.value)) {
-                        this.value = this.value ? [this.value] : [];
-                    } else if (!this.multiple && Array.isArray(this.value)) {
-                        this.value = this.value[0] || '';
-                    }
+                    // Disabled, because it causes race conditions!
+                    // this.adaptValueForMultiple();
                     break;
                 case 'value':
-                    if (this.multiple) {
-                        if (this.selectRef.value) {
-                            const data = Array.from(this.selectRef.value.selectedOptions).map(option => option.value);
-                            this.dataValue = stringifyForDataValue(data);
-                        }
-                    } else {
-                        this.dataValue = this.value;
-                    }
-
+                    this.generateDataValue();
                     break;
             }
         });
 
         super.update(changedProperties);
+    }
+
+    generateDataValue() {
+        if (this.multiple) {
+            if (this.selectRef.value) {
+                const data = Array.from(this.selectRef.value.selectedOptions).map(
+                    (option) => option.value,
+                );
+                this.dataValue = stringifyForDataValue(data);
+            }
+        } else {
+            this.dataValue = this.value;
+        }
     }
 }
 
