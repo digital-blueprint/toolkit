@@ -18,6 +18,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
         this.required = false;
         this.errorMessages = [];
         this.evaluationData = {};
+        this.customValidator = null;
     }
 
     static get properties() {
@@ -30,6 +31,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
             value: {type: String, reflect: true},
             required: {type: Boolean},
             errorMessages: {type: Array, attribute: false},
+            customValidator: {type: Function},
         };
     }
 
@@ -42,9 +44,9 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
             );
         }
 
-        // Evaluate the output of customValidationFnc() and add any error messages to the array
-        if (this.customValidationFnc) {
-            const customValidationErrors = this.customValidationFnc(
+        // Evaluate the output of customValidator() and add any error messages to the array
+        if (this.customValidator) {
+            const customValidationErrors = this.customValidator(
                 this.value,
                 this.evaluationData,
             );

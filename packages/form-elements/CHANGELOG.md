@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.
+- The name of the custom validator functions has changed from `customValidationFnc` to `customValidator`
+
 ## 0.2.5
 - Add form view components for the form elements
 

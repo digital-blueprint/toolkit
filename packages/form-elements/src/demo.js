@@ -71,24 +71,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         ];
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {
-            // Add a custom validation function to the special string component
-            this.mySpecialStringRef.value.customValidationFnc = (value, evaluationData) => {
-                // If the value is empty, return an error message with the evaluation data
-                return value === '' ? ['evaluationData: ' + JSON.stringify(evaluationData)] : [];
-            };
-
-            // Add a custom validation function to the datetime component
-            this.myComponentDateTimeRef.value.customValidationFnc = (value) => {
-                const date = new Date(value);
-                return date < new Date() ? ['The date needs to be in the future'] : [];
-            };
-        });
-    }
-
     update(changedProperties) {
         if (changedProperties.has('lang')) {
             this._i18n.changeLanguage(this.lang);
@@ -167,6 +149,10 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                 name="mySpecialString"
                                 description="Shows the evaluation data in the error message if empty"
                                 label="My special string"
+                                .customValidator=${(value, evaluationData) => {
+                                    // If the value is empty, return an error message with the evaluation data
+                                    return value === '' ? ['evaluationData: ' + JSON.stringify(evaluationData)] : [];
+                                }}
                                 value=${data.mySpecialString || ''}
                                 required>
                         </dbp-form-string-element>
@@ -185,6 +171,10 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                 name="myComponentDateTime"
                                 description="Needs to be in the future"
                                 label="My datetime"
+                                .customValidator=${(value) => {
+                                    const date = new Date(value);
+                                    return date < new Date() ? ['The date needs to be in the future'] : [];
+                                }}
                                 value=${data.myComponentDateTime || ''}
                                 required>
                         </dbp-form-datetime-element>

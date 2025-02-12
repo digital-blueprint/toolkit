@@ -50,6 +50,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `required`: Indicates if the element is mandatory
     - Type: Boolean
     - Determines if the field must be filled
+- `customValidator`: Custom validation function
+    - Type: Function
+    - Example: `<element .customValidator=${(value, evaluationData) => {return value === 'test' ? ['My message'] : []}}></element>`
 
 ### String Element
 
