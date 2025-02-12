@@ -15,7 +15,6 @@ import {
     DbpDateTimeView,
     DbpEnumView
 } from './index.js';
-import {createRef, ref} from 'lit/directives/ref.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {gatherFormDataFromElement, validateRequiredFields} from "./utils.js";
 
