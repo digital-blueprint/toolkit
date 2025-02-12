@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.
+## 0.2.6
 - The name of the custom validator functions has changed from `customValidationFnc` to `customValidator`
 
 ## 0.2.5
