@@ -25,8 +25,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.saveButtonEnabled = true;
-        this.mySpecialStringRef = createRef();
-        this.myComponentDateTimeRef = createRef();
         this.data = {};
         this.enumItems = {item1: 'Item 1', item2: 'Item 2'};
     }
@@ -144,7 +142,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         </dbp-form-string-element>
 
                         <dbp-form-string-element
-                                ${ref(this.mySpecialStringRef)}
                                 subscribe="lang"
                                 name="mySpecialString"
                                 description="Shows the evaluation data in the error message if empty"
@@ -166,7 +163,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         </dbp-form-date-element>
 
                         <dbp-form-datetime-element
-                                ${ref(this.myComponentDateTimeRef)}
                                 subscribe="lang"
                                 name="myComponentDateTime"
                                 description="Needs to be in the future"
