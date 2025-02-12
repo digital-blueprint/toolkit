@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.5
+- Add form view components for the form elements
+
 ## 0.2.4
 - Fix delayed value loading of the enums when `multiple` is set
 

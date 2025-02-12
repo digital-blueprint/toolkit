@@ -92,6 +92,10 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 this.myComponentEnumRef.value.setItems({item1: 'Item 1', item2: 'Item 2'});
 ```
 
+## Form Views
+
+Best look at [demo.js](./src/demo.js) for the example implementation.
+
 ## Local development
 
 ```bash
