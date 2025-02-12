@@ -188,6 +188,16 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                 required>
                         </dbp-form-enum-element>
 
+                        <dbp-form-enum-element
+                                subscribe="lang"
+                                name="myComponentMultipleEnum"
+                                label="My multiple enum"
+                                .value=${data.myComponentMultipleEnum || ''}
+                                .items=${this.enumItems}
+                                multiple
+                                required>
+                        </dbp-form-enum-element>
+
                         <dbp-form-checkbox-element
                                 subscribe="lang"
                                 name="myComponentCheckbox"
@@ -265,6 +275,13 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="My enum"
                             .items=${this.enumItems}
                             value=${data.myComponentEnum || ''}>
+                    </dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                            subscribe="lang"
+                            label="My multiple enum"
+                            .items=${this.enumItems}
+                            .value=${data.myComponentMultipleEnum || ''}>
                     </dbp-form-enum-view>
 
                     <dbp-form-string-view
