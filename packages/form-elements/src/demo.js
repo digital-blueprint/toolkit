@@ -4,7 +4,17 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {DbpStringElement, DbpDateElement, DbpDateTimeElement, DbpEnumElement, DbpCheckboxElement} from './index.js';
+import {
+    DbpStringElement,
+    DbpDateElement,
+    DbpDateTimeElement,
+    DbpEnumElement,
+    DbpCheckboxElement,
+    DbpStringView,
+    DbpDateView,
+    DbpDateTimeView,
+    DbpEnumView
+} from './index.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {gatherFormDataFromElement, validateRequiredFields} from "./utils.js";
@@ -28,6 +38,10 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
             'dbp-form-datetime-element': DbpDateTimeElement,
             'dbp-form-enum-element': DbpEnumElement,
             'dbp-form-checkbox-element': DbpCheckboxElement,
+            'dbp-form-string-view': DbpStringView,
+            'dbp-form-date-view': DbpDateView,
+            'dbp-form-datetime-view': DbpDateTimeView,
+            'dbp-form-enum-view': DbpEnumView,
         };
     }
 
@@ -117,6 +131,13 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        return html`
+            ${this.renderFormElements()}
+            ${this.renderFormViews()}
+        `;
+    }
+
+    renderFormElements() {
         const data = this.data || {};
 
         return html`
@@ -192,7 +213,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         ${this.getButtonRowHtml()}
                     </form>
                 </div>
-                ${this.renderResult(this.data)}
+                ${this.renderResult(data)}
             </section>
         `;
     }
@@ -209,6 +230,65 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         }
 
         return html``;
+    }
+
+    renderFormViews() {
+        const data = this.data || {};
+        const items = {item1: 'Item 1', item2: 'Item 2'};
+
+        return html`
+            <section class="section">
+                <div class="container">
+                    <h1 class="title">Form Views Demo</h1>
+                </div>
+                <div class="container">
+                    <dbp-form-string-view
+                            subscribe="lang"
+                            label="My string"
+                            .value=${data.myComponentString || ''}>
+                    </dbp-form-string-view>
+
+                    <dbp-form-string-view
+                            subscribe="lang"
+                            label="My long string"
+                            .value=${data.myComponentLongString || ''}
+                            rows="5">
+                    </dbp-form-string-view>
+
+                    <dbp-form-string-view
+                            subscribe="lang"
+                            name="mySpecialString"
+                            label="My special string"
+                            .value=${data.mySpecialString || ''}>
+                    </dbp-form-string-view>
+
+                    <dbp-form-date-view
+                            subscribe="lang"
+                            label="My date"
+                            .value=${data.myComponentDate || ''}>
+                    </dbp-form-date-view>
+
+                    <dbp-form-datetime-view
+                            subscribe="lang"
+                            label="My datetime"
+                            .value=${data.myComponentDateTime || ''}>
+                    </dbp-form-datetime-view>
+
+                    <dbp-form-enum-view
+                            subscribe="lang"
+                            label="My enum"
+                            .items=${items}
+                            value=${data.myComponentEnum || ''}>
+                    </dbp-form-enum-view>
+
+                    <dbp-form-string-view
+                            subscribe="lang"
+                            label="My checkbox"
+                            .value=${data.myComponentCheckbox ? 'on' : 'off'}>
+                    </dbp-form-string-view>
+                </div>
+            </section>
+        `;
     }
 }
 

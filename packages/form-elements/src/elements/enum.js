@@ -1,7 +1,7 @@
 import {css, html} from 'lit';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
-import {DbpBaseElement} from '../base.js';
+import {DbpBaseElement} from '../base-element.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {stringifyForDataValue} from "../utils.js";
 
