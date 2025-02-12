@@ -27,8 +27,8 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         this.saveButtonEnabled = true;
         this.mySpecialStringRef = createRef();
         this.myComponentDateTimeRef = createRef();
-        this.myComponentEnumRef = createRef();
         this.data = {};
+        this.enumItems = {item1: 'Item 1', item2: 'Item 2'};
     }
 
     static get scopedElements() {
@@ -86,9 +86,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                 const date = new Date(value);
                 return date < new Date() ? ['The date needs to be in the future'] : [];
             };
-
-            // Set items for the enum component
-            this.myComponentEnumRef.value.setItems({item1: 'Item 1', item2: 'Item 2'});
         });
     }
 
@@ -193,11 +190,11 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         </dbp-form-datetime-element>
 
                         <dbp-form-enum-element
-                                ${ref(this.myComponentEnumRef)}
                                 subscribe="lang"
                                 name="myComponentEnum"
                                 label="My enum"
                                 value=${data.myComponentEnum || ''}
+                                .items=${this.enumItems}
                                 required>
                         </dbp-form-enum-element>
 
@@ -234,7 +231,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
 
     renderFormViews() {
         const data = this.data || {};
-        const items = {item1: 'Item 1', item2: 'Item 2'};
 
         return html`
             <section class="section">
@@ -277,7 +273,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-form-enum-view
                             subscribe="lang"
                             label="My enum"
-                            .items=${items}
+                            .items=${this.enumItems}
                             value=${data.myComponentEnum || ''}>
                     </dbp-form-enum-view>
 

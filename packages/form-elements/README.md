@@ -72,28 +72,22 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     name="myComponentEnum"
     label="My enum"
     value=${data.myComponentEnum || ''}
+    .items=${{item1: 'Item 1', item2: 'Item 2'}}
     multiple
     required>
 </dbp-form-enum-element>
 ```
 
+- `items`: List of items to select from
+    - Type: Object
+    - Example: `<dbp-form-enum-element .items=${{item1: 'Item 1', item2: 'Item 2'}}></dbp-form-enum-element>`
 - `multiple` (optional, default: `false`): Indicates if multiple items can be selected
     - Type: Boolean
     - Example: `<dbp-form-enum-element multiple></dbp-form-enum-element>`
 
-#### Methods
-
-- `setItems()`: Set the items to be displayed in the enum element
-
-##### Example
-
-```js
-// Set items for the enum component
-this.myComponentEnumRef.value.setItems({item1: 'Item 1', item2: 'Item 2'});
-```
-
 ## Form Views
 
+They very little similar to the form element components.
 Best look at [demo.js](./src/demo.js) for the example implementation.
 
 ## Local development
