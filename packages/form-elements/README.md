@@ -50,6 +50,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `required`: Indicates if the element is mandatory
     - Type: Boolean
     - Determines if the field must be filled
+- `hidden`: Indicates if the element is hidden
+    - Type: Boolean
+    - Hides the element if set to `true`
 - `customValidator`: Custom validation function
     - Type: Function
     - Example: `<element .customValidator=${(value, evaluationData) => {return value === 'test' ? ['My message'] : []}}></element>`
@@ -90,8 +93,24 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 
 ## Form Views
 
-They very little similar to the form element components.
+They are a little similar to the form element components.
 Best look at [demo.js](./src/demo.js) for the example implementation.
+
+### General Attributes
+
+- `lang` (optional, default: `de`): Language setting
+  - Type: String
+  - Accepts: `de` (German) or `en` (English)
+  - Example: `<view lang="en"></view>`
+- `label`: Display label for the view
+  - Type: String
+  - Text shown alongside or near the form view
+- `value`: Current value of the view
+  - Type: String
+  - Reflects current input state
+- `hidden`: Indicates if the view is hidden
+  - Type: Boolean
+  - Hides the view if set to `true`
 
 ## Local development
 

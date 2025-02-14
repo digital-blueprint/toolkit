@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.7
+- Add `hidden` attribute to the form element and form view components
+
 ## 0.2.6
 - The name of the custom validator functions has changed from `customValidationFnc` to `customValidator`
 

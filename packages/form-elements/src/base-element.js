@@ -19,6 +19,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
         this.errorMessages = [];
         this.evaluationData = {};
         this.customValidator = null;
+        this.hidden = false;
     }
 
     static get properties() {
@@ -32,6 +33,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
             required: {type: Boolean},
             errorMessages: {type: Array, attribute: false},
             customValidator: {type: Function},
+            hidden: {type: Boolean},
         };
     }
 
@@ -130,6 +132,10 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        if (this.hidden) {
+            return html``;
+        }
+
         // Regenerate error messages in case the language has changed
         this.handleErrorsIfAny();
 

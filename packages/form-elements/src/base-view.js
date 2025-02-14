@@ -10,6 +10,7 @@ export class DbpBaseView extends ScopedElementsMixin(DBPLitElement) {
         this.lang = this._i18n.language;
         this.label = '';
         this.value = '';
+        this.hidden = false;
     }
 
     static get properties() {
@@ -18,6 +19,7 @@ export class DbpBaseView extends ScopedElementsMixin(DBPLitElement) {
             lang: {type: String},
             label: {type: String},
             value: {type: String},
+            hidden: {type: Boolean},
         };
     }
 
@@ -56,6 +58,10 @@ export class DbpBaseView extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
+        if (this.hidden) {
+            return html``;
+        }
+
         return html`
             <fieldset>
                 <label>${this.label}</label>
