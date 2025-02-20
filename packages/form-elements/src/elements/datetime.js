@@ -43,6 +43,7 @@ export class DbpDateTimeElement extends ScopedElementsMixin(DbpBaseElement) {
                 name="${this.name}"
                 .value="${formattedValue}"
                 @input="${this.handleInputValue}"
+                ?disabled=${this.disabled}
                 ?required=${this.required} />
         `;
     }

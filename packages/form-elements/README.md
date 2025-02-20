@@ -53,6 +53,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `hidden`: Indicates if the element is hidden
     - Type: Boolean
     - Hides the element if set to `true`
+- `disabled`: Indicates if the element is disabled
+    - Type: Boolean
+    - Disables the element if set to `true`
 - `customValidator`: Custom validation function
     - Type: Function
     - Example: `<element .customValidator=${(value, evaluationData) => {return value === 'test' ? ['My message'] : []}}></element>`

@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/form-elements",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/form-elements",
-    "version": "0.2.7",
+    "version": "0.2.8",
     "type": "module",
     "description": "Form elements for the Digital Blueprint Toolkit",
     "main": "src/index.js",

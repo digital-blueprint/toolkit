@@ -26,6 +26,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                           name="${this.name}"
                           rows="${this.rows}"
                           @input="${this.handleInputValue}"
+                          ?disabled=${this.disabled}
                           ?required=${this.required}>${this.value}</textarea
                       >
                   `
@@ -36,6 +37,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                           name="${this.name}"
                           .value="${this.value}"
                           @input="${this.handleInputValue}"
+                          ?disabled=${this.disabled}
                           ?required=${this.required} />
                   `}
         `;

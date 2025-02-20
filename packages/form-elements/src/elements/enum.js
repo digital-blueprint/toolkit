@@ -36,6 +36,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 id="${this.formElementId}"
                 name="${this.name}"
                 @change="${this.handleInputValue}"
+                ?disabled=${this.disabled}
                 ?required=${this.required}
                 ?multiple=${this.multiple}>
                 ${Object.keys(this.items).map(

@@ -113,6 +113,7 @@ export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
                     class="checkbox"
                     ?checked="${this.checked}"
                     @input="${this.handleInputValue}"
+                    ?disabled=${this.disabled}
                     ?required=${this.isRequired} />
                 ${this.description}
             </label>

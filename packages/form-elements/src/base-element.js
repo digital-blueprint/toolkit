@@ -16,6 +16,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
         this.label = '';
         this.value = '';
         this.required = false;
+        this.disabled = false;
         this.errorMessages = [];
         this.evaluationData = {};
         this.customValidator = null;
@@ -31,6 +32,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
             label: {type: String},
             value: {type: String, reflect: true},
             required: {type: Boolean},
+            disabled: {type: Boolean},
             errorMessages: {type: Array, attribute: false},
             customValidator: {type: Function},
             hidden: {type: Boolean},

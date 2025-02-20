@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.8
+- Add `disabled` attribute to all form elements
+
 ## 0.2.7
 - Add `hidden` attribute to the form element and form view components
 
