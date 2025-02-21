@@ -7,6 +7,16 @@ export class DbpDateElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
         super();
         this.label = 'A date field';
+        this.min = '';
+        this.max = '';
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            min: {type: String, attribute: 'min', reflect: true},
+            max: {type: String, attribute: 'max', reflect: true}
+        };
     }
 
     formatDateValue(val) {
@@ -31,12 +41,16 @@ export class DbpDateElement extends ScopedElementsMixin(DbpBaseElement) {
 
     renderInput() {
         const formattedValue = this.formatDateValue(this.value);
+        const minValue = this.formatDateValue(this.min);
+        const maxValue = this.formatDateValue(this.max);
 
         return html`
             <input
                 type="date"
                 id="${this.formElementId}"
                 name="${this.name}"
+                min="${minValue}"
+                max="${maxValue}"
                 .value="${formattedValue}"
                 @input="${this.handleInputValue}"
                 ?disabled=${this.disabled}

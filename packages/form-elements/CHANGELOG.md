@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.9
+- Add `min` and `max` attributes to date form element
+
 ## 0.2.8
 - Add `disabled` attribute to all form elements
 

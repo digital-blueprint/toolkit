@@ -72,6 +72,13 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     - Type: Boolean
     - Example: `<dbp-form-checkbox-element checked></dbp-form-checkbox-element>`
 
+### Date Element
+
+- `min`: Indicates the minimum value that can be entered
+    - Type: String
+- `max`: Indicates the maximum value that can be entered
+    - Type: String
+
 ### Enum Element
 
 ```html
