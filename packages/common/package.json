@@ -32,7 +32,7 @@
         "prettier": "^3.0.0",
         "rollup": "^4.0.0",
         "rollup-plugin-copy": "^3.1.0",
-        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-delete": "^3.0.0",
         "rollup-plugin-serve": "^3.0.0",
         "typescript": "^5.2.2"
     },
