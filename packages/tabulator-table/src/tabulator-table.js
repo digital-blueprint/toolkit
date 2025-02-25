@@ -257,6 +257,15 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     /**
+     * Select all visible rows from tabulator table
+     *
+     */
+    selectAllVisibleRows() {
+        if (!this.tabulatorTable) return;
+        this.tabulatorTable.getRows('visible').forEach((row) => row.select());
+    }
+
+    /**
      * Deselect all rows from tabulator table
      *
      */
@@ -267,6 +276,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.tabulatorTable.getSelectedRows().forEach((row) => row.deselect());
         }
     }
+
     checkAllSelected() {
         if (this.tabulatorTable) {
             let maxSelected = this.tabulatorTable.getRows('display').length;
@@ -330,12 +340,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         this.getSelectedRows();
         this.tabulatorTable.deleteRow(this.selectedRows);
-        if (this.selectAllEnabled) {
-            this.tabulatorTable.updateColumnDefinition('empty', {title:'<label id="select_all_wrapper" class="button-container select-all-icon">' +
-                    '<input type="checkbox" id="select_all" name="select_all" value="select_all">' +
-                    '<span class="checkmark" id="select_all_checkmark"></span>' +
-                    '</label>',});
-        }
     }
 
     getColumns() {
