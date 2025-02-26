@@ -75,9 +75,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 ### Date Element
 
 - `min`: Indicates the minimum value that can be entered
-    - Type: String
+    - Type: String/Date
 - `max`: Indicates the maximum value that can be entered
-    - Type: String
+    - Type: String/Date
 
 ### Enum Element
 
