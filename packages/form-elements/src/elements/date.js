@@ -14,8 +14,8 @@ export class DbpDateElement extends ScopedElementsMixin(DbpBaseElement) {
     static get properties() {
         return {
             ...super.properties,
-            min: {type: String, attribute: 'min', reflect: true},
-            max: {type: String, attribute: 'max', reflect: true}
+            min: {type: String},
+            max: {type: String}
         };
     }
 

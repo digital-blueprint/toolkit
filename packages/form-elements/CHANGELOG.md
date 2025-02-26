@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.10
+- Fix an issue with unwanted reflection in `min` and `max` attributes in the date form element
+
 ## 0.2.9
 - Add `min` and `max` attributes to date form element
 
