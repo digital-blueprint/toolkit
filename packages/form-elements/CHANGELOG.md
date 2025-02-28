@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.12
+- Remove bullet points in error messages, place description above error messages
+
 ## 0.2.11
 - Change position of error messages for better accessibility
 
