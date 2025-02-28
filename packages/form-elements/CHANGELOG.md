@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.11
+- Change position of error messages for better accessibility
+
 ## 0.2.10
 - Fix an issue with unwanted reflection in `min` and `max` attributes in the date form element
 

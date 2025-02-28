@@ -151,9 +151,9 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
                           `
                         : html``}
                 </label>
+                ${this.renderErrorMessages()}
                 <div>${this.description}</div>
                 ${this.renderInput()}
-                ${this.renderErrorMessages()}
             </fieldset>
         `;
     }
