@@ -7,6 +7,7 @@ import { Icon } from './icon';
 import {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
 import dialogPolyfill from 'dialog-polyfill';
 import DBPLitElement from './dbp-lit-element';
+import {getNativeModalDialogPrintCSS} from "./styles.js";
 
 export class Modal extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -141,6 +142,7 @@ export class Modal extends ScopedElementsMixin(DBPLitElement) {
         // language=css
         return css`
             ${commonStyles.getNativeModalDialogCSS()}
+            ${commonStyles.getNativeModalDialogPrintCSS()}
         `;
     }
 

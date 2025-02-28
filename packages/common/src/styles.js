@@ -1460,6 +1460,36 @@ export function getModalDialogCSS() {
     `;
 }
 
+export function getNativeModalDialogPrintCSS() {
+    // language=css
+    return css`
+        @media print {
+            dialog[open] {
+                display: block !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                max-width: 100%;
+                max-height: inherit;
+                height: auto;
+                box-shadow: none;
+                border: none;
+                background: white;
+                filter: none;
+            }
+
+            .modal-container {
+                max-height: inherit;
+            }
+
+            .modal-content {
+                overflow-y: visible;
+            }
+        }
+    `;
+}
+
 export function getNativeModalDialogCSS() {
     // language=css
     return css`
