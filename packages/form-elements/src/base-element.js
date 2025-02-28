@@ -111,6 +111,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
             css`
                 .validation-errors {
                     color: var(--dbp-override-danger);
+                    list-style: none;
                 }
             `,
         ];
@@ -151,8 +152,8 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
                           `
                         : html``}
                 </label>
-                ${this.renderErrorMessages()}
                 <div>${this.description}</div>
+                ${this.renderErrorMessages()}
                 ${this.renderInput()}
             </fieldset>
         `;
