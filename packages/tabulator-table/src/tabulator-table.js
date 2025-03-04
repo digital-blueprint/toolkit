@@ -35,7 +35,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tableReady = false;
         this.initialization = true;
         this.collapseEnabled = false;
-        this.expanded = false;
         this.isCollapsible = false;
     }
 
@@ -403,56 +402,48 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     expandAll() {
         if (!this.tabulatorTable) return;
-        if(this.expanded === false) {
 
-            this.tabulatorTable.getRows('visible').forEach((row) => {
-                let config = row._row.modules.responsiveLayout;
-                config.open = true;
-                const item = /** @type {HTMLElement} */(row.getElement().lastChild);
+        this.tabulatorTable.getRows('visible').forEach((row) => {
+            let config = row._row.modules.responsiveLayout;
+            config.open = true;
+            const item = /** @type {HTMLElement} */(row.getElement().lastChild);
 
-                if (item.classList.contains('tabulator-responsive-collapse')) {
-                    item.style.display = 'block';
-                }
-                row.getElement()
-                    .getElementsByClassName('tabulator-responsive-collapse-toggle')[0]
-                    .classList.add('open');
-            });
+            if (item.classList.contains('tabulator-responsive-collapse')) {
+                item.style.display = 'block';
+            }
+            row.getElement()
+                .getElementsByClassName('tabulator-responsive-collapse-toggle')[0]
+                .classList.add('open');
+        });
 
-            const that = this;
+        const that = this;
 
-            setTimeout(function () {
-                that.tabulatorTable.redraw();
-            }, 0);
-
-            this.expanded = true;
-        }
+        setTimeout(function () {
+            that.tabulatorTable.redraw();
+        }, 0);
 
 
     }
 
     collapseAll() {
-        if(this.expanded === true) {
-            this.tabulatorTable.getRows('visible').forEach((row) => {
-                let config = row._row.modules.responsiveLayout;
-                config.open = false;
-                const item = /** @type {HTMLElement} */(row.getElement().lastChild);
+        this.tabulatorTable.getRows('visible').forEach((row) => {
+            let config = row._row.modules.responsiveLayout;
+            config.open = false;
+            const item = /** @type {HTMLElement} */(row.getElement().lastChild);
 
-                if (item.classList.contains('tabulator-responsive-collapse')) {
-                    item.style.display = 'none';
-                }
-                row.getElement()
-                    .getElementsByClassName('tabulator-responsive-collapse-toggle')[0]
-                    .classList.remove('open');
-            });
+            if (item.classList.contains('tabulator-responsive-collapse')) {
+                item.style.display = 'none';
+            }
+            row.getElement()
+                .getElementsByClassName('tabulator-responsive-collapse-toggle')[0]
+                .classList.remove('open');
+        });
 
-            const that = this;
+        const that = this;
 
-            setTimeout(function () {
-                that.tabulatorTable.redraw();
-            }, 0);
-
-            this.expanded = false;
-        }
+        setTimeout(function () {
+            that.tabulatorTable.redraw();
+        }, 0);
 
     }
 
