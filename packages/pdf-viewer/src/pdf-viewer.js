@@ -153,6 +153,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
      *
      * @param file
      * @param placementData
+     * @param fixWidthAdaption
      */
     async showPDF(file, placementData = {}, fixWidthAdaption = false) {
         this.isPageLoaded = false; // prevent redisplay of previous pdf
