@@ -191,6 +191,18 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 this.dispatchEvent(collapseEvent);
             }
         });
+
+        this.tabulatorTable.on("renderComplete", () => {
+            const renderCompleteEvent = new CustomEvent('dbp-tabulator-table-render-complete-event', {
+                detail: {
+                    tableId: this.identifier,
+                },
+                bubbles: true,
+                composed: true,
+            });
+            this.dispatchEvent(renderCompleteEvent);
+        });
+
         this.tableReady = true;
     }
 
