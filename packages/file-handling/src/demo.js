@@ -1,11 +1,12 @@
 import {createInstance} from './i18n';
-import {html, LitElement} from 'lit';
+import {html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {FileSource} from './file-source';
 import {FileSink} from './file-sink';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
-export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
+export class FileSourceDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -13,6 +14,11 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
         this.url = '';
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
+
+        this.nextcloudAuthUrl = '';
+        this.nextcloudWebDavUrl = '';
+        this.nextcloudName = 'Nextcloud';
+        this.nextcloudFileURL = '';
     }
 
     static get scopedElements() {
@@ -28,6 +34,11 @@ export class FileSourceDemo extends ScopedElementsMixin(LitElement) {
             url: {type: String},
             selectedFiles: {type: Array, attribute: false},
             selectedFilesCount: {type: Number, attribute: false},
+
+            nextcloudAuthUrl: {type: String, attribute: 'nextcloud-auth-url'},
+            nextcloudWebDavUrl: {type: String, attribute: 'nextcloud-web-dav-url'},
+            nextcloudName: {type: String, attribute: 'nextcloud-name'},
+            nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
         };
     }
 
