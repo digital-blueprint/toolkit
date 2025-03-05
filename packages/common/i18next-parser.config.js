@@ -6,5 +6,4 @@ export default {
     output: 'src/i18n/$LOCALE/$NAMESPACE.json',
     input: ['src/*.js', './*.js'],
     sort: true,
-    i18nextOptions: {compatibilityJSON: 'v4'},
 };
