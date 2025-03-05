@@ -31,7 +31,7 @@ async function cacheOverrides(overridesFile, lng) {
  *
  * A i18next instance can be created with createInstance()
  *
- * @param {i18next.i18n} i18n - The i18next instance
+ * @param {import("i18next").i18n} i18n - The i18next instance
  * @param {Date} date - The date to format
  * @param {object} options - Options passed to Intl.DateTimeFormat
  * @returns {string} The formatted datetime
@@ -45,7 +45,7 @@ export function dateTimeFormat(i18n, date, options = {}) {
  *
  * A i18next instance can be created with createInstance()
  *
- * @param {i18next.i18n} i18n - The i18next instance
+ * @param {import("i18next").i18n} i18n - The i18next instance
  * @param {number} number - The number to format
  * @param {object} options - Options passed to Intl.NumberFormat
  * @returns {string} The formatted number
@@ -88,7 +88,7 @@ function getOverrideNamespace(namespace) {
  * @param {string} lng - The default language
  * @param {string} fallback - The fallback language to use for unknown languages or untranslated keys
  * @param {string} [namespace] - The i18next namespace to load, defaults to 'translation'
- * @returns {i18next.i18n} A new independent i18next instance
+ * @returns {import("i18next").i18n} A new independent i18next instance
  */
 export function createInstance(languages, lng, fallback, namespace) {
     if (namespace === undefined) {
@@ -128,7 +128,7 @@ export function createInstance(languages, lng, fallback, namespace) {
  * applied overrides will be removed first. So calling this with an empty overrides
  * object is equal to removing all overrides.
  *
- * @param {i18next.i18n} i18n - The i18next instance
+ * @param {import("i18next").i18n} i18n - The i18next instance
  * @param {HTMLElement} element - The element at which the overrides are targeted
  * @param {object} overrides - The override data in the following format: "{language: {tag-name: {key: value}}}"
  */
@@ -139,7 +139,7 @@ export function setOverrides(i18n, element, overrides) {
 
     // The scoped mixin saves the real tag name under data-tag-name
     let tagName = ((element.dataset && element.dataset.tagName) || element.tagName).toLowerCase();
-    let namespace = i18n.options.fallbackNS;
+    let namespace = /** @type {string} */ (i18n.options.fallbackNS);
     let overrideNamespace = getOverrideNamespace(namespace);
     let hasOverrides = false;
     for (let lng of i18n.languages) {
@@ -158,7 +158,7 @@ export function setOverrides(i18n, element, overrides) {
  * object is equal to removing all overrides.
  * Expects overrides as promise and requests update after overrides have been set.
  *
- * @param {i18next.i18n} i18n - The i18next instance
+ * @param {import("i18next").i18n} i18n - The i18next instance
  * @param {HTMLElement} element - The element at which the overrides are targeted
  */
 export async function setOverridesByGlobalCache(i18n, element) {
@@ -170,7 +170,7 @@ export async function setOverridesByGlobalCache(i18n, element) {
 
     // The scoped mixin saves the real tag name under data-tag-name
     let tagName = ((element.dataset && element.dataset.tagName) || element.tagName).toLowerCase();
-    let namespace = i18n.options.fallbackNS;
+    let namespace = /** @type {string} */ (i18n.options.fallbackNS);
     let overrideNamespace = getOverrideNamespace(namespace);
     let hasOverrides = false;
     for (let lng of i18n.languages) {
