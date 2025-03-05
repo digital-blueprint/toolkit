@@ -1,5 +1,5 @@
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
-import DBPLitElement from '../../common/dbp-lit-element';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 export default class DbpFileHandlingLitElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
