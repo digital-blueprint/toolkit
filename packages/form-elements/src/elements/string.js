@@ -8,12 +8,14 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
         super();
         this.label = 'A string field';
         this.rows = 1;
+        this.placeholder = '';
     }
 
     static get properties() {
         return {
             ...super.properties,
             rows: {type: Number},
+            placeholder: {type: String}
         };
     }
 
@@ -25,6 +27,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                           id="${this.formElementId}"
                           name="${this.name}"
                           rows="${this.rows}"
+                          placeholder="${this.placeholder}"
                           @input="${this.handleInputValue}"
                           ?disabled=${this.disabled}
                           ?required=${this.required}>${this.value}</textarea
@@ -36,6 +39,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                           id="${this.formElementId}"
                           name="${this.name}"
                           .value="${this.value}"
+                          placeholder="${this.placeholder}"
                           @input="${this.handleInputValue}"
                           ?disabled=${this.disabled}
                           ?required=${this.required} />

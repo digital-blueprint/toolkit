@@ -65,6 +65,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `rows` (optional, default: `1`): Number of rows for the text area (1 means a single-line input)
     - Type: Number
     - Example: `<dbp-form-string-element rows="3"></dbp-form-string-element>`
+- `placeholder` (optional): Placeholder text for the input field
+    - Type: Text
+    - Example: `<dbp-form-string-element placeholder="Short phrase that hints at the expected data"></dbp-form-string-element>`
 
 ### Checkbox Element
 
@@ -132,7 +135,7 @@ cd toolkit/packages/form-elements
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch
 
 # run tests
