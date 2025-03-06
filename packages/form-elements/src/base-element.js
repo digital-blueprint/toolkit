@@ -77,7 +77,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     renderErrorMessages() {
-        if (!this.errorMessages) {
+        if (!this.errorMessages.length) {
             return html``;
         }
 
@@ -112,6 +112,12 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
                 .validation-errors {
                     color: var(--dbp-override-danger);
                     list-style: none;
+                    padding-left: 0;
+                    margin-block: .25em;
+                }
+
+                .description {
+                    margin-bottom: .25em;
                 }
             `,
         ];
@@ -152,7 +158,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
                           `
                         : html``}
                 </label>
-                <div>${this.description}</div>
+                <div class="description">${this.description}</div>
                 ${this.renderErrorMessages()}
                 ${this.renderInput()}
             </fieldset>

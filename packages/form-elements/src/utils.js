@@ -20,6 +20,7 @@ export const getFieldsetCSS = () => {
         fieldset label {
             font-weight: bold;
             display: block;
+            margin-bottom: .5em;
         }
 
         fieldset input,
