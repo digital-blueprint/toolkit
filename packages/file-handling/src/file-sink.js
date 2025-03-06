@@ -251,6 +251,14 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 disableScroll: true,
                 onClose: (modal) => {
                     this.isDialogOpen = false;
+
+                    // Send event that dialog is closed
+                    const event = new CustomEvent('dbp-file-sink-dialog-closed', {
+                        detail: {},
+                        bubbles: true,
+                        composed: true,
+                    });
+                    this.dispatchEvent(event);
                 },
             });
         }

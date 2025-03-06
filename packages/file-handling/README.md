@@ -172,6 +172,12 @@ The component emits a `dbp-set-property` event for the attribute `initial-file-h
 - `initial-file-handling-state.target`: Target that should be selected the first time (possible values `local`, `nextcloud`)
 - `initial-file-handling-state.path`:  Path to initially jump to (only supported by target `nextcloud`)
 
+### Outgoing Events
+
+#### `dbp-file-sink-dialog-closed`
+
+This event is sent if the dialog was closed.
+
 ### Properties
 
 - `files`: an array of [File](https://developer.mozilla.org/en-US/docs/Web/API/File) objects which should be downloaded in the dialog
