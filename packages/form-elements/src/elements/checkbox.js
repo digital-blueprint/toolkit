@@ -6,7 +6,7 @@ import {DbpBaseElement} from '../base-element.js';
 export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
         super();
-        this.label = 'A checkbox field';
+        this.label = '';
         this.checked = false;
         this.dataValue = '';
     }
