@@ -8,10 +8,11 @@ import {stringifyForDataValue} from "../utils.js";
 export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
         super();
-        this.label = 'A enum field';
+        this.label = '';
         this.items = {};
         this.multiple = false;
         this.dataValue = '';
+        this.displayMode = 'dropdown';
         this.selectRef = createRef();
     }
 
@@ -20,6 +21,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             ...super.properties,
             multiple: {type: Boolean},
             dataValue: {type: String, attribute: 'data-value', reflect: true},
+            displayMode: {type: String, attribute: 'display-mode'},
             items: {type: Object},
         };
     }
@@ -28,30 +30,114 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         this.items = items;
     }
 
-    renderInput() {
-        // If multiple is true, this.value is an array of selected values!
+    render() {
+        if (this.hidden) {
+            return html``;
+        }
+
+        // Regenerate error messages in case the language has changed
+        this.handleErrorsIfAny();
+
         return html`
-            <select
-                ${ref(this.selectRef)}
-                id="${this.formElementId}"
-                name="${this.name}"
-                @change="${this.handleInputValue}"
-                ?disabled=${this.disabled}
-                ?required=${this.required}
-                ?multiple=${this.multiple}>
-                ${Object.keys(this.items).map(
-                    (key) => html`
-                        <option
-                            value="${key}"
-                            ?selected=${this.multiple
-                                ? this.value?.includes(key)
-                                : key === this.value}>
-                            ${this.items[key]}
-                        </option>
-                    `,
-                )}
-            </select>
+            <fieldset>
+                ${this.label ?
+                    html`<label for="${this.formElementId}">
+                        ${this.label}
+                        ${this.required
+                            ? html`
+                                (${this._i18n.t('render-form.base-object.required-field')})
+                            `
+                            : html``}
+                    </label>`
+                    : ''
+                }
+                ${this.description ?
+                    html`<div class="description">
+                        ${this.description}
+                        ${this.required
+                            ? html`
+                                (${this._i18n.t('render-form.base-object.required-field')})
+                            `
+                            : html``}
+                        </div>`
+                    : ''}
+                ${this.renderErrorMessages()}
+                ${this.renderInput()}
+            </fieldset>
         `;
+    }
+
+    renderInput() {
+
+        const validModes = ['dropdown', 'list'];
+        if (!validModes.includes(this.displayMode)) {
+            console.warn(`Invalid display-mode: ${this.displayMode}. Defaulting to 'dropdown'.`);
+            this._displayMode = 'dropdown';
+        } else {
+            this._displayMode = this.displayMode;
+        }
+
+        switch (this._displayMode) {
+            case 'dropdown':
+                // If multiple is true, this.value is an array of selected values!
+                return html`
+                    <select
+                        ${ref(this.selectRef)}
+                        id="${this.formElementId}"
+                        name="${this.name}"
+                        @change="${this.handleInputValue}"
+                        ?disabled=${this.disabled}
+                        ?required=${this.required}
+                        ?multiple=${this.multiple}>
+                        ${Object.keys(this.items).map(
+                            (key) => html`
+                                <option
+                                    value="${key}"
+                                    ?selected=${this.multiple
+                                        ? this.value?.includes(key)
+                                        : key === this.value}>
+                                    ${this.items[key]}
+                                </option>
+                            `,
+                        )}
+                    </select>
+                `;
+            case 'list':
+                return html`
+                    ${Object.keys(this.items).map(
+                        (key) => html`
+                            <label class="checkboxItem">
+                                ${this.multiple ?
+                                    html`<input
+                                        type="checkbox"
+                                        id="${this.formElementId}"
+                                        name="${key}"
+                                        value="${key}"
+                                        class="checkbox"
+                                        ?checked="${this.checked}"
+                                        @input="${this.handleInputValue}"
+                                        ?disabled=${this.disabled}
+                                        ?required=${this.required} />`
+                                    : html`<input
+                                        type="radio"
+                                        id="${this.formElementId}"
+                                        name="${this.name}"
+                                        value="${key}"
+                                        class="radio"
+                                        ?checked="${this.checked}"
+                                        @input="${this.handleInputValue}"
+                                        ?disabled=${this.disabled}
+                                        ?required=${this.required} />`
+                                }
+                                ${this.items[key]}
+                            </label>
+                        `
+                    )}
+                `;
+            default:
+                console.warn(`Unsupported display mode: ${this._displayMode}. Defaulting to 'dropdown'.`);
+                break;
+        }
     }
 
     static get styles() {
@@ -63,14 +149,64 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 select:not(.select) {
                     background-size: 1em;
                 }
+
+                .checkboxItem {
+                    display: flex;
+                    align-items: center;
+                    column-gap: 4px;
+                    width: fit-content;
+                    line-height: 1;
+                    cursor: pointer;
+                    font-weight: normal;
+                }
+
+                .checkboxItem:not(:last-of-type) {
+                    margin-bottom: 16px;
+                }
+
+                .checkbox {
+                    appearance: none;
+                    position: relative;
+                    width: 20px;
+                    height: 20px;
+                    border: 1px solid var(--dbp-info-surface);
+                    border-radius: 2px;
+                    cursor: pointer;
+                    margin-left: 0;
+                }
+
+                .checkbox:checked {
+                    background-color: var(--dbp-info-surface);
+                }
+
+                .checkbox:checked::after {
+                    content: '';
+                    position: absolute;
+                    top: 5px;
+                    left: 3px;
+                    width: 12px;
+                    height: 6px;
+                    border-bottom: 2px solid #ffffff;
+                    border-left: 2px solid #ffffff;
+                    transform: rotate(-45deg);
+                }
             `,
         ];
     }
 
     handleInputValue(e) {
-        this.value = this.multiple
-            ? Array.from(e.target.selectedOptions).map((option) => option.value)
-            : e.target.value;
+        if (this.displayMode === 'dropdown') {
+            this.value = this.multiple
+                ? Array.from(e.target.selectedOptions).map((option) => option.value)
+                : e.target.value;
+        }
+        if (this.displayMode === 'list') {
+            this.value = this.multiple
+                ? Array.from(this._a('[type="checkbox"]'))
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value)
+                : e.target.value;
+        }
     }
 
     adaptValueForMultiple() {
@@ -112,6 +248,12 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     (option) => option.value,
                 );
                 this.dataValue = stringifyForDataValue(data);
+            }
+            if (this._a('[type="checkbox"]').length > 0) {
+                const data = Array.from(this._a('[type="checkbox"]'))
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                this.dataValue =  stringifyForDataValue(data);
             }
         } else {
             this.dataValue = this.value;

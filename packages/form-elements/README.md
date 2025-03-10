@@ -103,6 +103,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `multiple` (optional, default: `false`): Indicates if multiple items can be selected
     - Type: Boolean
     - Example: `<dbp-form-enum-element multiple></dbp-form-enum-element>`
+- `display-mode` (optional, default: `dropdown`): Render as checkbox or radiobutton in `list` mode, select element in `dropdown` mode
+    - Type: String
+    - Example: `<dbp-form-enum-element display-mode="list"></dbp-form-enum-element>`
 
 ## Form Views
 

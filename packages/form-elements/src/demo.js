@@ -193,6 +193,27 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                 required>
                         </dbp-form-enum-element>
 
+                        <dbp-form-enum-element
+                                subscribe="lang"
+                                name="myComponentEnumList"
+                                label="My enum list"
+                                .value=${data.myComponentMultipleEnum || ''}
+                                .items=${this.enumItems}
+                                display-mode="list"
+                                required>
+                        </dbp-form-enum-element>
+
+                        <dbp-form-enum-element
+                                subscribe="lang"
+                                name="myComponentMultipleEnumList"
+                                label="My multiple enum list"
+                                .value=${data.myComponentMultipleEnum || ''}
+                                .items=${this.enumItems}
+                                display-mode="list"
+                                multiple
+                                required>
+                        </dbp-form-enum-element>
+
                         <dbp-form-checkbox-element
                                 subscribe="lang"
                                 name="myComponentCheckbox"
@@ -277,6 +298,25 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="My multiple enum"
                             .items=${this.enumItems}
                             .value=${data.myComponentMultipleEnum || ''}>
+                    </dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                            subscribe="lang"
+                            label="My enum list"
+                            .value=${data.myComponentMultipleEnum || ''}
+                            .items=${this.enumItems}
+                            display-mode="list"
+                            required>
+                    </dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                            subscribe="lang"
+                            name="myComponentMultipleEnumList"
+                            label="My multiple enum list"
+                            .value=${data.myComponentMultipleEnum || ''}
+                            .items=${this.enumItems}
+                            display-mode="list"
+                            required>
                     </dbp-form-enum-view>
 
                     <dbp-form-string-view
