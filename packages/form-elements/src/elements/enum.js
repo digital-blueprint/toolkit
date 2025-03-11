@@ -232,9 +232,17 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     // Disabled, because it causes race conditions!
                     // this.adaptValueForMultiple();
                     break;
-                case 'value':
+                case 'value': {
                     this.generateDataValue();
+
+                    const changeEvent = new CustomEvent('change', {
+                        detail: { value: this.dataValue },
+                        bubbles: true,
+                        composed: true
+                    });
+                    this.dispatchEvent(changeEvent);
                     break;
+                }
             }
         });
 
