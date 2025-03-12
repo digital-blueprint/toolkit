@@ -38,19 +38,21 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         // Regenerate error messages in case the language has changed
         this.handleErrorsIfAny();
 
+        // Check if the label slot has any assigned content
+        const hasLabelSlot = this.querySelector('[slot="label"]') !== null;
+
         return html`
             <fieldset>
-                ${this.label ?
-                    html`<label for="${this.formElementId}">
-                        ${this.label}
-                        ${this.required
-                            ? html`
-                                (${this._i18n.t('render-form.base-object.required-field')})
-                            `
-                            : html``}
-                    </label>`
-                    : ''
-                }
+
+                <label for="${this.formElementId}">
+                    <slot name="label">${this.label}</slot>
+                    ${this.required && (hasLabelSlot || this.label)
+                        ? html`
+                            (${this._i18n.t('render-form.base-object.required-field')})
+                        `
+                        : html``}
+                </label>
+
                 ${this.description ?
                     html`<div class="description">
                         ${this.description}
@@ -148,6 +150,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 /* For some reasons the selector chevron was very large */
                 select:not(.select) {
                     background-size: 1em;
+                }
+
+                label a {
+                    text-decoration: underline;
                 }
 
                 .checkboxItem {

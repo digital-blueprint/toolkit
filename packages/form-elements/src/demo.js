@@ -64,6 +64,10 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                 div.container {
                     margin-bottom: 1.5em;
                 }
+                [slot="label"] a {
+                    text-decoration: underline;
+                    text-underline-offset: 2px;
+                }
             `,
         ];
     }
@@ -212,6 +216,9 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                 display-mode="list"
                                 multiple
                                 required>
+                                <span slot="label">
+                                    Label with <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a> content. Can be used interchangeably the label property.
+                                </span>
                         </dbp-form-enum-element>
 
                         <dbp-form-checkbox-element

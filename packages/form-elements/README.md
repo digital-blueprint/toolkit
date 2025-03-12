@@ -94,6 +94,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     .items=${{item1: 'Item 1', item2: 'Item 2'}}
     multiple
     required>
+    <span slot="label">
+        Label with HTML content. Can be used interchangeably the label property.
+    </span>
 </dbp-form-enum-element>
 ```
 
