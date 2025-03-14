@@ -1,9 +1,9 @@
 # Form Element Web Components
 
-[GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/form-elements) |
-[NPM](https://www.npmjs.com/package/@dbp-toolkit/form-elements)
+[GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/grant-permission-dialog) |
+[NPM](https://www.npmjs.com/package/@dbp-toolkit/grant-permission-dialog)
 
-This package offers form components to be used to create an HTML form.
+This package offers a modal component to manage permission
 
 You can install this component via npm:
 
@@ -27,16 +27,20 @@ Or directly via CDN:
 
 ## Attributes
 
-
-### General Attributes
-
 - `lang` (optional, default: `de`): Language setting
     - Type: String
     - Accepts: `de` (German) or `en` (English)
     - Example: `<element lang="en"></element>`
+- `resource-class-identifier` class of resource to manage
+    - example `<dbp-grant-permission-dialog resource-class-identifier="DbpRelayFormalizeForm"></dbp-grant-permission-dialog>`
+- `resource-identifier` identifier of the resource to manage
+    - example `<dbp-grant-permission-dialog resource-identifier="f0b3521b-c5b2-4e27-b6bc-bc3d085f1cf2"></dbp-grant-permission-dialog>`
+- `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
+    - example `<grant-permission-dialog entry-point-url="http://127.0.0.1:8000"></grant-permission-dialog>`
 
 #### Methods
-
+- `open()`: Opens the modal.
+    - example `this._('#grant-permission-dialog').open();`
 
 ## Local development
 
