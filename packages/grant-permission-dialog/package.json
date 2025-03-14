@@ -1,0 +1,69 @@
+{
+    "name": "@dbp-toolkit/grant-permission-dialog",
+    "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/grant-permission-dialog",
+    "version": "0.1.0",
+    "type": "module",
+    "description": "Grant permission modal",
+    "main": "src/index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/digital-blueprint/toolkit.git",
+        "directory": "packages/grant-permission-dialog"
+    },
+    "license": "LGPL-2.1-or-later",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^28.0.0",
+        "@rollup/plugin-json": "^6.0.0",
+        "@rollup/plugin-node-resolve": "^16.0.0",
+        "@rollup/plugin-terser": "^0.4.0",
+        "@rollup/plugin-url": "^8.0.0",
+        "chai": "^5.0.0",
+        "eslint": "^9.1.0",
+        "eslint-plugin-jsdoc": "^50.0.0",
+        "glob": "^11.0.0",
+        "globals": "^15.3.0",
+        "i18next-parser": "^9.1.0",
+        "karma": "^6.0.0",
+        "karma-chrome-launcher": "^3.0.0",
+        "karma-firefox-launcher": "^2.1.0",
+        "karma-mocha": "^2.0.1",
+        "karma-source-map-support": "^1.4.0",
+        "mocha": "^11.0.0",
+        "playwright": "^1.34.0",
+        "playwright-core": "^1.20.2",
+        "prettier": "^3.0.0",
+        "rollup": "^4.0.0",
+        "rollup-plugin-copy": "^3.1.0",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-serve": "^3.0.0",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "@dbp-toolkit/common": "^0.3.13",
+        "@dbp-toolkit/person-select": "^0.3.7",
+        "lit": "^3.0.0"
+    },
+    "scripts": {
+        "clean": "rm dist/*",
+        "format": "npm run format:eslint && npm run format:prettier",
+        "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
+        "format:prettier": "prettier \"**/*.{js,json,ts}\" --write",
+        "build": "rollup -c",
+        "build-local": "rollup -c",
+        "build-dev": "rollup -c --environment BUILD:development",
+        "build-prod": "rollup -c --environment BUILD:production",
+        "build-demo": "rollup -c --environment BUILD:demo",
+        "build-test": "rollup -c --environment BUILD:test",
+        "i18next": "i18next",
+        "watch": "npm run watch-local",
+        "watch-local": "rollup -c --watch",
+        "watch-dev": "rollup -c --watch --environment BUILD:development",
+        "test": "npm run build-test && karma start karma.conf.cjs --singleRun",
+        "lint": "eslint .",
+        "tsc": "tsc -p jsconfig.json"
+    }
+}

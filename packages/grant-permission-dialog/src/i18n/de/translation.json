@@ -1,0 +1,9 @@
+{
+    "grant-permission-dialog": {
+        "modal-title": "Berechtigungen erteilen",
+        "error-requested-title": "Fehler",
+        "could-not-fetch-resource-class-actions": "Konnte Ressourcenklassen-Aktionen nicht abrufen.",
+        "error-not-authorized": "[ger] Not authorized",
+        "unknown-error": "[ger] Unknown error"
+    }
+}

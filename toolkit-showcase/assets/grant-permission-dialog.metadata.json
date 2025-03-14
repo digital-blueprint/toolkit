@@ -1,0 +1,18 @@
+{
+    "element": "dbp-grant-permission-dialog-demo-activity",
+    "module_src": "dbp-grant-permission-dialog-demo-activity.js",
+    "routing_name": "grant-permission-dialog",
+    "name": {
+        "de": "Grant Permission Dialog Komponente",
+        "en": "Grant Permission Dialog component"
+    },
+    "short_name": {
+        "de": "Grant Permission Dialog Komponente",
+        "en": "Grant Permission Dialog component"
+    },
+    "description": {
+        "de": "Grant Permission Dialog Web Komponente",
+        "en": "Grant Permission Dialog Web Component"
+    },
+    "subscribe": "lang,entry-point-url"
+}
