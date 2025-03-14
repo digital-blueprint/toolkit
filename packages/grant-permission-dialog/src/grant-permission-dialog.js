@@ -659,13 +659,11 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                     let hasThisPermission = false;
                     // let existingPermission = true;
                     let editable = false;
-                    let permissionId;
 
                     if (user.permissions) {
                         const userPermission  = user.permissions.get(action);
                         if(userPermission.identifier) {
                             hasThisPermission = true;
-                            permissionId = userPermission.identifier;
                         }
 
                         // Allow editing of newly added permissions

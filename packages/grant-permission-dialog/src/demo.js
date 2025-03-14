@@ -2,7 +2,6 @@ import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {GrantPermissionDialog} from './grant-permission-dialog.js';
-import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -24,8 +23,6 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
     static get scopedElements() {
         return {
             'dbp-grant-permission-dialog': GrantPermissionDialog,
-            // 'dbp-auth-keycloak': AuthKeycloak,
-            // 'dbp-login-button': LoginButton,
         };
     }
 
