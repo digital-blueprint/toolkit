@@ -5,6 +5,7 @@ import {GrantPermissionDialog} from './grant-permission-dialog.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {send} from '@dbp-toolkit/common/notification';
 import {httpGetAsync} from './utils.js';
 
 export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement) {
@@ -100,16 +101,22 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
     }
 
     async setForms() {
+        const i18n = this._i18n;
         try {
             let response = await this.apiGetForms();
             let responseBody = await response.json();
             if (responseBody !== undefined && responseBody.status !== 403 && responseBody['hydra:member'] && responseBody['hydra:member'].length > 0) {
                 this.forms = responseBody['hydra:member'];
                 this.requestUpdate();
-                console.log('this.forms', this.forms);
             }
         } catch (e) {
             console.log('setForms error', e);
+            send({
+                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
+                body: i18n.t('grant-permission-dialog.notifications.could-not-get-forms'),
+                type: 'danger',
+                timeout: 10,
+            });
         }
     }
 

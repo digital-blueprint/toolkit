@@ -17,7 +17,8 @@
             "could-not-fetch-resource-class-actions": "Could not fetch resource class actions",
             "permissions-saved-successfully": "Permissions saved successfully",
             "user-successfully-deleted": "All grants of {{userFullName}} successfully deleted",
-            "all-users-deleted": "All user's permissions successfully deleted"
+            "all-users-deleted": "All user's permissions successfully deleted",
+            "could-not-get-forms": "Could not get forms from the API"
         }
     }
 }
