@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.13
+- Add a `dbp-form-time-element` for inputs of type time
+
 ## 0.2.12
 - Remove bullet points in error messages, place description above error messages
 
