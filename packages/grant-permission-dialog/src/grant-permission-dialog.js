@@ -1,7 +1,6 @@
 import {css, html} from 'lit';
 import {createInstance} from './i18n.js';
 import {ref, createRef} from 'lit/directives/ref.js';
-// import {getFieldsetCSS} from './utils.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {getGrantPermissionDialogCSS} from './styles.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -20,7 +19,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         this.formName = '';
         this.availableActions = [];
         this.userList = new Map();
-        // this.userNames = new Map();
         this.permissionRows = [];
         this.usersToAdd = new Map();
         this.hasUsersToAdd = false;
@@ -59,7 +57,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             'dbp-icon-button': IconButton,
             'dbp-person-select': PersonSelect,
             'dbp-modal': Modal,
-            // 'dbp-notification': Notification,
         };
     }
 
@@ -76,8 +73,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            // console.log(`**** ${propName} changed`);
-
             switch (propName) {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
@@ -142,6 +137,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             }
         } catch (e) {
             console.log('setAvailableActions error', e);
+            //@TODO add notification
         }
     }
 
@@ -200,6 +196,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             }
         } catch (e) {
             console.log('setFormName error', e);
+            //@TODO add notification
         }
     }
 
@@ -316,6 +313,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             }
         } catch (e){
             console.log('delete user error', e);
+            //@TODO add notification
         }
     }
 
@@ -382,19 +380,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             this.hasUsersToAdd = this.usersToAdd.size > 0;
             this.requestUpdate();
         } else if (buttonType === 'is-primary') {
-
-            // try {
-            //     await this.saveUserPermissions(userId);
-            //     // Revert button to edit button
-            //     editButton.setAttribute('type', 'is-secondary');
-            //     editButton.innerHTML = '<dbp-icon name="pencil"></dbp-icon> Edit';
-            //     //
-            //     // this.hasUsersToAdd = this.usersToAdd.size > 0;
-            //     // this.requestUpdate();
-            // } catch (error) {
-            //     console.log(error);
-            // }
-
             try {
                 await this.saveUserPermissions(userId);
             } catch (error) {
@@ -1028,12 +1013,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
     render() {
         const i18n = this._i18n;
         console.log('*** MAIN RENDER ***');
-        // console.log('this.usersToAdd', this.usersToAdd);
-        // console.log('this.hasUsersToAdd', this.hasUsersToAdd);
-        // console.log('this.userList', this.userList);
-        // console.log('this.showDeleteAllButton', this.showDeleteAllButton);
-
-        // this.thereIsPersonToDelete();
 
         return html`
             <dbp-modal id="permission-modal" sticky-footer

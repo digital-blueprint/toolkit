@@ -17,7 +17,6 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
         this.noAuth = false;
         this.resourceClassIdentifier = 'DbpRelayFormalizeForm';
         this.formIdentifier = '';
-        // this.auth = {};
         this.forms = [];
     }
 
@@ -64,11 +63,6 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
         if (changedProperties.has('lang')) {
             this._i18n.changeLanguage(this.lang);
         }
-        // if (changedProperties.has('auth')) {
-        //     if (this.auth && this.auth.token) {
-        //         this.setForms();
-        //     }
-        // }
         super.update(changedProperties);
     }
 
