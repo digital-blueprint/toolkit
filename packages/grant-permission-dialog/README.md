@@ -1,9 +1,9 @@
-# Form Element Web Components
+# Grant Permission Dialog Web Component
 
 [GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/grant-permission-dialog) |
 [NPM](https://www.npmjs.com/package/@dbp-toolkit/grant-permission-dialog)
 
-This package offers a modal component to manage permission
+This package offers a modal component to manage individual persons permission
 
 You can install this component via npm:
 
