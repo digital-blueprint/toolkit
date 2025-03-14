@@ -94,7 +94,7 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
             },
         };
         return await httpGetAsync(
-            'http://127.0.0.1:8000' + `/formalize/forms?perPage=9999`,
+            this.entryPointUrl + '/formalize/forms?perPage=9999',
             options,
         );
     }
