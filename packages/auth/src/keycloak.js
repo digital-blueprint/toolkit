@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('keycloak-js')} Keycloak
+ */
+
 const promiseTimeout = function (ms, promise) {
     let timeout = new Promise((resolve, reject) => {
         let id = setTimeout(() => {
@@ -167,9 +171,8 @@ export class KeycloakWrapper extends EventTarget {
         this._keycloak.onAuthError = this._onChanged.bind(this);
         this._keycloak.onReady = this._onReady.bind(this);
 
-        const options = {
-            pkceMethod: 'S256',
-        };
+        const options = {};
+        options['pkceMethod'] = /** @type {Keycloak.KeycloakPkceMethod} */ ('S256');
 
         if (this.DEBUG) {
             options['enableLogging'] = true;
@@ -178,7 +181,7 @@ export class KeycloakWrapper extends EventTarget {
         options['checkLoginIframe'] = this._checkLoginIframe;
 
         if (this._silentCheckSsoUri) {
-            options['onLoad'] = 'check-sso';
+            options['onLoad'] = /** @type {Keycloak.KeycloakOnLoad} */ ('check-sso');
             options['silentCheckSsoRedirectUri'] = ensureURL(this._silentCheckSsoUri);
 
             // When silent-sso-check is active but the iframe doesn't load/work we will
