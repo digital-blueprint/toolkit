@@ -168,7 +168,6 @@ export class KeycloakWrapper extends EventTarget {
         this._keycloak.onReady = this._onReady.bind(this);
 
         const options = {
-            promiseType: 'native',
             pkceMethod: 'S256',
         };
 
@@ -223,7 +222,6 @@ export class KeycloakWrapper extends EventTarget {
 
         if (!this._keycloak.authenticated) {
             await this._keycloak.login({
-                kcLocale: language, // Keycloak < 9.0
                 locale: language,
                 scope: scope,
                 idpHint: this._idpHint,
