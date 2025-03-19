@@ -72,7 +72,7 @@ export class KeycloakWrapper extends EventTarget {
 
     _onVisibilityChanged() {
         let isVisible = document.visibilityState === 'visible';
-        if (isVisible && this._keycloak.authenticated) {
+        if (isVisible) {
             this._checkTokeHasExpired();
         }
     }
@@ -108,6 +108,10 @@ export class KeycloakWrapper extends EventTarget {
 
     async _checkTokeHasExpired() {
         let refreshed;
+
+        if (this._keycloak === null || !this._keycloak.authenticated) {
+            return;
+        }
 
         let minValidity = this.MIN_VALIDITY + this.CHECK_INTERVAL;
         if (this.DEBUG) {
