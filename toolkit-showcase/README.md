@@ -29,7 +29,7 @@ You can then open <https://127.0.0.1:8001/>.
     - example: `import {PersonSelectDemo} from '@dbp-toolkit/person-select/src/dbp-person-select-demo';`
 - Add the class to scopedElements
     - example ` static get scopedElements() {
-                 return {
-                   'dbp-person-select-demo': PersonSelectDemo,
-                 };
-             }'`
+           return {
+             'dbp-person-select-demo': PersonSelectDemo,
+           };
+       }'`

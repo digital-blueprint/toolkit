@@ -116,9 +116,7 @@ A full example can be found in each application in the `index.html` of the `app-
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-theme-switcher lang="de"></dbp-file-source>`
 - `themes`: An array with objects with properties: `class` (defines the class name which is append to the body),
-  `icon` (defines the icon which is used for presenting the theme), `name` (defines the displayed name),
-    - if no or only one theme object is added, then the theme switcher would not be displayed.
-        - example `<dbp-theme-switcher
+  `icon` (defines the icon which is used for presenting the theme), `name` (defines the displayed name), - if no or only one theme object is added, then the theme switcher would not be displayed. - example `<dbp-theme-switcher
 themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"},
 {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'>
 </dbp-theme-switcher>`

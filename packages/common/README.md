@@ -136,8 +136,7 @@ You can customize the modal with the following css variables:
 
 ### Events
 
-- `dbp-modal-closed` a event which is triggered if the modal is closed. in the detail attribute there is the modal-id of the closed modal.
-    - `<dbp-modal @dbp-modal-closed="${(event) => {
+- `dbp-modal-closed` a event which is triggered if the modal is closed. in the detail attribute there is the modal-id of the closed modal. - `<dbp-modal @dbp-modal-closed="${(event) => {
 this.doSomething(event);
 }}"></dbp-modal>`
 

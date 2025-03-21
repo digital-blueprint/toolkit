@@ -39,10 +39,8 @@ Or you can include the JS files directly via CDN:
 - `identifier` (optional string, default: `table`): set the css selector id of the table element
     - example `<dbp-tabulator-table identifier="my-table-id"></dbp-tabulator-table>`
 - `options` (optional object, can be set later, default: `{
-layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator table
-    - example `<dbp-tabulator-table options="{'myoption': 'a'}"></dbp-tabulator-table>`
-    - you can set a tabulator to automatically generate its own columns by setting the option `autoColumns: true`
-      and you can still automatically edit generated columns by using the function `autoColumnsDefinitions:[
+layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator table - example `<dbp-tabulator-table options="{'myoption': 'a'}"></dbp-tabulator-table>` - you can set a tabulator to automatically generate its own columns by setting the option `autoColumns: true`
+  and you can still automatically edit generated columns by using the function `autoColumnsDefinitions:[
 {field:"<field-name>", <property>: value},
 ...
 ],` or add translations for the header column titles by using `lang`
