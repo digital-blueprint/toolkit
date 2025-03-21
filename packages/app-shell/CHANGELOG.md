@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.16
+
+- Fix lit-element not reacting, when sending an empty `routing-url`, when pressing the back button
+
 ## 0.3.12
 
 - Fix `Route not found` errors when the `routing-url` only contains a hash or query

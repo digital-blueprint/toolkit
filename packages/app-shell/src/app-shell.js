@@ -259,7 +259,15 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         const routingBaseUrl = new URL(this.basePath, window.location.href) + encodeURIComponent(this.lang) + '/' + encodeURIComponent(this.activeView);
         this.sendSetPropertyEvent('routing-base-url', routingBaseUrl, true);
 
-        const routingUrl = this._extra.join('/') + window.location.search + window.location.hash;
+        let path = this._extra.join('/');
+
+        // Lit element does not seem to react on empty strings when pressing the back button
+        if (path === '') {
+            path = '/';
+        }
+
+        let routingUrl = path + window.location.search + window.location.hash;
+
         console.log('sendRoutingUrl routingUrl', routingUrl);
         this.sendSetPropertyEvent('routing-url', routingUrl, true);
     }
