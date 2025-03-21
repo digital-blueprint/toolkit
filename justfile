@@ -9,6 +9,10 @@ default:
 
 zellijSession := "dbp-toolkit"
 
+# Aliases
+
+alias fmt := format
+
 # Open a terminal with the formalize-app session
 [group('dev')]
 term-run:
@@ -37,3 +41,8 @@ just-format:
         echo "Formatting $file"
         just --fmt --unstable -f "$file"
     done
+
+# Format all files
+[group('linter')]
+format args='':
+    nix-shell -p treefmt nodePackages.prettier nixfmt-rfc-style statix taplo --run "treefmt {{ args }}"
