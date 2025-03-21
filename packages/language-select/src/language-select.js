@@ -3,12 +3,10 @@ import {createInstance} from './i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
-
 /**
  * Emits a dbp-language-changed event where event.detail.lang is the new selected language
  */
 export class LanguageSelect extends AdapterLitElement {
-
     constructor() {
         super();
         this._lang = 'de';
@@ -25,16 +23,14 @@ export class LanguageSelect extends AdapterLitElement {
     _getNextLanguage(lang) {
         var index = this.languages.indexOf(lang);
         var next = this.languages[index + 1];
-        if (typeof next === 'undefined')
-            next = this.languages[0];
+        if (typeof next === 'undefined') next = this.languages[0];
         return next;
     }
 
     _getPreviousLanguage(lang) {
         var index = this.languages.indexOf(lang);
         var prev = this.languages[index - 1];
-        if (typeof prev === 'undefined')
-            prev = this.languages[this.languages.length - 1];
+        if (typeof prev === 'undefined') prev = this.languages[this.languages.length - 1];
         return prev;
     }
 
@@ -79,7 +75,7 @@ export class LanguageSelect extends AdapterLitElement {
     static get styles() {
         // language=css
         return css`
-                ${commonStyles.getThemeCSS()}
+            ${commonStyles.getThemeCSS()}
             :host {
                 display: inline-block;
             }
@@ -94,23 +90,25 @@ export class LanguageSelect extends AdapterLitElement {
                 padding: 0.3em;
                 display: inline-block;
                 text-decoration: none;
-                transition: background-color 0.15s, color 0.15s;
+                transition:
+                    background-color 0.15s,
+                    color 0.15s;
                 color: var(--dbp-content);
             }
 
-            input::-moz-focus-inner { border: 0; }
+            input::-moz-focus-inner {
+                border: 0;
+            }
 
-            :focus-visible{
-                outline:none !important;
+            :focus-visible {
+                outline: none !important;
                 outline-width: 0 !important;
                 box-shadow: none;
                 -moz-box-shadow: none;
                 -webkit-box-shadow: none;
                 box-shadow: 0px 0px 4px 2px var(--dbp-primary);
             }
-            
-            `
-        ;
+        `;
     }
 
     onClick(e) {

@@ -98,10 +98,10 @@ export class Button extends DbpButton {
             }
 
             ::slotted(dbp-icon) {
-                transition: transform .25s ease-in-out;
+                transition: transform 0.25s ease-in-out;
             }
 
-            button:hover ::slotted(dbp-icon){
+            button:hover ::slotted(dbp-icon) {
                 transform: var(--icon-transform);
             }
         `;
@@ -109,9 +109,7 @@ export class Button extends DbpButton {
 
     render() {
         return html`
-            <button
-                class="button ${this.type}"
-                ?disabled="${this.disabled}">
+            <button class="button ${this.type}" ?disabled="${this.disabled}">
                 <slot>${this.value}</slot>
                 <dbp-mini-spinner
                     class="spinner"
@@ -162,10 +160,10 @@ export class LoadingButton extends DbpButton {
             }
 
             ::slotted(dbp-icon) {
-                transition: transform .25s ease-in-out;
+                transition: transform 0.25s ease-in-out;
             }
 
-            button:hover ::slotted(dbp-icon){
+            button:hover ::slotted(dbp-icon) {
                 transform: var(--icon-transform);
             }
 
@@ -209,7 +207,7 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
-            'dbp-mini-spinner': MiniSpinner
+            'dbp-mini-spinner': MiniSpinner,
         };
     }
 
@@ -239,7 +237,7 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getButtonCSS()}
 
-            :host{
+            :host {
                 display: inline-block;
                 font-size: 1.2rem;
             }
@@ -265,10 +263,10 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
             }
 
             ::slotted(dbp-icon) {
-                transition: transform .25s ease-in-out;
+                transition: transform 0.25s ease-in-out;
             }
 
-            button:hover ::slotted(dbp-icon){
+            button:hover ::slotted(dbp-icon) {
                 transform: var(--icon-transform);
             }
 
@@ -287,14 +285,16 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
     render() {
         return html`
             <button
-                class="button is-icon loading-container ${!this.loading ? 'is-not-loading': ''}"
+                class="button is-icon loading-container ${!this.loading ? 'is-not-loading' : ''}"
                 ?disabled="${this.disabled}"
                 aria-label="${ifDefined(this.ariaLabel ? this.ariaLabel : undefined)}">
-                <slot><dbp-icon
+                <slot>
+                    <dbp-icon
                         class="dbp-button-icon"
                         name="${this.iconName}"
                         aria-hidden="true"
-                        style="display: ${this.loading ? 'none' : 'inline'}"></dbp-icon></slot>
+                        style="display: ${this.loading ? 'none' : 'inline'}"></dbp-icon>
+                </slot>
                 <dbp-mini-spinner
                     class="spinner"
                     aria-hidden="true"

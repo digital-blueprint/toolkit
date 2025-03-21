@@ -49,7 +49,7 @@ export class Provider extends HTMLElement {
                             that.id +
                             ') eventListener("dbp-subscribe",..) name "' +
                             name +
-                            '" found.'
+                            '" found.',
                     );
                     that.callbackStore.push({
                         name: name,
@@ -61,7 +61,7 @@ export class Provider extends HTMLElement {
                     e.stopPropagation();
                 }
             },
-            false
+            false,
         );
 
         this.addEventListener(
@@ -75,7 +75,7 @@ export class Provider extends HTMLElement {
                             that.id +
                             ') eventListener("dbp-unsubscribe",..) name "' +
                             name +
-                            '" found.'
+                            '" found.',
                     );
                     that.callbackStore.forEach((item) => {
                         if (item.sender === sender && item.name === name) {
@@ -86,7 +86,7 @@ export class Provider extends HTMLElement {
                                     that.id +
                                     ') eventListener for name "' +
                                     name +
-                                    '" removed.'
+                                    '" removed.',
                             );
                         }
                     });
@@ -94,7 +94,7 @@ export class Provider extends HTMLElement {
                     e.stopPropagation();
                 }
             },
-            false
+            false,
         );
 
         // listen to property changes
@@ -110,7 +110,7 @@ export class Provider extends HTMLElement {
                             that.id +
                             ') eventListener("dbp-set-property",..) name "' +
                             name +
-                            '" found.'
+                            '" found.',
                     );
                     that.setProperty(name, value);
 
@@ -123,7 +123,7 @@ export class Provider extends HTMLElement {
                     e.stopPropagation();
                 }
             },
-            false
+            false,
         );
 
         // Options for the observer (which mutations to observe)
@@ -139,7 +139,7 @@ export class Provider extends HTMLElement {
 
                     if (that.hasPropertyChanged(name, value)) {
                         Logger.debug(
-                            'Provider (' + that.id + ') observed attribute "' + name + '" changed'
+                            'Provider (' + that.id + ') observed attribute "' + name + '" changed',
                         );
                         that.setProperty(name, value);
 
@@ -175,7 +175,7 @@ export class Provider extends HTMLElement {
                         attrs[i].name +
                         '" = "' +
                         attrs[i].value +
-                        '"'
+                        '"',
                 );
             }
         }

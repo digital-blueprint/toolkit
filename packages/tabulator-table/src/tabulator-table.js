@@ -157,24 +157,27 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
         this.tabulatorTable.on('rowSelectionChanged', (data, rows, selected, deselected) => {
             const allSelectedRows = this.tabulatorTable.getSelectedRows();
-            const collapseEvent = new CustomEvent('dbp-tabulator-table-row-selection-changed-event', {
-                detail: {
-                    selected: selected,
-                    deselected: deselected,
-                    allselected: allSelectedRows,
-                    rows: rows,
-                    data: data,
+            const collapseEvent = new CustomEvent(
+                'dbp-tabulator-table-row-selection-changed-event',
+                {
+                    detail: {
+                        selected: selected,
+                        deselected: deselected,
+                        allselected: allSelectedRows,
+                        rows: rows,
+                        data: data,
+                    },
+                    bubbles: true,
+                    composed: true,
                 },
-                bubbles: true,
-                composed: true,
-            });
+            );
             this.dispatchEvent(collapseEvent);
         });
-        this.tabulatorTable.on("columnVisibilityChanged", (column) => {
+        this.tabulatorTable.on('columnVisibilityChanged', (column) => {
             const columnDefinition = column.getDefinition();
             const columnVisibility = column.isVisible();
             if (columnDefinition.formatter === 'responsiveCollapse') {
-                if(columnVisibility === true) {
+                if (columnVisibility === true) {
                     this.isCollapsible = true;
                 } else {
                     this.isCollapsible = false;
@@ -183,7 +186,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 const collapseEvent = new CustomEvent('dbp-tabulator-table-collapsible-event', {
                     detail: {
                         tableId: this.identifier,
-                        isCollapsible: this.isCollapsible
+                        isCollapsible: this.isCollapsible,
                     },
                     bubbles: true,
                     composed: true,
@@ -192,14 +195,17 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             }
         });
 
-        this.tabulatorTable.on("renderComplete", () => {
-            const renderCompleteEvent = new CustomEvent('dbp-tabulator-table-render-complete-event', {
-                detail: {
-                    tableId: this.identifier,
+        this.tabulatorTable.on('renderComplete', () => {
+            const renderCompleteEvent = new CustomEvent(
+                'dbp-tabulator-table-render-complete-event',
+                {
+                    detail: {
+                        tableId: this.identifier,
+                    },
+                    bubbles: true,
+                    composed: true,
                 },
-                bubbles: true,
-                composed: true,
-            });
+            );
             this.dispatchEvent(renderCompleteEvent);
         });
 
@@ -213,8 +219,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         /**
          * Change cursor to pointer on hover if rows are selectable
          */
-        if(this.selectRowsEnabled) {
-            this.tabulatorTable.on("rowMouseOver", function(e, row){
+        if (this.selectRowsEnabled) {
+            this.tabulatorTable.on('rowMouseOver', function (e, row) {
                 this.rowManager.element.classList.add('pointer-mouse');
             });
         }
@@ -222,7 +228,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (this.paginationEnabled) {
             const paginationSizeDropdown = this._('#custom-pagination .tabulator-page-size');
 
-            const paginationSize = parseInt(localStorage.getItem(`tabulator-${this.identifier}-pagination-size`));
+            const paginationSize = parseInt(
+                localStorage.getItem(`tabulator-${this.identifier}-pagination-size`),
+            );
             if (paginationSize) {
                 this.paginationSize = paginationSize;
                 this.tabulatorTable.setPageSize(this.paginationSize);
@@ -230,7 +238,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
             paginationSizeDropdown.addEventListener('change', (event) => {
                 if (event.target.value) {
-                    localStorage.setItem(`tabulator-${this.identifier}-pagination-size`, event.target.value);
+                    localStorage.setItem(
+                        `tabulator-${this.identifier}-pagination-size`,
+                        event.target.value,
+                    );
                 }
             });
         }
@@ -242,12 +253,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         const check =
             this.tabulatorTable.getSelectedRows().length ===
             this.tabulatorTable.getRows('display').length;
-        /** @type {HTMLInputElement} */(this._('#select_all')).checked = check;
+        /** @type {HTMLInputElement} */ (this._('#select_all')).checked = check;
 
-        if(this.tabulatorTable.getSelectedRows().length === 0)
-            this.rowSelected = false;
-        else
-            this.rowSelected = true;
+        if (this.tabulatorTable.getSelectedRows().length === 0) this.rowSelected = false;
+        else this.rowSelected = true;
     }
 
     deleteRow(row) {
@@ -330,10 +339,8 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
     setFilter(listOfFilters) {
         if (!this.tabulatorTable) return;
-        if(listOfFilters.length === 0)
-            this.tabulatorTable.clearFilter(false);
-        else
-            this.tabulatorTable.setFilter(listOfFilters);
+        if (listOfFilters.length === 0) this.tabulatorTable.clearFilter(false);
+        else this.tabulatorTable.setFilter(listOfFilters);
     }
 
     clearFilter() {
@@ -372,7 +379,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         let columns = this.tabulatorTable.getColumns();
         let columns_titles = [];
-        for(let col of columns) {
+        for (let col of columns) {
             columns_titles.push(col.getField());
         }
         return columns_titles;
@@ -418,7 +425,7 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         this.tabulatorTable.getRows('visible').forEach((row) => {
             let config = row._row.modules.responsiveLayout;
             config.open = true;
-            const item = /** @type {HTMLElement} */(row.getElement().lastChild);
+            const item = /** @type {HTMLElement} */ (row.getElement().lastChild);
 
             if (item.classList.contains('tabulator-responsive-collapse')) {
                 item.style.display = 'block';
@@ -433,15 +440,13 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         setTimeout(function () {
             that.tabulatorTable.redraw();
         }, 0);
-
-
     }
 
     collapseAll() {
         this.tabulatorTable.getRows('visible').forEach((row) => {
             let config = row._row.modules.responsiveLayout;
             config.open = false;
-            const item = /** @type {HTMLElement} */(row.getElement().lastChild);
+            const item = /** @type {HTMLElement} */ (row.getElement().lastChild);
 
             if (item.classList.contains('tabulator-responsive-collapse')) {
                 item.style.display = 'none';
@@ -456,7 +461,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         setTimeout(function () {
             that.tabulatorTable.redraw();
         }, 0);
-
     }
 
     download(type, dataName) {
@@ -464,11 +468,10 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         if (!this.tabulatorTable) return;
         let selected_rows = this.tabulatorTable.getSelectedRows();
         const active_rows = this.tabulatorTable.getRows('active');
-        if(active_rows.length === 0)
-            return;
-        if(selected_rows.length === 0) {
+        if (active_rows.length === 0) return;
+        if (selected_rows.length === 0) {
             const data = this.tabulatorTable.getData();
-            switch(type) {
+            switch (type) {
                 case 'csv':
                 case 'json':
                 case 'html':
@@ -486,7 +489,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                                 continue;
                             }
                             let field = cell.getField();
-                            if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
+                            if (
+                                field !== 'empty' &&
+                                field !== 'undefined' &&
+                                definition.formatter !== 'html'
+                            ) {
                                 let cellValue = cell.getValue();
                                 if (Array.isArray(cellValue)) {
                                     cellValue = cellValue.join(', ');
@@ -505,27 +512,31 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     dataName = dataName.replace(extension, '').slice(0, maxlength);
                     dataName = dataName + extension;
                     XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
-                    XLSX.writeFile(workbook, dataName, { compression: true });
+                    XLSX.writeFile(workbook, dataName, {compression: true});
                     break;
                 }
                 case 'pdf': {
                     //  Get only displayed columns. [respect Column setting modal state]
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
-                    for(let column of columns) {
+                    for (let column of columns) {
                         let definition = column.getDefinition();
                         if (!column.isVisible()) {
                             continue;
                         }
                         let field = column.getField();
-                        if(field!== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
+                        if (
+                            field !== 'empty' &&
+                            field !== 'undefined' &&
+                            definition.formatter !== 'html'
+                        )
                             header.push(column.getField());
                     }
                     let body = [];
                     for (let entry of data) {
-                        let entry_array =  [];
+                        let entry_array = [];
 
-                        header.forEach(column => {
+                        header.forEach((column) => {
                             let cellValue = entry[column] ? entry[column] : '-';
                             if (Array.isArray(cellValue)) {
                                 cellValue = cellValue.join(', ');
@@ -544,27 +555,26 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         styles: {
                             overflow: 'linebreak',
                             valign: 'middle',
-                            cellWidth: 'auto'
+                            cellWidth: 'auto',
                         },
                         headStyles: {
                             // cellWidth: 'auto'
                         },
                         bodyStyles: {
                             // cellWidth: 'auto',
-                            overflow: 'linebreak'
-                        }
+                            overflow: 'linebreak',
+                        },
                     });
                     doc.save(dataName);
                     break;
                 }
-
-            };
+            }
         } else {
             const selected_data = [];
             for (let row of selected_rows) {
                 selected_data.push(row.getData());
             }
-            switch(type) {
+            switch (type) {
                 case 'csv':
                 case 'json':
                 case 'html':
@@ -582,7 +592,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                                 continue;
                             }
                             let field = cell.getField();
-                            if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
+                            if (
+                                field !== 'empty' &&
+                                field !== 'undefined' &&
+                                definition.formatter !== 'html'
+                            ) {
                                 let cellValue = cell.getValue();
                                 if (Array.isArray(cellValue)) {
                                     cellValue = cellValue.join(', ');
@@ -601,27 +615,31 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                     dataName = dataName.replace(extension, '').slice(0, maxlength);
                     dataName = dataName + extension;
                     XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
-                    XLSX.writeFile(workbook, dataName, { compression: true });
+                    XLSX.writeFile(workbook, dataName, {compression: true});
                     break;
                 }
                 case 'pdf': {
                     let columns = this.tabulatorTable.getColumns();
                     let header = [];
 
-                    for(let column of columns) {
+                    for (let column of columns) {
                         let definition = column.getDefinition();
                         if (!column.isVisible()) {
                             continue;
                         }
                         let field = column.getField();
-                        if(field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
+                        if (
+                            field !== 'empty' &&
+                            field !== 'undefined' &&
+                            definition.formatter !== 'html'
+                        )
                             header.push(column.getField());
                     }
                     let body = [];
                     for (let entry of selected_data) {
-                        let entry_array =  [];
+                        let entry_array = [];
 
-                        header.forEach(column => {
+                        header.forEach((column) => {
                             let cellValue = entry[column] ? entry[column] : '-';
                             if (Array.isArray(cellValue)) {
                                 cellValue = cellValue.join(', ');
@@ -640,22 +658,21 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                         styles: {
                             overflow: 'linebreak',
                             valign: 'middle',
-                            cellWidth: 'auto'
+                            cellWidth: 'auto',
                         },
                         headStyles: {
                             // cellWidth: 'auto'
                         },
                         bodyStyles: {
                             // cellWidth: 'auto',
-                            overflow: 'linebreak'
-                        }
+                            overflow: 'linebreak',
+                        },
                     });
                     doc.save(dataName);
                     break;
                 }
-            };
-        };
-
+            }
+        }
     }
 
     static get styles() {
@@ -859,8 +876,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}" />
                 <div class="table-wrapper">
-                    <div id=${this.identifier} class="${classMap({'sticky-header': this.stickyHeaderEnabled})}"></div>
-                    <div class="tabulator ${classMap({hidden: !this.paginationEnabled})}"
+                    <div
+                        id=${this.identifier}
+                        class="${classMap({'sticky-header': this.stickyHeaderEnabled})}"></div>
+                    <div
+                        class="tabulator ${classMap({hidden: !this.paginationEnabled})}"
                         id="custom-pagination">
                         <div class="tabulator-footer">
                             <div class="tabulator-footer-contents">

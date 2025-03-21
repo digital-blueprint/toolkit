@@ -1,29 +1,24 @@
 {
-  "extends": [
-    "config:base",
-    "group:allNonMajor",
-    "schedule:weekends",
-    ":automergePatch"
-  ],
-  "ignorePresets": [":prHourlyLimit2"],
-  "rangeStrategy": "update-lockfile",
-  "lockFileMaintenance": {
-    "enabled": true
-  },
-  "composer": {
-    "enabled": false
-  },
-  "poetry": {
-    "enabled": false
-  },
-  "packageRules": [
-    {
-      "matchPackageNames": ["@open-wc/scoped-elements"],
-      "allowedVersions": "<3"
+    "extends": ["config:base", "group:allNonMajor", "schedule:weekends", ":automergePatch"],
+    "ignorePresets": [":prHourlyLimit2"],
+    "rangeStrategy": "update-lockfile",
+    "lockFileMaintenance": {
+        "enabled": true
     },
-    {
-      "matchPackageNames": ["pdfjs-dist"],
-      "allowedVersions": "<4.6"
-    }
-  ]
+    "composer": {
+        "enabled": false
+    },
+    "poetry": {
+        "enabled": false
+    },
+    "packageRules": [
+        {
+            "matchPackageNames": ["@open-wc/scoped-elements"],
+            "allowedVersions": "<3"
+        },
+        {
+            "matchPackageNames": ["pdfjs-dist"],
+            "allowedVersions": "<4.6"
+        }
+    ]
 }

@@ -126,7 +126,7 @@ Example usage:
             }
 
             x.remove();
-        } catch(e) {
+        } catch (e) {
             return false;
         }
 
@@ -136,7 +136,7 @@ Example usage:
     // Required for newer i18next
     // https://caniuse.com/intl-pluralrules
     function supportsIntlPluralRules() {
-        if(typeof Intl === 'undefined' || !Intl.PluralRules){
+        if (typeof Intl === 'undefined' || !Intl.PluralRules) {
             return false;
         }
 
@@ -148,7 +148,7 @@ Example usage:
     function supportsEventTargetConstructor() {
         try {
             new EventTarget();
-        } catch(e) {
+        } catch (e) {
             return false;
         }
 
@@ -206,8 +206,8 @@ Example usage:
             return false;
         }
 
-        if(!supportsIntlPluralRules()){
-            console.log('Intl.PluralRules not supported')
+        if (!supportsIntlPluralRules()) {
+            console.log('Intl.PluralRules not supported');
             return false;
         }
 

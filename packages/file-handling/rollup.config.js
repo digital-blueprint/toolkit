@@ -8,7 +8,7 @@ import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
 import process from 'node:process';
-import { createRequire } from "node:module";
+import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');

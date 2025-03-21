@@ -50,10 +50,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
 
         // Evaluate the output of customValidator() and add any error messages to the array
         if (this.customValidator) {
-            const customValidationErrors = this.customValidator(
-                this.value,
-                this.evaluationData,
-            );
+            const customValidationErrors = this.customValidator(this.value, this.evaluationData);
             if (customValidationErrors) {
                 errorMessages = errorMessages.concat(customValidationErrors);
             }
@@ -113,11 +110,11 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
                     color: var(--dbp-override-danger);
                     list-style: none;
                     padding-left: 0;
-                    margin-block: .25em;
+                    margin-block: 0.25em;
                 }
 
                 .description {
-                    margin-bottom: .25em;
+                    margin-bottom: 0.25em;
                 }
             `,
         ];
@@ -159,8 +156,7 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
                         : html``}
                 </label>
                 <div class="description">${this.description}</div>
-                ${this.renderErrorMessages()}
-                ${this.renderInput()}
+                ${this.renderErrorMessages()} ${this.renderInput()}
             </fieldset>
         `;
     }

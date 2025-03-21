@@ -59,7 +59,7 @@ class DemoConsumer extends DBPLitElement {
                 oldValue +
                 ', ' +
                 newValue +
-                ')'
+                ')',
         );
         switch (name) {
             case 'lang':
@@ -127,7 +127,6 @@ class DemoConsumer extends DBPLitElement {
 
 customElements.define('dbp-consumer', DemoConsumer);
 
-
 class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
@@ -162,7 +161,7 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                 oldValue +
                 ', ' +
                 newValue +
-                ')'
+                ')',
         );
         switch (name) {
             case 'lang':
@@ -212,8 +211,8 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-auth-keycloak subscribe="requested-login-status" lang="${
                         this.lang
                     }" entry-point-url="${
-            this.entryPointUrl
-        }" url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu" client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
+                        this.entryPointUrl
+                    }" url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu" client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
                     <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
                 </div>
                 <dbp-provider id="demo"

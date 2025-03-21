@@ -38,7 +38,9 @@ export class DbpBaseView extends ScopedElementsMixin(DBPLitElement) {
                     display: block;
                 }
 
-                fieldset input, fieldset select, fieldset textarea {
+                fieldset input,
+                fieldset select,
+                fieldset textarea {
                     width: 95%;
                 }
             `,

@@ -1,12 +1,5 @@
-
 {
     "extends": "../jsconfig.json",
-    "include": [
-        "src"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist",
-        "vendor"
-    ]
+    "include": ["src"],
+    "exclude": ["node_modules", "dist", "vendor"]
 }

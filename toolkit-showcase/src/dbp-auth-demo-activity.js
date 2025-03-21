@@ -45,7 +45,7 @@ class DbpAuthDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
                 h1.title {
                     margin-bottom: 1em;
                 }
-                
+
                 div.container {
                     margin-bottom: 1.5em;
                 }

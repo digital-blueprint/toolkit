@@ -33,10 +33,9 @@ class ActivityExample extends LitElement {
             <h3>${i18n.t('activity-example.hello-world')}</h3>
             <ul>
                 ${Array.from(Array(100).keys()).map(
-                    (i) =>
-                        html`
-                            <li>${i18n.t('activity-example.hello-world') + ' ' + i}</li>
-                        `
+                    (i) => html`
+                        <li>${i18n.t('activity-example.hello-world') + ' ' + i}</li>
+                    `,
                 )}
             </ul>
         `;

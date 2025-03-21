@@ -53,7 +53,7 @@ export class MatomoElement extends DBPLitElement {
                                 ') analyticsEvent: ' +
                                 this.analyticsEvent.action +
                                 ', ' +
-                                this.analyticsEvent.message
+                                this.analyticsEvent.message,
                         );
                         const event = [
                             'trackEvent',
@@ -186,7 +186,7 @@ export class MatomoElement extends DBPLitElement {
                         '): ' +
                         this.lastEvent[1] +
                         ', ' +
-                        this.lastEvent[2]
+                        this.lastEvent[2],
                 );
                 that.pushEvent(this.lastEvent);
                 this.lastEvent = [];

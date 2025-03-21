@@ -11,7 +11,7 @@ import json from '@rollup/plugin-json';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
 import config from '../../demo.common.config.js';
-import { createRequire } from "node:module";
+import {createRequire} from 'node:module';
 
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);

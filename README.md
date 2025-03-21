@@ -26,8 +26,8 @@ npm install
 
 ## Other commands
 
-* `npm run test` -  Run test for all packages
-* `npm run clean` - Removes all `node_modules` directories.
+- `npm run test` - Run test for all packages
+- `npm run clean` - Removes all `node_modules` directories.
 
 ## Publishing packages to npmjs.com
 
@@ -37,18 +37,18 @@ the version number in its `package.json` is higher than the version number on np
 
 ## Reserved attributes
 
-| Attribute                     | Description                                                                       |
-| ----------------------------- | --------------------------------------------------------------------------------- |
-| `subscribe`                   | Used in all components to subscribe to attributes set by a provider               |
-| `unsubscribe`                 | Reserved for future use                                                           |
-| `auth`                        | Authentication information, set by the authentication component                   |
-| `lang`                        | Currently selected language, set by the language selector                         |
-| `lang-dir`                    | Location of the i18n language file where all required i18n translations are       |
-| `entry-point-url`             | Entry point url for all api requests                                              |
-| `requested-login-status`      | Used by the login buttons to trigger a login in auth components                   |
-| `initial-file-handling-state` | Used by the file-handling component to sync file source/sink at first time open   |
-| `clipboard-files`             | Used by the file-handling component to use the clipboard source and sink          |
-| `analytics-event`             | Used to send analytics events to the Matomo component                             |
+| Attribute                     | Description                                                                     |
+| ----------------------------- | ------------------------------------------------------------------------------- |
+| `subscribe`                   | Used in all components to subscribe to attributes set by a provider             |
+| `unsubscribe`                 | Reserved for future use                                                         |
+| `auth`                        | Authentication information, set by the authentication component                 |
+| `lang`                        | Currently selected language, set by the language selector                       |
+| `lang-dir`                    | Location of the i18n language file where all required i18n translations are     |
+| `entry-point-url`             | Entry point url for all api requests                                            |
+| `requested-login-status`      | Used by the login buttons to trigger a login in auth components                 |
+| `initial-file-handling-state` | Used by the file-handling component to sync file source/sink at first time open |
+| `clipboard-files`             | Used by the file-handling component to use the clipboard source and sink        |
+| `analytics-event`             | Used to send analytics events to the Matomo component                           |
 
 ## Reserved events
 

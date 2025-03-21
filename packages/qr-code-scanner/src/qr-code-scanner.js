@@ -55,7 +55,7 @@ async function getVideoDevices(i18n) {
                 let id = device.deviceId;
                 if (
                     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                        navigator.userAgent
+                        navigator.userAgent,
                     )
                 ) {
                     devices_map.set('environment', i18n.t('back-camera'));
@@ -63,7 +63,7 @@ async function getVideoDevices(i18n) {
                 } else {
                     devices_map.set(
                         id ? id : true,
-                        device.label || i18n.t('camera') + (devices_map.size + 1)
+                        device.label || i18n.t('camera') + (devices_map.size + 1),
                     );
                 }
             }
@@ -82,7 +82,7 @@ async function getVideoDevices(i18n) {
  */
 function checkIosMobileSupport(devices_map) {
     return /(iPhone|iPad|iPod).*(CriOS|FxiOS|OPT|EdgiOS|YaBrowser|AlohaBrowser)/i.test(
-        navigator.userAgent
+        navigator.userAgent,
     );
 }
 
@@ -295,7 +295,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                                             bubbles: true,
                                             composed: true,
                                             detail: {code: currentData},
-                                        })
+                                        }),
                                     );
                                 }
                                 lastSentData = currentData;
@@ -335,37 +335,37 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
                     maskStartX + (maskWidth / 3) * 2,
                     maskStartY,
                     maskWidth / 3,
-                    borderWidth
+                    borderWidth,
                 );
                 canvas.rect(
                     maskStartX + maskWidth - borderWidth,
                     maskStartY,
                     borderWidth,
-                    maskHeight / 3
+                    maskHeight / 3,
                 );
                 canvas.rect(
                     maskStartX,
                     maskStartY + maskHeight - borderWidth,
                     maskWidth / 3,
-                    borderWidth
+                    borderWidth,
                 );
                 canvas.rect(
                     maskStartX,
                     maskStartY + (maskHeight / 3) * 2,
                     borderWidth,
-                    maskHeight / 3
+                    maskHeight / 3,
                 );
                 canvas.rect(
                     maskStartX + (maskWidth / 3) * 2,
                     maskStartY + maskHeight - borderWidth,
                     maskWidth / 3,
-                    borderWidth
+                    borderWidth,
                 );
                 canvas.rect(
                     maskStartX + maskWidth - borderWidth,
                     maskStartY + (maskHeight / 3) * 2,
                     borderWidth,
-                    maskHeight / 3
+                    maskHeight / 3,
                 );
                 canvas.fill();
 
@@ -375,7 +375,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
                 if (!firstDrawDone) {
                     this.dispatchEvent(
-                        new CustomEvent('scan-started', {bubbles: true, composed: true})
+                        new CustomEvent('scan-started', {bubbles: true, composed: true}),
                     );
                     firstDrawDone = true;
                 }
@@ -560,10 +560,9 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
                             <select id="videoSource" class="button" @change=${this._onUpdateSource}>
                                 ${Array.from(this._devices).map(
-                                    (item) =>
-                                        html`
-                                            <option value="${item[0]}">${item[1]}</option>
-                                        `
+                                    (item) => html`
+                                        <option value="${item[0]}">${item[1]}</option>
+                                    `,
                                 )}
                             </select>
                         </div>

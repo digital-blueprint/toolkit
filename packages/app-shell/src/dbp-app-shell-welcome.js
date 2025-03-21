@@ -169,7 +169,7 @@ export const appWelcomeMeta = {
     },
     visible: true,
     required_roles: [],
-    subscribe: 'lang'
+    subscribe: 'lang',
 };
 
 commonUtils.defineCustomElement('dbp-app-shell-welcome', AppShellWelcome);

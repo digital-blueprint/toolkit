@@ -9,7 +9,7 @@ export default {
         matomoSiteId: 131,
         nextcloudBaseURL: 'https://cloud-dev.tugraz.at',
         nextcloudName: 'TU Graz cloud',
-        shortName: "dbp",
+        shortName: 'dbp',
     },
     development: {
         basePath: '/apps/toolkit-showcase/',
@@ -21,7 +21,7 @@ export default {
         matomoSiteId: 131,
         nextcloudBaseURL: 'https://cloud-dev.tugraz.at',
         nextcloudName: 'TU Graz cloud',
-        shortName: "dbp",
+        shortName: 'dbp',
     },
     demo: {
         basePath: '/apps/toolkit-showcase/',
@@ -33,6 +33,6 @@ export default {
         matomoSiteId: 131,
         nextcloudBaseURL: 'https://cloud-demo.tugraz.at',
         nextcloudName: 'TU Graz cloud',
-        shortName: "dbp",
+        shortName: 'dbp',
     },
 };

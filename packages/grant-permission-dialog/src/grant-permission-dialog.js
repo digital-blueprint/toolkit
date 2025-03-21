@@ -7,7 +7,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin, Modal, Button, Icon, IconButton} from '@dbp-toolkit/common';
 import {send} from '@dbp-toolkit/common/notification';
 import {PersonSelect} from '@dbp-toolkit/person-select';
-import { classMap } from 'lit/directives/class-map.js';
+import {classMap} from 'lit/directives/class-map.js';
 
 export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -43,7 +43,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             usersToAdd: {type: Map},
             hasUsersToAdd: {type: Boolean},
             showDeleteAllButton: {type: Boolean},
-            permissionRows: { type: Array },
+            permissionRows: {type: Array},
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
@@ -68,8 +68,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         });
     }
 
-    firstUpdated() {
-    }
+    firstUpdated() {}
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
@@ -88,7 +87,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
      * @returns {boolean} true or false
      */
     isLoggedIn() {
-        return (this.auth.person !== undefined && this.auth.person !== null);
+        return this.auth.person !== undefined && this.auth.person !== null;
     }
 
     /**
@@ -123,7 +122,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             },
         };
         return await this.httpGetAsync(
-            this.entryPointUrl + `/authorization/available-resource-class-actions/${this.resourceClassIdentifier}?perPage=9999`,
+            this.entryPointUrl +
+                `/authorization/available-resource-class-actions/${this.resourceClassIdentifier}?perPage=9999`,
             options,
         );
     }
@@ -132,7 +132,11 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         try {
             let response = await this.apiGetAvailableActions();
             let responseBody = await response.json();
-            if (responseBody !== undefined && responseBody.status !== 403 && responseBody['itemActions'].length > 0) {
+            if (
+                responseBody !== undefined &&
+                responseBody.status !== 403 &&
+                responseBody['itemActions'].length > 0
+            ) {
                 this.availableActions = responseBody['itemActions'];
             }
         } catch (e) {
@@ -154,7 +158,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             },
         };
         return await this.httpGetAsync(
-            this.entryPointUrl + `/authorization/resource-action-grants?resourceClass=${this.resourceClassIdentifier}&resourceIdentifier=${this.resourceIdentifier}&page=1&perPage=9999`,
+            this.entryPointUrl +
+                `/authorization/resource-action-grants?resourceClass=${this.resourceClassIdentifier}&resourceIdentifier=${this.resourceIdentifier}&page=1&perPage=9999`,
             options,
         );
     }
@@ -200,7 +205,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-
     /**
      * Delete user's Resource Action Grant
      * @param {string} grantIdentifier - Authorization Resource Action Grant identifier
@@ -240,7 +244,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             resourceIdentifier: this.resourceIdentifier,
             resourceClass: this.resourceClassIdentifier,
             action: action,
-            userIdentifier: userIdentifier
+            userIdentifier: userIdentifier,
         };
 
         const options = {
@@ -264,7 +268,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         const grantsToDelete = [];
 
         // Collect grants to delete
-        userToDelete.permissions.forEach(grant => {
+        userToDelete.permissions.forEach((grant) => {
             if (grant.identifier) {
                 grantsToDelete.push(grant);
             }
@@ -276,7 +280,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 console.log(`grant ${grant.action} deleted`, grant);
             }
             // @TODO handle multiple errors
-        } catch(e) {
+        } catch (e) {
             console.log('Error deleting grant', e);
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
@@ -299,8 +303,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             rowToAnimate.classList.add('delete-animation');
             // Wait for the animation to complete
             // Create a promise that resolves when the animation ends
-            const animationComplete = new Promise(resolve => {
-                rowToAnimate.addEventListener('transitionend', resolve, { once: true });
+            const animationComplete = new Promise((resolve) => {
+                rowToAnimate.addEventListener('transitionend', resolve, {once: true});
             });
             // Wait for animation to complete before updating the Map
             await animationComplete;
@@ -311,7 +315,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 this.setDeleteAllButtonVisibility();
                 this.requestUpdate();
             }
-        } catch (e){
+        } catch (e) {
             console.log('delete user error', e);
             //@TODO add notification
         }
@@ -322,7 +326,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         try {
             const response = await this.apiGetUserDetails(userIdentifier);
             let userDetailsResponse = await response.json();
-            if (userDetailsResponse !== undefined && userDetailsResponse.status !== 403 ) {
+            if (userDetailsResponse !== undefined && userDetailsResponse.status !== 403) {
                 return `${userDetailsResponse['givenName']} ${userDetailsResponse['familyName']}`;
             } else {
                 if (userDetailsResponse.status === 500) {
@@ -392,7 +396,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 editButton.innerHTML = '<dbp-icon name="pencil"></dbp-icon> Edit';
 
                 // Remove edit styles & disable checkboxes
-                this._a(`[data-user-id="${userId}"]`).forEach(checkbox => {
+                this._a(`[data-user-id="${userId}"]`).forEach((checkbox) => {
                     const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
                     checkboxElem.classList.remove('changed');
                     checkboxElem.removeAttribute('data-changed');
@@ -444,7 +448,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             } catch (e) {
                 console.log('Delete all failed', e);
             }
-
         }
     }
 
@@ -479,7 +482,9 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             deleteButton.innerHTML = '<dbp-icon name="trash"></dbp-icon> Delete';
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.success-title'),
-                body: i18n.t('grant-permission-dialog.notifications.user-successfully-deleted', { userFullName: userFullName}),
+                body: i18n.t('grant-permission-dialog.notifications.user-successfully-deleted', {
+                    userFullName: userFullName,
+                }),
                 type: 'info',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 5,
@@ -497,10 +502,13 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         try {
             let response = await this.apiGetResourceActionGrants();
             let responseBody = await response.json();
-            if (responseBody !== undefined && responseBody.status !== 403 && responseBody['hydra:member'].length > 0) {
+            if (
+                responseBody !== undefined &&
+                responseBody.status !== 403 &&
+                responseBody['hydra:member'].length > 0
+            ) {
                 // Loop trough all grants
                 for (const grant of responseBody['hydra:member']) {
-
                     if (grant.userIdentifier) {
                         const userId = grant.userIdentifier;
 
@@ -510,7 +518,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                             const user = {
                                 userIdentifier: userId,
                                 userFullName: userFullName,
-                                permissions: this.createEmptyUserPermission()
+                                permissions: this.createEmptyUserPermission(),
                             };
                             // Set current grant
                             user.permissions.set(grant.action, {
@@ -536,14 +544,15 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                     // Update Delete all Button visibility
                     this.setDeleteAllButtonVisibility();
                     this.requestUpdate();
-                };
+                }
                 console.log('userList', this.userList);
-
             } else {
                 if (responseBody.status === 500) {
                     send({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                        body: i18n.t('grant-permission-dialog.notifications.could-not-fetch-resource-class-actions'),
+                        body: i18n.t(
+                            'grant-permission-dialog.notifications.could-not-fetch-resource-class-actions',
+                        ),
                         type: 'danger',
                         targetNotificationId: 'permission-modal-notification',
                         timeout: 10,
@@ -577,54 +586,57 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         // const i18n = this._i18n;
 
         return html`
-            ${Array.from(this.userList).map(([userId, user]) => html`
-
-                <div class="user-row" data-user-id="${userId}">
-                    <div class="person-select-container">
-                    ${ user.userFullName
-                        ? html`<span class="user-name">${user.userFullName}</span>`
-                        : html`
-                            <dbp-person-select
-                                id="permission-person-select"
-                                subscribe="auth"
-                                lang="${this.lang}"
-                                @change="${(event) => {
-                                    this.handlePersonSelected(event);
-                                }}"
-                                entry-point-url="${this.entryPointUrl}">
-                            </dbp-person-select>`
-                    }
+            ${Array.from(this.userList).map(
+                ([userId, user]) => html`
+                    <div class="user-row" data-user-id="${userId}">
+                        <div class="person-select-container">
+                            ${user.userFullName
+                                ? html`
+                                      <span class="user-name">${user.userFullName}</span>
+                                  `
+                                : html`
+                                      <dbp-person-select
+                                          id="permission-person-select"
+                                          subscribe="auth"
+                                          lang="${this.lang}"
+                                          @change="${(event) => {
+                                              this.handlePersonSelected(event);
+                                          }}"
+                                          entry-point-url="${this
+                                              .entryPointUrl}"></dbp-person-select>
+                                  `}
+                        </div>
+                        ${user.userFullName ? this.renderPermissionCheckboxes(user) : ''}
+                        ${user.userFullName
+                            ? html`
+                                  <div class="action-buttons">
+                                      <dbp-button
+                                          type="is-secondary"
+                                          data-action="edit"
+                                          id="user-edit-button-${userId}"
+                                          no-spinner-on-click
+                                          @click="${() => {
+                                              this.handleUserEditButton(userId);
+                                          }}">
+                                          <dbp-icon name="pencil"></dbp-icon>
+                                          Edit
+                                      </dbp-button>
+                                      <dbp-button
+                                          type="is-secondary"
+                                          data-action="prepare-delete"
+                                          id="user-delete-button-${userId}"
+                                          no-spinner-on-click
+                                          @click="${() => {
+                                              this.handleUserDeleteButton(userId);
+                                          }}">
+                                          <dbp-icon name="trash"></dbp-icon>
+                                          Delete
+                                      </dbp-button>
+                                  </div>
+                              `
+                            : ''}
                     </div>
-                    ${ user.userFullName
-                        ? this.renderPermissionCheckboxes(user)
-                        : ''
-                    }
-                    ${ user.userFullName
-                        ? html`<div class="action-buttons">
-                                <dbp-button type="is-secondary"
-                                    data-action="edit"
-                                    id="user-edit-button-${userId}"
-                                    no-spinner-on-click
-                                    @click="${() => {
-                                        this.handleUserEditButton(userId);
-                                    }}">
-                                    <dbp-icon name="pencil"></dbp-icon>
-                                    Edit
-                                </dbp-button>
-                                <dbp-button type="is-secondary"
-                                    data-action="prepare-delete"
-                                    id="user-delete-button-${userId}"
-                                    no-spinner-on-click
-                                    @click="${() => {
-                                        this.handleUserDeleteButton(userId);
-                                    }}">
-                                    <dbp-icon name="trash"></dbp-icon>
-                                    Delete
-                                </dbp-button>
-                            </div>`
-                        : ''
-                    }
-                </div>`
+                `,
             )}
         `;
     }
@@ -637,7 +649,9 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <div class="permission-group" role="group" aria-labelledby="permissions-group-label">
-                <h3 id="permissions-group-label" class="visually-hidden">${i18n.t('grant-permission-dialog.available-permissions')}</h3>
+                <h3 id="permissions-group-label" class="visually-hidden">
+                    ${i18n.t('grant-permission-dialog.available-permissions')}
+                </h3>
                 ${this.availableActions.map((action) => {
                     const permissionName = action.replace('_', ' ');
 
@@ -646,8 +660,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                     let editable = false;
 
                     if (user.permissions) {
-                        const userPermission  = user.permissions.get(action);
-                        if(userPermission.identifier) {
+                        const userPermission = user.permissions.get(action);
+                        if (userPermission.identifier) {
                             hasThisPermission = true;
                         }
 
@@ -659,14 +673,17 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
 
                     return html`
                         <div class="checkbox-container">
-                            <label for="${action}-${user.userIdentifier}" class="visually-hidden">${permissionName}</label>
-                            <input id="${action}-${user.userIdentifier}"
+                            <label for="${action}-${user.userIdentifier}" class="visually-hidden">
+                                ${permissionName}
+                            </label>
+                            <input
+                                id="${action}-${user.userIdentifier}"
                                 name="${action}"
                                 data-user-id="${user.userIdentifier}"
                                 type="checkbox"
                                 @input="${this.handleCheckbox}"
                                 ?disabled="${!editable}"
-                                ?checked="${hasThisPermission}">
+                                ?checked="${hasThisPermission}" />
                         </div>
                     `;
                 })}
@@ -680,14 +697,14 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         }
 
         const userPermissions = new Map();
-        this.availableActions.forEach(action => {
+        this.availableActions.forEach((action) => {
             const emptyPermission = {
                 action: action,
                 authorizationResource: null,
                 identifier: null,
                 isNew: true,
                 // isNotSaved: true,
-                editable: editable
+                editable: editable,
             };
             userPermissions.set(action, emptyPermission);
         });
@@ -779,19 +796,21 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
      * @throws {Error} If no matching checkbox is found
      */
     disableCheckboxes(userId, actionName) {
-        const checkbox = /** @type {HTMLInputElement} */ (this._(`input[name="${actionName}"][data-user-id="${userId}"]`));
+        const checkbox = /** @type {HTMLInputElement} */ (
+            this._(`input[name="${actionName}"][data-user-id="${userId}"]`)
+        );
         checkbox.disabled = true;
     }
 
     enableUsersAllCheckboxes(userId) {
-        this._a(`input[data-user-id="${userId}"]`).forEach(checkbox => {
+        this._a(`input[data-user-id="${userId}"]`).forEach((checkbox) => {
             const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
             checkboxElem.disabled = false;
         });
     }
 
     disableUsersAllCheckboxes(userId) {
-        this._a(`input[data-user-id="${userId}"]`).forEach(checkbox => {
+        this._a(`input[data-user-id="${userId}"]`).forEach((checkbox) => {
             const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
             checkboxElem.disabled = true;
         });
@@ -831,7 +850,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-
     async open() {
         const i18n = this._i18n;
 
@@ -861,13 +879,11 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         this.permissionModalRef.value.close();
     }
 
-
     handleAddNewPerson() {
         this.addPersonButtonRef.value.start();
         this.userList.set('emptyPerson', {});
         this.requestUpdate();
     }
-
 
     /**
      * Saves user permissions for either a single user or all users in usersToAdd
@@ -910,7 +926,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                     } else {
                         grantsToPost.push({
                             action: permission.action,
-                            userIdentifier: userToAdd.userIdentifier
+                            userIdentifier: userToAdd.userIdentifier,
                         });
                     }
                 });
@@ -929,24 +945,21 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 // Add grants
-                if (grantsToPost.length > 0 ) {
+                if (grantsToPost.length > 0) {
                     for (const grant of grantsToPost) {
-                        await this.apiPostResourceActionGrant(
-                            grant.action,
-                            grant.userIdentifier
-                        );
+                        await this.apiPostResourceActionGrant(grant.action, grant.userIdentifier);
                     }
                 }
 
                 // Delete grants
-                if (grantsToPost.length > 0 ) {
+                if (grantsToPost.length > 0) {
                     for (const grant of grantsToDelete) {
                         await this.apiDeleteResourceActionGrant(grant.identifier);
                     }
                 }
 
                 // Remove edit styles & disable checkboxes
-                this._a(`[data-user-id="${userToAdd.userIdentifier}"]`).forEach(checkbox => {
+                this._a(`[data-user-id="${userToAdd.userIdentifier}"]`).forEach((checkbox) => {
                     const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
                     checkboxElem.classList.remove('changed');
                     checkboxElem.removeAttribute('data-changed');
@@ -957,7 +970,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 this.userList.set(userToAdd.userIdentifier, {
                     userIdentifier: userToAdd.userIdentifier,
                     userFullName: userToAdd.userFullName,
-                    permissions: this.createEmptyUserPermission()
+                    permissions: this.createEmptyUserPermission(),
                 });
 
                 // Remove processed user from usersToAdd list
@@ -977,13 +990,15 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             this.savePermissionButtonRef.value.stop();
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.success-title'),
-                body: i18n.t('grant-permission-dialog.notifications.permissions-saved-successfully'),
+                body: i18n.t(
+                    'grant-permission-dialog.notifications.permissions-saved-successfully',
+                ),
                 type: 'success',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 5,
             });
             return Promise.resolve();
-        } catch(e) {
+        } catch (e) {
             console.log('Save user permissions error:', e);
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
@@ -1004,9 +1019,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
 
             getGrantPermissionDialogCSS(),
             // language=css
-            css`
-
-            `,
+            css``,
         ];
     }
 
@@ -1015,7 +1028,9 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         console.log('*** MAIN RENDER ***');
 
         return html`
-            <dbp-modal id="permission-modal" sticky-footer
+            <dbp-modal
+                id="permission-modal"
+                sticky-footer
                 ${ref(this.permissionModalRef)}
                 class="modal modal--permissions"
                 modal-id="grant-permission-modal"
@@ -1023,21 +1038,22 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 subscribe="lang">
                 <div slot="header" class="header">
                     <div class="modal-notification">
-                        <dbp-notification id="permission-modal-notification" inline lang="${this.lang}"></dbp-notification>
+                        <dbp-notification
+                            id="permission-modal-notification"
+                            inline
+                            lang="${this.lang}"></dbp-notification>
                     </div>
                     <h3>${this.formName}</h3>
                 </div>
                 <div slot="content">
                     <div class="content-inner">
-
                         <div class="header-row">
                             <div class="person-select-header"></div>
-                            <div class="permissions-header">
-                                ${this.renderPermissionLabels()}
-                            </div>
+                            <div class="permissions-header">${this.renderPermissionLabels()}</div>
                             <div class="buttons-header">
-                                <dbp-button type="is-danger"
-                                    class="${classMap({'hidden': !this.showDeleteAllButton})}"
+                                <dbp-button
+                                    type="is-danger"
+                                    class="${classMap({hidden: !this.showDeleteAllButton})}"
                                     data-action="prepare-delete"
                                     id="user-delete-button-all"
                                     no-spinner-on-click
@@ -1048,7 +1064,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                                     ${i18n.t('grant-permission-dialog.buttons.delete-all-text')}
                                 </dbp-button>
                             </div>
-                        </div><!-- END .header-row -->
+                        </div>
+                        <!-- END .header-row -->
 
                         <div class="body-container">
                             <div class="button-container">
@@ -1056,14 +1073,16 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                                     type="is-primary"
                                     ${ref(this.addPersonButtonRef)}
                                     id="add-new-person-button"
-                                    @click="${() => { this.handleAddNewPerson(); }}">
+                                    @click="${() => {
+                                        this.handleAddNewPerson();
+                                    }}">
                                     <dbp-icon name="plus"></dbp-icon>
-                                    <span>${i18n.t('grant-permission-dialog.buttons.add-person-text')}</span>
+                                    <span>
+                                        ${i18n.t('grant-permission-dialog.buttons.add-person-text')}
+                                    </span>
                                 </dbp-button>
                             </div>
-                            <div class="user-row-container">
-                                ${this.renderUserPermissionRow()}
-                            </div>
+                            <div class="user-row-container">${this.renderUserPermissionRow()}</div>
                         </div>
                     </div>
                 </div>
@@ -1072,7 +1091,11 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-button
                         no-spinner-on-click
                         type="is-secondary"
-                        @click="${() => { this.closeModal(); }}">${i18n.t('grant-permission-dialog.buttons.cancel-text')}</dbp-button>
+                        @click="${() => {
+                            this.closeModal();
+                        }}">
+                        ${i18n.t('grant-permission-dialog.buttons.cancel-text')}
+                    </dbp-button>
                     <dbp-button
                         ${ref(this.savePermissionButtonRef)}
                         id="permission-save-button"
@@ -1081,13 +1104,18 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                             await this.saveUserPermissions();
 
                             // Revert buttons to edit button
-                            this._a(`[id*="user-edit-button"][type="is-primary"]`).forEach(editButton => {
-                                const editButtonElement = /** @type {Button}*/ (editButton);
-                                editButtonElement.setAttribute('type', 'is-secondary');
-                                editButtonElement.innerHTML = '<dbp-icon name="pencil"></dbp-icon> Edit';
-                            });
+                            this._a(`[id*="user-edit-button"][type="is-primary"]`).forEach(
+                                (editButton) => {
+                                    const editButtonElement = /** @type {Button}*/ (editButton);
+                                    editButtonElement.setAttribute('type', 'is-secondary');
+                                    editButtonElement.innerHTML =
+                                        '<dbp-icon name="pencil"></dbp-icon> Edit';
+                                },
+                            );
                         }}"
-                        type="is-primary">${i18n.t('grant-permission-dialog.buttons.save-all-text')}</dbp-button>
+                        type="is-primary">
+                        ${i18n.t('grant-permission-dialog.buttons.save-all-text')}
+                    </dbp-button>
                 </menu>
             </dbp-modal>
         `;

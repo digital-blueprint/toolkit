@@ -54,15 +54,16 @@ class DbpGrantPermissionDialogDemoActivity extends ScopedElementsMixin(AdapterLi
     render() {
         // ${unsafeHTML(readme)}
         return html`
-
             <dbp-grant-permission-dialog-demo
                 id="demo"
                 lang="${this.lang}"
                 subscribe="auth"
-                entry-point-url="${this.entryPointUrl}">
-            </dbp-grant-permission-dialog-demo>
+                entry-point-url="${this.entryPointUrl}"></dbp-grant-permission-dialog-demo>
         `;
     }
 }
 
-commonUtils.defineCustomElement('dbp-grant-permission-dialog-demo-activity', DbpGrantPermissionDialogDemoActivity);
+commonUtils.defineCustomElement(
+    'dbp-grant-permission-dialog-demo-activity',
+    DbpGrantPermissionDialogDemoActivity,
+);

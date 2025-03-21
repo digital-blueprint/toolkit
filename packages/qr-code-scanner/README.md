@@ -14,32 +14,33 @@ For some browsers it might be necessary to host the html using this component vi
 
 ```html
 <dbp-qr-code-scanner></dbp-qr-code-scanner>
-<script type="module" src="node_modules/@dbp-toolkit/qr-code-scanner/dist/dbp-qr-code-scanner.js"></script>
+<script
+    type="module"
+    src="node_modules/@dbp-toolkit/qr-code-scanner/dist/dbp-qr-code-scanner.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
 <dbp-qr-code-scanner></dbp-qr-code-scanner>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/qr-code-scanner@0.2.2/dist/dbp-qr-code-scanner.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/qr-code-scanner@0.2.2/dist/dbp-qr-code-scanner.js"></script>
 ```
 
 The QR code Scanner Web Component uses a camera device, which you can select (if you have more than one).
 With this camera device you can scan a QR code. If a QR code is detected an event named `dbp-qr-code-scanner-data` will be fired.
 In this event you can read the data of the qr code with `event.detail`.
 
-
 ## Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-qr-code-scanner lang="de"></dbp-qr-code-scanner>`
 - `match-regex` (optional, default: `.*`): a regular expression that when matching the QR code will result in the user getting feedback
-- `show-output` (optional, default: `false`): set to `true` for showing 
-a box under the video canvas with the read QR code data
-    - example `<dbp-qr-code-scanner show-output></dbp-qr-code-scanner>`
+- `show-output` (optional, default: `false`): set to `true` for showing
+  a box under the video canvas with the read QR code data - example `<dbp-qr-code-scanner show-output></dbp-qr-code-scanner>`
 - `stop-scan` (optional, default: `false`): set to `true` when you don't want to start the QR code reader immediatly
-after loaded. This attribute is also used to stop the QR code reader or if you don't need it anymore.
-    - example `<dbp-qr-code-scanner stop-scan></dbp-qr-code-scanner>`
+  after loaded. This attribute is also used to stop the QR code reader or if you don't need it anymore. - example `<dbp-qr-code-scanner stop-scan></dbp-qr-code-scanner>`
 
 ## Events
 
@@ -56,7 +57,7 @@ cd qr-code-scanner
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch-local
 
 # run tests

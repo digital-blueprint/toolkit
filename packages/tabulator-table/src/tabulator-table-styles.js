@@ -3,7 +3,6 @@ import {css} from 'lit';
 export function getTabulatorStyles() {
     // language=css
     return css`
-
         :host {
             --dbp-tabulator-collapse-padding-left: 0;
             --dbp-tabulator-cell-overflow: hidden;
@@ -107,7 +106,7 @@ export function getTabulatorStyles() {
         }
 
         /* hide first fake column used by select all checkbox in the header */
-        .tabulator-cell[tabulator-field="empty"] {
+        .tabulator-cell[tabulator-field='empty'] {
             display: none !important;
         }
 
@@ -157,19 +156,34 @@ export function getTabulatorStyles() {
         }
 
         /* Define the style when the column is not sorted */
-        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
+        .tabulator
+            .tabulator-header
+            .tabulator-col.tabulator-sortable[aria-sort='none']
+            .tabulator-col-content
+            .tabulator-col-sorter
+            .tabulator-arrow {
             border-top: none;
             border-bottom: 6px solid var(--dbp-muted);
         }
 
         /* Define the style when the column is sorted in ascending order */
-        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
+        .tabulator
+            .tabulator-header
+            .tabulator-col.tabulator-sortable[aria-sort='asc']
+            .tabulator-col-content
+            .tabulator-col-sorter
+            .tabulator-arrow {
             border-top: none;
             border-bottom: 6px solid var(--dbp-accent);
         }
 
         /* Define the style when the column is sorted in descending order */
-        .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
+        .tabulator
+            .tabulator-header
+            .tabulator-col.tabulator-sortable[aria-sort='desc']
+            .tabulator-col-content
+            .tabulator-col-sorter
+            .tabulator-arrow {
             border-bottom: none;
             border-top: 6px solid var(--dbp-accent);
             color: var(--dbp-accent);
@@ -180,7 +194,8 @@ export function getTabulatorStyles() {
             border-style: none;
         }
 
-        .tabulator-row, .tabulator-row.tabulator-row-even,
+        .tabulator-row,
+        .tabulator-row.tabulator-row-even,
         .tabulator-row.tabulator-row-odd {
             padding-top: 0px;
             padding-bottom: 0px;
@@ -224,7 +239,9 @@ export function getTabulatorStyles() {
             background-color: var(--dbp-background);
         }
 
-        .tabulator .tabulator-header .tabulator-col.tabulator-sortable.tabulator-col-sorter-element:hover {
+        .tabulator
+            .tabulator-header
+            .tabulator-col.tabulator-sortable.tabulator-col-sorter-element:hover {
             background-color: unset;
         }
 
@@ -233,7 +250,7 @@ export function getTabulatorStyles() {
          *************************************/
         .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right,
         .tabulator-row .tabulator-frozen.tabulator-frozen-right {
-            background-color:  var(--dbp-background);
+            background-color: var(--dbp-background);
             color: var(--dbp-content);
         }
 
@@ -241,13 +258,11 @@ export function getTabulatorStyles() {
             text-align: center;
         }
 
-        .tabulator[tabulator-layout=fitDataFill] .tabulator-tableHolder .tabulator-table {
+        .tabulator[tabulator-layout='fitDataFill'] .tabulator-tableHolder .tabulator-table {
             min-width: calc(100% - 41px);
         }
 
         @media only screen and (orientation: portrait) and (max-width: 768px) {
-
         }
-
     `;
 }

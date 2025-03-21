@@ -151,28 +151,27 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             this.dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
             this._('#fileElem').addEventListener(
                 'change',
-                this.handleChange.bind(this, this._('#fileElem'))
+                this.handleChange.bind(this, this._('#fileElem')),
             );
 
             this._('nav.modal-nav').addEventListener('scroll', this.handleScroll.bind(this));
 
-            if(this.enabledTargets.split(',').length > 1) {
+            if (this.enabledTargets.split(',').length > 1) {
                 this._('.right-paddle').addEventListener(
                     'click',
-                    this.handleScrollRight.bind(this, this._('nav.modal-nav'))
+                    this.handleScrollRight.bind(this, this._('nav.modal-nav')),
                 );
 
                 this._('.left-paddle').addEventListener(
                     'click',
-                    this.handleScrollLeft.bind(this, this._('nav.modal-nav'))
+                    this.handleScrollLeft.bind(this, this._('nav.modal-nav')),
                 );
             } else {
                 const paddles = this._('.paddles');
-                if(paddles) {
+                if (paddles) {
                     paddles.classList.add('hidden');
                 }
             }
-
         });
     }
 
@@ -235,7 +234,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 console.log("file '" + file.name + "' has size=0 and is denied!");
                 send({
                     summary: i18n.t('file-source.empty-file-error-title'),
-                    body: i18n.t('file-source.empty-file-error-text', { filename: file.name}),
+                    body: i18n.t('file-source.empty-file-error-text', {filename: file.name}),
                     type: 'danger',
                     timeout: 10,
                 });
@@ -244,7 +243,9 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
             }
 
             if (!this.checkSize(file)) {
-                console.log(`file "${file.name}" has size ${file.size} which is too large and is denied!`);
+                console.log(
+                    `file "${file.name}" has size ${file.size} which is too large and is denied!`,
+                );
                 fileCount--;
                 return;
             }
@@ -259,12 +260,12 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                     (file, index, array) => {
                         fileCount = index === array.length - 1 ? fileCount : fileCount + 1;
                         this.sendFileEvent(file, fileCount);
-                    }
+                    },
                 );
 
                 return;
             } else if (this.allowedMimeTypes && !this.checkFileType(file)) {
-            // } else if (this.allowedMimeTypes) {
+                // } else if (this.allowedMimeTypes) {
                 // const allowedMimeTypes = this.allowedMimeTypes.split(',');
                 // const mimeType = await commonUtils.getMimeTypeOfFile(file);
                 // if (!allowedMimeTypes.includes(mimeType)) {
@@ -274,8 +275,8 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 //         type: 'danger',
                 //         timeout: 10,
                 //     });
-                    fileCount--;
-                    return;
+                fileCount--;
+                return;
                 // }
             }
 
@@ -340,7 +341,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
 
         if (deny) {
             console.log(
-                `mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`
+                `mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`,
             );
             send({
                 summary: i18n.t('file-source.mime-type-title'),
@@ -414,16 +415,16 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                         (e) => {
                             // handle the error
                             console.error(
-                                'Decompressing of file in ' + file.name + ' failed: ' + e.message
+                                'Decompressing of file in ' + file.name + ' failed: ' + e.message,
                             );
-                        }
+                        },
                     );
                 });
             },
             function (e) {
                 // handle the error
                 console.error('Loading of ' + file.name + ' failed: ' + e.message);
-            }
+            },
         );
 
         // no suitable files found
@@ -716,7 +717,7 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                 }
 
                 .paddles.hidden {
-                    display: none
+                    display: none;
                 }
             }
         `;
@@ -769,7 +770,10 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                         aria-labelledby="modal-picker-title">
                         <div class="nav-wrapper modal-nav">
                             <nav class="modal-nav" role="tablist">
-                                <button role="tab" aria-selected="${(this.activeTarget === 'local')}" aria-controls="select-local"
+                                <button
+                                    role="tab"
+                                    aria-selected="${this.activeTarget === 'local'}"
+                                    aria-controls="select-local"
                                     title="${i18n.t('file-source.nav-local')}"
                                     @click="${() => {
                                         this.activeTarget = 'local';
@@ -781,7 +785,10 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
                                     <p>${i18n.t('file-source.nav-local')}</p>
                                 </button>
-                                <button role="tab" aria-selected="${(this.activeTarget === 'nextcloud')}" aria-controls="select-cloud"
+                                <button
+                                    role="tab"
+                                    aria-selected="${this.activeTarget === 'nextcloud'}"
+                                    aria-controls="select-cloud"
                                     title="Nextcloud"
                                     @click="${() => {
                                         this.activeTarget = 'nextcloud';
@@ -796,7 +803,10 @@ export class FileSource extends ScopedElementsMixin(DbpFileHandlingLitElement) {
                                     <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                     <p>${this.nextcloudName}</p>
                                 </button>
-                                <button role="tab" aria-selected="${(this.activeTarget === 'clipboard')}" aria-controls="select-clipboard"
+                                <button
+                                    role="tab"
+                                    aria-selected="${this.activeTarget === 'clipboard'}"
+                                    aria-controls="select-clipboard"
                                     title="${i18n.t('file-source.clipboard')}"
                                     @click="${() => {
                                         this.activeTarget = 'clipboard';

@@ -66,7 +66,8 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
                 overflow-y: auto;
             }
 
-            .container, p {
+            .container,
+            p {
                 margin: 20px auto;
             }
         `;
@@ -88,7 +89,7 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
         }
 
         let file = e.target.files[0];
-        console.log("file", file);
+        console.log('file', file);
 
         this._('#modal-container').style.display = 'flex';
 
@@ -105,7 +106,7 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
         }
 
         let file = e.target.files[0];
-        console.log("file", file);
+        console.log('file', file);
 
         await this._('#dbp-pdf-viewer-cover').showPDF(file);
     }
@@ -115,7 +116,7 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
             return;
         }
 
-        console.log("e", e);
+        console.log('e', e);
         this._('#modal-container').style.display = 'none';
         e.preventDefault();
     }
@@ -132,7 +133,8 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
                 <div class="container">
                     <div class="columns is-vcentered">
                         <p>
-                            The PDF will be resized  fit the container horizontally only, vertically the PDF can exceed the container.
+                            The PDF will be resized fit the container horizontally only, vertically
+                            the PDF can exceed the container.
                         </p>
                         <div class="column">
                             <input @change=${this.openFileCover} type="file" />
@@ -140,22 +142,32 @@ export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
                     </div>
                 </div>
                 <div class="container">
-                    <dbp-pdf-viewer id="dbp-pdf-viewer-cover" lang="${this.lang}" auto-resize="cover"></dbp-pdf-viewer>
+                    <dbp-pdf-viewer
+                        id="dbp-pdf-viewer-cover"
+                        lang="${this.lang}"
+                        auto-resize="cover"></dbp-pdf-viewer>
                 </div>
                 <h2>Contain</h2>
                 <div class="container">
                     <div class="columns is-vcentered">
                         <div class="column">
                             <p>
-                                The PDF will be resized to fit the container horizontally and vertically.
+                                The PDF will be resized to fit the container horizontally and
+                                vertically.
+                            </p>
+
                             <p>
-                            <input @change=${this.openFileContain} type="file" />
+                                <input @change=${this.openFileContain} type="file" />
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="container" id="modal-container" @click=${this.closeModal}>
                     <div class="container" id="pdf-container">
-                        <dbp-pdf-viewer id="dbp-pdf-viewer-contain" lang="${this.lang}" auto-resize="contain"></dbp-pdf-viewer>
+                        <dbp-pdf-viewer
+                            id="dbp-pdf-viewer-contain"
+                            lang="${this.lang}"
+                            auto-resize="contain"></dbp-pdf-viewer>
                     </div>
                 </div>
             </section>

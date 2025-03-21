@@ -94,7 +94,7 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
         const that = this;
         pdfjs.GlobalWorkerOptions.workerSrc = commonUtils.getAssetURL(
             pkgName,
-            'pdfjs/pdf.worker.mjs'
+            'pdfjs/pdf.worker.mjs',
         );
 
         window.addEventListener('resize', this._onWindowResize);
@@ -124,16 +124,16 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
             obj.top = Math.min(
                 obj.top,
                 obj.canvas.height -
-                obj.getBoundingRect().height +
-                obj.top -
-                obj.getBoundingRect().top
+                    obj.getBoundingRect().height +
+                    obj.top -
+                    obj.getBoundingRect().top,
             );
             obj.left = Math.min(
                 obj.left,
                 obj.canvas.width -
-                obj.getBoundingRect().width +
-                obj.left -
-                obj.getBoundingRect().left
+                    obj.getBoundingRect().width +
+                    obj.left -
+                    obj.getBoundingRect().left,
             );
         }
     }
@@ -233,8 +233,8 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                 // let clientHeight = this.pdfMainContainer.clientHeight - 2;
                 let clientWidth = that.initialClientWidth;
                 let clientHeight = that.initialClientHeight - that._('#pdf-meta').clientHeight;
-                console.log("clientWidth", clientWidth);
-                console.log("clientHeight", clientHeight);
+                console.log('clientWidth', clientWidth);
+                console.log('clientHeight', clientHeight);
 
                 // let proposedCanvasWidth = clientWidth;
                 // let proposedCanvasHeight = clientHeight;
@@ -253,7 +253,10 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                 if (this.autoResize === 'contain' && viewport.height > clientHeight) {
                     // this.canvasToPdfScale = this.canvasToPdfScale * (clientHeight / viewport.height);
                     this.canvasToPdfScale = clientHeight / originalViewport.height;
-                    console.log("viewport.height to high, new this.canvasToPdfScale", this.canvasToPdfScale);
+                    console.log(
+                        'viewport.height to high, new this.canvasToPdfScale',
+                        this.canvasToPdfScale,
+                    );
 
                     // get viewport to render the page at required scale
                     viewport = page.getViewport({scale: this.canvasToPdfScale});
@@ -410,8 +413,9 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
 -->
             <div id="pdf-main-container" class="${classMap({hidden: !this.isShowPage})}">
                 <dbp-mini-spinner
-                    class="${classMap({hidden: this.isPageLoaded || this.showErrorMessage})}">
-                </dbp-mini-spinner>
+                    class="${classMap({
+                        hidden: this.isPageLoaded || this.showErrorMessage,
+                    })}"></dbp-mini-spinner>
                 <div
                     class="error-message ${classMap({
                         hidden: !this.showErrorMessage || this.isPageLoaded,
@@ -428,7 +432,8 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                                     @click="${async () => {
                                         await this.showPage(1);
                                     }}"
-                                    ?disabled="${this.isPageRenderingInProgress || this.currentPage === 1}">
+                                    ?disabled="${this.isPageRenderingInProgress ||
+                                    this.currentPage === 1}">
                                     <dbp-icon name="angle-double-left"></dbp-icon>
                                 </button>
                                 <button
@@ -438,7 +443,8 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                                         if (this.currentPage > 1)
                                             await this.showPage(--this.currentPage);
                                     }}"
-                                    ?disabled="${this.isPageRenderingInProgress || this.currentPage === 1}">
+                                    ?disabled="${this.isPageRenderingInProgress ||
+                                    this.currentPage === 1}">
                                     <dbp-icon name="chevron-left"></dbp-icon>
                                 </button>
                                 <input
@@ -459,7 +465,8 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                                         if (this.currentPage < this.totalPages)
                                             await this.showPage(++this.currentPage);
                                     }}"
-                                    ?disabled="${this.isPageRenderingInProgress || this.currentPage === this.totalPages}">
+                                    ?disabled="${this.isPageRenderingInProgress ||
+                                    this.currentPage === this.totalPages}">
                                     <dbp-icon name="chevron-right"></dbp-icon>
                                 </button>
                                 <button
@@ -468,7 +475,8 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                                     @click="${async () => {
                                         await this.showPage(this.totalPages);
                                     }}"
-                                    ?disabled="${this.isPageRenderingInProgress || this.currentPage === this.totalPages}">
+                                    ?disabled="${this.isPageRenderingInProgress ||
+                                    this.currentPage === this.totalPages}">
                                     <dbp-icon name="angle-double-right"></dbp-icon>
                                 </button>
                             </div>
@@ -477,9 +485,9 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
                     <div
                         id="canvas-wrapper"
                         class="${classMap({hidden: this.isPageRenderingInProgress})}">
-                            <div id="canvas-wrapper-inner">
-                                <canvas id="pdf-canvas"></canvas>
-                            </div>
+                        <div id="canvas-wrapper-inner">
+                            <canvas id="pdf-canvas"></canvas>
+                        </div>
                     </div>
                     <div class="${classMap({hidden: !this.isPageRenderingInProgress})}">
                         <dbp-mini-spinner id="page-loader"></dbp-mini-spinner>

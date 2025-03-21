@@ -131,9 +131,7 @@ export class PersonSelectDemo extends ScopedElementsMixin(DBPLitElement) {
                                     show-reload-button
                                     reload-button-title="Click me"></dbp-person-select>
                             </div>
-                            <p>
-                                This component is disabled.
-                            </p>
+                            <p>This component is disabled.</p>
                         </div>
                     </form>
                 </div>

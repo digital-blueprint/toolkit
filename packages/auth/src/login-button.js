@@ -120,7 +120,9 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
                     display: flex;
                     align-items: center;
                     padding: 0.3em 0.4em;
-                    transition: background-color 0.15s, color 0.15s;
+                    transition:
+                        background-color 0.15s,
+                        color 0.15s;
                 }
 
                 .login-box svg,

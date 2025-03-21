@@ -10,14 +10,18 @@ npm i @dbp-toolkit/resource-select
 
 ```html
 <dbp-resource-select></dbp-resource-select>
-<script type="module" src="node_modules/@dbp-toolkit/resource-select/dist/dbp-resource-select.js"></script>
+<script
+    type="module"
+    src="node_modules/@dbp-toolkit/resource-select/dist/dbp-resource-select.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
 <dbp-resource-select></dbp-resource-select>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/resource-select@latest/dist/dbp-resource-select.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/resource-select@latest/dist/dbp-resource-select.js"></script>
 ```
 
 ## Attributes
@@ -51,5 +55,5 @@ Or directly via CDN:
 ## Events
 
 - `change` - Gets dispatched when either `value` or `valueObject` change.
-  - `event.detail.value` - Same as the `value` property
-  - `event.detail.object` - Same as the `valueObject` property
+    - `event.detail.value` - Same as the `value` property
+    - `event.detail.object` - Same as the `valueObject` property

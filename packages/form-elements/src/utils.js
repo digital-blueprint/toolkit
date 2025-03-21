@@ -20,7 +20,7 @@ export const getFieldsetCSS = () => {
         fieldset label {
             font-weight: bold;
             display: block;
-            margin-bottom: .5em;
+            margin-bottom: 0.5em;
         }
 
         fieldset input,
@@ -63,7 +63,7 @@ export const getElementWebComponents = (formElement) => {
  * @returns {string}
  */
 export const stringifyForDataValue = (myObject) => {
-    return JSON.stringify(myObject).replace(/"/g, "&quot;");
+    return JSON.stringify(myObject).replace(/"/g, '&quot;');
 };
 
 export const gatherFormDataFromElement = (formElement) => {

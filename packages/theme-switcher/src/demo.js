@@ -26,14 +26,14 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
     static get properties() {
         return {
             lang: {type: String},
-            langDir: {type: String, attribute: "lang-dir"},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
         if (this.langDir) {
-          setOverridesByGlobalCache(this._i18n, this);
+            setOverridesByGlobalCache(this._i18n, this);
         }
     }
 
@@ -52,7 +52,7 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
 
         return html`
             <style>
-                .light-theme{
+                .light-theme {
                     --dbp-override-background: white;
                     --dbp-override-content: black;
 
@@ -77,7 +77,7 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
                     --dbp-override-hover-color: white;
                 }
 
-                .dark-theme{
+                .dark-theme {
                     --dbp-override-background: #151515;
                     --dbp-override-content: white;
 
@@ -108,11 +108,19 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
                     <p>${i18n.t('intro')}</p>
                 </div>
                 <div class="content">
-                    <dbp-theme-switcher subscribe="lang, lang-dir"
+                    <dbp-theme-switcher
+                        subscribe="lang, lang-dir"
                         themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"}, {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'></dbp-theme-switcher>
                 </div>
 
-                This is a <b><dbp-themed><span slot="light">light</span><span slot="dark">dark</span></dbp-themed></b> theme.
+                This is a
+                <b>
+                    <dbp-themed>
+                        <span slot="light">light</span>
+                        <span slot="dark">dark</span>
+                    </dbp-themed>
+                </b>
+                theme.
             </section>
         `;
     }

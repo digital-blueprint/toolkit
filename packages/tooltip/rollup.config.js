@@ -10,7 +10,7 @@ import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getPackagePath, getDistPath, getBuildInfo} from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
-import { createRequire } from "node:module";
+import {createRequire} from 'node:module';
 import process from 'node:process';
 
 const require = createRequire(import.meta.url);
@@ -55,9 +55,7 @@ export default (async () => {
             commonjs(),
             url({
                 limit: 0,
-                include: [
-                    await getPackagePath('tippy.js', '**/*.css'),
-                ],
+                include: [await getPackagePath('tippy.js', '**/*.css')],
                 emitFiles: true,
                 fileName: 'shared/[name].[hash][extname]',
             }),
@@ -75,7 +73,7 @@ export default (async () => {
             }),
             replace({
                 'process.env.NODE_ENV': JSON.stringify('production'),
-                'preventAssignment': true
+                preventAssignment: true,
             }),
             process.env.ROLLUP_WATCH === 'true'
                 ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})

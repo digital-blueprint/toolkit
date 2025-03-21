@@ -103,11 +103,13 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
      */
     connectedCallback() {
         super.connectedCallback();
-        this.updateComplete.then(() =>{
+        this.updateComplete.then(() => {
             if (this.disabledLayout) {
                 /** Disable layout switcher if disabledLayout is set and only one layout is available */
                 this.isDisabled = true;
-                this.layout = this.layouts.filter((layout) => layout.name !== this.disabledLayout)[0].name;
+                this.layout = this.layouts.filter(
+                    (layout) => layout.name !== this.disabledLayout,
+                )[0].name;
                 this._setStoredLayout(this.layout);
             }
             if (this.layout === 'standard') {
@@ -129,7 +131,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.isDefaultLayout = true;
     }
 
-    loadAlternateLayout(){
+    loadAlternateLayout() {
         this.isDefaultLayout = false;
     }
 
@@ -160,7 +162,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         this.layout = newLayout;
         this._setStoredLayout(this.layout);
         /* Dispatch a custom event to inform other parts of the application of the layout change.The new layout state is passed as a detail in the event for use by event listeners. */
-        this.dispatchEvent(new CustomEvent('layout-changed', { detail: this.layout }));
+        this.dispatchEvent(new CustomEvent('layout-changed', {detail: this.layout}));
         this.loadLayout();
     }
 
@@ -206,9 +208,10 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             :host {
                 display: block;
             }
-            layout-button, button.button {
+            layout-button,
+            button.button {
                 cursor: pointer;
-                border:none;
+                border: none;
             }
             .layout-button.active dbp-icon {
                 color: var(--dbp-accent);
@@ -220,7 +223,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             .extended-menu li a.active {
                 color: var(--dbp-accent);
             }
-            a.active dbp-icon{
+            a.active dbp-icon {
                 color: var(--dbp-accent);
             }
             a:hover:not(.active),
@@ -233,7 +236,9 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 padding: 0.3em;
                 display: inline-block;
                 text-decoration: none;
-                transition: background-color 0.15s, color 0.15s;
+                transition:
+                    background-color 0.15s,
+                    color 0.15s;
                 color: var(--dbp-content);
             }
             .extended-menu {
@@ -265,10 +270,10 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             .icon {
                 margin-right: 10px;
             }
-            #layout-menu{
+            #layout-menu {
                 position: relative;
             }
-            .ul-right{
+            .ul-right {
                 right: 0px;
             }
             .hidden {
@@ -279,31 +284,44 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         const i18n = this._i18n;
-            if (!this.isDisabled) {
-                return html`
-                    <div id="layout-menu">
-                        <a href="#" class=${classMap({'layout-button': true, 'active': this.dropdown})} title="${i18n.t('switch-layout')}"
-                            @click="${this.toggleLayoutMenu}" >
-                            <dbp-icon name="layout"></dbp-icon>
-                        </a>
-                        <ul class="extended-menu ${classMap({'hidden': !this.dropdown})}">
-                            ${this.layouts.map((layout) => html`
+        if (!this.isDisabled) {
+            return html`
+                <div id="layout-menu">
+                    <a
+                        href="#"
+                        class=${classMap({'layout-button': true, active: this.dropdown})}
+                        title="${i18n.t('switch-layout')}"
+                        @click="${this.toggleLayoutMenu}">
+                        <dbp-icon name="layout"></dbp-icon>
+                    </a>
+                    <ul class="extended-menu ${classMap({hidden: !this.dropdown})}">
+                        ${this.layouts.map(
+                            (layout) => html`
                                 <li>
                                     <!-- Title for each layout option -->
-                                    <a href="#" class="${this.layout === layout.name ? 'active' : ''}"
-                                        title="${layout.name === 'wide' ? i18n.t('switch-to-wide-layout-label') : i18n.t('switch-to-standard-layout-label')}"
+                                    <a
+                                        href="#"
+                                        class="${this.layout === layout.name ? 'active' : ''}"
+                                        title="${layout.name === 'wide'
+                                            ? i18n.t('switch-to-wide-layout-label')
+                                            : i18n.t('switch-to-standard-layout-label')}"
                                         @click="${() => this.toggleLayout(layout.name)}">
                                         <!-- Icon based on layout-->
-                                        <dbp-icon class="icon" name="${layout.name === 'wide' ? 'wide' : 'standard'}"></dbp-icon>
+                                        <dbp-icon
+                                            class="icon"
+                                            name="${layout.name === 'wide'
+                                                ? 'wide'
+                                                : 'standard'}"></dbp-icon>
                                         ${layout.name === 'wide'
-                                    ? i18n.t('wide-layout-name')
-                                    : i18n.t('standard-layout-name')}
+                                            ? i18n.t('wide-layout-name')
+                                            : i18n.t('standard-layout-name')}
                                     </a>
                                 </li>
-                            `)}
-                        </ul>
-                    </div>
-                `;
-            }
+                            `,
+                        )}
+                    </ul>
+                </div>
+            `;
+        }
     }
 }

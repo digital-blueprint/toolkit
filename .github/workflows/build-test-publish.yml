@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Restore playwright cache
         uses: actions/cache@v4
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Publish to NPM
         if: github.ref == 'refs/heads/main'
@@ -80,9 +80,9 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo'
         uses: digital-blueprint/gitlab-pipeline-trigger-action@v1
         with:
-          host: 'gitlab.tugraz.at'
+          host: "gitlab.tugraz.at"
           trigger_token: ${{ secrets.DEPLOY_TRIGGER_TOKEN }}
           access_token: ${{ secrets.DEPLOY_ACCESS_TOKEN }}
-          id: '21238'
-          ref: 'main'
+          id: "21238"
+          ref: "main"
           variables: '{"UPSTREAM_PROJECT_PATH":"dbp/web-components/toolkit","UPSTREAM_COMMIT_BRANCH":"${{ github.ref_name }}","UPSTREAM_COMMIT_SHA":"${{ github.ref_name }}"}'

@@ -71,5 +71,5 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
 
 commonUtils.defineCustomElement(
     'dbp-resource-select-demo-activity',
-    DbpOrganizationSelectDemoActivity
+    DbpOrganizationSelectDemoActivity,
 );

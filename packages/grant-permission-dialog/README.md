@@ -15,14 +15,18 @@ npm i @dbp-toolkit/grant-permission-dialog
 
 ```html
 <dbp-grant-permission-dialog></dbp-grant-permission-dialog>
-<script type="module" src="node_modules/@dbp-toolkit/grant-permission-dialogs/dist/index.js"></script>
+<script
+    type="module"
+    src="node_modules/@dbp-toolkit/grant-permission-dialogs/dist/index.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
 <dbp-grant-permission-dialog></dbp-grant-permission-dialog>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/grant-permission-dialog@0.1.0/dist/index.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/grant-permission-dialog@0.1.0/dist/index.js"></script>
 ```
 
 ## Attributes
@@ -39,6 +43,7 @@ Or directly via CDN:
     - example `<grant-permission-dialog entry-point-url="http://127.0.0.1:8000"></grant-permission-dialog>`
 
 #### Methods
+
 - `open()`: Opens the modal.
     - example `this._('#grant-permission-dialog').open();`
 

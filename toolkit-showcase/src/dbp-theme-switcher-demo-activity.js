@@ -25,7 +25,7 @@ export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLit
         return {
             ...super.properties,
             lang: {type: String},
-            langDir: {type: String, attribute: "lang-dir"},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
@@ -60,7 +60,10 @@ export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLit
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-theme-switcher-demo id="demo" lang="${this.lang}" lang-dir="${this.langDir}"></dbp-theme-switcher-demo>
+            <dbp-theme-switcher-demo
+                id="demo"
+                lang="${this.lang}"
+                lang-dir="${this.langDir}"></dbp-theme-switcher-demo>
         `;
     }
 }

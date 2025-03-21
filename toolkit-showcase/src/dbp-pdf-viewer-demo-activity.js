@@ -60,9 +60,7 @@ class DbpPdfViewerDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-pdf-viewer-demo
-                id="demo"
-                lang="${this.lang}"></dbp-pdf-viewer-demo>
+            <dbp-pdf-viewer-demo id="demo" lang="${this.lang}"></dbp-pdf-viewer-demo>
         `;
     }
 }

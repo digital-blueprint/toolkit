@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
-import { createRequire } from "node:module";
+import {createRequire} from 'node:module';
 import process from 'node:process';
 
 const require = createRequire(import.meta.url);
@@ -19,10 +19,7 @@ export default (async () => {
     return {
         input:
             build !== 'test'
-                ? [
-                    'src/demo.js',
-                    'src/dbp-tabulator-table.js'
-                ]
+                ? ['src/demo.js', 'src/dbp-tabulator-table.js']
                 : globSync('test/**/*.js'),
         output: {
             dir: 'dist',

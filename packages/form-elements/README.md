@@ -22,7 +22,9 @@ Or directly via CDN:
 
 ```html
 <dbp-form-string-element></dbp-form-string-element>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/form-elements@0.2.0/dist/string.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/form-elements@0.2.0/dist/string.js"></script>
 ```
 
 ## Attributes
@@ -118,18 +120,18 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 ### General Attributes
 
 - `lang` (optional, default: `de`): Language setting
-  - Type: String
-  - Accepts: `de` (German) or `en` (English)
-  - Example: `<view lang="en"></view>`
+    - Type: String
+    - Accepts: `de` (German) or `en` (English)
+    - Example: `<view lang="en"></view>`
 - `label`: Display label for the view
-  - Type: String
-  - Text shown alongside or near the form view
+    - Type: String
+    - Text shown alongside or near the form view
 - `value`: Current value of the view
-  - Type: String
-  - Reflects current input state
+    - Type: String
+    - Reflects current input state
 - `hidden`: Indicates if the view is hidden
-  - Type: Boolean
-  - Hides the view if set to `true`
+    - Type: Boolean
+    - Hides the view if set to `true`
 
 ## Local development
 

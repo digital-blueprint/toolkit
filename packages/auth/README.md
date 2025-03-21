@@ -11,14 +11,20 @@ npm i @dbp-toolkit/auth
 ### Usage
 
 ```html
-<dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz-vpu" client-id="some-id"></dbp-auth-keycloak>
+<dbp-auth-keycloak
+    url="https://auth.tugraz.at/auth"
+    realm="tugraz-vpu"
+    client-id="some-id"></dbp-auth-keycloak>
 <script type="module" src="node_modules/@dbp-toolkit/auth/dist/dbp-auth.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
-<dbp-auth-keycloak url="https://auth.tugraz.at/auth" realm="tugraz-vpu" client-id="some-id"></dbp-auth-keycloak>
+<dbp-auth-keycloak
+    url="https://auth.tugraz.at/auth"
+    realm="tugraz-vpu"
+    client-id="some-id"></dbp-auth-keycloak>
 <script type="module" src="https://unpkg.com/@dbp-toolkit/auth@0.2.2/dist/dbp-auth.js"></script>
 ```
 
@@ -59,7 +65,6 @@ The component emits a `dbp-set-property` event for the attribute `auth`:
 - `auth.user-full-name`: Full name of the user
 - `auth.user-id`: Identifier of the user
 
-
 ## Login Button
 
 ### Usage
@@ -72,10 +77,10 @@ The component emits a `dbp-set-property` event for the attribute `auth`:
 ### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
-  - example `<dbp-auth-keycloak lang="de" </dbp-auth-keycloak>`
+    - example `<dbp-auth-keycloak lang="de" </dbp-auth-keycloak>`
 - `auth` object: you need to set that object property for the auth token
-  - example auth property: `{token: "THE_BEARER_TOKEN"}`
-  - note: most often this should be an attribute that is not set directly, but subscribed at a provider
+    - example auth property: `{token: "THE_BEARER_TOKEN"}`
+    - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 
 ### Emitted attributes
 
@@ -88,17 +93,17 @@ If embedded in an external page (without `<dbp-provider>`) components can also w
 ```html
 <dbp-person-select id="ps-1"></dbp-person-select>
 <script>
-  function onAuthHasChanged(auth) {
-      /* fully featured auth object */
-    const ps = document.getElementById('ps-1');
-    ps.setProperty('auth', auth);
-  }
-  /* or */
-  function onTokenHasChanged(token) {
-      /* only token available */
-    const auth = { token: token };
-    onAuthHasChanged(auth);
-  }
+    function onAuthHasChanged(auth) {
+        /* fully featured auth object */
+        const ps = document.getElementById('ps-1');
+        ps.setProperty('auth', auth);
+    }
+    /* or */
+    function onTokenHasChanged(token) {
+        /* only token available */
+        const auth = {token: token};
+        onAuthHasChanged(auth);
+    }
 </script>
 ```
 
@@ -114,7 +119,7 @@ cd toolkit/packages/auth
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch-local
 
 # build local packages in dist directory

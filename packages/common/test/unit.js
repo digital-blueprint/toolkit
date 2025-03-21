@@ -40,7 +40,7 @@ suite('utils', () => {
         // Normal usage
         assert.equal(
             new URL(utils.getAssetURL('foobar', 'bar/quux')).pathname,
-            '/local/foobar/bar/quux'
+            '/local/foobar/bar/quux',
         );
     });
 
@@ -53,7 +53,7 @@ suite('utils', () => {
         assert.equal(combineURLs('http://example.org/foo', '/bar'), 'http://example.org/foo/bar');
         assert.equal(
             combineURLs('http://example.org/foo/', '/bar/'),
-            'http://example.org/foo/bar/'
+            'http://example.org/foo/bar/',
         );
         assert.equal(combineURLs('http://example.org', '/bar'), 'http://example.org/bar');
         assert.equal(combineURLs('http://example.org', 'bar/'), 'http://example.org/bar/');
@@ -63,11 +63,11 @@ suite('utils', () => {
         assert.equal(combineURLs('http://example.org', 'http://other.com'), 'http://other.com/');
         assert.equal(
             combineURLs('http://example.org', 'http://other.com/test'),
-            'http://other.com/test'
+            'http://other.com/test',
         );
         assert.equal(
             combineURLs('http://example.org', 'http://other.com/test/'),
-            'http://other.com/test/'
+            'http://other.com/test/',
         );
     });
 
@@ -75,7 +75,11 @@ suite('utils', () => {
         let url = 'foo/bar%20quux?foo=bar&quux=42&quux=41#hash';
         assert.deepEqual(_parseUrlComponents(url).pathSegments, ['foo', 'bar quux']);
         assert.equal(_parseUrlComponents(url).pathname, '/foo/bar%20quux');
-        assert.deepEqual(Array.from(_parseUrlComponents(url).queryParams.entries()), [['foo', 'bar'], ['quux', '42'], ['quux', '41']]);
+        assert.deepEqual(Array.from(_parseUrlComponents(url).queryParams.entries()), [
+            ['foo', 'bar'],
+            ['quux', '42'],
+            ['quux', '41'],
+        ]);
         assert.equal(_parseUrlComponents(url).queryString, '?foo=bar&quux=42&quux=41');
         assert.equal(_parseUrlComponents(url).fragment, 'hash');
         assert.equal(_parseUrlComponents('/foo').pathname, '/foo');

@@ -1,8 +1,5 @@
 {
-  "packages": [
-    "packages/*",
-    "toolkit-showcase"
-  ],
-  "npmClient": "npm",
-  "version": "independent"
+    "packages": ["packages/*", "toolkit-showcase"],
+    "npmClient": "npm",
+    "version": "independent"
 }

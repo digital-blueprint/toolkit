@@ -15,17 +15,13 @@ Import {Button} from '@dbp-toolkit/common';
 ```
 
 Then add the new element to scopedElements and give it a name
+
 ```html
-static get scopedElements() {
-    return {
-        ...
-        'dbp-button': Button,
-        ...
-    }
-}
+static get scopedElements() { return { ... 'dbp-button': Button, ... } }
 ```
 
 Finally, add it to the render() function inside return html.
+
 ```html
 <dbp-button>...</dbp-button>
 ```
@@ -71,20 +67,33 @@ You can add content to 3 slots: `header`, `content` and `footer`. The `header` a
 Slotted content can be styled from outside with css.
 
 ```html
-<script type="module" src="https://unpkg.com/browse/@dbp-toolkit/common@0.3.5/src/modal.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/browse/@dbp-toolkit/common@0.3.5/src/modal.js"></script>
 
-<dbp-button type="is-primary" id="modal-trigger-basic"
+<dbp-button
+    type="is-primary"
+    id="modal-trigger-basic"
     value="open modal"
     no-spinner-on-click
     @click="${() => this._('#my-modal-basic').open() }"></dbp-button>
 
-<dbp-modal id="my-modal-basic" class="modal modal--basic" modal-id="my-modal-basic" title="The title of the modal" subscribe="lang">
+<dbp-modal
+    id="my-modal-basic"
+    class="modal modal--basic"
+    modal-id="my-modal-basic"
+    title="The title of the modal"
+    subscribe="lang">
     <div slot="header" class="header">
-        <h3>Person name</h3><dbp-icon name="cog"></dbp-icon>
+        <h3>Person name</h3>
+        <dbp-icon name="cog"></dbp-icon>
     </div>
     <div slot="content">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </p>
     </div>
     <menu slot="footer" class="footer-menu">
         <dbp-button @click="${() => { this._('#my-modal-basic').close(); }}">Cancel</dbp-button>
@@ -108,31 +117,29 @@ Slotted content can be styled from outside with css.
 
 You can customize the modal with the following css variables:
 
-`--dbp-modal-min-width`  : set modal min width
+`--dbp-modal-min-width` : set modal min width
 `--dbp-modal-min-height` : set modal min height
-`--dbp-modal-max-width`  : set modal max width
+`--dbp-modal-max-width` : set modal max width
 `--dbp-modal-max-height` : set modal max height
 
 `--dbp-modal-header-height` : set modal header height
 `--dbp-modal-footer-height` : set modal footer height
 
-`--dbp-modal-animation:`
-    - You can set animation on modal opening.
-    - The value can be `mmFadeIn`, `mmFadeOut`, `mmSlideIn`, `mmSlideOut`
+`--dbp-modal-animation:` - You can set animation on modal opening. - The value can be `mmFadeIn`, `mmFadeOut`, `mmSlideIn`, `mmSlideOut`
 
 ### Callable functions
 
 - `open()` opens a specific modal
-  - `this._('#my-modal-webcomponent-id').open();`
+    - `this._('#my-modal-webcomponent-id').open();`
 - `close()` closes a specific modal
-  - `this._('#my-modal-webcomponent-id').close();`
+    - `this._('#my-modal-webcomponent-id').close();`
 
 ### Events
 
 - `dbp-modal-closed` a event which is triggered if the modal is closed. in the detail attribute there is the modal-id of the closed modal.
-  - `<dbp-modal @dbp-modal-closed="${(event) => {
-    this.doSomething(event);
-    }}"></dbp-modal>`
+    - `<dbp-modal @dbp-modal-closed="${(event) => {
+this.doSomething(event);
+}}"></dbp-modal>`
 
 ## Overriding slots in nested web components
 
@@ -154,10 +161,12 @@ file pickers of the signature topic:
         <div slot="auth-info">
             <dbp-translated subscribe="lang">
                 <div slot="de">
-                    Deutscher Text mit <a href="#ein-link">einem Link</a>
+                    Deutscher Text mit
+                    <a href="#ein-link">einem Link</a>
                 </div>
                 <div slot="en">
-                    English text with <a href="#a-link">a link</a>
+                    English text with
+                    <a href="#a-link">a link</a>
                 </div>
             </dbp-translated>
         </div>
@@ -184,18 +193,6 @@ in the Nextcloud file picker.
 The css rules are added to the styles() function in the json file corresponding to a particular activity.
 
 ```html
-static get styles() {
-        return [
-            commonStyles.getThemeCSS(),
-            css`
-                .hidden {
-                    display: none;
-                }
-                .button-style {
-                    --dbp-override-secondary-surface: #3793A5;
-                }
-
-            `,
-        ];
-    }
+static get styles() { return [ commonStyles.getThemeCSS(), css` .hidden { display: none; }
+.button-style { --dbp-override-secondary-surface: #3793A5; } `, ]; }
 ```

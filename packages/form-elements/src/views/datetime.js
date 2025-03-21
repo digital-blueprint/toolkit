@@ -18,18 +18,23 @@ export class DbpDateTimeView extends ScopedElementsMixin(DbpBaseView) {
         }
 
         // Format the date using toLocaleString with de-DE locale
-        const dateTimeString = !date || date === '' ? '-' : date.toLocaleString('de-DE', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZoneName: 'short',
-            hour12: false
-        });
+        const dateTimeString =
+            !date || date === ''
+                ? '-'
+                : date.toLocaleString('de-DE', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      timeZoneName: 'short',
+                      hour12: false,
+                  });
 
-        return html`${dateTimeString}`;
+        return html`
+            ${dateTimeString}
+        `;
     }
 }
 

@@ -117,7 +117,7 @@ export function getFileHandlingCss() {
         }
 
         #fileElem:focus + label {
-            outline:none !important;
+            outline: none !important;
             outline-width: 0 !important;
             box-shadow: none;
             -moz-box-shadow: none;
@@ -148,48 +148,43 @@ export function getFileHandlingCss() {
             left: 10px;
             top: 8px;
         }
-        
+
         .button-container .checkmark::after {
             left: 7px;
             top: 2px;
             width: 5px;
             height: 11px;
         }
-        
-        
+
         /*.tabulator .tabulator-tableHolder {*/
         /*    overflow: hidden;*/
         /*}*/
-        
-        
+
         .force-no-select {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
-        
+
         /*.tabulator .tabulator-tableHolder {*/
         /*    !* height: unset !important; !*TODO find a better way to do this*!*/
         /*}*/
-        
-      
-        
-       /* .tabulator-row-handle {
+
+        /* .tabulator-row-handle {
             padding: 0px !important;
         }*/
-        
+
         /*.tabulator .tabulator-header .tabulator-col {*/
         /*    min-height: 37px !important;*/
         /*}*/
-        
-        .filename{
+
+        .filename {
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
             white-space: nowrap;
         }
-
 
         .select-all-icon {
             height: 40px;
@@ -197,14 +192,13 @@ export function getFileHandlingCss() {
             top: -1.1em;
         }
 
-
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
             padding-top: 4px;
             padding-bottom: 4px;
             font-weight: normal;
             font-size: 1rem;
         }
-        
+
         @media only screen and (orientation: portrait) and (max-width: 768px) {
             .tabulator .tabulator-tableHolder {
                 white-space: inherit;
@@ -215,8 +209,6 @@ export function getFileHandlingCss() {
                 height: 100%;
                 max-width: 100%;
             }
-            
-
         }
 
         /**************************\\

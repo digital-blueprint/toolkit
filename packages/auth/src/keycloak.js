@@ -139,7 +139,7 @@ export class KeycloakWrapper extends EventTarget {
         }
         this._checkId = setInterval(
             this._checkTokeHasExpired.bind(this),
-            this.CHECK_INTERVAL * 1000
+            this.CHECK_INTERVAL * 1000,
         );
 
         this._onChanged();

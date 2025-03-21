@@ -80,7 +80,9 @@ export class Icon extends LitElement {
                     mask-image: var(--dbp-override-icon-${iconPart}, url(${iconURL}));
                 }
             </style>
-            <div id="svg" aria-label="${ifDefined(this.ariaLabel ? this.ariaLabel : undefined)}"></div>
+            <div
+                id="svg"
+                aria-label="${ifDefined(this.ariaLabel ? this.ariaLabel : undefined)}"></div>
         `;
     }
 }

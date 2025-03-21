@@ -82,24 +82,22 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         this.updateComplete.then(() => {
             this._('nav.modal-nav').addEventListener('scroll', this.handleScroll.bind(this));
 
-
-            if(this.enabledTargets.split(',') > 1) {
+            if (this.enabledTargets.split(',') > 1) {
                 this._('.right-paddle').addEventListener(
                     'click',
-                    this.handleScrollRight.bind(this, this._('nav.modal-nav'))
+                    this.handleScrollRight.bind(this, this._('nav.modal-nav')),
                 );
 
                 this._('.left-paddle').addEventListener(
                     'click',
-                    this.handleScrollLeft.bind(this, this._('nav.modal-nav'))
+                    this.handleScrollLeft.bind(this, this._('nav.modal-nav')),
                 );
             } else {
                 const paddles = this._('.paddles');
-                if(paddles) {
+                if (paddles) {
                     paddles.classList.add('hidden');
                 }
             }
-
         });
     }
 
@@ -225,11 +223,8 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     loadWebdavDirectory() {
         const filePicker = this._('#nextcloud-file-picker');
         if (filePicker) {
-
             filePicker.checkLocalStorage().then((contents) => {
-
                 if (filePicker.webDavClient !== null) {
-
                     filePicker.loadDirectory(filePicker.directoryPath);
                 }
             });

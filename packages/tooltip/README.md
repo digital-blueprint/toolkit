@@ -3,9 +3,10 @@
 The tooltip component provides an icon as an anker for a tooltip.
 There is a generic tooltip `<dbp-tooltip>` which supports any icon the app has bundled.
 Another info tooltip `<dbp-info-tooltip>` shows an embedded info icon (small letter i inside a circle) as a convenient
-shortcut. 
+shortcut.
 
 ## Install
+
 You can install this component via npm:
 
 ```bash
@@ -25,13 +26,15 @@ Or directly via CDN:
 ```html
 <dbp-tooltip text-content="text to show" icon-name="information"></dbp-tooltip>
 <dbp-info-tooltip text-content="text to show"></dbp-info-tooltip>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/tooltip@0.0.1/dist/dbp-tooltip.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/tooltip@0.0.1/dist/dbp-tooltip.js"></script>
 ```
 
 ## Attributes
 
 - `text-content`: Text to show as tooltip (default is 'text missing.' as a reminder!)
-- `icon-name`: (`<dbp-tooltip>` only, default is a skull) Name of the bundled icon (SVG) for `<dbp-icon>` 
+- `icon-name`: (`<dbp-tooltip>` only, default is a skull) Name of the bundled icon (SVG) for `<dbp-icon>`
 - `button-text`: (`<dbp-button-tooltip>` only, default is 'submit') Text on the button
 - `type`: (`<dbp-button-tooltip>` only, default is 'submit') Options are 'submit', 'reset', or any string
 - `form-id`: (`<dbp-button-tooltip>` only) Id of the from to submit, if omitted the next form in DOM hirachy will be used.

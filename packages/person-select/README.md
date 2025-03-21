@@ -10,14 +10,18 @@ npm i @dbp-toolkit/person-select
 
 ```html
 <dbp-person-select></dbp-person-select>
-<script type="module" src="node_modules/@dbp-toolkit/person-select/dist/dbp-person-select.js"></script>
+<script
+    type="module"
+    src="node_modules/@dbp-toolkit/person-select/dist/dbp-person-select.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
 <dbp-person-select></dbp-person-select>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/person-select@0.2.2/dist/dbp-person-select.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/person-select@0.2.2/dist/dbp-person-select.js"></script>
 ```
 
 ## Attributes
@@ -59,7 +63,7 @@ cd toolkit/packages/person-select
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch
 
 # run tests

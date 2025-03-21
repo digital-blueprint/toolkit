@@ -18,8 +18,6 @@ import {
     Translation,
 } from './index.js';
 
-
-
 export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
@@ -176,7 +174,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
         e.target.classList.add('button-clicked');
 
         setTimeout(() => {
-            this.shadowRoot.querySelectorAll('dbp-button').forEach(element => {
+            this.shadowRoot.querySelectorAll('dbp-button').forEach((element) => {
                 element.stop();
             });
         }, 1000);
@@ -271,8 +269,7 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                             type="is-primary"></dbp-button>
                         <dbp-button
                             value="No type"
-                            @click="${this.buttonClickHandler}"
-                            ></dbp-button>
+                            @click="${this.buttonClickHandler}"></dbp-button>
                         <dbp-button
                             value="Secondary"
                             @click="${this.buttonClickHandler}"
@@ -293,7 +290,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                             value="Info"
                             @click="${this.buttonClickHandler}"
                             type="is-info"></dbp-button>
-                        <br><br>
+                        <br />
+                        <br />
                         <dbp-button
                             value="Small primary"
                             @click="${this.buttonClickHandler}"
@@ -302,7 +300,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                             value="Small secondary"
                             @click="${this.buttonClickHandler}"
                             type="is-small is-secondary"></dbp-button>
-                        <br><br>
+                        <br />
+                        <br />
                         <dbp-loading-button
                             @click="${this.loadingButtonClickHandler}"
                             type="is-primary">
@@ -314,7 +313,8 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                             disabled>
                             Loading Button Disabled
                         </dbp-loading-button>
-                        <br><br>
+                        <br />
+                        <br />
                         <dbp-icon-button
                             icon-name="checkmark-circle"
                             aria-label="Click to approve this changes"
@@ -337,7 +337,9 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                     <div class="control">
                         <ul class="color-demo-list">
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-background);">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-background);">
                                     <div class="demoblock__example"></div>
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">Background color</span>
@@ -346,8 +348,10 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-content);">
-                                <div class="demoblock__example"></div>
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-content);">
+                                    <div class="demoblock__example"></div>
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">Content color</span>
                                         <code class="demoblock__variable">--dbp-content</code>
@@ -355,7 +359,9 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-primary);">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-primary);">
                                     <div class="demoblock__example"></div>
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">Primary color</span>
@@ -364,7 +370,9 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-secondary);">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-secondary);">
                                     <div class="demoblock__example"></div>
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">Secondary color</span>
@@ -397,7 +405,9 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-success);">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-success);">
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">Success</span>
                                         <code class="demoblock__variable">--dbp-success</code>
@@ -405,7 +415,9 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-warning);">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-warning);">
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">Warning</span>
                                         <code class="demoblock__variable">--dbp-warning</code>
@@ -424,80 +436,130 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
 
                         <ul class="color-demo-list color-demo-list--examples">
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-primary-surface); color: var(--dbp-on-primary-surface)">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-primary-surface); color: var(--dbp-on-primary-surface)">
                                     <div class="demoblock__example">
                                         <span>Primary</span>
                                     </div>
                                     <div class="demoblock__description">
-                                        <span class="demoblock__color-role">On primary surface</span>
-                                        <code class="demoblock__variable">--dbp-primary-surface<br/>--dbp-on-primary-surface</code>
+                                        <span class="demoblock__color-role">
+                                            On primary surface
+                                        </span>
+                                        <code class="demoblock__variable">
+                                            --dbp-primary-surface
+                                            <br />
+                                            --dbp-on-primary-surface
+                                        </code>
                                     </div>
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-secondary-surface); color: var(--dbp-on-secondary-surface)">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-secondary-surface); color: var(--dbp-on-secondary-surface)">
                                     <div class="demoblock__example">
                                         <span>Secondary</span>
                                     </div>
                                     <div class="demoblock__description">
-                                        <span class="demoblock__color-role">On secondary surface</span>
-                                        <code class="demoblock__variable">--dbp-secondary-surface<br/>--dbp-on-secondary-surface</code>
+                                        <span class="demoblock__color-role">
+                                            On secondary surface
+                                        </span>
+                                        <code class="demoblock__variable">
+                                            --dbp-secondary-surface
+                                            <br />
+                                            --dbp-on-secondary-surface
+                                        </code>
                                     </div>
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-info-surface); color: var(--dbp-on-info-surface)">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-info-surface); color: var(--dbp-on-info-surface)">
                                     <div class="demoblock__example">
                                         <span>Info</span>
                                     </div>
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">On info surface</span>
-                                        <code class="demoblock__variable">--dbp-info-surface<br/>--dbp-on-info-surface</code>
+                                        <code class="demoblock__variable">
+                                            --dbp-info-surface
+                                            <br />
+                                            --dbp-on-info-surface
+                                        </code>
                                     </div>
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-success-surface); color: var(--dbp-on-success-surface)">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-success-surface); color: var(--dbp-on-success-surface)">
                                     <div class="demoblock__example">
                                         <span>Success</span>
                                     </div>
                                     <div class="demoblock__description">
-                                        <span class="demoblock__color-role">On success surface</span>
-                                        <code class="demoblock__variable">--dbp-success-surface<br/>--dbp-on-success-surface</code>
+                                        <span class="demoblock__color-role">
+                                            On success surface
+                                        </span>
+                                        <code class="demoblock__variable">
+                                            --dbp-success-surface
+                                            <br />
+                                            --dbp-on-success-surface
+                                        </code>
                                     </div>
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-warning-surface); color: var(--dbp-on-warning-surface)">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-warning-surface); color: var(--dbp-on-warning-surface)">
                                     <div class="demoblock__example">
                                         <span>Warning</span>
                                     </div>
                                     <div class="demoblock__description">
-                                        <span class="demoblock__color-role">On warning surface</span>
-                                        <code class="demoblock__variable">--dbp-warning-surface<br/>--dbp-on-warning-surface</code>
+                                        <span class="demoblock__color-role">
+                                            On warning surface
+                                        </span>
+                                        <code class="demoblock__variable">
+                                            --dbp-warning-surface
+                                            <br />
+                                            --dbp-on-warning-surface
+                                        </code>
                                     </div>
                                 </div>
                             </li>
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-danger-surface); color: var(--dbp-on-danger-surface)">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-danger-surface); color: var(--dbp-on-danger-surface)">
                                     <div class="demoblock__example">
                                         <span>Danger</span>
                                     </div>
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">On danger surface</span>
-                                        <code class="demoblock__variable">--dbp-danger-surface<br/>--dbp-on-danger-surface</code>
+                                        <code class="demoblock__variable">
+                                            --dbp-danger-surface
+                                            <br />
+                                            --dbp-on-danger-surface
+                                        </code>
                                     </div>
                                 </div>
                             </li>
 
                             <li>
-                                <div class="demoblock" style="background-color: var(--dbp-hover-background-color); color: var(--dbp-hover-color)">
+                                <div
+                                    class="demoblock"
+                                    style="background-color: var(--dbp-hover-background-color); color: var(--dbp-hover-color)">
                                     <div class="demoblock__example">
                                         <span>Hover</span>
                                     </div>
                                     <div class="demoblock__description">
                                         <span class="demoblock__color-role">On hover</span>
-                                        <code class="demoblock__variable">--dbp-hover-background-color<br/>--dbp-hover-color</code>
+                                        <code class="demoblock__variable">
+                                            --dbp-hover-background-color
+                                            <br />
+                                            --dbp-hover-color
+                                        </code>
                                     </div>
                                 </div>
                             </li>
@@ -521,7 +583,7 @@ html {
                         <dbp-inline-notification
                             summary="Default - no type"
                             body="Item <b>foo</b> was deleted!"></dbp-inline-notification>
-                        <br/>
+                        <br />
                         <dbp-inline-notification
                             summary="Primary - Item deleted"
                             body="Item <b>foo</b> was deleted!"
@@ -563,8 +625,14 @@ html {
                         </dbp-translated>
                     </div>
                     <div class="control" id="dbp-translation-demo">
-                        <dbp-translation key="toolkit-showcase" subscribe="lang, lang-dir"></dbp-translation>
-                        <dbp-translation key="toolkit-showcase-link" var='{"link1": "https://www.i18next.com/translation-function/interpolation"}' subscribe="lang, lang-dir" unsafe></dbp-translation>
+                        <dbp-translation
+                            key="toolkit-showcase"
+                            subscribe="lang, lang-dir"></dbp-translation>
+                        <dbp-translation
+                            key="toolkit-showcase-link"
+                            var='{"link1": "https://www.i18next.com/translation-function/interpolation"}'
+                            subscribe="lang, lang-dir"
+                            unsafe></dbp-translation>
                         <dbp-translation key="abc" subscribe="lang, lang-dir"></dbp-translation>
                     </div>
                 </div>
@@ -596,23 +664,38 @@ html {
                             }
                         </style>
 
-                        <dbp-button type="is-primary" id="modal-trigger-basic"
+                        <dbp-button
+                            type="is-primary"
+                            id="modal-trigger-basic"
                             value="open modal"
                             no-spinner-on-click
-                            @click="${() => this._('#my-modal-basic').open() }"></dbp-button>
+                            @click="${() => this._('#my-modal-basic').open()}"></dbp-button>
 
-                        <dbp-modal id="my-modal-basic" class="modal modal--basic" modal-id="modal-basic" title="The title of the modal" subscribe="lang">
+                        <dbp-modal
+                            id="my-modal-basic"
+                            class="modal modal--basic"
+                            modal-id="modal-basic"
+                            title="The title of the modal"
+                            subscribe="lang">
                             <div slot="header" class="header">
-                                <h3>Person name</h3><dbp-icon name="cog"></dbp-icon>
+                                <h3>Person name</h3>
+                                <dbp-icon name="cog"></dbp-icon>
                             </div>
                             <div slot="content">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                                nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                             </div>
                             <menu slot="footer" class="footer-menu">
-                                <dbp-button @click="${() => { this._('#my-modal-basic').close(); }}">Cancel</dbp-button>
+                                <dbp-button
+                                    @click="${() => {
+                                        this._('#my-modal-basic').close();
+                                    }}">
+                                    Cancel
+                                </dbp-button>
                                 <dbp-button type="is-primary">Submit</dbp-button>
                             </menu>
                         </dbp-modal>
@@ -637,52 +720,121 @@ html {
                             }
                         </style>
 
-                        <dbp-button type="is-primary" id="modal-trigger-long"
+                        <dbp-button
+                            type="is-primary"
+                            id="modal-trigger-long"
                             value="open modal"
                             no-spinner-on-click
-                            @click="${() => this._('#my-modal-long').open() }"></dbp-button>
+                            @click="${() => this._('#my-modal-long').open()}"></dbp-button>
 
-                        <dbp-modal id="my-modal-long" class="modal modal--long" modal-id="modal-long" title="The title of the modal" subscribe="lang">
+                        <dbp-modal
+                            id="my-modal-long"
+                            class="modal modal--long"
+                            modal-id="modal-long"
+                            title="The title of the modal"
+                            subscribe="lang">
                             <div slot="header" class="header">
-                                <div class="top"><h3>Person name</h3><dbp-icon name="cog"></dbp-icon></div>
-                                <div class="bottom"><h4>Ohter Person name</h4><dbp-icon name="ambulance"></dbp-icon></div>
+                                <div class="top">
+                                    <h3>Person name</h3>
+                                    <dbp-icon name="cog"></dbp-icon>
+                                </div>
+                                <div class="bottom">
+                                    <h4>Ohter Person name</h4>
+                                    <dbp-icon name="ambulance"></dbp-icon>
+                                </div>
                             </div>
                             <div slot="content">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h4>Exercitation</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h4>Consectetur</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h5>Eiusmod</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h4>Incididunt</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h5>Consequat</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                             </div>
                             <menu slot="footer" class="footer-menu">
-                                <dbp-button @click="${() => { this._('#my-modal-long').close(); }}">Cancel</dbp-button>
+                                <dbp-button
+                                    @click="${() => {
+                                        this._('#my-modal-long').close();
+                                    }}">
+                                    Cancel
+                                </dbp-button>
                                 <dbp-button type="is-primary">Submit</dbp-button>
                             </menu>
                         </dbp-modal>
@@ -707,51 +859,122 @@ html {
                             }
                         </style>
 
-                        <dbp-button type="is-primary" id="modal-trigger-sticky"
+                        <dbp-button
+                            type="is-primary"
+                            id="modal-trigger-sticky"
                             value="open modal"
                             no-spinner-on-click
-                            @click="${() => this._('#my-modal-sticky').open() }"></dbp-button>
+                            @click="${() => this._('#my-modal-sticky').open()}"></dbp-button>
 
-                        <dbp-modal id="my-modal-sticky" sticky-footer class="modal modal--sticky" modal-id="modal-sticky" title="The title of the modal" subscribe="lang">
+                        <dbp-modal
+                            id="my-modal-sticky"
+                            sticky-footer
+                            class="modal modal--sticky"
+                            modal-id="modal-sticky"
+                            title="The title of the modal"
+                            subscribe="lang">
                             <div slot="header" class="header">
-                                <div class="top"><h3>Person name</h3><dbp-icon name="cog"></dbp-icon></div>
-                                <div class="bottom"><h4>Ohter Person name</h4><dbp-icon name="ambulance"></dbp-icon></div>
+                                <div class="top">
+                                    <h3>Person name</h3>
+                                    <dbp-icon name="cog"></dbp-icon>
+                                </div>
+                                <div class="bottom">
+                                    <h4>Ohter Person name</h4>
+                                    <dbp-icon name="ambulance"></dbp-icon>
+                                </div>
                             </div>
                             <div slot="content">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h4>Exercitation</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h4>Consectetur</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h5>Eiusmod</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h4>Incididunt</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                                 <h5>Consequat</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                    nisi ut aliquip ex ea commodo consequat.
+                                </p>
                             </div>
                             <menu slot="footer" class="footer-menu">
-                                <dbp-button @click="${() => { this._('#my-modal-long').close(); }}">Cancel</dbp-button>
+                                <dbp-button
+                                    @click="${() => {
+                                        this._('#my-modal-long').close();
+                                    }}">
+                                    Cancel
+                                </dbp-button>
                                 <dbp-button type="is-primary">Submit</dbp-button>
                             </menu>
                         </dbp-modal>
@@ -769,19 +992,24 @@ html {
                             }
                         </style>
 
-                        <dbp-button type="is-primary" id="modal-trigger-person"
+                        <dbp-button
+                            type="is-primary"
+                            id="modal-trigger-person"
                             value="open modal"
                             no-spinner-on-click
-                            @click="${() => this._('#my-modal-person').open() }"></dbp-button>
+                            @click="${() => this._('#my-modal-person').open()}"></dbp-button>
 
-                        <dbp-modal id="my-modal-person" class="modal modal--person"
+                        <dbp-modal
+                            id="my-modal-person"
+                            class="modal modal--person"
                             modal-id="modal-person"
                             title="Person selector modal"
                             min-width="500px"
                             min-height="400px"
                             subscribe="lang">
                             <div slot="header" class="header">
-                                <h3>Person name</h3><dbp-icon name="cog"></dbp-icon>
+                                <h3>Person name</h3>
+                                <dbp-icon name="cog"></dbp-icon>
                             </div>
                             <div slot="content">
                                 <dbp-person-select
@@ -790,13 +1018,17 @@ html {
                                     entry-point-url="${this.entryPointUrl}"></dbp-person-select>
                             </div>
                             <menu slot="footer" class="footer-menu">
-                                <dbp-button @click="${() => { this._('#my-modal-person').close(); }}">Cancel</dbp-button>
+                                <dbp-button
+                                    @click="${() => {
+                                        this._('#my-modal-person').close();
+                                    }}">
+                                    Cancel
+                                </dbp-button>
                                 <dbp-button type="is-primary">Submit</dbp-button>
                             </menu>
                         </dbp-modal>
                     </div>
                 </div>
-
             </section>
         `;
     }

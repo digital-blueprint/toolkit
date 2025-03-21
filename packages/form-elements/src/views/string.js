@@ -10,7 +10,9 @@ export class DbpStringView extends ScopedElementsMixin(DbpBaseView) {
     }
 
     renderValue() {
-        return html`<div style="white-space: pre-line">${this.value}</div>`;
+        return html`
+            <div style="white-space: pre-line">${this.value}</div>
+        `;
     }
 }
 

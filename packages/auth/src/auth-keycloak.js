@@ -45,7 +45,7 @@ export class AuthKeycloak extends AdapterLitElement {
 
         // inject a data-testid attribute for Playwright
         if (window.playwright) {
-            this.setAttribute("data-testid", "dbp-auth-keycloak");
+            this.setAttribute('data-testid', 'dbp-auth-keycloak');
         }
     }
 
@@ -84,7 +84,10 @@ export class AuthKeycloak extends AdapterLitElement {
     }
 
     async _fetchUser(userId) {
-        const apiUrl = combineURLs(this.entryPointUrl, `/frontend/users/${encodeURIComponent(userId)}`);
+        const apiUrl = combineURLs(
+            this.entryPointUrl,
+            `/frontend/users/${encodeURIComponent(userId)}`,
+        );
 
         let response = await fetch(apiUrl, {
             headers: {
@@ -162,10 +165,10 @@ export class AuthKeycloak extends AdapterLitElement {
         // Warning: window.playwright is not set the if the browser window was just opened!
         if (window.Cypress || window.playwright) {
             window.DBPAuth = auth;
-            console.log("Cypress/Playwright detected");
+            console.log('Cypress/Playwright detected');
         }
 
-        this.setAttribute("data-auth-set", "true");
+        this.setAttribute('data-auth-set', 'true');
 
         this.sendSetPropertyEvent('auth', auth);
     }
@@ -213,7 +216,7 @@ export class AuthKeycloak extends AdapterLitElement {
             this.clientId,
             this.silentCheckSsoRedirectUri,
             !this.noCheckLoginIframe,
-            this.idpHint
+            this.idpHint,
         );
         this._kcwrapper.addEventListener('changed', this._onKCChanged);
 

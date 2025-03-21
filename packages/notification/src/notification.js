@@ -48,7 +48,10 @@ export class Notification extends DBPLitElement {
                 return;
             }
 
-            this.targetNotificationId = typeof customEvent.detail.targetNotificationId !== 'undefined' ? customEvent.detail.targetNotificationId : null;            // If targetNotificationId is set, only process notifications for that component
+            this.targetNotificationId =
+                typeof customEvent.detail.targetNotificationId !== 'undefined'
+                    ? customEvent.detail.targetNotificationId
+                    : null; // If targetNotificationId is set, only process notifications for that component
             if (this.targetNotificationId && this.targetNotificationId !== this.id) {
                 return;
             }
@@ -63,32 +66,48 @@ export class Notification extends DBPLitElement {
             this.notifications[notificationId].id = notificationId;
             this.notifications[notificationId].messageSelector = `#${notificationId}`;
 
-            const type = typeof customEvent.detail.type !== 'undefined' ? customEvent.detail.type : 'info';
-            const body = typeof customEvent.detail.body !== 'undefined' ? customEvent.detail.body : '';
-            const summary = typeof customEvent.detail.summary !== 'undefined' ? customEvent.detail.summary : '';
-            const timeout = typeof customEvent.detail.timeout !== 'undefined' ? customEvent.detail.timeout : 0;
-            const icon = typeof customEvent.detail.icon !== 'undefined' ? customEvent.detail.icon : '';
+            const type =
+                typeof customEvent.detail.type !== 'undefined' ? customEvent.detail.type : 'info';
+            const body =
+                typeof customEvent.detail.body !== 'undefined' ? customEvent.detail.body : '';
+            const summary =
+                typeof customEvent.detail.summary !== 'undefined' ? customEvent.detail.summary : '';
+            const timeout =
+                typeof customEvent.detail.timeout !== 'undefined' ? customEvent.detail.timeout : 0;
+            const icon =
+                typeof customEvent.detail.icon !== 'undefined' ? customEvent.detail.icon : '';
             const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : '';
             const summaryHTML = summary !== '' ? `<h3>${summary}</h3>` : '';
-            const replaceId = typeof customEvent.detail.replaceId !== 'undefined' ? customEvent.detail.replaceId : null;
+            const replaceId =
+                typeof customEvent.detail.replaceId !== 'undefined'
+                    ? customEvent.detail.replaceId
+                    : null;
 
             if (replaceId) {
                 // Search for notification in this.notifications with the same replaceId and remove it
                 for (const notificationId in this.notifications) {
-                      if (this.notifications[notificationId].replaceId === replaceId) {
+                    if (this.notifications[notificationId].replaceId === replaceId) {
                         this.removeMessageById(this.notifications[notificationId]);
                     }
                 }
             }
             this.notifications[notificationId].replaceId = replaceId;
 
-            const progressBarHTML = timeout > 0 ? `<div class="progress-container"><div class="progress" style="--dbp-progress-timeout: ${timeout}s;"></div></div>` : '';
+            const progressBarHTML =
+                timeout > 0
+                    ? `<div class="progress-container"><div class="progress" style="--dbp-progress-timeout: ${timeout}s;"></div></div>`
+                    : '';
             const progressClass = timeout > 0 ? 'has-progress-bar' : 'no-progress-bar';
 
             // Create and append notification element
             const newNotification = document.createElement('div');
             newNotification.id = notificationId;
-            newNotification.classList.add('notification', 'enter-animation', `is-${type}`, progressClass);
+            newNotification.classList.add(
+                'notification',
+                'enter-animation',
+                `is-${type}`,
+                progressClass,
+            );
             newNotification.innerHTML = `
                 <button id="${notificationId}-button" class="delete"></button>
                 ${summaryHTML}
@@ -99,7 +118,9 @@ export class Notification extends DBPLitElement {
 
             // Add event listener for the delete button
             const deleteButton = this.notificationBlock.querySelector(`#${notificationId}-button`);
-            deleteButton.addEventListener('click', () => this.removeMessageById(this.notifications[notificationId]));
+            deleteButton.addEventListener('click', () =>
+                this.removeMessageById(this.notifications[notificationId]),
+            );
 
             if (timeout > 0) {
                 // Remove notification after timeout

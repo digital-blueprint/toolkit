@@ -12,7 +12,7 @@ suite('i18next', () => {
         var inst = i18next.createInstance(
             {de: {foo: 'bar'}, en: {foo: 'baz', extra: 'quux'}},
             'de',
-            'en'
+            'en',
         );
         assert.deepEqual(inst.languages, ['de', 'en']);
         assert.equal(inst.t('foo'), 'bar');

@@ -55,7 +55,7 @@ export class Router {
         let page;
         try {
             page = await this._getStateForPath(location.pathname);
-        } catch{
+        } catch {
             // In case we can't resolve the location, just leave things as is.
             // This happens when a user enters a wrong URL or when testing with karma.
             return;
@@ -70,7 +70,7 @@ export class Router {
     async update() {
         // Queue updates so we can call this multiple times when changing state
         // without it resulting in multiple location changes
-        await new Promise(resolve => setTimeout(resolve));
+        await new Promise((resolve) => setTimeout(resolve));
 
         let page;
         try {
@@ -153,7 +153,7 @@ export class Router {
                     referrerUrl: referrerUrl,
                 },
                 bubbles: true,
-            })
+            }),
         );
     }
 }

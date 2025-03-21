@@ -59,9 +59,7 @@ class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement)
     render() {
         return html`
             ${unsafeHTML(readme)}
-            <dbp-form-elements-demo
-                id="demo"
-                lang="${this.lang}"></dbp-form-elements-demo>
+            <dbp-form-elements-demo id="demo" lang="${this.lang}"></dbp-form-elements-demo>
         `;
     }
 }

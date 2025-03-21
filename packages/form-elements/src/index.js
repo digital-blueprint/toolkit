@@ -12,6 +12,14 @@ import {DbpEnumView} from './views/enum.js';
 
 // Export all the form elements
 export {
-    DbpStringElement, DbpDateElement, DbpDateTimeElement, DbpTimeElement, DbpEnumElement, DbpCheckboxElement,
-    DbpStringView, DbpDateView, DbpDateTimeView, DbpEnumView,
+    DbpStringElement,
+    DbpDateElement,
+    DbpDateTimeElement,
+    DbpTimeElement,
+    DbpEnumElement,
+    DbpCheckboxElement,
+    DbpStringView,
+    DbpDateView,
+    DbpDateTimeView,
+    DbpEnumView,
 };

@@ -40,7 +40,9 @@ export function getDemoCSS() {
         }
 
         a {
-            transition: background-color 0.15s, color 0.15s;
+            transition:
+                background-color 0.15s,
+                color 0.15s;
             border-bottom: 1px solid rgba(0, 0, 0, 0.3);
         }
 

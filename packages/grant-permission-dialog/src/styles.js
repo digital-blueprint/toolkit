@@ -48,8 +48,7 @@ export function getGrantPermissionDialogCSS() {
         }
 
         @container permissions-content (width < 75px) {
-            .header-row
-            .user-row {
+            .header-row .user-row {
                 flex-direction: column;
             }
         }
@@ -88,7 +87,7 @@ export function getGrantPermissionDialogCSS() {
             display: flex;
             flex-direction: column;
             gap: 1em;
-            transition: .5s margin ease;
+            transition: 0.5s margin ease;
         }
 
         .person-select-container {
@@ -146,14 +145,14 @@ export function getGrantPermissionDialogCSS() {
             width: 80px;
         }
 
-        input[type="checkbox"] {
+        input[type='checkbox'] {
             width: 1.5em;
             height: 1.5em;
             cursor: pointer;
         }
 
-        input[type="checkbox"]:disabled {
-            cursor: not-allowed
+        input[type='checkbox']:disabled {
+            cursor: not-allowed;
         }
 
         .changed {

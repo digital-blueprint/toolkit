@@ -191,7 +191,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                                 value: identifier,
                             },
                             bubbles: true,
-                        })
+                        }),
                     );
                 }
             })
@@ -209,7 +209,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
         // preset a person
         if (!ignorePreset && this.value !== '' && this.authenticated()) {
             let itemUrl = combineURLs(this.entryPointUrl, this.value);
-            let params = (new URLSearchParams(this.buildUrlData(this, {'term': ''}))).toString();
+            let params = new URLSearchParams(this.buildUrlData(this, {term: ''})).toString();
             if (params) {
                 itemUrl += `?${params}`;
             }
@@ -232,7 +232,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                         that.formatPerson(this, person),
                         identifier,
                         true,
-                        true
+                        true,
                     );
                     $this.attr('data-object', JSON.stringify(person));
                     $this.data('object', person);
@@ -245,7 +245,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                                 value: identifier,
                             },
                             bubbles: true,
-                        })
+                        }),
                     );
                 })
                 .catch((e) => {
@@ -338,7 +338,7 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                     value: this.value,
                 },
                 bubbles: true,
-            })
+            }),
         );
     }
 

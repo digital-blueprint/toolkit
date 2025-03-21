@@ -131,7 +131,7 @@ export const dateToStrippedIsoDT = (date) => {
     }
 
     return `${date.getFullYear()}-${pad10(date.getMonth() + 1)}-${pad10(date.getDate())}T${pad10(
-        date.getHours()
+        date.getHours(),
     )}:${pad10(date.getMinutes())}`;
 };
 
@@ -341,7 +341,7 @@ export const querySlotted = (root, selector) => {
         matched = matched.concat(
             slot.assignedElements().filter((el) => {
                 return el.matches(selector);
-            })
+            }),
         );
     });
 

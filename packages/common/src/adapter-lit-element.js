@@ -91,7 +91,7 @@ export class AdapterLitElement extends LitElement {
                             that.tagName +
                             ') eventListener("dbp-subscribe",..) name "' +
                             name +
-                            '" found.'
+                            '" found.',
                     );
                     that.callbackStore.push({
                         name: name,
@@ -103,7 +103,7 @@ export class AdapterLitElement extends LitElement {
                     e.stopPropagation();
                 }
             },
-            false
+            false,
         );
 
         this.addEventListener(
@@ -117,7 +117,7 @@ export class AdapterLitElement extends LitElement {
                             that.tagName +
                             ') eventListener("dbp-unsubscribe",..) name "' +
                             name +
-                            '" found.'
+                            '" found.',
                     );
                     that.callbackStore.forEach((item) => {
                         if (item.sender === sender && item.name === name) {
@@ -128,7 +128,7 @@ export class AdapterLitElement extends LitElement {
                                     that.tagName +
                                     ') eventListener for name "' +
                                     name +
-                                    '" removed.'
+                                    '" removed.',
                             );
                         }
                     });
@@ -136,7 +136,7 @@ export class AdapterLitElement extends LitElement {
                     e.stopPropagation();
                 }
             },
-            false
+            false,
         );
 
         // listen to property changes
@@ -152,7 +152,7 @@ export class AdapterLitElement extends LitElement {
                             that.tagName +
                             ') eventListener("dbp-set-property",..) name "' +
                             name +
-                            '" found.'
+                            '" found.',
                     );
                     that.setProperty(name, value);
 
@@ -165,7 +165,7 @@ export class AdapterLitElement extends LitElement {
                     e.stopPropagation();
                 }
             },
-            false
+            false,
         );
 
         // Options for the observer (which mutations to observe)
@@ -185,7 +185,7 @@ export class AdapterLitElement extends LitElement {
                                 that.tagName +
                                 ') observed attribute "' +
                                 name +
-                                '" changed'
+                                '" changed',
                         );
                         that.setProperty(name, value);
 
@@ -221,7 +221,7 @@ export class AdapterLitElement extends LitElement {
                         attrs[i].name +
                         '" = "' +
                         attrs[i].value +
-                        '"'
+                        '"',
                 );
             }
         }
@@ -236,7 +236,7 @@ export class AdapterLitElement extends LitElement {
 
     subscribeProviderFor(element) {
         Logger.debug(
-            'AdapterLitElement(' + this.tagName + ') subscribeProviderFor( ' + element + ' )'
+            'AdapterLitElement(' + this.tagName + ') subscribeProviderFor( ' + element + ' )',
         );
         const pair = element.trim().split(':');
         const local = pair[0];
@@ -263,7 +263,7 @@ export class AdapterLitElement extends LitElement {
                             ' -> ' +
                             local +
                             ' = ' +
-                            value
+                            value,
                     );
 
                     // If value is an object set it directly as property
@@ -275,7 +275,7 @@ export class AdapterLitElement extends LitElement {
                         that.attributeChangedCallback(
                             local,
                             that.getPropertyByAttributeName(local),
-                            value
+                            value,
                         );
 
                         // check if an attribute also exists in the tag
@@ -286,7 +286,7 @@ export class AdapterLitElement extends LitElement {
                                     local +
                                     '" is also an attribute in tag "' +
                                     that.tagName +
-                                    '", this is not supported!'
+                                    '", this is not supported!',
                             );
 
                             // update attribute if reflectAttribute is enabled
@@ -304,7 +304,7 @@ export class AdapterLitElement extends LitElement {
 
     unSubscribeProviderFor(element) {
         Logger.debug(
-            'AdapterLitElement(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )'
+            'AdapterLitElement(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )',
         );
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
@@ -355,7 +355,7 @@ export class AdapterLitElement extends LitElement {
                         oldValue +
                         ', ' +
                         newValue +
-                        ')'
+                        ')',
                 );
 
                 if (this.subscribe && this.subscribe.length > 0) {

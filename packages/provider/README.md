@@ -18,7 +18,7 @@ cd toolkit/packages/provider
 # install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch
 
 # run tests
@@ -35,7 +35,7 @@ You can provide attributes (e.g. `global-name`) for components inside the provid
 
 ```html
 <dbp-provider global-name="value" global-name2="value2">
-  <dbp-person-select subscribe="local-name:global-name"></dbp-person-select>
+    <dbp-person-select subscribe="local-name:global-name"></dbp-person-select>
 </dbp-provider>
 <script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
 ```
@@ -43,7 +43,9 @@ You can provide attributes (e.g. `global-name`) for components inside the provid
 Or you can also use the CDN to include the component:
 
 ```html
-<script type="module" src="https://unpkg.com/@dbp-toolkit/provider@0.2.2/dist/dbp-provider.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/provider@0.2.2/dist/dbp-provider.js"></script>
 ```
 
 All other components are also inherent providers (see below), so you don't really need `dbp-provider` in the shadow dom
@@ -56,9 +58,9 @@ or entry point urls on the same page) or to deliver attribute changes across dif
 
 ```html
 <dbp-provider lang>
-  <dbp-language-select></dbp-language-select>
-  <!-- 'subscribe="lang"' is short for 'subscribe="lang:lang"' --> 
-  <dbp-person-select subscribe="lang"></dbp-person-select>
+    <dbp-language-select></dbp-language-select>
+    <!-- 'subscribe="lang"' is short for 'subscribe="lang:lang"' -->
+    <dbp-person-select subscribe="lang"></dbp-person-select>
 </dbp-provider>
 ```
 
@@ -80,21 +82,21 @@ sequenceDiagram
 
 ##### Flow
 
-1) The language selector propagates a change of `lang` (because the user clicked on it)
-2) The provider receives that event, because it has the attribute `lang` set
-3) The provider executes a callback with the updated value for `lang` in all components that subscribed `lang`
+1. The language selector propagates a change of `lang` (because the user clicked on it)
+2. The provider receives that event, because it has the attribute `lang` set
+3. The provider executes a callback with the updated value for `lang` in all components that subscribed `lang`
 
 #### Example 2 - Two providers
 
 ```html
 <!--  Provider1 -->
 <dbp-provider auth>
-  <!--  Provider2 -->
-  <dbp-provider lang>
-    <dbp-auth-keycloak></dbp-auth-keycloak>
-    <dbp-language-select></dbp-language-select>
-    <dbp-person-select subscribe="auth,lang"></dbp-person-select>
-  </dbp-provider>
+    <!--  Provider2 -->
+    <dbp-provider lang>
+        <dbp-auth-keycloak></dbp-auth-keycloak>
+        <dbp-language-select></dbp-language-select>
+        <dbp-person-select subscribe="auth,lang"></dbp-person-select>
+    </dbp-provider>
 </dbp-provider>
 ```
 
@@ -122,19 +124,19 @@ sequenceDiagram
 
 ##### Flow
 
-1) The language selector propagates a change of `lang` (because the user clicked on it)
-2) The provider 2 receives that event, because it has the attribute `lang` set
-3) The provider 2 executes a callback with the updated value for `lang` in all components that subscribed `lang`
-4) The auth component propagates a change of `auth` (because a new token was issued by Keycloak)
-5) The provider 1 receives that event, because it has the attribute `auth` set
-6) The provider 1 executes a callback with the updated value for `auth` in all components that subscribed `auth`
+1. The language selector propagates a change of `lang` (because the user clicked on it)
+2. The provider 2 receives that event, because it has the attribute `lang` set
+3. The provider 2 executes a callback with the updated value for `lang` in all components that subscribed `lang`
+4. The auth component propagates a change of `auth` (because a new token was issued by Keycloak)
+5. The provider 1 receives that event, because it has the attribute `auth` set
+6. The provider 1 executes a callback with the updated value for `auth` in all components that subscribed `auth`
 
 ### Attributes
 
 - `init` (optional): set your vars to values
-  - example `<dbp-provider init="foo=bar"></dbp-provider>`
+    - example `<dbp-provider init="foo=bar"></dbp-provider>`
 - `id` (optional): set an id, useful for debugging
-  - example `<dbp-provider id="p-1"></dbp-provider>`
+    - example `<dbp-provider id="p-1"></dbp-provider>`
 
 ## AdapterLitElement
 
@@ -167,9 +169,12 @@ the bearer token via `this.auth.token`.
 
 ```html
 <dbp-person-select-demo auth lang="de" entry-point-url="http://127.0.0.1:8000">
-  <!-- #shadow-root -->
-  <dbp-auth-keycloak></dbp-auth-keycloak>
-  <dbp-person-select subscribe="auth" lang="${this.lang}" entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+    <!-- #shadow-root -->
+    <dbp-auth-keycloak></dbp-auth-keycloak>
+    <dbp-person-select
+        subscribe="auth"
+        lang="${this.lang}"
+        entry-point-url="${this.entryPointUrl}"></dbp-person-select>
 </dbp-person-select-demo>
 ```
 
@@ -185,9 +190,9 @@ Multiple attributes can be subscribed when separated by a comma (`,`).
 
 ```html
 <dbp-provider global-name="value" global-name2="value2">
-  <dbp-provider-adapter subscribe="local-name:global-name">
-    <third-party-webcomponent>  </third-party-webcomponent>
-  </dbp-provider-adapter>
+    <dbp-provider-adapter subscribe="local-name:global-name">
+        <third-party-webcomponent></third-party-webcomponent>
+    </dbp-provider-adapter>
 </dbp-provider>
 <script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
 <script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-adapter.js"></script>

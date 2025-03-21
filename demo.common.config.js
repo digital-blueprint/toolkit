@@ -4,4 +4,4 @@ export default {
     keyCloakBaseURL: 'https://auth-dev.tugraz.at/auth',
     keyCloakRealm: 'tugraz-vpu',
     keyCloakClientId: 'auth-dev-mw-frontend-local',
-}
+};

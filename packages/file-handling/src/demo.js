@@ -50,7 +50,7 @@ export class FileSourceDemo extends ScopedElementsMixin(DBPLitElement) {
                 // TODO: remove orphaned event listeners
                 element.addEventListener(
                     'dbp-file-source-file-selected',
-                    this.addLogEntry.bind(this)
+                    this.addLogEntry.bind(this),
                 );
             });
         });

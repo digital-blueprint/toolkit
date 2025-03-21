@@ -23,8 +23,16 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
 
         return html`
             ${Array.isArray(value)
-            ? html`<ul>${value.map(v => html`<li>${items[v] || v}</li>`)}</ul>`
-            : items[value] || value}
+                ? html`
+                      <ul>
+                          ${value.map(
+                              (v) => html`
+                                  <li>${items[v] || v}</li>
+                              `,
+                          )}
+                      </ul>
+                  `
+                : items[value] || value}
         `;
     }
 

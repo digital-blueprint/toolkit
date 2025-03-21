@@ -7,11 +7,8 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import {
-    getPackagePath,
-    getDistPath,
-} from '@dbp-toolkit/dev-utils';
-import { createRequire } from "node:module";
+import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {createRequire} from 'node:module';
 import process from 'node:process';
 
 const require = createRequire(import.meta.url);

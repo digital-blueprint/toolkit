@@ -17,13 +17,18 @@ export class DbpDateView extends ScopedElementsMixin(DbpBaseView) {
             date = new Date(date);
         }
 
-        const dateString = !date || date === '' ? '-' : date.toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
+        const dateString =
+            !date || date === ''
+                ? '-'
+                : date.toLocaleDateString('de-DE', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                  });
 
-        return html`${dateString}`;
+        return html`
+            ${dateString}
+        `;
     }
 }
 

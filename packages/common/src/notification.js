@@ -29,7 +29,7 @@ function send(options) {
         alert(
             (options.summary !== undefined && options.summary !== ''
                 ? options.summary + ': '
-                : '') + options.body
+                : '') + options.body,
         );
         console.log('Use the web component dbp-notification to show fancy notifications.');
     }

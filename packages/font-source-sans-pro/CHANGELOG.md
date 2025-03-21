@@ -1,1 +1,1 @@
-* Add a subsetted "Source Sans Variable" variant
+- Add a subsetted "Source Sans Variable" variant

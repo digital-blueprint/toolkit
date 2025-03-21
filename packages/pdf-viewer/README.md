@@ -23,7 +23,9 @@ Or directly via CDN:
 
 ```html
 <dbp-pdf-viewer></dbp-pdf-viewer>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.7/dist/dbp-pdf-viewer.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.7/dist/dbp-pdf-viewer.js"></script>
 ```
 
 ## Attributes
@@ -50,19 +52,21 @@ Or directly via CDN:
 You can use the `showPDF` method to open a PDF file. This method accepts a `File` object as parameter.
 
 ```html
-<input @change=${this.openFile} type="file" />
+<input @change="${this.openFile}" type="file" />
 <dbp-pdf-viewer lang="en"></dbp-pdf-viewer>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.7/dist/dbp-pdf-viewer.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.7/dist/dbp-pdf-viewer.js"></script>
 
 <script>
-  document.querySelector('input').addEventListener('change', function(e) {
-    if (e.target.files[0]) {
-      let file = e.target.files[0];
+    document.querySelector('input').addEventListener('change', function (e) {
+        if (e.target.files[0]) {
+            let file = e.target.files[0];
 
-      console.log('You selected ' + file.name);
-      document.querySelector('dbp-pdf-viewer').showPDF(file);
-    }
-  });
+            console.log('You selected ' + file.name);
+            document.querySelector('dbp-pdf-viewer').showPDF(file);
+        }
+    });
 </script>
 ```
 
@@ -78,7 +82,7 @@ cd toolkit/packages/pdf-viewer
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch
 
 # run tests

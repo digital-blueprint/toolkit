@@ -21,12 +21,13 @@ export default (async () => {
         input:
             build !== 'test'
                 ? [
-                    'src/elements/checkbox.js',
-                    'src/elements/date.js',
-                    'src/elements/datetime.js',
-                    'src/elements/enum.js',
-                    'src/elements/string.js',
-                    'src/demo.js']
+                      'src/elements/checkbox.js',
+                      'src/elements/date.js',
+                      'src/elements/datetime.js',
+                      'src/elements/enum.js',
+                      'src/elements/string.js',
+                      'src/demo.js',
+                  ]
                 : globSync('test/**/*.js'),
         output: {
             dir: 'dist',

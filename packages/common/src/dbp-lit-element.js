@@ -104,7 +104,7 @@ export default class DBPLitElement extends AdapterLitElement {
             // we need to clone the element so we can access the content
             const overrideTemplateElemClone = globalOverrideTemplateElem.content.cloneNode(true);
             const templateOverrideElem = overrideTemplateElemClone.querySelector(
-                'template#' + this.tagName.toLowerCase()
+                'template#' + this.tagName.toLowerCase(),
             );
             if (templateOverrideElem !== null) {
                 const templateOverrideElemClone = templateOverrideElem.content.cloneNode(true);
@@ -148,5 +148,4 @@ export default class DBPLitElement extends AdapterLitElement {
     getRoutingData() {
         return _parseUrlComponents(this.routingUrl);
     }
-
 }

@@ -13,10 +13,10 @@ import {
     DbpStringView,
     DbpDateView,
     DbpDateTimeView,
-    DbpEnumView
+    DbpEnumView,
 } from './index.js';
 import {classMap} from 'lit/directives/class-map.js';
-import {gatherFormDataFromElement, validateRequiredFields} from "./utils.js";
+import {gatherFormDataFromElement, validateRequiredFields} from './utils.js';
 
 export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -64,7 +64,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                 div.container {
                     margin-bottom: 1.5em;
                 }
-                [slot="label"] a {
+                [slot='label'] a {
                     text-decoration: underline;
                     text-underline-offset: 2px;
                 }
@@ -112,8 +112,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         return html`
-            ${this.renderFormElements()}
-            ${this.renderFormViews()}
+            ${this.renderFormElements()} ${this.renderFormViews()}
         `;
     }
 
@@ -128,107 +127,105 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                 <div class="container">
                     <form>
                         <dbp-form-string-element
-                                subscribe="lang"
-                                name="myComponentString"
-                                label="My string"
-                                value=${data.myComponentString || ''}
-                                required>
-                        </dbp-form-string-element>
+                            subscribe="lang"
+                            name="myComponentString"
+                            label="My string"
+                            value=${data.myComponentString || ''}
+                            required></dbp-form-string-element>
 
                         <dbp-form-string-element
-                                subscribe="lang"
-                                name="myComponentLongString"
-                                label="My long string"
-                                value=${data.myComponentLongString || ''}
-                                rows="5"
-                                required>
-                        </dbp-form-string-element>
+                            subscribe="lang"
+                            name="myComponentLongString"
+                            label="My long string"
+                            value=${data.myComponentLongString || ''}
+                            rows="5"
+                            required></dbp-form-string-element>
 
                         <dbp-form-string-element
-                                subscribe="lang"
-                                name="mySpecialString"
-                                description="Shows the evaluation data in the error message if empty"
-                                label="My special string"
-                                .customValidator=${(value, evaluationData) => {
-                                    // If the value is empty, return an error message with the evaluation data
-                                    return value === '' ? ['evaluationData: ' + JSON.stringify(evaluationData)] : [];
-                                }}
-                                value=${data.mySpecialString || ''}
-                                required>
-                        </dbp-form-string-element>
+                            subscribe="lang"
+                            name="mySpecialString"
+                            description="Shows the evaluation data in the error message if empty"
+                            label="My special string"
+                            .customValidator=${(value, evaluationData) => {
+                                // If the value is empty, return an error message with the evaluation data
+                                return value === ''
+                                    ? ['evaluationData: ' + JSON.stringify(evaluationData)]
+                                    : [];
+                            }}
+                            value=${data.mySpecialString || ''}
+                            required></dbp-form-string-element>
 
                         <dbp-form-date-element
-                                subscribe="lang"
-                                name="myComponentDate"
-                                label="My date"
-                                value=${data.myComponentDate || ''}
-                                required>
-                        </dbp-form-date-element>
+                            subscribe="lang"
+                            name="myComponentDate"
+                            label="My date"
+                            value=${data.myComponentDate || ''}
+                            required></dbp-form-date-element>
 
                         <dbp-form-datetime-element
-                                subscribe="lang"
-                                name="myComponentDateTime"
-                                description="Needs to be in the future"
-                                label="My datetime"
-                                .customValidator=${(value) => {
-                                    const date = new Date(value);
-                                    return date < new Date() ? ['The date needs to be in the future'] : [];
-                                }}
-                                value=${data.myComponentDateTime || ''}
-                                required>
-                        </dbp-form-datetime-element>
+                            subscribe="lang"
+                            name="myComponentDateTime"
+                            description="Needs to be in the future"
+                            label="My datetime"
+                            .customValidator=${(value) => {
+                                const date = new Date(value);
+                                return date < new Date()
+                                    ? ['The date needs to be in the future']
+                                    : [];
+                            }}
+                            value=${data.myComponentDateTime || ''}
+                            required></dbp-form-datetime-element>
 
                         <dbp-form-enum-element
-                                subscribe="lang"
-                                name="myComponentEnum"
-                                label="My enum"
-                                value=${data.myComponentEnum || ''}
-                                .items=${this.enumItems}
-                                required>
-                        </dbp-form-enum-element>
+                            subscribe="lang"
+                            name="myComponentEnum"
+                            label="My enum"
+                            value=${data.myComponentEnum || ''}
+                            .items=${this.enumItems}
+                            required></dbp-form-enum-element>
 
                         <dbp-form-enum-element
-                                subscribe="lang"
-                                name="myComponentMultipleEnum"
-                                label="My multiple enum"
-                                .value=${data.myComponentMultipleEnum || ''}
-                                .items=${this.enumItems}
-                                multiple
-                                required>
-                        </dbp-form-enum-element>
+                            subscribe="lang"
+                            name="myComponentMultipleEnum"
+                            label="My multiple enum"
+                            .value=${data.myComponentMultipleEnum || ''}
+                            .items=${this.enumItems}
+                            multiple
+                            required></dbp-form-enum-element>
 
                         <dbp-form-enum-element
-                                subscribe="lang"
-                                name="myComponentEnumList"
-                                label="My enum list"
-                                .value=${data.myComponentMultipleEnum || ''}
-                                .items=${this.enumItems}
-                                display-mode="list"
-                                required>
-                        </dbp-form-enum-element>
+                            subscribe="lang"
+                            name="myComponentEnumList"
+                            label="My enum list"
+                            .value=${data.myComponentMultipleEnum || ''}
+                            .items=${this.enumItems}
+                            display-mode="list"
+                            required></dbp-form-enum-element>
 
                         <dbp-form-enum-element
-                                subscribe="lang"
-                                name="myComponentMultipleEnumList"
-                                label="My multiple enum list"
-                                .value=${data.myComponentMultipleEnum || ''}
-                                .items=${this.enumItems}
-                                display-mode="list"
-                                multiple
-                                required>
-                                <span slot="label">
-                                    Label with <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a> content. Can be used interchangeably the label property.
-                                </span>
+                            subscribe="lang"
+                            name="myComponentMultipleEnumList"
+                            label="My multiple enum list"
+                            .value=${data.myComponentMultipleEnum || ''}
+                            .items=${this.enumItems}
+                            display-mode="list"
+                            multiple
+                            required>
+                            <span slot="label">
+                                Label with
+                                <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a>
+                                content. Can be used interchangeably the label property.
+                            </span>
                         </dbp-form-enum-element>
 
                         <dbp-form-checkbox-element
-                                subscribe="lang"
-                                name="myComponentCheckbox"
-                                label="My checkbox"
-                                description="Check me"
-                                value="check"
-                                ?checked=${data.myComponentCheckbox || false}>
-                        </dbp-form-checkbox-element>
+                            subscribe="lang"
+                            name="myComponentCheckbox"
+                            label="My checkbox"
+                            description="Check me"
+                            value="check"
+                            ?checked=${data.myComponentCheckbox ||
+                            false}></dbp-form-checkbox-element>
 
                         ${this.getButtonRowHtml()}
                     </form>
@@ -262,75 +259,65 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
                 <div class="container">
                     <dbp-form-string-view
-                            subscribe="lang"
-                            label="My string"
-                            .value=${data.myComponentString || ''}>
-                    </dbp-form-string-view>
+                        subscribe="lang"
+                        label="My string"
+                        .value=${data.myComponentString || ''}></dbp-form-string-view>
 
                     <dbp-form-string-view
-                            subscribe="lang"
-                            label="My long string"
-                            .value=${data.myComponentLongString || ''}
-                            rows="5">
-                    </dbp-form-string-view>
+                        subscribe="lang"
+                        label="My long string"
+                        .value=${data.myComponentLongString || ''}
+                        rows="5"></dbp-form-string-view>
 
                     <dbp-form-string-view
-                            subscribe="lang"
-                            name="mySpecialString"
-                            label="My special string"
-                            .value=${data.mySpecialString || ''}>
-                    </dbp-form-string-view>
+                        subscribe="lang"
+                        name="mySpecialString"
+                        label="My special string"
+                        .value=${data.mySpecialString || ''}></dbp-form-string-view>
 
                     <dbp-form-date-view
-                            subscribe="lang"
-                            label="My date"
-                            .value=${data.myComponentDate || ''}>
-                    </dbp-form-date-view>
+                        subscribe="lang"
+                        label="My date"
+                        .value=${data.myComponentDate || ''}></dbp-form-date-view>
 
                     <dbp-form-datetime-view
-                            subscribe="lang"
-                            label="My datetime"
-                            .value=${data.myComponentDateTime || ''}>
-                    </dbp-form-datetime-view>
+                        subscribe="lang"
+                        label="My datetime"
+                        .value=${data.myComponentDateTime || ''}></dbp-form-datetime-view>
 
                     <dbp-form-enum-view
-                            subscribe="lang"
-                            label="My enum"
-                            .items=${this.enumItems}
-                            value=${data.myComponentEnum || ''}>
-                    </dbp-form-enum-view>
+                        subscribe="lang"
+                        label="My enum"
+                        .items=${this.enumItems}
+                        value=${data.myComponentEnum || ''}></dbp-form-enum-view>
 
                     <dbp-form-enum-view
-                            subscribe="lang"
-                            label="My multiple enum"
-                            .items=${this.enumItems}
-                            .value=${data.myComponentMultipleEnum || ''}>
-                    </dbp-form-enum-view>
+                        subscribe="lang"
+                        label="My multiple enum"
+                        .items=${this.enumItems}
+                        .value=${data.myComponentMultipleEnum || ''}></dbp-form-enum-view>
 
                     <dbp-form-enum-view
-                            subscribe="lang"
-                            label="My enum list"
-                            .value=${data.myComponentMultipleEnum || ''}
-                            .items=${this.enumItems}
-                            display-mode="list"
-                            required>
-                    </dbp-form-enum-view>
+                        subscribe="lang"
+                        label="My enum list"
+                        .value=${data.myComponentMultipleEnum || ''}
+                        .items=${this.enumItems}
+                        display-mode="list"
+                        required></dbp-form-enum-view>
 
                     <dbp-form-enum-view
-                            subscribe="lang"
-                            name="myComponentMultipleEnumList"
-                            label="My multiple enum list"
-                            .value=${data.myComponentMultipleEnum || ''}
-                            .items=${this.enumItems}
-                            display-mode="list"
-                            required>
-                    </dbp-form-enum-view>
+                        subscribe="lang"
+                        name="myComponentMultipleEnumList"
+                        label="My multiple enum list"
+                        .value=${data.myComponentMultipleEnum || ''}
+                        .items=${this.enumItems}
+                        display-mode="list"
+                        required></dbp-form-enum-view>
 
                     <dbp-form-string-view
-                            subscribe="lang"
-                            label="My checkbox"
-                            .value=${data.myComponentCheckbox ? 'on' : 'off'}>
-                    </dbp-form-string-view>
+                        subscribe="lang"
+                        label="My checkbox"
+                        .value=${data.myComponentCheckbox ? 'on' : 'off'}></dbp-form-string-view>
                 </div>
             </section>
         `;

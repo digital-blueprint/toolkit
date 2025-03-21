@@ -61,7 +61,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             this.detectInitialMode();
         });
         if (this.langDir) {
-          setOverridesByGlobalCache(this._i18n, this);
+            setOverridesByGlobalCache(this._i18n, this);
         }
     }
 
@@ -192,7 +192,9 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                 padding: 0.3em;
                 display: inline-block;
                 text-decoration: none;
-                transition: background-color 0.15s, color 0.15s;
+                transition:
+                    background-color 0.15s,
+                    color 0.15s;
                 color: var(--dbp-content);
             }
 
@@ -226,16 +228,14 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             .icon {
                 margin-right: 10px;
             }
-            
-            #theme-menu{
+
+            #theme-menu {
                 position: relative;
             }
-            
-         
-            .ul-right{
-                right: 0px;
-            };
 
+            .ul-right {
+                right: 0px;
+            }
         `;
     }
 
@@ -254,7 +254,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                     }}">
                     <dbp-icon name="contrast"></dbp-icon>
                 </a>
-                <ul class="extended-menu hidden ${classMap({'ul-right':this.dropdownRight})}">
+                <ul class="extended-menu hidden ${classMap({'ul-right': this.dropdownRight})}">
                     ${this.themes.map(
                         (theme) => html`
                             <li class="" id="${theme.class}">
@@ -271,7 +271,7 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                                     ${theme.name}
                                 </a>
                             </li>
-                        `
+                        `,
                     )}
                 </ul>
             </div>

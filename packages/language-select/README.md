@@ -10,14 +10,18 @@ npm i @dbp-toolkit/language-select
 
 ```html
 <dbp-language-select></dbp-language-select>
-<script type="module" src="node_modules/@dbp-toolkit/language-select/dist/dbp-language-select.js"></script>
+<script
+    type="module"
+    src="node_modules/@dbp-toolkit/language-select/dist/dbp-language-select.js"></script>
 ```
 
 Or directly via CDN:
 
 ```html
 <dbp-language-select></dbp-language-select>
-<script type="module" src="https://unpkg.com/@dbp-toolkit/language-select@0.2.2/dist/dbp-language-select.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/language-select@0.2.2/dist/dbp-language-select.js"></script>
 ```
 
 ## Attributes
@@ -42,7 +46,7 @@ cd toolkit/packages/language-select
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch-local
 
 # build local packages in dist directory

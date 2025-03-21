@@ -193,7 +193,9 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
             .login-button {
                 padding: 0.3em 0.4em;
-                transition: background-color 0.15s, color 0.15s;
+                transition:
+                    background-color 0.15s,
+                    color 0.15s;
             }
 
             .login-button:hover {
@@ -242,7 +244,7 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
         event.stopPropagation();
         event.currentTarget.classList.toggle('is-active');
         this.setChevron(
-            event.currentTarget.classList.contains('is-active') ? 'chevron-up' : 'chevron-down'
+            event.currentTarget.classList.contains('is-active') ? 'chevron-up' : 'chevron-down',
         );
         this.updateDropdownWidth();
     }

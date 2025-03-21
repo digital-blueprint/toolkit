@@ -9,8 +9,8 @@ export function _parseUrlComponents(url) {
         // Path segments (split pathname into individual segments)
         pathSegments: parsedUrl.pathname
             .split('/')
-            .filter(segment => segment !== '')
-            .map(segment => decodeURIComponent(segment)),
+            .filter((segment) => segment !== '')
+            .map((segment) => decodeURIComponent(segment)),
 
         // Query parameters as an object
         queryParams: parsedUrl.searchParams,
@@ -22,6 +22,6 @@ export function _parseUrlComponents(url) {
         hash: parsedUrl.hash,
 
         // Hash/fragment without the '#' symbol
-        fragment: parsedUrl.hash.replace(/^#/, '')
+        fragment: parsedUrl.hash.replace(/^#/, ''),
     };
 }

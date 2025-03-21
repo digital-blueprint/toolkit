@@ -39,7 +39,7 @@ export class Adapter extends HTMLElement {
                 this.attributeChangedCallback(
                     attrs[i].name,
                     this.getPropertyByAttributeName(attrs[i].name),
-                    attrs[i].value
+                    attrs[i].value,
                 );
 
                 console.debug(
@@ -49,7 +49,7 @@ export class Adapter extends HTMLElement {
                         attrs[i].name +
                         '" = "' +
                         attrs[i].value +
-                        '"'
+                        '"',
                 );
             }
         }
@@ -62,7 +62,7 @@ export class Adapter extends HTMLElement {
 
     subscribeProviderFor(element) {
         console.debug(
-            'AdapterProvider(' + this.tagName + ') subscribeProviderFor( ' + element + ' )'
+            'AdapterProvider(' + this.tagName + ') subscribeProviderFor( ' + element + ' )',
         );
         const pair = element.trim().split(':');
         const local = pair[0];
@@ -82,7 +82,7 @@ export class Adapter extends HTMLElement {
                             ' -> ' +
                             local +
                             ' = ' +
-                            value
+                            value,
                     );
                     that.setPropertiesToChildNodes(local, value);
 
@@ -95,7 +95,7 @@ export class Adapter extends HTMLElement {
                         that.attributeChangedCallback(
                             local,
                             that.getPropertyByAttributeName(local),
-                            value
+                            value,
                         );
 
                         // check if an attribute also exists in the tag
@@ -106,7 +106,7 @@ export class Adapter extends HTMLElement {
                                     local +
                                     '" is also an attribute in tag "' +
                                     that.tagName +
-                                    '", this is not supported!'
+                                    '", this is not supported!',
                             );
 
                             // update attribute if reflectAttribute is enabled
@@ -124,7 +124,7 @@ export class Adapter extends HTMLElement {
 
     unSubscribeProviderFor(element) {
         console.debug(
-            'AdapterProvider(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )'
+            'AdapterProvider(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )',
         );
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
@@ -173,7 +173,7 @@ export class Adapter extends HTMLElement {
                         oldValue +
                         ', ' +
                         newValue +
-                        ')'
+                        ')',
                 );
 
                 if (this.subscribe && this.subscribe.length > 0) {

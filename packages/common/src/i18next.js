@@ -5,25 +5,24 @@ const translationCache = {};
 
 // fetches overrides for given language
 async function fetchOverridesByLanguage(overrides, lng) {
-  let result = await
-      fetch(overrides + lng +'/translation.json', {
-          headers: {'Content-Type': 'application/json'},
-      });
-  let json = await result.json();
-  return json;
+    let result = await fetch(overrides + lng + '/translation.json', {
+        headers: {'Content-Type': 'application/json'},
+    });
+    let json = await result.json();
+    return json;
 }
 
 // handles translation cache promises
 async function cacheOverrides(overridesFile, lng) {
-  // use global var as cache
-  if (translationCache[lng] === undefined) {
-    // get translation.json for each lang
-    let response = fetchOverridesByLanguage(overridesFile, lng);
-    translationCache[lng] = response;
-    return response;
-  } else {
-    return translationCache[lng];
-  }
+    // use global var as cache
+    if (translationCache[lng] === undefined) {
+        // get translation.json for each lang
+        let response = fetchOverridesByLanguage(overridesFile, lng);
+        translationCache[lng] = response;
+        return response;
+    } else {
+        return translationCache[lng];
+    }
 }
 
 /**
@@ -164,8 +163,6 @@ export async function setOverridesByGlobalCache(i18n, element) {
     // to the original one. This way we an change the overrides at runtime
     // and can even remove them.
 
-
-
     // The scoped mixin saves the real tag name under data-tag-name
     let tagName = ((element.dataset && element.dataset.tagName) || element.tagName).toLowerCase();
     let namespace = /** @type {string} */ (i18n.options.fallbackNS);
@@ -175,7 +172,8 @@ export async function setOverridesByGlobalCache(i18n, element) {
         cacheOverrides(element.langDir, lng);
         translationCache[lng] = await translationCache[lng];
         i18n.removeResourceBundle(lng, overrideNamespace);
-        if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined) continue;
+        if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined)
+            continue;
         let resources = translationCache[lng][tagName];
         hasOverrides = true;
         i18n.addResourceBundle(lng, overrideNamespace, resources);

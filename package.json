@@ -1,33 +1,33 @@
 {
-  "name": "dbp-toolkit",
-  "type": "module",
-  "description": "",
-  "main": "index.js",
-  "private": true,
-  "workspaces": [
-    "packages/*",
-    "toolkit-showcase"
-  ],
-  "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=7.0.0"
-  },
-  "scripts": {
-    "test": "lerna --no-sort run test",
-    "format": "lerna --no-sort run format",
-    "build": "lerna --no-sort run build",
-    "i18next": "lerna --no-sort run i18next",
-    "version-patch": "lerna version patch",
-    "version-minor": "lerna version minor",
-    "version": "lerna version",
-    "rm-dist": "for d in ./packages/*/ ; do (cd \"$d\" && rm dist -Rf); done;",
-    "lint": "lerna --no-sort run lint",
-    "publish": "lerna --no-sort publish from-package --yes",
-    "tsc": "lerna --no-sort run tsc"
-  },
-  "author": "",
-  "license": "LGPL-2.1-or-later",
-  "devDependencies": {
-    "lerna": "^8.0.0"
-  }
+    "name": "dbp-toolkit",
+    "type": "module",
+    "description": "",
+    "main": "index.js",
+    "private": true,
+    "workspaces": [
+        "packages/*",
+        "toolkit-showcase"
+    ],
+    "engines": {
+        "node": ">=20.0.0",
+        "npm": ">=7.0.0"
+    },
+    "scripts": {
+        "test": "lerna --no-sort run test",
+        "format": "lerna --no-sort run format",
+        "build": "lerna --no-sort run build",
+        "i18next": "lerna --no-sort run i18next",
+        "version-patch": "lerna version patch",
+        "version-minor": "lerna version minor",
+        "version": "lerna version",
+        "rm-dist": "for d in ./packages/*/ ; do (cd \"$d\" && rm dist -Rf); done;",
+        "lint": "lerna --no-sort run lint",
+        "publish": "lerna --no-sort publish from-package --yes",
+        "tsc": "lerna --no-sort run tsc"
+    },
+    "author": "",
+    "license": "LGPL-2.1-or-later",
+    "devDependencies": {
+        "lerna": "^8.0.0"
+    }
 }

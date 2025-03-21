@@ -16,7 +16,7 @@ import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
-import { createRequire } from "node:module";
+import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
@@ -68,7 +68,7 @@ function getOrigin(url) {
 
 config.CSP = `default-src 'self' 'unsafe-inline' \
 ${getOrigin(config.matomoUrl)} ${getOrigin(config.keyCloakBaseURL)} ${getOrigin(
-    config.entryPointURL
+    config.entryPointURL,
 )} ${getOrigin(config.nextcloudBaseURL)}; \
 img-src * blob: data:`;
 
@@ -133,12 +133,20 @@ Dependencies:
                     thirdParty: {
                         allow(dependency) {
                             let licenses = [
-                                'LGPL-2.1-or-later', 'MIT', 'BSD-3-Clause', 'Apache-2.0', '0BSD',
-                                '(MPL-2.0 OR Apache-2.0)', 'MIT OR SEE LICENSE IN FEEL-FREE.md',
-                                '(MIT OR GPL-3.0-or-later)', 'BSD'
+                                'LGPL-2.1-or-later',
+                                'MIT',
+                                'BSD-3-Clause',
+                                'Apache-2.0',
+                                '0BSD',
+                                '(MPL-2.0 OR Apache-2.0)',
+                                'MIT OR SEE LICENSE IN FEEL-FREE.md',
+                                '(MIT OR GPL-3.0-or-later)',
+                                'BSD',
                             ];
                             if (!licenses.includes(dependency.license)) {
-                                throw new Error(`Unknown license for ${dependency.name}: ${dependency.license}`);
+                                throw new Error(
+                                    `Unknown license for ${dependency.name}: ${dependency.license}`,
+                                );
                             }
                             return true;
                         },
@@ -172,11 +180,18 @@ Dependencies:
                     {src: 'assets/*.metadata.json', dest: 'dist'},
                     {src: 'assets/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/htaccess-shared', dest: 'dist/shared/', rename: '.htaccess'},
-                    {src: 'assets/translation-overrides', dest: 'dist/' + (await getDistPath(pkg.name))},
+                    {
+                        src: 'assets/translation-overrides',
+                        dest: 'dist/' + (await getDistPath(pkg.name)),
+                    },
                     {src: 'assets/favicons/*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/favicons/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/favicons/*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: 'assets/favicons/site.webmanifest', dest: 'dist', rename: pkg.name + '.webmanifest'},
+                    {
+                        src: 'assets/favicons/site.webmanifest',
+                        dest: 'dist',
+                        rename: pkg.name + '.webmanifest',
+                    },
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
                     {
                         src: await getPackagePath('@dbp-toolkit/font-source-sans-pro', 'files/*'),
@@ -200,11 +215,15 @@ Dependencies:
                     },
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/file-handling', 'tabulator-tables')),
+                        dest:
+                            'dist/' +
+                            (await getDistPath('@dbp-toolkit/file-handling', 'tabulator-tables')),
                     },
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/tabulator-table', 'tabulator-tables')),
+                        dest:
+                            'dist/' +
+                            (await getDistPath('@dbp-toolkit/tabulator-table', 'tabulator-tables')),
                     },
                     {
                         src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'),
@@ -222,7 +241,7 @@ Dependencies:
             }),
             replace({
                 'process.env.NODE_ENV': JSON.stringify('production'),
-                'preventAssignment': true,
+                preventAssignment: true,
             }),
             useBabel &&
                 getBabelOutputPlugin({

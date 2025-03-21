@@ -19,7 +19,9 @@ npm i @dbp-toolkit/app-shell
 Or directly via CDN:
 
 ```html
-<script type="module" src="https://unpkg.com/@dbp-toolkit/app-shell@0.2.3/dist/dbp-app-shell.js"></script>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/app-shell@0.2.3/dist/dbp-app-shell.js"></script>
 <dbp-app-shell src="/example.topic.metadata.json"></dbp-app-shell>
 ```
 
@@ -30,16 +32,16 @@ for more explanation.
 ## Attributes
 
 - `provider-root` (optional): You need to set the `provider-root` attribute for the app-shell to "terminate" all provider events
-  - If you don't want to set the app-shell as `provider-root` then you need to set the attributes `auth`,
-    `requested-login-status` and `analytics-event` as attribute for the app-shell or in a `dbp-provider` above it 
-  - example `<dbp-app-shell provider-root></dbp-app-shell>`
+    - If you don't want to set the app-shell as `provider-root` then you need to set the attributes `auth`,
+      `requested-login-status` and `analytics-event` as attribute for the app-shell or in a `dbp-provider` above it
+    - example `<dbp-app-shell provider-root></dbp-app-shell>`
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-app-shell lang="de"></dbp-app-shell>`
 - `src`: The path to a topic metadata file (json)
 - `base-path` (optional, default: `/`): An absolute base path for routing
 - `entry-point-url`: Entry point URL to access the API
 - `keycloak-config`: An object with the following keys: url, realm, clientId, silentCheckSsoRedirectUri, scope
-- `matomo-url` (optional): set to your *Matomo* server (required only for tracking)
+- `matomo-url` (optional): set to your _Matomo_ server (required only for tracking)
     - example `<dbp-app-shell matomo-url="https://my-matomo.tld"></dbp-app-shell>`
 - `matomo-site-id` (optional): set to your site id (required only for tracking)
     - example `<dbp-app-shell matomo-site-id="456789"></dbp-app-shell>`
@@ -78,18 +80,15 @@ In this example `this.getRoutingData()` would return:
 
 ```json
 {
-  "pathname": "/demo-form/123",
-  "pathSegments": [
-    "demo-form",
-    "123"
-  ],
-  "queryParams": {
-    "test1": "2",
-    "test2": "7"
-  },
-  "queryString": "?test1=2&test2=7",
-  "hash": "#testHash",
-  "fragment": "testHash"
+    "pathname": "/demo-form/123",
+    "pathSegments": ["demo-form", "123"],
+    "queryParams": {
+        "test1": "2",
+        "test2": "7"
+    },
+    "queryString": "?test1=2&test2=7",
+    "hash": "#testHash",
+    "fragment": "testHash"
 }
 ```
 
@@ -162,23 +161,21 @@ Example: `<app-shell><template slot="footer"><a target="_blank" rel="noopener" c
 
 ```json
 {
-  "name": {
-    "de": "Beispiel",
-    "en": "Example"
-  },
-  "short_name": {
-    "de": "Beispiel",
-    "en": "Example"
-  },
-  "description": {
-    "de": "Ich bin eine Beschreibung der Applikation",
-    "en": "I am a description of this application"
-  },
-  "routing_name": "example",
-  "activities": [
-    {"path": "example.metadata.json", "visible": true}
-  ],
-  "attributes": []
+    "name": {
+        "de": "Beispiel",
+        "en": "Example"
+    },
+    "short_name": {
+        "de": "Beispiel",
+        "en": "Example"
+    },
+    "description": {
+        "de": "Ich bin eine Beschreibung der Applikation",
+        "en": "I am a description of this application"
+    },
+    "routing_name": "example",
+    "activities": [{"path": "example.metadata.json", "visible": true}],
+    "attributes": []
 }
 ```
 
@@ -186,21 +183,21 @@ Example: `<app-shell><template slot="footer"><a target="_blank" rel="noopener" c
 
 ```json
 {
-  "element": "dbp-activity-example",
-  "module_src": "dbp-activity-example.js",
-  "routing_name": "activity-example",
-  "name": {
-    "de": "Beispielaktivität",
-    "en": "Example Activity"
-  },
-  "short_name": {
-    "de": "Beispielaktivität",
-    "en": "Example Activity"
-  },
-  "description": {
-    "de": "Eine Beschreibung",
-    "en": "A Description"
-  }
+    "element": "dbp-activity-example",
+    "module_src": "dbp-activity-example.js",
+    "routing_name": "activity-example",
+    "name": {
+        "de": "Beispielaktivität",
+        "en": "Example Activity"
+    },
+    "short_name": {
+        "de": "Beispielaktivität",
+        "en": "Example Activity"
+    },
+    "description": {
+        "de": "Eine Beschreibung",
+        "en": "A Description"
+    }
 }
 ```
 
@@ -214,7 +211,7 @@ cd toolkit/packages/app-shell
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8002 
+# constantly build dist/bundle.js and run a local web-server on port 8002
 npm run watch
 
 # run tests

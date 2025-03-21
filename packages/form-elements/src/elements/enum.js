@@ -3,7 +3,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 import {createRef, ref} from 'lit/directives/ref.js';
-import {stringifyForDataValue} from "../utils.js";
+import {stringifyForDataValue} from '../utils.js';
 
 export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
@@ -43,34 +43,33 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
         return html`
             <fieldset>
-
                 <label for="${this.formElementId}">
                     <slot name="label">${this.label}</slot>
                     ${this.required && (hasLabelSlot || this.label)
                         ? html`
-                            (${this._i18n.t('render-form.base-object.required-field')})
-                        `
+                              (${this._i18n.t('render-form.base-object.required-field')})
+                          `
                         : html``}
                 </label>
 
-                ${this.description ?
-                    html`<div class="description">
-                        ${this.description}
-                        ${this.required
-                            ? html`
-                                (${this._i18n.t('render-form.base-object.required-field')})
-                            `
-                            : html``}
-                        </div>`
+                ${this.description
+                    ? html`
+                          <div class="description">
+                              ${this.description}
+                              ${this.required
+                                  ? html`
+                                        (${this._i18n.t('render-form.base-object.required-field')})
+                                    `
+                                  : html``}
+                          </div>
+                      `
                     : ''}
-                ${this.renderErrorMessages()}
-                ${this.renderInput()}
+                ${this.renderErrorMessages()} ${this.renderInput()}
             </fieldset>
         `;
     }
 
     renderInput() {
-
         const validModes = ['dropdown', 'list'];
         if (!validModes.includes(this.displayMode)) {
             console.warn(`Invalid display-mode: ${this.displayMode}. Defaulting to 'dropdown'.`);
@@ -109,35 +108,40 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     ${Object.keys(this.items).map(
                         (key) => html`
                             <label class="checkboxItem">
-                                ${this.multiple ?
-                                    html`<input
-                                        type="checkbox"
-                                        id="${this.formElementId}"
-                                        name="${key}"
-                                        value="${key}"
-                                        class="checkbox"
-                                        ?checked="${this.checked}"
-                                        @input="${this.handleInputValue}"
-                                        ?disabled=${this.disabled}
-                                        ?required=${this.required} />`
-                                    : html`<input
-                                        type="radio"
-                                        id="${this.formElementId}"
-                                        name="${this.name}"
-                                        value="${key}"
-                                        class="radio"
-                                        ?checked="${this.checked}"
-                                        @input="${this.handleInputValue}"
-                                        ?disabled=${this.disabled}
-                                        ?required=${this.required} />`
-                                }
+                                ${this.multiple
+                                    ? html`
+                                          <input
+                                              type="checkbox"
+                                              id="${this.formElementId}"
+                                              name="${key}"
+                                              value="${key}"
+                                              class="checkbox"
+                                              ?checked="${this.checked}"
+                                              @input="${this.handleInputValue}"
+                                              ?disabled=${this.disabled}
+                                              ?required=${this.required} />
+                                      `
+                                    : html`
+                                          <input
+                                              type="radio"
+                                              id="${this.formElementId}"
+                                              name="${this.name}"
+                                              value="${key}"
+                                              class="radio"
+                                              ?checked="${this.checked}"
+                                              @input="${this.handleInputValue}"
+                                              ?disabled=${this.disabled}
+                                              ?required=${this.required} />
+                                      `}
                                 ${this.items[key]}
                             </label>
-                        `
+                        `,
                     )}
                 `;
             default:
-                console.warn(`Unsupported display mode: ${this._displayMode}. Defaulting to 'dropdown'.`);
+                console.warn(
+                    `Unsupported display mode: ${this._displayMode}. Defaulting to 'dropdown'.`,
+                );
                 break;
         }
     }
@@ -209,8 +213,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         if (this.displayMode === 'list') {
             this.value = this.multiple
                 ? Array.from(this._a('[type="checkbox"]'))
-                    .filter(checkbox => checkbox.checked)
-                    .map(checkbox => checkbox.value)
+                      .filter((checkbox) => checkbox.checked)
+                      .map((checkbox) => checkbox.value)
                 : e.target.value;
         }
     }
@@ -242,9 +246,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     this.generateDataValue();
 
                     const changeEvent = new CustomEvent('change', {
-                        detail: { value: this.dataValue },
+                        detail: {value: this.dataValue},
                         bubbles: true,
-                        composed: true
+                        composed: true,
                     });
                     this.dispatchEvent(changeEvent);
                     break;
@@ -265,9 +269,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             }
             if (this._a('[type="checkbox"]').length > 0) {
                 const data = Array.from(this._a('[type="checkbox"]'))
-                    .filter(checkbox => checkbox.checked)
-                    .map(checkbox => checkbox.value);
-                this.dataValue =  stringifyForDataValue(data);
+                    .filter((checkbox) => checkbox.checked)
+                    .map((checkbox) => checkbox.value);
+                this.dataValue = stringifyForDataValue(data);
             }
         } else {
             this.dataValue = this.value;
