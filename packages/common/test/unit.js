@@ -36,10 +36,31 @@ suite('utils', () => {
 
     test('getAssetURL', () => {
         // Backwards compat
-        assert.equal(new URL(utils.getAssetURL('foo/bar')).pathname, '/foo/bar');
+        assert.equal(
+            new URL(
+                utils.getAssetURL('foo/bar', undefined, {
+                    metaUrl: 'http://localhost/shared/chunk.js',
+                }),
+            ).pathname,
+            '/foo/bar',
+        );
+        assert.equal(
+            new URL(utils.getAssetURL('foo/bar', undefined, {metaUrl: 'http://localhost/entry.js'}))
+                .pathname,
+            '/foo/bar',
+        );
         // Normal usage
         assert.equal(
-            new URL(utils.getAssetURL('foobar', 'bar/quux')).pathname,
+            new URL(
+                utils.getAssetURL('foobar', 'bar/quux', {
+                    metaUrl: 'http://localhost/shared/chunk.js',
+                }),
+            ).pathname,
+            '/local/foobar/bar/quux',
+        );
+        assert.equal(
+            new URL(utils.getAssetURL('foobar', 'bar/quux', {metaUrl: 'http://localhost/entry.js'}))
+                .pathname,
             '/local/foobar/bar/quux',
         );
     });

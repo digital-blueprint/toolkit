@@ -168,8 +168,11 @@ export const dateToInputTimeString = (date) => {
  *
  * @param {string} pkg The package which provides the asset
  * @param {string} path The relative path based on the js bundle path
+ * @param {object} [options] Optional parameters
+ * @param {string} [options.metaUrl] Custom meta URL for testing
+ * @returns {string} The absolute URL to the asset
  */
-export const getAssetURL = (pkg, path) => {
+export const getAssetURL = (pkg, path, options = {}) => {
     let fullPath = '';
     if (path === undefined) {
         // backwards compat: in case only one parameter is passed
@@ -178,7 +181,15 @@ export const getAssetURL = (pkg, path) => {
     } else {
         fullPath = 'local/' + pkg + '/' + path;
     }
-    return new URL(fullPath, new URL('..', import.meta.url).href).href;
+
+    let baseUrl = new URL(options.metaUrl !== undefined ? options.metaUrl : import.meta.url);
+    // XXX: In case we are under "/shared/" assume we are called from a chunk
+    // and need to go up one level. This assumes that all chunks are stored in
+    // "/shared/" by the bundler.
+    if (baseUrl.pathname.split('/').slice(-2)[0] === 'shared') {
+        baseUrl = new URL('..', baseUrl);
+    }
+    return new URL(fullPath, baseUrl).href;
 };
 
 /**
