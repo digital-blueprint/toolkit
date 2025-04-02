@@ -7,12 +7,19 @@ export function getIconSVGURL(name) {
     return commonUtils.getAssetURL(pkgName, 'icons/' + encodeURI(name) + '.svg');
 }
 
+/**
+ * Gives CSS for showing an icon in cases where there is no way to use a web component.
+ * For example: <style> a:after { ${getIconCSS('envelope')}; }</style>
+ * @param {string} name - The icon name
+ * @returns {string}
+ */
 export function getIconCSS(name) {
+    const iconPart = name.trim().split(' ').join('');
     const iconURL = getIconSVGURL(name);
     return `
         background-color: currentColor;
-        mask-image: url(${iconURL});
-        -webkit-mask-image: url(${iconURL});
+        mask-image: var(--dbp-override-icon-${iconPart}, url(${iconURL}));
+        -webkit-mask-image: var(--dbp-override-icon-${iconPart}, url(${iconURL}));
         mask-size: contain;
         -webkit-mask-size: contain;
         mask-repeat: no-repeat;
