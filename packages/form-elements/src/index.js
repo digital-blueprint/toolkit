@@ -4,7 +4,7 @@ import {DbpDateElement} from './elements/date.js';
 import {DbpDateTimeElement} from './elements/datetime.js';
 import {DbpTimeElement} from './elements/time.js';
 import {DbpEnumElement} from './elements/enum.js';
-import {DbpCheckboxElement} from './elements/checkbox.js';
+import {DbpCheckboxElement} from './elements/boolean.js';
 import {DbpStringView} from './views/string.js';
 import {DbpDateView} from './views/date.js';
 import {DbpDateTimeView} from './views/datetime.js';

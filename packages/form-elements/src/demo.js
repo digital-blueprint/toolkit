@@ -34,7 +34,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
             'dbp-form-date-element': DbpDateElement,
             'dbp-form-datetime-element': DbpDateTimeElement,
             'dbp-form-enum-element': DbpEnumElement,
-            'dbp-form-checkbox-element': DbpCheckboxElement,
+            'dbp-form-boolean-element': DbpCheckboxElement,
             'dbp-form-string-view': DbpStringView,
             'dbp-form-date-view': DbpDateView,
             'dbp-form-datetime-view': DbpDateTimeView,
@@ -218,14 +218,14 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             </span>
                         </dbp-form-enum-element>
 
-                        <dbp-form-checkbox-element
+                        <dbp-form-boolean-element
                             subscribe="lang"
-                            name="myComponentCheckbox"
-                            label="My checkbox"
+                            name="myComponentBoolean"
+                            label="My boolean"
                             description="Check me"
                             value="check"
-                            ?checked=${data.myComponentCheckbox ||
-                            false}></dbp-form-checkbox-element>
+                            ?checked=${data.myComponentBoolean ||
+                            false}></dbp-form-boolean-element>
 
                         ${this.getButtonRowHtml()}
                     </form>
@@ -316,8 +316,8 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
 
                     <dbp-form-string-view
                         subscribe="lang"
-                        label="My checkbox"
-                        .value=${data.myComponentCheckbox ? 'on' : 'off'}></dbp-form-string-view>
+                        label="My boolean"
+                        .value=${data.myComponentBoolean ? 'true' : 'false'}></dbp-form-string-view>
                 </div>
             </section>
         `;

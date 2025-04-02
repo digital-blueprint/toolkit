@@ -3,11 +3,11 @@ import {assert} from 'chai';
 import '../src/index';
 import '../src/demo';
 
-suite('dbp-form-checkbox-element', () => {
+suite('dbp-form-boolean-element', () => {
     let node;
 
     setup(async () => {
-        node = document.createElement('dbp-form-checkbox-element');
+        node = document.createElement('dbp-form-boolean-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });

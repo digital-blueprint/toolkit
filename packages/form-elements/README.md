@@ -71,11 +71,11 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     - Type: Text
     - Example: `<dbp-form-string-element placeholder="Short phrase that hints at the expected data"></dbp-form-string-element>`
 
-### Checkbox Element
+### Boolean Element
 
 - `checked`: Indicates if the checkbox is checked
     - Type: Boolean
-    - Example: `<dbp-form-checkbox-element checked></dbp-form-checkbox-element>`
+    - Example: `<dbp-form-boolean-element checked></dbp-form-boolean-element>`
 
 ### Date Element
 

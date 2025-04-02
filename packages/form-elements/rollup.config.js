@@ -21,7 +21,7 @@ export default (async () => {
         input:
             build !== 'test'
                 ? [
-                      'src/elements/checkbox.js',
+                      'src/elements/boolean.js',
                       'src/elements/date.js',
                       'src/elements/datetime.js',
                       'src/elements/enum.js',
