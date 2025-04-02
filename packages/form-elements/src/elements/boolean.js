@@ -8,13 +8,14 @@ export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
         super();
         this.label = '';
         this.checked = false;
-        this.dataValue = '';
+        this.dataValue = false;
+        this.value = 'false';
     }
 
     static get properties() {
         return {
             ...super.properties,
-            checked: {type: Boolean},
+            checked: {type: Boolean, attribute: false},
             dataValue: {type: String, attribute: 'data-value', reflect: true},
         };
     }
@@ -70,9 +71,9 @@ export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'checked':
-                    // Mimic the behavior of a real checkbox
-                    this.dataValue = this.checked ? this.value : '';
+                case 'value':
+                    this.checked = this.value === 'true';
+                    this.dataValue = this.checked;
                     break;
             }
         });
@@ -82,6 +83,8 @@ export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
 
     handleInputValue(e) {
         this.checked = e.target.checked;
+        this.dataValue = this.checked;
+        this.value = this.checked ? 'true' : 'false';
     }
 
     render() {

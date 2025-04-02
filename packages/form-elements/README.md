@@ -73,9 +73,11 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 
 ### Boolean Element
 
-- `checked`: Indicates if the checkbox is checked
+- `value`: Use the string `true` or `false` to set the value
+    - Type: String
+    - Example: `<dbp-form-boolean-element value="true"></dbp-form-boolean-element>`
+- `data-value`: Returns the state of the boolean element
     - Type: Boolean
-    - Example: `<dbp-form-boolean-element checked></dbp-form-boolean-element>`
 
 ### Date Element
 

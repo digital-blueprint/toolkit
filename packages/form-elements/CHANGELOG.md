@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.14
+
+- `dbp-form-checkbox-element` was renamed to `dbp-form-boolean-element` and will now accept
+  the values `true` and `false` as strings and return the state in `data-value` as a boolean
+
 ## 0.2.13
 
 - Add a `dbp-form-time-element` for inputs of type time

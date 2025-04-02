@@ -130,16 +130,14 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             subscribe="lang"
                             name="myComponentString"
                             label="My string"
-                            value=${data.myComponentString || ''}
-                            required></dbp-form-string-element>
+                            value=${data.myComponentString || ''}></dbp-form-string-element>
 
                         <dbp-form-string-element
                             subscribe="lang"
                             name="myComponentLongString"
                             label="My long string"
                             value=${data.myComponentLongString || ''}
-                            rows="5"
-                            required></dbp-form-string-element>
+                            rows="5"></dbp-form-string-element>
 
                         <dbp-form-string-element
                             subscribe="lang"
@@ -152,15 +150,13 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                     ? ['evaluationData: ' + JSON.stringify(evaluationData)]
                                     : [];
                             }}
-                            value=${data.mySpecialString || ''}
-                            required></dbp-form-string-element>
+                            value=${data.mySpecialString || ''}></dbp-form-string-element>
 
                         <dbp-form-date-element
                             subscribe="lang"
                             name="myComponentDate"
                             label="My date"
-                            value=${data.myComponentDate || ''}
-                            required></dbp-form-date-element>
+                            value=${data.myComponentDate || ''}></dbp-form-date-element>
 
                         <dbp-form-datetime-element
                             subscribe="lang"
@@ -173,16 +169,14 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                     ? ['The date needs to be in the future']
                                     : [];
                             }}
-                            value=${data.myComponentDateTime || ''}
-                            required></dbp-form-datetime-element>
+                            value=${data.myComponentDateTime || ''}></dbp-form-datetime-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"
                             name="myComponentEnum"
                             label="My enum"
                             value=${data.myComponentEnum || ''}
-                            .items=${this.enumItems}
-                            required></dbp-form-enum-element>
+                            .items=${this.enumItems}></dbp-form-enum-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"
@@ -190,8 +184,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="My multiple enum"
                             .value=${data.myComponentMultipleEnum || ''}
                             .items=${this.enumItems}
-                            multiple
-                            required></dbp-form-enum-element>
+                            multiple></dbp-form-enum-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"
@@ -199,8 +192,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="My enum list"
                             .value=${data.myComponentMultipleEnum || ''}
                             .items=${this.enumItems}
-                            display-mode="list"
-                            required></dbp-form-enum-element>
+                            display-mode="list"></dbp-form-enum-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"
@@ -209,8 +201,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             .value=${data.myComponentMultipleEnum || ''}
                             .items=${this.enumItems}
                             display-mode="list"
-                            multiple
-                            required>
+                            multiple>
                             <span slot="label">
                                 Label with
                                 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a>
@@ -223,9 +214,9 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             name="myComponentBoolean"
                             label="My boolean"
                             description="Check me"
-                            value="check"
-                            ?checked=${data.myComponentBoolean ||
-                            false}></dbp-form-boolean-element>
+                            .value=${data.myComponentBoolean
+                                ? 'true'
+                                : 'false'}></dbp-form-boolean-element>
 
                         ${this.getButtonRowHtml()}
                     </form>
@@ -302,8 +293,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         label="My enum list"
                         .value=${data.myComponentMultipleEnum || ''}
                         .items=${this.enumItems}
-                        display-mode="list"
-                        required></dbp-form-enum-view>
+                        display-mode="list"></dbp-form-enum-view>
 
                     <dbp-form-enum-view
                         subscribe="lang"
@@ -311,13 +301,12 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         label="My multiple enum list"
                         .value=${data.myComponentMultipleEnum || ''}
                         .items=${this.enumItems}
-                        display-mode="list"
-                        required></dbp-form-enum-view>
+                        display-mode="list"></dbp-form-enum-view>
 
                     <dbp-form-string-view
                         subscribe="lang"
                         label="My boolean"
-                        .value=${data.myComponentBoolean ? 'true' : 'false'}></dbp-form-string-view>
+                        value=${data.myComponentBoolean ? 'true' : 'false'}></dbp-form-string-view>
                 </div>
             </section>
         `;
