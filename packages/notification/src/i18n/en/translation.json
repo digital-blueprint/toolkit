@@ -1,3 +1,5 @@
 {
-    "send": "send"
+    "add-notification": "Add Notification",
+    "open-dialog": "Open Dialog",
+    "send": "Send"
 }
