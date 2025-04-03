@@ -1,14 +1,9 @@
 {
+    "dbp-modal": {
+        "close": "Schließen"
+    },
     "error": {
         "connection-to-server-refused": "Verbindungs zum Server verweigert!",
         "summary": "Ein Fehler ist aufgetreten"
-    },
-    "jsonld": {
-        "api-documentation-server": "Verbindung zum apiDocumentation API Server {{apiDocUrl}} fehlgeschlagen!",
-        "error-api-server": "Verbindung zum API Server {{apiUrl}} fehlgeschlagen!",
-        "error-hydra-documentation-url-not-set": "Hydra apiDocumentation URL wurden für server {{apiUrl}} nicht gesetzt!"
-    },
-    "dbp-modal": {
-        "close": "Schließen"
     }
 }

@@ -4,6 +4,6 @@ export default {
     keepRemoved: false,
     locales: ['en', 'de'],
     output: 'src/i18n/$LOCALE/$NAMESPACE.json',
-    input: ['src/*.js', './*.js'],
+    input: ['src/**/*.js', './*.js'],
     sort: true,
 };
