@@ -1,6 +1,6 @@
 {
+    "logging-in": "Logging in",
     "login": "Login",
     "login-failed": "Communication with the login server failed",
-    "logout": "Logout",
-    "logging-in": "Logging in"
+    "logout": "Logout"
 }
