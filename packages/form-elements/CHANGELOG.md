@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.15
+
+- Fix `DbpBooleanElement` class name
+
 ## 0.2.14
 
 - `dbp-form-checkbox-element` was renamed to `dbp-form-boolean-element` and will now accept

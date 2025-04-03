@@ -3,7 +3,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 
-export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
+export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
         super();
         this.label = '';
@@ -124,4 +124,4 @@ export class DbpCheckboxElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 }
 
-commonUtils.defineCustomElement('dbp-form-boolean-element', DbpCheckboxElement);
+commonUtils.defineCustomElement('dbp-form-boolean-element', DbpBooleanElement);
