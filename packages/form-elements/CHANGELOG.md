@@ -3,6 +3,7 @@
 ## 0.2.15
 
 - Fix `DbpBooleanElement` class name
+- Add checkbox to enable and disable required fields in the demo form
 
 ## 0.2.14
 

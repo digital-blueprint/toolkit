@@ -26,6 +26,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         this.saveButtonEnabled = true;
         this.data = {};
         this.enumItems = {item1: 'Item 1', item2: 'Item 2'};
+        this.isRequired = false;
     }
 
     static get scopedElements() {
@@ -47,6 +48,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
             saveButtonEnabled: {type: Boolean, attribute: false},
+            isRequired: {type: Boolean, attribute: false},
             data: {type: Object, attribute: false},
         };
     }
@@ -126,18 +128,33 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                 </div>
                 <div class="container">
                     <form>
+                        <dbp-form-boolean-element
+                            subscribe="lang"
+                            name="isRequired"
+                            label="Fields are required"
+                            description="Disable this to make all fields optional"
+                            @change=${(e) => {
+                                this.isRequired = e.target.value;
+                                console.log(" this.isRequired", this.isRequired);
+                            }}
+                            .value=${this.isRequired ? 'true' : 'false'}></dbp-form-boolean-element>
+
+                        Required: ${this.isRequired ? 'true' : 'false'}
+
                         <dbp-form-string-element
                             subscribe="lang"
                             name="myComponentString"
                             label="My string"
-                            value=${data.myComponentString || ''}></dbp-form-string-element>
+                            value=${data.myComponentString || ''}
+                            ?required=${this.isRequired}></dbp-form-string-element>
 
                         <dbp-form-string-element
                             subscribe="lang"
                             name="myComponentLongString"
                             label="My long string"
                             value=${data.myComponentLongString || ''}
-                            rows="5"></dbp-form-string-element>
+                            rows="5"
+                            ?required=${this.isRequired}></dbp-form-string-element>
 
                         <dbp-form-string-element
                             subscribe="lang"
@@ -150,13 +167,15 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                     ? ['evaluationData: ' + JSON.stringify(evaluationData)]
                                     : [];
                             }}
-                            value=${data.mySpecialString || ''}></dbp-form-string-element>
+                            value=${data.mySpecialString || ''}
+                            ?required=${this.isRequired}></dbp-form-string-element>
 
                         <dbp-form-date-element
                             subscribe="lang"
                             name="myComponentDate"
                             label="My date"
-                            value=${data.myComponentDate || ''}></dbp-form-date-element>
+                            value=${data.myComponentDate || ''}
+                            ?required=${this.isRequired}></dbp-form-date-element>
 
                         <dbp-form-datetime-element
                             subscribe="lang"
@@ -169,14 +188,16 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                                     ? ['The date needs to be in the future']
                                     : [];
                             }}
-                            value=${data.myComponentDateTime || ''}></dbp-form-datetime-element>
+                            value=${data.myComponentDateTime || ''}
+                            ?required=${this.isRequired}></dbp-form-datetime-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"
                             name="myComponentEnum"
                             label="My enum"
                             value=${data.myComponentEnum || ''}
-                            .items=${this.enumItems}></dbp-form-enum-element>
+                            .items=${this.enumItems}
+                            ?required=${this.isRequired}></dbp-form-enum-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"
@@ -184,7 +205,8 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="My multiple enum"
                             .value=${data.myComponentMultipleEnum || ''}
                             .items=${this.enumItems}
-                            multiple></dbp-form-enum-element>
+                            multiple
+                            ?required=${this.isRequired}></dbp-form-enum-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"
@@ -192,7 +214,8 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="My enum list"
                             .value=${data.myComponentMultipleEnum || ''}
                             .items=${this.enumItems}
-                            display-mode="list"></dbp-form-enum-element>
+                            display-mode="list"
+                            ?required=${this.isRequired}></dbp-form-enum-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"
