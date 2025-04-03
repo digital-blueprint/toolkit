@@ -1,8 +1,8 @@
 {
     "render-form": {
         "base-object": {
-            "required-field-validation-error": "Bitte füllen Sie das Pflichtfeld aus!",
-            "required-field": "Pflichtfeld"
+            "required-field": "Pflichtfeld",
+            "required-field-validation-error": "Bitte füllen Sie das Pflichtfeld aus!"
         }
     }
 }
