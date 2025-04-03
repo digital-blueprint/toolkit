@@ -135,7 +135,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             description="Disable this to make all fields optional"
                             @change=${(e) => {
                                 this.isRequired = e.target.value;
-                                console.log(" this.isRequired", this.isRequired);
+                                console.log(' this.isRequired', this.isRequired);
                             }}
                             .value=${this.isRequired ? 'true' : 'false'}></dbp-form-boolean-element>
 
