@@ -61,19 +61,19 @@
     },
     "file-source": {
         "clipboard": "Zwischenablage",
+        "empty-file-error-text": "{{filename}} hat size=0 und wird abgelehnt!",
+        "empty-file-error-title": "Leere Dateien sind nicht erlaubt",
         "mime-type-body": "Das Dateiformat wird von dieser Applikation nicht unterstützt.",
         "mime-type-title": "Nicht unterstützes Dateiformat",
         "modal-close": "Dialog schließen",
         "nav-local": "Lokaler Computer",
         "no-usable-files-hint": "Laden Sie eine ZIP Datei mit Dateien von folgendem Typ hoch: ",
         "no-usable-files-in-zip": "ZIP Datei enthält keine verwendbaren Dateien",
+        "not-allowed-mime-type-file-error-text": "{{filename}} hat nicht erlaubt mime type",
+        "not-allowed-mime-type-file-error-title": "Nicht erlaubt MIME-Type",
         "open-menu": "",
         "too-big-file-body": "Die Datei darf maximal {{size}} haben.",
-        "too-big-file-title": "Datei ist zu groß!",
-        "empty-file-error-title": "Leere Dateien sind nicht erlaubt",
-        "empty-file-error-text": "{{filename}} hat size=0 und wird abgelehnt!",
-        "not-allowed-mime-type-file-error-title": "Nicht erlaubt MIME-Type",
-        "not-allowed-mime-type-file-error-text": "{{filename}} hat nicht erlaubt mime type"
+        "too-big-file-title": "Datei ist zu groß!"
     },
     "intro": "Sie können in diesem Bereich Dateien per Drag & Drop oder per Direktauswahl hochladen. Die Dateien dürfen sich auch in ZIP-Archiven befinden.",
     "nextcloud-file-picker": {
@@ -93,8 +93,11 @@
         "error-save-to-recent": "Speichern in den neuesten Dateien nicht möglich! Bitte wählen Sie einen Ordner innerhalb der neuesten Dateien aus.",
         "favorites-link-text": "Meine Favoriten",
         "favorites-title": "Favoriten",
+        "file-error": "Das Dateiformat wird nicht unterstützt oder die Datei ist fehlerhaft und konnte nicht hochgeladen werden.",
+        "file-upload-error": "Entschuldigung, etwas ist schief gelaufen. Bitte versuchen Sie es später noch einmal.",
         "filename": "Name",
         "folder-home": "In das Home Verzeichnis springen",
+        "forbidden": "Sie sind nicht berechtigt, diese Aktion in diesem Ordner auszuführen.",
         "init-text-1": "Wählen Sie Ihre Dateien von {{name}}.",
         "init-text-2": "Sie müssen sich zuerst authentifizieren.",
         "last-modified": "Geändert",
@@ -139,10 +142,7 @@
         "size": "Größe",
         "something-went-wrong": "Etwas ist schief gelaufen. Bitte verbinden Sie sich erneut.",
         "upload-to": "Es wird nach {{- path}} hochgeladen ...",
-        "webdav-error": "Etwas ist schief gelaufen: {{error}}",
-        "file-error": "Das Dateiformat wird nicht unterstützt oder die Datei ist fehlerhaft und konnte nicht hochgeladen werden.",
-        "forbidden": "Sie sind nicht berechtigt, diese Aktion in diesem Ordner auszuführen.",
-        "file-upload-error": "Entschuldigung, etwas ist schief gelaufen. Bitte versuchen Sie es später noch einmal."
+        "webdav-error": "Etwas ist schief gelaufen: {{error}}"
     },
     "upload-label": "Dateiauswahl"
 }

@@ -61,19 +61,19 @@
     },
     "file-source": {
         "clipboard": "Clipboard",
+        "empty-file-error-text": "{{filename}} has size=0 and is denied!",
+        "empty-file-error-title": "Empty files are not allowed",
         "mime-type-body": "The file format is not supported by this application.",
         "mime-type-title": "Unsupported file format",
         "modal-close": "Close dialog",
         "nav-local": "My device",
         "no-usable-files-hint": "Upload a ZIP file with file type(s) of ",
         "no-usable-files-in-zip": "ZIP file does not contain any usable files",
+        "not-allowed-mime-type-file-error-text": "{{filename}} has not allowed MIME-Type",
+        "not-allowed-mime-type-file-error-title": "Not allowed MIME-Type",
         "open-menu": "",
         "too-big-file-body": "The file can have a maximum of {{size}}.",
-        "too-big-file-title": "The file is too big!",
-        "empty-file-error-title": "Empty files are not allowed",
-        "empty-file-error-text": "{{filename}} has size=0 and is denied!",
-        "not-allowed-mime-type-file-error-title": "Not allowed MIME-Type",
-        "not-allowed-mime-type-file-error-text": "{{filename}} has not allowed MIME-Type"
+        "too-big-file-title": "The file is too big!"
     },
     "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region.",
     "nextcloud-file-picker": {
@@ -93,8 +93,11 @@
         "error-save-to-recent": "Saving to Recent Files not possible! Please select a folder within the Recent Files.",
         "favorites-link-text": "My Favorites",
         "favorites-title": "Favorites",
+        "file-error": "The file format is not supported or the file is corrupt and could not be uploaded.",
+        "file-upload-error": "Sorry, something went wrong. Please try again later.",
         "filename": "Filename",
         "folder-home": "Jump to the home directory",
+        "forbidden": "You don't have permissions to perform this action in this folder.",
         "init-text-1": "Chose your files from {{name}}.",
         "init-text-2": "You need to authenticate first.",
         "last-modified": "Last modified",
@@ -139,10 +142,7 @@
         "size": "Size",
         "something-went-wrong": "Something went wrong. Please reload.",
         "upload-to": "Uploading to {{- path}} ...",
-        "webdav-error": "Something went wrong",
-        "file-error": "The file format is not supported or the file is corrupt and could not be uploaded.",
-        "forbidden": "You don't have permissions to perform this action in this folder.",
-        "file-upload-error": "Sorry, something went wrong. Please try again later."
+        "webdav-error": "Something went wrong"
     },
     "upload-label": "Select some files"
 }
