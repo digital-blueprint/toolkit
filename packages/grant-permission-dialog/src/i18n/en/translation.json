@@ -1,24 +1,32 @@
 {
     "grant-permission-dialog": {
-        "modal-title": "Grant permissions",
-        "unknown-error": "Unknown error",
-        "need-login": "You need to be logged in to use the grant permission modal",
+        "available-permissions": "available-permissions",
         "buttons": {
-            "save-all-text": "Save All",
-            "cancel-text": "Cancel",
             "add-person-text": "Add new person",
-            "delete-all-text": "Delete all"
+            "cancel-text": "Cancel",
+            "delete-all-text": "Delete all",
+            "save-all-text": "Save All"
         },
+        "could-not-delete-grant": "could-not-delete-grant",
+        "could-not-fetch-user-details": "could-not-fetch-user-details",
+        "failed-to-get-user-details": "failed-to-get-user-details",
+        "info-title": "info-title",
+        "modal-title": "Grant permissions",
+        "need-login": "You need to be logged in to use the grant permission modal",
         "notifications": {
-            "error-title": "Error",
-            "success-title": "Success",
-            "error-not-authorized": "Not authorized",
-            "failed-get-user-details": "Failed to get user details",
-            "could-not-fetch-resource-class-actions": "Could not fetch resource class actions",
-            "permissions-saved-successfully": "Permissions saved successfully",
-            "user-successfully-deleted": "All grants of {{userFullName}} successfully deleted",
             "all-users-deleted": "All user's permissions successfully deleted",
-            "could-not-get-forms": "Could not get forms from the API"
-        }
+            "could-not-fetch-resource-class-actions": "Could not fetch resource class actions",
+            "could-not-get-forms": "Could not get forms from the API",
+            "error-not-authorized": "Not authorized",
+            "error-title": "Error",
+            "failed-get-user-details": "Failed to get user details",
+            "permissions-saved-successfully": "Permissions saved successfully",
+            "success-title": "Success",
+            "user-successfully-deleted": "All grants of {{userFullName}} successfully deleted"
+        },
+        "save-permissions-error": "save-permissions-error",
+        "there-is-nothing-to-save": "there-is-nothing-to-save",
+        "unknown-error": "Unknown error",
+        "user-already-added": "user-already-added"
     }
 }

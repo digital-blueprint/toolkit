@@ -1,9 +1,32 @@
 {
     "grant-permission-dialog": {
+        "available-permissions": "available-permissions",
+        "buttons": {
+            "add-person-text": "Neue Person hinzufügen",
+            "cancel-text": "Abbrechen",
+            "delete-all-text": "Alle löschen",
+            "save-all-text": "Alle speichern"
+        },
+        "could-not-delete-grant": "could-not-delete-grant",
+        "could-not-fetch-user-details": "could-not-fetch-user-details",
+        "failed-to-get-user-details": "failed-to-get-user-details",
+        "info-title": "info-title",
         "modal-title": "Berechtigungen erteilen",
-        "error-requested-title": "Fehler",
-        "could-not-fetch-resource-class-actions": "Konnte Ressourcenklassen-Aktionen nicht abrufen.",
-        "error-not-authorized": "[ger] Not authorized",
-        "unknown-error": "[ger] Unknown error"
+        "need-login": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",
+        "notifications": {
+            "all-users-deleted": "Berechtigungen aller Benutzer erfolgreich gelöscht",
+            "could-not-fetch-resource-class-actions": "Ressourcenklassenaktionen konnten nicht abgerufen werden",
+            "could-not-get-forms": "Formulare konnten nicht von der API abgerufen werden",
+            "error-not-authorized": "Nicht autorisiert",
+            "error-title": "Fehler",
+            "failed-get-user-details": "Benutzerdetails konnten nicht abgerufen werden",
+            "permissions-saved-successfully": "Berechtigungen erfolgreich gespeichert",
+            "success-title": "Erfolg",
+            "user-successfully-deleted": "Alle Berechtigungen von {{userFullName}} erfolgreich gelöscht"
+        },
+        "save-permissions-error": "save-permissions-error",
+        "there-is-nothing-to-save": "there-is-nothing-to-save",
+        "unknown-error": "Unbekannter Fehler",
+        "user-already-added": "user-already-added"
     }
 }
