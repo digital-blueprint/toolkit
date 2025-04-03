@@ -6,21 +6,16 @@
     "contact": "Contact",
     "imprint": "Legal Notice",
     "login": "Login",
-    "logo": {
-        "word1": "Science",
-        "word2": "Passion",
-        "word3": "Technology"
-    },
     "logout": "Logout",
     "page-not-found": "Requested Page Not Found",
     "page-updated-needs-reload": "The application has been updated. Please reload the page.",
     "privacy-policy": "Privacy Policy",
+    "standard-layout-name": "Standard",
+    "switch-layout": "Switch layout",
+    "switch-to-standard-layout-label": "Switch to Standard Layout",
+    "switch-to-wide-layout-label": "Switch to Wide Layout",
     "welcome": {
         "headline": "Welcome!"
     },
-    "switch-layout": "Switch layout",
-    "switch-to-wide-layout-label": "Switch to Wide Layout",
-    "switch-to-standard-layout-label": "Switch to Standard Layout",
-    "wide-layout-name": "Wide",
-    "standard-layout-name": "Standard"
+    "wide-layout-name": "Wide"
 }

@@ -6,21 +6,16 @@
     "contact": "Kontakt",
     "imprint": "Impressum",
     "login": "Anmelden",
-    "logo": {
-        "word1": "Wissen",
-        "word2": "Technik",
-        "word3": "Leidenschaft"
-    },
     "logout": "Abmelden",
     "page-not-found": "Die gewünschte Seite wurde nicht gefunden",
     "page-updated-needs-reload": "Die Applikation wurde aktualisiert. Bitte laden Sie die Seite neu.",
     "privacy-policy": "Datenschutz",
+    "standard-layout-name": "Standard",
+    "switch-layout": "Layout wechseln",
+    "switch-to-standard-layout-label": "Zum Standardlayout wechseln",
+    "switch-to-wide-layout-label": "Zum Weiten Layout wechseln",
     "welcome": {
         "headline": "Willkommen!"
     },
-    "switch-layout": "Layout wechseln",
-    "switch-to-wide-layout-label": "Zum Weiten Layout wechseln",
-    "switch-to-standard-layout-label": "Zum Standardlayout wechseln",
-    "wide-layout-name": "Erweitert",
-    "standard-layout-name": "Standard"
+    "wide-layout-name": "Erweitert"
 }
