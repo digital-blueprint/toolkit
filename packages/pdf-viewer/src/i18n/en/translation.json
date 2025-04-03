@@ -1,6 +1,5 @@
 {
     "pdf-viewer": {
-        "continue": "Confirm placement",
         "error-message": "Error: This document is incorrect.",
         "first-page": "First page",
         "last-page": "Last page",

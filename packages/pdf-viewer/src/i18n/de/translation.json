@@ -1,6 +1,5 @@
 {
     "pdf-viewer": {
-        "continue": "Platzierung bestätigen",
         "error-message": "Fehler: Dieses Dokument ist beschädigt.",
         "first-page": "Erste Seite",
         "last-page": "Letzte Seite",
