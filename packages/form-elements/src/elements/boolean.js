@@ -71,10 +71,18 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'value':
+                case 'value': {
                     this.checked = this.value === 'true';
                     this.dataValue = this.checked;
+
+                    const changeEvent = new CustomEvent('change', {
+                        detail: {value: this.checked},
+                        bubbles: true,
+                        composed: true,
+                    });
+                    this.dispatchEvent(changeEvent);
                     break;
+                }
             }
         });
 

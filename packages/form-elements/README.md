@@ -73,6 +73,18 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 
 ### Boolean Element
 
+```html
+<dbp-form-boolean-element
+        subscribe="lang"
+        name="myBoolean"
+        label="My label"
+        description="My description"
+        @change=${(e) => {
+            console.log('value', e.target.value);
+        }}
+        .value=${this.myBoolean ? 'true' : 'false'}></dbp-form-boolean-element>
+```
+
 - `value`: Use the string `true` or `false` to set the value
     - Type: String
     - Example: `<dbp-form-boolean-element value="true"></dbp-form-boolean-element>`
