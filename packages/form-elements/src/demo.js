@@ -26,7 +26,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
         this.saveButtonEnabled = true;
         this.data = {};
         this.enumItems = {item1: 'Item 1', item2: 'Item 2'};
-        this.isRequired = false;
+        this.isRequired = true;
     }
 
     static get scopedElements() {
@@ -134,12 +134,10 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="Fields are required"
                             description="Disable this to make all fields optional"
                             @change=${(e) => {
-                                this.isRequired = e.target.value;
-                                console.log(' this.isRequired', this.isRequired);
+                                this.isRequired = e.detail.value;
                             }}
                             .value=${this.isRequired ? 'true' : 'false'}></dbp-form-boolean-element>
 
-                        Required: ${this.isRequired ? 'true' : 'false'}
 
                         <dbp-form-string-element
                             subscribe="lang"
@@ -163,7 +161,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="My special string"
                             .customValidator=${(value, evaluationData) => {
                                 // If the value is empty, return an error message with the evaluation data
-                                return value === ''
+                                return value === '' && this.isRequired
                                     ? ['evaluationData: ' + JSON.stringify(evaluationData)]
                                     : [];
                             }}
