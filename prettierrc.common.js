@@ -9,15 +9,15 @@ export default {
         {
             files: '*.js',
             options: {
-                semi: true
-            }
+                semi: true,
+            },
         },
         {
             files: ['*.yaml', '*.yml'],
             options: {
                 tabWidth: 2,
-                singleQuote: false
-            }
-        }
-    ]
+                singleQuote: false,
+            },
+        },
+    ],
 };
