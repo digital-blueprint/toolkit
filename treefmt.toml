@@ -2,6 +2,7 @@
 # https://github.com/numtide/treefmt-nix
 
 on-unmatched = "info"
+excludes = ["node_modules/**", "**/node_modules/**", "**/dist/**"]
 
 [formatter.prettier]
 command = "prettier"
