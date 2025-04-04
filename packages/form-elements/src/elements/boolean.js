@@ -7,15 +7,16 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
         super();
         this.label = '';
-        this.checked = false;
+        this.state = false;
         this.dataValue = false;
-        this.value = 'false';
+        // Needs to be empty, because we can ignore that
+        this.value = '';
     }
 
     static get properties() {
         return {
             ...super.properties,
-            checked: {type: Boolean, attribute: false},
+            state: {type: Boolean},
             dataValue: {type: String, attribute: 'data-value', reflect: true},
         };
     }
@@ -72,11 +73,15 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'value': {
-                    this.checked = this.value === 'true';
-                    this.dataValue = this.checked;
+                    if (this.value === '') {
+                        return;
+                    }
+
+                    this.state = this.value === 'true';
+                    this.dataValue = this.state;
 
                     const changeEvent = new CustomEvent('change', {
-                        detail: {value: this.checked},
+                        detail: {value: this.state, state: this.state},
                         bubbles: true,
                         composed: true,
                     });
@@ -90,9 +95,9 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     handleInputValue(e) {
-        this.checked = e.target.checked;
-        this.dataValue = this.checked;
-        this.value = this.checked ? 'true' : 'false';
+        this.state = e.target.checked;
+        this.dataValue = this.state;
+        this.value = this.state ? 'true' : 'false';
     }
 
     render() {
@@ -122,7 +127,7 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
                     id="${this.formElementId}"
                     name="${this.name}"
                     class="checkbox"
-                    ?checked="${this.checked}"
+                    ?checked=${this.state}
                     @input="${this.handleInputValue}"
                     ?disabled=${this.disabled}
                     ?required=${this.isRequired} />

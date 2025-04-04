@@ -73,23 +73,43 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 
 ### Boolean Element
 
+- `value`: Use the string `true` or `false` to set the value
+    - Type: String
+    - Example: `<dbp-form-boolean-element value="true"></dbp-form-boolean-element>`
+- `state`: Instead of `value` you can also use `state` to set the state of the boolean element as a boolean
+    - Type: Boolean
+- `data-value`: Returns the state of the boolean element
+    - Type: Boolean
+
+#### Examples
+
+The `change` event is fired when the state changes. The event contains the new state in `e.detail.state` as a boolean.
+
+##### Boolean Element with String Value
+
 ```html
 <dbp-form-boolean-element
     subscribe="lang"
     name="myBoolean"
     label="My label"
     description="My description"
-    @change="${(e)"
-    ="">
-    { console.log('value', e.target.value); }} .value=${this.myBoolean ? 'true' : 'false'}>
+    .value=${this.myBoolean ? 'true' : 'false'}
+    @change="${(e) { console.log('state', e.detail.state); }}>
 </dbp-form-boolean-element>
 ```
 
-- `value`: Use the string `true` or `false` to set the value
-    - Type: String
-    - Example: `<dbp-form-boolean-element value="true"></dbp-form-boolean-element>`
-- `data-value`: Returns the state of the boolean element
-    - Type: Boolean
+##### Boolean Element with Boolean State
+
+```html
+<dbp-form-boolean-element
+    subscribe="lang"
+    name="myBoolean"
+    label="My label"
+    description="My description"
+    .state=${this.myBoolean}
+    @change="${(e) { console.log('state', e.detail.state); }}>
+</dbp-form-boolean-element>
+```
 
 ### Date Element
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.16
+
+- Expose the `state` property in `dbp-form-boolean-element` to set the state as a boolean
+
 ## 0.2.15
 
 - Fix `DbpBooleanElement` class name

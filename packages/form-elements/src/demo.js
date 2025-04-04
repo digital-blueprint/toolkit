@@ -134,9 +134,9 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             label="Fields are required"
                             description="Disable this to make all fields optional"
                             @change=${(e) => {
-                                this.isRequired = e.detail.value;
+                                this.isRequired = e.detail.state;
                             }}
-                            .value=${this.isRequired ? 'true' : 'false'}></dbp-form-boolean-element>
+                            .state=${this.isRequired}></dbp-form-boolean-element>
 
                         <dbp-form-string-element
                             subscribe="lang"
@@ -234,9 +234,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             name="myComponentBoolean"
                             label="My boolean"
                             description="Check me"
-                            .value=${data.myComponentBoolean
-                                ? 'true'
-                                : 'false'}></dbp-form-boolean-element>
+                            .state=${data.myComponentBoolean}></dbp-form-boolean-element>
 
                         ${this.getButtonRowHtml()}
                     </form>
