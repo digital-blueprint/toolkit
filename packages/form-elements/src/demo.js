@@ -138,7 +138,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             }}
                             .value=${this.isRequired ? 'true' : 'false'}></dbp-form-boolean-element>
 
-
                         <dbp-form-string-element
                             subscribe="lang"
                             name="myComponentString"
@@ -210,7 +209,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             subscribe="lang"
                             name="myComponentEnumList"
                             label="My enum list"
-                            .value=${data.myComponentMultipleEnum || ''}
+                            .value=${data.myComponentEnumList || ''}
                             .items=${this.enumItems}
                             display-mode="list"
                             ?required=${this.isRequired}></dbp-form-enum-element>
@@ -219,7 +218,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                             subscribe="lang"
                             name="myComponentMultipleEnumList"
                             label="My multiple enum list"
-                            .value=${data.myComponentMultipleEnum || ''}
+                            .value=${data.myComponentMultipleEnumList || ''}
                             .items=${this.enumItems}
                             display-mode="list"
                             multiple>
@@ -312,7 +311,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                     <dbp-form-enum-view
                         subscribe="lang"
                         label="My enum list"
-                        .value=${data.myComponentMultipleEnum || ''}
+                        .value=${data.myComponentEnumList || ''}
                         .items=${this.enumItems}
                         display-mode="list"></dbp-form-enum-view>
 
@@ -320,7 +319,7 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                         subscribe="lang"
                         name="myComponentMultipleEnumList"
                         label="My multiple enum list"
-                        .value=${data.myComponentMultipleEnum || ''}
+                        .value=${data.myComponentMultipleEnumList || ''}
                         .items=${this.enumItems}
                         display-mode="list"></dbp-form-enum-view>
 
