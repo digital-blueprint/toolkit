@@ -4,6 +4,7 @@
 
 - Fix `DbpBooleanElement` class name
 - Add checkbox to enable and disable required fields in the demo form
+- Fix enum variable names in the demo form
 
 ## 0.2.14
 
