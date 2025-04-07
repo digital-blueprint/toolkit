@@ -40,14 +40,8 @@ jobs:
       - name: Run tests
         run: npm run test
 
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run i18next check
-        run: npm run i18next:check
-
-      - name: Run formatter check
-        run: npm run format && git diff --check --exit-code
+      - name: Run formatter/linter/i18next checks
+        run: npm run check
 
       - name: Run separate package builds
         run: |

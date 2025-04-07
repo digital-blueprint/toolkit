@@ -51,7 +51,7 @@
     "scripts": {
         "clean": "rm dist/*",
         "format": "npm run format:eslint && npm run format:prettier",
-        "check": "npm run format:eslint-nofix && npm run format:prettier-check",
+        "check": "npm run format:eslint-nofix && npm run format:prettier-check && npm run i18next:check",
         "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
         "format:eslint-nofix": "eslint \"**/*.{js,ts}\"",
         "format:prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
@@ -62,7 +62,8 @@
         "build-prod": "rollup -c --environment BUILD:production",
         "build-demo": "rollup -c --environment BUILD:demo",
         "build-test": "rollup -c --environment BUILD:test",
-        "i18next": "i18next",
+        "i18next:fix": "i18next",
+        "i18next:check": "i18next --fail-on-update",
         "watch": "npm run watch-local",
         "watch-local": "rollup -c --watch",
         "watch-dev": "rollup -c --watch --environment BUILD:development",

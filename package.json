@@ -17,8 +17,6 @@
         "check": "lerna --no-sort run check",
         "format": "lerna --no-sort run format",
         "build": "lerna --no-sort run build",
-        "i18next": "lerna --no-sort run i18next",
-        "i18next:check": "lerna --no-sort run i18next -- --fail-on-update",
         "version-patch": "lerna version patch",
         "version-minor": "lerna version minor",
         "version": "lerna version",
