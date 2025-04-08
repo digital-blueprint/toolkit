@@ -3,7 +3,7 @@
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/common",
     "version": "0.3.13",
     "type": "module",
-    "module": "src/index.js",
+    "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
     "repository": {
         "type": "git",
