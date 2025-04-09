@@ -23,13 +23,12 @@
         "selfsigned": "^2.0.0"
     },
     "scripts": {
-        "format": "npm run format:eslint && npm run format:prettier",
-        "check": "npm run format:eslint-nofix && npm run format:prettier-check",
-        "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
-        "format:eslint-nofix": "eslint \"**/*.{js,ts}\"",
-        "format:prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
-        "format:prettier-check": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
-        "lint": "eslint .",
+        "fix": "npm run eslint:fix && npm run prettier:fix",
+        "check": "npm run eslint && npm run prettier",
+        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix",
+        "eslint": "eslint \"**/*.{js,ts}\"",
+        "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
+        "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
         "tsc": "tsc -p jsconfig.json"
     }
 }

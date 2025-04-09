@@ -47,12 +47,12 @@
     },
     "scripts": {
         "clean": "rm dist/*",
-        "format": "npm run format:eslint && npm run format:prettier",
-        "check": "npm run format:eslint-nofix && npm run format:prettier-check && npm run i18next:check",
-        "format:eslint": "eslint \"**/*.{js,ts}\" --fix",
-        "format:eslint-nofix": "eslint \"**/*.{js,ts}\"",
-        "format:prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
-        "format:prettier-check": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
+        "fix": "npm run eslint:fix && npm run prettier:fix && npm run i18next:fix",
+        "check": "npm run eslint && npm run prettier && npm run i18next",
+        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix",
+        "eslint": "eslint \"**/*.{js,ts}\"",
+        "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
+        "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
         "build": "rollup -c",
         "build-local": "rollup -c",
         "build-dev": "rollup -c --environment BUILD:development",
@@ -60,12 +60,11 @@
         "build-demo": "rollup -c --environment BUILD:demo",
         "build-test": "rollup -c --environment BUILD:test",
         "i18next:fix": "i18next",
-        "i18next:check": "i18next --fail-on-update",
+        "i18next": "i18next --fail-on-update",
         "watch": "rollup -c --watch",
         "watch-local": "npm run watch",
         "watch-dev": "rollup -c --watch --environment BUILD:development",
         "test": "rollup -c --environment BUILD:test && karma start karma.conf.cjs --singleRun",
-        "lint": "eslint .",
         "tsc": "tsc -p jsconfig.json"
     }
 }

@@ -15,7 +15,7 @@
     "scripts": {
         "test": "lerna --no-sort run test",
         "check": "lerna --no-sort run check",
-        "format": "lerna --no-sort run format",
+        "fix": "lerna --no-sort run fix",
         "build": "lerna --no-sort run build",
         "version-patch": "lerna version patch",
         "version-minor": "lerna version minor",
