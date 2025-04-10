@@ -289,7 +289,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             -moz-appearance: none;
             -webkit-appearance: none;
             background-color: var(--dbp-background);
-            background: calc(100% - 0.2rem) center no-repeat
+            background: calc(100% - 0.4rem) center no-repeat
                 url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
             background-size: 25%;
             border: var(--dbp-border);
