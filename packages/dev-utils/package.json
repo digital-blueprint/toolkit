@@ -19,7 +19,7 @@
         "prettier": "^3.0.0"
     },
     "dependencies": {
-        "find-cache-dir": "^6.0.0",
+        "find-cache-directory": "^6.0.0",
         "selfsigned": "^2.0.0"
     },
     "scripts": {
