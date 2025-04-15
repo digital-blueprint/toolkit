@@ -23,10 +23,12 @@ export const getFieldsetCSS = () => {
             margin-bottom: 0.5em;
         }
 
-        fieldset input,
+        fieldset input:not([type="radio"]):not([type="checkbox"]),
         fieldset select,
         fieldset textarea {
-            width: 95%;
+            width: calc(100% - 12px);
+            padding: 2px 5px;
+            border: var(--dbp-border);
         }
     `;
 };

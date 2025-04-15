@@ -38,10 +38,12 @@ export class DbpBaseView extends ScopedElementsMixin(DBPLitElement) {
                     display: block;
                 }
 
-                fieldset input,
+                fieldset input:not([type="radio"]):not([type="checkbox"]),
                 fieldset select,
                 fieldset textarea {
-                    width: 95%;
+                    width: calc(100% - 12px);
+                    padding: 2px 5px;
+                    border: 1px solid var(--dbp-border);
                 }
             `,
         ];
