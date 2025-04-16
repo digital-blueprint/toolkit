@@ -77,10 +77,15 @@ export class Modal extends ScopedElementsMixin(DBPLitElement) {
 
     updateModalNotificationPadding(notificationId) {
         const notificationSlot = this.querySelector('[slot="header"]');
+        if (!notificationSlot) {
+            return;
+        }
+
         const notificationComponent = notificationSlot.querySelector('#' + notificationId);
         if (!notificationComponent) {
             return;
         }
+
         /** @type {HTMLElement} */
         const notificationContainer =
             notificationComponent.shadowRoot.querySelector('#notification-container');

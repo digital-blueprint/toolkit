@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.14
+
+- Common: Fix `undefined notificationSlot` error in modal component
+
 ## 0.3.10
 
 - `DBPLitElement` directly integrates the `routing-url` attribute and `this.getRoutingData()` can be used to get the structured data
