@@ -23,7 +23,7 @@ export const getFieldsetCSS = () => {
             margin-bottom: 0.5em;
         }
 
-        fieldset input:not([type="radio"]):not([type="checkbox"]),
+        fieldset input:not([type='radio']):not([type='checkbox']),
         fieldset select,
         fieldset textarea {
             width: calc(100% - 12px);
