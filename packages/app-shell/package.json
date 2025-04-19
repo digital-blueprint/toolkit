@@ -47,7 +47,7 @@
         "@dbp-toolkit/matomo": "^0.2.11",
         "@dbp-toolkit/notification": "^0.3.6",
         "@dbp-toolkit/theme-switcher": "^0.1.4",
-        "i18next": "^23.0.0 || ^24.0.0",
+        "i18next": "^25.0.0",
         "lit": "^3.0.0",
         "universal-router": "^9.0.1"
     },

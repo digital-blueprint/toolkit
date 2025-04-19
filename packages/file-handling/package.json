@@ -43,7 +43,7 @@
         "@dbp-toolkit/common": "^0.3.13",
         "@dbp-toolkit/tabulator-table": "^0.1.4",
         "file-saver": "^2.0.2",
-        "i18next": "^23.0.0 || ^24.0.0",
+        "i18next": "^25.0.0",
         "jose": "^5.0.0 || ^6.0.8",
         "jszip": "^3.5.0",
         "lit": "^3.0.0",
