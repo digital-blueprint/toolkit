@@ -82,7 +82,7 @@ export class Modal extends ScopedElementsMixin(DBPLitElement) {
         }
 
         const notificationComponent = notificationSlot.querySelector('#' + notificationId);
-        if (!notificationComponent) {
+        if (!notificationComponent || !notificationComponent.shadowRoot) {
             return;
         }
 
@@ -143,7 +143,7 @@ export class Modal extends ScopedElementsMixin(DBPLitElement) {
         const notificationSlot = this.querySelector('[slot="header"]');
         if (notificationSlot) {
             const notificationComponent = notificationSlot.querySelector('dbp-notification');
-            if (notificationComponent) {
+            if (notificationComponent && notificationComponent.shadowRoot) {
                 notificationComponent.removeAllNotifications();
             }
         }
