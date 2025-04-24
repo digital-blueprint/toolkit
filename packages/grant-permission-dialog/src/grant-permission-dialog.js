@@ -6,6 +6,7 @@ import {getGrantPermissionDialogCSS} from './styles.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin, Modal, Button, Icon, IconButton} from '@dbp-toolkit/common';
 import {send} from '@dbp-toolkit/common/notification';
+import {Notification} from '@dbp-toolkit/notification';
 import {PersonSelect} from '@dbp-toolkit/person-select';
 import {classMap} from 'lit/directives/class-map.js';
 
@@ -57,6 +58,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             'dbp-icon-button': IconButton,
             'dbp-person-select': PersonSelect,
             'dbp-modal': Modal,
+            'dbp-notification': Notification,
         };
     }
 
