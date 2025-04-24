@@ -952,7 +952,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 }
 
                 // Delete grants
-                if (grantsToPost.length > 0) {
+                if (grantsToDelete.length > 0) {
                     for (const grant of grantsToDelete) {
                         await this.apiDeleteResourceActionGrant(grant.identifier);
                     }
