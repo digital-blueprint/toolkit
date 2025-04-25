@@ -33,6 +33,7 @@ export class DbpBaseView extends ScopedElementsMixin(DBPLitElement) {
                     padding: 0;
                 }
 
+                slot[name='label'],
                 fieldset label {
                     font-weight: bold;
                     display: block;

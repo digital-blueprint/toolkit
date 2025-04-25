@@ -17,6 +17,28 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
         };
     }
 
+    render() {
+        if (this.hidden) {
+            return html``;
+        }
+
+        // Check if the label slot has any assigned content
+        const hasLabelSlot = this.querySelector('[slot="label"]') !== null;
+
+        return html`
+            <fieldset>
+                ${hasLabelSlot
+                    ? html`
+                          <slot name="label"></slot>
+                      `
+                    : html`
+                          <label>${this.label}</label>
+                      `}
+                ${this.renderValue()}
+            </fieldset>
+        `;
+    }
+
     renderValue() {
         const value = this.value;
         const items = this.items;
