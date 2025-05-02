@@ -245,13 +245,13 @@ export function getTabulatorStyles() {
             background-color: unset;
         }
 
-        /*************************************
-         * from the other getTabulatorStyles()
-         *************************************/
-        .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right,
-        .tabulator-row .tabulator-frozen.tabulator-frozen-right {
-            background-color: var(--dbp-background);
-            color: var(--dbp-content);
+        .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right {
+            border: none;
+        }
+        .tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-right {
+            background-color: var(--dbp-primary);
+            color: var(--dbp-background);
+            border: none;
         }
 
         .tabulator .tabulator-footer .tabulator-paginator {
@@ -260,9 +260,6 @@ export function getTabulatorStyles() {
 
         .tabulator[tabulator-layout='fitDataFill'] .tabulator-tableHolder .tabulator-table {
             min-width: calc(100% - 41px);
-        }
-
-        @media only screen and (orientation: portrait) and (max-width: 768px) {
         }
     `;
 }
