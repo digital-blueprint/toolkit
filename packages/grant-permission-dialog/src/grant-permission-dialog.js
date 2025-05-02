@@ -65,9 +65,17 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
     connectedCallback() {
         super.connectedCallback();
 
-        this.addEventListener('dbp-modal-closed', () => {
-            this.closeModal();
-        });
+        this.addEventListener('dbp-modal-closed', this.modalClosedHandler.bind(this));
+    }
+
+    modalClosedHandler() {
+        this.closeModal();
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+
+        this.removeEventListener('dbp-modal-closed', this.modalClosedHandler);
     }
 
     firstUpdated() {}
@@ -400,8 +408,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             // @TODO add a function addUserToAddQueue
             this.usersToAdd.set(userId, userToAdd);
             this.enableUsersAllCheckboxes(userId);
-            this.hasUsersToAdd = this.usersToAdd.size > 0;
-            this.requestUpdate();
+
+            this.savePermissionButtonRef.value.removeAttribute('disabled');
         } else if (buttonType === 'is-primary') {
             try {
                 await this.saveUserPermissions(userId);
@@ -422,8 +430,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 });
                 this.disableUsersAllCheckboxes(userId);
 
-                this.hasUsersToAdd = this.usersToAdd.size > 0;
-                this.requestUpdate();
+                this.savePermissionButtonRef.value.setAttribute('disabled', 'disabled');
             }
         }
     }
@@ -698,6 +705,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                             <input
                                 id="${action}-${user.userIdentifier}"
                                 name="${action}"
+                                class="permission-checkbox"
                                 data-user-id="${user.userIdentifier}"
                                 type="checkbox"
                                 @input="${this.handleCheckbox}"
@@ -722,7 +730,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 authorizationResource: null,
                 identifier: null,
                 isNew: true,
-                // isNotSaved: true,
                 editable: editable,
             };
             userPermissions.set(action, emptyPermission);
@@ -795,13 +802,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         const userToAdd = this.usersToAdd.get(userIdentifier);
         // Get clicked permission
         const permission = userToAdd.permissions.get(permissionName);
-
         // Set permission to be saved
-        // permission.toSave = checkbox.getAttribute('data-changed');
-        console.log('getAttirbute value', checkbox.getAttribute('data-changed'));
         permission.toSave = checkbox.getAttribute('data-changed') ? true : false;
-        console.log('permission.toSave', permission.toSave);
-        console.log('checked permission', permission);
     }
 
     /**
@@ -813,41 +815,48 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
      */
     disableCheckboxes(userId, actionName) {
         const checkbox = /** @type {HTMLInputElement} */ (
-            this._(`input[name="${actionName}"][data-user-id="${userId}"]`)
+            this._(`.permission-checkbox[name="${actionName}"][data-user-id="${userId}"]`)
         );
         checkbox.disabled = true;
     }
 
     enableUsersAllCheckboxes(userId) {
-        this._a(`input[data-user-id="${userId}"]`).forEach((checkbox) => {
+        this._a(`.permission-checkbox[data-user-id="${userId}"]`).forEach((checkbox) => {
             const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
             checkboxElem.disabled = false;
         });
     }
 
     disableUsersAllCheckboxes(userId) {
-        this._a(`input[data-user-id="${userId}"]`).forEach((checkbox) => {
+        this._a(`.permission-checkbox[data-user-id="${userId}"]`).forEach((checkbox) => {
+            const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
+            checkboxElem.disabled = true;
+        });
+    }
+
+    disableAllCheckboxes() {
+        this._a('.permission-checkbox').forEach((checkbox) => {
             const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
             checkboxElem.disabled = true;
         });
     }
 
     renderPermissionLabels() {
-        if (!this.availableActions) {
+        if (!this.availableActions || this.userList.size < 1) {
             return;
         }
 
         return html`
-            <div class="permission-group">
-                ${this.availableActions.map((permission) => {
-                    const permissionName = permission.replace('_', ' ');
-                    return html`
-                        <div class="checkbox-label-container">
-                            <label for="${permission}">${permissionName}</label>
-                        </div>
-                    `;
-                })}
-            </div>
+            <!-- <div class="permission-group">-->
+            ${this.availableActions.map((permission) => {
+                const permissionName = permission.replace('_', ' ');
+                return html`
+                    <div class="checkbox-label-container">
+                        <label for="${permission}">${permissionName}</label>
+                    </div>
+                `;
+            })}
+            <!-- </div> -->
         `;
     }
 
@@ -959,7 +968,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                     });
                     // Remove user form queue
                     this.usersToAdd.delete(userId);
-                    return Promise.reject();
+                    // return Promise.reject();
+                    return Promise.resolve();
                 }
 
                 // Add grants
@@ -1052,7 +1062,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 ${ref(this.permissionModalRef)}
                 class="modal modal--permissions"
                 modal-id="grant-permission-modal"
-                title="${i18n.t('grant-permission-dialog.modal-title')}"
                 subscribe="lang">
                 <div slot="header" class="header">
                     <div class="modal-notification">
@@ -1115,9 +1124,9 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                         ${i18n.t('grant-permission-dialog.buttons.cancel-text')}
                     </dbp-button>
                     <dbp-button
+                        no-spinner-on-click
                         ${ref(this.savePermissionButtonRef)}
                         id="permission-save-button"
-                        ?disabled="${!this.hasUsersToAdd}"
                         @click="${async () => {
                             await this.saveUserPermissions();
 
@@ -1130,6 +1139,15 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                                         '<dbp-icon name="pencil"></dbp-icon> Edit';
                                 },
                             );
+                            // Remove edit styles & disable checkboxes
+                            this._a(`input[type="checkbox"][data-user-id]`).forEach((checkbox) => {
+                                const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
+                                checkboxElem.classList.remove('changed');
+                                checkboxElem.removeAttribute('data-changed');
+                            });
+                            this.disableAllCheckboxes();
+
+                            this.savePermissionButtonRef.value.setAttribute('disabled', 'disabled');
                         }}"
                         type="is-primary">
                         ${i18n.t('grant-permission-dialog.buttons.save-all-text')}
