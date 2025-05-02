@@ -131,6 +131,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async setAvailableActions() {
+        const i18n = this._i18n;
         try {
             let response = await this.apiGetAvailableActions();
             let responseBody = await response.json();
@@ -143,7 +144,15 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             }
         } catch (e) {
             console.log('setAvailableActions error', e);
-            //@TODO add notification
+            send({
+                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
+                body: i18n.t(
+                    'grant-permission-dialog.notifications.set-available-actions-error-text',
+                ),
+                type: 'error',
+                targetNotificationId: 'permission-modal-notification',
+                timeout: 5,
+            });
         }
     }
 
@@ -195,6 +204,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
     }
 
     async setFormName() {
+        const i18n = this._i18n;
         try {
             let response = await this.apiGetFormDetails();
             let responseBody = await response.json();
@@ -203,7 +213,13 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             }
         } catch (e) {
             console.log('setFormName error', e);
-            //@TODO add notification
+            send({
+                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
+                body: i18n.t('grant-permission-dialog.notifications.set-form-name-error-text'),
+                type: 'error',
+                targetNotificationId: 'permission-modal-notification',
+                timeout: 5,
+            });
         }
     }
 
@@ -279,15 +295,14 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         try {
             for (const grant of grantsToDelete) {
                 await this.apiDeleteResourceActionGrant(grant.identifier);
-                console.log(`grant ${grant.action} deleted`, grant);
             }
             // @TODO handle multiple errors
         } catch (e) {
             console.log('Error deleting grant', e);
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                // Add username and grantname here
-                body: i18n.t('grant-permission-dialog.could-not-delete-grant'),
+                // Add username and grant name here
+                body: i18n.t('grant-permission-dialog.notifications.could-not-delete-grant'),
                 type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 10,
@@ -334,7 +349,9 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 if (userDetailsResponse.status === 500) {
                     send({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                        body: i18n.t('grant-permission-dialog.could-not-fetch-user-details'),
+                        body: i18n.t(
+                            'grant-permission-dialog.notifications.could-not-fetch-user-details',
+                        ),
                         type: 'danger',
                         targetNotificationId: 'permission-modal-notification',
                         timeout: 10,
@@ -441,7 +458,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 }
                 send({
                     summary: i18n.t('grant-permission-dialog.notifications.success-title'),
-                    // Add username and grantname here
+                    // Add username and grant name here
                     body: i18n.t('grant-permission-dialog.notifications.all-users-deleted'),
                     type: 'info',
                     targetNotificationId: 'permission-modal-notification',
@@ -495,7 +512,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
     }
 
     /**
-     * Get a list of users and grantad permissions
+     * Get a list of users and granted permissions
      * @returns {Promise<void>}
      */
     async setListOfUsersAndPermissions() {
@@ -573,7 +590,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             console.log('setListOfUsersAndPermissions', e);
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.unknown-error'),
+                body: i18n.t('grant-permission-dialog.notifications.unknown-error'),
                 targetNotificationId: 'permission-modal-notification',
                 type: 'danger',
                 timeout: 5,
@@ -723,7 +740,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             if (newUser && this.userList.has(newUser.identifier)) {
                 send({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                    body: i18n.t('grant-permission-dialog.user-already-added'),
+                    body: i18n.t('grant-permission-dialog.notifications.user-already-added'),
                     targetNotificationId: 'permission-modal-notification',
                     type: 'danger',
                     timeout: 10,
@@ -731,32 +748,29 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                 return;
             }
 
-            // Set new user datas
+            // Set new user data
             let userToAdd = {};
             userToAdd.userIdentifier = newUser['identifier'];
             userToAdd.userFullName = `${newUser['givenName']} ${newUser['familyName']}`;
             userToAdd.permissions = this.createEmptyUserPermission(true);
 
-            console.count('user added to usersToAdd[]');
-
             this.usersToAdd.set(userToAdd.userIdentifier, userToAdd);
-            console.log('usersToAdd[]', this.usersToAdd);
 
             // Remove person select
             this.userList.delete('emptyPerson');
             // Update person in this.userList
             this.userList.set(userToAdd.userIdentifier, userToAdd);
             this.requestUpdate();
+
             // Toggle edit button to save button
             await this.updateComplete;
             this.handleUserEditButton(userToAdd.userIdentifier);
             this.addPersonButtonRef.value.stop();
-            // addPersonButton.stop();
         } catch (error) {
             console.log('Failed to get user object', error);
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.failed-to-get-user-details'),
+                body: i18n.t('grant-permission-dialog.notifications.failed-to-get-user-details'),
                 targetNotificationId: 'permission-modal-notification',
                 type: 'danger',
                 timeout: 10,
@@ -858,7 +872,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         if (!this.isLoggedIn()) {
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.need-login'),
+                body: i18n.t('grant-permission-dialog.need-login-warning-text'),
                 type: 'danger',
                 timeout: 10,
             });
@@ -898,8 +912,8 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
         // If no users to save, show message and return
         if (this.usersToAdd.size < 1) {
             send({
-                summary: i18n.t('grant-permission-dialog.info-title'),
-                body: i18n.t('grant-permission-dialog.there-is-nothing-to-save'),
+                summary: i18n.t('grant-permission-dialog.notifications.info-title'),
+                body: i18n.t('grant-permission-dialog.notifications.there-is-no-user-to-save'),
                 type: 'info',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 5,
@@ -935,8 +949,10 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
 
                 if (grantsToPost.length === 0 && grantsToDelete.length === 0) {
                     send({
-                        summary: i18n.t('grant-permission-dialog.info-title'),
-                        body: i18n.t('grant-permission-dialog.there-is-nothing-to-save'),
+                        summary: i18n.t('grant-permission-dialog.notifications.info-title'),
+                        body: i18n.t(
+                            'grant-permission-dialog.notifications.there-is-nothing-to-save',
+                        ),
                         type: 'info',
                         targetNotificationId: 'permission-modal-notification',
                         timeout: 5,
@@ -982,7 +998,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
 
             // Refresh rendered permissions
             await this.setListOfUsersAndPermissions();
-            // Update Delete all Button visibilit
+            // Update Delete all Button visibility
             this.setDeleteAllButtonVisibility();
             // set Save all button visibility
             this.hasUsersToAdd = this.usersToAdd.size > 0;
@@ -1004,7 +1020,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             console.log('Save user permissions error:', e);
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.save-permissions-error'),
+                body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
                 type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 5,
