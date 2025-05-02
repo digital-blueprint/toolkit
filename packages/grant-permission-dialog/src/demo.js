@@ -121,6 +121,7 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
     }
 
     render() {
+        const i18n = this._i18n;
         return html`
             <section class="section" id="grant-permission-demo">
                 <div class="container">
@@ -134,7 +135,21 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
                             id="modal-trigger-basic"
                             value="Get forms"
                             no-spinner-on-click
-                            @click="${() => this.setForms()}"></dbp-button>
+                            @click="${() => {
+                                if (this.auth.person === undefined || this.auth.person === null) {
+                                    send({
+                                        summary: i18n.t(
+                                            'grant-permission-dialog.notifications.warning-title',
+                                        ),
+                                        body: i18n.t(
+                                            'grant-permission-dialog.need-login-warning-text',
+                                        ),
+                                        type: 'warning',
+                                        timeout: 10,
+                                    });
+                                }
+                                this.setForms();
+                            }}"></dbp-button>
 
                         ${this.forms.length > 0
                             ? html`
