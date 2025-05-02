@@ -247,7 +247,9 @@ export function getTabulatorStyles() {
 
         .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right {
             border: none;
+            background-color: var(--dbp-background);
         }
+
         .tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-right {
             background-color: var(--dbp-primary);
             color: var(--dbp-background);
