@@ -1073,43 +1073,54 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
                     <h3>${this.formName}</h3>
                 </div>
                 <div slot="content">
-                    <div class="content-inner">
-                        <div class="header-row">
-                            <div class="person-select-header"></div>
-                            <div class="permissions-header">${this.renderPermissionLabels()}</div>
-                            <div class="buttons-header">
-                                <dbp-button
-                                    type="is-danger"
-                                    class="${classMap({hidden: !this.showDeleteAllButton})}"
-                                    data-action="prepare-delete"
-                                    id="user-delete-button-all"
-                                    no-spinner-on-click
-                                    @click="${() => {
-                                        this.handleAllUserDeleteButton();
-                                    }}">
-                                    <dbp-icon name="trash"></dbp-icon>
-                                    ${i18n.t('grant-permission-dialog.buttons.delete-all-text')}
-                                </dbp-button>
+                    <div class="content-container">
+                        <div class="content-inner">
+                            <div
+                                class="header-row ${classMap({
+                                    hidden: this.userList.size < 1,
+                                })}">
+                                <div class="person-select-header"></div>
+                                <div class="permissions-header">
+                                    ${this.renderPermissionLabels()}
+                                </div>
+                                <div class="buttons-header">
+                                    <dbp-button
+                                        type="is-danger"
+                                        class="${classMap({hidden: !this.showDeleteAllButton})}"
+                                        data-action="prepare-delete"
+                                        id="user-delete-button-all"
+                                        no-spinner-on-click
+                                        @click="${() => {
+                                            this.handleAllUserDeleteButton();
+                                        }}">
+                                        <dbp-icon name="trash"></dbp-icon>
+                                        ${i18n.t('grant-permission-dialog.buttons.delete-all-text')}
+                                    </dbp-button>
+                                </div>
                             </div>
-                        </div>
-                        <!-- END .header-row -->
+                            <!-- END .header-row -->
 
-                        <div class="body-container">
-                            <div class="button-container">
-                                <dbp-button
-                                    type="is-primary"
-                                    ${ref(this.addPersonButtonRef)}
-                                    id="add-new-person-button"
-                                    @click="${() => {
-                                        this.handleAddNewPerson();
-                                    }}">
-                                    <dbp-icon name="plus"></dbp-icon>
-                                    <span>
-                                        ${i18n.t('grant-permission-dialog.buttons.add-person-text')}
-                                    </span>
-                                </dbp-button>
+                            <div class="body-container">
+                                <div class="button-container">
+                                    <dbp-button
+                                        type="is-primary"
+                                        ${ref(this.addPersonButtonRef)}
+                                        id="add-new-person-button"
+                                        @click="${() => {
+                                            this.handleAddNewPerson();
+                                        }}">
+                                        <dbp-icon name="plus"></dbp-icon>
+                                        <span>
+                                            ${i18n.t(
+                                                'grant-permission-dialog.buttons.add-person-text',
+                                            )}
+                                        </span>
+                                    </dbp-button>
+                                </div>
+                                <div class="user-row-container">
+                                    ${this.renderUserPermissionRow()}
+                                </div>
                             </div>
-                            <div class="user-row-container">${this.renderUserPermissionRow()}</div>
                         </div>
                     </div>
                 </div>
