@@ -1477,6 +1477,7 @@ export function getNativeModalDialogCSS() {
             --dbp-modal-animation: mmFadeIn;
             --dbp-modal-title-font-size: 1rem;
             --dbp-modal-title-font-weight: 300;
+            --dbp-modal-content-overflow-y: auto;
         }
 
         dialog:not([open]) {
@@ -1508,6 +1509,8 @@ export function getNativeModalDialogCSS() {
 
             transition: height 5s ease-in-out;
             transform: translateY(var(--dbp-modal-translate-y, 0));
+
+            position: static !important;
         }
 
         .modal-container {
@@ -1525,7 +1528,8 @@ export function getNativeModalDialogCSS() {
 
         .modal-content {
             position: relative;
-            overflow-y: auto;
+            overflow-y: var(--dbp-modal-content-overflow-y);
+            /* overflow-y: auto; */
             max-height: 100%;
             min-height: 100%;
             height: 100%;

@@ -117,6 +117,7 @@ Slotted content can be styled from outside with css.
 
 You can customize the modal with the following css variables:
 
+`--dbp-modal-width`: set modal width
 `--dbp-modal-min-width` : set modal min width
 `--dbp-modal-min-height` : set modal min height
 `--dbp-modal-max-width` : set modal max width
@@ -124,6 +125,8 @@ You can customize the modal with the following css variables:
 
 `--dbp-modal-header-height` : set modal header height
 `--dbp-modal-footer-height` : set modal footer height
+
+`--dbp-modal-content-overflow-y` : set .modal-content overflow-y
 
 `--dbp-modal-animation:` - You can set animation on modal opening. - The value can be `mmFadeIn`, `mmFadeOut`, `mmSlideIn`, `mmSlideOut`
 
