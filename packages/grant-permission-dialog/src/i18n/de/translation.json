@@ -1,32 +1,35 @@
 {
     "grant-permission-dialog": {
-        "available-permissions": "available-permissions",
+        "available-permissions": "Verfügbare Berechtigungen",
         "buttons": {
             "add-person-text": "Neue Person hinzufügen",
             "cancel-text": "Abbrechen",
             "delete-all-text": "Alle löschen",
             "save-all-text": "Alle speichern"
         },
-        "could-not-delete-grant": "could-not-delete-grant",
-        "could-not-fetch-user-details": "could-not-fetch-user-details",
-        "failed-to-get-user-details": "failed-to-get-user-details",
-        "info-title": "info-title",
-        "modal-title": "Berechtigungen erteilen",
-        "need-login": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",
+        "need-login-warning-text": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",
         "notifications": {
             "all-users-deleted": "Berechtigungen aller Benutzer erfolgreich gelöscht",
+            "could-not-delete-grant": "Löschen von Berechtigungen fehlgeschlagen",
             "could-not-fetch-resource-class-actions": "Ressourcenklassenaktionen konnten nicht abgerufen werden",
+            "could-not-fetch-user-details": "Benutzerdetails konnten nicht abgerufen werden",
             "could-not-get-forms": "Formulare konnten nicht von der API abgerufen werden",
             "error-not-authorized": "Nicht autorisiert",
             "error-title": "Fehler",
             "failed-get-user-details": "Benutzerdetails konnten nicht abgerufen werden",
+            "failed-to-get-user-details": "Benutzerdetails konnten nicht abgerufen werden",
+            "info-title": "Info",
             "permissions-saved-successfully": "Berechtigungen erfolgreich gespeichert",
+            "save-permissions-error": "Benutzerrechte können nicht gespeichert werden",
+            "set-available-actions-error-text": "Verfügbare Aktionen konnten nicht festgelegt werden",
+            "set-form-name-error-text": "Formularname konnte nicht gesetzt werden",
             "success-title": "Erfolg",
-            "user-successfully-deleted": "Alle Berechtigungen von {{userFullName}} erfolgreich gelöscht"
-        },
-        "save-permissions-error": "save-permissions-error",
-        "there-is-nothing-to-save": "there-is-nothing-to-save",
-        "unknown-error": "Unbekannter Fehler",
-        "user-already-added": "user-already-added"
+            "there-is-no-user-to-save": "There is no user to save",
+            "there-is-nothing-to-save": "Es gibt keine Änderung der Berechtigungen zum Speichern",
+            "unknown-error": "Unbekannter Fehler beim Abrufen von Benutzerberechtigungen",
+            "user-already-added": "Benutzer bereits hinzugefügt",
+            "user-successfully-deleted": "Alle Berechtigungen von {{userFullName}} erfolgreich gelöscht",
+            "warning-title": "Warnung"
+        }
     }
 }

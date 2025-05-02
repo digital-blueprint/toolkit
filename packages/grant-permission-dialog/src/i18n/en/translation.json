@@ -1,32 +1,35 @@
 {
     "grant-permission-dialog": {
-        "available-permissions": "available-permissions",
+        "available-permissions": "Available Permissions",
         "buttons": {
             "add-person-text": "Add new person",
             "cancel-text": "Cancel",
             "delete-all-text": "Delete all",
             "save-all-text": "Save All"
         },
-        "could-not-delete-grant": "could-not-delete-grant",
-        "could-not-fetch-user-details": "could-not-fetch-user-details",
-        "failed-to-get-user-details": "failed-to-get-user-details",
-        "info-title": "info-title",
-        "modal-title": "Grant permissions",
-        "need-login": "You need to be logged in to use the grant permission modal",
+        "need-login-warning-text": "You need to be logged in to use the grant permission modal",
         "notifications": {
             "all-users-deleted": "All user's permissions successfully deleted",
+            "could-not-delete-grant": "Failed to delete permissions",
             "could-not-fetch-resource-class-actions": "Could not fetch resource class actions",
+            "could-not-fetch-user-details": "Failed to fetch user details",
             "could-not-get-forms": "Could not get forms from the API",
             "error-not-authorized": "Not authorized",
             "error-title": "Error",
             "failed-get-user-details": "Failed to get user details",
+            "failed-to-get-user-details": "Failed to fetch user details",
+            "info-title": "Info",
             "permissions-saved-successfully": "Permissions saved successfully",
+            "save-permissions-error": "Can't save user permissions",
+            "set-available-actions-error-text": "Failed to set available actions",
+            "set-form-name-error-text": "Failed to set form name",
             "success-title": "Success",
-            "user-successfully-deleted": "All grants of {{userFullName}} successfully deleted"
-        },
-        "save-permissions-error": "save-permissions-error",
-        "there-is-nothing-to-save": "there-is-nothing-to-save",
-        "unknown-error": "Unknown error",
-        "user-already-added": "user-already-added"
+            "there-is-no-user-to-save": "There is no user to save",
+            "there-is-nothing-to-save": "There is no change in permissions to save",
+            "unknown-error": "Unknown error while getting user permissions",
+            "user-already-added": "User already added",
+            "user-successfully-deleted": "All permissions of {{userFullName}} successfully deleted",
+            "warning-title": "Warning"
+        }
     }
 }
