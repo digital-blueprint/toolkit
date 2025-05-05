@@ -890,6 +890,59 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
             await this.setAvailableActions();
             await this.setListOfUsersAndPermissions();
             this.permissionModalRef.value.open();
+
+            const modalContent = this._('.content-inner');
+
+            const resizeObserver = new ResizeObserver((entries) => {
+                const personSelect = this._('.person-select-container');
+                const permissionItems = /** @type {HTMLElement[]} */ (
+                    Array.from(
+                        this._a('.user-row:first-child .permission-group .checkbox-container'),
+                    )
+                );
+                const actionButtons = this._('.action-buttons');
+
+                const userRow = this._('.user-row:first-child');
+                if (!userRow) return;
+
+                const userRowStyle = window.getComputedStyle(userRow);
+                const userRowPadding =
+                    parseInt(userRowStyle.paddingLeft) + parseInt(userRowStyle.paddingRight);
+
+                const permissionGroup = this._('.user-row:first-child .permission-group');
+                const permissionGroupStyle = window.getComputedStyle(permissionGroup);
+                const permissionGroupGap = parseInt(permissionGroupStyle.gap);
+
+                const modalWidth = modalContent.clientWidth;
+                const permissionCount = permissionItems.length;
+                const permissionWidth =
+                    permissionItems[0].clientWidth * permissionCount +
+                    permissionGroupGap * permissionCount -
+                    1;
+                const rowWidth =
+                    personSelect.clientWidth +
+                    (permissionItems[0].clientWidth * permissionCount +
+                        permissionGroupGap * permissionCount -
+                        1) +
+                    actionButtons.clientWidth;
+
+                // const halfRowWidth = personSelect.clientWidth + (permissionItems[0].clientWidth * permissionCount/2 + permissionGroupGap * permissionCount/2-1) + actionButtons.clientWidth;
+                // console.log('halfRowWidth', halfRowWidth);
+
+                if (modalWidth < permissionWidth + userRowPadding) {
+                    modalContent.classList.add('mobile');
+                } else {
+                    modalContent.classList.remove('mobile');
+                }
+
+                if (modalWidth < rowWidth + userRowPadding) {
+                    modalContent.classList.add('collapsed');
+                } else {
+                    modalContent.classList.remove('collapsed');
+                }
+            });
+
+            resizeObserver.observe(modalContent);
         }
     }
 
@@ -1003,7 +1056,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
 
                 // Remove processed user from usersToAdd list
                 this.usersToAdd.delete(userToAdd.userIdentifier);
-                console.log('AFTER REMOVING USER', this.usersToAdd);
             }
 
             // Refresh rendered permissions

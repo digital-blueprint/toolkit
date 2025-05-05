@@ -11,10 +11,11 @@ export function getGrantPermissionDialogCSS() {
         .modal--permissions {
             --dbp-modal-header-height: 80px;
             --dbp-modal-footer-height: 3em;
-            --dbp-modal-min-width: 1300px;
+            --dbp-modal-min-width: 320px;
+            --dbp-modal-max-width: min(90vw, 1300px);
             --dbp-modal-min-height: 300px;
-            --dbp-modal-max-width: 100vw;
             --dbp-modal-max-height: 90vh;
+            --dbp-modal-width: auto;
         }
 
         dbp-modal .header {
@@ -26,6 +27,7 @@ export function getGrantPermissionDialogCSS() {
             font-size: 2em;
             font-weight: bold;
             margin: 0 1em 0 0;
+            overflow-wrap: anywhere;
         }
 
         dbp-modal .footer-menu {
@@ -42,15 +44,10 @@ export function getGrantPermissionDialogCSS() {
             flex-direction: column;
             gap: 1em;
             margin-top: 1em;
-            width: 100%;
-
-            container: permissions-content / inline-size;
-        }
-
-        @container permissions-content (width < 75px) {
-            .header-row .user-row {
-                flex-direction: column;
-            }
+            max-width: 1300px;
+            /*min-width: calc((var(--dbp-action-count) * 40px) + (.5em * (var(--dbp-action-count) - 1))  + 250px + 100px);*/
+            /*--dbp-container-size: calc((var(--dbp-action-count) * 40px) + (.5em * (var(--dbp-action-count) - 1))  + 250px + 100px);*/
+            position: relative;
         }
 
         .header-row {
@@ -63,18 +60,30 @@ export function getGrantPermissionDialogCSS() {
         .header-row,
         .user-row {
             display: grid;
-            grid-template-columns: 250px 1fr 200px;
-            gap: 2em;
+            grid-template-columns: 250px auto 200px;
+            gap: 0;
+            padding: 0 1em;
+        }
+
+        .user-row:nth-child(2n + 1) {
+            background-color: rgba(125, 125, 125, 0.1);
+        }
+
+        .person-select-header {
+            flex-basis: 250px;
         }
 
         .buttons-header {
             display: flex;
             justify-content: flex-end;
+            flex-basis: 200px;
+            align-items: flex-end;
+            grid-column: 3/4;
         }
 
         /*
          * For better tab order
-         * Add person button is second in taborder
+         * Add person button is second in tab order
          * No need to go trough all edit/delete buttons
          */
         .body-container {
@@ -86,7 +95,7 @@ export function getGrantPermissionDialogCSS() {
         .user-row-container {
             display: flex;
             flex-direction: column;
-            gap: 1em;
+            gap: 0;
             transition: 0.5s margin ease;
         }
 
@@ -94,9 +103,10 @@ export function getGrantPermissionDialogCSS() {
             display: flex;
             align-items: center;
             height: 100%;
+            flex-basis: 250px;
         }
 
-        /* for the person-selct dropdown */
+        /* for the person-select dropdown */
         .user-row-container:has(dbp-person-select) {
             margin-bottom: 180px;
         }
@@ -106,10 +116,20 @@ export function getGrantPermissionDialogCSS() {
             height: 30px;
         }
 
+        .permissions-header,
         .permission-group {
             display: flex;
             align-items: center;
             gap: 1em;
+            flex-wrap: nowrap;
+            /*flex-wrap: wrap;*/
+            padding: 1em 0;
+            /*min-width: calc( ((var(--dbp-action-count) / 2) * 80px) + (1em * ((var(--dbp-action-count) / 2) - 1))); /* 4*80px + (column-count-1) *1em */
+            /*width: calc( ((var(--dbp-action-count) / 2) * 80px) + (1em * ((var(--dbp-action-count) / 2) - 1))); /* 4*80px + (column-count-1) *1em */
+        }
+
+        .header-row .permission-group {
+            padding-bottom: 0;
         }
 
         .action-buttons {
@@ -118,6 +138,7 @@ export function getGrantPermissionDialogCSS() {
             align-items: center;
             justify-content: flex-end;
             height: 100%;
+            flex-basis: 200px;
         }
 
         .checkbox-label-container {
@@ -170,6 +191,40 @@ export function getGrantPermissionDialogCSS() {
             opacity: 0;
         }
 
+        /* responsiveness */
+
+        .collapsed {
+            .content-inner {
+                background-color: rgba(255, 0, 0, 0.2);
+            }
+
+            .permission-group {
+                flex-wrap: wrap;
+            }
+
+            .header-row .permissions-header {
+                display: none;
+            }
+
+            .checkbox-container label {
+                position: initial !important;
+                clip: initial !important;
+                overflow: initial !important;
+                height: 40px !important;
+                width: initial !important;
+                word-wrap: initial !important;
+                display: flex;
+                align-items: flex-end;
+            }
+        }
+
+        .mobile {
+            .user-row {
+                grid-template-columns: 1fr;
+                padding: 1em;
+            }
+        }
+
         /* util classes */
         .visually-hidden {
             position: absolute !important;
@@ -180,11 +235,8 @@ export function getGrantPermissionDialogCSS() {
             word-wrap: normal;
         }
 
-        /* button:focus-visible {
-            border: 3px solid black;
+        .hidden {
+            display: none !important;
         }
-        dbp-button:focus-visible {
-            border: 3px solid blue;
-        }*/
     `;
 }
