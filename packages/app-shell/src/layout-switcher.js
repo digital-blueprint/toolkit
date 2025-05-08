@@ -103,10 +103,8 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
      */
     connectedCallback() {
         super.connectedCallback();
-
         this.updateLayoutBasedOnWindowSize();
         window.addEventListener('resize', this.updateLayoutBasedOnWindowSize.bind(this));
-
         this.updateComplete.then(() => {
             if (this.disabledLayout) {
                 /** Disable layout switcher if disabledLayout is set and only one layout is available */
@@ -229,7 +227,7 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             button.button {
                 cursor: pointer;
                 border: none;
-                display:none;
+                display: none;
             }
             @media screen and (min-width: 768px) {
                 .layout-button {
@@ -319,29 +317,29 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                     </a>
                     <ul class="extended-menu ${classMap({hidden: !this.dropdown})}">
                         ${this.layouts.map(
-                (layout) => html`
+                            (layout) => html`
                                 <li>
                                     <!-- Title for each layout option -->
                                     <a
                                         href="#"
                                         class="${this.layout === layout.name ? 'active' : ''}"
                                         title="${layout.name === 'wide'
-                    ? i18n.t('switch-to-wide-layout-label')
-                    : i18n.t('switch-to-standard-layout-label')}"
+                                            ? i18n.t('switch-to-wide-layout-label')
+                                            : i18n.t('switch-to-standard-layout-label')}"
                                         @click="${() => this.toggleLayout(layout.name)}">
                                         <!-- Icon based on layout-->
                                         <dbp-icon
                                             class="icon"
                                             name="${layout.name === 'wide'
-                    ? 'wide'
-                    : 'standard'}"></dbp-icon>
+                                                ? 'wide'
+                                                : 'standard'}"></dbp-icon>
                                         ${layout.name === 'wide'
-                    ? i18n.t('wide-layout-name')
-                    : i18n.t('standard-layout-name')}
+                                            ? i18n.t('wide-layout-name')
+                                            : i18n.t('standard-layout-name')}
                                     </a>
                                 </li>
                             `,
-            )}
+                        )}
                     </ul>
                 </div>
             `;
