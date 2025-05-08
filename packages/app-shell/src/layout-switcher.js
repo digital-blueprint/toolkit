@@ -103,6 +103,10 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
      */
     connectedCallback() {
         super.connectedCallback();
+
+        this.updateLayoutBasedOnWindowSize();
+        window.addEventListener('resize', this.updateLayoutBasedOnWindowSize.bind(this));
+
         this.updateComplete.then(() => {
             if (this.disabledLayout) {
                 /** Disable layout switcher if disabledLayout is set and only one layout is available */
@@ -125,6 +129,19 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
      */
     disconnectedCallback() {
         super.disconnectedCallback();
+        window.removeEventListener('resize', this.updateLayoutBasedOnWindowSize.bind(this));
+    }
+
+    /**
+     * Updates the layout based on the window size
+     */
+    updateLayoutBasedOnWindowSize() {
+        if (window.innerWidth < 768) {
+            this.layout = 'wide';
+        } else {
+            this.layout = this._getStoredLayout() || this.defaultLayout || 'standard';
+        }
+        this.requestUpdate();
     }
 
     loadDefaultLayout() {
@@ -208,10 +225,16 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
             :host {
                 display: block;
             }
-            layout-button,
+            .layout-button,
             button.button {
                 cursor: pointer;
                 border: none;
+                display:none;
+            }
+            @media screen and (min-width: 768px) {
+                .layout-button {
+                    display: inline-block;
+                }
             }
             .layout-button.active dbp-icon {
                 color: var(--dbp-accent);
@@ -296,29 +319,29 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
                     </a>
                     <ul class="extended-menu ${classMap({hidden: !this.dropdown})}">
                         ${this.layouts.map(
-                            (layout) => html`
+                (layout) => html`
                                 <li>
                                     <!-- Title for each layout option -->
                                     <a
                                         href="#"
                                         class="${this.layout === layout.name ? 'active' : ''}"
                                         title="${layout.name === 'wide'
-                                            ? i18n.t('switch-to-wide-layout-label')
-                                            : i18n.t('switch-to-standard-layout-label')}"
+                    ? i18n.t('switch-to-wide-layout-label')
+                    : i18n.t('switch-to-standard-layout-label')}"
                                         @click="${() => this.toggleLayout(layout.name)}">
                                         <!-- Icon based on layout-->
                                         <dbp-icon
                                             class="icon"
                                             name="${layout.name === 'wide'
-                                                ? 'wide'
-                                                : 'standard'}"></dbp-icon>
+                    ? 'wide'
+                    : 'standard'}"></dbp-icon>
                                         ${layout.name === 'wide'
-                                            ? i18n.t('wide-layout-name')
-                                            : i18n.t('standard-layout-name')}
+                    ? i18n.t('wide-layout-name')
+                    : i18n.t('standard-layout-name')}
                                     </a>
                                 </li>
                             `,
-                        )}
+            )}
                     </ul>
                 </div>
             `;

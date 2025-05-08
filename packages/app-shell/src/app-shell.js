@@ -644,7 +644,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             header {
                 grid-area: header;
                 display: grid;
-                grid-template-columns: 50% 1px auto;
+                grid-template-columns: 50% 0.5em auto;
                 grid-template-rows: 60px 60px;
                 grid-template-areas: 'hd1-left hd1-middle hd1-right' 'hd2-left . hd2-right';
                 width: 100%;
@@ -693,6 +693,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     var(--dbp-content) 85%,
                     rgba(0, 0, 0, 0) 90%
                 );
+                width: 0.1em;
             }
 
             header .hd1-right {
@@ -1072,7 +1073,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     header {
                         grid-area: header;
                         display: grid;
-                        grid-template-columns: 50% 1px auto;
+                        grid-template-columns: 50% 0 auto;
                         grid-template-rows: 60px 60px;
                         grid-template-areas: 'hd1-left hd1-middle hd1-right' 'hd2-left . hd2-right';
                         width: 100%;
