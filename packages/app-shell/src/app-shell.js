@@ -1318,11 +1318,11 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                         <slot name="header">
                             <div class="hd1-left">
                                 <dbp-layout-switcher
-                                        class="${classMap({hidden: this.disableLayouts})}"
-                                        subscribe="default-layout,disabled-layout,app-name"
-                                        lang="${this.lang}"
-                                        @layout-changed="${this
-                                                .handleLayoutChange}"></dbp-layout-switcher>
+                                    class="${classMap({hidden: this.disableLayouts})}"
+                                    subscribe="default-layout,disabled-layout,app-name"
+                                    lang="${this.lang}"
+                                    @layout-changed="${this
+                                        .handleLayoutChange}"></dbp-layout-switcher>
                                 <dbp-theme-switcher
                                     subscribe="themes,dark-mode-theme-override"
                                     lang="${this.lang}"></dbp-theme-switcher>
