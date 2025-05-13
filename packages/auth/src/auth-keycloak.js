@@ -56,9 +56,12 @@ export class AuthKeycloak extends AdapterLitElement {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
                     break;
-                case 'requestedLoginStatus':
+                case 'requestedLoginStatus': {
                     console.log('requested-login-status changed', this.requestedLoginStatus);
-                    switch (this.requestedLoginStatus) {
+                    let newStatus = this.requestedLoginStatus;
+                    // reset so the next change will be detected if below fails or gets cancelled
+                    this.requestedLoginStatus = LoginStatus.UNKNOWN;
+                    switch (newStatus) {
                         case LoginStatus.LOGGED_IN:
                             this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
                             break;
@@ -77,6 +80,7 @@ export class AuthKeycloak extends AdapterLitElement {
                             break;
                     }
                     break;
+                }
             }
         });
 
