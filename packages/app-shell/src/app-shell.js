@@ -63,7 +63,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this._roles = [];
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this._extra = [];
+        this._extra = undefined;
         this.disableLayouts = false;
 
         this.matomoUrl = '';
@@ -188,7 +188,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     return {
                         lang: this.lang,
                         component: '',
-                        extra: [],
+                        extra: undefined,
                     };
                 },
             },
@@ -201,16 +201,16 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                             return {
                                 lang: params.lang,
                                 component: '',
-                                extra: [],
+                                extra: undefined,
                             };
                         },
                     },
                     {
                         name: 'mainRoute',
-                        path: ['/:component/:extra*'],
+                        path: ['/:component{/*extra}'],
                         action: (context, params) => {
                             let componentTag = params.component.toLowerCase();
-                            let extra = params.extra ?? [];
+                            let extra = params.extra ?? undefined;
                             return {
                                 lang: params.lang,
                                 component: componentTag,
@@ -244,7 +244,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                     return {
                         lang: 'de',
                         component: this.routes[0],
-                        extra: [],
+                        extra: undefined,
                     };
                 },
             },
@@ -264,7 +264,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             encodeURIComponent(this.activeView);
         this.sendSetPropertyEvent('routing-base-url', routingBaseUrl, true);
 
-        let path = this._extra.join('/');
+        let path = (this._extra ?? []).join('/');
 
         // Lit element does not seem to react on empty strings when pressing the back button
         if (path === '') {
@@ -1037,7 +1037,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
             };
             // clear the extra state for everything but the current activity
             if (this.activeView !== routingName) {
-                partialState['extra'] = [];
+                partialState['extra'] = undefined;
             }
             menuTemplates.push(html`
                 <li>
