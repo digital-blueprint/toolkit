@@ -47,13 +47,20 @@ export const AuthMixin = dedupeMixin(
             }
 
             /**
-             * Called when user logs in
-             * @param {object} auth - The auth state with login information
+             * @returns {boolean} - True if the user is logged in, false otherwise.
+             */
+            isLoggedIn() {
+                return this.auth && this.auth['login-status'] === 'logged-in';
+            }
+
+            /**
+             * Called when user logs in, or on load when the user is logged in.
+             * @param {object} auth - The auth state with login information, same as this.auth
              */
             loginCallback(auth) {}
 
             /**
-             * Called when user logs out or was logged out
+             * Called when user logs out or was logged out, or on load when the user is not logged in.
              */
             logoutCallback() {}
         },
