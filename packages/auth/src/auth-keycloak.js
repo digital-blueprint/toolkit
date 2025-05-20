@@ -117,9 +117,9 @@ export class AuthKeycloak extends AdapterLitElement {
             this.name = kc.idTokenParsed.name;
             this.token = kc.token;
 
-            this.subject = kc.subject;
             const userId = kc.idTokenParsed.preferred_username;
-            let userChanged = userId !== this._userId;
+            let userChanged = kc.subject !== this.subject;
+            this.subject = kc.subject;
             if (userChanged) {
                 this._userId = userId;
                 let user;
