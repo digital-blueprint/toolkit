@@ -11,3 +11,4 @@ export {Modal} from './modal.js';
 export * from './logger.js';
 export * from './utils.js';
 export {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
+export {AuthMixin} from './auth-mixin.js';
