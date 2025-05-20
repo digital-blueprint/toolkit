@@ -375,11 +375,7 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
                             break;
                         }
 
-                        if (this.auth.person) {
-                            this._roles = this.auth.person['roles'];
-                        } else {
-                            this._roles = [];
-                        }
+                        this._roles = this.auth._roles;
                         this._updateVisibleRoutes();
 
                         const loginStatus = this.auth['login-status'];

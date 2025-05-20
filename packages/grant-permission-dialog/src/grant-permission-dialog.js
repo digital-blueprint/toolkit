@@ -97,7 +97,7 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
      * @returns {boolean} true or false
      */
     isLoggedIn() {
-        return this.auth.person !== undefined && this.auth.person !== null;
+        return this.auth && this.auth.token;
     }
 
     /**

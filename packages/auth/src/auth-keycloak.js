@@ -163,6 +163,7 @@ export class AuthKeycloak extends AdapterLitElement {
             // Deprecated
             'person-id': this._userId,
             person: this._user,
+            _roles: this._user ? this._user.roles : [],
         };
 
         // Inject a window.DBPAuth variable for Cypress/Playwright

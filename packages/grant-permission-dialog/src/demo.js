@@ -18,6 +18,7 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
         this.resourceClassIdentifier = 'DbpRelayFormalizeForm';
         this.formIdentifier = '';
         this.forms = [];
+        this.auth = null;
     }
 
     static get scopedElements() {
@@ -136,7 +137,7 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
                             value="Get forms"
                             no-spinner-on-click
                             @click="${() => {
-                                if (this.auth.person === undefined || this.auth.person === null) {
+                                if (!this.auth || !this.auth.token) {
                                     send({
                                         summary: i18n.t(
                                             'grant-permission-dialog.notifications.warning-title',
