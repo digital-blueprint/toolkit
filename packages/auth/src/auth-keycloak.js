@@ -87,7 +87,7 @@ export class AuthKeycloak extends AdapterLitElement {
         super.update(changedProperties);
     }
 
-    async _fetchUser(userId) {
+    async _fetchUser(userId, token) {
         const apiUrl = combineURLs(
             this.entryPointUrl,
             `/frontend/users/${encodeURIComponent(userId)}`,
@@ -95,7 +95,7 @@ export class AuthKeycloak extends AdapterLitElement {
 
         let response = await fetch(apiUrl, {
             headers: {
-                Authorization: 'Bearer ' + this.token,
+                Authorization: 'Bearer ' + token,
             },
         });
         if (!response.ok) {
@@ -125,7 +125,7 @@ export class AuthKeycloak extends AdapterLitElement {
                 this._userId = userId;
                 let user;
                 try {
-                    user = await this._fetchUser(userId);
+                    user = await this._fetchUser(userId, kc.token);
                 } catch (error) {
                     // In case fetching the user failed then likely the API backend
                     // is not set up or broken. Return a user without any roles so we
