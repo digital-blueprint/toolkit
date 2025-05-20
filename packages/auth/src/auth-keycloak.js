@@ -114,13 +114,14 @@ export class AuthKeycloak extends AdapterLitElement {
         this._authenticated = kc.authenticated;
         if (kc.authenticated) {
             let tokenChanged = this.token !== kc.token;
-            this.name = kc.idTokenParsed.name;
-            this.token = kc.token;
-
-            const userId = kc.idTokenParsed.preferred_username;
             let userChanged = kc.subject !== this.subject;
-            this.subject = kc.subject;
             if (userChanged) {
+                if (this._loginStatus === LoginStatus.LOGGED_IN) {
+                    this._setLoginStatus(LoginStatus.LOGGING_OUT);
+                    this._setLoggedOut();
+                }
+
+                const userId = kc.idTokenParsed.preferred_username;
                 this._userId = userId;
                 let user;
                 try {
@@ -136,21 +137,27 @@ export class AuthKeycloak extends AdapterLitElement {
                     this._user = user;
                 }
             }
+            this.token = kc.token;
+            this.name = kc.idTokenParsed.name;
+            this.subject = kc.subject;
             if (this._user !== null) {
-                this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged || userChanged);
+                this._setLoginStatus(LoginStatus.LOGGED_IN, tokenChanged);
             }
         } else {
             if (this._loginStatus === LoginStatus.LOGGED_IN) {
                 this._setLoginStatus(LoginStatus.LOGGING_OUT);
             }
-            this.name = '';
-            this.token = '';
-            this.subject = '';
-            this._userId = '';
-            this._user = null;
-
-            this._setLoginStatus(LoginStatus.LOGGED_OUT);
+            this._setLoggedOut();
         }
+    }
+
+    _setLoggedOut() {
+        this.name = '';
+        this.token = '';
+        this.subject = '';
+        this._userId = '';
+        this._user = null;
+        this._setLoginStatus(LoginStatus.LOGGED_OUT);
     }
 
     sendSetPropertyEvents() {
