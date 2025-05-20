@@ -29,7 +29,7 @@ export const AuthMixin = dedupeMixin(
                         this._authPending = false;
                         this.loginCallback(currentAuth);
                     }
-                    if (!wasLoggedOut && isLoggedOut) {
+                    if (!wasLoggedOut && isLoggedOut && !this._authPending) {
                         this._authPending = false;
                         this.logoutCallback();
                     }
@@ -60,7 +60,8 @@ export const AuthMixin = dedupeMixin(
             loginCallback(auth) {}
 
             /**
-             * Called when user logs out or was logged out, or on load when the user is not logged in.
+             * Called when user logs out or was logged out. Only gets called if loginCallback()
+             * was called before.
              */
             logoutCallback() {}
         },
