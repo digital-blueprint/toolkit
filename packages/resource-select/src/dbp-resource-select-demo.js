@@ -79,7 +79,7 @@ export class ResourceSelectDemo extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         let buildUrl = (select, url) => {
-            url += '?person=' + encodeURIComponent(select.auth['person-id']);
+            url += '?person=' + encodeURIComponent(select.auth['user-id']);
             url += '&' + new URLSearchParams({lang: select.lang}).toString();
             return url;
         };

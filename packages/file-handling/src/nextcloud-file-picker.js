@@ -492,7 +492,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
             }
             return;
         }
-        const publicId = this.auth['person-id'];
+        const publicId = this.auth['user-id'];
         const token = this.auth.token ? parseJwt(this.auth.token) : null;
         const sessionId = token ? token.sid : '';
 
@@ -610,7 +610,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
                     this._('#remember-checkbox') &&
                     this._('#remember-checkbox').checked
                 ) {
-                    const publicId = this.auth['person-id'];
+                    const publicId = this.auth['user-id'];
                     const token = this.auth.token ? parseJwt(this.auth.token) : null;
                     const sessionId = token ? token.sid : '';
                     if (sessionId) {
@@ -2226,7 +2226,7 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
         this.webDavClient = null;
         this.isPickerActive = false;
         if (this.auth) {
-            const publicId = this.auth['person-id'];
+            const publicId = this.auth['user-id'];
             localStorage.removeItem('nextcloud-webdav-username' + publicId);
             localStorage.removeItem('nextcloud-webdav-password' + publicId);
             localStorage.removeItem('nextcloud-webdav-url-' + publicId);
