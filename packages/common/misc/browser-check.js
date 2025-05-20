@@ -7,14 +7,29 @@ is supported. In case it isn't it will replace the whole(!) page with an error m
 Example usage:
     <script src="browser-check.js" defer></script>
     <noscript>Diese Applikation benötigt Javascript / This application requires Javascript</noscript>
+
+To disable checks that require eval, add the noeval parameter to the script tag:
+    <script src="browser-check.js?noeval" defer></script>
 */
 
 (function () {
+    // To avoid CSP errors we need to allow the user to disable eval
+    function hasNoEvalParam() {
+        if (document.currentScript && document.currentScript.src) {
+            return new URL(document.currentScript.src).searchParams.has('noeval');
+        }
+        return false;
+    }
+
     // Eval can be disabled through https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
     // Make sure to only call once, to only error once
     let evalSupported = null;
     function supportsEval() {
         if (evalSupported === null) {
+            if (hasNoEvalParam()) {
+                evalSupported = false;
+                return evalSupported;
+            }
             try {
                 eval('');
                 evalSupported = true;
