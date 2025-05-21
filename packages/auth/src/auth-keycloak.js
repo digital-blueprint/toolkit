@@ -1,7 +1,7 @@
 import {createInstance} from './i18n.js';
 import {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
-import {AdapterLitElement, combineURLs} from '@dbp-toolkit/common';
+import {AdapterLitElement, combineURLs, LangMixin} from '@dbp-toolkit/common';
 import {send} from '@dbp-toolkit/common/notification';
 
 /**
@@ -15,7 +15,7 @@ import {send} from '@dbp-toolkit/common/notification';
  *   auth.user-full-name: Full name of the user
  *   auth.user-id: Identifier of the user
  */
-export class AuthKeycloak extends AdapterLitElement {
+export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
     constructor() {
         super();
         this.forceLogin = false;
@@ -29,8 +29,6 @@ export class AuthKeycloak extends AdapterLitElement {
         this._authenticated = false;
         this._loginStatus = LoginStatus.UNKNOWN;
         this.requestedLoginStatus = LoginStatus.UNKNOWN;
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
 
         // Keycloak config
         this.keycloakUrl = null;
@@ -53,9 +51,6 @@ export class AuthKeycloak extends AdapterLitElement {
         // console.log("changedProperties", changedProperties);
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
                 case 'requestedLoginStatus': {
                     console.log('requested-login-status changed', this.requestedLoginStatus);
                     let newStatus = this.requestedLoginStatus;

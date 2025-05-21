@@ -1,20 +1,17 @@
 import {createInstance} from './i18n.js';
 import {html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {AuthKeycloak} from './auth-keycloak.js';
 import {LoginButton} from './login-button.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-//import {name as pkgName} from './../package.json';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
-export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
+export class DbpAuthDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
         this.entryPointUrl = '';
         this.auth = {};
         this.noAuth = false;
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
     }
 
     static get scopedElements() {
@@ -27,21 +24,10 @@ export class DbpAuthDemo extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             auth: {type: Object},
             noAuth: {type: Boolean, attribute: 'no-auth'},
         };
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     async _onUserInfoClick() {

@@ -4,7 +4,7 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {LoginStatus} from './util.js';
-import {AdapterLitElement, MiniSpinner} from '@dbp-toolkit/common';
+import {AdapterLitElement, MiniSpinner, LangMixin, AuthMixin} from '@dbp-toolkit/common';
 
 let logoutSVG = `
 <svg
@@ -51,33 +51,13 @@ let loginSVG = `
 </svg>
 `;
 
-export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-        this.auth = {};
-    }
-
+export class LoginButton extends AuthMixin(
+    LangMixin(ScopedElementsMixin(AdapterLitElement), createInstance),
+) {
     static get scopedElements() {
         return {
             'dbp-mini-spinner': MiniSpinner,
         };
-    }
-
-    static get properties() {
-        return {
-            lang: {type: String},
-            auth: {type: Object},
-        };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
     }
 
     _onLoginClicked(e) {
@@ -88,16 +68,6 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
     _onLogoutClicked(e) {
         this.sendSetPropertyEvent('requested-login-status', LoginStatus.LOGGED_OUT);
         e.preventDefault();
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     static get styles() {
@@ -156,7 +126,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         let i18n = this._i18n;
-        if (this.auth['login-status'] === LoginStatus.LOGGING_IN) {
+        if (this.isAuthPending()) {
             // try to keep the layout the same to avoid layout shifts
             return html`
                 <a href="#">
@@ -168,7 +138,7 @@ export class LoginButton extends ScopedElementsMixin(AdapterLitElement) {
                     </div>
                 </a>
             `;
-        } else if (this.auth['login-status'] === LoginStatus.LOGGED_IN) {
+        } else if (this.isLoggedIn()) {
             return html`
                 <a href="#" @click="${this._onLogoutClicked}">
                     <div class="login-box login-button">
