@@ -102,6 +102,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
         }
         if (this.paginationNoLangsEnabled) {
             let paginationElement = this._('.tabulator-paginator');
+            if (paginationElement) {
+                while (paginationElement.firstChild) {
+                    paginationElement.removeChild(paginationElement.firstChild);
+                }
+            }
             //this.options['autoColumns'] = true;
             this.options['pagination'] = true;
             this.options['paginationSize'] = this.paginationSize;
@@ -112,6 +117,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
 
         if (this.paginationEnabled) {
             let paginationElement = this._('.tabulator-paginator');
+            if (paginationElement) {
+                while (paginationElement.firstChild) {
+                    paginationElement.removeChild(paginationElement.firstChild);
+                }
+            }
             this.options['pagination'] = true;
             this.options['paginationSize'] = this.paginationSize;
             this.options['paginationSizeSelector'] = true;
@@ -151,8 +161,13 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
             this.data = this.options.data;
         }
 
-        /** @type {import('tabulator-tables').Tabulator} */
-        this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
+        if (this._(`#${this.identifier}`)) {
+            /** @type {import('tabulator-tables').Tabulator} */
+            this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
+        }
+
+        console.log('TABULATOR TABLE INITIALIZED', this.tabulatorTable);
+
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
         this.tabulatorTable.on('rowSelectionChanged', (data, rows, selected, deselected) => {
@@ -213,9 +228,11 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     tableBuildFunctions() {
-        if (!this.tabulatorTable) return;
+        if (!this.tabulatorTable || !this.tabulatorTable.initialized) return;
         this.tabulatorTable.setLocale(this.lang);
-        this.tabulatorTable.setData(this.data);
+        if (Array.isArray(this.data) && this.data.length > 0) {
+            this.tabulatorTable.setData(this.data);
+        }
         /**
          * Change cursor to pointer on hover if rows are selectable
          */
