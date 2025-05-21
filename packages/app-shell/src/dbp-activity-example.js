@@ -1,32 +1,10 @@
-import {html, LitElement} from 'lit';
+import {html} from 'lit';
 import {createInstance} from './i18n.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
+import {LangMixin} from '@dbp-toolkit/common';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
-class ActivityExample extends LitElement {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-    }
-
-    static get properties() {
-        return {
-            lang: {type: String},
-        };
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
-    }
-
+class ActivityExample extends LangMixin(DBPLitElement, createInstance) {
     render() {
         const i18n = this._i18n;
         return html`

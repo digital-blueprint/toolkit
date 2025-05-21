@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
@@ -40,7 +40,7 @@ const importNotify = async (i18n, promise) => {
     }
 };
 
-export class AppShell extends ScopedElementsMixin(DBPLitElement) {
+export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
         this.activeView = '';
@@ -61,8 +61,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         this.buildTime = '';
         this._loginStatus = 'unknown';
         this._roles = [];
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this._extra = undefined;
         this.disableLayouts = false;
 
@@ -280,7 +278,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String, reflect: true},
             src: {type: String},
             basePath: {type: String, attribute: 'base-path'},
             activeView: {type: String, attribute: false},
@@ -346,7 +343,6 @@ export class AppShell extends ScopedElementsMixin(DBPLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    this._i18n.changeLanguage(this.lang);
                     // For screen readers
                     document.documentElement.setAttribute('lang', this.lang);
 

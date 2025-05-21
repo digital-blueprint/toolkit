@@ -1,19 +1,18 @@
 import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
-import {AdapterLitElement, Icon} from '@dbp-toolkit/common';
+import {AdapterLitElement, Icon, LangMixin} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 
-export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
+export class LayoutSwitcher extends LangMixin(
+    ScopedElementsMixin(AdapterLitElement),
+    createInstance,
+) {
     /**
      * constructor function of LayoutSwitcher class for creating and initializing objects instance of this class
      */
     constructor() {
         super();
-
-        this._i18n = createInstance();
-        /** @type {string} */
-        this.lang = this._i18n.language;
         /** @type {string} */
         this.langDir = '';
         /** @type {boolean} */
@@ -46,7 +45,6 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             appName: {type: String, attribute: 'app-name'},
             langDir: {type: String, attribute: 'lang-dir'},
             isDisabled: {type: Boolean, attribute: 'disabled', reflect: true},
@@ -71,9 +69,6 @@ export class LayoutSwitcher extends ScopedElementsMixin(AdapterLitElement) {
 
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
             if (propName === 'defaultLayout') {
                 /* Set default layout based on: */
                 if (this._getStoredLayout()) {

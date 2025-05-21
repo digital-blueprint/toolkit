@@ -4,16 +4,14 @@ import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Icon} from '@dbp-toolkit/common';
-import {AdapterLitElement} from '@dbp-toolkit/common';
+import {AdapterLitElement, LangMixin, AuthMixin} from '@dbp-toolkit/common';
 import {LoginStatus} from '@dbp-toolkit/auth/src/util';
 
-export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
+export class AuthMenuButton extends AuthMixin(
+    LangMixin(ScopedElementsMixin(AdapterLitElement), createInstance),
+) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-        this.auth = {};
-
         this.closeDropdown = this.closeDropdown.bind(this);
         this.onWindowResize = this.onWindowResize.bind(this);
     }
@@ -21,14 +19,6 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
-        };
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: {type: String},
-            auth: {type: Object},
         };
     }
 
@@ -72,16 +62,6 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
 
     onLogoutClicked(e) {
         this.sendSetPropertyEvent('requested-login-status', LoginStatus.LOGGED_OUT);
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     static get styles() {
@@ -318,9 +298,10 @@ export class AuthMenuButton extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     render() {
-        const loggedIn = this.auth['login-status'] === 'logged-in';
         return html`
-            <div class="authbox">${loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}</div>
+            <div class="authbox">
+                ${this.isLoggedIn() ? this.renderLoggedIn() : this.renderLoggedOut()}
+            </div>
         `;
     }
 }

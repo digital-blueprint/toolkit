@@ -1,37 +1,18 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-class AppShellWelcome extends ScopedElementsMixin(DBPLitElement) {
+class AppShellWelcome extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-
         this._onVisibilityChanged = this._onVisibilityChanged.bind(this);
-    }
-
-    static get properties() {
-        return {
-            lang: {type: String},
-        };
     }
 
     static set app(app) {
         this._app = app;
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     static get styles() {
