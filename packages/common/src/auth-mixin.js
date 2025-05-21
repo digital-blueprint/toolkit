@@ -29,9 +29,12 @@ export const AuthMixin = dedupeMixin(
                         this._authPending = false;
                         this.loginCallback(currentAuth);
                     }
-                    if (!wasLoggedOut && isLoggedOut && !this._authPending) {
-                        this._authPending = false;
-                        this.logoutCallback();
+                    if (!wasLoggedOut && isLoggedOut) {
+                        if (this._authPending) {
+                            this._authPending = false;
+                        } else {
+                            this.logoutCallback();
+                        }
                     }
                     this._previousAuthState = {...currentAuth};
                 }
@@ -39,8 +42,7 @@ export const AuthMixin = dedupeMixin(
             }
 
             /**
-             * @returns {boolean} - True if the auth state is not settled yet, i.e.
-             * loginCallback or logoutCallback has not been called yet.
+             * @returns {boolean} - True if the auth state is not settled yet.
              */
             isAuthPending() {
                 return this._authPending;
