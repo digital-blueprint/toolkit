@@ -16,13 +16,12 @@ import {
     InlineNotification,
     Translated,
     Translation,
+    LangMixin,
 } from './index.js';
 
-export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
+export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.noAuth = false;
         this.entryPointUrl = '';
         this.langDir = '';
@@ -53,18 +52,10 @@ export class DbpCommonDemo extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             noAuth: {type: Boolean, attribute: 'no-auth'},
             langDir: {type: String, attribute: 'lang-dir'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        this._i18n.changeLanguage(this.lang);
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
