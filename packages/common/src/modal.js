@@ -5,12 +5,11 @@ import {Icon} from './icon';
 import {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
 import dialogPolyfill from 'dialog-polyfill';
 import DBPLitElement from './dbp-lit-element';
+import {LangMixin} from './lang-mixin.js';
 
-export class Modal extends ScopedElementsMixin(DBPLitElement) {
+export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         /** @type {HTMLDialogElement} */
         this.modalDialog = null;
         /** @type {string} */
