@@ -113,7 +113,6 @@ export class AuthKeycloak extends AdapterLitElement {
 
         this._authenticated = kc.authenticated;
         if (kc.authenticated) {
-            let tokenChanged = this.token !== kc.token;
             let userChanged = kc.subject !== this.subject;
             if (userChanged) {
                 if (this._loginStatus === LoginStatus.LOGGED_IN) {
@@ -137,6 +136,7 @@ export class AuthKeycloak extends AdapterLitElement {
                     this._user = user;
                 }
             }
+            let tokenChanged = this.token !== kc.token;
             this.token = kc.token;
             this.name = kc.idTokenParsed.name;
             this.subject = kc.subject;
