@@ -42,7 +42,6 @@ export class AdapterLitElement extends LitElement {
     setProperty(name, value) {
         // TODO: check if lit attribute really present?
         if (typeof value === 'object' && value !== null) {
-            // Logger.debug("value is object", value);
             this.setPropertyByAttributeName(name, value);
         } else {
             this.attributeChangedCallback(name, this.getPropertyByAttributeName(name), value);
@@ -268,10 +267,8 @@ export class AdapterLitElement extends LitElement {
 
                     // If value is an object set it directly as property
                     if (typeof value === 'object' && value !== null) {
-                        // Logger.debug("value is object", value);
                         that.setPropertyByAttributeName(local, value);
                     } else {
-                        // Logger.debug("local, that.getPropertyByAttributeName(local), value", local, that.getPropertyByAttributeName(local), value);
                         that.attributeChangedCallback(
                             local,
                             that.getPropertyByAttributeName(local),
@@ -331,10 +328,8 @@ export class AdapterLitElement extends LitElement {
     findPropertyName(attributeName) {
         let resultName = attributeName;
         const properties = this.constructor.properties;
-        // Logger.debug("properties", properties);
 
         for (const propertyName in properties) {
-            // Logger.debug("findPropertyName", `${propertyName}: ${properties[propertyName]}`);
             const attribute = properties[propertyName].attribute;
             if (attribute === attributeName) {
                 resultName = propertyName;
@@ -386,15 +381,10 @@ export class AdapterLitElement extends LitElement {
                     (typeof oldValue === 'object' && !oldValue && !newValue) ||
                     (!newValue && oldValue && name)
                 ) {
-                    // Logger.debug("attributeChangedCallback ignored", name, oldValue, newValue);
                     break;
                 }
                 super.attributeChangedCallback(name, oldValue, newValue);
         }
-
-        // Logger.debug("this.lang", this.tagName, name, this.lang);
-        // Logger.debug("this.entryPointUrl", this.tagName, name, this.entryPointUrl);
-        // console.trace();
     }
 
     /**
@@ -406,8 +396,6 @@ export class AdapterLitElement extends LitElement {
      * @returns {boolean}
      */
     sendSetPropertyEvent(name, value, sendToSelf = false) {
-        // Logger.debug("dbp-set-property", name, value);
-
         const event = new CustomEvent('dbp-set-property', {
             bubbles: true,
             composed: true,
@@ -420,32 +408,4 @@ export class AdapterLitElement extends LitElement {
 
         return element.dispatchEvent(event);
     }
-
-    // update(changedProperties) {
-    //     changedProperties.forEach((oldValue, propName) => {
-    //         switch(propName) {
-    //             case 'subscribe':
-    //                 if (this.subscribe && this.subscribe.length > 0) {
-    //                     if (this.connected) {
-    //                         const attrs = this.subscribe.split(',');
-    //                         attrs.forEach(element => this.unSubscribeProviderFor(element));
-    //                     } else {
-    //                         this.deferUnSubscribe = this.subscribe.length > 0;
-    //                         this.unsubscribe = this.subscribe;
-    //                     }
-    //                 }
-    //                 if (this.subscribe !== null) {
-    //                     if (this.connected) {
-    //                         const attrs = this.subscribe.split(',');
-    //                         attrs.forEach(element => this.subscribeProviderFor(element));
-    //                     } else {
-    //                         this.deferSubscribe = this.subscribe && this.subscribe.length > 0;
-    //                     }
-    //                 }
-    //                 break;
-    //         }
-    //     });
-    //
-    //     super.update(changedProperties);
-    // }
 }
