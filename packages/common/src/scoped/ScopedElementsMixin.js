@@ -1,6 +1,6 @@
-import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { adoptStyles, isServer } from 'lit';
-import { ScopedElementsMixin as OpenWcLitScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import {dedupeMixin} from '@open-wc/dedupe-mixin';
+import {adoptStyles, isServer} from 'lit';
+import {ScopedElementsMixin as OpenWcLitScopedElementsMixin} from '@open-wc/scoped-elements/lit-element.js';
 
 /**
  * @typedef {import('../../form-core/types/validate/ValidateMixinTypes.js').ScopedElementsMap} ScopedElementsMap
@@ -14,10 +14,11 @@ import { ScopedElementsMixin as OpenWcLitScopedElementsMixin } from '@open-wc/sc
  */
 
 export function supportsScopedRegistry() {
-  return Boolean(
-    // @ts-expect-error
-    globalThis.ShadowRoot?.prototype.createElement && globalThis.ShadowRoot?.prototype.importNode,
-  );
+    return Boolean(
+        // @ts-expect-error
+        globalThis.ShadowRoot?.prototype.createElement &&
+            globalThis.ShadowRoot?.prototype.importNode,
+    );
 }
 
 /**
@@ -51,119 +52,123 @@ export function supportsScopedRegistry() {
  * @param {T} superclass
  * @return {T & ScopedElementsHostConstructor & ScopedElementsHostV2Constructor}
  */
-const ScopedElementsMixinImplementation = superclass =>
-  /** @type {ScopedElementsHost} */
-  class ScopedElementsHost extends OpenWcLitScopedElementsMixin(superclass) {
-    constructor() {
-      super();
+const ScopedElementsMixinImplementation = (superclass) =>
+    /** @type {ScopedElementsHost} */
+    class ScopedElementsHost extends OpenWcLitScopedElementsMixin(superclass) {
+        constructor() {
+            super();
 
-      if (isServer) {
-        // We are on the server: this means we can't support scoped registries...
-        // So we must treat it like the "no-polyfill scenario", that registers scoped
-        // elements used for internal composition on the global registry.
-        // On the client that would happen in connectedCallback, so we do it here...
-        // N.B. keep in mind that this does not work when we have multiple element (versions)
-        // with the same name. (like multiple versions of lion extension layers).
-        // If we want to support this, we must re-introduce the shim-behavior of ScopedElementsMixin v1
-        // to make this work with ssr as well.
-        // @ts-expect-error
-        this.registry = customElements;
-        // @ts-expect-error
-        for (const [name, klass] of Object.entries(this.constructor.scopedElements || {})) {
-          this.defineScopedElement(name, klass);
+            if (isServer) {
+                // We are on the server: this means we can't support scoped registries...
+                // So we must treat it like the "no-polyfill scenario", that registers scoped
+                // elements used for internal composition on the global registry.
+                // On the client that would happen in connectedCallback, so we do it here...
+                // N.B. keep in mind that this does not work when we have multiple element (versions)
+                // with the same name. (like multiple versions of lion extension layers).
+                // If we want to support this, we must re-introduce the shim-behavior of ScopedElementsMixin v1
+                // to make this work with ssr as well.
+                // @ts-expect-error
+                this.registry = customElements;
+                // @ts-expect-error
+                for (const [name, klass] of Object.entries(this.constructor.scopedElements || {})) {
+                    this.defineScopedElement(name, klass);
+                }
+            }
         }
-      }
-    }
 
-    createScopedElement(/** @type {string} */ tagName) {
-      const root = supportsScopedRegistry() ? this.shadowRoot : document;
-      // @ts-expect-error polyfill to support createElement on shadowRoot is loaded
-      return root.createElement(tagName);
-    }
-
-    /**
-     * Defines a scoped element.
-     *
-     * @param {string} tagName
-     * @param {typeof HTMLElement} classToBeRegistered
-     */
-    defineScopedElement(tagName, classToBeRegistered) {
-      const registeredClass = this.registry.get(tagName);
-      const isNewClassWithSameName = registeredClass && registeredClass !== classToBeRegistered;
-      if (!supportsScopedRegistry() && isNewClassWithSameName) {
-        // eslint-disable-next-line no-console
-        console.error(
-          [
-            `You are trying to re-register the "${tagName}" custom element with a different class via ScopedElementsMixin.`,
-            'This is only possible with a CustomElementRegistry.',
-            'Your browser does not support this feature so you will need to load a polyfill for it.',
-            'Load "@webcomponents/scoped-custom-element-registry" before you register ANY web component to the global customElements registry.',
-            'e.g. add "<script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>" as your first script tag.',
-            'For more details you can visit https://open-wc.org/docs/development/scoped-elements/',
-          ].join('\n'),
-        );
-      }
-      if (!registeredClass) {
-        return this.registry.define(tagName, classToBeRegistered);
-      }
-      return this.registry.get(tagName);
-    }
-
-    /**
-     * @param {ShadowRootInit} options
-     * @returns {ShadowRoot}
-     */
-    attachShadow(options) {
-      // @ts-expect-error
-      const { scopedElements } = /** @type {typeof ScopedElementsHost} */ (this.constructor);
-
-      const shouldCreateRegistry =
-        !this.registry ||
-        // @ts-expect-error
-        (this.registry === this.constructor.__registry &&
-          !Object.prototype.hasOwnProperty.call(this.constructor, '__registry'));
-
-      /**
-       * Create a new registry if:
-       * - the registry is not defined
-       * - this class doesn't have its own registry *AND* has no shared registry
-       * This is important specifically for superclasses/inheritance
-       */
-      if (shouldCreateRegistry) {
-        this.registry = supportsScopedRegistry() ? new CustomElementRegistry() : customElements;
-        for (const [tagName, klass] of Object.entries(scopedElements ?? {})) {
-          this.defineScopedElement(tagName, klass);
+        createScopedElement(/** @type {string} */ tagName) {
+            const root = supportsScopedRegistry() ? this.shadowRoot : document;
+            // @ts-expect-error polyfill to support createElement on shadowRoot is loaded
+            return root.createElement(tagName);
         }
-      }
 
-      return Element.prototype.attachShadow.call(this, {
-        ...options,
-        // The polyfill currently expects the registry to be passed as `customElements`
-        customElements: this.registry,
-        // But the proposal has moved forward, and renamed it to `registry`
-        // For backwards compatibility, we pass it as both
-        registry: this.registry,
-      });
-    }
+        /**
+         * Defines a scoped element.
+         *
+         * @param {string} tagName
+         * @param {typeof HTMLElement} classToBeRegistered
+         */
+        defineScopedElement(tagName, classToBeRegistered) {
+            const registeredClass = this.registry.get(tagName);
+            const isNewClassWithSameName =
+                registeredClass && registeredClass !== classToBeRegistered;
+            if (!supportsScopedRegistry() && isNewClassWithSameName) {
+                // eslint-disable-next-line no-console
+                console.error(
+                    [
+                        `You are trying to re-register the "${tagName}" custom element with a different class via ScopedElementsMixin.`,
+                        'This is only possible with a CustomElementRegistry.',
+                        'Your browser does not support this feature so you will need to load a polyfill for it.',
+                        'Load "@webcomponents/scoped-custom-element-registry" before you register ANY web component to the global customElements registry.',
+                        'e.g. add "<script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>" as your first script tag.',
+                        'For more details you can visit https://open-wc.org/docs/development/scoped-elements/',
+                    ].join('\n'),
+                );
+            }
+            if (!registeredClass) {
+                return this.registry.define(tagName, classToBeRegistered);
+            }
+            return this.registry.get(tagName);
+        }
 
-    createRenderRoot() {
-      const { shadowRootOptions, elementStyles } = /** @type {TypeofLitElement} */ (
-        this.constructor
-      );
+        /**
+         * @param {ShadowRootInit} options
+         * @returns {ShadowRoot}
+         */
+        attachShadow(options) {
+            // @ts-expect-error
+            const {scopedElements} = /** @type {typeof ScopedElementsHost} */ (this.constructor);
 
-      const createdRoot = this.attachShadow(shadowRootOptions);
-      if (supportsScopedRegistry()) {
-        // @ts-expect-error
-        this.renderOptions.creationScope = createdRoot;
-      }
+            const shouldCreateRegistry =
+                !this.registry ||
+                // @ts-expect-error
+                (this.registry === this.constructor.__registry &&
+                    !Object.prototype.hasOwnProperty.call(this.constructor, '__registry'));
 
-      if (createdRoot instanceof ShadowRoot) {
-        adoptStyles(createdRoot, elementStyles);
-        this.renderOptions.renderBefore = this.renderOptions.renderBefore || createdRoot.firstChild;
-      }
+            /**
+             * Create a new registry if:
+             * - the registry is not defined
+             * - this class doesn't have its own registry *AND* has no shared registry
+             * This is important specifically for superclasses/inheritance
+             */
+            if (shouldCreateRegistry) {
+                this.registry = supportsScopedRegistry()
+                    ? new CustomElementRegistry()
+                    : customElements;
+                for (const [tagName, klass] of Object.entries(scopedElements ?? {})) {
+                    this.defineScopedElement(tagName, klass);
+                }
+            }
 
-      return createdRoot;
-    }
-  };
+            return Element.prototype.attachShadow.call(this, {
+                ...options,
+                // The polyfill currently expects the registry to be passed as `customElements`
+                customElements: this.registry,
+                // But the proposal has moved forward, and renamed it to `registry`
+                // For backwards compatibility, we pass it as both
+                registry: this.registry,
+            });
+        }
+
+        createRenderRoot() {
+            const {shadowRootOptions, elementStyles} = /** @type {TypeofLitElement} */ (
+                this.constructor
+            );
+
+            const createdRoot = this.attachShadow(shadowRootOptions);
+            if (supportsScopedRegistry()) {
+                // @ts-expect-error
+                this.renderOptions.creationScope = createdRoot;
+            }
+
+            if (createdRoot instanceof ShadowRoot) {
+                adoptStyles(createdRoot, elementStyles);
+                this.renderOptions.renderBefore =
+                    this.renderOptions.renderBefore || createdRoot.firstChild;
+            }
+
+            return createdRoot;
+        }
+    };
 
 export const ScopedElementsMixin = dedupeMixin(ScopedElementsMixinImplementation);
