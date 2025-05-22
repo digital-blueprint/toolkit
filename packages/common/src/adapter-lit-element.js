@@ -4,9 +4,9 @@ import {Logger} from './logger';
 export class AdapterLitElement extends LitElement {
     constructor() {
         super();
-        this.connected = false;
-        this.deferSubscribe = false;
-        this.deferUnSubscribe = false;
+        this._connected = false;
+        this._deferSubscribe = false;
+        this._deferUnSubscribe = false;
         // attributes (if they exist) will be updated if a property is changed by "subscribe"
         this.reflectAttribute = true;
 
@@ -14,21 +14,21 @@ export class AdapterLitElement extends LitElement {
         this.subscribe = '';
         this.unsubscribe = '';
 
-        this.callbackStore = [];
+        this._callbackStore = [];
 
-        // Previously we used direct properties like this["lang"] (instead of this.propertyStore["lang"]) for storing the
+        // Previously we used direct properties like this["lang"] (instead of this._propertyStore["lang"]) for storing the
         // properties, but the "lang" property seems to be updated before the event from the MutationObserver, so we
         // cannot observe a value change directly (as workaround we use another property (e.g. "langValue") instead of "lang")
-        this.propertyStore = {};
+        this._propertyStore = {};
 
         // We need to store our own "last values" because we cannot be sure what the MutationObserver detects
-        this.lastProperties = {};
+        this._lastProperties = {};
 
         Logger.debug('AdapterLitElement(' + this.tagName + ') constructor()');
     }
 
     getProperty(name) {
-        return this.propertyStore[name];
+        return this._propertyStore[name];
     }
 
     getPropertyByAttributeName(name) {
@@ -47,36 +47,36 @@ export class AdapterLitElement extends LitElement {
             this.attributeChangedCallback(name, this.getPropertyByAttributeName(name), value);
         }
 
-        this.lastProperties[name] = value;
-        this.propertyStore[name] = value;
+        this._lastProperties[name] = value;
+        this._propertyStore[name] = value;
     }
 
     hasPropertyChanged(name, value) {
-        return this.lastProperties[name] !== value;
+        return this._lastProperties[name] !== value;
     }
 
     hasProperty(name) {
         // return this.hasAttribute("name")
-        return Object.hasOwnProperty.call(this.propertyStore, name);
+        return Object.hasOwnProperty.call(this._propertyStore, name);
     }
 
     connectedCallback() {
         super.connectedCallback();
 
-        if (this.deferUnSubscribe) {
+        if (this._deferUnSubscribe) {
             const attrs = this.unsubscribe.split(',');
             attrs.forEach((element) => this.unSubscribeProviderFor(element));
-            this.deferSubscribe = false;
+            this._deferSubscribe = false;
             this.unsubscribe = '';
         }
 
-        if (this.deferSubscribe) {
+        if (this._deferSubscribe) {
             const attrs = this.subscribe.split(',');
             attrs.forEach((element) => this.subscribeProviderFor(element));
-            this.deferSubscribe = false;
+            this._deferSubscribe = false;
         }
 
-        this.connected = true;
+        this._connected = true;
 
         const that = this;
 
@@ -92,7 +92,7 @@ export class AdapterLitElement extends LitElement {
                             name +
                             '" found.',
                     );
-                    that.callbackStore.push({
+                    that._callbackStore.push({
                         name: name,
                         callback: e.detail.callback,
                         sender: e.detail.sender,
@@ -118,10 +118,10 @@ export class AdapterLitElement extends LitElement {
                             name +
                             '" found.',
                     );
-                    that.callbackStore.forEach((item) => {
+                    that._callbackStore.forEach((item) => {
                         if (item.sender === sender && item.name === name) {
-                            const index = that.callbackStore.indexOf(item);
-                            that.callbackStore.splice(index, 1);
+                            const index = that._callbackStore.indexOf(item);
+                            that._callbackStore.splice(index, 1);
                             Logger.debug(
                                 'AdapterLitElementProvider(' +
                                     that.tagName +
@@ -155,7 +155,7 @@ export class AdapterLitElement extends LitElement {
                     );
                     that.setProperty(name, value);
 
-                    that.callbackStore.forEach((item) => {
+                    that._callbackStore.forEach((item) => {
                         if (item.name === name) {
                             item.callback(value);
                         }
@@ -188,7 +188,7 @@ export class AdapterLitElement extends LitElement {
                         );
                         that.setProperty(name, value);
 
-                        that.callbackStore.forEach((item) => {
+                        that._callbackStore.forEach((item) => {
                             if (item.name === name) {
                                 item.callback(value);
                             }
@@ -354,22 +354,22 @@ export class AdapterLitElement extends LitElement {
                 );
 
                 if (this.subscribe && this.subscribe.length > 0) {
-                    if (this.connected) {
+                    if (this._connected) {
                         const attrs = this.subscribe.split(',');
                         attrs.forEach((element) => this.unSubscribeProviderFor(element));
                     } else {
-                        this.deferUnSubscribe = this.subscribe.length > 0;
+                        this._deferUnSubscribe = this.subscribe.length > 0;
                         this.unsubscribe = this.subscribe;
                     }
                 }
 
                 if (newValue !== null) {
                     this.subscribe = newValue;
-                    if (this.connected) {
+                    if (this._connected) {
                         const attrs = newValue.split(',');
                         attrs.forEach((element) => this.subscribeProviderFor(element));
                     } else {
-                        this.deferSubscribe = newValue && newValue.length > 0;
+                        this._deferSubscribe = newValue && newValue.length > 0;
                     }
                 }
                 break;
