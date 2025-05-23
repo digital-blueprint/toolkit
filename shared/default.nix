@@ -1,16 +1,18 @@
 {
   pkgs ? import <nixpkgs> { },
+  projectName ? "project",
 }:
 let
   # Common shellHooks also for the toolkit itself
   shellHookCommon = ''
-    export CHROMIUM_BIN=${pkgs.chromium}/bin/chromium
-    export FIREFOX_BIN=${pkgs.firefox}/bin/firefox
-    echo "🏁 Using chromium at $CHROMIUM_BIN and firefox at $FIREFOX_BIN for karma tests"
+    export CHROMIUM_BIN=${lib.getExe pkgs.chromium}
+    export FIREFOX_BIN=${lib.getExe pkgs.firefox}
+    echo "🏁 Using Chromium at ${pkgs.chromium.version} and Firefox at ${pkgs.firefox.version} for karma tests"
 
     # Determine the repository root
     REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
   '';
+  lib = pkgs.lib;
 in
 pkgs.mkShell {
   # Common nativeBuildInputs for toolkit and apps
@@ -35,5 +37,7 @@ pkgs.mkShell {
         echo "🛠️ Installing pre-commit hook"
         ln -sf ../../vendor/toolkit/shared/pre-commit.sh .git/hooks/pre-commit
       fi
+
+      echo "💻 Starting ${lib.toSentenceCase projectName} dev shell"
     '';
 }
