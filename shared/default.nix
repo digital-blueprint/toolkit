@@ -22,6 +22,13 @@ pkgs.mkShell {
     lazygit # git terminal
     just # task runner
     fzf # fuzzy finder, for "just watch"
+
+    # Formatter for treefmt
+    treefmt
+    nodePackages.prettier
+    nixfmt-rfc-style
+    statix
+    taplo
   ];
 
   # Common shellHooks also for the toolkit itself

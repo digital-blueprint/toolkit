@@ -66,7 +66,7 @@ watch:
 # Format all files
 [group('linter')]
 format args='':
-    nix-shell -p treefmt nodePackages.prettier nixfmt-rfc-style statix taplo --run "treefmt {{ args }}"
+    treefmt {{ args }}
 
 # Add git commit hashes to the .git-blame-ignore-revs file
 [group('linter')]
