@@ -1,4 +1,4 @@
-import sharedConfig from '../../prettierrc.common.js';
+import sharedConfig from '../../shared/prettierrc.common.js';
 
 export default {
     ...sharedConfig,
