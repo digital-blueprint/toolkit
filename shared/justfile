@@ -64,6 +64,11 @@ watch:
     fi
 
 # Format all files
+[group('dev')]
+remove-toolkit-node-modules:
+    rm ./vendor/toolkit/node_modules -Rf
+
+# Format all files
 [group('linter')]
 format args='':
     treefmt {{ args }}
