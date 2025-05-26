@@ -7,13 +7,12 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2LangDe from '@dbp-toolkit/resource-select/src/i18n/de/select2';
 import select2LangEn from '@dbp-toolkit/resource-select/src/i18n/en/select2';
-import {AdapterLitElement} from '@dbp-toolkit/common';
+import {AdapterLitElement, LangMixin} from '@dbp-toolkit/common';
 import * as hydra from './hydra.js';
 
-export class ResourceSelect extends AdapterLitElement {
+export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
         this._resources = [];
         this._url = null;
         this._lang = null;
@@ -21,7 +20,6 @@ export class ResourceSelect extends AdapterLitElement {
         this._selectId = 'select-resource-' + commonUtils.makeId(24);
 
         this.auth = {};
-        this.lang = this._i18n.language;
         this.entryPointUrl = null;
         this.resourcePath = null;
         this.value = null;
@@ -35,7 +33,6 @@ export class ResourceSelect extends AdapterLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             auth: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             resourcePath: {type: String, attribute: 'resource-path'},
@@ -243,10 +240,7 @@ export class ResourceSelect extends AdapterLitElement {
     }
 
     update(changedProperties) {
-        if (changedProperties.has('lang')) {
-            this._i18n.changeLanguage(this.lang);
-        }
-
+        super.update(changedProperties);
         if (
             changedProperties.has('lang') ||
             changedProperties.has('value') ||
@@ -257,8 +251,6 @@ export class ResourceSelect extends AdapterLitElement {
         ) {
             this._updateAll();
         }
-
-        super.update(changedProperties);
     }
 
     static get styles() {

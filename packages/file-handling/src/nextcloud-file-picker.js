@@ -1,6 +1,6 @@
 import {createInstance} from './i18n';
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -18,12 +18,12 @@ import {encrypt, decrypt, parseJwt} from './crypto.js';
 /**
  * NextcloudFilePicker web component
  */
-export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
+export class NextcloudFilePicker extends LangMixin(
+    ScopedElementsMixin(DBPLitElement),
+    createInstance,
+) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-
         this.auth = {};
         this.authUrl = '';
         this.webDavUrl = '';
@@ -93,7 +93,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             auth: {type: Object},
             authUrl: {type: String, attribute: 'auth-url'},
             webDavUrl: {type: String, attribute: 'web-dav-url'},
@@ -125,9 +124,6 @@ export class NextcloudFilePicker extends ScopedElementsMixin(DBPLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
                 case 'auth':
                     this._updateAuth();
                     break;

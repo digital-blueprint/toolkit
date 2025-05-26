@@ -1,17 +1,16 @@
 import {createInstance} from './i18n';
 import {createUUID} from './utils';
 import {css, html} from 'lit';
+import {LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 /**
  * Notification web component
  */
-export class Notification extends DBPLitElement {
+export class Notification extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.notificationBlock = null;
         this.notifications = {};
         this.targetNotificationId = null;
@@ -30,7 +29,6 @@ export class Notification extends DBPLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             inline: {type: Boolean, attribute: 'inline'},
         };
     }

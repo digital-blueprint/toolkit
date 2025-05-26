@@ -2,18 +2,19 @@ import {createInstance} from './i18n';
 import {send as notify} from '@dbp-toolkit/common/notification';
 import {css, html} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {Notification} from './notification.js';
 import {getRandomInt} from './utils.js';
 import {Modal} from '@dbp-toolkit/common/src/modal';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-export class NotificationDemo extends ScopedElementsMixin(DBPLitElement) {
+export class NotificationDemo extends LangMixin(
+    ScopedElementsMixin(DBPLitElement),
+    createInstance,
+) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         /** @type {Modal} */
         this.modal = null;
         /** @type {Modal} */
@@ -27,12 +28,6 @@ export class NotificationDemo extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    static get properties() {
-        return {
-            lang: {type: String},
-        };
-    }
-
     connectedCallback() {
         super.connectedCallback();
     }
@@ -41,16 +36,6 @@ export class NotificationDemo extends ScopedElementsMixin(DBPLitElement) {
         super.firstUpdated(changedProperties);
         this.modal = this.shadowRoot.querySelector('#modal-notification-test');
         this.modalLarge = this.shadowRoot.querySelector('#modal-notification-test--large');
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     openModal() {

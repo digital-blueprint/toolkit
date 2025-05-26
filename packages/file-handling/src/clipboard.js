@@ -10,18 +10,16 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
 import {send} from '@dbp-toolkit/common/notification';
-import {AdapterLitElement} from '@dbp-toolkit/common';
+import {AdapterLitElement, LangMixin} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 
 const MODE_TABLE_ONLY = 'table-only';
 const MODE_FILE_SINK = 'file-sink';
 const MODE_FILE_SOURCE = 'file-source';
 
-export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
+export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.allowedMimeTypes = '';
         this.clipboardFiles = {files: ''};
         this.clipboardSelectBtnDisabled = true;
@@ -64,7 +62,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             allowedMimeTypes: {type: String, attribute: 'allowed-mime-types'},
             clipboardSelectBtnDisabled: {type: Boolean},
             clipboardFiles: {type: Object, attribute: 'clipboard-files'},
@@ -101,9 +98,6 @@ export class Clipboard extends ScopedElementsMixin(AdapterLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
                 case 'clipboardFiles':
                     if (this.tabulatorTable) this.generateClipboardTable();
                     break;

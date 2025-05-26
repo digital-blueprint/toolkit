@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin from '@dbp-toolkit/common';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -8,12 +8,9 @@ import {Provider} from '@dbp-toolkit/provider';
 import {Adapter} from '@dbp-toolkit/provider';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
-class DemoConsumer extends DBPLitElement {
+class DemoConsumer extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
         super();
-
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         // default values
         this.foo = 100;
@@ -35,7 +32,6 @@ class DemoConsumer extends DBPLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             foo: {type: String},
             bar: {type: String},
@@ -64,7 +60,6 @@ class DemoConsumer extends DBPLitElement {
         switch (name) {
             case 'lang':
                 this.lang = newValue;
-                this._i18n.changeLanguage(this.lang);
                 break;
             case 'foo':
                 this.foo = parseInt(newValue);
@@ -127,12 +122,7 @@ class DemoConsumer extends DBPLitElement {
 
 customElements.define('dbp-consumer', DemoConsumer);
 
-class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-    }
+class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
 
     static get scopedElements() {
         return {
@@ -141,13 +131,6 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
             'dbp-provider': Provider,
             'dbp-provider-adapter': Adapter,
             'dbp-consumer': DemoConsumer,
-        };
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: {type: String},
         };
     }
 
@@ -166,7 +149,6 @@ class ProviderDemo extends ScopedElementsMixin(DBPLitElement) {
         switch (name) {
             case 'lang':
                 this.lang = newValue;
-                this._i18n.changeLanguage(this.lang);
                 break;
             default:
                 super.attributeChangedCallback(name, oldValue, newValue);

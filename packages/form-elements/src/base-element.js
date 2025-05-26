@@ -1,15 +1,13 @@
 import {css, html} from 'lit';
 import {createInstance} from './i18n';
 import {getFieldsetCSS} from './utils.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
-export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
+export class DbpBaseElement extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.formElementId = 'form-element';
         this.name = '';
         this.description = '';
@@ -26,7 +24,6 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             name: {type: String},
             description: {type: String},
             label: {type: String},
@@ -121,16 +118,15 @@ export class DbpBaseElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     update(changedProperties) {
+        super.update(changedProperties);
+
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    this._i18n.changeLanguage(this.lang);
                     this.handleErrorsIfAny();
                     break;
             }
         });
-
-        super.update(changedProperties);
     }
 
     handleInputValue(e) {

@@ -2,7 +2,7 @@ import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
 import {live} from 'lit/directives/live.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {MiniSpinner, Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -14,11 +14,9 @@ import {readBinaryFileContent} from './utils.js';
 /**
  * PdfViewer web component
  */
-export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
+export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.pdfDoc = null;
         this.currentPage = 0;
         this.totalPages = 0;
@@ -53,7 +51,6 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             autoResize: {type: String, attribute: 'auto-resize'},
             currentPage: {type: Number, attribute: false},
             totalPages: {type: Number, attribute: false},
@@ -65,18 +62,14 @@ export class PdfViewer extends ScopedElementsMixin(DBPLitElement) {
     }
 
     update(changedProperties) {
+        super.update(changedProperties);
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
                 case 'autoResize':
                     this._onWindowResize();
                     break;
             }
         });
-
-        super.update(changedProperties);
     }
 
     _onWindowResize() {

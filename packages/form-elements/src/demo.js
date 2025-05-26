@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -18,11 +18,12 @@ import {
 import {classMap} from 'lit/directives/class-map.js';
 import {gatherFormDataFromElement, validateRequiredFields} from './utils.js';
 
-export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
+export class FormElementsDemo extends LangMixin(
+    ScopedElementsMixin(DBPLitElement),
+    createInstance,
+) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.saveButtonEnabled = true;
         this.data = {};
         this.enumItems = {item1: 'Item 1', item2: 'Item 2'};
@@ -46,7 +47,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             saveButtonEnabled: {type: Boolean, attribute: false},
             isRequired: {type: Boolean, attribute: false},
             data: {type: Object, attribute: false},
@@ -72,13 +72,6 @@ export class FormElementsDemo extends ScopedElementsMixin(DBPLitElement) {
                 }
             `,
         ];
-    }
-
-    update(changedProperties) {
-        if (changedProperties.has('lang')) {
-            this._i18n.changeLanguage(this.lang);
-        }
-        super.update(changedProperties);
     }
 
     async validate(event) {

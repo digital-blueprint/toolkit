@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TooltipElement} from './tooltip';
@@ -8,36 +8,13 @@ import {InfoTooltip} from './info-tooltip';
 import {ButtonTooltip} from './button-tooltip';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
-export class TooltipDemo extends ScopedElementsMixin(DBPLitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-    }
-
+export class TooltipDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     static get scopedElements() {
         return {
             'dbp-tooltip': TooltipElement,
             'dbp-info-tooltip': InfoTooltip,
             'dbp-button-tooltip': ButtonTooltip,
         };
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: {type: String},
-        };
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     static get styles() {

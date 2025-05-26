@@ -2,7 +2,7 @@ import {createInstance} from './i18n';
 import {css, html, unsafeCSS} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 import {Mutex} from 'async-mutex';
@@ -117,12 +117,9 @@ async function createVideoElement(deviceId) {
     return null;
 }
 
-export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
+export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-
         this._askPermission = false;
         this._loading = false;
 
@@ -151,7 +148,7 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
 
     static get properties() {
         return {
-            lang: {type: String},
+            ...super.properties,
             showOutput: {type: Boolean, attribute: 'show-output'},
             stopScan: {type: Boolean, attribute: 'stop-scan'},
             matchRegex: {type: String, attribute: 'match-regex'},
@@ -188,18 +185,6 @@ export class QrCodeScanner extends ScopedElementsMixin(DBPLitElement) {
         } else if (!changedProperties.get('stopScan') && this.stopScan) {
             this.stopScanning();
         }
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     /**

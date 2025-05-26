@@ -4,7 +4,7 @@ import select2 from 'select2';
 import select2LangDe from './i18n/de/select2';
 import select2LangEn from './i18n/en/select2';
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {createInstance} from './i18n.js';
 import {Icon, combineURLs} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -13,13 +13,14 @@ import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from '@dbp-toolkit/common/error';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
-export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
+export class PersonSelect extends LangMixin(
+    ScopedElementsMixin(AdapterLitElement),
+    createInstance,
+) {
     constructor() {
         super();
         Object.assign(PersonSelect.prototype, errorUtils.errorMixin);
         this.auth = {};
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.entryPointUrl = null;
         this.$select = null;
         this.active = false;
@@ -52,7 +53,6 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             active: {type: Boolean, attribute: false},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             value: {type: String},
@@ -289,11 +289,11 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
     }
 
     update(changedProperties) {
+        super.update(changedProperties);
+
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-
                     if (this.select2IsInitialized()) {
                         // no other way to set an other language at runtime did work
                         this.initSelect2(true);
@@ -318,8 +318,6 @@ export class PersonSelect extends ScopedElementsMixin(AdapterLitElement) {
                     break;
             }
         });
-
-        super.update(changedProperties);
     }
 
     select2IsInitialized() {

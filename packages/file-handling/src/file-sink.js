@@ -1,6 +1,6 @@
 import {createInstance} from './i18n';
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -16,12 +16,13 @@ import DbpFileHandlingLitElement from './dbp-file-handling-lit-element';
 /**
  * FileSink web component
  */
-export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
+export class FileSink extends LangMixin(
+    ScopedElementsMixin(DbpFileHandlingLitElement),
+    createInstance,
+) {
     constructor() {
         super();
         this.context = '';
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
         this.nextcloudName = 'Nextcloud';
@@ -57,7 +58,6 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
         return {
             ...super.properties,
             context: {type: String, attribute: 'context'},
-            lang: {type: String},
             filename: {type: String},
             files: {type: Array, attribute: false},
             enabledTargets: {type: String, attribute: 'enabled-targets'},
@@ -143,9 +143,6 @@ export class FileSink extends ScopedElementsMixin(DbpFileHandlingLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
                 case 'enabledTargets':
                     if (!this.hasEnabledDestination(this.activeTargets)) {
                         this.activeTargets = this.enabledTargets.split(',')[0];

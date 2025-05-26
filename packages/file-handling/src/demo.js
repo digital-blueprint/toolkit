@@ -1,16 +1,14 @@
 import {createInstance} from './i18n';
 import {html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {FileSource} from './file-source';
 import {FileSink} from './file-sink';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
-export class FileSourceDemo extends ScopedElementsMixin(DBPLitElement) {
+export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.url = '';
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
@@ -30,7 +28,6 @@ export class FileSourceDemo extends ScopedElementsMixin(DBPLitElement) {
 
     static get properties() {
         return {
-            lang: {type: String},
             url: {type: String},
             selectedFiles: {type: Array, attribute: false},
             selectedFilesCount: {type: Number, attribute: false},
@@ -54,16 +51,6 @@ export class FileSourceDemo extends ScopedElementsMixin(DBPLitElement) {
                 );
             });
         });
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     getSelectedFilesHtml() {

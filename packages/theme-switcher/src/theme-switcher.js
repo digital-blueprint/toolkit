@@ -1,16 +1,16 @@
 import {createInstance, setOverridesByGlobalCache} from './i18n.js';
 import {html, css} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {AdapterLitElement, Icon} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';
 
-export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
+export class ThemeSwitcher extends LangMixin(
+    ScopedElementsMixin(AdapterLitElement),
+    createInstance,
+) {
     constructor() {
         super();
-
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.themes = [];
         this.boundCloseAdditionalMenuHandler = this.hideModeMenu.bind(this);
         this.detectBrowserDarkMode = false;
@@ -23,7 +23,6 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             themes: {type: Array, attribute: 'themes'},
             darkModeThemeOverride: {type: String, attribute: 'dark-mode-theme-override'},
             dropdownRight: {type: Boolean, attribute: 'dropdown-right'},
@@ -35,15 +34,6 @@ export class ThemeSwitcher extends ScopedElementsMixin(AdapterLitElement) {
         return {
             'dbp-icon': Icon,
         };
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-        super.update(changedProperties);
     }
 
     connectedCallback() {

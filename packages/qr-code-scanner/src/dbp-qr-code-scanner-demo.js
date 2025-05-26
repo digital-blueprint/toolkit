@@ -1,34 +1,15 @@
 import {createInstance} from './i18n';
 import {css, html, LitElement} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {QrCodeScanner} from './qr-code-scanner.js';
 
-export class QrCodeScannerDemo extends ScopedElementsMixin(LitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-    }
-
+export class QrCodeScannerDemo extends LangMixin(ScopedElementsMixin(LitElement), createInstance) {
     static get scopedElements() {
         return {
             'dbp-qr-code-scanner': QrCodeScanner,
         };
-    }
-
-    static get properties() {
-        return {
-            lang: {type: String},
-        };
-    }
-
-    update(changedProperties) {
-        if (changedProperties.has('lang')) {
-            this._i18n.changeLanguage(this.lang);
-        }
-        super.update(changedProperties);
     }
 
     static get styles() {

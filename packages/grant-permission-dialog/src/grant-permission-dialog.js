@@ -10,11 +10,9 @@ import {Notification} from '@dbp-toolkit/notification';
 import {PersonSelect} from '@dbp-toolkit/person-select';
 import {classMap} from 'lit/directives/class-map.js';
 
-export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
+export class GrantPermissionDialog extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.auth = {};
         this.entryPointUrl = '';
         this.formName = '';
@@ -37,7 +35,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             auth: {type: Object},
             availableActions: {type: Array},
             userList: {type: Map},
@@ -79,18 +76,6 @@ export class GrantPermissionDialog extends ScopedElementsMixin(DBPLitElement) {
     }
 
     firstUpdated() {}
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
-    }
 
     /**
      * Returns if a person is set in or not

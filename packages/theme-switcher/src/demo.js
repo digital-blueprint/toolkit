@@ -1,15 +1,13 @@
 import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {html, LitElement} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {ThemeSwitcher} from './theme-switcher';
 import {Themed} from './themed';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 
-export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
+export class ThemeSwitcherDemo extends LangMixin(ScopedElementsMixin(LitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.url = '';
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
@@ -25,7 +23,7 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
 
     static get properties() {
         return {
-            lang: {type: String},
+            ...super.properties,
             langDir: {type: String, attribute: 'lang-dir'},
         };
     }
@@ -35,16 +33,6 @@ export class ThemeSwitcherDemo extends ScopedElementsMixin(LitElement) {
         if (this.langDir) {
             setOverridesByGlobalCache(this._i18n, this);
         }
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     render() {

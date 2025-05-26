@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {GrantPermissionDialog} from './grant-permission-dialog.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -8,11 +8,9 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {send} from '@dbp-toolkit/common/notification';
 import {httpGetAsync} from './utils.js';
 
-export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement) {
+export class GrantPermissionDialogDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.entryPointUrl = '';
         this.noAuth = false;
         this.resourceClassIdentifier = 'DbpRelayFormalizeForm';
@@ -30,7 +28,6 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             formIdentifier: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
@@ -58,13 +55,6 @@ export class GrantPermissionDialogDemo extends ScopedElementsMixin(DBPLitElement
                 }
             `,
         ];
-    }
-
-    update(changedProperties) {
-        if (changedProperties.has('lang')) {
-            this._i18n.changeLanguage(this.lang);
-        }
-        super.update(changedProperties);
     }
 
     connectedCallback() {

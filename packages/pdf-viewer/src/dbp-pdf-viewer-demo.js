@@ -1,37 +1,16 @@
 import {createInstance} from './i18n';
 import {css, html, LitElement} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {PdfViewer} from './pdf-viewer.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-export class PdfViewerDemo extends ScopedElementsMixin(LitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-    }
+export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), createInstance) {
 
     static get scopedElements() {
         return {
             'dbp-pdf-viewer': PdfViewer,
         };
-    }
-
-    static get properties() {
-        return {
-            lang: {type: String},
-        };
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     static get styles() {

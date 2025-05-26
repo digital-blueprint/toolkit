@@ -1,7 +1,7 @@
 import {createInstance, setOverridesByGlobalCache} from './i18n';
 import {css, html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {TabulatorTable} from './tabulator-table';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -9,11 +9,12 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {IconButton} from '@dbp-toolkit/common';
 import {Modal} from '@dbp-toolkit/common/src/modal.js';
 
-export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
+export class TabulatorTableDemo extends LangMixin(
+    ScopedElementsMixin(DBPLitElement),
+    createInstance,
+) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.url = '';
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
@@ -37,7 +38,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
             selectAllTable2: {type: Boolean},
             selectAllTable7: {type: Boolean},
@@ -60,16 +60,6 @@ export class TabulatorTableDemo extends ScopedElementsMixin(DBPLitElement) {
                     table.addEventListener('click', this.selectedRow);
             });
         });
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     pressEnterAndSubmitSearch(event) {

@@ -1,7 +1,7 @@
 import {html} from 'lit';
 import {LanguageSelect} from './language-select.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 import {createInstance, setOverrides} from './i18n.js';
 
@@ -19,28 +19,10 @@ let OVERRIDES = {
     },
 };
 
-class LanguageSelectDisplay extends AdapterLitElement {
+class LanguageSelectDisplay extends LangMixin(AdapterLitElement, createInstance) {
     constructor() {
         super();
-        this.lang = 'de';
-        this._i18n = createInstance();
         setOverrides(this._i18n, this, OVERRIDES);
-    }
-
-    static get properties() {
-        return {
-            lang: {type: String},
-        };
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-            }
-        });
-        super.update(changedProperties);
     }
 
     render() {

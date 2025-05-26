@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css, unsafeCSS} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -12,12 +12,9 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
+export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
 
         this.identifier = 'table';
         /** @type {import('tabulator-tables').Options} */
@@ -41,7 +38,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             identifier: {type: String, attribute: 'identifier'},
             options: {type: Object, attribute: 'options'},
             data: {type: Array, attribute: 'data'},
@@ -59,9 +55,9 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
     }
 
     update(changedProperties) {
+        super.update(changedProperties);
         changedProperties.forEach((oldValue, propName) => {
             if (propName === 'lang') {
-                this._i18n.changeLanguage(this.lang);
                 if (this.tabulatorTable) {
                     this.tabulatorTable.setLocale(this.lang);
                 }
@@ -74,7 +70,6 @@ export class TabulatorTable extends ScopedElementsMixin(DBPLitElement) {
                 this.buildTable();
             }
         });
-        super.update(changedProperties);
     }
 
     connectedCallback() {
