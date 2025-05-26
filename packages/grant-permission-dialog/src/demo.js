@@ -8,7 +8,10 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {send} from '@dbp-toolkit/common/notification';
 import {httpGetAsync} from './utils.js';
 
-export class GrantPermissionDialogDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+export class GrantPermissionDialogDemo extends LangMixin(
+    ScopedElementsMixin(DBPLitElement),
+    createInstance,
+) {
     constructor() {
         super();
         this.entryPointUrl = '';

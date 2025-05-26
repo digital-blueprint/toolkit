@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin, LangMixin from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -123,7 +123,6 @@ class DemoConsumer extends LangMixin(DBPLitElement, createInstance) {
 customElements.define('dbp-consumer', DemoConsumer);
 
 class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
-
     static get scopedElements() {
         return {
             'dbp-auth-keycloak': AuthKeycloak,

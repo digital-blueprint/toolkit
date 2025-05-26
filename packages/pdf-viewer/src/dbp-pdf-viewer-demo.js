@@ -6,7 +6,6 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), createInstance) {
-
     static get scopedElements() {
         return {
             'dbp-pdf-viewer': PdfViewer,

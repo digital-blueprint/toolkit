@@ -7,7 +7,10 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
-export class ResourceSelectDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+export class ResourceSelectDemo extends LangMixin(
+    ScopedElementsMixin(DBPLitElement),
+    createInstance,
+) {
     constructor() {
         super();
         this.entryPointUrl = '';

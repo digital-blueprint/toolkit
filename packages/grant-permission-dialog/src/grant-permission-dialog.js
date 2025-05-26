@@ -4,13 +4,16 @@ import {ref, createRef} from 'lit/directives/ref.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {getGrantPermissionDialogCSS} from './styles.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin, Modal, Button, Icon, IconButton} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, Modal, Button, Icon, IconButton, LangMixin} from '@dbp-toolkit/common';
 import {send} from '@dbp-toolkit/common/notification';
 import {Notification} from '@dbp-toolkit/notification';
 import {PersonSelect} from '@dbp-toolkit/person-select';
 import {classMap} from 'lit/directives/class-map.js';
 
-export class GrantPermissionDialog extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+export class GrantPermissionDialog extends LangMixin(
+    ScopedElementsMixin(DBPLitElement),
+    createInstance,
+) {
     constructor() {
         super();
         this.auth = {};
