@@ -13,16 +13,16 @@
         "npm": ">=7.0.0"
     },
     "scripts": {
-        "test": "lerna --no-sort run test",
-        "check": "lerna --no-sort run check",
-        "fix": "lerna --no-sort run fix",
-        "build": "lerna --no-sort run build",
+        "test": "lerna --no-sort run --no-bail test",
+        "check": "lerna --no-sort run --no-bail check",
+        "fix": "lerna --no-sort run --no-bail fix",
+        "build": "lerna --no-sort run --no-bail build",
         "version-patch": "lerna version patch",
         "version-minor": "lerna version minor",
         "version": "lerna version",
         "rm-dist": "for d in ./packages/*/ ; do (cd \"$d\" && rm dist -Rf); done;",
         "publish": "lerna --no-sort publish from-package --yes",
-        "tsc": "lerna --no-sort run tsc"
+        "tsc": "lerna --no-sort run --no-bail tsc"
     },
     "author": "",
     "license": "LGPL-2.1-or-later",
