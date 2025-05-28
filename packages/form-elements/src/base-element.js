@@ -1,11 +1,14 @@
 import {css, html} from 'lit';
 import {createInstance} from './i18n';
 import {getFieldsetCSS} from './utils.js';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {AuthMixin, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
-export class DbpBaseElement extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+export class DbpBaseElement extends LangMixin(
+    AuthMixin(ScopedElementsMixin(DBPLitElement)),
+    createInstance,
+) {
     constructor() {
         super();
         this.formElementId = 'form-element';
