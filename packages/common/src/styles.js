@@ -1509,8 +1509,6 @@ export function getNativeModalDialogCSS() {
 
             transition: height 5s ease-in-out;
             transform: translateY(var(--dbp-modal-translate-y, 0));
-
-            position: static !important;
         }
 
         .modal-container {
@@ -1529,7 +1527,6 @@ export function getNativeModalDialogCSS() {
         .modal-content {
             position: relative;
             overflow-y: var(--dbp-modal-content-overflow-y);
-            /* overflow-y: auto; */
             max-height: 100%;
             min-height: 100%;
             height: 100%;
