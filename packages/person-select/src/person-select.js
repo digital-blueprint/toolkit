@@ -130,6 +130,7 @@ export class PersonSelect extends LangMixin(
                 width: '100%',
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
                 minimumInputLength: 2,
+                allowClear: true,
                 placeholder: this.authenticated()
                     ? i18n.t('person-select.placeholder')
                     : i18n.t('person-select.login-required'),
@@ -169,6 +170,9 @@ export class PersonSelect extends LangMixin(
                         that.isSearching = false;
                     },
                 },
+            })
+            .on('select2:clear', function (e) {
+                that.clear();
             })
             .on('select2:select', function (e) {
                 that.$('#person-select-dropdown').removeClass('select2-bug');
