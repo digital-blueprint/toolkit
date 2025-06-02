@@ -72,7 +72,7 @@ export class ResourceSelectDemo extends LangMixin(
 
     render() {
         let buildUrl = (select, url) => {
-            url += '?person=' + encodeURIComponent(select.auth['user-id']);
+            url += '?perPage=9999999';
             url += '&' + new URLSearchParams({lang: select.lang}).toString();
             return url;
         };
