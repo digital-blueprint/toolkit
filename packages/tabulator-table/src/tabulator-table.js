@@ -17,6 +17,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         super();
 
         this.identifier = 'table';
+        this.id = '';
         /** @type {import('tabulator-tables').Options} */
         this.options = {
             layout: 'fitColumns',
@@ -38,6 +39,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     static get properties() {
         return {
             ...super.properties,
+            id: {type: String, reflect: true},
             identifier: {type: String, attribute: 'identifier'},
             options: {type: Object, attribute: 'options'},
             data: {type: Array, attribute: 'data'},
@@ -257,6 +259,19 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 }
             });
         }
+
+        const tableBuiltEvent = new CustomEvent(
+            'dbp-tabulator-table-built',
+            {
+                detail: {
+                    id: this.id,
+                    tabulator: this.tabulatorTable,
+                },
+                bubbles: true,
+                composed: true,
+            },
+        );
+        this.dispatchEvent(tableBuiltEvent);
     }
 
     rowClickFunction(e, row) {

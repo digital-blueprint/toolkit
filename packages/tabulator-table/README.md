@@ -63,6 +63,7 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
 | ------------------------------------------------- | ------------------------------------------------------ |
 | `dbp-tabulator-table-collapsible-event`           | Event to tell if the component is in collapsible state |
 | `dbp-tabulator-table-row-selection-changed-event` | Tabulator table `rowSelectionChanged` event            |
+| `dbp-tabulator-table-built`                       | Fired after table is built                             |
 
 ## Important functions
 
