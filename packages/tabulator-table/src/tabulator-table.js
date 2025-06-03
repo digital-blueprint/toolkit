@@ -260,17 +260,14 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             });
         }
 
-        const tableBuiltEvent = new CustomEvent(
-            'dbp-tabulator-table-built',
-            {
-                detail: {
-                    id: this.id,
-                    tabulator: this.tabulatorTable,
-                },
-                bubbles: true,
-                composed: true,
+        const tableBuiltEvent = new CustomEvent('dbp-tabulator-table-built', {
+            detail: {
+                id: this.id,
+                tabulator: this.tabulatorTable,
             },
-        );
+            bubbles: true,
+            composed: true,
+        });
         this.dispatchEvent(tableBuiltEvent);
     }
 
