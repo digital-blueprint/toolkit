@@ -73,6 +73,16 @@ export class PersonSelect extends LangMixin(
         // when it is set again with the previous value
         $(this).attr('value', '');
         this.$select.val(null).trigger('change').trigger('select2:unselect');
+
+        // Fire a change event
+        this.dispatchEvent(
+            new CustomEvent('change', {
+                detail: {
+                    value: '',
+                },
+                bubbles: true,
+            }),
+        );
     }
 
     connectedCallback() {
