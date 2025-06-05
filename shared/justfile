@@ -19,10 +19,10 @@ term-kill:
 [group('dev')]
 term: term-kill term-run
 
-# Open a browser with the application
+# Open a browser with the application (http/https)
 [group('dev')]
 open-browser:
-    xdg-open http://localhost:8001
+    curl -s http://127.0.0.1:8001 > /dev/null && xdg-open http://127.0.0.1:8001 || xdg-open https://127.0.0.1:8001
 
 # Interactive npm watch script selector
 [group('dev')]
