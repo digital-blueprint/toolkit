@@ -167,16 +167,6 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
             person: this._user,
             _roles: this._user ? this._user.roles : [],
         };
-
-        // Inject a window.DBPAuth variable for Cypress/Playwright
-        // Warning: window.playwright is not set the if the browser window was just opened!
-        if (window.Cypress || window.playwright) {
-            window.DBPAuth = auth;
-            console.log('Cypress/Playwright detected');
-        }
-
-        this.setAttribute('data-auth-set', 'true');
-
         this.sendSetPropertyEvent('auth', auth);
     }
 
