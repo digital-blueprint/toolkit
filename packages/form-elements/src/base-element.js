@@ -39,13 +39,18 @@ export class DbpBaseElement extends LangMixin(
         };
     }
 
+    // This is supposed to be overwritten by subclasses if empty values need to be handled differently
+    isValueEmpty() {
+        return !this.value;
+    }
+
     handleErrors() {
         let errorMessages = [];
 
         console.log('handleErrors this.name', this.name);
         console.log('handleErrors this.value', this.value);
 
-        if (this.required && !this.value) {
+        if (this.required && this.isValueEmpty()) {
             errorMessages.push(
                 this._i18n.t('render-form.base-object.required-field-validation-error'),
             );
