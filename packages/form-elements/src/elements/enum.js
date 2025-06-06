@@ -11,6 +11,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         this.label = '';
         this.items = {};
         this.multiple = false;
+        // Since this.multiple === false, we set an empty string as this.value
+        this.value = '';
         this.dataValue = '';
         this.displayMode = 'dropdown';
         this.selectRef = createRef();
@@ -20,12 +22,17 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         return {
             ...super.properties,
             multiple: {type: Boolean},
+            // We will treat this.value as an object, and will not reflect it outside
+            // Although we might write a string into this.value anyway for this.multiple === false
+            value: {type: Object},
+            // That's the only thing we will reflect, and which will be used for gathering the data in the form
             dataValue: {type: String, attribute: 'data-value', reflect: true},
             displayMode: {type: String, attribute: 'display-mode'},
             items: {type: Object},
         };
     }
 
+    // Can be used to set items from the outside
     setItems(items) {
         this.items = items;
     }
@@ -78,24 +85,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             this._displayMode = this.displayMode;
         }
 
-        console.log('renderInput this.name', this.name);
-        console.log('renderInput this.multiple', this.multiple);
-        console.log('renderInput this.value (before)', this.value);
-        console.log('renderInput this.dataValue (before)', this.dataValue);
-
-        // If the value for a single-select dropdown is empty, then show either the first item
-        // or the item for the empty value
-        if (this._displayMode === 'dropdown' && !this.multiple && this.value === '') {
-            const emptyItem = this.items[''];
-            this.value = !!emptyItem ? emptyItem : Object.keys(this.items)[0];
-        }
-
-        if (this._displayMode === 'dropdown' && this.multiple) {
-            this.dataValue = stringifyForDataValue(this.value);
-        }
-
-        console.log('renderInput this.value', this.value);
-        console.log('renderInput this.dataValue', this.dataValue);
+        // In case it wasn't handled before
+        this.handleEmptyValue();
 
         switch (this._displayMode) {
             case 'dropdown':
@@ -162,6 +153,28 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     `Unsupported display mode: ${this._displayMode}. Defaulting to 'dropdown'.`,
                 );
                 break;
+        }
+    }
+
+    handleEmptyValue() {
+        // If the value for a single-select dropdown is empty, then show either the first item
+        // or the item for the empty value
+        if (this._displayMode === 'dropdown' && !this.multiple && this.value === '') {
+            const emptyItem = this.items[''];
+            this.value = !!emptyItem ? emptyItem : Object.keys(this.items)[0];
+            this.generateDataValue();
+        }
+
+        // For this.multiple === true and empty value, fix the value and dataValue if necessary
+        if (
+            (this.value === '' || this.value === []) &&
+            !!this.multiple &&
+            this.dataValue !== '[]'
+        ) {
+            if (this.value !== []) {
+                this.value = [];
+            }
+            this.generateDataValue();
         }
     }
 
@@ -236,6 +249,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                       .map((checkbox) => checkbox.value)
                 : e.target.value;
         }
+
+        console.log('handleInputValue this.value', this.value);
     }
 
     adaptValueForMultiple() {
@@ -256,16 +271,23 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
+                // Disabled, because it causes race conditions!
+                // case 'items':
+                // case 'multiple':
+                //     this.adaptValueForMultiple();
+                //     break;
                 case 'items':
                 case 'multiple':
-                    // Disabled, because it causes race conditions!
-                    // this.adaptValueForMultiple();
+                    this.handleEmptyValue();
                     break;
                 case 'value': {
+                    console.log('update propName', propName);
+                    console.log('update this.value', this.value);
+                    this.handleEmptyValue();
                     this.generateDataValue();
 
                     const changeEvent = new CustomEvent('change', {
-                        detail: {value: this.dataValue},
+                        detail: {value: this.value},
                         bubbles: true,
                         composed: true,
                     });
@@ -280,18 +302,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
     generateDataValue() {
         if (this.multiple) {
-            if (this.selectRef.value) {
-                const data = Array.from(this.selectRef.value.selectedOptions).map(
-                    (option) => option.value,
-                );
-                this.dataValue = stringifyForDataValue(data);
-            }
-            if (this._a('[type="checkbox"]').length > 0) {
-                const data = Array.from(this._a('[type="checkbox"]'))
-                    .filter((checkbox) => checkbox.checked)
-                    .map((checkbox) => checkbox.value);
-                this.dataValue = stringifyForDataValue(data);
-            }
+            this.dataValue = stringifyForDataValue(this.value);
+            console.log('generateDataValue this.value', this.value);
+            console.log('generateDataValue this.dataValue', this.dataValue);
         } else {
             this.dataValue = this.value;
         }
