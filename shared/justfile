@@ -73,6 +73,16 @@ remove-toolkit-node-modules:
 format args='':
     treefmt {{ args }}
 
+# Run checker
+[group('linter')]
+check:
+    npm run check
+
+# Run fixer
+[group('linter')]
+fix:
+    npm run fix
+
 # Add git commit hashes to the .git-blame-ignore-revs file
 [group('linter')]
 add-git-blame-ignore-revs:
