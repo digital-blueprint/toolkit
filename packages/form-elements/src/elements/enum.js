@@ -37,6 +37,14 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         this.items = items;
     }
 
+    isValueEmptyArray() {
+        return Array.isArray(this.value) && this.value.length === 0;
+    }
+
+    isValueEmpty() {
+        return this.value === '' || this.isValueEmptyArray();
+    }
+
     render() {
         if (this.hidden) {
             return html``;
@@ -161,17 +169,13 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         // or the item for the empty value
         if (this._displayMode === 'dropdown' && !this.multiple && this.value === '') {
             const emptyItem = this.items[''];
-            this.value = !!emptyItem ? emptyItem : Object.keys(this.items)[0];
+            this.value = emptyItem ? emptyItem : Object.keys(this.items)[0];
             this.generateDataValue();
         }
 
         // For this.multiple === true and empty value, fix the value and dataValue if necessary
-        if (
-            (this.value === '' || this.value === []) &&
-            !!this.multiple &&
-            this.dataValue !== '[]'
-        ) {
-            if (this.value !== []) {
+        if (this.isValueEmpty() && !!this.multiple && this.dataValue !== '[]') {
+            if (!this.isValueEmptyArray()) {
                 this.value = [];
             }
             this.generateDataValue();
