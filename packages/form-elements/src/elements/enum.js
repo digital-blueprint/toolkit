@@ -22,7 +22,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         return {
             ...super.properties,
             multiple: {type: Boolean},
-            // We will treat this.value as an object, and will not reflect it outside
+            // We will treat this.value as an object and will not reflect it outside
             // Although we might write a string into this.value anyway for this.multiple === false
             value: {type: Object},
             // That's the only thing we will reflect, and which will be used for gathering the data in the form
