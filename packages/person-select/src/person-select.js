@@ -323,6 +323,18 @@ export class PersonSelect extends LangMixin(
      * @returns {object} The query parameters.
      */
     getFilterQueryParameters(select, searchTerm) {
+        return PersonSelect.getFilterQueryParametersDefault(select, searchTerm);
+    }
+
+    /**
+     * Gets passed the search term and returns a key-value mapping of filter parameters (e.g., serach, filter, sort)
+     * to use for the person get collection request. Feel free to override.
+     *
+     * @param {object} select
+     * @param {string} searchTerm
+     * @returns {object} The query parameters.
+     */
+    static getFilterQueryParametersDefault(select, searchTerm) {
         return {
             search: searchTerm.trim(),
             sort: 'familyName',
