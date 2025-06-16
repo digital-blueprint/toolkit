@@ -317,6 +317,12 @@ export class PersonSelect extends LangMixin(
         };
     }
 
+    addIncludeLocalQueryParameter(select, queryParameters) {
+        if (this.localDataAttributes.length > 0) {
+            queryParameters['includeLocal'] = this.localDataAttributes.join(',');
+        }
+    }
+
     /**
      * Gets passed a person object and should return a string representation that will
      * be shown to the user.
@@ -332,12 +338,6 @@ export class PersonSelect extends LangMixin(
         }
 
         return text;
-    }
-
-    addIncludeLocalQueryParameter(select, queryParameters) {
-        if (false === this.localDataAttributes.empty()) {
-            queryParameters['includeLocal'] = this.localDataAttributes.join(',');
-        }
     }
 
     update(changedProperties) {
