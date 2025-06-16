@@ -34,6 +34,7 @@ export class PersonSelect extends LangMixin(
         this.showReloadButton = false;
         this.reloadButtonTitle = '';
         this.disabled = false;
+        this.localDataAttributes = [];
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
 
@@ -57,6 +58,7 @@ export class PersonSelect extends LangMixin(
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             value: {type: String},
             object: {type: Object, attribute: false},
+            localDataAttributes: {type: Array},
             showReloadButton: {type: Boolean, attribute: 'show-reload-button'},
             reloadButtonTitle: {type: String, attribute: 'reload-button-title'},
             auth: {type: Object},
@@ -154,7 +156,7 @@ export class PersonSelect extends LangMixin(
                         that.isSearching = true;
                     },
                     data: (params) => {
-                        return this.buildUrlData(this, params);
+                        return this.getCollectionQueryParameters(this, params.term);
                     },
                     processResults: function (data) {
                         that.$('#person-select-dropdown').addClass('select2-bug');
@@ -223,7 +225,7 @@ export class PersonSelect extends LangMixin(
         // preset a person
         if (!ignorePreset && this.value !== '' && this.authenticated()) {
             let itemUrl = combineURLs(this.entryPointUrl, this.value);
-            let params = new URLSearchParams(this.buildUrlData(this, {term: ''})).toString();
+            let params = new URLSearchParams(this.getItemQueryParameters(this)).toString();
             if (params) {
                 itemUrl += `?${params}`;
             }
@@ -272,22 +274,52 @@ export class PersonSelect extends LangMixin(
     }
 
     /**
-     * Gets passed the select2 params (https://select2.org/data-sources/ajax#jquery-ajax-options)
-     * and should return an object containing the query parameters send to the server.
+     * Returns a key-value mapping of query parameters to use for the person get item request.
+     * Gets called if a person is pre-set.
      *
      * @param {object} select
-     * @param {object} params
-     * @returns {object}
+     * @returns {object} The query parameters.
      */
-    buildUrlData(select, params) {
+    getItemQueryParameters(select) {
+        let queryParameters = {};
+        this.addIncludeLocalQueryParameter(select, queryParameters);
+
+        return queryParameters;
+    }
+
+    /**
+     * Gets passed the search term and returns a key-value mapping of query parameters to use for the
+     * person get collection request.
+     *
+     * @param {object} select
+     * @param {string} searchTerm
+     * @returns {object} The query parameters.
+     */
+    getCollectionQueryParameters(select, searchTerm) {
+        let queryParameters = this.getFilterQueryParameters(select, searchTerm);
+        this.addIncludeLocalQueryParameter(select, queryParameters);
+
+        return queryParameters;
+    }
+
+    /**
+     * Gets passed the search term and returns a key-value mapping of filter parameters (e.g., serach, filter, sort)
+     * to use for the person get collection request. Feel free to override.
+     *
+     * @param {object} select
+     * @param {string} searchTerm
+     * @returns {object} The query parameters.
+     */
+    getFilterQueryParameters(select, searchTerm) {
         return {
-            search: params.term.trim(),
+            search: searchTerm.trim(),
+            sort: 'givenName',
         };
     }
 
     /**
      * Gets passed a person object and should return a string representation that will
-     * will be shown to the user.
+     * be shown to the user.
      *
      * @param {object} select
      * @param {object} person
@@ -300,6 +332,12 @@ export class PersonSelect extends LangMixin(
         }
 
         return text;
+    }
+
+    addIncludeLocalQueryParameter(select, queryParameters) {
+        if (false === this.localDataAttributes.empty()) {
+            queryParameters['includeLocal'] = this.localDataAttributes.join(',');
+        }
     }
 
     update(changedProperties) {
