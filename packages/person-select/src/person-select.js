@@ -97,6 +97,18 @@ export class PersonSelect extends LangMixin(
                 this.initSelect2();
             }
         });
+
+        const localDataAttributes = this.getAttribute('local-data-attributes');
+        if (localDataAttributes) {
+            try {
+                this.localDataAttributes = JSON.parse(localDataAttributes);
+            } catch (error) {
+                console.error(
+                    'local-data-attributes attribute must be a JSON array of strings',
+                    error.message,
+                );
+            }
+        }
     }
 
     disconnectedCallback() {
@@ -313,7 +325,7 @@ export class PersonSelect extends LangMixin(
     getFilterQueryParameters(select, searchTerm) {
         return {
             search: searchTerm.trim(),
-            sort: 'givenName',
+            sort: 'familyName',
         };
     }
 
