@@ -315,7 +315,7 @@ export class PersonSelect extends LangMixin(
     }
 
     /**
-     * Gets passed the search term and returns a key-value mapping of filter parameters (e.g., serach, filter, sort)
+     * Gets passed the search term and returns a key-value mapping of filter parameters (e.g., search, filter, sort)
      * to use for the person get collection request. Feel free to override.
      *
      * @param {object} select
@@ -327,8 +327,8 @@ export class PersonSelect extends LangMixin(
     }
 
     /**
-     * Gets passed the search term and returns a key-value mapping of filter parameters (e.g., serach, filter, sort)
-     * to use for the person get collection request. Feel free to override.
+     * Gets passed the search term and returns the default key-value mapping of filter parameters
+     * (e.g., search, filter, sort) to use for the person get collection request.
      *
      * @param {object} select
      * @param {string} searchTerm
@@ -349,7 +349,7 @@ export class PersonSelect extends LangMixin(
 
     /**
      * Gets passed a person object and should return a string representation that will
-     * be shown to the user.
+     * be shown to the user. Feel free to override.
      *
      * @param {object} select
      * @param {object} person
@@ -360,8 +360,57 @@ export class PersonSelect extends LangMixin(
         if (person['familyName']) {
             text += ` ${person['familyName']}`;
         }
+        const localDataText = this.formatLocalData(select, person);
+        if (localDataText) {
+            text += ` ${localDataText}`;
+        }
 
         return text;
+    }
+
+    /**
+     * Gets passed a person object and returns the default string representation of the selected person.
+     * Feel free to override.
+     *
+     * @param {object} select
+     * @param {object} person
+     * @returns {string}
+     */
+    static formatPersonDefault(select, person) {
+        let text = person['givenName'] ?? '';
+        if (person['familyName']) {
+            text += ` ${person['familyName']}`;
+        }
+        const localDataText = PersonSelect.formatLocalDataDefault(select, person);
+        if (localDataText) {
+            text += ` ${localDataText}`;
+        }
+
+        return text;
+    }
+
+    /**
+     * Should return a string representation of the selected person's local data attributes.
+     * Feel free to override.
+     *
+     * @param {object} select
+     * @param {object} person
+     * @returns {string}
+     */
+    formatLocalData(select, person) {
+        return PersonSelect.formatLocalDataDefault(select, person);
+    }
+
+    /**
+     * Returns the default string representation of the selected person's local data attributes.
+     */
+    static formatLocalDataDefault(select, person) {
+        const attributes = person.localData ?? {};
+        if (attributes.length === 0) {
+            return '';
+        }
+
+        return `(${Object.values(attributes).join(', ')})`;
     }
 
     update(changedProperties) {
