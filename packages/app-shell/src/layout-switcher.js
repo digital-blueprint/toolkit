@@ -129,7 +129,7 @@ export class LayoutSwitcher extends LangMixin(
      * Updates the layout based on the window size
      */
     updateLayoutBasedOnWindowSize() {
-        if (window.innerWidth < 768) {
+        if (window.innerWidth < 871) {
             this.layout = 'wide';
         } else {
             this.layout = this._getStoredLayout() || this.defaultLayout || 'standard';
@@ -224,7 +224,7 @@ export class LayoutSwitcher extends LangMixin(
                 border: none;
                 display: none;
             }
-            @media screen and (min-width: 768px) {
+            @media screen and (min-width: 871px) {
                 .layout-button {
                     display: inline-block;
                 }
