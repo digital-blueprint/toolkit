@@ -283,7 +283,6 @@ maxSelectedItems: {type: Number, attribute: 'max-selected-items'}
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-file-source lang="de"></dbp-file-source>`
 - `allowed-mime-types` (optional): if set accepts only files matching mime types
-
     - example `<dbp-file-source allowed-mime-types='application/pdf'></dbp-file-source>` ... PDFs only
     - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all subtypes) only
     - example `<dbp-file-source allowed-mime-types='image/png,text/plain'></dbp-file-source>` ... PNGs or TXTs only
