@@ -14,6 +14,7 @@ export default [
             globals: {
                 ...globals.browser,
                 ...globals.mocha,
+                ...globals.serviceworker,
             },
         },
         rules: {

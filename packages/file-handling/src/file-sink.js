@@ -38,6 +38,8 @@ export class FileSink extends LangMixin(
         this.firstOpen = true;
         this.fullsizeModal = false;
         this.nextcloudAuthInfo = '';
+        this.streamed = false;
+        this.sumContentLengths = -1;
 
         this.initialFileHandlingState = {target: '', path: ''};
     }
@@ -74,11 +76,19 @@ export class FileSink extends LangMixin(
             nextcloudPath: {type: String, attribute: false},
             fullsizeModal: {type: Boolean, attribute: 'fullsize-modal'},
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
+            streamed: {type: Boolean, attribute: 'streamed'},
+            sumContentLengths: {type: Number, attribute: 'content-length'},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
+
+        // only activate file streaming mode when the file-sink set the streamed property during connection
+        if (this.streamed) {
+            navigator.serviceWorker.register(new URL('./stream-sw.js', import.meta.url).href);
+        }
+
         this.updateComplete.then(() => {
             this._('nav.modal-nav').addEventListener('scroll', this.handleScroll.bind(this));
 
@@ -101,6 +111,75 @@ export class FileSink extends LangMixin(
         });
     }
 
+    // starts a streamed download of all files in this.files
+    handleStreamedDownload() {
+        // create form used to stream-download a zip
+        const downloadForm = document.createElement('form');
+        downloadForm.style.display = 'none';
+        downloadForm.action = 'downloadZip/files.zip';
+        downloadForm.method = 'POST';
+
+        // start keepalive calls only in Firefox
+        if (window.navigator.userAgent.includes('Firefox')) {
+            // TODO find a way to reliably stop this again
+            // clearInterval works, but when should it be called? callback from sw?
+            setInterval(function keepAlive() {
+                fetch('downloadZip/keep-alive', {
+                    method: 'POST',
+                });
+            }, 3500);
+        }
+
+        // detect errors. "return" in forEach does not stop the method call
+        let error = false;
+
+        // if sumContentLengths set, create input with previously determined sum of content-length
+        // this prevents the SW from doing the HEAD requests to do content-length prediction itself
+        if (this.sumContentLengths >= 0) {
+            let contentLength = document.createElement('input');
+            contentLength.name = 'sumContentLengths';
+            contentLength.value = this.sumContentLengths;
+            downloadForm.appendChild(contentLength);
+        }
+
+        this.files.forEach((file) => {
+            // check if object is in expected format
+            if (
+                !Object.hasOwn(file, 'name') ||
+                !Object.hasOwn(file, 'url') ||
+                file instanceof File
+            ) {
+                console.error('Given object cannot be streamed!');
+                error = true;
+                return;
+            }
+            // create URL object to check if its a real and valid url
+            let fileUrl = new URL(file.url);
+
+            // create input with file name and url
+            let url = document.createElement('input');
+            url.type = 'url';
+            url.name = file.name;
+            url.value = fileUrl.toString();
+            downloadForm.appendChild(url);
+        });
+
+        // if error was thrown, stop
+        if (error) {
+            return;
+        }
+
+        // start download
+        this.appendChild(downloadForm);
+        downloadForm.submit();
+
+        // cleanup
+        while (downloadForm.hasChildNodes()) {
+            downloadForm.removeChild(downloadForm.firstChild);
+        }
+        this.removeChild(downloadForm);
+    }
+
     async downloadCompressedFiles() {
         // see: https://stuk.github.io/jszip/
         let JSZip = (await import('jszip/dist/jszip.js')).default;
@@ -109,33 +188,58 @@ export class FileSink extends LangMixin(
 
         // download one file not compressed!
         if (this.files.length === 1) {
-            FileSaver.saveAs(this.files[0], this.files[0].filename);
+            // if it should be streamed and everything
+            if (this.streamed) {
+                this.handleStreamedDownload();
+            } else {
+                if (!(this.files[0] instanceof File)) {
+                    console.error('Given object cannot be saved!');
+                    return;
+                }
+                FileSaver.saveAs(this.files[0], this.files[0].filename);
+            }
+
             this.closeDialog();
             return;
         }
 
-        // download all files compressed
-        this.files.forEach((file) => {
-            let fileName = file.name;
+        if (this.streamed) {
+            this.handleStreamedDownload();
+        } else {
+            // check if an error was thrown in the forEach. "return does not stop the method call
+            let error = false;
 
-            // add pseudo-random string on duplicate file name
-            if (fileNames.indexOf(fileName) !== -1) {
-                fileName =
-                    commonUtils.getBaseName(fileName) +
-                    '-' +
-                    Math.random().toString(36).substring(7) +
-                    '.' +
-                    commonUtils.getFileExtension(fileName);
+            // download all files compressed
+            this.files.forEach((file) => {
+                if (!(file instanceof File)) {
+                    console.error('Given object cannot be saved!');
+                    error = true;
+                    return;
+                }
+                let fileName = file.name;
+
+                // add pseudo-random string on duplicate file name
+                if (fileNames.indexOf(fileName) !== -1) {
+                    fileName =
+                        commonUtils.getBaseName(fileName) +
+                        '-' +
+                        Math.random().toString(36).substring(7) +
+                        '.' +
+                        commonUtils.getFileExtension(fileName);
+                }
+
+                fileNames.push(fileName);
+                zip.file(fileName, file);
+            });
+            // if error was thrown, stop
+            if (error) {
+                return;
             }
+            let content = await zip.generateAsync({type: 'blob'});
 
-            fileNames.push(fileName);
-            zip.file(fileName, file);
-        });
-
-        let content = await zip.generateAsync({type: 'blob'});
-
-        // see: https://github.com/eligrey/FileSaver.js#readme
-        FileSaver.saveAs(content, this.filename || 'files.zip');
+            // see: https://github.com/eligrey/FileSaver.js#readme
+            FileSaver.saveAs(content, this.filename || 'files.zip');
+        }
 
         this.closeDialog();
     }
