@@ -1,5 +1,4 @@
 import {css, html} from 'lit';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 import {createRef, ref} from 'lit/directives/ref.js';
@@ -314,5 +313,3 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         }
     }
 }
-
-commonUtils.defineCustomElement('dbp-form-enum-element', DbpEnumElement);
