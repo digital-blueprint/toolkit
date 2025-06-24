@@ -1,6 +1,11 @@
 import {assert} from 'chai';
 
-import '../src/index';
+import '../src/build/boolean';
+import '../src/build/date';
+import '../src/build/string';
+import '../src/build/datetime';
+import '../src/build/date';
+import '../src/build/enum';
 import '../src/demo';
 
 suite('dbp-form-boolean-element', () => {

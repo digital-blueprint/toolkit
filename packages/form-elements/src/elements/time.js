@@ -1,5 +1,4 @@
 import {html} from 'lit';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 
@@ -28,5 +27,3 @@ export class DbpTimeElement extends ScopedElementsMixin(DbpBaseElement) {
         `;
     }
 }
-
-commonUtils.defineCustomElement('dbp-form-time-element', DbpTimeElement);

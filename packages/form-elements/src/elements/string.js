@@ -1,5 +1,4 @@
 import {html} from 'lit';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 
@@ -48,5 +47,3 @@ ${this.value}</textarea
         `;
     }
 }
-
-commonUtils.defineCustomElement('dbp-form-string-element', DbpStringElement);

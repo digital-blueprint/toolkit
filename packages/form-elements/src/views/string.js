@@ -1,5 +1,4 @@
 import {html} from 'lit';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseView} from '../base-view.js';
 
@@ -15,5 +14,3 @@ export class DbpStringView extends ScopedElementsMixin(DbpBaseView) {
         `;
     }
 }
-
-commonUtils.defineCustomElement('dbp-form-string-view', DbpStringView);
