@@ -1,12 +1,12 @@
 /**
  * A mixin that adds internationalization (i18next) support to a base class.
  */
-export const LangMixin = (superClass, i18nFactory) =>
+export const LangMixin = (superClass, i18nFactory, propertyName = '_i18n') =>
     class extends superClass {
         constructor() {
             super();
-            this._i18n = i18nFactory();
-            this.lang = this._i18n.language;
+            this[propertyName] = i18nFactory();
+            this.lang = this[propertyName].language;
         }
 
         static get properties() {
@@ -19,7 +19,7 @@ export const LangMixin = (superClass, i18nFactory) =>
         update(changedProperties) {
             changedProperties.forEach((oldValue, propName) => {
                 if (propName === 'lang') {
-                    this._i18n.changeLanguage(this.lang);
+                    this[propertyName].changeLanguage(this.lang);
                 }
             });
 
