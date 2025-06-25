@@ -67,6 +67,7 @@ watch:
 [group('dev')]
 remove-toolkit-node-modules:
     rm ./vendor/toolkit/node_modules -Rf
+    rm ./vendor/toolkit/packages/*/node_modules -Rf
 
 # Format all files
 [group('linter')]
