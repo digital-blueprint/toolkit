@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.15
+
+- Modal: Add `title` slot to allow custom titles in the modal component
+
 ## 0.3.14
 
 - Common: Fix `undefined notificationSlot` error in modal component
