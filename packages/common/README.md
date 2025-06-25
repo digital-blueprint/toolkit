@@ -84,6 +84,9 @@ Slotted content can be styled from outside with css.
     modal-id="my-modal-basic"
     title="The title of the modal"
     subscribe="lang">
+    <div slot="title" class="title">
+        This overrides the title attribute
+    </div>
     <div slot="header" class="header">
         <h3>Person name</h3>
         <dbp-icon name="cog"></dbp-icon>

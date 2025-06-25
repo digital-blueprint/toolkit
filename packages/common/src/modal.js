@@ -176,7 +176,9 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                 <div class="modal-container">
                     <header class="modal-header">
                         <div class="header-top">
-                            <h3 class="modal-title" id="modal-title">${this.title}</h3>
+                            <slot name="title">
+                                <h3 class="modal-title" id="modal-title">${this.title}</h3>
+                            </slot>
                             <button
                                 title="${i18n.t('dbp-modal.close')}"
                                 class="modal-close"
