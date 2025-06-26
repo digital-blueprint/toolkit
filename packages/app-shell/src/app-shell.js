@@ -438,17 +438,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.hideMenu();
     }
 
-    onLanguageChanged(e) {
-        const newLang = e.detail.lang;
-        const changed = this.lang !== newLang;
-        this.lang = newLang;
-        if (changed) {
-            this.router.update();
-            this.subtitle = this.activeMetaDataText('short_name');
-            this.description = this.activeMetaDataText('description');
-        }
-    }
-
     /**
      * Scroll the page to the top of the active view. Used when switching views.
      */
