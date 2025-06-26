@@ -449,8 +449,42 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         }
     }
 
-    switchComponent(componentTag) {
+    /**
+     * Scroll the page to the top of the active view. Used when switching views.
+     */
+    _scrollToTop() {
         let offset = window.pageYOffset;
+        if (offset > 0) {
+            const header = this.shadowRoot.querySelector('header');
+            const title = this.shadowRoot.querySelector('#headline');
+
+            if (header === null || title === null) {
+                return;
+            }
+
+            let style = getComputedStyle(title);
+            let marginTop = isNaN(parseInt(style.marginTop, 10))
+                ? 0
+                : parseInt(style.marginTop, 10);
+            let marginBottom = isNaN(parseInt(style.marginBottom, 10))
+                ? 0
+                : parseInt(style.marginBottom, 10);
+
+            let topValue =
+                header.getBoundingClientRect().height +
+                title.getBoundingClientRect().height +
+                marginTop +
+                marginBottom;
+
+            if (offset < topValue) {
+                window.scrollTo(0, offset);
+            } else {
+                window.scrollTo(0, topValue);
+            }
+        }
+    }
+
+    switchComponent(componentTag) {
         const changed = componentTag !== this.activeView;
         this.activeView = componentTag;
         if (changed) this.router.update();
@@ -461,33 +495,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         }
 
         let updateFunc = () => {
-            if (offset > 0) {
-                const header = this.shadowRoot.querySelector('header');
-                const title = this.shadowRoot.querySelector('#headline');
-
-                if (header === null || title === null) {
-                    return;
-                }
-
-                let style = getComputedStyle(title);
-                let marginTop = isNaN(parseInt(style.marginTop, 10))
-                    ? 0
-                    : parseInt(style.marginTop, 10);
-                let marginBottom = isNaN(parseInt(style.marginBottom, 10))
-                    ? 0
-                    : parseInt(style.marginBottom, 10);
-
-                let topValue =
-                    header.getBoundingClientRect().height +
-                    title.getBoundingClientRect().height +
-                    marginTop +
-                    marginBottom;
-
-                if (offset < topValue) {
-                    window.scrollTo(0, offset);
-                } else {
-                    window.scrollTo(0, topValue);
-                }
+            if (changed) {
+                this._scrollToTop();
             }
             this.updatePageTitle();
             this.updatePageMetaDescription();
