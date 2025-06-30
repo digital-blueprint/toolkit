@@ -151,6 +151,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
         if (this.selectRowsEnabled) {
             this.options['selectableRows'] = true;
+        } else {
+            this.options['selectableRows'] = false;
         }
 
         // Set this.data if data is provided in the options
