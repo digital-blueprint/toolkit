@@ -245,11 +245,13 @@ export function getTabulatorStyles() {
             background-color: unset;
         }
 
+        .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-left,
         .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right {
             border: none;
             background-color: var(--dbp-background);
         }
 
+        .tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left,
         .tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-right {
             border: none;
         }
