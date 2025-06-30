@@ -171,6 +171,10 @@ files to a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
   This is supported by the provider! Use this object to sync file source and file sink on one page at first time open.
     - example `<dbp-file-source initial-file-handling-state="{target: 'local', path:'my/server/path'}"></dbp-file-source>`
     - example provider `<dbp-file-source subscribe="initial-file-handling-state"></dbp-file-source>`
+- `streamed` (optional, default: `false`): Allows the client to stream the content into a zip as RAM friendly as possible.
+    - example `<dbp-file-sink streamed></dbp-file-sink>`
+- `content-length` (optional, default: `-1`): The predicted size of the streamed zip. NOTE: only usable together with `streamed`.
+    - example `<dbp-file-sink content-length="1024" streamed></dbp-file-sink>`
 
 ### Emitted attributes
 
@@ -287,7 +291,6 @@ maxSelectedItems: {type: Number, attribute: 'max-selected-items'}
     - example `<dbp-file-source allowed-mime-types='image/*'></dbp-file-source>` ... images (of all subtypes) only
     - example `<dbp-file-source allowed-mime-types='image/png,text/plain'></dbp-file-source>` ... PNGs or TXTs only
     - example `<dbp-file-source allowed-mime-types='*/*'></dbp-file-source>` ... all file types (default)
-
 - `auth-url` (optional): Nextcloud Auth Url to use with the Nextcloud file picker
     - example `<dbp-file-source auth-url="http://localhost:8081/index.php/apps/webapppassword"></dbp-file-source>`
     - `web-dav-url` also needs to be set for the Nextcloud file picker to be active

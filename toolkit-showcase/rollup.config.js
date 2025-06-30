@@ -237,6 +237,19 @@ Dependencies:
                         src: await getPackagePath('pdfjs-dist', 'cmaps/*'),
                         dest: 'dist/' + (await getDistPath('@dbp-toolkit/pdf-viewer', 'pdfjs')),
                     }, // do we want all map files?
+                    {
+                        // client-zip and dl-stream are needed for streamed downloads in file-sink
+                        src: await getPackagePath('client-zip', 'worker.js'),
+                        dest: 'dist/client-zip/',
+                    },
+                    {
+                        src: await getPackagePath('dl-stream', 'worker.js'),
+                        dest: 'dist/dl-stream/',
+                    },
+                    {
+                        src: await getPackagePath('@dbp-toolkit/file-handling', 'src/stream-sw.js'),
+                        dest: 'dist/',
+                    },
                 ],
             }),
             replace({

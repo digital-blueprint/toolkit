@@ -137,8 +137,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         class="file-source"
                         allowed-mime-types="image/*"
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                        enabled-targets="local,nextcloud"
-                        text="Please select images"></dbp-file-source>
+                        enabled-targets="local,nextcloud"></dbp-file-source>
 
                     <p>This is for PDF only:</p>
                     <button
@@ -156,7 +155,6 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         allowed-mime-types="application/pdf"
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                         enabled-targets="local,nextcloud"
-                        text="Submit only PDF files"
                         button-label="PDF auswählen"></dbp-file-source>
 
                     <p>Text and images (JPG, PNG, GIF, TIF, ...) :</p>
@@ -174,8 +172,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         class="file-source"
                         allowed-mime-types="text/plain,image/*"
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                        enabled-targets="local,nextcloud"
-                        text="Please select text or images"></dbp-file-source>
+                        enabled-targets="local,nextcloud"></dbp-file-source>
 
                     <p>PDFs also in ZIPS :</p>
                     <button
@@ -193,10 +190,29 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         allowed-mime-types="application/pdf"
                         decompress-zip
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                        enabled-targets="local,nextcloud"
-                        text="Please select PDF(s) or ZIP(s) with PDF(s)"></dbp-file-source>
+                        enabled-targets="local,nextcloud"></dbp-file-source>
 
-                    <dbp-file-sink lang="en"></dbp-file-sink>
+                    <p>Download uploaded files :</p>
+                    <button
+                        @click="${() => {
+                            this._('#file-sink').files = this.selectedFiles;
+                        }}"
+                        class="button is-primary">
+                        Open download dialog
+                    </button>
+                    <dbp-file-sink id="file-sink" lang="en"></dbp-file-sink>
+                    <!--- use something like this to stream/download from arbitrary remote urls:
+                    <button
+                        @click="${() => {
+                        /* this._('#file-sink').files = [
+                                {name: "dir/abc.txt", url:""},
+                            ];*/
+                    }}"
+                        class="button is-primary">
+                        Open download dialog
+                    </button>
+                    <dbp-file-sink id="file-sink" lang="en" content-length="21474836480" streamed></dbp-file-sink>
+                    -->
                 </div>
             </section>
         `;

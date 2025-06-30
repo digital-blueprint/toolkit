@@ -21,6 +21,7 @@ export default (async () => {
             build !== 'test'
                 ? [
                       'src/demo.js',
+                      'src/stream-sw.js',
                       'src/dbp-file-source.js',
                       'src/dbp-file-sink.js',
                       'src/dbp-clipboard.js',
@@ -53,6 +54,14 @@ export default (async () => {
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),
                         dest: 'dist/' + (await getDistPath(pkg.name, 'tabulator-tables')),
+                    },
+                    {
+                        src: await getPackagePath('client-zip', 'worker.js'),
+                        dest: 'dist/' + (await getDistPath(pkg.name, 'client-zip')),
+                    },
+                    {
+                        src: await getPackagePath('dl-stream', 'worker.js'),
+                        dest: 'dist/' + (await getDistPath(pkg.name, 'dl-stream')),
                     },
                 ],
             }),
