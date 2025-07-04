@@ -18,7 +18,7 @@ export class GrantPermissionDialog extends LangMixin(
         super();
         this.auth = {};
         this.entryPointUrl = '';
-        this.formName = '';
+        this.modalTitle = '';
         this.availableActions = [];
         this.userList = new Map();
         this.permissionRows = [];
@@ -199,23 +199,27 @@ export class GrantPermissionDialog extends LangMixin(
         );
     }
 
-    async setFormName() {
+    async setModalTitle() {
         const i18n = this._i18n;
-        try {
-            let response = await this.apiGetFormDetails();
-            let responseBody = await response.json();
-            if (responseBody !== undefined && responseBody['name']) {
-                this.formName = responseBody['name'];
+        if (this.resourceClassIdentifier === 'DbpRelayFormalizeForm') {
+            try {
+                let response = await this.apiGetFormDetails();
+                let responseBody = await response.json();
+                if (responseBody !== undefined && responseBody['name']) {
+                    this.modalTitle = responseBody['name'];
+                }
+            } catch (e) {
+                console.log('setModalTitle error', e);
+                send({
+                    summary: i18n.t('grant-permission-dialog.notifications.error-title'),
+                    body: i18n.t('grant-permission-dialog.notifications.set-form-name-error-text'),
+                    type: 'error',
+                    targetNotificationId: 'permission-modal-notification',
+                    timeout: 5,
+                });
             }
-        } catch (e) {
-            console.log('setFormName error', e);
-            send({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.notifications.set-form-name-error-text'),
-                type: 'error',
-                targetNotificationId: 'permission-modal-notification',
-                timeout: 5,
-            });
+        } else {
+            this.modalTitle = 'Manage permissions';
         }
     }
 
@@ -874,7 +878,7 @@ export class GrantPermissionDialog extends LangMixin(
                 timeout: 10,
             });
         } else {
-            await this.setFormName();
+            await this.setModalTitle();
             await this.setAvailableActions();
             await this.setListOfUsersAndPermissions();
             this.permissionModalRef.value.open();
@@ -1110,7 +1114,7 @@ export class GrantPermissionDialog extends LangMixin(
                             inline
                             lang="${this.lang}"></dbp-notification>
                     </div>
-                    <h3>${this.formName}</h3>
+                    <h3>${this.modalTitle}</h3>
                 </div>
                 <div slot="content">
                     <div class="content-container">
