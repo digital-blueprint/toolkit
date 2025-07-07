@@ -86,7 +86,13 @@ export class FileSink extends LangMixin(
 
         // only activate file streaming mode when the file-sink set the streamed property during connection
         if (this.streamed) {
-            navigator.serviceWorker.register(new URL('./stream-sw.js', import.meta.url).href);
+            let baseUrl = new URL('./stream-sw.js', import.meta.url).href;
+            // sw should always be run at the topmost level to listen to all fetch events
+            // see common-untils.js getAssetURL()
+            if (baseUrl.split('/').slice(-2)[0] === 'shared') {
+                baseUrl = new URL('../stream-sw.js', baseUrl).href;
+            }
+            navigator.serviceWorker.register(baseUrl);
 
             // start keepalive calls only in Firefox
             if (window.navigator.userAgent.includes('Firefox')) {
