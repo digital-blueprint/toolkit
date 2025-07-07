@@ -87,6 +87,17 @@ export class FileSink extends LangMixin(
         // only activate file streaming mode when the file-sink set the streamed property during connection
         if (this.streamed) {
             navigator.serviceWorker.register(new URL('./stream-sw.js', import.meta.url).href);
+
+            // start keepalive calls only in Firefox
+            if (window.navigator.userAgent.includes('Firefox')) {
+                // TODO find a way to reliably stop this again
+                // clearInterval works, but when should it be called? callback from sw?
+                setInterval(function keepAlive() {
+                    fetch('downloadZip/keep-alive', {
+                        method: 'POST',
+                    });
+                }, 3500);
+            }
         }
 
         this.updateComplete.then(() => {
@@ -118,17 +129,6 @@ export class FileSink extends LangMixin(
         downloadForm.style.display = 'none';
         downloadForm.action = 'downloadZip/files.zip';
         downloadForm.method = 'POST';
-
-        // start keepalive calls only in Firefox
-        if (window.navigator.userAgent.includes('Firefox')) {
-            // TODO find a way to reliably stop this again
-            // clearInterval works, but when should it be called? callback from sw?
-            setInterval(function keepAlive() {
-                fetch('downloadZip/keep-alive', {
-                    method: 'POST',
-                });
-            }, 3500);
-        }
 
         // detect errors. "return" in forEach does not stop the method call
         let error = false;
