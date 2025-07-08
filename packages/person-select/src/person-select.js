@@ -406,7 +406,7 @@ export class PersonSelect extends LangMixin(
      */
     static formatLocalDataDefault(select, person) {
         const attributes = person.localData ?? {};
-        if (attributes.length === 0) {
+        if (Object.values(attributes).length === 0) {
             return '';
         }
 
