@@ -93,7 +93,6 @@ export class FileSink extends LangMixin(
                 baseUrl = new URL('../stream-sw.js', baseUrl).href;
             }
             navigator.serviceWorker.register(baseUrl);
-
             // start keepalive calls only in Firefox
             if (window.navigator.userAgent.includes('Firefox')) {
                 // TODO find a way to reliably stop this again
@@ -101,6 +100,7 @@ export class FileSink extends LangMixin(
                 setInterval(function keepAlive() {
                     fetch('downloadZip/keep-alive', {
                         method: 'POST',
+                        mode: 'cors',
                     });
                 }, 3500);
             }
