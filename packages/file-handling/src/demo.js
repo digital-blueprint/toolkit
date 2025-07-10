@@ -9,6 +9,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
+        this.auth = {};
         this.url = '';
         this.selectedFiles = [];
         this.selectedFilesCount = 0;
@@ -31,12 +32,16 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
             url: {type: String},
             selectedFiles: {type: Array, attribute: false},
             selectedFilesCount: {type: Number, attribute: false},
-
+            auth: {type: Object},
             nextcloudAuthUrl: {type: String, attribute: 'nextcloud-auth-url'},
             nextcloudWebDavUrl: {type: String, attribute: 'nextcloud-web-dav-url'},
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
         };
+    }
+
+    update(changedProperties) {
+        super.update(changedProperties);
     }
 
     connectedCallback() {
@@ -51,6 +56,10 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 );
             });
         });
+    }
+
+    authenticated() {
+        return (this.auth.token || '') !== '';
     }
 
     getSelectedFilesHtml() {
@@ -78,7 +87,11 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
     render() {
         const i18n = this._i18n;
-
+        if (!this.authenticated()) {
+            return html`
+                <p>Please log in to use this demo!</p>
+            `;
+        }
         return html`
             <style>
                 dbp-file-source.clean {
@@ -205,17 +218,18 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <br />
                     <h2 class="subtitle">Client-side streamed zip downloads</h2>
                     <p>Define the zip directory structure of a streamed download:</p>
-                    <div id="inputs-list">
-                        <input placeholder="dir/filename.svg" />
+                    <form id="inputs-list">
+                        <input placeholder="dir/filename.svg" required />
                         <br />
                         <br />
-                    </div>
+                    </form>
                     <button
                         @click="${() => {
                             let input = document.createElement('input');
                             let br1 = document.createElement('br');
                             let br2 = document.createElement('br');
                             input.placeholder = 'dir/filename.svg';
+                            input.required = true;
                             let parent = this.shadowRoot.getElementById('inputs-list');
                             parent.appendChild(input);
                             parent.appendChild(br1);
@@ -232,23 +246,25 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                             let inputsParent = this.parentNode
                                 .querySelector('#demo')
                                 .shadowRoot.querySelector('#inputs-list');
-                            while (inputsParent.hasChildNodes()) {
-                                if (inputsParent.firstChild.tagName === 'INPUT') {
-                                    let path = inputsParent.firstChild.value;
-                                    files.push({name: path, url: logo});
+                            let valid = inputsParent.checkValidity();
+                            if (valid) {
+                                while (inputsParent.hasChildNodes()) {
+                                    if (
+                                        inputsParent.firstChild.tagName === 'INPUT' &&
+                                        inputsParent.firstChild.value !== ''
+                                    ) {
+                                        let path = inputsParent.firstChild.value;
+                                        files.push({name: path, url: logo});
+                                    }
+                                    inputsParent.firstChild.remove();
                                 }
-                                inputsParent.firstChild.remove();
+                                this._('#file-sink1').files = files;
                             }
-                            this._('#file-sink1').files = files;
                         }}"
                         class="button is-primary">
                         Open download dialog
                     </button>
-                    <dbp-file-sink
-                        id="file-sink1"
-                        lang="en"
-                        content-length="21474836480"
-                        streamed></dbp-file-sink>
+                    <dbp-file-sink id="file-sink1" lang="en" streamed></dbp-file-sink>
                 </div>
             </section>
         `;

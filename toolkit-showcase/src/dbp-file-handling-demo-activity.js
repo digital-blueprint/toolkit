@@ -63,7 +63,8 @@ export class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitE
             <dbp-file-source-demo
                 id="demo"
                 lang="${this.lang}"
-                entry-point-url="${this.entryPointUrl}"></dbp-file-source-demo>
+                entry-point-url="${this.entryPointUrl}"
+                subscribe="auth"></dbp-file-source-demo>
         `;
     }
 }
