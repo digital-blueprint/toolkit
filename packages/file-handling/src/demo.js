@@ -201,18 +201,54 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         Open download dialog
                     </button>
                     <dbp-file-sink id="file-sink" lang="en"></dbp-file-sink>
-                    <!--- use something like this to stream/download from arbitrary remote urls:
+                    <br />
+                    <br />
+                    <h2 class="subtitle">Client-side streamed zip downloads</h2>
+                    <p>Define the zip directory structure of a streamed download:</p>
+                    <div id="inputs-list">
+                        <input placeholder="dir/filename.svg" />
+                        <br />
+                        <br />
+                    </div>
                     <button
                         @click="${() => {
-                        /* this._('#file-sink').files = [
-                                {name: "dir/abc.txt", url:""},
-                            ];*/
-                    }}"
+                            let input = document.createElement('input');
+                            let br1 = document.createElement('br');
+                            let br2 = document.createElement('br');
+                            input.placeholder = 'dir/filename.svg';
+                            let parent = this.shadowRoot.getElementById('inputs-list');
+                            parent.appendChild(input);
+                            parent.appendChild(br1);
+                            parent.appendChild(br2);
+                        }}"
+                        class="button is-primary">
+                        Add new input field
+                    </button>
+                    <p>Download the zip:</p>
+                    <button
+                        @click="${() => {
+                            let logo = document.getElementsByClassName('logo-light')[0].src;
+                            let files = [];
+                            let inputsParent = this.parentNode
+                                .querySelector('#demo')
+                                .shadowRoot.querySelector('#inputs-list');
+                            while (inputsParent.hasChildNodes()) {
+                                if (inputsParent.firstChild.tagName === 'INPUT') {
+                                    let path = inputsParent.firstChild.value;
+                                    files.push({name: path, url: logo});
+                                }
+                                inputsParent.firstChild.remove();
+                            }
+                            this._('#file-sink1').files = files;
+                        }}"
                         class="button is-primary">
                         Open download dialog
                     </button>
-                    <dbp-file-sink id="file-sink" lang="en" content-length="21474836480" streamed></dbp-file-sink>
-                    -->
+                    <dbp-file-sink
+                        id="file-sink1"
+                        lang="en"
+                        content-length="21474836480"
+                        streamed></dbp-file-sink>
                 </div>
             </section>
         `;
