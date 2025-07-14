@@ -252,8 +252,6 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                       .map((checkbox) => checkbox.value)
                 : e.target.value;
         }
-
-        console.log('handleInputValue this.value', this.value);
     }
 
     adaptValueForMultiple() {
@@ -284,8 +282,6 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     this.handleEmptyValue();
                     break;
                 case 'value': {
-                    console.log('update propName', propName);
-                    console.log('update this.value', this.value);
                     this.handleEmptyValue();
                     this.generateDataValue();
 
@@ -306,8 +302,6 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     generateDataValue() {
         if (this.multiple) {
             this.dataValue = stringifyForDataValue(this.value);
-            console.log('generateDataValue this.value', this.value);
-            console.log('generateDataValue this.dataValue', this.dataValue);
         } else {
             this.dataValue = this.value;
         }
