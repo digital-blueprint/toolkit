@@ -87,12 +87,8 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
     render() {
         const i18n = this._i18n;
-        if (!this.authenticated()) {
-            return html`
-                <p>Please log in to use this demo!</p>
-            `;
-        }
-        return html`
+
+        let base = html`
             <style>
                 dbp-file-source.clean {
                     --FUBorderWidth: initial;
@@ -214,71 +210,91 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         Open download dialog
                     </button>
                     <dbp-file-sink id="file-sink" lang="en"></dbp-file-sink>
-                    <br />
-                    <br />
-                    <h2 class="subtitle">Client-side streamed zip downloads</h2>
-                    <p>
-                        This is a demo for zip downloads where the zip is created in a RAM-friendly
-                        way on the client-side.
-                    </p>
-                    <p>
-                        Every input field shown below corresponds to a svg file, just for
-                        demonstration purposes.
-                        <br />
-                        A input field expects some kind of file name or directory structure (as
-                        shown by the placeholder) which will be used in the zip file
-                    </p>
-                    <p>Define the zip directory structure of a streamed download:</p>
-                    <form id="inputs-list">
-                        <input placeholder="dir/filename.svg" required />
-                        <br />
-                        <br />
-                    </form>
-                    <button
-                        @click="${() => {
-                            let input = document.createElement('input');
-                            let br1 = document.createElement('br');
-                            let br2 = document.createElement('br');
-                            input.placeholder = 'dir/filename.svg';
-                            input.required = true;
-                            let parent = this.shadowRoot.getElementById('inputs-list');
-                            parent.appendChild(input);
-                            parent.appendChild(br1);
-                            parent.appendChild(br2);
-                        }}"
-                        class="button is-primary">
-                        Add new input field
-                    </button>
-                    <p>Download the zip:</p>
-                    <button
-                        @click="${() => {
-                            let logo = document.getElementsByClassName('logo-light')[0].src;
-                            let files = [];
-                            let inputsParent = this.parentNode
-                                .querySelector('#demo')
-                                .shadowRoot.querySelector('#inputs-list');
-                            let valid = inputsParent.checkValidity();
-                            if (valid) {
-                                while (inputsParent.hasChildNodes()) {
-                                    if (
-                                        inputsParent.firstChild.tagName === 'INPUT' &&
-                                        inputsParent.firstChild.value !== ''
-                                    ) {
-                                        let path = inputsParent.firstChild.value;
-                                        files.push({name: path, url: logo});
-                                    }
-                                    inputsParent.firstChild.remove();
-                                }
-                                this._('#file-sink1').files = files;
-                            }
-                        }}"
-                        class="button is-primary">
-                        Open download dialog
-                    </button>
-                    <dbp-file-sink id="file-sink1" lang="en" streamed></dbp-file-sink>
                 </div>
             </section>
         `;
+
+        let streamHtml = html`
+            <br />
+            <br />
+            <h2 class="subtitle">Client-side streamed zip downloads</h2>
+            <p>
+                This is a demo for zip downloads where the zip is created in a RAM-friendly way on
+                the client-side.
+            </p>
+            <p>
+                Every input field shown below corresponds to a svg file, just for demonstration
+                purposes.
+                <br />
+                A input field expects some kind of file name or directory structure (as shown by the
+                placeholder) which will be used in the zip file
+            </p>
+            <p>Define the zip directory structure of a streamed download:</p>
+            <form id="inputs-list">
+                <input placeholder="dir/filename.svg" required />
+                <br />
+                <br />
+            </form>
+            <button
+                @click="${() => {
+                    let input = document.createElement('input');
+                    let br1 = document.createElement('br');
+                    let br2 = document.createElement('br');
+                    input.placeholder = 'dir/filename.svg';
+                    input.required = true;
+                    let parent = this.shadowRoot.getElementById('inputs-list');
+                    parent.appendChild(input);
+                    parent.appendChild(br1);
+                    parent.appendChild(br2);
+                }}"
+                class="button is-primary">
+                Add new input field
+            </button>
+            <p>Download the zip:</p>
+            <button
+                @click="${() => {
+                    let logo = document.getElementsByClassName('logo-light')[0].src;
+                    let files = [];
+                    let inputsParent = this.parentNode
+                        .querySelector('#demo')
+                        .shadowRoot.querySelector('#inputs-list');
+                    let valid = inputsParent.checkValidity();
+                    if (valid) {
+                        while (inputsParent.hasChildNodes()) {
+                            if (
+                                inputsParent.firstChild.tagName === 'INPUT' &&
+                                inputsParent.firstChild.value !== ''
+                            ) {
+                                let path = inputsParent.firstChild.value;
+                                files.push({name: path, url: logo});
+                            }
+                            inputsParent.firstChild.remove();
+                        }
+                        this._('#file-sink1').files = files;
+                    }
+                }}"
+                class="button is-primary">
+                Open download dialog
+            </button>
+            <dbp-file-sink id="file-sink1" lang="en" streamed></dbp-file-sink>
+        `;
+
+        let end = html`
+                </div>
+            </section>
+        `;
+
+        if (!this.authenticated()) {
+            return html`
+                ${base}
+                <p><b>Please login to see the client-side streaming demo!</b></p>
+                ${end}
+            `;
+        } else {
+            return html`
+                ${base}${streamHtml}${end}
+            `;
+        }
     }
 
     _(selector) {
