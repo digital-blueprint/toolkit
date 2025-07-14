@@ -217,6 +217,17 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <br />
                     <br />
                     <h2 class="subtitle">Client-side streamed zip downloads</h2>
+                    <p>
+                        This is a demo for zip downloads where the zip is created in a RAM-friendly
+                        way on the client-side.
+                    </p>
+                    <p>
+                        Every input field shown below corresponds to a svg file, just for
+                        demonstration purposes.
+                        <br />
+                        A input field expects some kind of file name or directory structure (as
+                        shown by the placeholder) which will be used in the zip file
+                    </p>
                     <p>Define the zip directory structure of a streamed download:</p>
                     <form id="inputs-list">
                         <input placeholder="dir/filename.svg" required />
