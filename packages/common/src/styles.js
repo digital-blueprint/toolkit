@@ -1338,6 +1338,8 @@ export function getModalDialogCSS() {
             color: var(--dbp-accent);
             cursor: pointer;
             padding: 0px;
+            position: relative;
+            z-index: 9;
         }
 
         .modal-close .close-icon svg,
