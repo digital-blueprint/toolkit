@@ -63,7 +63,7 @@ watch:
         exit 1
     fi
 
-# Format all files
+# Remove all node-modules directories in the toolkit
 [group('dev')]
 remove-toolkit-node-modules:
     rm ./vendor/toolkit/node_modules -Rf
