@@ -69,6 +69,11 @@ remove-toolkit-node-modules:
     rm ./vendor/toolkit/node_modules -Rf
     rm ./vendor/toolkit/packages/*/node_modules -Rf
 
+# Remove all node-modules directories in the vendor folder recursively
+[group('dev')]
+remove-vendor-node-modules:
+    find ./vendor -type d -name 'node_modules' -prune -exec rm -rf '{}' +
+
 # Format all files
 [group('linter')]
 format args='':
