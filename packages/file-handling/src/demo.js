@@ -223,52 +223,66 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 the client-side.
             </p>
             <p>
-                Every input field shown below corresponds to a svg file, just for demonstration
-                purposes.
+                You can add a 'url' and 'filename' pair by pressing the 'Add new file to download'
+                button.
                 <br />
-                A input field expects some kind of file name or directory structure (as shown by the
-                placeholder) which will be used in the zip file
+                Each list item corresponds to a remote file which will be downloaded and saved with
+                the defined filename in the zip.
+                <br />
+                An 'filename' input field expects some kind of file name or directory structure (as
+                shown by the placeholder) which will be used in the zip file.
+                <br />
+                An 'url' input field expects some url which will be used to fetch the file.
             </p>
-            <p>Define the zip directory structure of a streamed download:</p>
-            <form id="inputs-list">
-                <input placeholder="dir/filename.svg" required />
-                <br />
-                <br />
+            <p>Define the files and directory structure of the streamed zip:</p>
+            <form id="inputs-list-form">
+                <ul id="inputs-list"></ul>
             </form>
             <button
                 @click="${() => {
+                    let listItem = document.createElement('li');
                     let input = document.createElement('input');
+                    let inputText = document.createTextNode('filename: ');
+                    let urlInput = document.createElement('input');
+                    let urlInputText = document.createTextNode('url: ');
                     let br1 = document.createElement('br');
                     let br2 = document.createElement('br');
+                    urlInput.placeholder = document.getElementsByClassName('logo-light')[0].src;
+                    urlInput.type = 'url';
+                    urlInput.required = true;
+                    urlInput.name = 'streamUrl';
                     input.placeholder = 'dir/filename.svg';
                     input.required = true;
+                    input.name = 'streamFilenames';
                     let parent = this.shadowRoot.getElementById('inputs-list');
-                    parent.appendChild(input);
-                    parent.appendChild(br1);
+                    listItem.appendChild(inputText);
+                    listItem.appendChild(input);
+                    listItem.appendChild(br1);
+                    listItem.appendChild(urlInputText);
+                    listItem.appendChild(urlInput);
+                    parent.appendChild(listItem);
                     parent.appendChild(br2);
                 }}"
                 class="button is-primary">
-                Add new input field
+                Add new file to download
             </button>
             <p>Download the zip:</p>
             <button
                 @click="${() => {
-                    let logo = document.getElementsByClassName('logo-light')[0].src;
                     let files = [];
                     let inputsParent = this.parentNode
                         .querySelector('#demo')
-                        .shadowRoot.querySelector('#inputs-list');
-                    let valid = inputsParent.checkValidity();
+                        .shadowRoot.querySelector('#inputs-list-form');
+                    let valid = inputsParent.reportValidity();
+                    let urls = this.parentNode
+                        .querySelector('#demo')
+                        .shadowRoot.querySelectorAll('input[name="streamUrl"]');
+                    let filenames = this.parentNode
+                        .querySelector('#demo')
+                        .shadowRoot.querySelectorAll('input[name="streamFilenames"]');
                     if (valid) {
-                        while (inputsParent.hasChildNodes()) {
-                            if (
-                                inputsParent.firstChild.tagName === 'INPUT' &&
-                                inputsParent.firstChild.value !== ''
-                            ) {
-                                let path = inputsParent.firstChild.value;
-                                files.push({name: path, url: logo});
-                            }
-                            inputsParent.firstChild.remove();
+                        for (let i = 0; i < urls.length; i++) {
+                            files.push({name: filenames[i].value, url: urls[i].value});
                         }
                         this._('#file-sink1').files = files;
                     }
