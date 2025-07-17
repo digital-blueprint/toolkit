@@ -186,7 +186,7 @@ export class LoadingButton extends DbpButton {
                     ? 'is-not-loading'
                     : ''}"
                 ?disabled="${this.disabled}">
-                <div class="label"><slot>${this.value}</slot></div>
+                <span class="label"><slot>${this.value}</slot></span>
                 <dbp-mini-spinner
                     class="spinner"
                     style="display: ${this.loading ? 'inline' : 'none'}"></dbp-mini-spinner>
