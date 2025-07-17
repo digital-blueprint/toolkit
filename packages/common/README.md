@@ -113,6 +113,7 @@ Slotted content can be styled from outside with css.
     - example `<dbp-modal title="This is my modal"></dbp-modal>`
 - `width`, `height`, `min-width`, `min-height` (optional): set the size of a modal
     - example `<dbp-modal width="15px" height="100%"></dbp-modal>`
+- `sticky-footer` (optional, boolean): set the footer to stick to the bottom of the modal
 
 ### CSS variables
 
