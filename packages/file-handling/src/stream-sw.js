@@ -14,16 +14,39 @@ self.addEventListener('fetch', (event) => {
     if (url.origin === self.origin && name && name !== 'keep-alive') {
         event.respondWith(
             event.request.formData().then(async (data) => {
-                let sumContentLengths = 0;
+                let requests;
+                let auth = null;
+                let sumContentLengths = -1;
 
-                // if sum of content-lengths is given, trust it
-                // else we try to sum up the content-lengths ourselves at the cost of additional runtime
+                // check meta information given to the sw, and set it if necessary
+                if (data.has('authorization')) {
+                    auth = data.get('authorization');
+                    data.delete('authorization');
+                }
                 if (data.has('sumContentLengths')) {
                     sumContentLengths = parseInt(data.get('sumContentLengths'));
                     data.delete('sumContentLengths');
+                }
+
+                // only send Authorization headers if necessary
+                if (auth != null) {
+                    requests = Array.from(
+                        data.values(),
+                        (data) => new Request(data, {headers: {Authorization: auth}}),
+                    );
                 } else {
+                    requests = Array.from(data.values(), (data) => new Request(data));
+                }
+
+                // if sum of content-lengths is given, trust it
+                // else we try to sum up the content-lengths ourselves at the cost of additional runtime
+                if (sumContentLengths == -1) {
                     for (const item of data.values()) {
-                        await fetch(item, {method: 'HEAD'}).then(
+                        let init = {method: 'HEAD'};
+                        if (auth != null) {
+                            init['headers'] = {Authorization: auth};
+                        }
+                        await fetch(item, init).then(
                             (r) => (sumContentLengths += parseInt(r.headers.get('Content-Length'))),
                         );
                     }
@@ -34,7 +57,7 @@ self.addEventListener('fetch', (event) => {
                 // eslint-disable-next-line no-undef
                 return downloadZip(
                     // eslint-disable-next-line no-undef
-                    nameFile(new DownloadStream(data.values(), {highWaterMark: 1}), data.keys()),
+                    nameFile(new DownloadStream(requests, {highWaterMark: 1}), data.keys()),
                     {length: sumContentLengths},
                 );
             }),

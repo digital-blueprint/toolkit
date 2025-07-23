@@ -22,6 +22,7 @@ export class FileSink extends LangMixin(
 ) {
     constructor() {
         super();
+        this.auth = {};
         this.context = '';
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
@@ -78,6 +79,7 @@ export class FileSink extends LangMixin(
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
             streamed: {type: Boolean, attribute: 'streamed'},
             sumContentLengths: {type: Number, attribute: 'content-length'},
+            auth: {type: Object},
         };
     }
 
@@ -146,6 +148,13 @@ export class FileSink extends LangMixin(
             contentLength.name = 'sumContentLengths';
             contentLength.value = this.sumContentLengths;
             downloadForm.appendChild(contentLength);
+        }
+
+        if (this.auth != null && this.auth.token != null) {
+            let authorization = document.createElement('input');
+            authorization.name = 'authorization';
+            authorization.value = this.auth.token;
+            downloadForm.appendChild(authorization);
         }
 
         this.files.forEach((file) => {

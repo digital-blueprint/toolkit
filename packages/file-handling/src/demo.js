@@ -245,8 +245,11 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     let inputText = document.createTextNode('filename: ');
                     let urlInput = document.createElement('input');
                     let urlInputText = document.createTextNode('url: ');
+                    let sizeInput = document.createElement('input');
+                    let sizeInputText = document.createTextNode('filesize: ');
                     let br1 = document.createElement('br');
                     let br2 = document.createElement('br');
+                    let br3 = document.createElement('br');
                     urlInput.placeholder = document.getElementsByClassName('logo-light')[0].src;
                     urlInput.type = 'url';
                     urlInput.required = true;
@@ -254,14 +257,20 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     input.placeholder = 'dir/filename.svg';
                     input.required = true;
                     input.name = 'streamFilenames';
+                    sizeInput.placeholder = '0';
+                    sizeInput.required = true;
+                    sizeInput.name = 'streamFilesizes';
                     let parent = this.shadowRoot.getElementById('inputs-list');
                     listItem.appendChild(inputText);
                     listItem.appendChild(input);
                     listItem.appendChild(br1);
                     listItem.appendChild(urlInputText);
                     listItem.appendChild(urlInput);
+                    listItem.appendChild(br2);
+                    listItem.appendChild(sizeInputText);
+                    listItem.appendChild(sizeInput);
                     parent.appendChild(listItem);
-                    parent.appendChild(br2);
+                    parent.appendChild(br3);
                 }}"
                 class="button is-primary">
                 Add new file to download
@@ -270,6 +279,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
             <button
                 @click="${() => {
                     let files = [];
+                    let contentLength = 0;
                     let inputsParent = this.parentNode
                         .querySelector('#demo')
                         .shadowRoot.querySelector('#inputs-list-form');
@@ -280,17 +290,22 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     let filenames = this.parentNode
                         .querySelector('#demo')
                         .shadowRoot.querySelectorAll('input[name="streamFilenames"]');
+                    let filesizes = this.parentNode
+                        .querySelector('#demo')
+                        .shadowRoot.querySelectorAll('input[name="streamFilesizes"]');
                     if (valid) {
                         for (let i = 0; i < urls.length; i++) {
                             files.push({name: filenames[i].value, url: urls[i].value});
+                            contentLength += parseInt(filesizes[i].value);
                         }
                         this._('#file-sink1').files = files;
+                        this._('#file-sink1').sumContentLengths = contentLength;
                     }
                 }}"
                 class="button is-primary">
                 Open download dialog
             </button>
-            <dbp-file-sink id="file-sink1" lang="en" streamed></dbp-file-sink>
+            <dbp-file-sink id="file-sink1" lang="en" subscribe="auth" streamed></dbp-file-sink>
         `;
 
         let end = html`
