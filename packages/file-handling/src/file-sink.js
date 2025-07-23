@@ -153,7 +153,7 @@ export class FileSink extends LangMixin(
         if (this.auth != null && this.auth.token != null) {
             let authorization = document.createElement('input');
             authorization.name = 'authorization';
-            authorization.value = this.auth.token;
+            authorization.value = 'Bearer ' + this.auth.token;
             downloadForm.appendChild(authorization);
         }
 
