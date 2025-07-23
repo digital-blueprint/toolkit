@@ -1051,7 +1051,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                         grid-template-columns: minmax(180px, 17%) minmax(0, auto);
                         grid-template-rows: min-content min-content 1fr min-content;
                         grid-template-areas: 'header header' 'headline headline' 'main main' 'footer footer';
-                        max-width: 1900px;
+                        max-width: 1400px;
                         margin: auto;
                         min-height: 100vh;
                     }
