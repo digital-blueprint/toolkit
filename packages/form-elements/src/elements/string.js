@@ -8,6 +8,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
         this.label = 'A string field';
         this.rows = 1;
         this.placeholder = '';
+        this.maxLength = null;
     }
 
     static get properties() {
@@ -15,6 +16,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
             ...super.properties,
             rows: {type: Number},
             placeholder: {type: String},
+            maxLength: {type: Number, attribute: 'maxlength'},
         };
     }
 
@@ -28,9 +30,10 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                           rows="${this.rows}"
                           placeholder="${this.placeholder}"
                           @input="${this.handleInputValue}"
+                          maxlength="${this.maxLength}"
                           ?disabled=${this.disabled}
                           ?required=${this.required}>
-${this.value}</textarea
+                        ${this.value}</textarea
                       >
                   `
                 : html`
