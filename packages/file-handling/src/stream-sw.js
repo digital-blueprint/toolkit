@@ -64,3 +64,8 @@ self.addEventListener('fetch', (event) => {
         );
     }
 });
+
+// for some reason, in Firefox (tested on version 140.0.2) the fetch event listener is not enough
+// to keep the sw alive, even when periodically fetching something.
+// thus, we register a "message" event listener and periodically send messages
+self.addEventListener('message', (event) => {});

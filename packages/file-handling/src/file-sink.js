@@ -94,18 +94,16 @@ export class FileSink extends LangMixin(
             if (baseUrl.split('/').slice(-2)[0] === 'shared') {
                 baseUrl = new URL('../stream-sw.js', baseUrl).href;
             }
-            navigator.serviceWorker.register(baseUrl);
-            // start keepalive calls only in Firefox
-            if (window.navigator.userAgent.includes('Firefox')) {
-                // TODO find a way to reliably stop this again
-                // clearInterval works, but when should it be called? callback from sw?
-                setInterval(function keepAlive() {
-                    fetch('downloadZip/keep-alive', {
-                        method: 'POST',
-                        mode: 'cors',
-                    });
-                }, 3500);
-            }
+            navigator.serviceWorker.register(baseUrl).then((registration) => {
+                // start keepalive calls only in Firefox
+                if (window.navigator.userAgent.includes('Firefox')) {
+                    // TODO find a way to reliably stop this again
+                    // clearInterval works, but when should it be called? callback from sw?
+                    setInterval(function keepAlive() {
+                        registration.active.postMessage('keep-alive');
+                    }, 3000);
+                }
+            });
         }
 
         this.updateComplete.then(() => {
