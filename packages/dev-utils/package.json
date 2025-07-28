@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "find-cache-directory": "^6.0.0",
-        "selfsigned": "^2.0.0"
+        "selfsigned": "^3.0.0"
     },
     "scripts": {
         "fix": "npm run eslint:fix && npm run prettier:fix",
