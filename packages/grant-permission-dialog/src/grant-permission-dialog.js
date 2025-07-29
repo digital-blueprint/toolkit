@@ -133,15 +133,14 @@ export class GrantPermissionDialog extends LangMixin(
         try {
             let responseBody = null;
             const response = await this.apiGetAvailableActions();
-            if (response.status !== 200
-                || (responseBody = await response.json()) === undefined ) {
+            if (response.status !== 200 || (responseBody = await response.json()) === undefined) {
                 showErrorNotification = true;
             } else {
                 this.availableActions = Object.keys(responseBody.itemActions).map((actionKey) => {
                     return responseBody.itemActions[actionKey][this.lang] ?? actionKey;
                 });
             }
-        } catch (e) {
+        } catch {
             showErrorNotification = true;
         }
 
