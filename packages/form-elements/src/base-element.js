@@ -115,7 +115,7 @@ export class DbpBaseElement extends LangMixin(
             // language=css
             css`
                 .validation-errors {
-                    color: var(--dbp-override-danger);
+                    color: var(--dbp-danger);
                     list-style: none;
                     padding-left: 0;
                     margin-block: 0.25em;
