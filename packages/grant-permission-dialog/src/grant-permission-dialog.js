@@ -127,19 +127,25 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     async setAvailableActions() {
+        this.availableActions = [];
+        let showErrorNotification = false;
         const i18n = this._i18n;
         try {
-            let response = await this.apiGetAvailableActions();
-            let responseBody = await response.json();
-            if (
-                responseBody !== undefined &&
-                responseBody.status !== 403 &&
-                responseBody['itemActions'].length > 0
-            ) {
-                this.availableActions = responseBody['itemActions'];
+            let responseBody = null;
+            const response = await this.apiGetAvailableActions();
+            if (response.status !== 200
+                || (responseBody = await response.json()) === undefined ) {
+                showErrorNotification = true;
+            } else {
+                this.availableActions = Object.keys(responseBody.itemActions).map((actionKey) => {
+                    return responseBody.itemActions[actionKey][this.lang] ?? actionKey;
+                });
             }
         } catch (e) {
-            console.log('setAvailableActions error', e);
+            showErrorNotification = true;
+        }
+
+        if (showErrorNotification) {
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t(
