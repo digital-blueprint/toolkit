@@ -137,7 +137,12 @@ export class GrantPermissionDialog extends LangMixin(
                 showErrorNotification = true;
             } else {
                 this.availableActions = Object.keys(responseBody.itemActions).map((actionKey) => {
-                    return responseBody.itemActions[actionKey][this.lang] ?? actionKey;
+                    return {
+                        [actionKey]: {
+                            [this.lang]:
+                                responseBody.itemActions[actionKey][this.lang] ?? actionKey,
+                        },
+                    };
                 });
             }
         } catch {
@@ -568,7 +573,7 @@ export class GrantPermissionDialog extends LangMixin(
                     this.setDeleteAllButtonVisibility();
                     this.requestUpdate();
                 }
-                console.log('userList', this.userList);
+                // console.log('userList', this.userList);
             } else {
                 if (responseBody.status === 500) {
                     send({
@@ -669,21 +674,20 @@ export class GrantPermissionDialog extends LangMixin(
         if (!this.availableActions) {
             return;
         }
-
         return html`
             <div class="permission-group" role="group" aria-labelledby="permissions-group-label">
                 <h3 id="permissions-group-label" class="visually-hidden">
                     ${i18n.t('grant-permission-dialog.available-permissions')}
                 </h3>
                 ${this.availableActions.map((action) => {
-                    const permissionName = action.replace('_', ' ');
+                    const actionValue = Object.keys(action)[0];
+                    const actionName = action[actionValue][this.lang];
 
                     let hasThisPermission = false;
-                    // let existingPermission = true;
                     let editable = false;
 
                     if (user.permissions) {
-                        const userPermission = user.permissions.get(action);
+                        const userPermission = user.permissions.get(actionValue);
                         if (userPermission.identifier) {
                             hasThisPermission = true;
                         }
@@ -696,12 +700,14 @@ export class GrantPermissionDialog extends LangMixin(
 
                     return html`
                         <div class="checkbox-container">
-                            <label for="${action}-${user.userIdentifier}" class="visually-hidden">
-                                ${permissionName}
+                            <label
+                                for="${actionValue}-${user.userIdentifier}"
+                                class="visually-hidden">
+                                ${actionName}
                             </label>
                             <input
-                                id="${action}-${user.userIdentifier}"
-                                name="${action}"
+                                id="${actionValue}-${user.userIdentifier}"
+                                name="${actionValue}"
                                 class="permission-checkbox"
                                 data-user-id="${user.userIdentifier}"
                                 type="checkbox"
@@ -722,14 +728,15 @@ export class GrantPermissionDialog extends LangMixin(
 
         const userPermissions = new Map();
         this.availableActions.forEach((action) => {
+            const actionValue = Object.keys(action)[0];
             const emptyPermission = {
-                action: action,
+                action: actionValue,
                 authorizationResource: null,
                 identifier: null,
                 isNew: true,
                 editable: editable,
             };
-            userPermissions.set(action, emptyPermission);
+            userPermissions.set(actionValue, emptyPermission);
         });
         return userPermissions;
     }
@@ -844,16 +851,16 @@ export class GrantPermissionDialog extends LangMixin(
         }
 
         return html`
-            <!-- <div class="permission-group">-->
-            ${this.availableActions.map((permission) => {
-                const permissionName = permission.replace('_', ' ');
+            ${this.availableActions.map((action) => {
+                const actionValue = Object.keys(action)[0];
+                const actionName = action[actionValue][this.lang] ?? actionValue;
+
                 return html`
                     <div class="checkbox-label-container">
-                        <label for="${permission}">${permissionName}</label>
+                        <label for="${actionValue}">${actionName}</label>
                     </div>
                 `;
             })}
-            <!-- </div> -->
         `;
     }
 
