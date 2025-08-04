@@ -857,7 +857,7 @@ export class GrantPermissionDialog extends LangMixin(
 
                 return html`
                     <div class="checkbox-label-container">
-                        <label for="${actionValue}">${actionName}</label>
+                        <span>${actionName}</span>
                     </div>
                 `;
             })}
