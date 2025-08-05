@@ -259,6 +259,10 @@ Dependencies:
             useBabel &&
                 getBabelOutputPlugin({
                     compact: false,
+                    targets: {
+                        esmodules: true,
+                        browsers: 'defaults and not dead, last 5 years',
+                    },
                     presets: [
                         [
                             '@babel/preset-env',
@@ -267,9 +271,6 @@ Dependencies:
                                 shippedProposals: true,
                                 bugfixes: true,
                                 modules: false,
-                                targets: {
-                                    esmodules: true,
-                                },
                             },
                         ],
                     ],
