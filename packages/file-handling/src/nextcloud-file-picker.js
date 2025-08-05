@@ -16,6 +16,28 @@ import * as fileHandlingStyles from './styles';
 import {encrypt, decrypt, parseJwt} from './crypto.js';
 
 /**
+ * A wrapper for the webdav putFileContents method that also handles Blob/File
+ * (inefficiently, but works). In theory this could be fixed upstream, if someone
+ * feels strongly about it.
+ *
+ * https://github.com/perry-mitchell/webdav-client#putfilecontents
+ */
+async function customPutFileContents(client, filename, data, options = {}) {
+    if (data instanceof Blob) {
+        // Broke with 4.x
+        // contentLength: https://github.com/perry-mitchell/webdav-client/issues/266
+        if (options.contentLength === true || options.contentLength === undefined) {
+            options.contentLength = data.size;
+        }
+        // Broke with 5.x
+        // Blob: https://github.com/perry-mitchell/webdav-client/issues/352
+        data = await data.arrayBuffer();
+    }
+
+    return client.putFileContents(filename, data, options);
+}
+
+/**
  * NextcloudFilePicker web component
  */
 export class NextcloudFilePicker extends LangMixin(
@@ -1585,16 +1607,12 @@ export class NextcloudFilePicker extends LangMixin(
             let file = this.fileList[0];
             this.replaceFilename = file.name;
             let path = directory + '/' + file.name;
-            // https://github.com/perry-mitchell/webdav-client#putfilecontents
             let that = this;
             this.loading = true;
             this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
-            // contentLength: https://github.com/perry-mitchell/webdav-client/issues/266
-            await this.webDavClient
-                .putFileContents(path, file, {
-                    contentLength: file.size,
-                    overwrite: false,
-                })
+            await customPutFileContents(this.webDavClient, path, file, {
+                overwrite: false,
+            })
                 .then(function (success) {
                     if (!success) {
                         that.generatedFilename = that.getNextFilename();
@@ -1721,16 +1739,9 @@ export class NextcloudFilePicker extends LangMixin(
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
 
         let that = this;
-        // https://github.com/perry-mitchell/webdav-client#putfilecontents
-        // contentLength: https://github.com/perry-mitchell/webdav-client/issues/266
-        await this.webDavClient
-            .putFileContents(path, file, {
-                contentLength: file.size,
-                overwrite: overwrite,
-                onUploadProgress: (progress) => {
-                    /*console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);*/
-                },
-            })
+        await customPutFileContents(this.webDavClient, path, file, {
+            overwrite: overwrite,
+        })
             .then((content) => {
                 MicroModal.close(this._('#replace-modal'));
                 this.uploadCount += 1;
