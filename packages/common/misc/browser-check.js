@@ -170,6 +170,16 @@ To disable checks that require eval, add the noeval parameter to the script tag:
         return true;
     }
 
+    // check for container size queries support
+    // https://caniuse.com/css-container-queries
+    function supportsContainerSizeQueries() {
+        if (!CSS || !CSS.supports) {
+            return false;
+        }
+
+        return CSS.supports('container-type: inline-size') && CSS.supports('container-type: size');
+    }
+
     function isBrowserSupported() {
         if (!supportsES6()) {
             console.log('ES6 not supported');
@@ -228,6 +238,11 @@ To disable checks that require eval, add the noeval parameter to the script tag:
 
         if (!supportsEventTargetConstructor()) {
             console.log('EventTarget() constructor not supported');
+            return false;
+        }
+
+        if (!supportsContainerSizeQueries()) {
+            console.log('container size queries not supported');
             return false;
         }
 
