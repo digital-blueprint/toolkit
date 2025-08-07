@@ -61,7 +61,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     <slot name="label">${this.label}</slot>
                     ${this.required && (hasLabelSlot || this.label)
                         ? html`
-                              (${this._i18n.t('render-form.base-object.required-field')})
+                            <span class="required-mark">
+                                (${this._i18n.t('render-form.base-object.required-field')})
+                            </span>
                           `
                         : html``}
                 </label>
@@ -234,6 +236,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     border-bottom: 2px solid #ffffff;
                     border-left: 2px solid #ffffff;
                     transform: rotate(-45deg);
+                }
+
+                .required-mark {
+                    color: var(--dbp-danger);
                 }
             `,
         ];

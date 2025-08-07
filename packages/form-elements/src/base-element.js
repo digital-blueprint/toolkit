@@ -124,6 +124,9 @@ export class DbpBaseElement extends LangMixin(
                 .description {
                     margin-bottom: 0.25em;
                 }
+                .required-mark {
+                    color: var(--dbp-danger);
+                }
             `,
         ];
     }
@@ -159,7 +162,9 @@ export class DbpBaseElement extends LangMixin(
                     ${this.label}
                     ${this.required
                         ? html`
-                              (${this._i18n.t('render-form.base-object.required-field')})
+                                <span class="required-mark">
+                                    (${this._i18n.t('render-form.base-object.required-field')})
+                                </span>
                           `
                         : html``}
                 </label>
