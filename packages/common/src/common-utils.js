@@ -26,6 +26,20 @@ export const stringListToSelect2DataArray = (list) => {
 };
 
 /**
+ * Converts a key-value object to a data array for Select2
+ *
+ * @param keyValueObject
+ * @returns {Array}
+ */
+export const keyValueObjectToSelect2DataArray = (keyValueObject) => {
+    let data = [];
+    Object.keys(keyValueObject).forEach((key) => {
+        data.push({id: key, text: keyValueObject[key]});
+    });
+    return data;
+};
+
+/**
  * Does generic Base64 Encoding with support for 16-bit encoded strings
  *
  * @see https://www.base64encoder.io/javascript/

@@ -3,6 +3,9 @@
         "base-object": {
             "required-field": "*",
             "required-field-validation-error": "Bitte füllen Sie das Pflichtfeld aus!"
+        },
+        "enum": {
+            "select-placeholder": "Bitte wählen Sie eine Option aus"
         }
     }
 }

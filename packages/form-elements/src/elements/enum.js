@@ -3,6 +3,13 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {stringifyForDataValue} from '../utils.js';
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import * as commonStyles from '@dbp-toolkit/common/styles';
+import select2CSSPath from 'select2/dist/css/select2.min.css';
+import $ from 'jquery';
+import select2 from 'select2';
+import select2LangDe from '../i18n/de/select2';
+import select2LangEn from '../i18n/en/select2';
 
 export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
@@ -15,6 +22,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         this.dataValue = '';
         this.displayMode = 'dropdown';
         this.selectRef = createRef();
+        this.$select = null;
+        select2(window, $);
     }
 
     static get properties() {
@@ -31,6 +40,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         };
     }
 
+    $(selector) {
+        return $(this.shadowRoot.querySelector(selector));
+    }
+
     // Can be used to set items from the outside
     setItems(items) {
         this.items = items;
@@ -42,6 +55,64 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
     isValueEmpty() {
         return this.value === '' || this.isValueEmptyArray();
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+
+        this.updateComplete.then(() => {
+            this.$select = this.$('#' + this.formElementId);
+            this.initSelect2IfNeeded();
+        });
+    }
+
+    isDisplayModeTags() {
+        return ['tags', 'tag'].includes(this.displayMode);
+    }
+
+    initSelect2IfNeeded() {
+        if (this.isDisplayModeTags() && !this.select2IsInitialized()) {
+            this.initSelect2();
+        }
+    }
+
+    select2IsInitialized() {
+        return this.$select !== null && this.$select.hasClass('select2-hidden-accessible');
+    }
+
+    /**
+     * Initializes the Select2 selector
+     *
+     * @param ignorePreset
+     */
+    initSelect2(ignorePreset = false) {
+        if (this.$select === null) {
+            return false;
+        }
+
+        // we need to destroy Select2 and remove the event listeners before we can initialize it again
+        if (this.$select && this.$select.hasClass('select2-hidden-accessible')) {
+            this.$select.select2('destroy');
+            this.$select.off('select2:select');
+            this.$select.off('select2:closing');
+        }
+
+        this.$select
+            .select2({
+                language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
+                allowClear: true,
+                placeholder: this._i18n.t('render-form.enum.select-placeholder'),
+                dropdownParent: this.$('#select-dropdown'),
+                data: commonUtils.keyValueObjectToSelect2DataArray(this.items),
+            })
+            .on('select2:select', this.handleInputValue.bind(this))
+            // select2:clear will trigger select2:unselect for each selected item
+            .on('select2:unselect', this.handleInputValue.bind(this));
+
+        // Set the value after initialization
+        this.$select.val(this.value).trigger('change');
+
+        return true;
     }
 
     render() {
@@ -86,7 +157,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     renderInput() {
-        const validModes = ['dropdown', 'list'];
+        const validModes = ['dropdown', 'list', 'tag', 'tags'];
         if (!validModes.includes(this.displayMode)) {
             console.warn(`Invalid display-mode: ${this.displayMode}. Defaulting to 'dropdown'.`);
             this._displayMode = 'dropdown';
@@ -96,6 +167,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
         // In case it wasn't handled before
         this.handleEmptyValue();
+        const select2CSS = commonUtils.getAssetURL(select2CSSPath);
 
         switch (this._displayMode) {
             case 'dropdown':
@@ -157,6 +229,20 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                         `,
                     )}
                 `;
+            case 'tag':
+            case 'tags':
+                return html`
+                    <link rel="stylesheet" href="${select2CSS}" />
+                    <select
+                        ${ref(this.selectRef)}
+                        id="${this.formElementId}"
+                        name="${this.name}"
+                        class="select"
+                        ?disabled=${this.disabled}
+                        ?required=${this.required}
+                        ?multiple=${this.multiple}></select>
+                    <div id="select-dropdown"></div>
+                `;
             default:
                 console.warn(
                     `Unsupported display mode: ${this._displayMode}. Defaulting to 'dropdown'.`,
@@ -186,6 +272,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     static get styles() {
         return [
             ...super.styles,
+            commonStyles.getSelect2CSS(),
             // language=css
             css`
                 /* For some reasons the selector chevron was very large */
@@ -241,6 +328,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 .required-mark {
                     color: var(--dbp-danger);
                 }
+
+                #select-dropdown {
+                    position: relative;
+                }
             `,
         ];
     }
@@ -257,6 +348,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                       .filter((checkbox) => checkbox.checked)
                       .map((checkbox) => checkbox.value)
                 : e.target.value;
+        }
+        if (this.isDisplayModeTags()) {
+            this.value = this.$select.val();
         }
     }
 
@@ -283,13 +377,27 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 // case 'multiple':
                 //     this.adaptValueForMultiple();
                 //     break;
+                case 'displayMode':
+                    this.initSelect2IfNeeded();
+                    break;
                 case 'items':
+                    this.handleEmptyValue();
+
+                    // If the display mode is tags, we need to reinitialize Select2 to get in the new items
+                    if (this.isDisplayModeTags()) {
+                        this.initSelect2();
+                    }
+                    break;
                 case 'multiple':
                     this.handleEmptyValue();
                     break;
                 case 'value': {
                     this.handleEmptyValue();
                     this.generateDataValue();
+
+                    if (this.select2IsInitialized()) {
+                        this.$select.val(this.value).trigger('change');
+                    }
 
                     const changeEvent = new CustomEvent('change', {
                         detail: {value: this.value},
