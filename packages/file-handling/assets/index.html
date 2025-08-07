@@ -1,29 +1,28 @@
 <!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <script type="module" id="dbp-file-source-src" src="demo.js"></script>
-    <style>
-      dbp-file-source-demo {
-          --FUBorderWidth: 2px;
-          --FUBorderStyle: dotted;
-          --FUBorderColor: #555;
-          --FUBorderColorHighlight: #935;
-          --FUBorderRadius: 10px;
-          --FUBorder: 2px dashed red;
-          --FUMargin: 0;
-          --FUPadding: 5px;
-          --FUWidth: 450px;
-      }
-    </style>
-</head>
-<body>
-    <dbp-file-source-demo
-        lang="de"
-        nextcloud-auth-url="https://cloud-dev.tugraz.at/index.php/apps/webapppassword"
-        nextcloud-web-dav-url="https://cloud-dev.tugraz.at/remote.php/dav/files"
-        nextcloud-name="TU Graz cloud"
-        nextcloud-file-url="https://cloud-dev.tugraz.at/index.php/apps/files/?dir="
-    ></dbp-file-source-demo>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <script type="module" id="dbp-file-source-src" src="demo.js"></script>
+        <style>
+            dbp-file-source-demo {
+                --FUBorderWidth: 2px;
+                --FUBorderStyle: dotted;
+                --FUBorderColor: #555;
+                --FUBorderColorHighlight: #935;
+                --FUBorderRadius: 10px;
+                --FUBorder: 2px dashed red;
+                --FUMargin: 0;
+                --FUPadding: 5px;
+                --FUWidth: 450px;
+            }
+        </style>
+    </head>
+    <body>
+        <dbp-file-source-demo
+            lang="de"
+            nextcloud-auth-url="https://cloud-dev.tugraz.at/index.php/apps/webapppassword"
+            nextcloud-web-dav-url="https://cloud-dev.tugraz.at/remote.php/dav/files"
+            nextcloud-name="TU Graz cloud"
+            nextcloud-file-url="https://cloud-dev.tugraz.at/index.php/apps/files/?dir="></dbp-file-source-demo>
+    </body>
 </html>

@@ -61,9 +61,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     <slot name="label">${this.label}</slot>
                     ${this.required && (hasLabelSlot || this.label)
                         ? html`
-                            <span class="required-mark">
-                                (${this._i18n.t('render-form.base-object.required-field')})
-                            </span>
+                              <span class="required-mark">
+                                  (${this._i18n.t('render-form.base-object.required-field')})
+                              </span>
                           `
                         : html``}
                 </label>

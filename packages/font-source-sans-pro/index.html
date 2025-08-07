@@ -1,16 +1,16 @@
 <html>
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8" />
         <style>
-            @import "files/static.css";
-            @import "files/variable.css";
+            @import 'files/static.css';
+            @import 'files/variable.css';
 
             .pro {
-                font-family: "Source Sans Pro";
+                font-family: 'Source Sans Pro';
             }
 
             .variable {
-                font-family: "Source Sans Variable";
+                font-family: 'Source Sans Variable';
             }
 
             p {
@@ -19,9 +19,19 @@
         </style>
 
         <script type="module">
-            for (let weight of ['inherit', 'lighter', 'bolder', '200', '300', '400', '600', '700', '900']) {
+            for (let weight of [
+                'inherit',
+                'lighter',
+                'bolder',
+                '200',
+                '300',
+                '400',
+                '600',
+                '700',
+                '900',
+            ]) {
                 for (let style of ['normal', 'italic']) {
-                    let par = document.createElement("p");
+                    let par = document.createElement('p');
                     let text = document.createTextNode(`(${weight}, ${style})
                         The quick brown fox jumps over the lazy dog. THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.`);
                     par.setAttribute('style', `font-weight: ${weight};font-style: ${style}`);
@@ -37,13 +47,14 @@
             }
             window.updateWeight = updateWeight;
             updateWeight();
-
         </script>
     </head>
     <body class="pro">
         <button onclick="document.body.setAttribute('class', 'pro');">source-sans-pro</button>
-        <button onclick="document.body.setAttribute('class', 'variable');">source-sans-variable</button>
-        <input id="range" type="range" value="200" min="200" max="900" oninput="updateWeight();">
+        <button onclick="document.body.setAttribute('class', 'variable');">
+            source-sans-variable
+        </button>
+        <input id="range" type="range" value="200" min="200" max="900" oninput="updateWeight();" />
         <span id="weight"></span>
     </body>
 </html>
