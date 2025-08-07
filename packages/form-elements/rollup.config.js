@@ -49,6 +49,7 @@ export default (async () => {
             json(),
             url({
                 limit: 0,
+                include: [await getPackagePath('select2', '**/*.css')],
                 emitFiles: true,
                 fileName: 'shared/[name].[hash][extname]',
             }),
