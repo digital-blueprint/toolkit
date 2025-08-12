@@ -185,7 +185,7 @@ export class FormElementsDemo extends LangMixin(
                             subscribe="lang"
                             name="myComponentEnum"
                             label="My enum"
-                            value=${data.myComponentEnum || ''}
+                            .value=${data.myComponentEnum || ''}
                             .items=${this.enumItems}
                             ?required=${this.isRequired}></dbp-form-enum-element>
 
@@ -227,7 +227,7 @@ export class FormElementsDemo extends LangMixin(
                             name="myComponentEnumTags"
                             label="My enum tags"
                             display-mode="tags"
-                            value=${data.myComponentEnumTags || ''}
+                            .value=${data.myComponentEnumTags || ''}
                             .items=${this.enumItems}
                             ?required=${this.isRequired}></dbp-form-enum-element>
 

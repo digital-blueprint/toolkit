@@ -126,7 +126,7 @@ The `change` event is fired when the state changes. The event contains the new s
     subscribe="lang"
     name="myComponentEnum"
     label="My enum"
-    value=${data.myComponentEnum || ''}
+    .value=${data.myComponentEnum || ''}
     .items=${{item1: 'Item 1', item2: 'Item 2'}}
     multiple
     required>
@@ -136,13 +136,16 @@ The `change` event is fired when the state changes. The event contains the new s
 </dbp-form-enum-element>
 ```
 
+Please always use `.value` to set the value of the enum element, as it is a property and not an attribute.
+
 - `items`: List of items to select from
     - Type: Object
     - Example: `<dbp-form-enum-element .items=${{item1: 'Item 1', item2: 'Item 2'}}></dbp-form-enum-element>`
 - `multiple` (optional, default: `false`): Indicates if multiple items can be selected
     - Type: Boolean
     - Example: `<dbp-form-enum-element multiple></dbp-form-enum-element>`
-- `display-mode` (optional, default: `dropdown`): Render as checkbox or radiobutton in `list` mode, select element in `dropdown` mode
+- `display-mode` (optional, default: `dropdown`): Render as checkbox or radiobutton in `list` mode,
+   select-element in `dropdown` mode or as tags in `tags` mode
     - Type: String
     - Example with list: `<dbp-form-enum-element display-mode="list"></dbp-form-enum-element>`
     - Example with tags: `<dbp-form-enum-element display-mode="tags"></dbp-form-enum-element>`
