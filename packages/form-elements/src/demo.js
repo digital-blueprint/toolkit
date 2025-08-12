@@ -222,6 +222,25 @@ export class FormElementsDemo extends LangMixin(
                             </span>
                         </dbp-form-enum-element>
 
+                        <dbp-form-enum-element
+                            subscribe="lang"
+                            name="myComponentEnumTags"
+                            label="My enum tags"
+                            display-mode="tags"
+                            value=${data.myComponentEnumTags || ''}
+                            .items=${this.enumItems}
+                            ?required=${this.isRequired}></dbp-form-enum-element>
+
+                        <dbp-form-enum-element
+                            subscribe="lang"
+                            name="myComponentMultipleEnumTags"
+                            label="My multiple enum tags"
+                            display-mode="tags"
+                            .value=${data.myComponentMultipleEnumTags || ''}
+                            .items=${this.enumItems}
+                            multiple
+                            ?required=${this.isRequired}></dbp-form-enum-element>
+
                         <dbp-form-boolean-element
                             subscribe="lang"
                             name="myComponentBoolean"
@@ -313,6 +332,20 @@ export class FormElementsDemo extends LangMixin(
                         .value=${data.myComponentMultipleEnumList || ''}
                         .items=${this.enumItems}
                         display-mode="list"></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
+                        name="myComponentEnumTags"
+                        label="My enum tags"
+                        value=${data.myComponentEnumTags || ''}
+                        .items=${this.enumItems}></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
+                        name="myComponentMultipleEnumTags"
+                        label="My multiple enum tags"
+                        .value=${data.myComponentMultipleEnumTags || ''}
+                        .items=${this.enumItems}></dbp-form-enum-view>
 
                     <dbp-form-string-view
                         subscribe="lang"

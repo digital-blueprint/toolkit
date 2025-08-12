@@ -144,7 +144,8 @@ The `change` event is fired when the state changes. The event contains the new s
     - Example: `<dbp-form-enum-element multiple></dbp-form-enum-element>`
 - `display-mode` (optional, default: `dropdown`): Render as checkbox or radiobutton in `list` mode, select element in `dropdown` mode
     - Type: String
-    - Example: `<dbp-form-enum-element display-mode="list"></dbp-form-enum-element>`
+    - Example with list: `<dbp-form-enum-element display-mode="list"></dbp-form-enum-element>`
+    - Example with tags: `<dbp-form-enum-element display-mode="tags"></dbp-form-enum-element>`
 
 ## Form Views
 
