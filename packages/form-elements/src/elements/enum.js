@@ -106,9 +106,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 dropdownParent: this.$('#select-dropdown'),
                 data: commonUtils.keyValueObjectToSelect2DataArray(this.items),
             })
-            .on('select2:select', this.handleInputValue.bind(this))
-            // select2:clear will trigger select2:unselect for each selected item
-            .on('select2:unselect', this.handleInputValue.bind(this));
+            // https://select2.org/programmatic-control/events
+            // select2:clear will trigger select2:unselect and change for each selected item
+            .on('change', this.handleInputValue.bind(this));
 
         // Set the value after initialization
         this.$select.val(this.value).trigger('change');
