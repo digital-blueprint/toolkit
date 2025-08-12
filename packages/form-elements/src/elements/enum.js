@@ -99,6 +99,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
         this.$select
             .select2({
+                width: '100%',
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
                 allowClear: true,
                 placeholder: this._i18n.t('render-form.enum.select-placeholder'),
@@ -331,6 +332,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
                 #select-dropdown {
                     position: relative;
+                }
+
+                .select2-control.control {
+                    width: 100%;
                 }
             `,
         ];
