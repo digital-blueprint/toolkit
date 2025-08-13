@@ -208,7 +208,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                                               name="${this.name}"
                                               value="${key}"
                                               class="checkbox"
-                                              ?checked="${(!!this.value?.includes(key))}"
+                                              ?checked="${!!this.value?.includes(key)}"
                                               @input="${this.handleInputValue}"
                                               ?disabled=${this.disabled}
                                               ?required=${this.required} />
@@ -220,7 +220,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                                               name="${this.name}"
                                               value="${key}"
                                               class="radio"
-                                              ?checked="${(!!this.value?.includes(key))}"
+                                              ?checked="${!!this.value?.includes(key)}"
                                               @input="${this.handleInputValue}"
                                               ?disabled=${this.disabled}
                                               ?required=${this.required} />
