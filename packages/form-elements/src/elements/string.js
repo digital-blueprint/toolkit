@@ -21,6 +21,8 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     renderInput() {
+        // With the textarea tag, it's advised to use `.value` to set the value!
+        // https://lit.dev/docs/templates/expressions/#binding-properties
         return html`
             ${this.rows > 1
                 ? html`
@@ -28,12 +30,12 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                           id="${this.formElementId}"
                           name="${this.name}"
                           rows="${this.rows}"
+                          .value="${this.value}"
                           placeholder="${this.placeholder}"
                           @input="${this.handleInputValue}"
                           maxlength="${this.maxLength}"
                           ?disabled=${this.disabled}
-                          ?required=${this.required}>${this.value}</textarea
-                      >
+                          ?required=${this.required}></textarea>
                   `
                 : html`
                       <input
