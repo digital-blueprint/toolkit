@@ -338,7 +338,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     width: 100%;
                 }
 
-                .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                .select2-container--default
+                    .select2-selection--multiple
+                    .select2-selection__choice {
                     border-radius: 0;
                 }
             `,
