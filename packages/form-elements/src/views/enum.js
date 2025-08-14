@@ -62,7 +62,11 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
             ...super.styles,
             // language=css
             css`
-                /* Do we need ul styling? */
+                ul {
+                    list-style: none;
+                    padding-left: 0;
+                    margin: 0;
+                }
             `,
         ];
     }
