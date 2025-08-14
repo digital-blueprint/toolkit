@@ -32,8 +32,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                           @input="${this.handleInputValue}"
                           maxlength="${this.maxLength}"
                           ?disabled=${this.disabled}
-                          ?required=${this.required}>
-                        ${this.value}</textarea
+                          ?required=${this.required}>${this.value}</textarea
                       >
                   `
                 : html`
