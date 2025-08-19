@@ -12,7 +12,15 @@ import {readBinaryFileContent} from './utils.js';
 
 let pdfjsPromise = null;
 
-async function getPdfJs() {
+/**
+ * Dynamically imports the PDF.js library and sets up the worker source.
+ * This can be used separately from the PdfViewer component to ensure that PDF.js
+ * is loaded and set up.
+ *
+ * @async
+ * @returns {Promise<object>} A promise that resolves to the imported PDF.js module.
+ */
+export async function importPdfJs() {
     if (!pdfjsPromise) {
         pdfjsPromise = (async () => {
             const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
@@ -169,7 +177,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
         // get handle of pdf document
         try {
-            let pdfjs = await getPdfJs();
+            let pdfjs = await importPdfJs();
             this.pdfDoc = await pdfjs.getDocument({data: data, isEvalSupported: false}).promise;
         } catch (error) {
             console.error(error);

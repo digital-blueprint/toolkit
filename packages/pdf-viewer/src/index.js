@@ -1,3 +1,1 @@
-import {PdfViewer} from './pdf-viewer.js';
-
-export {PdfViewer};
+export {PdfViewer, importPdfJs} from './pdf-viewer.js';
