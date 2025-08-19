@@ -54,10 +54,9 @@ export class DbpBaseElement extends LangMixin(
             errorMessages.push(
                 this._i18n.t('render-form.base-object.required-field-validation-error'),
             );
-        }
-
-        // Evaluate the output of customValidator() and add any error messages to the array
-        if (this.customValidator) {
+        } else if (this.customValidator) {
+            // To avoid confusion we skip custom validators if the required field is empty.
+            // Evaluate the output of customValidator() and add any error messages to the array
             const customValidationErrors = this.customValidator(this.value, this.evaluationData);
             if (customValidationErrors) {
                 errorMessages = errorMessages.concat(customValidationErrors);
