@@ -10,7 +10,7 @@ import serve from 'rollup-plugin-serve';
 import urlPlugin from '@rollup/plugin-url';
 import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
-import md from 'rollup-plugin-md';
+import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
