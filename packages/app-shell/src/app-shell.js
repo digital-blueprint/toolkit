@@ -730,7 +730,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: inline;
             }
 
-            aside ul.menu,
+            ul.menu,
             footer ul.menu {
                 list-style: none;
             }
@@ -773,7 +773,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 font-size:94%;
             }
             */
-
+            .menu-container {
+                display: flex;
+                justify-content: center;
+            }
+            
             .menu a {
                 padding: 0.3em;
                 font-weight: 300;
@@ -2042,12 +2046,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                 style="color: var(--dbp-accent)"
                                 id="menu-chevron-icon"></dbp-icon>
                         </h2>
-                        <ul class="menu hidden">
+                        <!--<ul class="menu hidden">
                             ${menuTemplates}
                             <li class="close" @click="${this.hideMenu}">
                                 <dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon>
                             </li>
-                        </ul>
+                        </ul>-->
                     </aside>
 
                     <main>
@@ -2056,6 +2060,16 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             <h2>${i18n.t('page-not-found')}</h2>
                             <p>${i18n.t('choose-from-menu')}</p>
                         </div>
+                        <p class="description">${this.description}</p>
+                        <div class="menu-container">
+                            <ul class="menu hidden">
+                                ${menuTemplates}
+                                <li class="close" @click="${this.hideMenu}">
+                                    <dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon>
+                                </li>
+                            </ul>
+                        </div>
+                        
                         <p class="description">${this.description}</p>
                         ${this._renderActivity()}
                     </main>
