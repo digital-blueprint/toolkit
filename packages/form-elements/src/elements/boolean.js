@@ -109,7 +109,7 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
                     ${this.label}
                     ${this.required
                         ? html`
-                              (${this._i18n.t('render-form.base-object.required-field')})
+                              ${this._i18n.t('render-form.base-object.required-field')}
                           `
                         : html``}
                 </label>
