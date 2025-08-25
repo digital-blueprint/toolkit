@@ -162,7 +162,7 @@ export class DbpBaseElement extends LangMixin(
                     ${this.required
                         ? html`
                               <span class="required-mark">
-                                  (${this._i18n.t('render-form.base-object.required-field')})
+                                  ${this._i18n.t('render-form.base-object.required-field')}
                               </span>
                           `
                         : html``}
