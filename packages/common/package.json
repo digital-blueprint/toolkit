@@ -34,7 +34,11 @@
         "rollup-plugin-copy": "^3.1.0",
         "rollup-plugin-delete": "^3.0.0",
         "rollup-plugin-serve": "^3.0.0",
-        "typescript": "^5.2.2"
+        "sirv": "^3.0.1",
+        "typescript": "^5.2.2",
+        "vite": "^7.1.3",
+        "vite-plugin-html": "^3.2.2",
+        "vite-plugin-static-copy": "^3.1.2"
     },
     "scripts": {
         "i18next:fix": "i18next",
@@ -50,7 +54,8 @@
         "build-test": "rollup -c --environment BUILD:test",
         "test": "npm run build-test && karma start karma.conf.cjs --singleRun",
         "watch": "rollup -c --watch",
-        "tsc": "tsc -p jsconfig.json"
+        "tsc": "tsc -p jsconfig.json",
+        "watch:vite": "vite"
     },
     "dependencies": {
         "@open-wc/dedupe-mixin": "^2.0.1",
