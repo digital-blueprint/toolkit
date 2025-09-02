@@ -5,7 +5,7 @@ import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
-import {getDistPath} from '@dbp-toolkit/dev-utils';
+import {getCopyTargets} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
@@ -35,10 +35,7 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
-                    {
-                        src: 'assets/icons/*.svg',
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'icons')),
-                    },
+                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

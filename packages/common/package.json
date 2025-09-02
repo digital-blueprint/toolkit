@@ -10,6 +10,15 @@
         "url": "https://github.com/digital-blueprint/toolkit.git",
         "directory": "packages/common"
     },
+    "dbp": {
+        "assets": [
+            {
+                "srcPackage": "@dbp-toolkit/common",
+                "src": "assets/icons/*.svg",
+                "dest": "icons"
+            }
+        ]
+    },
     "devDependencies": {
         "@dbp-toolkit/dev-utils": "^0.1.1",
         "@rollup/plugin-commonjs": "^28.0.0",

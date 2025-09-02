@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {getPackagePath, getDistPath, getCopyTargets} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
@@ -49,14 +49,7 @@ export default (async () => {
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
-                    {
-                        src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.mjs'),
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'pdfjs')),
-                    },
-                    {
-                        src: await getPackagePath('pdfjs-dist', 'cmaps/*'),
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'pdfjs')),
-                    }, // do we want all map files?
+                    ...(await getCopyTargets(pkg.name, 'dist')),
                     {
                         src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
                         dest: 'dist/' + (await getDistPath(pkg.name)),
@@ -64,10 +57,6 @@ export default (async () => {
                     {
                         src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
                         dest: 'dist/' + (await getDistPath(pkg.name)),
-                    },
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
                     },
                 ],
             }),

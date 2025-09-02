@@ -5,6 +5,15 @@
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
+    "dbp": {
+        "assets": [
+            {
+                "srcPackage": "tabulator-tables",
+                "src": "dist/css",
+                "dest": "tabulator-tables"
+            }
+        ]
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/digital-blueprint/toolkit.git",

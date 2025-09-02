@@ -8,8 +8,11 @@ import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import process from 'node:process';
-import {getPackagePath, getDistPath, generateTLSConfig} from '@dbp-toolkit/dev-utils';
+import {createRequire} from 'node:module';
+import {generateTLSConfig, getCopyTargets} from '@dbp-toolkit/dev-utils';
 
+const require = createRequire(import.meta.url);
+const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
 
@@ -45,10 +48,7 @@ export default async () => {
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
-                    },
+                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

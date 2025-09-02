@@ -14,7 +14,13 @@ import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
-import {generateTLSConfig, getBuildInfo, getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {
+    generateTLSConfig,
+    getBuildInfo,
+    getPackagePath,
+    getDistPath,
+    getCopyTargets,
+} from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
 import {createRequire} from 'node:module';
 
@@ -210,34 +216,6 @@ Dependencies:
                         dest: 'dist/' + (await getDistPath(pkg.name)),
                     },
                     {
-                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
-                    },
-                    {
-                        src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest:
-                            'dist/' +
-                            (await getDistPath('@dbp-toolkit/file-handling', 'tabulator-tables')),
-                    },
-                    {
-                        src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest:
-                            'dist/' +
-                            (await getDistPath('@dbp-toolkit/tabulator-table', 'tabulator-tables')),
-                    },
-                    {
-                        src: await getPackagePath('qr-scanner', 'qr-scanner-worker.*'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/qr-code-scanner')),
-                    },
-                    {
-                        src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.mjs'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/pdf-viewer', 'pdfjs')),
-                    },
-                    {
-                        src: await getPackagePath('pdfjs-dist', 'cmaps/*'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/pdf-viewer', 'pdfjs')),
-                    }, // do we want all map files?
-                    {
                         // client-zip and dl-stream are needed for streamed downloads in file-sink
                         src: await getPackagePath('client-zip', 'worker.js'),
                         dest: 'dist/client-zip/',
@@ -250,6 +228,7 @@ Dependencies:
                         src: await getPackagePath('@dbp-toolkit/file-handling', 'src/stream-sw.js'),
                         dest: 'dist/',
                     },
+                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             replace({
