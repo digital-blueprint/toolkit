@@ -11,6 +11,21 @@
                 "srcPackage": "tabulator-tables",
                 "src": "dist/css",
                 "dest": "tabulator-tables"
+            },
+            {
+                "srcPackage": "client-zip",
+                "src": "worker.js",
+                "dest": "client-zip"
+            },
+            {
+                "srcPackage": "dl-stream",
+                "src": "worker.js",
+                "dest": "dl-stream"
+            },
+            {
+                "srcPackage": "@dbp-toolkit/file-handling",
+                "src": "src/stream-sw.js",
+                "dest": "."
             }
         ]
     },

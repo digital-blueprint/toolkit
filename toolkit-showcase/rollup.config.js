@@ -215,19 +215,6 @@ Dependencies:
                         src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
                         dest: 'dist/' + (await getDistPath(pkg.name)),
                     },
-                    {
-                        // client-zip and dl-stream are needed for streamed downloads in file-sink
-                        src: await getPackagePath('client-zip', 'worker.js'),
-                        dest: 'dist/client-zip/',
-                    },
-                    {
-                        src: await getPackagePath('dl-stream', 'worker.js'),
-                        dest: 'dist/dl-stream/',
-                    },
-                    {
-                        src: await getPackagePath('@dbp-toolkit/file-handling', 'src/stream-sw.js'),
-                        dest: 'dist/',
-                    },
                     ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
