@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css, unsafeCSS} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, getIconSVGURL} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -700,8 +700,6 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     }
 
     static get styles() {
-        const iconPath = commonUtils.getAssetURL('@dbp-toolkit/common', 'icons/');
-
         // language=css
         return css`
             ${commonStyles.getThemeCSS()}
@@ -871,20 +869,20 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
                 button[data-page='first']::after {
                     content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
-                    mask-image: url('${unsafeCSS(iconPath)}angle-double-left.svg');
+                    mask-image: url('${unsafeCSS(getIconSVGURL('angle-double-left'))}');
                 }
 
                 button[data-page='prev']::after {
-                    mask-image: url('${unsafeCSS(iconPath)}chevron-left.svg');
+                    mask-image: url('${unsafeCSS(getIconSVGURL('chevron-left'))}');
                 }
 
                 button[data-page='next']::after {
-                    mask-image: url('${unsafeCSS(iconPath)}chevron-right.svg');
+                    mask-image: url('${unsafeCSS(getIconSVGURL('chevron-right'))}');
                 }
 
                 button[data-page='last']::after {
                     content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
-                    mask-image: url('${unsafeCSS(iconPath)}angle-double-right.svg');
+                    mask-image: url('${unsafeCSS(getIconSVGURL('angle-double-right'))}');
                 }
             }
         `;
