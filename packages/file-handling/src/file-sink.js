@@ -12,6 +12,7 @@ import * as fileHandlingStyles from './styles';
 import {send} from '@dbp-toolkit/common/notification';
 import {Clipboard} from '@dbp-toolkit/file-handling/src/clipboard';
 import DbpFileHandlingLitElement from './dbp-file-handling-lit-element';
+import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
 
 /**
  * FileSink web component
@@ -88,12 +89,7 @@ export class FileSink extends LangMixin(
 
         // only activate file streaming mode when the file-sink set the streamed property during connection
         if (this.streamed) {
-            let baseUrl = new URL('./stream-sw.js', import.meta.url).href;
-            // sw should always be run at the topmost level to listen to all fetch events
-            // see common-untils.js getAssetURL()
-            if (baseUrl.split('/').slice(-2)[0] === 'shared') {
-                baseUrl = new URL('../stream-sw.js', baseUrl).href;
-            }
+            let baseUrl = commonUtils.getAssetURL(pkgName, 'stream-sw.js');
             navigator.serviceWorker.register(baseUrl).then((registration) => {
                 // start keepalive calls only in Firefox
                 if (window.navigator.userAgent.includes('Firefox')) {

@@ -1494,7 +1494,7 @@ export function getNativeModalDialogCSS() {
         }
 
         dialog {
-            min-width: var(--dbp-modal-min-width, 320px);
+            min-width: var(--dbp-modal-min-width, 250px);
             max-width: var(--dbp-modal-max-width, 75vw);
             min-height: var(--dbp-modal-min-height, 200px);
             max-height: var(--dbp-modal-max-height, 90vh);

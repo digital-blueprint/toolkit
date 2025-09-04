@@ -9,7 +9,7 @@ import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {getDistPath, getCopyTargets} from '@dbp-toolkit/dev-utils';
 import config from '../../demo.common.config.js';
 import {createRequire} from 'node:module';
 
@@ -63,10 +63,7 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
-                    },
+                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

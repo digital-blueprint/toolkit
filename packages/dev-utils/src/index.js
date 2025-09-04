@@ -81,26 +81,37 @@ function findPackageJsonDir(startPath) {
     return findPackageJsonDir(parentPath);
 }
 
-export async function getPackagePath(packageName, assetPath) {
-    let packageRoot;
+function getPackageJsonPath(packageName, parentPath) {
     const require = createRequire(import.meta.url);
     let current = require.resolve(path.join(process.cwd(), './package.json'));
     if (require(current).name === packageName) {
         // current package
-        packageRoot = path.dirname(current);
+        return current;
     } else {
         // Other packages from nodes_modules etc.
         try {
             // For packages that export a package.json
             // (also non-js like @dbp-toolkit/font-source-sans-pro)
-            packageRoot = path.dirname(require.resolve(packageName + '/package.json'));
+            return require.resolve(packageName + '/package.json', {paths: [parentPath]});
         } catch {
             // If there is no package.json export we try the default export
             // and search for a package.json in the parent directories.
             // That's the case with tabulator-tables for example
-            packageRoot = findPackageJsonDir(require.resolve(packageName));
+            try {
+                return path.join(
+                    findPackageJsonDir(require.resolve(packageName, {paths: [parentPath]})),
+                    'package.json',
+                );
+            } catch {
+                throw new Error(`Cannot find package.json for package "${packageName}"`);
+            }
         }
     }
+}
+
+export async function getPackagePath(packageName, assetPath) {
+    // this does not support nested packages
+    let packageRoot = path.dirname(getPackageJsonPath(packageName, process.cwd()));
     return path.relative(process.cwd(), path.join(packageRoot, assetPath));
 }
 
@@ -129,4 +140,101 @@ export async function generateTLSConfig() {
         key: await fs.promises.readFile(keyPath),
         cert: await fs.promises.readFile(certPath),
     };
+}
+
+/**
+ * Given a root package name, recursively collects all dbp metadata from the
+ * package and its (runtime) dependencies.
+ */
+async function collectDbpMetadata(packageName, _visited = new Set(), _path = null) {
+    const packageJsonPath = getPackageJsonPath(packageName, _path || process.cwd());
+
+    if (!fs.existsSync(packageJsonPath)) {
+        return {};
+    }
+
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    const actualPackageName = packageJson.name;
+
+    if (_visited.has(actualPackageName)) {
+        return {};
+    }
+    _visited.add(actualPackageName);
+
+    let allMeta = {};
+
+    if (packageJson.dbp) {
+        allMeta[actualPackageName] = packageJson.dbp;
+    }
+
+    for (const depName of Object.keys(packageJson.dependencies || {})) {
+        const depMeta = await collectDbpMetadata(depName, _visited, path.dirname(packageJsonPath));
+        Object.assign(allMeta, depMeta);
+    }
+
+    return allMeta;
+}
+
+/**
+ * Given a result from collectDbpMetadata(), returns an array of copy targets
+ * suitable for use with rollup-plugin-copy.
+ */
+async function getCopyTargetsForDbpMetadata(metadata, bundleDest = 'dist') {
+    const allTargets = [];
+
+    for (const [packageName, packageMeta] of Object.entries(metadata)) {
+        const assets = packageMeta.assets || [];
+
+        const targets = await Promise.all(
+            assets.map(async (asset) => {
+                const {src, dest, srcPackage} = asset;
+
+                // Handle src as array or string
+                const srcArray = Array.isArray(src) ? src : [src];
+                const resolvedSrcArray = await Promise.all(
+                    srcArray.map((s) => getPackagePath(srcPackage, s)),
+                );
+
+                // Handle dest as array or string
+                const destArray = Array.isArray(dest) ? dest : [dest];
+                const resolvedDestArray = destArray.map((d) =>
+                    path.join(bundleDest, 'local', packageName, d),
+                );
+
+                return {
+                    src: Array.isArray(src) ? resolvedSrcArray : resolvedSrcArray[0],
+                    dest: Array.isArray(dest) ? resolvedDestArray : resolvedDestArray[0],
+                };
+            }),
+        );
+
+        allTargets.push(...targets);
+    }
+
+    return allTargets;
+}
+
+/**
+ * Given a package name, returns an array of copy targets,
+ * suitable for use with rollup-plugin-copy.
+ *
+ * Add this to package.json to define assets that should be copied during build:
+ *
+ * "dbp": {
+ *   "assets": [
+ *     {
+ *       "srcPackage": "@dbp-toolkit/common",
+ *       "src": "assets/icons/*.svg",
+ *       "dest": "icons"
+ *     }
+ *   ]
+ * }
+ *
+ * - srcPackage: npm package name where files are located
+ * - src: source path within srcPackage (string, array, or glob pattern)
+ * - dest: destination directory (string or array)
+ */
+export async function getCopyTargets(packageName, bundleDest) {
+    const metadata = await collectDbpMetadata(packageName);
+    return getCopyTargetsForDbpMetadata(metadata, bundleDest);
 }

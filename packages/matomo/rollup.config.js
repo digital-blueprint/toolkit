@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getPackagePath, getDistPath, getBuildInfo} from '@dbp-toolkit/dev-utils';
+import {getBuildInfo, getCopyTargets} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 import url from 'node:url';
@@ -61,11 +61,9 @@ export default (async () => {
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
-                    },
+
                     {src: 'assets/favicon.ico', dest: 'dist'},
+                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

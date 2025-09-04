@@ -857,7 +857,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                 aside h2.subtitle {
                     display: block;
-                    border-bottom: var(--dbp-border);
                     padding: 0.5em 0.5em;
                 }
 
@@ -1238,7 +1237,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                     aside h2.subtitle {
                         display: block;
-                        border-bottom: var(--dbp-border);
                         padding: 0.5em 0.5em;
                     }
 

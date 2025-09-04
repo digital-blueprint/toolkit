@@ -6,7 +6,7 @@ import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
-import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {getCopyTargets} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
@@ -40,14 +40,7 @@ export default (async () => {
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
-                    },
-                    {
-                        src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'tabulator-tables')),
-                    },
+                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

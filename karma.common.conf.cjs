@@ -20,7 +20,6 @@ module.exports = async function (config) {
             {pattern: './*.js', included: true, watched: true, served: true, type: 'module'},
             {pattern: './**/*', included: false, watched: true, served: true, nocache: true},
         ],
-        exclude: ['./stream-sw.js'],
         autoWatch: true,
         browsers: ['ChromiumHeadlessNoSandbox', 'FirefoxHeadless'],
         customLaunchers: {
