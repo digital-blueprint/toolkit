@@ -238,3 +238,48 @@ export async function getCopyTargets(packageName, bundleDest) {
     const metadata = await collectDbpMetadata(packageName);
     return getCopyTargetsForDbpMetadata(metadata, bundleDest);
 }
+
+/**
+ * Given a package name, returns URL options for use with rollup-plugin-url.
+ *
+ * Add this to package.json to define files that should be copied during build,
+ * and provided as URLs when imported:
+ *
+ * "dbp": {
+ *   "urls": [
+ *     {
+ *       "srcPackage": "select2",
+ *       "src": "**\/*.css"
+ *     }
+ *   ]
+ * }
+ *
+ * - srcPackage: npm package name where files are located
+ * - src: source path within srcPackage (string, array, or glob pattern)
+ *
+ * All the matching files will be copied and renamed when imported, and the
+ * import will return a relative path to the copied file.
+ * Use getAbsoluteURL() to get an absolute URL to the file at runtime.
+ */
+export async function getUrlOptions(packageName, bundleDest) {
+    const metadata = await collectDbpMetadata(packageName);
+
+    let allIncludes = [];
+    for (const packageMeta of Object.values(metadata)) {
+        const urls = packageMeta.urls || [];
+        for (const url of urls) {
+            const {src, srcPackage} = url;
+            const srcArray = Array.isArray(src) ? src : [src];
+            for (const srcEntry of srcArray) {
+                allIncludes.push(await getPackagePath(srcPackage, srcEntry));
+            }
+        }
+    }
+
+    return {
+        limit: 0,
+        include: allIncludes.length === 0 ? undefined : allIncludes,
+        emitFiles: true,
+        fileName: bundleDest + '/[name].[hash][extname]',
+    };
+}

@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import {getPackagePath, getDistPath, getCopyTargets} from '@dbp-toolkit/dev-utils';
+import {getPackagePath, getDistPath, getCopyTargets, getUrlOptions} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
@@ -39,11 +39,7 @@ export default (async () => {
             }),
             commonjs(),
             json(),
-            url({
-                limit: 0,
-                emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]',
-            }),
+            url(await getUrlOptions(pkg.name, 'shared')),
             build !== 'local' && build !== 'test' ? terser() : false,
             copy({
                 targets: [

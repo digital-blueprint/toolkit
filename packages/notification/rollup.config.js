@@ -5,7 +5,6 @@ import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import process from 'node:process';
 
@@ -31,11 +30,6 @@ export default {
         resolve({browser: true}),
         commonjs(),
         json(),
-        url({
-            limit: 0,
-            emitFiles: true,
-            fileName: 'shared/[name].[hash][extname]',
-        }),
         build !== 'local' && build !== 'test' ? terser() : false,
         copy({
             targets: [

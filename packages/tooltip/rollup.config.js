@@ -8,7 +8,7 @@ import serve from 'rollup-plugin-serve';
 import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getPackagePath, getBuildInfo, getCopyTargets} from '@dbp-toolkit/dev-utils';
+import {getBuildInfo, getCopyTargets, getUrlOptions} from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
 import {createRequire} from 'node:module';
 import process from 'node:process';
@@ -53,12 +53,7 @@ export default (async () => {
             }),
             resolve({browser: true}),
             commonjs(),
-            url({
-                limit: 0,
-                include: [await getPackagePath('tippy.js', '**/*.css')],
-                emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]',
-            }),
+            url(await getUrlOptions(pkg.name, 'shared')),
             json(),
             build !== 'local' && build !== 'test' ? terser() : false,
             copy({

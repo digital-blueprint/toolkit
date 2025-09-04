@@ -20,6 +20,7 @@ import {
     getPackagePath,
     getDistPath,
     getCopyTargets,
+    getUrlOptions,
 } from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
 import {createRequire} from 'node:module';
@@ -171,16 +172,7 @@ Dependencies:
                     },
                 },
             }),
-            urlPlugin({
-                limit: 0,
-                include: [
-                    await getPackagePath('select2', '**/*.css'),
-                    await getPackagePath('highlight.js', '**/*.css'),
-                    await getPackagePath('tippy.js', '**/*.css'),
-                ],
-                emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]',
-            }),
+            urlPlugin(await getUrlOptions(pkg.name, 'shared')),
             copy({
                 targets: [
                     {src: 'assets/*.css', dest: 'dist/' + (await getDistPath(pkg.name))},

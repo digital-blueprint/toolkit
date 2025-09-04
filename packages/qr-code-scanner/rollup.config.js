@@ -9,7 +9,7 @@ import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import process from 'node:process';
 import {createRequire} from 'node:module';
-import {generateTLSConfig, getCopyTargets} from '@dbp-toolkit/dev-utils';
+import {generateTLSConfig, getCopyTargets, getUrlOptions} from '@dbp-toolkit/dev-utils';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
@@ -38,11 +38,7 @@ export default async () => {
             resolve({browser: true}),
             commonjs(),
             json(),
-            url({
-                limit: 0,
-                emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]',
-            }),
+            url(await getUrlOptions(pkg.name, 'shared')),
             build !== 'local' && build !== 'test' ? terser() : false,
             copy({
                 targets: [
