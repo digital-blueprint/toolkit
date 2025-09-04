@@ -178,32 +178,52 @@ export const dateToInputTimeString = (date) => {
 };
 
 /**
- * Get an absolute path for assets given a relative path to the js bundle.
+ * Get an absolute URL for shared assets (hashed assets).
  *
- * @param {string} pkg The package which provides the asset
- * @param {string} path The relative path based on the js bundle path
+ * @param {string} path The relative path to the shared asset
  * @param {object} [options] Optional parameters
  * @param {string} [options.metaUrl] Custom meta URL for testing
- * @returns {string} The absolute URL to the asset
+ * @returns {string} The absolute URL to the shared asset
  */
-export const getAssetURL = (pkg, path, options = {}) => {
-    let fullPath = '';
-    if (path === undefined) {
-        // backwards compat: in case only one parameter is passed
-        // assume it is a full path
-        fullPath = pkg;
-    } else {
-        fullPath = 'local/' + pkg + '/' + path;
-    }
+export const getAbsoluteURL = (path, options = {}) => {
+    const baseUrl = getBaseURL(options);
+    return new URL(path, baseUrl).href;
+};
 
+/**
+ * Get an absolute URL for local assets (namespaced by package).
+ *
+ * @param {string} pkgName The package which provides the asset
+ * @param {string} path The relative path within the package
+ * @param {object} [options] Optional parameters
+ * @param {string} [options.metaUrl] Custom meta URL for testing
+ * @returns {string} The absolute URL to the local asset
+ */
+export const getAssetURL = (pkgName, path, options = {}) => {
+    if (path === undefined) {
+        console.warn('getAssetURL called without package name, use getAbsoluteURL instead');
+        return getAbsoluteURL(pkgName, options);
+    }
+    const fullPath = 'local/' + pkgName + '/' + path;
+    const baseUrl = getBaseURL(options);
+    return new URL(fullPath, baseUrl).href;
+};
+
+/**
+ * Get the base URL for asset resolution.
+ *
+ * @param {object} [options] Optional parameters
+ * @param {string} [options.metaUrl] Custom meta URL for testing
+ * @returns {URL} The base URL for asset resolution
+ */
+const getBaseURL = (options = {}) => {
     let baseUrl = new URL(options.metaUrl !== undefined ? options.metaUrl : import.meta.url);
-    // XXX: In case we are under "/shared/" assume we are called from a chunk
-    // and need to go up one level. This assumes that all chunks are stored in
-    // "/shared/" by the bundler.
+    // If we are under "/shared/" assume we are called from a chunk
+    // and need to go up one level
     if (baseUrl.pathname.split('/').slice(-2)[0] === 'shared') {
         baseUrl = new URL('..', baseUrl);
     }
-    return new URL(fullPath, baseUrl).href;
+    return baseUrl;
 };
 
 /**

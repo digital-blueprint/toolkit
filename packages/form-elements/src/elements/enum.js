@@ -168,7 +168,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
         // In case it wasn't handled before
         this.handleEmptyValue();
-        const select2CSS = commonUtils.getAssetURL(select2CSSPath);
+        const select2CSS = commonUtils.getAbsoluteURL(select2CSSPath);
 
         switch (this._displayMode) {
             case 'dropdown':

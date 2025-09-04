@@ -65,6 +65,22 @@ suite('utils', () => {
         );
     });
 
+    test('getAbsoluteURL', () => {
+        assert.equal(
+            new URL(
+                utils.getAbsoluteURL('foo/bar', {
+                    metaUrl: 'http://localhost/shared/chunk.js',
+                }),
+            ).pathname,
+            '/foo/bar',
+        );
+        assert.equal(
+            new URL(utils.getAbsoluteURL('foo/bar', {metaUrl: 'http://localhost/entry.js'}))
+                .pathname,
+            '/foo/bar',
+        );
+    });
+
     test('getThemeCSS', () => {
         styles.getThemeCSS();
     });

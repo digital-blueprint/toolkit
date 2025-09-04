@@ -265,7 +265,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
     }
 
     render() {
-        const select2CSS = commonUtils.getAssetURL(select2CSSPath);
+        const select2CSS = commonUtils.getAbsoluteURL(select2CSSPath);
         return html`
             <link rel="stylesheet" href="${select2CSS}" />
 
