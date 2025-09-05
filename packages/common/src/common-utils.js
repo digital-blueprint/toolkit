@@ -66,14 +66,10 @@ export const base64EncodeUnicode = (str) => {
  */
 
 /**
- * Same as customElements.define() but with some additional error handling.
+ * Same as customElements.define() but less strict.
  *
  * In case the same component (with the exact same implementation) is already
  * defined then this will do nothing instead of erroring out.
- *
- * In case the browser doesn't support custom elements it will fill all those
- * custom tags with an error message so the user gets some feedback instead of
- * just an empty page.
  *
  * @param {string} name
  * @param {Function} constructor
@@ -83,22 +79,6 @@ export const defineCustomElement = (name, constructor, options) => {
     // In case the constructor is already defined just do nothing
     if (customElements.get(name) === constructor) {
         return true;
-    }
-    // Checks taken from https://github.com/webcomponents/webcomponentsjs/blob/master/webcomponents-loader.js
-    if (
-        !(
-            'attachShadow' in Element.prototype &&
-            'getRootNode' in Element.prototype &&
-            window.customElements
-        )
-    ) {
-        var elements = document.getElementsByTagName(name);
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].innerHTML =
-                "<span style='border: 1px solid red; font-size: 0.8em; " +
-                "opacity: 0.5; padding: 0.2em;'>☹ Your browser is not supported ☹</span>";
-        }
-        return false;
     }
     customElements.define(name, constructor, options);
     return true;
