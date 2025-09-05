@@ -51,14 +51,14 @@
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.13",
+        "exceljs": "^4.4.0",
         "i18next": "^23.0.0 || ^24.0.0",
         "jspdf": "^3.0.2",
         "jspdf-autotable": "^5.0.0",
         "jszip": "^3.5.0",
         "lit": "^3.0.0",
         "material-design-icons-svg": "^3.0.0",
-        "tabulator-tables": "^6.0.0",
-        "xlsx": "^0.18.2"
+        "tabulator-tables": "^6.0.0"
     },
     "scripts": {
         "clean": "rm dist/*",
