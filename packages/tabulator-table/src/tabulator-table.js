@@ -8,7 +8,6 @@ import * as tabulatorStyles from '@dbp-toolkit/tabulator-table/src/tabulator-tab
 import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
 import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -487,7 +486,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         }, 0);
     }
 
-    download(type, dataName) {
+    async download(type, dataName) {
         dataName = dataName + '.' + type;
         if (!this.tabulatorTable) return;
         let selected_rows = this.tabulatorTable.getSelectedRows();
@@ -527,16 +526,33 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         }
                         entries.push(entry);
                     }
-                    const worksheet = XLSX.utils.json_to_sheet(entries);
-                    const workbook = XLSX.utils.book_new();
-                    /* Add the worksheet to the workbook */
-                    // Exported filen-name must be shorter than 31 chars with extension included
                     const extension = '.' + type;
                     const maxlength = 26;
                     dataName = dataName.replace(extension, '').slice(0, maxlength);
                     dataName = dataName + extension;
-                    XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
-                    XLSX.writeFile(workbook, dataName, {compression: true});
+
+                    const ExcelJS = (await import('exceljs')).default;
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet(dataName);
+                    if (entries.length > 0) {
+                        const headers = Object.keys(entries[0]);
+                        worksheet.addRow(headers);
+                        entries.forEach((entry) => {
+                            const rowData = headers.map((header) => entry[header] || '');
+                            worksheet.addRow(rowData);
+                        });
+                    }
+
+                    const buffer = await workbook.xlsx.writeBuffer();
+                    const blob = new Blob([buffer], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = dataName;
+                    link.click();
+                    URL.revokeObjectURL(url);
                     break;
                 }
                 case 'pdf': {
@@ -630,16 +646,34 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         }
                         entries.push(entry);
                     }
-                    const worksheet = XLSX.utils.json_to_sheet(entries);
-                    const workbook = XLSX.utils.book_new();
-                    /* Add the worksheet to the workbook */
                     // Exported filen-name must be shorter than 31 chars with extension included
                     const extension = '.' + type;
                     const maxlength = 26;
                     dataName = dataName.replace(extension, '').slice(0, maxlength);
                     dataName = dataName + extension;
-                    XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
-                    XLSX.writeFile(workbook, dataName, {compression: true});
+
+                    const ExcelJS = (await import('exceljs')).default;
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet(dataName);
+                    if (entries.length > 0) {
+                        const headers = Object.keys(entries[0]);
+                        worksheet.addRow(headers);
+                        entries.forEach((entry) => {
+                            const rowData = headers.map((header) => entry[header] || '');
+                            worksheet.addRow(rowData);
+                        });
+                    }
+
+                    const buffer = await workbook.xlsx.writeBuffer();
+                    const blob = new Blob([buffer], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = dataName;
+                    link.click();
+                    URL.revokeObjectURL(url);
                     break;
                 }
                 case 'pdf': {
