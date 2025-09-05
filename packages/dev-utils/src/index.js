@@ -275,6 +275,7 @@ export async function getUrlOptions(packageName, bundleDest) {
             }
         }
     }
+    allIncludes = Array.from(new Set(allIncludes));
 
     return {
         limit: 0,
