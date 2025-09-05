@@ -52,9 +52,7 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
     }
 
     _(selector) {
-        return this.shadowRoot === null
-            ? this.querySelector(selector)
-            : this.shadowRoot.querySelector(selector);
+        return this.renderRoot.querySelector(selector);
     }
 
     /**

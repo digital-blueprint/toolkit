@@ -29,15 +29,11 @@ export default class DBPLitElement extends AdapterLitElement {
     }
 
     _(selector) {
-        return this.shadowRoot === null
-            ? this.querySelector(selector)
-            : this.shadowRoot.querySelector(selector);
+        return this.renderRoot.querySelector(selector);
     }
 
     _a(selector) {
-        return this.shadowRoot === null
-            ? this.querySelectorAll(selector)
-            : this.shadowRoot.querySelectorAll(selector);
+        return this.renderRoot.querySelectorAll(selector);
     }
 
     firstUpdated() {

@@ -597,9 +597,7 @@ export class NextcloudFilePicker extends LangMixin(
     }
 
     _a(selector) {
-        return this.shadowRoot === null
-            ? this.querySelectorAll(selector)
-            : this.shadowRoot.querySelectorAll(selector);
+        return this.renderRoot.querySelectorAll(selector);
     }
 
     async onReceiveWindowMessage(event) {
