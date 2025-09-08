@@ -46,7 +46,7 @@ export async function generatePDFDownload(tabulatorTable, data, dataName) {
             overflow: 'linebreak',
         },
     });
-    doc.save(dataName);
+    doc.save(dataName + '.pdf');
 }
 
 export async function downloadExcel(rows, dataName) {

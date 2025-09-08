@@ -486,7 +486,6 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     }
 
     async download(type, dataName) {
-        dataName = dataName + '.' + type;
         if (!this.tabulatorTable) {
             return;
         }
@@ -502,12 +501,11 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             ? selected_rows.map((row) => row.getData())
             : this.tabulatorTable.getData();
         const downloadMode = hasSelection ? 'selected' : 'all';
-
         switch (type) {
             case 'csv':
             case 'json':
             case 'html':
-                this.tabulatorTable.download(type, dataName, {}, downloadMode);
+                this.tabulatorTable.download(type, dataName + '.' + type, {}, downloadMode);
                 break;
             case 'xlsx':
                 await downloadExcel(rows, dataName);
