@@ -72,12 +72,6 @@ export async function downloadExcel(rows, dataName) {
         entries.push(entry);
     }
 
-    // Exported filename must be shorter than 31 chars with extension included
-    const extension = '.xlsx';
-    const maxlength = 26;
-    dataName = dataName.replace(extension, '').slice(0, maxlength);
-    dataName = dataName + extension;
-
     const ExcelJS = (await import('exceljs')).default;
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet(dataName);
@@ -98,7 +92,7 @@ export async function downloadExcel(rows, dataName) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = dataName;
+    link.download = dataName + '.xlsx';
     link.click();
     URL.revokeObjectURL(url);
 }
