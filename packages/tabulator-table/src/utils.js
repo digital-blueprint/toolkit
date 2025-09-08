@@ -1,0 +1,104 @@
+export async function generatePDFDownload(tabulatorTable, data, dataName) {
+    // Get only displayed columns. [respect Column setting modal state]
+    let columns = tabulatorTable.getColumns();
+    let header = [];
+    for (let column of columns) {
+        let definition = column.getDefinition();
+        if (!column.isVisible()) {
+            continue;
+        }
+        let field = column.getField();
+        if (field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
+            header.push(column.getField());
+    }
+
+    let body = [];
+    for (let entry of data) {
+        let entry_array = [];
+        header.forEach((column) => {
+            let cellValue = entry[column] ? entry[column] : '-';
+            if (Array.isArray(cellValue)) {
+                cellValue = cellValue.join(', ');
+            }
+            entry_array.push(cellValue);
+        });
+        body.push(entry_array);
+    }
+
+    let jsPDF = (await import('jspdf')).default;
+    let autoTable = (await import('jspdf-autotable')).default;
+    const doc = new jsPDF('l', 'pt');
+    autoTable(doc, {
+        head: [header],
+        body: body,
+        horizontalPageBreak: false,
+        tableWidth: 'auto',
+        styles: {
+            overflow: 'linebreak',
+            valign: 'middle',
+            cellWidth: 'auto',
+        },
+        headStyles: {
+            // cellWidth: 'auto'
+        },
+        bodyStyles: {
+            // cellWidth: 'auto',
+            overflow: 'linebreak',
+        },
+    });
+    doc.save(dataName);
+}
+
+export async function downloadExcel(rows, dataName) {
+    let entries = [];
+    for (let row of rows) {
+        let cells = row.getCells();
+        let entry = {};
+        for (let cell of cells) {
+            let column = cell.getColumn();
+            let definition = column.getDefinition();
+            if (!column.isVisible()) {
+                continue;
+            }
+            let field = cell.getField();
+            if (field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
+                let cellValue = cell.getValue();
+                if (Array.isArray(cellValue)) {
+                    cellValue = cellValue.join(', ');
+                }
+                entry[field] = cellValue;
+            }
+        }
+        entries.push(entry);
+    }
+
+    // Exported filename must be shorter than 31 chars with extension included
+    const extension = '.xlsx';
+    const maxlength = 26;
+    dataName = dataName.replace(extension, '').slice(0, maxlength);
+    dataName = dataName + extension;
+
+    const ExcelJS = (await import('exceljs')).default;
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(dataName);
+
+    if (entries.length > 0) {
+        const headers = Object.keys(entries[0]);
+        worksheet.addRow(headers);
+        entries.forEach((entry) => {
+            const rowData = headers.map((header) => entry[header] || '');
+            worksheet.addRow(rowData);
+        });
+    }
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = dataName;
+    link.click();
+    URL.revokeObjectURL(url);
+}
