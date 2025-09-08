@@ -8,8 +8,6 @@ import * as tabulatorStyles from '@dbp-toolkit/tabulator-table/src/tabulator-tab
 import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
 import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -585,6 +583,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         });
                         body.push(entry_array);
                     }
+                    let jsPDF = (await import('jspdf')).default;
+                    let autoTable = (await import('jspdf-autotable')).default;
                     const doc = new jsPDF('l', 'pt');
                     autoTable(doc, {
                         head: [header],
@@ -706,6 +706,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         });
                         body.push(entry_array);
                     }
+                    let jsPDF = (await import('jspdf')).default;
+                    let autoTable = (await import('jspdf-autotable')).default;
                     const doc = new jsPDF('l', 'pt');
                     autoTable(doc, {
                         head: [header],
