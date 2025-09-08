@@ -29,7 +29,7 @@
         "chai": "^6.0.0",
         "chokidar": "^4.0.0",
         "eslint": "^9.1.0",
-        "eslint-plugin-jsdoc": "^54.0.0",
+        "eslint-plugin-jsdoc": "^55.0.0",
         "glob": "^11.0.0",
         "i18next-parser": "^9.1.0",
         "karma": "^6.0.0",
