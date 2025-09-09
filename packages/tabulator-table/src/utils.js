@@ -57,7 +57,7 @@ export async function downloadExcel(rows, dataName) {
         for (let cell of cells) {
             let column = cell.getColumn();
             let definition = column.getDefinition();
-            if (!column.isVisible()) {
+            if (definition.visible === false) {
                 continue;
             }
             let field = cell.getField();
