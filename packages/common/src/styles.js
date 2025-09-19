@@ -1730,3 +1730,74 @@ export function getLinkCss() {
         }
     `;
 }
+
+export function getDropDownCss() {
+    // language=css
+    return css`
+        :host {
+            display: inline-block;
+            position: relative;
+        }
+        :host([disabled]) {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--dbp-border);
+            border-radius: 0.5rem;
+            background: var(--dbp-background);
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .menu {
+            position: absolute;
+            top: calc(100% + 0.25rem);
+            min-width: 12rem;
+            padding: 0.25rem;
+            margin: 0;
+            list-style: none;
+            border: 1px solid var(--dbp-border);
+            border-radius: 0.5rem;
+            background: var(--dbp-background);
+            box-shadow:
+                0 6px 24px rgba(0, 0, 0, 0.08),
+                0 2px 8px rgba(0, 0, 0, 0.06);
+            z-index: 1000;
+        }
+        :host([align='right']) .menu {
+            right: 0;
+        }
+        :host(:not([align='right'])) .menu {
+            left: 0;
+        }
+
+        ::slotted([slot='item']) {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.6rem;
+            border: 0;
+            background: transparent;
+            font: inherit;
+            text-align: left;
+            border-radius: 0.4rem;
+            width: 100%;
+            cursor: pointer;
+        }
+        ::slotted([slot='item']:hover),
+        ::slotted([slot='item']:focus-visible) {
+            background: rgba(0, 0, 0, 0.06);
+            outline: none;
+        }
+        ::slotted([slot='item'][disabled]) {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    `;
+}
