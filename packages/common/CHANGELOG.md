@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.16
+
+- Utils: add function createUUID
+
 ## 0.3.15
 
 - Modal: Add `title` slot to allow custom titles in the modal component
