@@ -304,7 +304,10 @@ export class GrantPermissionDialog extends LangMixin(
 
         try {
             for (const grant of grantsToDelete) {
-                await this.apiDeleteResourceActionGrant(grant.identifier);
+                const deleteResponse = await this.apiDeleteResourceActionGrant(grant.identifier);
+                if (deleteResponse.status !== 204) {
+                    throw new Error('Failed to delete grant');
+                }
             }
             // @TODO handle multiple errors
         } catch (e) {
@@ -532,7 +535,7 @@ export class GrantPermissionDialog extends LangMixin(
             let responseBody = await response.json();
             if (
                 responseBody !== undefined &&
-                responseBody.status !== 403 &&
+                response.status !== 403 &&
                 responseBody['hydra:member'].length > 0
             ) {
                 // Loop trough all grants
@@ -989,6 +992,7 @@ export class GrantPermissionDialog extends LangMixin(
 
         try {
             console.log('BEFORE REMOVING USER', this.usersToAdd);
+            let noErrors = true;
             // Process each user
             for (const userIdentifier of this.usersToAdd.keys()) {
                 const userToAdd = this.usersToAdd.get(userIdentifier);
@@ -1032,14 +1036,27 @@ export class GrantPermissionDialog extends LangMixin(
                 // Add grants
                 if (grantsToPost.length > 0) {
                     for (const grant of grantsToPost) {
-                        await this.apiPostResourceActionGrant(grant.action, grant.userIdentifier);
+                        const postResponse = await this.apiPostResourceActionGrant(
+                            grant.action,
+                            grant.userIdentifier,
+                        );
+                        if (postResponse.status !== 200) {
+                            noErrors = false;
+                            continue;
+                        }
                     }
                 }
 
                 // Delete grants
                 if (grantsToDelete.length > 0) {
                     for (const grant of grantsToDelete) {
-                        await this.apiDeleteResourceActionGrant(grant.identifier);
+                        const deleteResponse = await this.apiDeleteResourceActionGrant(
+                            grant.identifier,
+                        );
+                        if (deleteResponse.status !== 204) {
+                            noErrors = false;
+                            continue;
+                        }
                     }
                 }
 
@@ -1072,16 +1089,27 @@ export class GrantPermissionDialog extends LangMixin(
 
             // Stop the save button spinner and show success message
             this.savePermissionButtonRef.value.stop();
-            send({
-                summary: i18n.t('grant-permission-dialog.notifications.success-title'),
-                body: i18n.t(
-                    'grant-permission-dialog.notifications.permissions-saved-successfully',
-                ),
-                type: 'success',
-                targetNotificationId: 'permission-modal-notification',
-                timeout: 5,
-            });
-            return Promise.resolve();
+            if (noErrors) {
+                send({
+                    summary: i18n.t('grant-permission-dialog.notifications.success-title'),
+                    body: i18n.t(
+                        'grant-permission-dialog.notifications.permissions-saved-successfully',
+                    ),
+                    type: 'success',
+                    targetNotificationId: 'permission-modal-notification',
+                    timeout: 5,
+                });
+                return Promise.resolve();
+            } else {
+                send({
+                    summary: i18n.t('grant-permission-dialog.notifications.error-title'),
+                    body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
+                    type: 'danger',
+                    targetNotificationId: 'permission-modal-notification',
+                    timeout: 5,
+                });
+                return Promise.reject();
+            }
         } catch (e) {
             console.log('Save user permissions error:', e);
             send({
