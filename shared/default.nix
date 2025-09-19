@@ -35,16 +35,14 @@ pkgs.mkShell {
   shellHookCommon = shellHookCommon;
 
   # Specific shellHooks for the apps
-  shellHook =
-    shellHookCommon
-    + ''
-      # Check if we are in the repository root (and git is an actual folder and not part of a submodule);
-      if [ "$REPO_ROOT" = "$(pwd)" ] && [ -d ".git" ]; then
-        # Symlink the pre-commit hook into the .git/hooks directory
-        echo "🛠️ Installing pre-commit hook"
-        ln -sf ../../vendor/toolkit/shared/pre-commit.sh .git/hooks/pre-commit
-      fi
+  shellHook = shellHookCommon + ''
+    # Check if we are in the repository root (and git is an actual folder and not part of a submodule);
+    if [ "$REPO_ROOT" = "$(pwd)" ] && [ -d ".git" ]; then
+      # Symlink the pre-commit hook into the .git/hooks directory
+      echo "🛠️ Installing pre-commit hook"
+      ln -sf ../../vendor/toolkit/shared/pre-commit.sh .git/hooks/pre-commit
+    fi
 
-      echo "💻 Starting ${lib.toSentenceCase projectName} dev shell"
-    '';
+    echo "💻 Starting ${lib.toSentenceCase projectName} dev shell"
+  '';
 }
