@@ -1040,7 +1040,7 @@ export class GrantPermissionDialog extends LangMixin(
                             grant.action,
                             grant.userIdentifier,
                         );
-                        if (postResponse.status !== 200) {
+                        if (postResponse.status !== 201) {
                             noErrors = false;
                             continue;
                         }
