@@ -1505,9 +1505,10 @@ export function getNativeModalDialogCSS() {
             border: 0 none;
             color: var(--dbp-content);
             background-color: var(--dbp-background);
-            filter: drop-shadow(rgba(0, 0, 0, 0.3) 2px 4px 8px)
-                drop-shadow(rgba(0, 0, 0, 0.2) 4px 8px 16px)
-                drop-shadow(rgba(0, 0, 0, 0.1) 8px 16px 32px);
+            box-shadow:
+                rgba(0, 0, 0, 0.3) 2px 4px 16px,
+                rgba(0, 0, 0, 0.2) 4px 8px 32px,
+                rgba(0, 0, 0, 0.1) 8px 16px 64px;
 
             transition: height 5s ease-in-out;
             transform: translateY(var(--dbp-modal-translate-y, 0));
