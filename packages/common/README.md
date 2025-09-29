@@ -59,10 +59,30 @@ You can use this web component to show translated html.
 </dbp-translated>
 ```
 
+## Select Web Component
+
+You can use this web component to have select/dropdown with a menu of options (with optional icons).
+Supports full keyboard navigation and “click outside to close,” and emits a change event when an option is selected.
+
+### Key features
+
+- Options via JSON: `{ name, title, iconName? }[]`
+- Optional icons (uses `<dbp-icon>` when iconName is provided)
+- Accessible: ARIA roles, arrow-key navigation, Escape to close
+
+```html
+<script type="module" src="https://unpkg.com/@dbp-toolkit/common@0.2.8/dist/components.js"></script>
+
+<dbp-select id="actions" label="Actions"></dbp-select>
+const sel = document.getElementById('actions'); sel.setOptions([ {name: 'add', title: 'Add',
+iconName: 'add'}, {name: 'edit', title: 'Edit', disabled: true}, {name: 'delete', title: 'Delete'},
+]);
+```
+
 ## Modal Web Component
 
 You can use this web component to show content in a modal.
-This webcomponent has two function which can be called from outside: `open()` - which opens the modal and `close()` - which closes the modal.
+This web component has two function which can be called from outside: `open()` - which opens the modal and `close()` - which closes the modal.
 You can add content to 3 slots: `header`, `content` and `footer`. The `header` and `footer` are optional.
 Slotted content can be styled from outside with css.
 
