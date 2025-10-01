@@ -47,9 +47,6 @@ export class DbpBaseElement extends LangMixin(
     handleErrors() {
         let errorMessages = [];
 
-        console.log('handleErrors this.name', this.name);
-        console.log('handleErrors this.value', this.value);
-
         if (this.required && this.isValueEmpty()) {
             errorMessages.push(
                 this._i18n.t('render-form.base-object.required-field-validation-error'),
@@ -74,9 +71,7 @@ export class DbpBaseElement extends LangMixin(
     }
 
     evaluateCallback(data) {
-        console.log('evaluateCallback data', data);
         this.evaluationData = data;
-
         return this.handleErrors();
     }
 
@@ -144,7 +139,6 @@ export class DbpBaseElement extends LangMixin(
 
     handleInputValue(e) {
         this.value = e.target.value;
-        console.log('handleInputValue this.value', this.value);
     }
 
     render() {
