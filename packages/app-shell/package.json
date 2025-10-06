@@ -33,6 +33,7 @@
         "playwright": "^1.34.0",
         "playwright-core": "^1.20.2",
         "prettier": "^3.0.0",
+        "rolldown": "^1.0.0-beta.42",
         "rollup": "^4.0.0",
         "rollup-plugin-copy": "^3.1.0",
         "rollup-plugin-delete": "^3.0.0",
@@ -60,11 +61,11 @@
         "eslint": "eslint \"**/*.{js,ts}\"",
         "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
-        "build": "rollup -c",
-        "build-local": "rollup -c",
-        "build-test": "rollup -c --environment BUILD:test",
+        "build": "rolldown -c rollup.config.js",
+        "build-local": "rolldown -c rollup.config.js",
+        "build-test": "rolldown -c rollup.config.js --environment BUILD:test",
         "watch": "npm run watch-local",
-        "watch-local": "rollup -c --watch",
+        "watch-local": "rolldown -c rollup.config.js --watch",
         "test": "npm run build-test && karma start karma.conf.cjs --singleRun",
         "tsc": "tsc -p jsconfig.json"
     }

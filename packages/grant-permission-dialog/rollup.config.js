@@ -15,6 +15,7 @@ const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 
 export default (async () => {
     return {
@@ -25,22 +26,27 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
+        },
+        moduleTypes: {
+            '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
         },
         plugins: [
             del({
                 targets: 'dist/*',
             }),
-            resolve({
-                browser: true,
-                preferBuiltins: true,
-            }),
-            commonjs(),
-            json({
-                strictRequires: 'auto',
-            }),
+            !isRolldown &&
+                resolve({
+                    browser: true,
+                    preferBuiltins: true,
+                }),
+            !isRolldown && commonjs(),
+            !isRolldown &&
+                json({
+                    strictRequires: 'auto',
+                }),
             url(await getUrlOptions(pkg.name, 'shared')),
             build !== 'local' && build !== 'test' ? terser() : false,
             copy({

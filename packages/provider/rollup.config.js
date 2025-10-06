@@ -17,6 +17,7 @@ const pkg = require('./package.json');
 const basePath = '/dist/';
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 
 export default (async () => {
     return {
@@ -27,7 +28,7 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
         },
@@ -50,9 +51,9 @@ export default (async () => {
                     buildInfo: getBuildInfo(build),
                 },
             }),
-            resolve({browser: true}),
-            commonjs(),
-            json(),
+            !isRolldown && resolve({browser: true}),
+            !isRolldown && commonjs(),
+            !isRolldown && json(),
             build !== 'local' && build !== 'test' ? terser() : false,
             copy({
                 targets: [

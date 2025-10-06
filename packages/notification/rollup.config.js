@@ -10,6 +10,7 @@ import process from 'node:process';
 
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 
 export default {
     input:
@@ -19,7 +20,7 @@ export default {
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
-        chunkFileNames: 'shared/[name].[hash].[format].js',
+        chunkFileNames: 'shared/[name].[hash].js',
         format: 'esm',
         sourcemap: true,
     },
@@ -27,9 +28,9 @@ export default {
         del({
             targets: 'dist/*',
         }),
-        resolve({browser: true}),
-        commonjs(),
-        json(),
+        !isRolldown && resolve({browser: true}),
+        !isRolldown && commonjs(),
+        !isRolldown && json(),
         build !== 'local' && build !== 'test' ? terser() : false,
         copy({
             targets: [

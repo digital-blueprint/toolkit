@@ -35,6 +35,7 @@ let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
 let useHTTPS = true;
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 
 console.log('APP_ENV: ' + appEnv);
 
@@ -86,9 +87,12 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
+        },
+        moduleTypes: {
+            '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
         },
         treeshake: treeshake,
         plugins: [
@@ -122,10 +126,11 @@ export default (async () => {
                     shortName: config.shortName,
                 },
             }),
-            resolve({
-                browser: true,
-                preferBuiltins: true,
-            }),
+            !isRolldown &&
+                resolve({
+                    browser: true,
+                    preferBuiltins: true,
+                }),
             checkLicenses &&
                 license({
                     banner: {
@@ -160,10 +165,11 @@ Dependencies:
                         },
                     },
                 }),
-            commonjs({
-                strictRequires: 'auto',
-            }),
-            json(),
+            !isRolldown &&
+                commonjs({
+                    strictRequires: 'auto',
+                }),
+            !isRolldown && json(),
             md({
                 include: ['../../**/*.md'],
                 marked: {

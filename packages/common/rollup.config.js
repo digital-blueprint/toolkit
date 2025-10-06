@@ -9,6 +9,7 @@ import {getCopyTargets} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
@@ -21,7 +22,7 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
         },
@@ -29,9 +30,9 @@ export default (async () => {
             del({
                 targets: 'dist/*',
             }),
-            resolve({browser: true}),
-            commonjs(),
-            json(),
+            !isRolldown && resolve({browser: true}),
+            !isRolldown && commonjs(),
+            !isRolldown && json(),
             copy({
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},

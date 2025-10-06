@@ -19,6 +19,7 @@ const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const basePath = '/dist/';
 const appName = 'dbp-app-shell';
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 
 export default (async () => {
     let privatePath = await getDistPath(pkg.name);
@@ -30,7 +31,7 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
         },
@@ -55,9 +56,9 @@ export default (async () => {
                     keyCloakClientId: config.keyCloakClientId,
                 },
             }),
-            resolve({browser: true}),
-            commonjs(),
-            json(),
+            !isRolldown && resolve({browser: true}),
+            !isRolldown && commonjs(),
+            !isRolldown && json(),
             copy({
                 targets: [
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
