@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/language-select",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/language-select",
-    "version": "0.3.6",
+    "version": "0.3.7",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -41,8 +41,8 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.13",
-        "@dbp-toolkit/provider": "^0.2.13",
+        "@dbp-toolkit/common": "^0.3.17",
+        "@dbp-toolkit/provider": "^0.2.14",
         "lit": "^3.0.0"
     },
     "scripts": {

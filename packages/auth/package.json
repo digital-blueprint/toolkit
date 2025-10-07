@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/auth",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/auth",
-    "version": "0.3.7",
+    "version": "0.3.8",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -45,7 +45,7 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.13",
+        "@dbp-toolkit/common": "^0.3.17",
         "keycloak-js": "^26.0.0",
         "lit": "^3.0.0"
     },

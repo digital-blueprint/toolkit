@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/dev-utils",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/dev-utils",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",

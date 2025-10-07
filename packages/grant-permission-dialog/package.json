@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/grant-permission-dialog",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/grant-permission-dialog",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "type": "module",
     "description": "Grant permission modal",
     "main": "src/index.js",
@@ -44,9 +44,9 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.13",
-        "@dbp-toolkit/notification": "^0.3.6",
-        "@dbp-toolkit/person-select": "^0.3.7",
+        "@dbp-toolkit/common": "^0.3.17",
+        "@dbp-toolkit/notification": "^0.3.8",
+        "@dbp-toolkit/person-select": "^0.3.8",
         "lit": "^3.0.0"
     },
     "scripts": {

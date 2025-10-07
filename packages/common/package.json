@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/common",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/common",
-    "version": "0.3.16",
+    "version": "0.3.17",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -20,7 +20,7 @@
         ]
     },
     "devDependencies": {
-        "@dbp-toolkit/dev-utils": "^0.1.1",
+        "@dbp-toolkit/dev-utils": "^0.1.2",
         "@rollup/plugin-commonjs": "^28.0.0",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^16.0.0",
