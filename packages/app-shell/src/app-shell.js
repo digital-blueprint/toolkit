@@ -551,44 +551,45 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         const menu = this.shadowRoot.querySelector('ul.menu');
         const subtitle = this.shadowRoot.querySelector('h2.subtitle');
 
-        if (menu === null || subtitle === null) {
-            return;
-        }
+        if (!menu || !subtitle) return;
 
-        menu.classList.toggle('hidden');
+        const isOpening = !menu.classList.contains('is-open');
+        menu.classList.toggle('is-open', isOpening);
 
-        if (this.menuHeight === -1) {
-            this.menuHeight = menu.clientHeight;
-        }
+        const mainGrid = this.shadowRoot.querySelector('#main');
+        if (mainGrid) mainGrid.classList.toggle('menu-open', isOpening);
 
-        let topValue = subtitle.getBoundingClientRect().bottom;
-        let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
+        // Icon + aria
+        const burger = this.shadowRoot.querySelector('#menu-burger-icon');
+        if (burger) burger.name = isOpening ? 'close' : 'menu';
+        subtitle.setAttribute('aria-expanded', String(isOpening));
 
-        if (isMenuOverflow && !menu.classList.contains('hidden')) {
-            menu.setAttribute(
-                'style',
-                'position: fixed;top: ' +
-                    topValue +
-                    'px;bottom: 0;border-bottom: 0;overflow-y: auto;',
+        // Outside click + initial click guard
+        if (isOpening) {
+            this.initateOpenMenu = true; // (typo kept to match your code)
+            if (!this._boundCloseMenuHandler) {
+                this._boundCloseMenuHandler = (evt) => {
+                    // ignore the very first click that opened the menu
+                    if (this.initateOpenMenu) {
+                        this.initateOpenMenu = false;
+                        return;
+                    }
+                    const path = evt.composedPath();
+                    const clickedInside = path.includes(menu) || path.includes(subtitle);
+                    if (!clickedInside) this.hideMenu();
+                };
+            }
+
+            document.addEventListener('click', this._boundCloseMenuHandler, {capture: true});
+            document.addEventListener(
+                'keydown',
+                (this._boundEscHandler ||= (e) => {
+                    if (e.key === 'Escape') this.hideMenu();
+                }),
             );
-            menu.scrollTop = 0;
-            document.body.setAttribute('style', 'overflow:hidden;');
-        } else if (isMenuOverflow && menu.classList.contains('hidden')) {
-            document.body.removeAttribute('style', 'overflow:hidden;');
-            menu.removeAttribute('style');
-        }
-
-        const chevron = this.shadowRoot.querySelector('#menu-chevron-icon');
-        if (chevron !== null) {
-            chevron.name = menu.classList.contains('hidden') ? 'chevron-down' : 'chevron-up';
-        }
-
-        if (!menu.classList.contains('hidden')) {
-            document.addEventListener('click', this.boundCloseMenuHandler);
-            this.initateOpenMenu = true;
         } else {
-            document.removeEventListener('click', this.boundCloseMenuHandler);
-            menu.removeAttribute('style');
+            document.removeEventListener('click', this._boundCloseMenuHandler, {capture: true});
+            document.removeEventListener('keydown', this._boundEscHandler);
         }
     }
 
@@ -608,20 +609,17 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getLinkCss()}
 
-            .hidden {
-                display: none;
-            }
-
+            
             h1.title {
                 margin-bottom: 0;
-                font-weight: 300;
+                font-weight: bold;
             }
 
             #main {
                 display: grid;
-                grid-template-columns: minmax(180px, 17%) minmax(0, auto);
+                grid-template-columns: minmax(0, 1fr);
                 grid-template-rows: min-content min-content 1fr min-content;
-                grid-template-areas: 'header header' 'headline headline' 'sidebar main' 'footer footer';
+                grid-template-areas: 'header' 'headline' 'main' 'footer';
                 max-width: 1400px;
                 margin: auto;
                 min-height: 100vh;
@@ -638,23 +636,26 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 grid-template-rows: 60px 60px;
                 grid-template-areas: 'hd1-left hd1-middle hd1-right' 'hd2-left . hd2-right';
                 width: 100%;
-                max-width: 1060px;
                 margin: 0 auto;
             }
 
             aside {
                 grid-area: sidebar;
                 margin: 15px 15px;
+                display: contents;
             }
+
             #headline {
                 grid-area: headline;
                 margin: 20px 0 30px 0;
                 text-align: center;
             }
+
             main {
                 grid-area: main;
                 margin: 15px 15px;
             }
+
             footer {
                 grid-area: footer;
                 margin: 15px;
@@ -664,14 +665,23 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             header .hd1-left {
                 display: flex;
                 flex-direction: row;
-                justify-content: flex-end;
-                -webkit-justify-content: flex-end;
+                justify-content: space-between;
+                -webkit-justify-content: space-between;
                 grid-area: hd1-left;
                 text-align: right;
                 padding-right: 20px;
                 align-items: center;
                 -webkit-align-items: center;
                 gap: 10px;
+            }
+
+            .hd1-left-menu {
+                display: flex;
+                gap: 10px;
+            }
+
+            .hd1-left-switches {
+                display: flex;
             }
 
             header .hd1-middle {
@@ -689,8 +699,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             header .hd1-right {
                 grid-area: hd1-right;
                 display: flex;
-                justify-content: flex-start;
-                -webkit-justify-content: flex-start;
+                justify-content: space-between;
+                -webkit-justify-content: space-between;
                 padding: 0 20px;
                 min-width: 0;
                 align-items: center;
@@ -733,10 +743,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             aside ul.menu,
             footer ul.menu {
                 list-style: none;
-            }
-
-            ul.menu li.close {
-                display: none;
+                max-height: calc(100vh - 30px);
+                overflow-y: auto;
             }
 
             footer {
@@ -795,6 +803,13 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 padding-right: 0.3em;
             }
 
+            aside h2.subtitle {
+                grid-area: headline;
+                justify-self: center;
+                display: inline-block;
+                cursor: pointer;
+            }
+
             aside .subtitle {
                 display: none;
                 color: var(--dbp-content);
@@ -805,7 +820,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 text-align: center;
             }
 
-            ul.menu.hidden {
+            /* Show/hide via a dedicated class */
+            ul.menu {
+                display: none;
+            }
+            ul.menu.is-open {
                 display: block;
             }
 
@@ -823,6 +842,27 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
             #dbp-notification {
                 z-index: 99999;
+            }
+
+            #main.menu-open {
+                grid-template-columns: minmax(180px, 17%) minmax(0, 1fr);
+                grid-template-areas:
+                    'header header'
+                    'headline headline'
+                    'sidebar main'
+                    'footer footer';
+            }
+
+            #main.menu-open aside {
+                display: block;
+            }
+
+            #main.menu-open aside h2.subtitle {
+                grid-area: auto;
+            }
+
+            #main:not(.menu-open) ul.menu.is-open {
+                display: none;
             }
 
             @media (max-width: 768px) {
@@ -843,6 +883,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
 
                 aside {
+                    align-self: start;
                     margin: 0;
                     position: sticky;
                     top: 0;
@@ -857,7 +898,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
 
                 aside .menu {
-                    border-bottom: var(--dbp-border);
                     border-top-width: 0;
                     width: 100%;
                     position: absolute;
@@ -873,15 +913,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     padding: 8px;
                 }
 
-                ul.menu li.close {
-                    display: block;
-                    padding: 0 15px 15px 15px;
-                    text-align: right;
-                    cursor: pointer;
-                }
-
                 ul.menu.hidden {
-                    display: none;
                 }
             }
         `;
@@ -1045,149 +1077,149 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (this.currentLayout == 'wide') {
             style = html`
                 <style>
-                    #root #main {
-                        display: grid;
-                        grid-template-columns: minmax(180px, 17%) minmax(0, auto);
-                        grid-template-rows: min-content min-content 1fr min-content;
-                        grid-template-areas: 'header header' 'headline headline' 'main main' 'footer footer';
-                        max-width: 1400px;
-                        margin: auto;
-                        min-height: 100vh;
-                    }
+                    /* #root #main {
+                       display: grid;
+                       grid-template-columns: minmax(180px, 17%) minmax(0, auto);
+                       grid-template-rows: min-content min-content 1fr min-content;
+                       grid-template-areas: 'header header' 'headline headline' 'main main' 'footer footer';
+                       max-width: 1400px;
+                       margin: auto;
+                       min-height: 100vh;
+                   }
 
-                    #main-logo {
-                        padding: 0 50px 0 0;
-                    }
+                   #main-logo {
+                       padding: 0 50px 0 0;
+                   }
 
-                    header {
-                        grid-area: header;
-                        display: grid;
-                        grid-template-columns: 50% 0 auto;
-                        grid-template-rows: 60px 60px;
-                        grid-template-areas: 'hd1-left hd1-middle hd1-right' 'hd2-left . hd2-right';
-                        width: 100%;
-                        max-width: 1060px;
-                        margin: 0 auto;
-                    }
+                   header {
+                       grid-area: header;
+                       display: grid;
+                       grid-template-columns: 50% 0 auto;
+                       grid-template-rows: 60px 60px;
+                       grid-template-areas: 'hd1-left hd1-middle hd1-right' 'hd2-left . hd2-right';
+                       width: 100%;
+                       max-width: 1060px;
+                       margin: 0 auto;
+                   }
 
-                    #headline {
-                        grid-area: headline;
-                        margin: 20px 0 30px 0;
-                        text-align: center;
-                    }
+                   #headline {
+                       grid-area: headline;
+                       margin: 20px 0 30px 0;
+                       text-align: center;
+                   }
 
-                    main {
-                        grid-area: main;
-                        margin: 15px 15px;
-                    }
+                   main {
+                       grid-area: main;
+                       margin: 15px 15px;
+                   }
 
-                    footer {
-                        grid-area: footer;
-                        margin: 15px;
-                        text-align: right;
-                    }
+                   footer {
+                       grid-area: footer;
+                       margin: 15px;
+                       text-align: right;
+                   }
 
-                    header .hd1-left {
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: flex-end;
-                        -webkit-justify-content: flex-end;
-                        grid-area: hd1-left;
-                        text-align: right;
-                        padding-right: 20px;
-                        align-items: center;
-                        -webkit-align-items: center;
-                        gap: 10px;
-                    }
+                   header .hd1-left {
+                       display: flex;
+                       flex-direction: row;
+                       justify-content: flex-end;
+                       -webkit-justify-content: flex-end;
+                       grid-area: hd1-left;
+                       text-align: right;
+                       padding-right: 20px;
+                       align-items: center;
+                       -webkit-align-items: center;
+                       gap: 10px;
+                   }
 
-                    header .hd1-middle {
-                        grid-area: hd1-middle;
-                        background-color: var(--dbp-content);
-                        background: linear-gradient(
-                            180deg,
-                            var(--dbp-content) 0%,
-                            var(--dbp-content) 85%,
-                            rgba(0, 0, 0, 0) 90%
-                        );
-                    }
+                   header .hd1-middle {
+                       grid-area: hd1-middle;
+                       background-color: var(--dbp-content);
+                       background: linear-gradient(
+                           180deg,
+                           var(--dbp-content) 0%,
+                           var(--dbp-content) 85%,
+                           rgba(0, 0, 0, 0) 90%
+                       );
+                   }
 
-                    header .hd1-right {
-                        grid-area: hd1-right;
-                        display: flex;
-                        justify-content: flex-start;
-                        -webkit-justify-content: flex-start;
-                        padding: 0 20px;
-                        min-width: 0;
-                        align-items: center;
-                        -webkit-align-items: center;
-                    }
+                   header .hd1-right {
+                       grid-area: hd1-right;
+                       display: flex;
+                       justify-content: flex-start;
+                       -webkit-justify-content: flex-start;
+                       padding: 0 20px;
+                       min-width: 0;
+                       align-items: center;
+                       -webkit-align-items: center;
+                   }
 
-                    header .hd1-right .auth-button {
-                        min-width: 0;
-                    }
+                   header .hd1-right .auth-button {
+                       min-width: 0;
+                   }
 
-                    header .hd2-left {
-                        grid-area: hd2-left;
-                        display: flex;
-                        flex-direction: column;
-                        white-space: nowrap;
-                    }
+                   header .hd2-left {
+                       grid-area: hd2-left;
+                       display: flex;
+                       flex-direction: column;
+                       white-space: nowrap;
+                   }
 
-                    header .hd2-left .header {
-                        margin-left: 50px;
-                    }
+                   header .hd2-left .header {
+                       margin-left: 50px;
+                   }
 
-                    header .hd2-left a:hover {
-                        color: var(--dbp-hover-color, var(--dbp-content));
-                        background-color: var(--dbp-hover-background-color);
-                    }
+                   header .hd2-left a:hover {
+                       color: var(--dbp-hover-color, var(--dbp-content));
+                       background-color: var(--dbp-hover-background-color);
+                   }
 
-                    header .hd2-right {
-                        grid-area: hd2-right;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        text-align: right;
-                    }
+                   header .hd2-right {
+                       grid-area: hd2-right;
+                       display: flex;
+                       flex-direction: column;
+                       justify-content: center;
+                       text-align: right;
+                   }
 
-                    header a {
-                        color: var(--dbp-content);
-                        display: inline;
-                    }
+                   header a {
+                       color: var(--dbp-content);
+                       display: inline;
+                   }
 
-                    aside ul.menu,
-                    footer ul.menu {
-                        list-style: none;
-                    }
+                   aside ul.menu,
+                   footer ul.menu {
+                       list-style: none;
+                   }
 
-                    ul.menu li.close {
-                        text-align: right !important;
-                        cursor: pointer;
-                    }
+                   ul.menu li.close {
+                       text-align: right !important;
+                       cursor: pointer;
+                   }
 
-                    footer {
-                        display: flex;
-                        justify-content: flex-end;
-                        flex-wrap: wrap;
-                    }
+                   footer {
+                       display: flex;
+                       justify-content: flex-end;
+                       flex-wrap: wrap;
+                   }
 
-                    footer > *,
-                    footer slot > * {
-                        margin: 0.5em 0 0 1em;
-                    }
+                   footer > *,
+                   footer slot > * {
+                       margin: 0.5em 0 0 1em;
+                   }
 
-                    footer a {
-                        border-bottom: var(--dbp-border);
-                        padding: 0;
-                    }
+                   footer a {
+                       border-bottom: var(--dbp-border);
+                       padding: 0;
+                   }
 
-                    footer a:hover {
-                        color: var(--dbp-hover-color, var(--dbp-content));
-                        background-color: var(--dbp-hover-background-color);
-                        border-color: var(--dbp-hover-color, var(--dbp-content));
-                    }
+                   footer a:hover {
+                       color: var(--dbp-hover-color, var(--dbp-content));
+                       background-color: var(--dbp-hover-background-color);
+                       border-color: var(--dbp-hover-color, var(--dbp-content));
+                   }
 
-                    /* We don't allow inline-svg */
+                   /* We don't allow inline-svg */
                     /*
                 footer .int-link-external::after {
                     content: "\\00a0\\00a0\\00a0\\00a0";
@@ -1200,7 +1232,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
                 */
 
-                    .menu a {
+                    /* .menu a {
                         padding: 8px !important;
                         font-weight: 300;
                         color: var(--dbp-content);
@@ -1266,7 +1298,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                         line-height: 1.125;
                         color: var(--dbp-content);
                         width: 100%;
-                    }
+                    }*/
                 </style>
             `;
         } else {
@@ -1305,18 +1337,28 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                <dbp-layout-switcher
+                                <div class="hd1-left-menu">
+                                    <dbp-icon
+                                        name="menu"
+                                        style="color: var(--dbp-accent); cursor: pointer;"
+                                        id="menu-burger-icon"
+                                        @click="${this.toggleMenu}"></dbp-icon>
+                                    <h2 class="subtitle" @click="${this.toggleMenu}">menu</h2>
+                                </div>
+                                <div class="hd1-left-switches">
+                                    <!-- <dbp-layout-switcher
                                     class="${classMap({hidden: this.disableLayouts})}"
                                     subscribe="default-layout,disabled-layout,app-name"
                                     lang="${this.lang}"
                                     @layout-changed="${this
-                                        .handleLayoutChange}"></dbp-layout-switcher>
-                                <dbp-theme-switcher
-                                    subscribe="themes,dark-mode-theme-override"
-                                    lang="${this.lang}"></dbp-theme-switcher>
-                                <dbp-language-select
-                                    id="lang-select"
-                                    lang="${this.lang}"></dbp-language-select>
+                                        .handleLayoutChange}"></dbp-layout-switcher> -->
+                                    <dbp-theme-switcher
+                                        subscribe="themes,dark-mode-theme-override"
+                                        lang="${this.lang}"></dbp-theme-switcher>
+                                    <dbp-language-select
+                                        id="lang-select"
+                                        lang="${this.lang}"></dbp-language-select>
+                                </div>
                             </div>
                             <div class="hd1-middle"></div>
                             <div class="hd1-right">
@@ -1325,17 +1367,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     subscribe="auth"
                                     class="auth-button"
                                     lang="${this.lang}"></dbp-auth-menu-button>
-                            </div>
-                            <div class="hd2-left">
-                                <div class="header">
-                                    <slot name="name">
-                                        DBP
-                                        <br />
-                                        Digital Blueprint
-                                    </slot>
-                                </div>
-                            </div>
-                            <div class="hd2-right">
+
                                 <slot name="logo">
                                     <dbp-themed>
                                         <div
@@ -2025,26 +2057,19 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     </dbp-themed>
                                 </slot>
                             </div>
+                            <div class="hd2-left"></div>
+                            <div class="hd2-right"></div>
                         </slot>
                     </header>
                     <div id="headline">
-                        <h1 class="title">
+                        <p class="">
                             <slot name="title">${this.topicMetaDataText('name')}</slot>
-                        </h1>
+                        </p>
+                        <h1 class="title">${this.subtitle}</h1>
                     </div>
                     <aside>
-                        <h2 class="subtitle" @click="${this.toggleMenu}">
-                            ${this.subtitle}
-                            <dbp-icon
-                                name="chevron-down"
-                                style="color: var(--dbp-accent)"
-                                id="menu-chevron-icon"></dbp-icon>
-                        </h2>
                         <ul class="menu hidden">
                             ${menuTemplates}
-                            <li class="close" @click="${this.hideMenu}">
-                                <dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon>
-                            </li>
                         </ul>
                     </aside>
 

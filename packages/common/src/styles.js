@@ -163,6 +163,10 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             margin-bottom: 0.75rem;
         }
 
+        p {
+            font-size: 1em;
+        }
+
         .field:not(:last-child) {
             margin-bottom: 0.75rem;
         }
