@@ -281,6 +281,11 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     gap: var(--dbp-enum-label-gap, 1em);
                     margin: 0;
                 }
+
+                :host([display-style='inline']) .checkboxItem:not(:last-of-type) {
+                    margin-bottom: 0.5em;
+                }
+
                 /* For some reasons the selector chevron was very large */
                 select:not(.select) {
                     background-size: 1em;

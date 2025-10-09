@@ -241,6 +241,21 @@ export class FormElementsDemo extends LangMixin(
                             multiple
                             ?required=${this.isRequired}></dbp-form-enum-element>
 
+                        <dbp-form-enum-element
+                            subscribe="lang"
+                            name="myComponentEnumList"
+                            .value=${data.myComponentEnumList || ''}
+                            .items=${this.enumItems}
+                            display-mode="list"
+                            display-style="inline"
+                            ?required=${this.isRequired}>
+                            <span slot="label">
+                                My
+                                <em>inline</em>
+                                enum list"
+                            </span>
+                        </dbp-form-enum-element>
+
                         <dbp-form-boolean-element
                             subscribe="lang"
                             name="myComponentBoolean"
@@ -344,6 +359,14 @@ export class FormElementsDemo extends LangMixin(
                         subscribe="lang"
                         name="myComponentMultipleEnumTags"
                         label="My multiple enum tags"
+                        .value=${data.myComponentMultipleEnumTags || ''}
+                        .items=${this.enumItems}></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
+                        name="myComponentMultipleEnumTags"
+                        label="Tags display style"
+                        display-style="tags"
                         .value=${data.myComponentMultipleEnumTags || ''}
                         .items=${this.enumItems}></dbp-form-enum-view>
 
