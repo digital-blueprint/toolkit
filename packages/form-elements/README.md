@@ -149,6 +149,11 @@ Please always use `.value` to set the value of the enum element, as it is a prop
     - Type: String
     - Example with list: `<dbp-form-enum-element display-mode="list"></dbp-form-enum-element>`
     - Example with tags: `<dbp-form-enum-element display-mode="tags"></dbp-form-enum-element>`
+- `display-style` (optional, available values: `inline`): Renders label and value the same line in `inline` style.
+    - Type: String
+    - Example with list: `<dbp-form-enum-element display-style="inline"></dbp-form-enum-element>`
+- CSS custom properties for styling:
+    - `--dbp-enum-label-gap`
 
 ## Form Views
 
@@ -170,6 +175,32 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `hidden`: Indicates if the view is hidden
     - Type: Boolean
     - Hides the view if set to `true`
+
+### Enum Element
+
+```html
+<dbp-form-enum-view
+    subscribe="lang"
+    name="myComponentEnum"
+    label="My enum"
+    .value=${data.myComponentEnum || ''}
+    .items=${{item1: 'Item 1', item2: 'Item 2'}}>
+    <span slot="label">
+        Label with HTML content. Can be used interchangeably the label property.
+    </span>
+</dbp-form-enum-view>
+```
+- `display-style` (optional, available values: `inline`, `tags`): Renders label and value the same line in `inline` style. For enums using `multiple` attribute `tags` style renders values in tag style with background color.
+    - Type: String
+    - Example with list: `<dbp-form-enum-element display-style="tags"></dbp-form-enum-element>`
+- CSS custom properties for styling:
+    - `--dbp-enum-label-gap`
+    - `--dbp-enum-fieldset-line-height`
+    - `--dbp-enum-tags-gap`
+    - `--dbp-enum-tag-padding`
+    - `--dbp-enum-tag-border-radius`
+    - `--dbp-enum-tag-line-height`
+    - `--dbp-enum-tag-bg-color`
 
 ## Local development
 

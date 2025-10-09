@@ -276,6 +276,11 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             commonStyles.getSelect2CSS(),
             // language=css
             css`
+                :host([display-style="inline"]) fieldset {
+                    display: flex;
+                    gap: var(--dbp-enum-label-gap, 1em);
+                    margin: 0;
+                }
                 /* For some reasons the selector chevron was very large */
                 select:not(.select) {
                     background-size: 1em;
