@@ -161,7 +161,11 @@ export class DbpBaseElement extends LangMixin(
                           `
                         : html``}
                 </label>
-                <div class="description">${this.description}</div>
+                ${this.description
+                    ? html`
+                          <div class="description">${this.description}</div>
+                      `
+                    : ''}
                 ${this.renderErrorMessages()} ${this.renderInput()}
             </fieldset>
         `;
