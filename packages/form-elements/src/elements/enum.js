@@ -14,6 +14,8 @@ import select2LangEn from '../i18n/en/select2';
 export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
         super();
+        // Generate a unique id per instance to avoid DOM id collisions across components
+        this.formElementId = `form-element-${Math.random().toString(36).slice(2, 10)}`;
         this.label = '';
         this.items = {};
         this.multiple = false;
