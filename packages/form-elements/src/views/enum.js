@@ -68,32 +68,32 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
                     margin: 0;
                 }
 
-                :host([display-style="inline"]) fieldset {
+                :host([display-style='inline']) fieldset {
                     display: flex;
                     gap: var(--dbp-enum-label-gap, 1em);
                     margin: 0;
                 }
 
-                :host([display-style="tags"]) fieldset {
+                :host([display-style='tags']) fieldset {
                     display: flex;
                     gap: var(--dbp-enum-label-gap, 1em);
                     margin: 0;
                 }
 
-                :host([display-style="tags"]) fieldset {
+                :host([display-style='tags']) fieldset {
                     line-height: var(--dbp-enum-fieldset-line-height, 28px);
                 }
 
-                :host([display-style="tags"]) ul {
+                :host([display-style='tags']) ul {
                     display: flex;
-                    gap: var(--dbp-enum-tags-gap, .5em);
+                    gap: var(--dbp-enum-tags-gap, 0.5em);
                     flex-wrap: wrap;
                 }
 
-                :host([display-style="tags"]) li {
-                    background-color: var(--dbp-enum-tag-bg-color, #F2F2F2);
+                :host([display-style='tags']) li {
+                    background-color: var(--dbp-enum-tag-bg-color, #f2f2f2);
                     color: var(--dbp-enum-tag-color, #121212);
-                    padding:  var(--dbp-enum-tag-padding, 3px 8px);
+                    padding: var(--dbp-enum-tag-padding, 3px 8px);
                     border-radius: var(--dbp-enum-tag-border-radius, 4px);
                     flex-shrink: 0;
                     line-height: var(--dbp-enum-tag-line-height, 22px);

@@ -276,7 +276,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             commonStyles.getSelect2CSS(),
             // language=css
             css`
-                :host([display-style="inline"]) fieldset {
+                :host([display-style='inline']) fieldset {
                     display: flex;
                     gap: var(--dbp-enum-label-gap, 1em);
                     margin: 0;

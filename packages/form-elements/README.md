@@ -190,6 +190,7 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     </span>
 </dbp-form-enum-view>
 ```
+
 - `display-style` (optional, available values: `inline`, `tags`): Renders label and value the same line in `inline` style. For enums using `multiple` attribute `tags` style renders values in tag style with background color.
     - Type: String
     - Example with list: `<dbp-form-enum-element display-style="tags"></dbp-form-enum-element>`
