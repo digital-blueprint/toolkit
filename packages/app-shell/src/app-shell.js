@@ -2062,10 +2062,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                         </slot>
                     </header>
                     <div id="headline">
-                        <p class="">
+                        <p class="title">
                             <slot name="title">${this.topicMetaDataText('name')}</slot>
                         </p>
-                        <h1 class="title">${this.subtitle}</h1>
+                        <h1>${this.subtitle}</h1>
                     </div>
                     <aside>
                         <ul class="menu hidden">

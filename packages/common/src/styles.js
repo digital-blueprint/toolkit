@@ -253,9 +253,12 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
 
         .title {
             color: var(--dbp-content);
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: 1em;
             line-height: 1.125;
+        }
+
+        #headline h1 {
+            font-size: 2em;
         }
 
         ${marginPaddingResetCss}.int-link-internal
