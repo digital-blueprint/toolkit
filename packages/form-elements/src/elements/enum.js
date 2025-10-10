@@ -292,7 +292,11 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
                 /* allows .select2-container to fully expand */
                 :host([layout-type='inline']) #select-dropdown {
-                    display: contents;
+                    order: 1;
+                }
+
+                :host([layout-type='inline']) .select2 {
+                    order: 2;
                 }
 
                 :host([layout-type='inline']) .checkboxItem:not(:last-of-type) {
