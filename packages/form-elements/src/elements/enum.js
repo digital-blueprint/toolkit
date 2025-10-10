@@ -46,6 +46,12 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         return $(this.shadowRoot.querySelector(selector));
     }
 
+    closeSelect2() {
+        if (this.select2IsInitialized()) {
+            this.$select.select2('close');
+        }
+    }
+
     // Can be used to set items from the outside
     setItems(items) {
         this.items = items;
