@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 
@@ -16,6 +16,28 @@ export class DbpDateElement extends ScopedElementsMixin(DbpBaseElement) {
             min: {type: String},
             max: {type: String},
         };
+    }
+
+    static get styles() {
+        return [
+            ...super.styles,
+            // language=css
+            css`
+                :host([layout-type='inline']) fieldset {
+                    display: flex;
+                    gap: var(--dbp-enum-label-gap, 1em);
+                    align-items: center;
+                }
+
+                :host([layout-type='inline']) label {
+                    margin-bottom: 0;
+                }
+
+                :host([layout-type='inline']) input[type='date'] {
+                    width: min-content;
+                }
+            `,
+        ];
     }
 
     formatDateValue(val) {

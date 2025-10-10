@@ -61,6 +61,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `customValidator`: Custom validation function
     - Type: Function
     - Example: `<element .customValidator=${(value, evaluationData) => {return value === 'test' ? ['My message'] : []}}></element>`
+- `layout-type` (optional, available value: `inline`): Renders label and value the same line in `inline` style.
+    - Type: String
+    - Example with list: `<dbp-form-enum-view layout-type="inline"></dbp-form-enum-view>`
 
 ### String Element
 
@@ -149,9 +152,6 @@ Please always use `.value` to set the value of the enum element, as it is a prop
     - Type: String
     - Example with list: `<dbp-form-enum-element display-mode="list"></dbp-form-enum-element>`
     - Example with tags: `<dbp-form-enum-element display-mode="tags"></dbp-form-enum-element>`
-- `display-style` (optional, available values: `inline`): Renders label and value the same line in `inline` style.
-    - Type: String
-    - Example with list: `<dbp-form-enum-element display-style="inline"></dbp-form-enum-element>`
 - CSS custom properties for styling:
     - `--dbp-enum-label-gap`
 
@@ -175,6 +175,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `hidden`: Indicates if the view is hidden
     - Type: Boolean
     - Hides the view if set to `true`
+- `layout-type` (optional, available value: `inline`): Renders label and value the same line in `inline` style.
+    - Type: String
+    - Example with list: `<dbp-form-enum-view layout-type="inline"></dbp-form-enum-view>`
 
 ### Enum Element
 
@@ -191,9 +194,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 </dbp-form-enum-view>
 ```
 
-- `display-style` (optional, available values: `inline`, `tags`): Renders label and value the same line in `inline` style. For enums using `multiple` attribute `tags` style renders values in tag style with background color.
+- `display-mode` (optional, available value: `tags`): `tags` mode renders values in tag style with background color.
     - Type: String
-    - Example with list: `<dbp-form-enum-element display-style="tags"></dbp-form-enum-element>`
+    - Example with list: `<dbp-form-enum-view display-mode="tags"></dbp-form-enum-view>`
 - CSS custom properties for styling:
     - `--dbp-enum-label-gap`
     - `--dbp-enum-fieldset-line-height`

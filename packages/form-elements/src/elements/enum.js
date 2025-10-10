@@ -278,19 +278,34 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             commonStyles.getSelect2CSS(),
             // language=css
             css`
-                :host([display-style='inline']) fieldset {
+                :host([layout-type='inline']) fieldset {
                     display: flex;
                     gap: var(--dbp-enum-label-gap, 1em);
                     margin: 0;
+                    align-items: center;
                 }
 
-                :host([display-style='inline']) .checkboxItem:not(:last-of-type) {
-                    margin-bottom: 0.5em;
+                :host([layout-type='inline']) label {
+                    white-space: nowrap;
+                    margin-bottom: 0;
+                }
+
+                /* allows .select2-container to fully expand */
+                :host([layout-type='inline']) #select-dropdown {
+                    display: contents;
+                }
+
+                :host([layout-type='inline']) .checkboxItem:not(:last-of-type) {
+                    margin-bottom: 0;
                 }
 
                 /* For some reasons the selector chevron was very large */
                 select:not(.select) {
                     background-size: 1em;
+                }
+
+                :host([multiple]) select:not(.select) {
+                    background: none;
                 }
 
                 label a {

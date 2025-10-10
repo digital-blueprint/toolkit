@@ -53,7 +53,13 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
                           )}
                       </ul>
                   `
-                : items[value] || value}
+                : html`
+                      ${items[value] || value
+                          ? html`
+                                <span>${items[value] || value}</span>
+                            `
+                          : ''}
+                  `}
         `;
     }
 
@@ -68,29 +74,24 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
                     margin: 0;
                 }
 
-                :host([display-style='inline']) fieldset {
+                :host([layout-type='inline']) fieldset {
                     display: flex;
                     gap: var(--dbp-enum-label-gap, 1em);
                     margin: 0;
                 }
 
-                :host([display-style='tags']) fieldset {
-                    display: flex;
-                    gap: var(--dbp-enum-label-gap, 1em);
-                    margin: 0;
-                }
-
-                :host([display-style='tags']) fieldset {
+                :host([display-mode='tags']) fieldset {
                     line-height: var(--dbp-enum-fieldset-line-height, 28px);
                 }
 
-                :host([display-style='tags']) ul {
+                :host([display-mode='tags']) ul {
                     display: flex;
                     gap: var(--dbp-enum-tags-gap, 0.5em);
                     flex-wrap: wrap;
                 }
 
-                :host([display-style='tags']) li {
+                :host([display-mode='tags']) span,
+                :host([display-mode='tags']) li {
                     background-color: var(--dbp-enum-tag-bg-color, #f2f2f2);
                     color: var(--dbp-enum-tag-color, #121212);
                     padding: var(--dbp-enum-tag-padding, 3px 8px);
