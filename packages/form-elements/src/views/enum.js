@@ -53,7 +53,13 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
                           )}
                       </ul>
                   `
-                : items[value] || value}
+                : html`
+                      ${items[value] || value
+                          ? html`
+                                <span>${items[value] || value}</span>
+                            `
+                          : ''}
+                  `}
         `;
     }
 
@@ -66,6 +72,32 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
                     list-style: none;
                     padding-left: 0;
                     margin: 0;
+                }
+
+                :host([layout-type='inline']) fieldset {
+                    display: flex;
+                    gap: var(--dbp-enum-label-gap, 1em);
+                    margin: 0;
+                }
+
+                :host([display-mode='tags']) fieldset {
+                    line-height: var(--dbp-enum-fieldset-line-height, 28px);
+                }
+
+                :host([display-mode='tags']) ul {
+                    display: flex;
+                    gap: var(--dbp-enum-tags-gap, 0.5em);
+                    flex-wrap: wrap;
+                }
+
+                :host([display-mode='tags']) span,
+                :host([display-mode='tags']) li {
+                    background-color: var(--dbp-enum-tag-bg-color, #f2f2f2);
+                    color: var(--dbp-enum-tag-color, #121212);
+                    padding: var(--dbp-enum-tag-padding, 3px 8px);
+                    border-radius: var(--dbp-enum-tag-border-radius, 4px);
+                    flex-shrink: 0;
+                    line-height: var(--dbp-enum-tag-line-height, 22px);
                 }
             `,
         ];
