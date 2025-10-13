@@ -12,7 +12,7 @@ let
     # Determine the repository root
     REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
   '';
-  lib = pkgs.lib;
+  inherit (pkgs) lib;
 in
 pkgs.mkShell {
   # Common nativeBuildInputs for toolkit and apps
@@ -32,7 +32,7 @@ pkgs.mkShell {
   ];
 
   # Common shellHooks also for the toolkit itself
-  shellHookCommon = shellHookCommon;
+  inherit shellHookCommon;
 
   # Specific shellHooks for the apps
   shellHook = shellHookCommon + ''
