@@ -74,11 +74,6 @@ remove-toolkit-node-modules:
 remove-vendor-node-modules:
     find ./vendor -type d -name 'node_modules' -prune -exec rm -rf '{}' +
 
-# Format all files
-[group('linter')]
-format args='':
-    treefmt {{ args }}
-
 # Run checker
 [group('linter')]
 check:
@@ -98,5 +93,5 @@ add-git-blame-ignore-revs:
 
 # Format all files using pre-commit
 [group('linter')]
-format-all args='':
+format args='':
     pre-commit run --all-files {{ args }}
