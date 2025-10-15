@@ -229,7 +229,7 @@ export class GrantPermissionDialog extends LangMixin(
                 });
             }
         } else {
-            this.modalTitle = 'Manage permissions';
+            this.modalTitle = i18n.t('grant-permission-dialog.modal-title');
         }
     }
 

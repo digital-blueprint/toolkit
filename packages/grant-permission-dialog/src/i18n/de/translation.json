@@ -11,6 +11,7 @@
             "edit-text": "Bearbeiten",
             "save-all-text": "Alle speichern"
         },
+        "modal-title": "Berechtigungen verwalten",
         "need-login-warning-text": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",
         "notifications": {
             "all-users-deleted": "Berechtigungen aller Benutzer erfolgreich gelöscht",

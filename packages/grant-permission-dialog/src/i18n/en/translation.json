@@ -11,6 +11,7 @@
             "edit-text": "Edit",
             "save-all-text": "Save All"
         },
+        "modal-title": "Manage permissions",
         "need-login-warning-text": "You need to be logged in to use the grant permission modal",
         "notifications": {
             "all-users-deleted": "All user's permissions successfully deleted",
