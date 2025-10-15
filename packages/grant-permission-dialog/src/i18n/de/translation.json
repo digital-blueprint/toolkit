@@ -5,6 +5,10 @@
             "add-person-text": "Neue Person hinzufügen",
             "cancel-text": "Abbrechen",
             "delete-all-text": "Alle löschen",
+            "delete-now-text": "Jetzt löschen",
+            "delete-text": "Löschen",
+            "delete-warning-text": "Are you sure? ({{counter}}s)",
+            "edit-text": "Bearbeiten",
             "save-all-text": "Alle speichern"
         },
         "need-login-warning-text": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",

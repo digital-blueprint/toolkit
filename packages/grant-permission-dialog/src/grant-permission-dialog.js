@@ -447,19 +447,22 @@ export class GrantPermissionDialog extends LangMixin(
 
         // Change button to disabled red, wait 3 second and enable deleting
         if (buttonAction === 'prepare-delete') {
+            let countdown = 3;
             deleteButton.setAttribute('type', 'is-danger');
             // deleteButton.setAttribute('data-action', 'delete');
             deleteButton.setAttribute('disabled', 'disabled');
-            deleteButton.innerText = 'Are you sure? (3s)';
-            let countdown = 3;
+
             let countdownInterval = setInterval(() => {
                 countdown--;
-                deleteButton.innerHTML = 'Are you sure? (' + countdown + 's)';
+                deleteButton.innerText = i18n.t(
+                    'grant-permission-dialog.buttons.delete-warning-text',
+                    {counter: countdown},
+                );
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     deleteButton.removeAttribute('disabled');
                     deleteButton.setAttribute('data-action', 'delete');
-                    deleteButton.innerHTML = '<dbp-icon name="trash"></dbp-icon> Delete now';
+                    deleteButton.innerHTML = `<dbp-icon name="trash"></dbp-icon> ${i18n.t('grant-permission-dialog.buttons.delete-now-text')}`;
                 }
             }, 1000);
         } else if (buttonAction === 'delete') {
@@ -489,19 +492,23 @@ export class GrantPermissionDialog extends LangMixin(
 
         // Change button to disabled red, wait 3 second and enable deleting
         if (buttonAction === 'prepare-delete') {
+            let countdown = 3;
             deleteButton.setAttribute('type', 'is-danger');
             deleteButton.setAttribute('disabled', 'disabled');
-            deleteButton.innerText = 'Are you sure? (3s)';
-            let countdown = 3;
+            deleteButton.innerText = i18n.t('grant-permission-dialog.buttons.delete-warning-text', {
+                counter: countdown,
+            });
             let countdownInterval = setInterval(() => {
                 countdown--;
-
-                deleteButton.innerHTML = 'Are you sure? (' + countdown + 's)';
+                deleteButton.innerText = i18n.t(
+                    'grant-permission-dialog.buttons.delete-warning-text',
+                    {counter: countdown},
+                );
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     deleteButton.removeAttribute('disabled');
                     deleteButton.setAttribute('data-action', 'delete');
-                    deleteButton.innerHTML = '<dbp-icon name="trash"></dbp-icon> Delete now';
+                    deleteButton.innerHTML = `<dbp-icon name="trash"></dbp-icon> ${i18n.t('grant-permission-dialog.buttons.delete-now-text')}`;
                 }
             }, 1000);
         } else if (buttonAction === 'delete') {
@@ -614,7 +621,7 @@ export class GrantPermissionDialog extends LangMixin(
         if (!this.userList) {
             return;
         }
-        // const i18n = this._i18n;
+        const i18n = this._i18n;
 
         return html`
             ${Array.from(this.userList).map(
@@ -650,7 +657,7 @@ export class GrantPermissionDialog extends LangMixin(
                                               this.handleUserEditButton(userId);
                                           }}">
                                           <dbp-icon name="pencil"></dbp-icon>
-                                          Edit
+                                          ${i18n.t('grant-permission-dialog.buttons.edit-text')}
                                       </dbp-button>
                                       <dbp-button
                                           type="is-secondary"
@@ -661,7 +668,7 @@ export class GrantPermissionDialog extends LangMixin(
                                               this.handleUserDeleteButton(userId);
                                           }}">
                                           <dbp-icon name="trash"></dbp-icon>
-                                          Delete
+                                          ${i18n.t('grant-permission-dialog.buttons.delete-text')}
                                       </dbp-button>
                                   </div>
                               `
