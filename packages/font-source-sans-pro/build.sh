@@ -12,26 +12,25 @@ CYRILLIC="U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116"
 CYRILLIC_EXT="U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F"
 EXT="$VIETNAMESE,$GREEK,$GREEK_EXT,$CYRILLIC,$CYRILLIC_EXT"
 
-
 function build() {
-    INPUT_NAME=$1
-    INPUT_FORMAT='otf'
-    STYLE=$2
-    WEIGHT=$3
-    BASE_DIR="source-sans-pro-2.045R-ro-1.095R-it"
-    CSS_FILE="files/$WEIGHT.css"
+	INPUT_NAME=$1
+	INPUT_FORMAT='otf'
+	STYLE=$2
+	WEIGHT=$3
+	BASE_DIR="source-sans-pro-2.045R-ro-1.095R-it"
+	CSS_FILE="files/$WEIGHT.css"
 
-    echo "$WEIGHT-$STYLE"
+	echo "$WEIGHT-$STYLE"
 
-    SUBSET="rest"
-    pyftsubset \
-    "$BASE_DIR/${INPUT_FORMAT^^}/SourceSansPro-$INPUT_NAME.${INPUT_FORMAT,,}" \
-    --output-file="files/source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2" \
-    --flavor=woff2 \
-    --layout-features='*' \
-    --unicodes="$EXT"
+	SUBSET="rest"
+	pyftsubset \
+		"$BASE_DIR/${INPUT_FORMAT^^}/SourceSansPro-$INPUT_NAME.${INPUT_FORMAT,,}" \
+		--output-file="files/source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2" \
+		--flavor=woff2 \
+		--layout-features='*' \
+		--unicodes="$EXT"
 
-    echo "
+	echo "
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: $STYLE;
@@ -39,17 +38,17 @@ function build() {
     font-display: swap;
     src: url(source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2) format('woff2');
     unicode-range: $EXT;
-}" >> "$CSS_FILE"
+}" >>"$CSS_FILE"
 
-    SUBSET="base-ext"
-    pyftsubset \
-    "$BASE_DIR/${INPUT_FORMAT^^}/SourceSansPro-$INPUT_NAME.${INPUT_FORMAT,,}" \
-    --output-file="files/source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2" \
-    --flavor=woff2 \
-    --layout-features='*' \
-    --unicodes="$LATIN_EXT"
+	SUBSET="base-ext"
+	pyftsubset \
+		"$BASE_DIR/${INPUT_FORMAT^^}/SourceSansPro-$INPUT_NAME.${INPUT_FORMAT,,}" \
+		--output-file="files/source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2" \
+		--flavor=woff2 \
+		--layout-features='*' \
+		--unicodes="$LATIN_EXT"
 
-    echo "
+	echo "
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: $STYLE;
@@ -57,17 +56,17 @@ function build() {
     font-display: swap;
     src: url(source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2) format('woff2');
     unicode-range: $LATIN_EXT;
-}" >> "$CSS_FILE"
+}" >>"$CSS_FILE"
 
-    SUBSET="base"
-    pyftsubset \
-    "$BASE_DIR/${INPUT_FORMAT^^}/SourceSansPro-$INPUT_NAME.${INPUT_FORMAT,,}" \
-    --output-file="files/source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2" \
-    --flavor=woff2 \
-    --layout-features='*' \
-    --unicodes="$LATIN"
+	SUBSET="base"
+	pyftsubset \
+		"$BASE_DIR/${INPUT_FORMAT^^}/SourceSansPro-$INPUT_NAME.${INPUT_FORMAT,,}" \
+		--output-file="files/source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2" \
+		--flavor=woff2 \
+		--layout-features='*' \
+		--unicodes="$LATIN"
 
-    echo "
+	echo "
 @font-face {
     font-family: 'Source Sans Pro';
     font-style: $STYLE;
@@ -75,28 +74,28 @@ function build() {
     font-display: swap;
     src: url(source-sans-pro-$SUBSET-$WEIGHT-$STYLE.woff2) format('woff2');
     unicode-range: $LATIN;
-}" >> "$CSS_FILE"
+}" >>"$CSS_FILE"
 
 }
 
 function build_variable() {
-    INPUT_NAME=$1
-    INPUT_FORMAT='otf'
-    STYLE=$2
-    CSS_FILE="files/variable.css"
-    FLAVOR=woff2
+	INPUT_NAME=$1
+	INPUT_FORMAT='otf'
+	STYLE=$2
+	CSS_FILE="files/variable.css"
+	FLAVOR=woff2
 
-    echo "variable-$STYLE"
+	echo "variable-$STYLE"
 
-    SUBSET="rest"
-    pyftsubset \
-    "$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
-    --output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
-    --flavor=$FLAVOR \
-    --layout-features='*' \
-    --unicodes="$EXT"
+	SUBSET="rest"
+	pyftsubset \
+		"$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
+		--output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
+		--flavor=$FLAVOR \
+		--layout-features='*' \
+		--unicodes="$EXT"
 
-    echo "
+	echo "
 @font-face {
     font-family: 'Source Sans Variable';
     font-style: $STYLE;
@@ -105,17 +104,17 @@ function build_variable() {
     font-display: swap;
     src: url(source-sans-variable-$SUBSET-$STYLE.$FLAVOR) format('$FLAVOR');
     unicode-range: $EXT;
-}" >> "$CSS_FILE"
+}" >>"$CSS_FILE"
 
-    SUBSET="base-ext"
-    pyftsubset \
-    "$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
-    --output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
-    --flavor=$FLAVOR \
-    --layout-features='*' \
-    --unicodes="$LATIN_EXT"
+	SUBSET="base-ext"
+	pyftsubset \
+		"$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
+		--output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
+		--flavor=$FLAVOR \
+		--layout-features='*' \
+		--unicodes="$LATIN_EXT"
 
-    echo "
+	echo "
 @font-face {
     font-family: 'Source Sans Variable';
     font-style: $STYLE;
@@ -124,17 +123,17 @@ function build_variable() {
     font-display: swap;
     src: url(source-sans-variable-$SUBSET-$STYLE.$FLAVOR) format('$FLAVOR');
     unicode-range: $LATIN_EXT;
-}" >> "$CSS_FILE"
+}" >>"$CSS_FILE"
 
-    SUBSET="base"
-    pyftsubset \
-    "$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
-    --output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
-    --flavor=$FLAVOR \
-    --layout-features='*' \
-    --unicodes="$LATIN"
+	SUBSET="base"
+	pyftsubset \
+		"$BASE_DIR/VAR/SourceSansVariable-$INPUT_NAME.${INPUT_FORMAT,,}" \
+		--output-file="files/source-sans-variable-$SUBSET-$STYLE.$FLAVOR" \
+		--flavor=$FLAVOR \
+		--layout-features='*' \
+		--unicodes="$LATIN"
 
-    echo "
+	echo "
 @font-face {
     font-family: 'Source Sans Variable';
     font-style: $STYLE;
@@ -143,48 +142,48 @@ function build_variable() {
     font-display: swap;
     src: url(source-sans-variable-$SUBSET-$STYLE.woff2) format('$FLAVOR');
     unicode-range: $LATIN;
-}" >> "$CSS_FILE"
+}" >>"$CSS_FILE"
 }
-
 
 function main() {
-    # Extract upstream release
-    RELEASE="source-sans-pro-2.045R-ro-1.095R-it"
+	# Extract upstream release
+	RELEASE="source-sans-pro-2.045R-ro-1.095R-it"
 
-    [ -d "$RELEASE" ] || (
-        wget -c "https://github.com/adobe-fonts/source-sans-pro/releases/download/2.045R-ro%2F1.095R-it/$RELEASE.zip";
-        unzip "$RELEASE.zip"
-        rm "$RELEASE.zip")
+	[ -d "$RELEASE" ] || (
+		wget -c "https://github.com/adobe-fonts/source-sans-pro/releases/download/2.045R-ro%2F1.095R-it/$RELEASE.zip"
+		unzip "$RELEASE.zip"
+		rm "$RELEASE.zip"
+	)
 
-    BASE_DIR="$RELEASE"
+	BASE_DIR="$RELEASE"
 
-    rm -rf files
-    mkdir -p "files"
+	rm -rf files
+	mkdir -p "files"
 
-    build_variable "Roman" "normal"
-    build_variable "Italic" "italic"
+	build_variable "Roman" "normal"
+	build_variable "Italic" "italic"
 
-    build "ExtraLight" "normal" "200"
-    build "ExtraLightIt" "italic" "200"
+	build "ExtraLight" "normal" "200"
+	build "ExtraLightIt" "italic" "200"
 
-    build "Light" "normal" "300"
-    build "LightIt" "italic" "300"
+	build "Light" "normal" "300"
+	build "LightIt" "italic" "300"
 
-    build "Regular" "normal" "400"
-    build "It" "italic" "400"
+	build "Regular" "normal" "400"
+	build "It" "italic" "400"
 
-    build "Semibold" "normal" "600"
-    build "SemiboldIt" "italic" "600"
+	build "Semibold" "normal" "600"
+	build "SemiboldIt" "italic" "600"
 
-    build "Bold" "normal" "700"
-    build "BoldIt" "italic" "700"
+	build "Bold" "normal" "700"
+	build "BoldIt" "italic" "700"
 
-    build "Black" "normal" "900"
-    build "BlackIt" "italic" "900"
+	build "Black" "normal" "900"
+	build "BlackIt" "italic" "900"
 
-    cat files/200.css files/300.css files/400.css files/600.css files/700.css files/900.css > files/static.css
+	cat files/200.css files/300.css files/400.css files/600.css files/700.css files/900.css >files/static.css
 
-    rm -rf "$RELEASE"
+	rm -rf "$RELEASE"
 }
 
-main;
+main
