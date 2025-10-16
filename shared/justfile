@@ -94,4 +94,6 @@ add-git-blame-ignore-revs:
 # Format all files using pre-commit
 [group('linter')]
 format args='':
+    # Make sure obsolete
+    rm -f .git/hooks/pre-commit.legacy
     pre-commit run --all-files {{ args }}
