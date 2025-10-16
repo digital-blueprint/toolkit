@@ -1532,6 +1532,7 @@ export function getNativeModalDialogCSS() {
 
         .modal-header {
             height: var(--dbp-modal-header-height);
+            overflow: hidden;
         }
 
         .modal-content {
