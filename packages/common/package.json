@@ -14,8 +14,8 @@
         "assets": [
             {
                 "srcPackage": "@dbp-toolkit/common",
-                "src": "assets/icons/*.svg",
-                "dest": "icons"
+                "src": "assets/icons",
+                "dest": "."
             }
         ]
     },
