@@ -670,6 +670,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 grid-area: hd1-left;
                 text-align: right;
                 padding-right: 20px;
+                padding-left: 18px;
                 align-items: center;
                 -webkit-align-items: center;
                 gap: 10px;
@@ -678,6 +679,15 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             .hd1-left-menu {
                 display: flex;
                 gap: 10px;
+                justify-self: center;
+                align-self: center;
+            }
+
+            .burger-menu-icon {
+                color: var(--dbp-accent);
+                cursor: pointer;
+                justify-self: center;
+                align-self: inherit;
             }
 
             .hd1-left-switches {
@@ -1339,8 +1349,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             <div class="hd1-left">
                                 <div class="hd1-left-menu">
                                     <dbp-icon
+                                        class="burger-menu-icon"
                                         name="menu"
-                                        style="color: var(--dbp-accent); cursor: pointer;"
+                                        style=""
                                         id="menu-burger-icon"
                                         @click="${this.toggleMenu}"></dbp-icon>
                                     <h2 class="subtitle" @click="${this.toggleMenu}">menu</h2>
