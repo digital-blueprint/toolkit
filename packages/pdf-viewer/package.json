@@ -24,7 +24,7 @@
             },
             {
                 "srcPackage": "pdfjs-dist",
-                "src": "cmaps/*",
+                "src": "cmaps",
                 "dest": "pdfjs"
             }
         ]
