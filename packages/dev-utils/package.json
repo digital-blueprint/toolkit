@@ -22,7 +22,9 @@
         "prettier": "^3.0.0"
     },
     "dependencies": {
+        "@rollup/plugin-url": "^8.0.2",
         "find-cache-directory": "^6.0.0",
+        "rollup-plugin-copy": "^3.5.0",
         "selfsigned": "^3.0.0"
     },
     "scripts": {

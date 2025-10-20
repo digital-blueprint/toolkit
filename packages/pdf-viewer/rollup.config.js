@@ -5,9 +5,8 @@ import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import {getPackagePath, getDistPath, getCopyTargets, getUrlOptions} from '@dbp-toolkit/dev-utils';
+import {getPackagePath, getDistPath, assetPlugin} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
@@ -43,14 +42,13 @@ export default (async () => {
                 }),
             !isRolldown && commonjs(),
             !isRolldown && json(),
-            url(await getUrlOptions(pkg.name, 'shared')),
+            await assetPlugin(pkg.name, 'dist'),
             buildFull && !isRolldown ? terser() : false,
             copy({
                 copySync: true,
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
-                    ...(await getCopyTargets(pkg.name, 'dist')),
                     {
                         src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
                         dest: 'dist/' + (await getDistPath(pkg.name)),

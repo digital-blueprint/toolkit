@@ -6,6 +6,8 @@ import {createRequire} from 'node:module';
 import child_process from 'node:child_process';
 import selfsigned from 'selfsigned';
 import findCacheDir from 'find-cache-directory';
+import copyPlugin from 'rollup-plugin-copy';
+import urlPlugin from '@rollup/plugin-url';
 
 /**
  * Returns true if git is installed and we are inside a git working tree
@@ -279,8 +281,58 @@ export async function getUrlOptions(packageName, bundleDest) {
 
     return {
         limit: 0,
-        include: allIncludes.length === 0 ? undefined : allIncludes,
+        include: allIncludes,
+        exclude: allIncludes.length > 0 ? [] : ['**'],
         emitFiles: true,
         fileName: bundleDest + '/[name].[hash][extname]',
     };
+}
+
+/**
+ * A hack to monkey patch \@rollup/plugin-url to set includes as filter
+ * hooks for better performance with rolldown.
+ */
+function urlPluginHack(options = {}) {
+    // Logic taken from @rollup/pluginutils (spdx:MIT) so we match the patterns
+    // of createFilter() exactly (otherwise relative paths are broken)
+    const normalizePath = function normalizePath(filename) {
+        const normalizePathRegExp = new RegExp(`\\${path.win32.sep}`, 'g');
+        return filename.replace(normalizePathRegExp, path.posix.sep);
+    };
+
+    function getMatcherString(id) {
+        if (path.isAbsolute(id) || id.startsWith('**')) {
+            return normalizePath(id);
+        }
+        const basePath = normalizePath(path.resolve('')).replace(/[-^$*+?.()|[\]{}]/g, '\\$&');
+        return path.posix.join(basePath, normalizePath(id));
+    }
+
+    let plugin = urlPlugin(options);
+    plugin.load = {
+        filter: {
+            id: {
+                include: (options.include ?? []).map((id) => getMatcherString(id)),
+                exclude: (options.exclude ?? []).map((id) => getMatcherString(id)),
+            },
+        },
+        handler: plugin.load,
+    };
+
+    return plugin;
+}
+
+/**
+ * Returns a Rollup plugin which handles asset copying and URL imports.
+ *
+ * @returns {Promise<Array>} Array of Rollup plugins
+ */
+export async function assetPlugin(packageName, bundleDest = 'dist') {
+    return [
+        copyPlugin({
+            copySync: true,
+            targets: await getCopyTargets(packageName, bundleDest),
+        }),
+        urlPluginHack(await getUrlOptions(packageName, 'shared')),
+    ];
 }

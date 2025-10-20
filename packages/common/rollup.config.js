@@ -6,7 +6,7 @@ import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
-import {getCopyTargets} from '@dbp-toolkit/dev-utils';
+import {assetPlugin} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
@@ -37,12 +37,10 @@ export default (async () => {
             !isRolldown && commonjs(),
             !isRolldown && json(),
             buildFull && !isRolldown ? terser() : false,
+            await assetPlugin(pkg.name, 'dist'),
             copy({
                 copySync: true,
-                targets: [
-                    {src: 'assets/index.html', dest: 'dist'},
-                    ...(await getCopyTargets(pkg.name, 'dist')),
-                ],
+                targets: [{src: 'assets/index.html', dest: 'dist'}],
             }),
             process.env.ROLLUP_WATCH === 'true'
                 ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})

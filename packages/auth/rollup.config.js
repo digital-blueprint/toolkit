@@ -9,7 +9,7 @@ import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getDistPath, getCopyTargets} from '@dbp-toolkit/dev-utils';
+import {getDistPath, assetPlugin} from '@dbp-toolkit/dev-utils';
 import config from '../../demo.common.config.js';
 import {createRequire} from 'node:module';
 
@@ -62,13 +62,11 @@ export default (async () => {
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
             !isRolldown && json(),
+            await assetPlugin(pkg.name, 'dist'),
             buildFull && !isRolldown ? terser() : false,
             copy({
                 copySync: true,
-                targets: [
-                    {src: 'assets/silent-check-sso.html', dest: 'dist'},
-                    ...(await getCopyTargets(pkg.name, 'dist')),
-                ],
+                targets: [{src: 'assets/silent-check-sso.html', dest: 'dist'}],
             }),
             process.env.ROLLUP_WATCH === 'true'
                 ? serve({

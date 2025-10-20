@@ -1,14 +1,14 @@
 import {globSync} from 'glob';
+import url from 'node:url';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getBuildInfo, getCopyTargets, getUrlOptions} from '@dbp-toolkit/dev-utils';
+import {getBuildInfo, assetPlugin} from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
 import {createRequire} from 'node:module';
 import process from 'node:process';
@@ -59,7 +59,7 @@ export default (async () => {
             }),
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
-            url(await getUrlOptions(pkg.name, 'shared')),
+            await assetPlugin(pkg.name, 'dist'),
             !isRolldown && json(),
             buildFull && !isRolldown ? terser() : false,
             copy({
@@ -67,7 +67,6 @@ export default (async () => {
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
-                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             replace({

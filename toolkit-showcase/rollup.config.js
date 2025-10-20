@@ -7,7 +7,6 @@ import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import urlPlugin from '@rollup/plugin-url';
 import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
 import md from './rollup-plugin-md.js';
@@ -19,8 +18,7 @@ import {
     getBuildInfo,
     getPackagePath,
     getDistPath,
-    getCopyTargets,
-    getUrlOptions,
+    assetPlugin,
 } from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
 import {createRequire} from 'node:module';
@@ -179,7 +177,7 @@ Dependencies:
                     },
                 },
             }),
-            urlPlugin(await getUrlOptions(pkg.name, 'shared')),
+            await assetPlugin(pkg.name, 'dist'),
             copy({
                 copySync: true,
                 targets: [
@@ -216,7 +214,6 @@ Dependencies:
                         src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
                         dest: 'dist/' + (await getDistPath(pkg.name)),
                     },
-                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             replace({

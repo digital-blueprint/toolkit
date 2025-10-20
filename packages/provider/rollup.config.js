@@ -7,7 +7,7 @@ import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getBuildInfo, getCopyTargets} from '@dbp-toolkit/dev-utils';
+import {getBuildInfo, assetPlugin} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 import url from 'node:url';
@@ -56,13 +56,13 @@ export default (async () => {
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
             !isRolldown && json(),
+            await assetPlugin(pkg.name, 'dist'),
             buildFull && !isRolldown ? terser() : false,
             copy({
                 copySync: true,
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
-                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

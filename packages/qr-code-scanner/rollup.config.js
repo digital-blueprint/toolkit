@@ -5,11 +5,10 @@ import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
 import process from 'node:process';
 import {createRequire} from 'node:module';
-import {generateTLSConfig, getCopyTargets, getUrlOptions} from '@dbp-toolkit/dev-utils';
+import {generateTLSConfig, assetPlugin} from '@dbp-toolkit/dev-utils';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
@@ -44,14 +43,13 @@ export default async () => {
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
             !isRolldown && json(),
-            url(await getUrlOptions(pkg.name, 'shared')),
+            await assetPlugin(pkg.name, 'dist'),
             buildFull && !isRolldown ? terser() : false,
             copy({
                 copySync: true,
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
-                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

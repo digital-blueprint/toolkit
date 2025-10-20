@@ -6,7 +6,7 @@ import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
-import {getCopyTargets} from '@dbp-toolkit/dev-utils';
+import {assetPlugin} from '@dbp-toolkit/dev-utils';
 import process from 'node:process';
 import {createRequire} from 'node:module';
 
@@ -45,13 +45,13 @@ export default (async () => {
             !isRolldown && commonjs(),
             !isRolldown && json(),
             buildFull && !isRolldown ? terser() : false,
+            await assetPlugin(pkg.name, 'dist'),
             copy({
                 copySync: true,
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
-                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'

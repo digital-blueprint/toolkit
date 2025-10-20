@@ -5,9 +5,8 @@ import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import {getCopyTargets, getUrlOptions} from '@dbp-toolkit/dev-utils';
+import {assetPlugin} from '@dbp-toolkit/dev-utils';
 import process from 'node:process';
 import {createRequire} from 'node:module';
 
@@ -41,7 +40,7 @@ export default (async () => {
             }),
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
-            url(await getUrlOptions(pkg.name, 'shared')),
+            await assetPlugin(pkg.name, 'dist'),
             !isRolldown && json(),
             buildFull && !isRolldown ? terser() : false,
             copy({
@@ -49,7 +48,6 @@ export default (async () => {
                 targets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
-                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
             process.env.ROLLUP_WATCH === 'true'
