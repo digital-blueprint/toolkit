@@ -30,7 +30,7 @@ const pkg = require('./package.json');
 const appEnv = typeof process.env.APP_ENV !== 'undefined' ? process.env.APP_ENV : 'local';
 const watch = process.env.ROLLUP_WATCH === 'true';
 const buildFull = (!watch && appEnv !== 'test') || process.env.FORCE_FULL !== undefined;
-let useTerser = buildFull;
+let doMinify = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
@@ -90,6 +90,7 @@ export default (async () => {
             chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
+            ...(isRolldown ? {minify: doMinify} : {}),
         },
         moduleTypes: {
             '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
@@ -180,6 +181,7 @@ Dependencies:
             }),
             urlPlugin(await getUrlOptions(pkg.name, 'shared')),
             copy({
+                copySync: true,
                 targets: [
                     {src: 'assets/*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/*.metadata.json', dest: 'dist'},
@@ -241,7 +243,7 @@ Dependencies:
                     ],
                 }),
             // the terser must be used AFTER babel, otherwise it will cause pdfjs to not show SVGs (or other images?)
-            useTerser ? terser() : false,
+            doMinify && !isRolldown ? terser() : false,
             watch
                 ? serve({
                       contentBase: '.',

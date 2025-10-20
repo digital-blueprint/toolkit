@@ -5,6 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import serve from 'rollup-plugin-serve';
+import terser from '@rollup/plugin-terser';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
 import emitEJS from 'rollup-plugin-emit-ejs';
@@ -20,6 +21,7 @@ const pkg = require('./package.json');
 const basePath = '/dist/';
 const appName = 'dbp-app-shell';
 let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
+const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
 
 export default (async () => {
     let privatePath = await getDistPath(pkg.name);
@@ -34,6 +36,7 @@ export default (async () => {
             chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
+            ...(isRolldown ? {minify: buildFull} : {}),
         },
         plugins: [
             del({
@@ -59,7 +62,9 @@ export default (async () => {
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
             !isRolldown && json(),
+            buildFull && !isRolldown ? terser() : false,
             copy({
+                copySync: true,
                 targets: [
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
                     {src: 'assets/*.json', dest: 'dist'},

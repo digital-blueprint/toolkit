@@ -11,6 +11,7 @@ import process from 'node:process';
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
 let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
+const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
 
 export default {
     input:
@@ -23,6 +24,7 @@ export default {
         chunkFileNames: 'shared/[name].[hash].js',
         format: 'esm',
         sourcemap: true,
+        ...(isRolldown ? {minify: buildFull} : {}),
     },
     plugins: [
         del({
@@ -31,8 +33,9 @@ export default {
         !isRolldown && resolve({browser: true}),
         !isRolldown && commonjs(),
         !isRolldown && json(),
-        build !== 'local' && build !== 'test' ? terser() : false,
+        buildFull && !isRolldown ? terser() : false,
         copy({
+            copySync: true,
             targets: [
                 {src: 'assets/index.html', dest: 'dist'},
                 {src: 'assets/favicon.ico', dest: 'dist'},
