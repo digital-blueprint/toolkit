@@ -155,8 +155,8 @@ export const errorMixin = {
  */
 export const getStackTrace = () => {
     let stack = new Error().stack || '';
-    stack = stack.split('\n').map(function (line) {
+    let stackLines = stack.split('\n').map(function (line) {
         return line.trim();
     });
-    return stack.splice(stack[0] === 'Error' ? 2 : 1);
+    return stackLines.splice(stack[0] === 'Error' ? 2 : 1);
 };

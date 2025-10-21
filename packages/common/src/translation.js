@@ -88,7 +88,7 @@ export class Translation extends DBPLitElement {
         })();
 
         // if translation == "" key was not found
-        let key = '';
+        let key;
         if (translation != '') {
             key = unsafeHTML('<!-- key: ' + this.key + '-->');
         } else {

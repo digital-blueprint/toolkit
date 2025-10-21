@@ -82,6 +82,9 @@ export class AdapterLitElement extends LitElement {
 
         this.addEventListener(
             'dbp-subscribe',
+            /**
+             * @param {CustomEvent} e
+             */
             function (e) {
                 const name = e.detail.name;
                 if (that.hasProperty(name) || that.providerRoot) {
@@ -107,6 +110,9 @@ export class AdapterLitElement extends LitElement {
 
         this.addEventListener(
             'dbp-unsubscribe',
+            /**
+             * @param {CustomEvent} e
+             */
             function (e) {
                 const name = e.detail.name;
                 const sender = e.detail.sender;

@@ -36,8 +36,8 @@ export default class DBPLitElement extends AdapterLitElement {
         return this.renderRoot.querySelectorAll(selector);
     }
 
-    firstUpdated() {
-        super.firstUpdated();
+    firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
         this._renderDone = true;
         this._importTemplateSlots();
     }
@@ -95,6 +95,9 @@ export default class DBPLitElement extends AdapterLitElement {
         }
 
         // First add global override templates as light dom slots
+        /**
+         * @type {HTMLTemplateElement | null}
+         */
         let globalOverrideTemplateElem = document.querySelector('template#' + this.htmlOverrides);
         if (globalOverrideTemplateElem !== null) {
             // we need to clone the element so we can access the content
