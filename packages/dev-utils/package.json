@@ -30,10 +30,10 @@
     "scripts": {
         "fix": "npm run eslint:fix && npm run prettier:fix",
         "check": "npm run eslint && npm run prettier",
-        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix",
-        "eslint": "eslint \"**/*.{js,ts}\"",
-        "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
-        "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
+        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix --cache",
+        "eslint": "eslint \"**/*.{js,ts}\" --cache",
+        "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write --cache",
+        "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
         "tsc": "tsc -p jsconfig.json"
     }
 }
