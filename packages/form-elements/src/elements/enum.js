@@ -385,6 +385,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     handleInputValue(e) {
+        // Only handle user-triggered events and events from Select2 in tag mode
+        if (e.isTrusted !== true && !this.isDisplayModeTags()) return;
+
         if (this.displayMode === 'dropdown') {
             this.value = this.multiple
                 ? Array.from(e.target.selectedOptions).map((option) => option.value)
@@ -400,6 +403,16 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         if (this.isDisplayModeTags()) {
             this.value = this.$select.val();
         }
+
+        this.generateDataValue();
+
+        // Pass the value and field name in the event detail
+        const changeEvent = new CustomEvent('change', {
+            detail: {value: this.value, fieldName: this.name},
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(changeEvent);
     }
 
     adaptValueForMultiple() {
@@ -446,13 +459,6 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     if (this.select2IsInitialized()) {
                         this.$select.val(this.value).trigger('change');
                     }
-
-                    const changeEvent = new CustomEvent('change', {
-                        detail: {value: this.value},
-                        bubbles: true,
-                        composed: true,
-                    });
-                    this.dispatchEvent(changeEvent);
                     break;
                 }
             }
