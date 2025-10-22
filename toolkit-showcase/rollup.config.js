@@ -11,6 +11,7 @@ import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
 import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
+import {replacePlugin as rolldownReplace} from 'rolldown/experimental';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {
@@ -34,6 +35,7 @@ let checkLicenses = buildFull;
 let treeshake = buildFull;
 let useHTTPS = true;
 let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
+let nodeEnv = buildFull ? 'production' : 'development';
 
 console.log('APP_ENV: ' + appEnv);
 
@@ -216,10 +218,19 @@ Dependencies:
                     },
                 ],
             }),
-            replace({
-                'process.env.NODE_ENV': JSON.stringify('production'),
-                preventAssignment: true,
-            }),
+            isRolldown
+                ? rolldownReplace(
+                      {
+                          'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+                      },
+                      {
+                          preventAssignment: true,
+                      },
+                  )
+                : replace({
+                      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+                      preventAssignment: true,
+                  }),
             useBabel &&
                 getBabelOutputPlugin({
                     compact: false,
