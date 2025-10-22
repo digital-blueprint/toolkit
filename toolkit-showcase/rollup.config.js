@@ -170,7 +170,7 @@ Dependencies:
                 }),
             !isRolldown && json(),
             md({
-                include: ['../../**/*.md'],
+                include: ['**/*.md'],
                 marked: {
                     highlight: function (code) {
                         return require('highlight.js').highlightAuto(code).value;
