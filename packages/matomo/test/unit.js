@@ -4,13 +4,13 @@ import '../src/dbp-matomo';
 suite('dbp-matomo', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-matomo');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

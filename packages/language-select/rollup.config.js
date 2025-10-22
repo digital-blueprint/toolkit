@@ -30,6 +30,7 @@ export default {
         sourcemap: true,
         ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
     },
+    external: build == 'test' ? ['vitest'] : [],
     plugins: [
         del({
             targets: 'dist/*',

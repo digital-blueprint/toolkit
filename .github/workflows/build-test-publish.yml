@@ -38,7 +38,7 @@ jobs:
         run: ./node_modules/.bin/playwright install-deps chromium firefox
 
       - name: Run tests
-        run: npm run test
+        run: npm run test:full
 
       - name: Run formatter/linter/i18next checks
         run: npm run check

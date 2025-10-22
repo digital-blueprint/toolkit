@@ -6,7 +6,7 @@ import '../src/dbp-auth-demo';
 suite('dbp-auth basics', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-auth-keycloak');
         node.setAttribute('url', 'someurl');
         node.setAttribute('realm', 'somerealm');
@@ -15,7 +15,7 @@ suite('dbp-auth basics', () => {
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -27,13 +27,13 @@ suite('dbp-auth basics', () => {
 suite('dbp-login-button', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-login-button');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -45,7 +45,7 @@ suite('dbp-login-button', () => {
 suite('dbp-auth-demo basics', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-auth-demo');
         node.setAttribute('url', 'someurl');
         node.setAttribute('realm', 'somerealm');
@@ -54,7 +54,7 @@ suite('dbp-auth-demo basics', () => {
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

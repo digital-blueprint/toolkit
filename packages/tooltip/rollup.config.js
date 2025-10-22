@@ -38,6 +38,7 @@ export default (async () => {
         moduleTypes: {
             '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
         },
+        external: build == 'test' ? ['vitest'] : [],
         plugins: [
             del({
                 targets: 'dist/*',

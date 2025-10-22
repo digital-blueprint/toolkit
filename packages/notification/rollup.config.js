@@ -26,6 +26,7 @@ export default {
         sourcemap: true,
         ...(isRolldown ? {minify: buildFull} : {}),
     },
+    external: build == 'test' ? ['vitest'] : [],
     plugins: [
         del({
             targets: 'dist/*',

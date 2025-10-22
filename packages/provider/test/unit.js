@@ -6,13 +6,13 @@ import '../src/dbp-provider-demo';
 suite('dbp-provider basics', () => {
     let node;
 
-    suiteSetup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-provider');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    suiteTeardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -24,13 +24,13 @@ suite('dbp-provider basics', () => {
 suite('dbp-provider-demo basics', () => {
     let node;
 
-    suiteSetup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-provider-demo');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    suiteTeardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

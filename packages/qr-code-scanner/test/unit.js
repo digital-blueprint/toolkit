@@ -6,13 +6,13 @@ import {QrCodeScannerEngine} from '../src';
 suite('dbp-qr-code-scanner basics', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-qr-code-scanner');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

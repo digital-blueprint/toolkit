@@ -5,13 +5,13 @@ import '../src/dbp-pdf-viewer';
 suite('dbp-pdf-viewer basics', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-pdf-viewer');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

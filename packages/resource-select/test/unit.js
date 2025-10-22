@@ -6,13 +6,13 @@ import '../src/demo.js';
 suite('dbp-resource-select basics', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-resource-select');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -24,13 +24,13 @@ suite('dbp-resource-select basics', () => {
 suite('dbp-resource-select-demo basics', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-resource-select-demo');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

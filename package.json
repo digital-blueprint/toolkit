@@ -14,6 +14,7 @@
     },
     "scripts": {
         "test": "lerna --no-sort run --no-bail test",
+        "test:full": "lerna --no-sort run --no-bail test:full",
         "check": "lerna --no-sort run --no-bail check",
         "fix": "lerna --no-sort run --no-bail fix",
         "build": "lerna --no-sort run --no-bail build",

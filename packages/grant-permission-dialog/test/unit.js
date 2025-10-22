@@ -6,13 +6,13 @@ import '../src/demo.js';
 suite('dbp-grant-permission-dialog', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-grant-permission-dialog');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

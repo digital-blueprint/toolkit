@@ -6,13 +6,13 @@ import '../src/demo';
 suite('dbp-tabulator-table basics', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-tabulator-table');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -24,13 +24,13 @@ suite('dbp-tabulator-table basics', () => {
 suite('dbp-tabulator-table demo', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-tabulator-table-demo');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

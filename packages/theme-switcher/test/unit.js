@@ -6,13 +6,13 @@ import '../src/demo';
 suite('dbp-theme-switcher basics', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-theme-switcher');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -24,13 +24,13 @@ suite('dbp-theme-switcher basics', () => {
 suite('dbp-theme-switcher demo', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-theme-switcher-demo');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

@@ -11,13 +11,13 @@ import '../src/demo';
 suite('dbp-form-boolean-element', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-form-boolean-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -29,13 +29,13 @@ suite('dbp-form-boolean-element', () => {
 suite('dbp-form-date-element', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-form-date-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -47,13 +47,13 @@ suite('dbp-form-date-element', () => {
 suite('dbp-form-datetime-element', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-form-datetime-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -65,13 +65,13 @@ suite('dbp-form-datetime-element', () => {
 suite('dbp-form-enum-element', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-form-enum-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -83,13 +83,13 @@ suite('dbp-form-enum-element', () => {
 suite('dbp-form-string-element', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-form-string-element');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
@@ -101,13 +101,13 @@ suite('dbp-form-string-element', () => {
 suite('dbp-form-elements-demo', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-form-elements-demo');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

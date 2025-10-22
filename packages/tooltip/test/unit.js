@@ -4,13 +4,13 @@ import '../src/dbp-tooltip';
 suite('dbp-tooltip', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-tooltip');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 

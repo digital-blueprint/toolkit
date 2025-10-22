@@ -11,7 +11,7 @@ suite('dbp-language-select basics', () => {
         events.push(e);
     }
 
-    setup(async () => {
+    beforeEach(async () => {
         events.length = 0;
         window.addEventListener('dbp-set-property', handler);
         node = document.createElement('dbp-language-select');
@@ -19,7 +19,7 @@ suite('dbp-language-select basics', () => {
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
         window.removeEventListener('dbp-set-property', handler);
     });
@@ -52,13 +52,13 @@ suite('dbp-language-select basics', () => {
 suite('dbp-language-select demo', () => {
     let node;
 
-    setup(async () => {
+    beforeEach(async () => {
         node = document.createElement('dbp-language-select-demo');
         document.body.appendChild(node);
         await node.updateComplete;
     });
 
-    teardown(() => {
+    afterEach(() => {
         node.remove();
     });
 
