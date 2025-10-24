@@ -1,11 +1,12 @@
 import {html, css} from 'lit';
+import {createInstance} from './i18n';
 import * as commonStyles from './styles.js';
 import {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
 import DBPLitElement from './dbp-lit-element';
 import {LangMixin} from './lang-mixin.js';
 import {Icon} from './icon';
 
-export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement)) {
+export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
         this.open = false;
