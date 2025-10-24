@@ -1748,13 +1748,14 @@ export function getDropDownCss() {
             display: inline-block;
             position: relative;
         }
+
         :host([disabled]) {
             opacity: 0.6;
             pointer-events: none;
         }
 
         .trigger {
-            display: inline-flex;
+            /*display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.4rem 0.6rem;
@@ -1762,33 +1763,71 @@ export function getDropDownCss() {
             border-radius: 0.5rem;
             background: var(--dbp-background);
             cursor: pointer;
-            font: inherit;
+            font: inherit;*/
         }
 
         .menu {
             position: absolute;
             top: calc(100% + 0.25rem);
-            min-width: 12rem;
-            padding: 0.25rem;
+            min-width: max-content;
+            padding: 0;
             margin: 0;
             list-style: none;
-            border: 1px solid var(--dbp-border);
-            border-radius: 0.5rem;
+            border: 0 none;
+            border-radius: 0;
+            text-align: left;
             background: var(--dbp-background);
             box-shadow:
                 0 6px 24px rgba(0, 0, 0, 0.08),
                 0 2px 8px rgba(0, 0, 0, 0.06);
-            z-index: 1000;
-        }
-        :host([align='right']) .menu {
-            right: 0;
-        }
-        :host(:not([align='right'])) .menu {
-            left: 0;
+            z-index: 10;
         }
 
+        .item-button {
+            width: 100%;
+            text-align: left;
+            border: 0 none;
+            color: var(--dbp-content);
+            background-color: var(--dbp-background);
+        }
+
+        .item-button:hover {
+            /* @TODO we need a lighter grey than muted */
+            background-color: light-dark(#f7f7f7, #333333);
+        }
+
+        .item-button:not([disabled]):hover dbp-icon {
+            transform: scale(1.25);
+        }
+
+        .item-button dbp-icon {
+            margin-right: 5px;
+            transition: transform 150ms ease-in;
+        }
+
+        :host([open]) .icon-chevron {
+            transform: rotate(180deg);
+        }
+
+        .icon-chevron {
+            transition: transform 250ms ease-in;
+            margin-left: 0.5em;
+        }
+
+        :host([align='right']) .menu {
+            right: 0;
+            text-align: right;
+        }
+
+        :host(:not([align='right'])) .menu {
+            left: 0;
+            text-align: left;
+        }
+
+        /*
         ::slotted([slot='item']) {
             display: flex;
+            width: 100%;
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 0.6rem;
@@ -1809,6 +1848,7 @@ export function getDropDownCss() {
             opacity: 0.5;
             pointer-events: none;
         }
+        */
     `;
 }
 

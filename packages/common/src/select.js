@@ -16,6 +16,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.hideOnSelect = true;
         this.options = [];
         this.value = '';
+        this.buttonType = 'is-secondary';
     }
 
     static properties = {
@@ -26,6 +27,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         hideOnSelect: {type: Boolean, attribute: 'hide-on-select'},
         options: {type: Array},
         value: {type: String, reflect: true},
+        buttonType: {type: String, attribute: 'button-type'},
     };
 
     static get scopedElements() {
@@ -73,7 +75,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     }
 
     _items() {
-        return Array.from(this.renderRoot.querySelectorAll('.itemBtn'));
+        return Array.from(this.renderRoot.querySelectorAll('.item-button'));
     }
 
     _onTriggerKeydown = (e) => {
@@ -142,7 +144,13 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     static get styles() {
         // language=css
         return css`
-            ${commonStyles.getDropDownCss()}
+            @layer theme, components;
+            @layer theme {
+                ${commonStyles.getButtonCSS()}
+            }
+            @layer components {
+                ${commonStyles.getDropDownCss()}
+            }
         `;
     }
 
@@ -151,25 +159,33 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         const triggerText = selected?.title ?? this.label ?? '';
         return html`
             <button
-                class="trigger"
+                id="action-trigger-button"
+                class="trigger button ${this.buttonType}"
                 part="trigger"
                 @click=${this.toggle}
                 @keydown=${this._onTriggerKeydown}
                 ?disabled=${this.disabled}
                 aria-haspopup="menu"
                 aria-expanded=${String(this.open)}
-                aria-label=${triggerText || 'menu'}>
+                aria-controls="action-dropdown">
                 ${triggerText}
+                <dbp-icon class="icon-chevron" name="chevron-down" aria-hidden="true"></dbp-icon>
             </button>
 
             ${this.open
                 ? html`
-                      <ul class="menu" part="menu" role="menu" @keydown=${this._onMenuKeydown}>
+                      <ul
+                          id="action-dropdown"
+                          class="menu"
+                          part="menu"
+                          role="menu"
+                          aria-labelledby="action-trigger-button"
+                          @keydown=${this._onMenuKeydown}>
                           ${this.options.map(
                               (o) => html`
                                   <li role="none">
                                       <button
-                                          class="itemBtn"
+                                          class="item-button button"
                                           role="menuitem"
                                           data-name=${o.name}
                                           @click=${this._onItemClick}
@@ -182,7 +198,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                                                         aria-hidden="true"></dbp-icon>
                                                 `
                                               : null}
-                                          <span>${o.title ?? o.name}</span>
+                                          <span>${o.label ?? o.name}</span>
                                       </button>
                                   </li>
                               `,
