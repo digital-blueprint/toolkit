@@ -331,6 +331,7 @@ export async function assetPlugin(packageName, bundleDest = 'dist') {
     return [
         copyPlugin({
             copySync: true,
+            hook: 'generateBundle',
             targets: await getCopyTargets(packageName, bundleDest),
         }),
         urlPluginHack(await getUrlOptions(packageName, 'shared')),
