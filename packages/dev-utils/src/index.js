@@ -325,14 +325,21 @@ function urlPluginHack(options = {}) {
 /**
  * Returns a Rollup plugin which handles asset copying and URL imports.
  *
+ * @param {string} packageName - The root package name
+ * @param {string} [bundleDest] - The bundle destination directory
+ * @param {object} [options] - Additional options
+ * @param {Array} [options.copyTargets] - Additional copy targets to include
  * @returns {Promise<Array>} Array of Rollup plugins
  */
-export async function assetPlugin(packageName, bundleDest = 'dist') {
+export async function assetPlugin(packageName, bundleDest = 'dist', options = {}) {
     return [
         copyPlugin({
             copySync: true,
             hook: 'generateBundle',
-            targets: await getCopyTargets(packageName, bundleDest),
+            targets: [
+                ...(options.copyTargets || []),
+                ...(await getCopyTargets(packageName, bundleDest)),
+            ],
         }),
         urlPluginHack(await getUrlOptions(packageName, 'shared')),
     ];
