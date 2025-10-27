@@ -9,9 +9,6 @@
     "composer": {
         "enabled": false
     },
-    "poetry": {
-        "enabled": false
-    },
     "packageRules": [
         {
             "matchPackageNames": ["pdfjs-dist"],
