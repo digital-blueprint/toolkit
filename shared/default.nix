@@ -7,7 +7,7 @@ let
   shellHookCommon = ''
     export CHROMIUM_BIN=${lib.getExe pkgs.chromium}
     export FIREFOX_BIN=${lib.getExe pkgs.firefox}
-    echo "🏁 Using Chromium at ${pkgs.chromium.version} and Firefox at ${pkgs.firefox.version} for karma tests"
+    echo "🏁 Using Chromium at ${pkgs.chromium.version} and Firefox at ${pkgs.firefox.version} for tests"
 
     # Determine the repository root
     REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
