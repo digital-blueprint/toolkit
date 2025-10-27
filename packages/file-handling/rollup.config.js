@@ -1,7 +1,6 @@
 import {globSync} from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
@@ -45,10 +44,8 @@ export default (async () => {
             !isRolldown && commonjs(),
             !isRolldown && json(),
             buildFull && !isRolldown ? terser() : false,
-            await assetPlugin(pkg.name, 'dist'),
-            copy({
-                copySync: true,
-                targets: [
+            await assetPlugin(pkg.name, 'dist', {
+                copyTargets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},

@@ -3,7 +3,6 @@ import url from 'node:url';
 import process from 'node:process';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
@@ -62,12 +61,11 @@ export default (async () => {
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
             !isRolldown && json(),
-            await assetPlugin(pkg.name, 'dist'),
-            buildFull && !isRolldown ? terser() : false,
-            copy({
-                copySync: true,
-                targets: [{src: 'assets/silent-check-sso.html', dest: 'dist'}],
+            await assetPlugin(pkg.name, 'dist', {
+                copyTargets: [{src: 'assets/silent-check-sso.html', dest: 'dist'}],
             }),
+            buildFull && !isRolldown ? terser() : false,
+
             process.env.ROLLUP_WATCH === 'true'
                 ? serve({
                       contentBase: '.',

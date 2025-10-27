@@ -1,7 +1,6 @@
 import {globSync} from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
@@ -53,11 +52,8 @@ export default (async () => {
                 }),
             !isRolldown && commonjs(),
             !isRolldown && json(),
-            await assetPlugin(pkg.name, 'dist'),
-            buildFull && !isRolldown ? terser() : false,
-            copy({
-                copySync: true,
-                targets: [
+            await assetPlugin(pkg.name, 'dist', {
+                copyTargets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
                     {
@@ -70,6 +66,7 @@ export default (async () => {
                     },
                 ],
             }),
+            buildFull && !isRolldown ? terser() : false,
             process.env.ROLLUP_WATCH === 'true'
                 ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
                 : false,

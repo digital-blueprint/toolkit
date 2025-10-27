@@ -2,7 +2,6 @@ import {globSync} from 'glob';
 import url from 'node:url';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
@@ -59,16 +58,14 @@ export default (async () => {
             }),
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
-            await assetPlugin(pkg.name, 'dist'),
-            !isRolldown && json(),
-            buildFull && !isRolldown ? terser() : false,
-            copy({
-                copySync: true,
-                targets: [
+            await assetPlugin(pkg.name, 'dist', {
+                copyTargets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
                 ],
             }),
+            !isRolldown && json(),
+            buildFull && !isRolldown ? terser() : false,
             replace({
                 'process.env.NODE_ENV': JSON.stringify('production'),
                 preventAssignment: true,
