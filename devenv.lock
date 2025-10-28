@@ -101,10 +101,10 @@
     "shared": {
       "flake": false,
       "locked": {
-        "lastModified": 1761640040,
+        "lastModified": 1761657092,
         "owner": "digital-blueprint",
         "repo": "shared",
-        "rev": "76cdbf3b255b4e3790effd9cf8b4476ac2e4c731",
+        "rev": "4e6e34440e85683835c8121b476d2fe84c216243",
         "type": "github"
       },
       "original": {

@@ -9,3 +9,4 @@ inputs:
 imports:
   - shared/common
   - shared/dbp-app
+  - shared/playwright
