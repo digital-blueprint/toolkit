@@ -1,4 +1,4 @@
-import {globSync} from 'glob';
+import {globSync} from 'node:fs';
 import url from 'node:url';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';

@@ -28,7 +28,6 @@
         "chai": "^6.0.0",
         "eslint": "^9.1.0",
         "eslint-plugin-jsdoc": "^61.0.0",
-        "glob": "^11.0.0",
         "globals": "^16.0.0",
         "i18next-cli": "^1.5.4",
         "karma": "^6.0.0",
