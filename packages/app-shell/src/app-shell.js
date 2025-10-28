@@ -777,7 +777,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: flex;
                 justify-content: center;
             }
-            
+
             .menu a {
                 padding: 0.3em;
                 font-weight: 300;
@@ -2063,11 +2063,13 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             <ul class="menu hidden">
                                 ${menuTemplates}
                                 <li class="close" @click="${this.hideMenu}">
-                                    <dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon>
+                                    <dbp-icon
+                                        name="close"
+                                        style="color: var(--dbp-accent)"></dbp-icon>
                                 </li>
                             </ul>
                         </div>
-                        
+
                         <p class="description">${this.description}</p>
                         ${this._renderActivity()}
                     </main>
