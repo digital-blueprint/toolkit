@@ -13,7 +13,7 @@
         "npm": ">=7.0.0"
     },
     "scripts": {
-        "test": "lerna --no-sort run --no-bail test",
+        "test": "lerna --no-sort --concurrency 1 run --no-bail test",
         "check": "lerna --no-sort run --no-bail check",
         "fix": "lerna --no-sort run --no-bail fix",
         "build": "lerna --no-sort run --no-bail build",
