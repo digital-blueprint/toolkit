@@ -3,7 +3,7 @@ import {css, html} from 'lit';
 import DBPLitElement from '../dbp-lit-element.js';
 import {ScopedElementsMixin} from '../scoped/ScopedElementsMixin.js';
 import * as commonStyles from '../styles.js';
-import {Icon, Button, LangMixin} from '../index.js';
+import {Icon, Button, LangMixin, DBPSelect} from '../index.js';
 
 export class DbpSelectDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -14,6 +14,7 @@ export class DbpSelectDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
         let elements = {
             'dbp-icon': Icon,
             'dbp-button': Button,
+            'dbp-select': DBPSelect,
         };
 
         return elements;
