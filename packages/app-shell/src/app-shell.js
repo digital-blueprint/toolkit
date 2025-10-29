@@ -17,6 +17,8 @@ import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from '@dbp-toolkit/matomo/src/matomo';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {LayoutSwitcher} from './layout-switcher.js';
+import {FeatureFlagDropdown} from './feature-flag-dropdown.js';
+
 /**
  * In case the application gets updated future dynamic imports might fail.
  * This sends a notification suggesting the user to reload the page.
@@ -83,6 +85,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         return {
             'dbp-language-select': LanguageSelect,
             'dbp-build-info': BuildInfo,
+            'dbp-feature-flag-dropdown': FeatureFlagDropdown,
             'dbp-auth-keycloak': AuthKeycloak,
             'dbp-auth-menu-button': AuthMenuButton,
             'dbp-theme-switcher': ThemeSwitcher,
@@ -661,6 +664,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 grid-area: footer;
                 margin: 15px;
                 text-align: right;
+                align-items: end;
             }
 
             header .hd1-left {
@@ -1902,6 +1906,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                 env="${this.env}"
                                 build-url="${this.buildUrl}"
                                 build-time="${this.buildTime}"></dbp-build-info>
+                            <dbp-feature-flag-dropdown class="${prodClassMap}"></dbp-feature-flag-dropdown>
                         </slot>
                     </footer>
                 </div>
