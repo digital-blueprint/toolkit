@@ -1906,7 +1906,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                 env="${this.env}"
                                 build-url="${this.buildUrl}"
                                 build-time="${this.buildTime}"></dbp-build-info>
-                            <dbp-feature-flag-dropdown class="${prodClassMap}"></dbp-feature-flag-dropdown>
+                            <dbp-feature-flag-dropdown
+                                class="${prodClassMap}"></dbp-feature-flag-dropdown>
                         </slot>
                     </footer>
                 </div>
