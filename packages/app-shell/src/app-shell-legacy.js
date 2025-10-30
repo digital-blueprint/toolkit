@@ -554,45 +554,44 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         const menu = this.shadowRoot.querySelector('ul.menu');
         const subtitle = this.shadowRoot.querySelector('h2.subtitle');
 
-        if (!menu || !subtitle) return;
+        if (menu === null || subtitle === null) {
+            return;
+        }
 
-        const isOpening = !menu.classList.contains('is-open');
-        menu.classList.toggle('is-open', isOpening);
+        menu.classList.toggle('hidden');
 
-        const mainGrid = this.shadowRoot.querySelector('#main');
-        if (mainGrid) mainGrid.classList.toggle('menu-open', isOpening);
+        if (this.menuHeight === -1) {
+            this.menuHeight = menu.clientHeight;
+        }
 
-        // Icon + aria
-        const burger = this.shadowRoot.querySelector('#menu-burger-icon');
-        if (burger) burger.name = isOpening ? 'close' : 'menu';
-        subtitle.setAttribute('aria-expanded', String(isOpening));
+        let topValue = subtitle.getBoundingClientRect().bottom;
+        let isMenuOverflow = this.menuHeight + topValue >= window.innerHeight ? true : false;
 
-        // Outside click + initial click guard
-        if (isOpening) {
-            this.initateOpenMenu = true;
-            if (!this._boundCloseMenuHandler) {
-                this._boundCloseMenuHandler = (evt) => {
-                    // ignore the very first click that opened the menu
-                    if (this.initateOpenMenu) {
-                        this.initateOpenMenu = false;
-                        return;
-                    }
-                    const path = evt.composedPath();
-                    const clickedInside = path.includes(menu) || path.includes(subtitle);
-                    if (!clickedInside) this.hideMenu();
-                };
-            }
-
-            document.addEventListener('click', this._boundCloseMenuHandler, {capture: true});
-            document.addEventListener(
-                'keydown',
-                (this._boundEscHandler ||= (e) => {
-                    if (e.key === 'Escape') this.hideMenu();
-                }),
+        if (isMenuOverflow && !menu.classList.contains('hidden')) {
+            menu.setAttribute(
+                'style',
+                'position: fixed;top: ' +
+                    topValue +
+                    'px;bottom: 0;border-bottom: 0;overflow-y: auto;',
             );
+            menu.scrollTop = 0;
+            document.body.setAttribute('style', 'overflow:hidden;');
+        } else if (isMenuOverflow && menu.classList.contains('hidden')) {
+            document.body.removeAttribute('style', 'overflow:hidden;');
+            menu.removeAttribute('style');
+        }
+
+        const chevron = this.shadowRoot.querySelector('#menu-chevron-icon');
+        if (chevron !== null) {
+            chevron.name = menu.classList.contains('hidden') ? 'chevron-down' : 'chevron-up';
+        }
+
+        if (!menu.classList.contains('hidden')) {
+            document.addEventListener('click', this.boundCloseMenuHandler);
+            this.initateOpenMenu = true;
         } else {
-            document.removeEventListener('click', this._boundCloseMenuHandler, {capture: true});
-            document.removeEventListener('keydown', this._boundEscHandler);
+            document.removeEventListener('click', this.boundCloseMenuHandler);
+            menu.removeAttribute('style');
         }
     }
 
@@ -607,23 +606,25 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     static get styles() {
         // language=css
-        //${commonStyles.wideLayout()} add this to return css below in case of allow wide-layout css
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getLinkCss()}
-            
-            
+
+            .hidden {
+                display: none;
+            }
+
             h1.title {
                 margin-bottom: 0;
-                font-weight: bold;
+                font-weight: 300;
             }
 
             #main {
                 display: grid;
-                grid-template-columns: minmax(0, 1fr);
+                grid-template-columns: minmax(180px, 17%) minmax(0, auto);
                 grid-template-rows: min-content min-content 1fr min-content;
-                grid-template-areas: 'header' 'headline' 'main' 'footer';
+                grid-template-areas: 'header header' 'headline headline' 'sidebar main' 'footer footer';
                 max-width: 1400px;
                 margin: auto;
                 min-height: 100vh;
@@ -640,26 +641,23 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 grid-template-rows: 60px 60px;
                 grid-template-areas: 'hd1-left hd1-middle hd1-right' 'hd2-left . hd2-right';
                 width: 100%;
+                max-width: 1060px;
                 margin: 0 auto;
             }
 
             aside {
                 grid-area: sidebar;
                 margin: 15px 15px;
-                display: contents;
             }
-
             #headline {
                 grid-area: headline;
                 margin: 20px 0 30px 0;
                 text-align: center;
             }
-
             main {
                 grid-area: main;
                 margin: 15px 15px;
             }
-
             footer {
                 grid-area: footer;
                 margin: 15px;
@@ -670,33 +668,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             header .hd1-left {
                 display: flex;
                 flex-direction: row;
-                justify-content: space-between;
-                -webkit-justify-content: space-between;
+                justify-content: flex-end;
+                -webkit-justify-content: flex-end;
                 grid-area: hd1-left;
                 text-align: right;
                 padding-right: 20px;
-                padding-left: 18px;
                 align-items: center;
                 -webkit-align-items: center;
                 gap: 10px;
-            }
-
-            .hd1-left-menu {
-                display: flex;
-                gap: 10px;
-                justify-self: center;
-                align-self: center;
-            }
-
-            .burger-menu-icon {
-                color: var(--dbp-accent);
-                cursor: pointer;
-                justify-self: center;
-                align-self: inherit;
-            }
-
-            .hd1-left-switches {
-                display: flex;
             }
 
             header .hd1-middle {
@@ -714,8 +693,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             header .hd1-right {
                 grid-area: hd1-right;
                 display: flex;
-                justify-content: space-between;
-                -webkit-justify-content: space-between;
+                justify-content: flex-start;
+                -webkit-justify-content: flex-start;
                 padding: 0 20px;
                 min-width: 0;
                 align-items: center;
@@ -758,8 +737,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             aside ul.menu,
             footer ul.menu {
                 list-style: none;
-                max-height: calc(100vh - 30px);
-                overflow-y: auto;
+            }
+
+            ul.menu li.close {
+                display: none;
             }
 
             footer {
@@ -818,13 +799,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 padding-right: 0.3em;
             }
 
-            aside h2.subtitle {
-                grid-area: headline;
-                justify-self: center;
-                display: inline-block;
-                cursor: pointer;
-            }
-
             aside .subtitle {
                 display: none;
                 color: var(--dbp-content);
@@ -835,11 +809,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 text-align: center;
             }
 
-            /* Show/hide via a dedicated class */
-            ul.menu {
-                display: none;
-            }
-            ul.menu.is-open {
+            ul.menu.hidden {
                 display: block;
             }
 
@@ -857,27 +827,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
             #dbp-notification {
                 z-index: 99999;
-            }
-
-            #main.menu-open {
-                grid-template-columns: minmax(180px, 17%) minmax(0, 1fr);
-                grid-template-areas:
-                    'header header'
-                    'headline headline'
-                    'sidebar main'
-                    'footer footer';
-            }
-
-            #main.menu-open aside {
-                display: block;
-            }
-
-            #main.menu-open aside h2.subtitle {
-                grid-area: auto;
-            }
-
-            #main:not(.menu-open) ul.menu.is-open {
-                display: none;
             }
 
             @media (max-width: 768px) {
@@ -898,7 +847,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
 
                 aside {
-                    align-self: start;
                     margin: 0;
                     position: sticky;
                     top: 0;
@@ -913,6 +861,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
 
                 aside .menu {
+                    border-bottom: var(--dbp-border);
                     border-top-width: 0;
                     width: 100%;
                     position: absolute;
@@ -928,7 +877,15 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     padding: 8px;
                 }
 
+                ul.menu li.close {
+                    display: block;
+                    padding: 0 15px 15px 15px;
+                    text-align: right;
+                    cursor: pointer;
+                }
+
                 ul.menu.hidden {
+                    display: none;
                 }
             }
         `;
@@ -1089,11 +1046,231 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             `);
         }
         let style;
-        /*if (this.currentLayout == 'wide') {
-
+        if (this.currentLayout == 'wide') {
             style = html`
                 <style>
-                    ${this.wideLayout()}
+                    #root #main {
+                        display: grid;
+                        grid-template-columns: minmax(180px, 17%) minmax(0, auto);
+                        grid-template-rows: min-content min-content 1fr min-content;
+                        grid-template-areas: 'header header' 'headline headline' 'main main' 'footer footer';
+                        max-width: 1400px;
+                        margin: auto;
+                        min-height: 100vh;
+                    }
+
+                    #main-logo {
+                        padding: 0 50px 0 0;
+                    }
+
+                    header {
+                        grid-area: header;
+                        display: grid;
+                        grid-template-columns: 50% 0 auto;
+                        grid-template-rows: 60px 60px;
+                        grid-template-areas: 'hd1-left hd1-middle hd1-right' 'hd2-left . hd2-right';
+                        width: 100%;
+                        max-width: 1060px;
+                        margin: 0 auto;
+                    }
+
+                    #headline {
+                        grid-area: headline;
+                        margin: 20px 0 30px 0;
+                        text-align: center;
+                    }
+
+                    main {
+                        grid-area: main;
+                        margin: 15px 15px;
+                    }
+
+                    footer {
+                        grid-area: footer;
+                        margin: 15px;
+                        text-align: right;
+                    }
+
+                    header .hd1-left {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: flex-end;
+                        -webkit-justify-content: flex-end;
+                        grid-area: hd1-left;
+                        text-align: right;
+                        padding-right: 20px;
+                        align-items: center;
+                        -webkit-align-items: center;
+                        gap: 10px;
+                    }
+
+                    header .hd1-middle {
+                        grid-area: hd1-middle;
+                        background-color: var(--dbp-content);
+                        background: linear-gradient(
+                            180deg,
+                            var(--dbp-content) 0%,
+                            var(--dbp-content) 85%,
+                            rgba(0, 0, 0, 0) 90%
+                        );
+                    }
+
+                    header .hd1-right {
+                        grid-area: hd1-right;
+                        display: flex;
+                        justify-content: flex-start;
+                        -webkit-justify-content: flex-start;
+                        padding: 0 20px;
+                        min-width: 0;
+                        align-items: center;
+                        -webkit-align-items: center;
+                    }
+
+                    header .hd1-right .auth-button {
+                        min-width: 0;
+                    }
+
+                    header .hd2-left {
+                        grid-area: hd2-left;
+                        display: flex;
+                        flex-direction: column;
+                        white-space: nowrap;
+                    }
+
+                    header .hd2-left .header {
+                        margin-left: 50px;
+                    }
+
+                    header .hd2-left a:hover {
+                        color: var(--dbp-hover-color, var(--dbp-content));
+                        background-color: var(--dbp-hover-background-color);
+                    }
+
+                    header .hd2-right {
+                        grid-area: hd2-right;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        text-align: right;
+                    }
+
+                    header a {
+                        color: var(--dbp-content);
+                        display: inline;
+                    }
+
+                    aside ul.menu,
+                    footer ul.menu {
+                        list-style: none;
+                    }
+
+                    ul.menu li.close {
+                        text-align: right !important;
+                        cursor: pointer;
+                    }
+
+                    footer {
+                        display: flex;
+                        justify-content: flex-end;
+                        flex-wrap: wrap;
+                    }
+
+                    footer > *,
+                    footer slot > * {
+                        margin: 0.5em 0 0 1em;
+                    }
+
+                    footer a {
+                        border-bottom: var(--dbp-border);
+                        padding: 0;
+                    }
+
+                    footer a:hover {
+                        color: var(--dbp-hover-color, var(--dbp-content));
+                        background-color: var(--dbp-hover-background-color);
+                        border-color: var(--dbp-hover-color, var(--dbp-content));
+                    }
+
+                    /* We don't allow inline-svg */
+                    /*
+                footer .int-link-external::after {
+                    content: "\\00a0\\00a0\\00a0\\00a0";
+                    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3Ardf%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%225.6842mm%22%20width%3D%225.6873mm%22%20version%3D%221.1%22%20xmlns%3Acc%3D%22http%3A%2F%2Fcreativecommons.org%2Fns%23%22%20xmlns%3Adc%3D%22http%3A%2F%2Fpurl.org%2Fdc%2Felements%2F1.1%2F%22%20viewBox%3D%220%200%2020.151879%2020.141083%22%3E%3Cg%20transform%3D%22translate(-258.5%20-425.15)%22%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A1.2%3Bfill%3Anone%22%20d%3D%22m266.7%20429.59h-7.5029v15.002h15.002v-7.4634%22%2F%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A1.2%3Bfill%3Anone%22%20d%3D%22m262.94%20440.86%2015.002-15.002%22%2F%3E%3Cpath%20style%3D%22stroke-linejoin%3Around%3Bstroke%3A%23000%3Bstroke-linecap%3Around%3Bstroke-width%3A1.2%3Bfill%3Anone%22%20d%3D%22m270.44%20425.86h7.499v7.499%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E');
+                    background-size:contain;
+                    background-repeat: no-repeat;
+                    background-position:center center;
+                    margin: 0 0.5% 0 1.5%;
+                    font-size:94%;
+                }
+                */
+
+                    .menu a {
+                        padding: 8px !important;
+                        font-weight: 300;
+                        color: var(--dbp-content);
+                        display: block;
+                        padding-right: 13px;
+                        word-break: break-word;
+                    }
+
+                    .menu a:hover {
+                        color: var(--dbp-hover-color, var(--dbp-content));
+                        background-color: var(--dbp-hover-background-color);
+                    }
+
+                    .menu a.selected {
+                        border-left: 3px solid var(--dbp-accent);
+                        font-weight: bolder;
+                        padding-left: 0.5em;
+                        padding-right: 0.3em;
+                    }
+
+                    aside .subtitle {
+                        display: none;
+                        color: var(--dbp-content);
+                        font-size: 1.25rem;
+                        font-weight: 300;
+                        line-height: 1.25;
+                        cursor: pointer;
+                        text-align: center;
+                    }
+
+                    aside h2.subtitle {
+                        display: block;
+                        padding: 0.5em 0.5em;
+                    }
+
+                    aside .menu {
+                        grid-area: headline !important;
+                        border-top-width: 0px;
+                        background-color: var(--dbp-background);
+                        border-bottom: var(--dbp-border);
+                        z-index: 10;
+                        width: 100%;
+                    }
+
+                    ul.menu.hidden {
+                        display: none !important;
+                    }
+
+                    a {
+                        transition:
+                            background-color 0.15s ease 0s,
+                            color 0.15s ease 0s;
+                    }
+
+                    .description {
+                        text-align: left;
+                        margin-bottom: 1rem;
+                    }
+
+                    aside {
+                        grid-area: headline !important;
+                        margin: 65px auto !important;
+                        line-height: 1.125;
+                        color: var(--dbp-content);
+                        width: 100%;
+                    }
                 </style>
             `;
         } else {
@@ -1103,7 +1280,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     }
                 </style>
             `;
-        }*/
+        }
         const kc = this.keycloakConfig;
         return html`
             ${style}
@@ -1132,29 +1309,18 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                <div class="hd1-left-menu">
-                                    <dbp-icon
-                                        class="burger-menu-icon"
-                                        name="menu"
-                                        style=""
-                                        id="menu-burger-icon"
-                                        @click="${this.toggleMenu}"></dbp-icon>
-                                    <h2 class="subtitle" @click="${this.toggleMenu}">menu</h2>
-                                </div>
-                                <div class="hd1-left-switches">
-                                    <!-- <dbp-layout-switcher
+                                <dbp-layout-switcher
                                     class="${classMap({hidden: this.disableLayouts})}"
                                     subscribe="default-layout,disabled-layout,app-name"
                                     lang="${this.lang}"
                                     @layout-changed="${this
-                                        .handleLayoutChange}"></dbp-layout-switcher> -->
-                                    <dbp-theme-switcher
-                                        subscribe="themes,dark-mode-theme-override"
-                                        lang="${this.lang}"></dbp-theme-switcher>
-                                    <dbp-language-select
-                                        id="lang-select"
-                                        lang="${this.lang}"></dbp-language-select>
-                                </div>
+                                        .handleLayoutChange}"></dbp-layout-switcher>
+                                <dbp-theme-switcher
+                                    subscribe="themes,dark-mode-theme-override"
+                                    lang="${this.lang}"></dbp-theme-switcher>
+                                <dbp-language-select
+                                    id="lang-select"
+                                    lang="${this.lang}"></dbp-language-select>
                             </div>
                             <div class="hd1-middle"></div>
                             <div class="hd1-right">
@@ -1163,7 +1329,17 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     subscribe="auth"
                                     class="auth-button"
                                     lang="${this.lang}"></dbp-auth-menu-button>
-
+                            </div>
+                            <div class="hd2-left">
+                                <div class="header">
+                                    <slot name="name">
+                                        DBP
+                                        <br />
+                                        Digital Blueprint
+                                    </slot>
+                                </div>
+                            </div>
+                            <div class="hd2-right">
                                 <slot name="logo">
                                     <dbp-themed>
                                         <div
@@ -1853,27 +2029,26 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     </dbp-themed>
                                 </slot>
                             </div>
-                            <div class="hd2-left"></div>
-                            <div class="hd2-right"></div>
                         </slot>
                     </header>
                     <div id="headline">
-                        <p class="title">
-                            <slot name="title">
-                                ${this.activeView === 'welcome'
-                                    ? html``
-                                    : this.topicMetaDataText('name')}
-                            </slot>
-                        </p>
-                        <h1>
-                            ${this.activeView === 'welcome'
-                                ? this.topicMetaDataText('name')
-                                : this.subtitle}
+                        <h1 class="title">
+                            <slot name="title">${this.topicMetaDataText('name')}</slot>
                         </h1>
                     </div>
                     <aside>
+                        <h2 class="subtitle" @click="${this.toggleMenu}">
+                            ${this.subtitle}
+                            <dbp-icon
+                                name="chevron-down"
+                                style="color: var(--dbp-accent)"
+                                id="menu-chevron-icon"></dbp-icon>
+                        </h2>
                         <ul class="menu hidden">
                             ${menuTemplates}
+                            <li class="close" @click="${this.hideMenu}">
+                                <dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon>
+                            </li>
                         </ul>
                     </aside>
 
