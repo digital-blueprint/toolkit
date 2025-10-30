@@ -11,7 +11,6 @@ const pkg = require('./package.json');
 const basePath = '/dist/';
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
-let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
 
 export default {
@@ -25,7 +24,8 @@ export default {
         chunkFileNames: 'shared/[name].[hash].js',
         format: 'esm',
         sourcemap: true,
-        ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
+        minify: buildFull,
+        cleanDir: true,
     },
     plugins: [
         emitEJS({

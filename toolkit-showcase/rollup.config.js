@@ -5,7 +5,7 @@ import serve from 'rollup-plugin-serve';
 import license from 'rollup-plugin-license';
 import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {replacePlugin as rolldownReplace} from 'rolldown/experimental';
+import {replacePlugin} from 'rolldown/experimental';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {
@@ -15,7 +15,6 @@ import {
     getDistPath,
     assetPlugin,
 } from '@dbp-toolkit/dev-utils';
-import replace from '@rollup/plugin-replace';
 import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -28,7 +27,6 @@ let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
 let useHTTPS = true;
-let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 let nodeEnv = buildFull ? 'production' : 'development';
 
 console.log('APP_ENV: ' + appEnv);
@@ -84,7 +82,8 @@ export default {
         chunkFileNames: 'shared/[name].[hash].js',
         format: 'esm',
         sourcemap: true,
-        ...(isRolldown ? {minify: doMinify, cleanDir: true} : {}),
+        minify: doMinify,
+        cleanDir: true,
     },
     moduleTypes: {
         '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
@@ -199,19 +198,14 @@ Dependencies:
                 },
             ],
         }),
-        isRolldown
-            ? rolldownReplace(
-                  {
-                      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
-                  },
-                  {
-                      preventAssignment: true,
-                  },
-              )
-            : replace({
-                  'process.env.NODE_ENV': JSON.stringify(nodeEnv),
-                  preventAssignment: true,
-              }),
+        replacePlugin(
+            {
+                'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+            },
+            {
+                preventAssignment: true,
+            },
+        ),
         useBabel &&
             getBabelOutputPlugin({
                 compact: false,

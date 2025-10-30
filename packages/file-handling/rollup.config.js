@@ -4,7 +4,6 @@ import {assetPlugin} from '@dbp-toolkit/dev-utils';
 import process from 'node:process';
 import {createRequire} from 'node:module';
 
-let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
@@ -28,7 +27,8 @@ export default {
         chunkFileNames: 'shared/[name].[hash].js',
         format: 'esm',
         sourcemap: true,
-        ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
+        minify: buildFull,
+        cleanDir: true,
     },
     plugins: [
         await assetPlugin(pkg.name, 'dist', {

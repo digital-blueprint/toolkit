@@ -14,7 +14,6 @@ const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const basePath = '/dist/';
 const appName = 'dbp-app-shell';
-let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
 let privatePath = await getDistPath(pkg.name);
 
@@ -29,7 +28,8 @@ export default {
         chunkFileNames: 'shared/[name].[hash].js',
         format: 'esm',
         sourcemap: true,
-        ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
+        minify: buildFull,
+        cleanDir: true,
     },
     plugins: [
         emitEJS({
