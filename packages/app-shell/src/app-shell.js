@@ -1139,7 +1139,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                         style=""
                                         id="menu-burger-icon"
                                         @click="${this.toggleMenu}"></dbp-icon>
-                                    <!--<h2 class="subtitle" @click="${this.toggleMenu}">menu</h2>-->
+                                    <!--<h2 class="subtitle" @click="${this
+                                        .toggleMenu}">menu</h2>-->
                                 </div>
                                 <div class="hd1-left-switches">
                                     <!-- <dbp-layout-switcher
