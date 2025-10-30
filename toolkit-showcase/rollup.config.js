@@ -79,191 +79,190 @@ ${getOrigin(config.matomoUrl)} ${getOrigin(config.keyCloakBaseURL)} ${getOrigin(
 )} ${getOrigin(config.nextcloudBaseURL)}; \
 img-src * blob: data:`;
 
-export default (async () => {
-    let privatePath = await getDistPath(pkg.name);
-    return {
-        input: appEnv != 'test' ? globSync('src/dbp-*.js') : globSync('test/**/*.js'),
-        output: {
-            dir: 'dist',
-            entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].js',
-            format: 'esm',
-            sourcemap: true,
-            ...(isRolldown ? {minify: doMinify, cleanDir: true} : {}),
-        },
-        moduleTypes: {
-            '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
-        },
-        treeshake: treeshake,
-        plugins: [
-            !isRolldown &&
-                del({
-                    targets: 'dist/*',
-                }),
-            emitEJS({
-                src: 'assets',
-                include: ['**/*.ejs', '**/.*.ejs'],
-                data: {
-                    getUrl: (p) => {
-                        return url.resolve(config.basePath, p);
-                    },
-                    getPrivateUrl: (p) => {
-                        return url.resolve(`${config.basePath}${privatePath}/`, p);
-                    },
-                    name: pkg.name,
-                    entryPointURL: config.entryPointURL,
-                    nextcloudBaseURL: config.nextcloudBaseURL,
-                    nextcloudWebAppPasswordURL: config.nextcloudWebAppPasswordURL,
-                    nextcloudWebDavURL: config.nextcloudWebDavURL,
-                    nextcloudFileURL: config.nextcloudFileURL,
-                    nextcloudName: config.nextcloudName,
-                    keyCloakBaseURL: config.keyCloakBaseURL,
-                    keyCloakRealm: config.keyCloakRealm,
-                    keyCloakClientId: config.keyCloakClientId,
-                    CSP: config.CSP,
-                    matomoUrl: config.matomoUrl,
-                    matomoSiteId: config.matomoSiteId,
-                    buildInfo: getBuildInfo(appEnv),
-                    shortName: config.shortName,
-                },
+let privatePath = await getDistPath(pkg.name);
+
+export default {
+    input: appEnv != 'test' ? globSync('src/dbp-*.js') : globSync('test/**/*.js'),
+    output: {
+        dir: 'dist',
+        entryFileNames: '[name].js',
+        chunkFileNames: 'shared/[name].[hash].js',
+        format: 'esm',
+        sourcemap: true,
+        ...(isRolldown ? {minify: doMinify, cleanDir: true} : {}),
+    },
+    moduleTypes: {
+        '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
+    },
+    treeshake: treeshake,
+    plugins: [
+        !isRolldown &&
+            del({
+                targets: 'dist/*',
             }),
-            !isRolldown &&
-                resolve({
-                    browser: true,
-                    preferBuiltins: true,
-                }),
-            checkLicenses &&
-                license({
-                    banner: {
-                        commentStyle: 'ignored',
-                        content: `
+        emitEJS({
+            src: 'assets',
+            include: ['**/*.ejs', '**/.*.ejs'],
+            data: {
+                getUrl: (p) => {
+                    return url.resolve(config.basePath, p);
+                },
+                getPrivateUrl: (p) => {
+                    return url.resolve(`${config.basePath}${privatePath}/`, p);
+                },
+                name: pkg.name,
+                entryPointURL: config.entryPointURL,
+                nextcloudBaseURL: config.nextcloudBaseURL,
+                nextcloudWebAppPasswordURL: config.nextcloudWebAppPasswordURL,
+                nextcloudWebDavURL: config.nextcloudWebDavURL,
+                nextcloudFileURL: config.nextcloudFileURL,
+                nextcloudName: config.nextcloudName,
+                keyCloakBaseURL: config.keyCloakBaseURL,
+                keyCloakRealm: config.keyCloakRealm,
+                keyCloakClientId: config.keyCloakClientId,
+                CSP: config.CSP,
+                matomoUrl: config.matomoUrl,
+                matomoSiteId: config.matomoSiteId,
+                buildInfo: getBuildInfo(appEnv),
+                shortName: config.shortName,
+            },
+        }),
+        !isRolldown &&
+            resolve({
+                browser: true,
+                preferBuiltins: true,
+            }),
+        checkLicenses &&
+            license({
+                banner: {
+                    commentStyle: 'ignored',
+                    content: `
 License: <%= pkg.license %>
 Dependencies:
 <% _.forEach(dependencies, function (dependency) { if (dependency.name) { %>
 <%= dependency.name %>: <%= dependency.license %><% }}) %>
 `,
-                    },
-                    thirdParty: {
-                        allow(dependency) {
-                            let licenses = [
-                                'LGPL-2.1-or-later',
-                                'MIT',
-                                'BSD-3-Clause',
-                                'Apache-2.0',
-                                '0BSD',
-                                '(MPL-2.0 OR Apache-2.0)',
-                                'MIT OR SEE LICENSE IN FEEL-FREE.md',
-                                '(MIT OR GPL-3.0-or-later)',
-                                'BSD',
-                                '(MIT AND Zlib)',
-                            ];
-                            if (!licenses.includes(dependency.license)) {
-                                throw new Error(
-                                    `Unknown license for ${dependency.name}: ${dependency.license}`,
-                                );
-                            }
-                            return true;
-                        },
-                    },
-                }),
-            !isRolldown &&
-                commonjs({
-                    strictRequires: 'auto',
-                }),
-            !isRolldown && json(),
-            md({
-                include: ['**/*.md'],
-                marked: {
-                    highlight: function (code) {
-                        return require('highlight.js').highlightAuto(code).value;
+                },
+                thirdParty: {
+                    allow(dependency) {
+                        let licenses = [
+                            'LGPL-2.1-or-later',
+                            'MIT',
+                            'BSD-3-Clause',
+                            'Apache-2.0',
+                            '0BSD',
+                            '(MPL-2.0 OR Apache-2.0)',
+                            'MIT OR SEE LICENSE IN FEEL-FREE.md',
+                            '(MIT OR GPL-3.0-or-later)',
+                            'BSD',
+                            '(MIT AND Zlib)',
+                        ];
+                        if (!licenses.includes(dependency.license)) {
+                            throw new Error(
+                                `Unknown license for ${dependency.name}: ${dependency.license}`,
+                            );
+                        }
+                        return true;
                     },
                 },
             }),
-            await assetPlugin(pkg.name, 'dist', {
-                copyTargets: [
-                    {src: 'assets/*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: 'assets/*.metadata.json', dest: 'dist'},
-                    {src: 'assets/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: 'assets/htaccess-shared', dest: 'dist/shared/', rename: '.htaccess'},
-                    {
-                        src: 'assets/translation-overrides',
-                        dest: 'dist/' + (await getDistPath(pkg.name)),
-                    },
-                    {src: 'assets/favicons/*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: 'assets/favicons/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: 'assets/favicons/*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {
-                        src: 'assets/favicons/site.webmanifest',
-                        dest: 'dist',
-                        rename: pkg.name + '.webmanifest',
-                    },
-                    {src: 'assets/silent-check-sso.html', dest: 'dist'},
-                    {
-                        src: await getPackagePath('@dbp-toolkit/font-source-sans-pro', 'files'),
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
-                        rename: 'source-sans-pro',
-                    },
-                    {
-                        src: await getPackagePath('@fontsource/nunito-sans', '.'),
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
-                        rename: 'nunito-sans',
-                    },
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
-                        dest: 'dist/' + (await getDistPath(pkg.name)),
-                    },
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
-                        dest: 'dist/' + (await getDistPath(pkg.name)),
-                    },
+        !isRolldown &&
+            commonjs({
+                strictRequires: 'auto',
+            }),
+        !isRolldown && json(),
+        md({
+            include: ['**/*.md'],
+            marked: {
+                highlight: function (code) {
+                    return require('highlight.js').highlightAuto(code).value;
+                },
+            },
+        }),
+        await assetPlugin(pkg.name, 'dist', {
+            copyTargets: [
+                {src: 'assets/*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
+                {src: 'assets/*.metadata.json', dest: 'dist'},
+                {src: 'assets/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
+                {src: 'assets/htaccess-shared', dest: 'dist/shared/', rename: '.htaccess'},
+                {
+                    src: 'assets/translation-overrides',
+                    dest: 'dist/' + (await getDistPath(pkg.name)),
+                },
+                {src: 'assets/favicons/*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
+                {src: 'assets/favicons/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
+                {src: 'assets/favicons/*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
+                {
+                    src: 'assets/favicons/site.webmanifest',
+                    dest: 'dist',
+                    rename: pkg.name + '.webmanifest',
+                },
+                {src: 'assets/silent-check-sso.html', dest: 'dist'},
+                {
+                    src: await getPackagePath('@dbp-toolkit/font-source-sans-pro', 'files'),
+                    dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
+                    rename: 'source-sans-pro',
+                },
+                {
+                    src: await getPackagePath('@fontsource/nunito-sans', '.'),
+                    dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
+                    rename: 'nunito-sans',
+                },
+                {
+                    src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
+                    dest: 'dist/' + (await getDistPath(pkg.name)),
+                },
+                {
+                    src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
+                    dest: 'dist/' + (await getDistPath(pkg.name)),
+                },
+            ],
+        }),
+        isRolldown
+            ? rolldownReplace(
+                  {
+                      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+                  },
+                  {
+                      preventAssignment: true,
+                  },
+              )
+            : replace({
+                  'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+                  preventAssignment: true,
+              }),
+        useBabel &&
+            getBabelOutputPlugin({
+                compact: false,
+                targets: {
+                    esmodules: true,
+                    browsers: 'defaults and not dead, last 5 years',
+                },
+                presets: [
+                    [
+                        '@babel/preset-env',
+                        {
+                            loose: false,
+                            shippedProposals: true,
+                            bugfixes: true,
+                            modules: false,
+                        },
+                    ],
                 ],
             }),
-            isRolldown
-                ? rolldownReplace(
-                      {
-                          'process.env.NODE_ENV': JSON.stringify(nodeEnv),
-                      },
-                      {
-                          preventAssignment: true,
-                      },
-                  )
-                : replace({
-                      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
-                      preventAssignment: true,
-                  }),
-            useBabel &&
-                getBabelOutputPlugin({
-                    compact: false,
-                    targets: {
-                        esmodules: true,
-                        browsers: 'defaults and not dead, last 5 years',
-                    },
-                    presets: [
-                        [
-                            '@babel/preset-env',
-                            {
-                                loose: false,
-                                shippedProposals: true,
-                                bugfixes: true,
-                                modules: false,
-                            },
-                        ],
-                    ],
-                }),
-            // the terser must be used AFTER babel, otherwise it will cause pdfjs to not show SVGs (or other images?)
-            doMinify && !isRolldown ? terser() : false,
-            watch
-                ? serve({
-                      contentBase: '.',
-                      host: '127.0.0.1',
-                      port: 8001,
-                      historyApiFallback: config.basePath + pkg.name + '.html',
-                      https: useHTTPS ? await generateTLSConfig() : false,
-                      headers: {
-                          'Content-Security-Policy': config.CSP,
-                      },
-                  })
-                : false,
-        ],
-    };
-})();
+        // the terser must be used AFTER babel, otherwise it will cause pdfjs to not show SVGs (or other images?)
+        doMinify && !isRolldown ? terser() : false,
+        watch
+            ? serve({
+                  contentBase: '.',
+                  host: '127.0.0.1',
+                  port: 8001,
+                  historyApiFallback: config.basePath + pkg.name + '.html',
+                  https: useHTTPS ? await generateTLSConfig() : false,
+                  headers: {
+                      'Content-Security-Policy': config.CSP,
+                  },
+              })
+            : false,
+    ],
+};

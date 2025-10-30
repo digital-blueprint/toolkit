@@ -20,60 +20,58 @@ console.log('build: ' + build);
 let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
 
-export default (async () => {
-    return {
-        input:
-            build != 'test'
-                ? ['src/dbp-tooltip.js', 'src/dbp-tooltip-demo.js']
-                : globSync('test/**/*.js'),
-        output: {
-            dir: 'dist',
-            entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].js',
-            format: 'esm',
-            sourcemap: true,
-            ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
-        },
-        moduleTypes: {
-            '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
-        },
-        plugins: [
-            !isRolldown &&
-                del({
-                    targets: 'dist/*',
-                }),
-            emitEJS({
-                src: 'assets',
-                include: ['**/*.ejs', '**/.*.ejs'],
-                data: {
-                    getUrl: (p) => {
-                        return url.resolve(basePath, p);
-                    },
-                    getPrivateUrl: (p) => {
-                        return url.resolve(`${basePath}local/${pkg.name}/`, p);
-                    },
-                    name: pkg.name,
-                    environment: build,
-                    buildInfo: getBuildInfo(build),
+export default {
+    input:
+        build != 'test'
+            ? ['src/dbp-tooltip.js', 'src/dbp-tooltip-demo.js']
+            : globSync('test/**/*.js'),
+    output: {
+        dir: 'dist',
+        entryFileNames: '[name].js',
+        chunkFileNames: 'shared/[name].[hash].js',
+        format: 'esm',
+        sourcemap: true,
+        ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
+    },
+    moduleTypes: {
+        '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
+    },
+    plugins: [
+        !isRolldown &&
+            del({
+                targets: 'dist/*',
+            }),
+        emitEJS({
+            src: 'assets',
+            include: ['**/*.ejs', '**/.*.ejs'],
+            data: {
+                getUrl: (p) => {
+                    return url.resolve(basePath, p);
                 },
-            }),
-            !isRolldown && resolve({browser: true}),
-            !isRolldown && commonjs(),
-            await assetPlugin(pkg.name, 'dist', {
-                copyTargets: [
-                    {src: 'assets/index.html', dest: 'dist'},
-                    {src: 'assets/favicon.ico', dest: 'dist'},
-                ],
-            }),
-            !isRolldown && json(),
-            buildFull && !isRolldown ? terser() : false,
-            replace({
-                'process.env.NODE_ENV': JSON.stringify('production'),
-                preventAssignment: true,
-            }),
-            process.env.ROLLUP_WATCH === 'true'
-                ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
-                : false,
-        ],
-    };
-})();
+                getPrivateUrl: (p) => {
+                    return url.resolve(`${basePath}local/${pkg.name}/`, p);
+                },
+                name: pkg.name,
+                environment: build,
+                buildInfo: getBuildInfo(build),
+            },
+        }),
+        !isRolldown && resolve({browser: true}),
+        !isRolldown && commonjs(),
+        await assetPlugin(pkg.name, 'dist', {
+            copyTargets: [
+                {src: 'assets/index.html', dest: 'dist'},
+                {src: 'assets/favicon.ico', dest: 'dist'},
+            ],
+        }),
+        !isRolldown && json(),
+        buildFull && !isRolldown ? terser() : false,
+        replace({
+            'process.env.NODE_ENV': JSON.stringify('production'),
+            preventAssignment: true,
+        }),
+        process.env.ROLLUP_WATCH === 'true'
+            ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
+            : false,
+    ],
+};
