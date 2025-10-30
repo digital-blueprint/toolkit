@@ -34,12 +34,13 @@ export default (async () => {
             chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
-            ...(isRolldown ? {minify: buildFull} : {}),
+            ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
         },
         plugins: [
-            del({
-                targets: 'dist/*',
-            }),
+            !isRolldown &&
+                del({
+                    targets: 'dist/*',
+                }),
             !isRolldown && resolve({browser: true}),
             !isRolldown && commonjs(),
             !isRolldown && json(),

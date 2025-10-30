@@ -89,16 +89,17 @@ export default (async () => {
             chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
-            ...(isRolldown ? {minify: doMinify} : {}),
+            ...(isRolldown ? {minify: doMinify, cleanDir: true} : {}),
         },
         moduleTypes: {
             '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
         },
         treeshake: treeshake,
         plugins: [
-            del({
-                targets: 'dist/*',
-            }),
+            !isRolldown &&
+                del({
+                    targets: 'dist/*',
+                }),
             emitEJS({
                 src: 'assets',
                 include: ['**/*.ejs', '**/.*.ejs'],
