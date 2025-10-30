@@ -3,7 +3,6 @@ import process from 'node:process';
 import {globSync} from 'node:fs';
 import serve from 'rollup-plugin-serve';
 import license from 'rollup-plugin-license';
-import del from 'rollup-plugin-delete';
 import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {replacePlugin as rolldownReplace} from 'rolldown/experimental';
@@ -92,10 +91,6 @@ export default {
     },
     treeshake: treeshake,
     plugins: [
-        !isRolldown &&
-            del({
-                targets: 'dist/*',
-            }),
         emitEJS({
             src: 'assets',
             include: ['**/*.ejs', '**/.*.ejs'],

@@ -1,7 +1,6 @@
 import {globSync} from 'node:fs';
 import url from 'node:url';
 import serve from 'rollup-plugin-serve';
-import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getBuildInfo, assetPlugin} from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
@@ -33,10 +32,6 @@ export default {
         '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
     },
     plugins: [
-        !isRolldown &&
-            del({
-                targets: 'dist/*',
-            }),
         emitEJS({
             src: 'assets',
             include: ['**/*.ejs', '**/.*.ejs'],

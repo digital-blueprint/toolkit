@@ -2,7 +2,6 @@ import {globSync} from 'node:fs';
 import url from 'node:url';
 import process from 'node:process';
 import serve from 'rollup-plugin-serve';
-import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getDistPath, assetPlugin} from '@dbp-toolkit/dev-utils';
 import config from '../../demo.common.config.js';
@@ -33,10 +32,6 @@ export default {
         ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
     },
     plugins: [
-        !isRolldown &&
-            del({
-                targets: 'dist/*',
-            }),
         emitEJS({
             src: 'assets',
             include: ['**/*.ejs', '**/.*.ejs'],

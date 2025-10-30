@@ -1,6 +1,5 @@
 import {globSync} from 'node:fs';
 import serve from 'rollup-plugin-serve';
-import del from 'rollup-plugin-delete';
 import process from 'node:process';
 import {createRequire} from 'node:module';
 import {generateTLSConfig, assetPlugin} from '@dbp-toolkit/dev-utils';
@@ -31,10 +30,6 @@ export default {
         '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
     },
     plugins: [
-        !isRolldown &&
-            del({
-                targets: 'dist/*',
-            }),
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [
                 {src: 'assets/index.html', dest: 'dist'},
