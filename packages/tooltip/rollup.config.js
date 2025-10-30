@@ -1,7 +1,6 @@
 import {globSync} from 'node:fs';
 import url from 'node:url';
 import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
@@ -55,7 +54,6 @@ export default {
             },
         }),
         !isRolldown && resolve({browser: true}),
-        !isRolldown && commonjs(),
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [
                 {src: 'assets/index.html', dest: 'dist'},

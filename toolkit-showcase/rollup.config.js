@@ -2,7 +2,6 @@ import url from 'node:url';
 import process from 'node:process';
 import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
 import serve from 'rollup-plugin-serve';
 import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
@@ -163,10 +162,6 @@ Dependencies:
                         return true;
                     },
                 },
-            }),
-        !isRolldown &&
-            commonjs({
-                strictRequires: 'auto',
             }),
         md({
             include: ['**/*.md'],
