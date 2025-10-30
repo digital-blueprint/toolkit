@@ -2,8 +2,8 @@ import {globSync} from 'node:fs';
 import url from 'node:url';
 import serve from 'rollup-plugin-serve';
 import emitEJS from 'rollup-plugin-emit-ejs';
+import {replacePlugin} from 'rolldown/experimental';
 import {getBuildInfo, assetPlugin} from '@dbp-toolkit/dev-utils';
-import replace from '@rollup/plugin-replace';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
@@ -13,6 +13,7 @@ const basePath = '/dist/';
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
 const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
+let nodeEnv = buildFull ? 'production' : 'development';
 
 export default {
     input:
@@ -53,10 +54,14 @@ export default {
                 {src: 'assets/favicon.ico', dest: 'dist'},
             ],
         }),
-        replace({
-            'process.env.NODE_ENV': JSON.stringify('production'),
-            preventAssignment: true,
-        }),
+        replacePlugin(
+            {
+                'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+            },
+            {
+                preventAssignment: true,
+            },
+        ),
         process.env.ROLLUP_WATCH === 'true'
             ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
             : false,
