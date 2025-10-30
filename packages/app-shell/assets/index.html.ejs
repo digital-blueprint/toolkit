@@ -24,6 +24,7 @@
 <dbp-app-shell
     provider-root
     auth
+    env="development"
     requested-login-status
     entry-point-url="<%= entryPointURL %>"
     keycloak-config='{"url": "<%= keyCloakBaseURL %>", "realm": "<%= keyCloakRealm %>", "clientId": "<%= keyCloakClientId %>", "silentCheckSsoRedirectUri": "<%= getUrl('silent-check-sso.html') %>"}'

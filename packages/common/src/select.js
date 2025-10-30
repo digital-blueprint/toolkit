@@ -209,6 +209,3 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         `;
     }
 }
-if (!customElements.get('dbp-select')) {
-    customElements.define('dbp-select', DBPSelect);
-}

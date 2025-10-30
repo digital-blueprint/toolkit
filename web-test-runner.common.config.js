@@ -1,10 +1,10 @@
 import process from 'node:process';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { fileURLToPath } from 'node:url';
-import { playwrightLauncher } from '@web/test-runner-playwright';
+import {fileURLToPath} from 'node:url';
+import {playwrightLauncher} from '@web/test-runner-playwright';
 
-import { installBrowsersForNpmInstall, registry } from 'playwright-core/lib/server';
+import {installBrowsersForNpmInstall, registry} from 'playwright-core/lib/server';
 
 async function setup() {
     const browsersToInstall = [];
@@ -28,7 +28,10 @@ async function setup() {
 function getPortFromDirectory() {
     // Workaround for https://github.com/modernweb-dev/web/issues/1951
     const relativePath = path.relative(path.dirname(fileURLToPath(import.meta.url)), process.cwd());
-    return 20000 + (parseInt(crypto.createHash('sha256').update(relativePath).digest('hex'), 16) % 10000);
+    return (
+        20000 +
+        (parseInt(crypto.createHash('sha256').update(relativePath).digest('hex'), 16) % 10000)
+    );
 }
 
 await setup();
