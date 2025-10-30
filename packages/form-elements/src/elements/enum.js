@@ -14,6 +14,8 @@ import select2LangEn from '../i18n/en/select2';
 export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
         super();
+        // Generate a unique id per instance to avoid DOM id collisions across components
+        this.formElementId = `form-element-${Math.random().toString(36).slice(2, 10)}`;
         this.label = '';
         this.items = {};
         this.multiple = false;
@@ -42,6 +44,12 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
     $(selector) {
         return $(this.shadowRoot.querySelector(selector));
+    }
+
+    closeSelect2() {
+        if (this.select2IsInitialized()) {
+            this.$select.select2('close');
+        }
     }
 
     // Can be used to set items from the outside
@@ -168,7 +176,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
         // In case it wasn't handled before
         this.handleEmptyValue();
-        const select2CSS = commonUtils.getAssetURL(select2CSSPath);
+        const select2CSS = commonUtils.getAbsoluteURL(select2CSSPath);
 
         switch (this._displayMode) {
             case 'dropdown':
@@ -276,9 +284,38 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             commonStyles.getSelect2CSS(),
             // language=css
             css`
+                :host([layout-type='inline']) fieldset {
+                    display: flex;
+                    gap: var(--dbp-enum-label-gap, 1em);
+                    margin: 0;
+                    align-items: center;
+                }
+
+                :host([layout-type='inline']) label {
+                    white-space: nowrap;
+                    margin-bottom: 0;
+                }
+
+                /* allows .select2-container to fully expand */
+                :host([layout-type='inline']) #select-dropdown {
+                    order: 1;
+                }
+
+                :host([layout-type='inline']) .select2 {
+                    order: 2;
+                }
+
+                :host([layout-type='inline']) .checkboxItem:not(:last-of-type) {
+                    margin-bottom: 0;
+                }
+
                 /* For some reasons the selector chevron was very large */
                 select:not(.select) {
                     background-size: 1em;
+                }
+
+                :host([multiple]) select:not(.select) {
+                    background: none;
                 }
 
                 label a {
@@ -348,6 +385,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     handleInputValue(e) {
+        // Only handle user-triggered events and events from Select2 in tag mode
+        if (e.isTrusted !== true && !this.isDisplayModeTags()) return;
+
         if (this.displayMode === 'dropdown') {
             this.value = this.multiple
                 ? Array.from(e.target.selectedOptions).map((option) => option.value)
@@ -363,6 +403,16 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         if (this.isDisplayModeTags()) {
             this.value = this.$select.val();
         }
+
+        this.generateDataValue();
+
+        // Pass the value and field name in the event detail
+        const changeEvent = new CustomEvent('change', {
+            detail: {value: this.value, fieldName: this.name},
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(changeEvent);
     }
 
     adaptValueForMultiple() {
@@ -409,13 +459,6 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     if (this.select2IsInitialized()) {
                         this.$select.val(this.value).trigger('change');
                     }
-
-                    const changeEvent = new CustomEvent('change', {
-                        detail: {value: this.value},
-                        bubbles: true,
-                        composed: true,
-                    });
-                    this.dispatchEvent(changeEvent);
                     break;
                 }
             }

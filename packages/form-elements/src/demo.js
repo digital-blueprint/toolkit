@@ -140,9 +140,26 @@ export class FormElementsDemo extends LangMixin(
 
                         <dbp-form-string-element
                             subscribe="lang"
+                            name="myComponentStringInline"
+                            label="Inline string"
+                            layout-type="inline"
+                            value=${data.myComponentStringInline || ''}
+                            ?required=${this.isRequired}></dbp-form-string-element>
+
+                        <dbp-form-string-element
+                            subscribe="lang"
                             name="myComponentLongString"
                             label="My long string"
                             value=${data.myComponentLongString || ''}
+                            rows="5"
+                            ?required=${this.isRequired}></dbp-form-string-element>
+
+                        <dbp-form-string-element
+                            subscribe="lang"
+                            name="myComponentLongStringInline"
+                            label="Inline long string"
+                            layout-type="inline"
+                            value=${data.myComponentLongStringInline || ''}
                             rows="5"
                             ?required=${this.isRequired}></dbp-form-string-element>
 
@@ -167,6 +184,14 @@ export class FormElementsDemo extends LangMixin(
                             value=${data.myComponentDate || ''}
                             ?required=${this.isRequired}></dbp-form-date-element>
 
+                        <dbp-form-date-element
+                            subscribe="lang"
+                            name="myComponentDateInline"
+                            label="Inline date"
+                            layout-type="inline"
+                            value=${data.myComponentDateInline || ''}
+                            ?required=${this.isRequired}></dbp-form-date-element>
+
                         <dbp-form-datetime-element
                             subscribe="lang"
                             name="myComponentDateTime"
@@ -181,11 +206,35 @@ export class FormElementsDemo extends LangMixin(
                             value=${data.myComponentDateTime || ''}
                             ?required=${this.isRequired}></dbp-form-datetime-element>
 
+                        <dbp-form-datetime-element
+                            subscribe="lang"
+                            name="myComponentDateTimeInline"
+                            description="Needs to be in the future"
+                            label="Inline datetime"
+                            layout-type="inline"
+                            .customValidator=${(value) => {
+                                const date = new Date(value);
+                                return date < new Date()
+                                    ? ['The date needs to be in the future']
+                                    : [];
+                            }}
+                            value=${data.myComponentDateTimeInline || ''}
+                            ?required=${this.isRequired}></dbp-form-datetime-element>
+
                         <dbp-form-enum-element
                             subscribe="lang"
                             name="myComponentEnum"
                             label="My enum"
                             .value=${data.myComponentEnum || ''}
+                            .items=${this.enumItems}
+                            ?required=${this.isRequired}></dbp-form-enum-element>
+
+                        <dbp-form-enum-element
+                            subscribe="lang"
+                            name="myComponentEnumInline"
+                            label="Inline enum"
+                            layout-type="inline"
+                            .value=${data.myComponentEnumInline || ''}
                             .items=${this.enumItems}
                             ?required=${this.isRequired}></dbp-form-enum-element>
 
@@ -209,6 +258,20 @@ export class FormElementsDemo extends LangMixin(
 
                         <dbp-form-enum-element
                             subscribe="lang"
+                            name="myComponentEnumListInline"
+                            .value=${data.myComponentEnumListInline || ''}
+                            .items=${this.enumItems}
+                            display-mode="list"
+                            layout-type="inline"
+                            ?required=${this.isRequired}>
+                            <span slot="label">
+                                <em>Inline</em>
+                                enum list
+                            </span>
+                        </dbp-form-enum-element>
+
+                        <dbp-form-enum-element
+                            subscribe="lang"
                             name="myComponentMultipleEnumList"
                             label="My multiple enum list"
                             .value=${data.myComponentMultipleEnumList || ''}
@@ -224,6 +287,22 @@ export class FormElementsDemo extends LangMixin(
 
                         <dbp-form-enum-element
                             subscribe="lang"
+                            name="myComponentMultipleEnumListInline"
+                            label="Inline multiple enum list"
+                            .value=${data.myComponentMultipleEnumListInline || ''}
+                            .items=${this.enumItems}
+                            display-mode="list"
+                            layout-type="inline"
+                            multiple>
+                            <span slot="label">
+                                Label with
+                                <a href="https://developer.mozilla.org/en-US/docs/Web/HTML">HTML</a>
+                                content.
+                            </span>
+                        </dbp-form-enum-element>
+
+                        <dbp-form-enum-element
+                            subscribe="lang"
                             name="myComponentEnumTags"
                             label="My enum tags"
                             display-mode="tags"
@@ -234,9 +313,20 @@ export class FormElementsDemo extends LangMixin(
                         <dbp-form-enum-element
                             subscribe="lang"
                             name="myComponentMultipleEnumTags"
-                            label="My multiple enum tags"
+                            label="My multiple enum tags TAGS"
                             display-mode="tags"
                             .value=${data.myComponentMultipleEnumTags || ''}
+                            .items=${this.enumItems}
+                            multiple
+                            ?required=${this.isRequired}></dbp-form-enum-element>
+
+                        <dbp-form-enum-element
+                            subscribe="lang"
+                            name="myComponentMultipleEnumTagsInline"
+                            label="Inline multiple enum tags"
+                            display-mode="tags"
+                            layout-type="inline"
+                            .value=${data.myComponentMultipleEnumTagsInline || ''}
                             .items=${this.enumItems}
                             multiple
                             ?required=${this.isRequired}></dbp-form-enum-element>
@@ -247,6 +337,14 @@ export class FormElementsDemo extends LangMixin(
                             label="My boolean"
                             description="Check me"
                             .state=${data.myComponentBoolean}></dbp-form-boolean-element>
+
+                        <dbp-form-boolean-element
+                            subscribe="lang"
+                            name="myComponentBooleanInline"
+                            label="Inline boolean"
+                            description="Check me"
+                            layout-type="inline"
+                            .state=${data.myComponentBooleanInline}></dbp-form-boolean-element>
 
                         ${this.getButtonRowHtml()}
                     </form>
@@ -286,8 +384,21 @@ export class FormElementsDemo extends LangMixin(
 
                     <dbp-form-string-view
                         subscribe="lang"
+                        label="My string [layout-type: inline]"
+                        layout-type="inline"
+                        .value=${data.myComponentStringInline || ''}></dbp-form-string-view>
+
+                    <dbp-form-string-view
+                        subscribe="lang"
                         label="My long string"
                         .value=${data.myComponentLongString || ''}
+                        rows="5"></dbp-form-string-view>
+
+                    <dbp-form-string-view
+                        subscribe="lang"
+                        label="My long string [layout-type: inline]"
+                        layout-type="inline"
+                        .value=${data.myComponentLongStringInline || ''}
                         rows="5"></dbp-form-string-view>
 
                     <dbp-form-string-view
@@ -301,6 +412,12 @@ export class FormElementsDemo extends LangMixin(
                         label="My date"
                         .value=${data.myComponentDate || ''}></dbp-form-date-view>
 
+                    <dbp-form-date-view
+                        subscribe="lang"
+                        label="My date [layout-type: inline]"
+                        layout-type="inline"
+                        .value=${data.myComponentDateInline || ''}></dbp-form-date-view>
+
                     <dbp-form-datetime-view
                         subscribe="lang"
                         label="My datetime"
@@ -311,6 +428,13 @@ export class FormElementsDemo extends LangMixin(
                         label="My enum"
                         .items=${this.enumItems}
                         value=${data.myComponentEnum || ''}></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
+                        label="My enum [layout-type: inline]"
+                        .items=${this.enumItems}
+                        layout-type="inline"
+                        value=${data.myComponentEnumInline || ''}></dbp-form-enum-view>
 
                     <dbp-form-enum-view
                         subscribe="lang"
@@ -327,11 +451,28 @@ export class FormElementsDemo extends LangMixin(
 
                     <dbp-form-enum-view
                         subscribe="lang"
+                        label="My enum list [layout-type: inline]"
+                        .value=${data.myComponentEnumListInline || ''}
+                        .items=${this.enumItems}
+                        layout-type="inline"
+                        display-mode="list"></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
                         name="myComponentMultipleEnumList"
                         label="My multiple enum list"
                         .value=${data.myComponentMultipleEnumList || ''}
                         .items=${this.enumItems}
                         display-mode="list"></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
+                        name="myComponentMultipleEnumListInline"
+                        label="My multiple enum list [layout-type: inline]"
+                        .value=${data.myComponentMultipleEnumListInline || ''}
+                        .items=${this.enumItems}
+                        display-mode="list"
+                        layout-type="inline"></dbp-form-enum-view>
 
                     <dbp-form-enum-view
                         subscribe="lang"
@@ -342,14 +483,45 @@ export class FormElementsDemo extends LangMixin(
 
                     <dbp-form-enum-view
                         subscribe="lang"
+                        name="myComponentEnumTags"
+                        label="My enum tags [display-mode: tags]"
+                        display-mode="tags"
+                        value=${data.myComponentEnumTags || ''}
+                        .items=${this.enumItems}></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
                         name="myComponentMultipleEnumTags"
                         label="My multiple enum tags"
+                        .value=${data.myComponentMultipleEnumTags || ''}
+                        .items=${this.enumItems}></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
+                        name="myComponentMultipleEnumTags"
+                        label="My multiple enum tags [display-mode: tags]"
+                        display-mode="tags"
+                        .value=${data.myComponentMultipleEnumTags || ''}
+                        .items=${this.enumItems}></dbp-form-enum-view>
+
+                    <dbp-form-enum-view
+                        subscribe="lang"
+                        name="myComponentMultipleEnumTags"
+                        label="My multiple enum tags [display-mode: tags, layout-type: inline]"
+                        display-mode="tags"
+                        layout-type="inline"
                         .value=${data.myComponentMultipleEnumTags || ''}
                         .items=${this.enumItems}></dbp-form-enum-view>
 
                     <dbp-form-string-view
                         subscribe="lang"
                         label="My boolean"
+                        value=${data.myComponentBoolean ? 'true' : 'false'}></dbp-form-string-view>
+
+                    <dbp-form-string-view
+                        subscribe="lang"
+                        layout-type="inline"
+                        label="Inline boolean"
                         value=${data.myComponentBoolean ? 'true' : 'false'}></dbp-form-string-view>
                 </div>
             </section>

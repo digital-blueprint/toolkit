@@ -3,16 +3,16 @@
     "module_src": "dbp-tabulator-table-demo-activity.js",
     "routing_name": "tabulator-table",
     "name": {
-        "de": "Tabellarische-Tabelle Komponente",
-        "en": "Tabulator-Table component"
+        "de": "Tabellen Komponente",
+        "en": "Table Component"
     },
     "short_name": {
-        "de": "Tabellarische-Tabelle Komponente",
-        "en": "Tabulator-Table component"
+        "de": "Tabellen Komponente",
+        "en": "Table Component"
     },
     "description": {
-        "de": "Tabellarische Tabelle Web Komponente",
-        "en": "Tabulator Table Web Component"
+        "de": "Tabellen Web Komponente",
+        "en": "Table web component"
     },
     "subscribe": "lang, lang-dir"
 }

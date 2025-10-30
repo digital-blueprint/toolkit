@@ -312,9 +312,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
     }
 
     _(selector) {
-        return this.shadowRoot === null
-            ? this.querySelector(selector)
-            : this.shadowRoot.querySelector(selector);
+        return this.renderRoot.querySelector(selector);
     }
 }
 

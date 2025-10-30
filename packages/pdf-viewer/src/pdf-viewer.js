@@ -35,6 +35,30 @@ export async function importPdfJs() {
 }
 
 /**
+ * Loads a PDF document using PDF.js with default configuration options.
+ *
+ * This sets various default options for loading the PDF document, such as the
+ * cmap URL and cmap packed setting, as well as disabling eval for security
+ * reasons unless explicitly enabled.
+ *
+ * @param {import('pdfjs-dist/legacy/build/pdf.mjs')} pdfjs - The PDF.js library instance.
+ * @param {object} [src] - The source configuration object for the PDF document.
+ * @returns {import('pdfjs-dist/legacy/build/pdf.mjs').PDFDocumentLoadingTask}
+ */
+export function getPdfJsDocument(pdfjs, src = {}) {
+    let cmaps = commonUtils.getAssetURL(pkgName, 'pdfjs/cmaps/');
+
+    // Set for cmaps we ship by default
+    if (src.cMapUrl === undefined) src.cMapUrl = cmaps;
+    if (src.cMapPacked === undefined) src.cMapPacked = true;
+
+    // Disable eval by default for security reasons, unless explicitly enabled
+    if (src.isEvalSupported === undefined) src.isEvalSupported = false;
+
+    return pdfjs.getDocument(src);
+}
+
+/**
  * PdfViewer web component
  */
 export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
@@ -178,7 +202,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         // get handle of pdf document
         try {
             let pdfjs = await importPdfJs();
-            this.pdfDoc = await pdfjs.getDocument({data: data, isEvalSupported: false}).promise;
+            this.pdfDoc = await getPdfJsDocument(pdfjs, {data: data}).promise;
         } catch (error) {
             console.error(error);
             this.showErrorMessage = true;

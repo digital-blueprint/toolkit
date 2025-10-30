@@ -518,7 +518,7 @@ export class PersonSelect extends LangMixin(
 
     render() {
         const i18n = this._i18n;
-        const select2CSS = commonUtils.getAssetURL(select2CSSPath);
+        const select2CSS = commonUtils.getAbsoluteURL(select2CSSPath);
         return html`
             <link rel="stylesheet" href="${select2CSS}" />
             <style>

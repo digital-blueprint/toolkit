@@ -229,7 +229,7 @@ export class GrantPermissionDialog extends LangMixin(
                 });
             }
         } else {
-            this.modalTitle = 'Manage permissions';
+            this.modalTitle = i18n.t('grant-permission-dialog.modal-title');
         }
     }
 
@@ -304,7 +304,10 @@ export class GrantPermissionDialog extends LangMixin(
 
         try {
             for (const grant of grantsToDelete) {
-                await this.apiDeleteResourceActionGrant(grant.identifier);
+                const deleteResponse = await this.apiDeleteResourceActionGrant(grant.identifier);
+                if (deleteResponse.status !== 204) {
+                    throw new Error('Failed to delete grant');
+                }
             }
             // @TODO handle multiple errors
         } catch (e) {
@@ -444,19 +447,22 @@ export class GrantPermissionDialog extends LangMixin(
 
         // Change button to disabled red, wait 3 second and enable deleting
         if (buttonAction === 'prepare-delete') {
+            let countdown = 3;
             deleteButton.setAttribute('type', 'is-danger');
             // deleteButton.setAttribute('data-action', 'delete');
             deleteButton.setAttribute('disabled', 'disabled');
-            deleteButton.innerText = 'Are you sure? (3s)';
-            let countdown = 3;
+
             let countdownInterval = setInterval(() => {
                 countdown--;
-                deleteButton.innerHTML = 'Are you sure? (' + countdown + 's)';
+                deleteButton.innerText = i18n.t(
+                    'grant-permission-dialog.buttons.delete-warning-text',
+                    {counter: countdown},
+                );
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     deleteButton.removeAttribute('disabled');
                     deleteButton.setAttribute('data-action', 'delete');
-                    deleteButton.innerHTML = '<dbp-icon name="trash"></dbp-icon> Delete now';
+                    deleteButton.innerHTML = `<dbp-icon name="trash"></dbp-icon> ${i18n.t('grant-permission-dialog.buttons.delete-now-text')}`;
                 }
             }, 1000);
         } else if (buttonAction === 'delete') {
@@ -486,19 +492,23 @@ export class GrantPermissionDialog extends LangMixin(
 
         // Change button to disabled red, wait 3 second and enable deleting
         if (buttonAction === 'prepare-delete') {
+            let countdown = 3;
             deleteButton.setAttribute('type', 'is-danger');
             deleteButton.setAttribute('disabled', 'disabled');
-            deleteButton.innerText = 'Are you sure? (3s)';
-            let countdown = 3;
+            deleteButton.innerText = i18n.t('grant-permission-dialog.buttons.delete-warning-text', {
+                counter: countdown,
+            });
             let countdownInterval = setInterval(() => {
                 countdown--;
-
-                deleteButton.innerHTML = 'Are you sure? (' + countdown + 's)';
+                deleteButton.innerText = i18n.t(
+                    'grant-permission-dialog.buttons.delete-warning-text',
+                    {counter: countdown},
+                );
                 if (countdown <= 0) {
                     clearInterval(countdownInterval);
                     deleteButton.removeAttribute('disabled');
                     deleteButton.setAttribute('data-action', 'delete');
-                    deleteButton.innerHTML = '<dbp-icon name="trash"></dbp-icon> Delete now';
+                    deleteButton.innerHTML = `<dbp-icon name="trash"></dbp-icon> ${i18n.t('grant-permission-dialog.buttons.delete-now-text')}`;
                 }
             }, 1000);
         } else if (buttonAction === 'delete') {
@@ -532,7 +542,7 @@ export class GrantPermissionDialog extends LangMixin(
             let responseBody = await response.json();
             if (
                 responseBody !== undefined &&
-                responseBody.status !== 403 &&
+                response.status !== 403 &&
                 responseBody['hydra:member'].length > 0
             ) {
                 // Loop trough all grants
@@ -611,7 +621,7 @@ export class GrantPermissionDialog extends LangMixin(
         if (!this.userList) {
             return;
         }
-        // const i18n = this._i18n;
+        const i18n = this._i18n;
 
         return html`
             ${Array.from(this.userList).map(
@@ -647,7 +657,7 @@ export class GrantPermissionDialog extends LangMixin(
                                               this.handleUserEditButton(userId);
                                           }}">
                                           <dbp-icon name="pencil"></dbp-icon>
-                                          Edit
+                                          ${i18n.t('grant-permission-dialog.buttons.edit-text')}
                                       </dbp-button>
                                       <dbp-button
                                           type="is-secondary"
@@ -658,7 +668,7 @@ export class GrantPermissionDialog extends LangMixin(
                                               this.handleUserDeleteButton(userId);
                                           }}">
                                           <dbp-icon name="trash"></dbp-icon>
-                                          Delete
+                                          ${i18n.t('grant-permission-dialog.buttons.delete-text')}
                                       </dbp-button>
                                   </div>
                               `
@@ -989,6 +999,7 @@ export class GrantPermissionDialog extends LangMixin(
 
         try {
             console.log('BEFORE REMOVING USER', this.usersToAdd);
+            let noErrors = true;
             // Process each user
             for (const userIdentifier of this.usersToAdd.keys()) {
                 const userToAdd = this.usersToAdd.get(userIdentifier);
@@ -1032,14 +1043,27 @@ export class GrantPermissionDialog extends LangMixin(
                 // Add grants
                 if (grantsToPost.length > 0) {
                     for (const grant of grantsToPost) {
-                        await this.apiPostResourceActionGrant(grant.action, grant.userIdentifier);
+                        const postResponse = await this.apiPostResourceActionGrant(
+                            grant.action,
+                            grant.userIdentifier,
+                        );
+                        if (postResponse.status !== 201) {
+                            noErrors = false;
+                            continue;
+                        }
                     }
                 }
 
                 // Delete grants
                 if (grantsToDelete.length > 0) {
                     for (const grant of grantsToDelete) {
-                        await this.apiDeleteResourceActionGrant(grant.identifier);
+                        const deleteResponse = await this.apiDeleteResourceActionGrant(
+                            grant.identifier,
+                        );
+                        if (deleteResponse.status !== 204) {
+                            noErrors = false;
+                            continue;
+                        }
                     }
                 }
 
@@ -1072,16 +1096,27 @@ export class GrantPermissionDialog extends LangMixin(
 
             // Stop the save button spinner and show success message
             this.savePermissionButtonRef.value.stop();
-            send({
-                summary: i18n.t('grant-permission-dialog.notifications.success-title'),
-                body: i18n.t(
-                    'grant-permission-dialog.notifications.permissions-saved-successfully',
-                ),
-                type: 'success',
-                targetNotificationId: 'permission-modal-notification',
-                timeout: 5,
-            });
-            return Promise.resolve();
+            if (noErrors) {
+                send({
+                    summary: i18n.t('grant-permission-dialog.notifications.success-title'),
+                    body: i18n.t(
+                        'grant-permission-dialog.notifications.permissions-saved-successfully',
+                    ),
+                    type: 'success',
+                    targetNotificationId: 'permission-modal-notification',
+                    timeout: 5,
+                });
+                return Promise.resolve();
+            } else {
+                send({
+                    summary: i18n.t('grant-permission-dialog.notifications.error-title'),
+                    body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
+                    type: 'danger',
+                    targetNotificationId: 'permission-modal-notification',
+                    timeout: 5,
+                });
+                return Promise.reject();
+            }
         } catch (e) {
             console.log('Save user permissions error:', e);
             send({

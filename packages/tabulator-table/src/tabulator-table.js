@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css, unsafeCSS} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, getIconSVGURL} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -8,9 +8,7 @@ import * as tabulatorStyles from '@dbp-toolkit/tabulator-table/src/tabulator-tab
 import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
 import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import {downloadExcel, generatePDFDownload} from './utils.js';
 
 export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -487,221 +485,38 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         }, 0);
     }
 
-    download(type, dataName) {
-        dataName = dataName + '.' + type;
-        if (!this.tabulatorTable) return;
-        let selected_rows = this.tabulatorTable.getSelectedRows();
+    async download(type, dataName) {
+        if (!this.tabulatorTable) {
+            return;
+        }
+
         const active_rows = this.tabulatorTable.getRows('active');
         if (active_rows.length === 0) return;
-        if (selected_rows.length === 0) {
-            const data = this.tabulatorTable.getData();
-            switch (type) {
-                case 'csv':
-                case 'json':
-                case 'html':
-                    this.tabulatorTable.download(type, dataName);
-                    break;
-                case 'xlsx': {
-                    let entries = [];
-                    for (let row of active_rows) {
-                        let cells = row.getCells();
-                        let entry = {};
-                        for (let cell of cells) {
-                            let column = cell.getColumn();
-                            let definition = column.getDefinition();
-                            if (!column.isVisible()) {
-                                continue;
-                            }
-                            let field = cell.getField();
-                            if (
-                                field !== 'empty' &&
-                                field !== 'undefined' &&
-                                definition.formatter !== 'html'
-                            ) {
-                                let cellValue = cell.getValue();
-                                if (Array.isArray(cellValue)) {
-                                    cellValue = cellValue.join(', ');
-                                }
-                                entry[field] = cellValue;
-                            }
-                        }
-                        entries.push(entry);
-                    }
-                    const worksheet = XLSX.utils.json_to_sheet(entries);
-                    const workbook = XLSX.utils.book_new();
-                    /* Add the worksheet to the workbook */
-                    // Exported filen-name must be shorter than 31 chars with extension included
-                    const extension = '.' + type;
-                    const maxlength = 26;
-                    dataName = dataName.replace(extension, '').slice(0, maxlength);
-                    dataName = dataName + extension;
-                    XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
-                    XLSX.writeFile(workbook, dataName, {compression: true});
-                    break;
-                }
-                case 'pdf': {
-                    //  Get only displayed columns. [respect Column setting modal state]
-                    let columns = this.tabulatorTable.getColumns();
-                    let header = [];
-                    for (let column of columns) {
-                        let definition = column.getDefinition();
-                        if (!column.isVisible()) {
-                            continue;
-                        }
-                        let field = column.getField();
-                        if (
-                            field !== 'empty' &&
-                            field !== 'undefined' &&
-                            definition.formatter !== 'html'
-                        )
-                            header.push(column.getField());
-                    }
-                    let body = [];
-                    for (let entry of data) {
-                        let entry_array = [];
 
-                        header.forEach((column) => {
-                            let cellValue = entry[column] ? entry[column] : '-';
-                            if (Array.isArray(cellValue)) {
-                                cellValue = cellValue.join(', ');
-                            }
-                            entry_array.push(cellValue);
-                        });
-                        body.push(entry_array);
-                    }
-                    const doc = new jsPDF('l', 'pt');
-                    autoTable(doc, {
-                        head: [header],
-                        body: body,
-                        horizontalPageBreak: false,
-                        // horizontalPageBreakBehaviour: 'immediately',
-                        tableWidth: 'auto',
-                        styles: {
-                            overflow: 'linebreak',
-                            valign: 'middle',
-                            cellWidth: 'auto',
-                        },
-                        headStyles: {
-                            // cellWidth: 'auto'
-                        },
-                        bodyStyles: {
-                            // cellWidth: 'auto',
-                            overflow: 'linebreak',
-                        },
-                    });
-                    doc.save(dataName);
-                    break;
-                }
-            }
-        } else {
-            const selected_data = [];
-            for (let row of selected_rows) {
-                selected_data.push(row.getData());
-            }
-            switch (type) {
-                case 'csv':
-                case 'json':
-                case 'html':
-                    this.tabulatorTable.download(type, dataName, {}, 'selected');
-                    break;
-                case 'xlsx': {
-                    let entries = [];
-                    for (let row of selected_rows) {
-                        let cells = row.getCells();
-                        let entry = {};
-                        for (let cell of cells) {
-                            let column = cell.getColumn();
-                            let definition = column.getDefinition();
-                            if (!column.isVisible()) {
-                                continue;
-                            }
-                            let field = cell.getField();
-                            if (
-                                field !== 'empty' &&
-                                field !== 'undefined' &&
-                                definition.formatter !== 'html'
-                            ) {
-                                let cellValue = cell.getValue();
-                                if (Array.isArray(cellValue)) {
-                                    cellValue = cellValue.join(', ');
-                                }
-                                entry[field] = cellValue;
-                            }
-                        }
-                        entries.push(entry);
-                    }
-                    const worksheet = XLSX.utils.json_to_sheet(entries);
-                    const workbook = XLSX.utils.book_new();
-                    /* Add the worksheet to the workbook */
-                    // Exported filen-name must be shorter than 31 chars with extension included
-                    const extension = '.' + type;
-                    const maxlength = 26;
-                    dataName = dataName.replace(extension, '').slice(0, maxlength);
-                    dataName = dataName + extension;
-                    XLSX.utils.book_append_sheet(workbook, worksheet, dataName);
-                    XLSX.writeFile(workbook, dataName, {compression: true});
-                    break;
-                }
-                case 'pdf': {
-                    let columns = this.tabulatorTable.getColumns();
-                    let header = [];
+        const selected_rows = this.tabulatorTable.getSelectedRows();
+        const hasSelection = selected_rows.length > 0;
 
-                    for (let column of columns) {
-                        let definition = column.getDefinition();
-                        if (!column.isVisible()) {
-                            continue;
-                        }
-                        let field = column.getField();
-                        if (
-                            field !== 'empty' &&
-                            field !== 'undefined' &&
-                            definition.formatter !== 'html'
-                        )
-                            header.push(column.getField());
-                    }
-                    let body = [];
-                    for (let entry of selected_data) {
-                        let entry_array = [];
-
-                        header.forEach((column) => {
-                            let cellValue = entry[column] ? entry[column] : '-';
-                            if (Array.isArray(cellValue)) {
-                                cellValue = cellValue.join(', ');
-                            }
-                            entry_array.push(cellValue);
-                        });
-                        body.push(entry_array);
-                    }
-                    const doc = new jsPDF('l', 'pt');
-                    autoTable(doc, {
-                        head: [header],
-                        body: body,
-                        horizontalPageBreak: false,
-                        // horizontalPageBreakBehaviour: 'immediately',
-                        tableWidth: 'auto',
-                        styles: {
-                            overflow: 'linebreak',
-                            valign: 'middle',
-                            cellWidth: 'auto',
-                        },
-                        headStyles: {
-                            // cellWidth: 'auto'
-                        },
-                        bodyStyles: {
-                            // cellWidth: 'auto',
-                            overflow: 'linebreak',
-                        },
-                    });
-                    doc.save(dataName);
-                    break;
-                }
-            }
+        const rows = hasSelection ? selected_rows : active_rows;
+        const data = hasSelection
+            ? selected_rows.map((row) => row.getData())
+            : this.tabulatorTable.getData();
+        const downloadMode = hasSelection ? 'selected' : 'all';
+        switch (type) {
+            case 'csv':
+            case 'json':
+            case 'html':
+                this.tabulatorTable.download(type, dataName + '.' + type, {}, downloadMode);
+                break;
+            case 'xlsx':
+                await downloadExcel(rows, dataName);
+                break;
+            case 'pdf':
+                await generatePDFDownload(this.tabulatorTable, data, dataName);
+                break;
         }
     }
 
     static get styles() {
-        const iconPath = commonUtils.getAssetURL('@dbp-toolkit/common', 'icons/');
-
         // language=css
         return css`
             ${commonStyles.getThemeCSS()}
@@ -871,20 +686,20 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
                 button[data-page='first']::after {
                     content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
-                    mask-image: url('${unsafeCSS(iconPath)}angle-double-left.svg');
+                    mask-image: url('${unsafeCSS(getIconSVGURL('angle-double-left'))}');
                 }
 
                 button[data-page='prev']::after {
-                    mask-image: url('${unsafeCSS(iconPath)}chevron-left.svg');
+                    mask-image: url('${unsafeCSS(getIconSVGURL('chevron-left'))}');
                 }
 
                 button[data-page='next']::after {
-                    mask-image: url('${unsafeCSS(iconPath)}chevron-right.svg');
+                    mask-image: url('${unsafeCSS(getIconSVGURL('chevron-right'))}');
                 }
 
                 button[data-page='last']::after {
                     content: '\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0';
-                    mask-image: url('${unsafeCSS(iconPath)}angle-double-right.svg');
+                    mask-image: url('${unsafeCSS(getIconSVGURL('angle-double-right'))}');
                 }
             }
         `;

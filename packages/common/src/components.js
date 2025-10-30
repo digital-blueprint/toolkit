@@ -9,6 +9,7 @@ import {
     Spinner,
     Translated,
     Translation,
+    DBPSelect,
 } from './index.js';
 
 commonUtils.defineCustomElement('dbp-mini-spinner', MiniSpinner);
@@ -20,3 +21,4 @@ commonUtils.defineCustomElement('dbp-icon-button', IconButton);
 commonUtils.defineCustomElement('dbp-inline-notification', InlineNotification);
 commonUtils.defineCustomElement('dbp-translated', Translated);
 commonUtils.defineCustomElement('dbp-translation', Translation);
+commonUtils.defineCustomElement('dbp-select', DBPSelect);

@@ -1,19 +1,19 @@
-import {globSync} from 'glob';
+import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import url from '@rollup/plugin-url';
 import del from 'rollup-plugin-delete';
-import {getPackagePath, getDistPath} from '@dbp-toolkit/dev-utils';
+import {getPackagePath, getDistPath, assetPlugin} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
+const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
 console.log('build: ' + build);
 
 export default (async () => {
@@ -33,29 +33,27 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
+            ...(isRolldown ? {minify: buildFull} : {}),
+        },
+        moduleTypes: {
+            '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
         },
         plugins: [
             del({
                 targets: 'dist/*',
             }),
-            resolve({
-                browser: true,
-                preferBuiltins: true,
-            }),
-            commonjs(),
-            json(),
-            url({
-                limit: 0,
-                include: [await getPackagePath('select2', '**/*.css')],
-                emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]',
-            }),
-            build !== 'local' && build !== 'test' ? terser() : false,
-            copy({
-                targets: [
+            !isRolldown &&
+                resolve({
+                    browser: true,
+                    preferBuiltins: true,
+                }),
+            !isRolldown && commonjs(),
+            !isRolldown && json(),
+            await assetPlugin(pkg.name, 'dist', {
+                copyTargets: [
                     {src: 'assets/index.html', dest: 'dist'},
                     {src: 'assets/favicon.ico', dest: 'dist'},
                     {
@@ -68,6 +66,7 @@ export default (async () => {
                     },
                 ],
             }),
+            buildFull && !isRolldown ? terser() : false,
             process.env.ROLLUP_WATCH === 'true'
                 ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
                 : false,

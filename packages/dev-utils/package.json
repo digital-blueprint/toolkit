@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/dev-utils",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/dev-utils",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -17,21 +17,23 @@
     "devDependencies": {
         "@eslint/js": "^9.8.0",
         "eslint": "^9.1.0",
-        "eslint-plugin-jsdoc": "^54.0.0",
+        "eslint-plugin-jsdoc": "^61.0.0",
         "globals": "^16.0.0",
         "prettier": "^3.0.0"
     },
     "dependencies": {
+        "@rollup/plugin-url": "^8.0.2",
         "find-cache-directory": "^6.0.0",
+        "rollup-plugin-copy": "^3.5.0",
         "selfsigned": "^3.0.0"
     },
     "scripts": {
         "fix": "npm run eslint:fix && npm run prettier:fix",
         "check": "npm run eslint && npm run prettier",
-        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix",
-        "eslint": "eslint \"**/*.{js,ts}\"",
-        "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
-        "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
+        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix --cache",
+        "eslint": "eslint \"**/*.{js,ts}\" --cache",
+        "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write --cache",
+        "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
         "tsc": "tsc -p jsconfig.json"
     }
 }

@@ -39,7 +39,8 @@ export class DbpBaseView extends LangMixin(ScopedElementsMixin(DBPLitElement), c
                 fieldset input:not([type='radio']):not([type='checkbox']),
                 fieldset select,
                 fieldset textarea {
-                    width: calc(100% - 12px);
+                    box-sizing: border-box;
+                    width: 100%;
                     padding: 2px 5px;
                     border: 1px solid var(--dbp-border);
                 }

@@ -129,7 +129,7 @@ export class FileSink extends LangMixin(
         // create form used to stream-download a zip
         const downloadForm = document.createElement('form');
         downloadForm.style.display = 'none';
-        downloadForm.action = 'downloadZip/files.zip';
+        downloadForm.action = commonUtils.getAssetURL(pkgName, 'downloadZip/files.zip');
         downloadForm.method = 'POST';
 
         // detect errors. "return" in forEach does not stop the method call

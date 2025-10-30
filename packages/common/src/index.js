@@ -13,3 +13,4 @@ export * from './utils.js';
 export {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
 export {AuthMixin} from './auth-mixin.js';
 export {LangMixin} from './lang-mixin.js';
+export {DBPSelect} from './select.js';

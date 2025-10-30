@@ -1,5 +1,5 @@
 import {createInstance} from './i18n';
-import {createUUID} from './utils';
+import {createUUID} from '@dbp-toolkit/common/utils';
 import {css, html} from 'lit';
 import {LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';

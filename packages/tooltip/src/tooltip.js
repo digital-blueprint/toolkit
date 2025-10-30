@@ -72,7 +72,7 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        const tippy2CSS = commonUtils.getAssetURL(tippy2CSSPath);
+        const tippy2CSS = commonUtils.getAbsoluteURL(tippy2CSSPath);
 
         this.setOrUpdateTippy();
 

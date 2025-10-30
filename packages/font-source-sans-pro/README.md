@@ -31,5 +31,5 @@ You can also use the files directly from the [CDN](https://unpkg.com/browse/@dbp
 
 ## Rebuilding the fonts
 
-- `poetry install`
-- `poetry run bash build.sh`
+- `uv sync`
+- `uv run bash build.sh`

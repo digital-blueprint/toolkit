@@ -74,11 +74,6 @@ remove-toolkit-node-modules:
 remove-vendor-node-modules:
     find ./vendor -type d -name 'node_modules' -prune -exec rm -rf '{}' +
 
-# Format all files
-[group('linter')]
-format args='':
-    treefmt {{ args }}
-
 # Run checker
 [group('linter')]
 check:
@@ -95,3 +90,8 @@ add-git-blame-ignore-revs:
     git log --pretty=format:"%H" --grep="^lint" >> .git-blame-ignore-revs
     sort .git-blame-ignore-revs | uniq > .git-blame-ignore-revs.tmp
     mv .git-blame-ignore-revs.tmp .git-blame-ignore-revs
+
+# Format all files using pre-commit
+[group('linter')]
+format args='':
+    pre-commit run --all-files {{ args }}

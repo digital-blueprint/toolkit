@@ -1,17 +1,16 @@
 import url from 'node:url';
 import process from 'node:process';
-import {globSync} from 'glob';
+import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import urlPlugin from '@rollup/plugin-url';
 import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
 import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
+import {replacePlugin as rolldownReplace} from 'rolldown/experimental';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {
@@ -19,7 +18,7 @@ import {
     getBuildInfo,
     getPackagePath,
     getDistPath,
-    getCopyTargets,
+    assetPlugin,
 } from '@dbp-toolkit/dev-utils';
 import replace from '@rollup/plugin-replace';
 import {createRequire} from 'node:module';
@@ -29,11 +28,13 @@ const pkg = require('./package.json');
 const appEnv = typeof process.env.APP_ENV !== 'undefined' ? process.env.APP_ENV : 'local';
 const watch = process.env.ROLLUP_WATCH === 'true';
 const buildFull = (!watch && appEnv !== 'test') || process.env.FORCE_FULL !== undefined;
-let useTerser = buildFull;
+let doMinify = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
 let useHTTPS = true;
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
+let nodeEnv = buildFull ? 'production' : 'development';
 
 console.log('APP_ENV: ' + appEnv);
 
@@ -85,9 +86,13 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
+            ...(isRolldown ? {minify: doMinify} : {}),
+        },
+        moduleTypes: {
+            '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
         },
         treeshake: treeshake,
         plugins: [
@@ -121,10 +126,11 @@ export default (async () => {
                     shortName: config.shortName,
                 },
             }),
-            resolve({
-                browser: true,
-                preferBuiltins: true,
-            }),
+            !isRolldown &&
+                resolve({
+                    browser: true,
+                    preferBuiltins: true,
+                }),
             checkLicenses &&
                 license({
                     banner: {
@@ -148,6 +154,7 @@ Dependencies:
                                 'MIT OR SEE LICENSE IN FEEL-FREE.md',
                                 '(MIT OR GPL-3.0-or-later)',
                                 'BSD',
+                                '(MIT AND Zlib)',
                             ];
                             if (!licenses.includes(dependency.license)) {
                                 throw new Error(
@@ -158,30 +165,21 @@ Dependencies:
                         },
                     },
                 }),
-            commonjs({
-                strictRequires: 'auto',
-            }),
-            json(),
+            !isRolldown &&
+                commonjs({
+                    strictRequires: 'auto',
+                }),
+            !isRolldown && json(),
             md({
-                include: ['../../**/*.md'],
+                include: ['**/*.md'],
                 marked: {
                     highlight: function (code) {
                         return require('highlight.js').highlightAuto(code).value;
                     },
                 },
             }),
-            urlPlugin({
-                limit: 0,
-                include: [
-                    await getPackagePath('select2', '**/*.css'),
-                    await getPackagePath('highlight.js', '**/*.css'),
-                    await getPackagePath('tippy.js', '**/*.css'),
-                ],
-                emitFiles: true,
-                fileName: 'shared/[name].[hash][extname]',
-            }),
-            copy({
-                targets: [
+            await assetPlugin(pkg.name, 'dist', {
+                copyTargets: [
                     {src: 'assets/*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/*.metadata.json', dest: 'dist'},
                     {src: 'assets/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
@@ -200,12 +198,14 @@ Dependencies:
                     },
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
                     {
-                        src: await getPackagePath('@dbp-toolkit/font-source-sans-pro', 'files/*'),
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'fonts/source-sans-pro')),
+                        src: await getPackagePath('@dbp-toolkit/font-source-sans-pro', 'files'),
+                        dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
+                        rename: 'source-sans-pro',
                     },
                     {
-                        src: await getPackagePath('@fontsource/nunito-sans', '*'),
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'fonts/nunito-sans')),
+                        src: await getPackagePath('@fontsource/nunito-sans', '.'),
+                        dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
+                        rename: 'nunito-sans',
                     },
                     {
                         src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
@@ -215,13 +215,21 @@ Dependencies:
                         src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
                         dest: 'dist/' + (await getDistPath(pkg.name)),
                     },
-                    ...(await getCopyTargets(pkg.name, 'dist')),
                 ],
             }),
-            replace({
-                'process.env.NODE_ENV': JSON.stringify('production'),
-                preventAssignment: true,
-            }),
+            isRolldown
+                ? rolldownReplace(
+                      {
+                          'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+                      },
+                      {
+                          preventAssignment: true,
+                      },
+                  )
+                : replace({
+                      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+                      preventAssignment: true,
+                  }),
             useBabel &&
                 getBabelOutputPlugin({
                     compact: false,
@@ -242,7 +250,7 @@ Dependencies:
                     ],
                 }),
             // the terser must be used AFTER babel, otherwise it will cause pdfjs to not show SVGs (or other images?)
-            useTerser ? terser() : false,
+            doMinify && !isRolldown ? terser() : false,
             watch
                 ? serve({
                       contentBase: '.',

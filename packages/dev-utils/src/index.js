@@ -6,6 +6,8 @@ import {createRequire} from 'node:module';
 import child_process from 'node:child_process';
 import selfsigned from 'selfsigned';
 import findCacheDir from 'find-cache-directory';
+import copyPlugin from 'rollup-plugin-copy';
+import urlPlugin from '@rollup/plugin-url';
 
 /**
  * Returns true if git is installed and we are inside a git working tree
@@ -237,4 +239,108 @@ async function getCopyTargetsForDbpMetadata(metadata, bundleDest = 'dist') {
 export async function getCopyTargets(packageName, bundleDest) {
     const metadata = await collectDbpMetadata(packageName);
     return getCopyTargetsForDbpMetadata(metadata, bundleDest);
+}
+
+/**
+ * Given a package name, returns URL options for use with rollup-plugin-url.
+ *
+ * Add this to package.json to define files that should be copied during build,
+ * and provided as URLs when imported:
+ *
+ * "dbp": {
+ *   "urls": [
+ *     {
+ *       "srcPackage": "select2",
+ *       "src": "**\/*.css"
+ *     }
+ *   ]
+ * }
+ *
+ * - srcPackage: npm package name where files are located
+ * - src: source path within srcPackage (string, array, or glob pattern)
+ *
+ * All the matching files will be copied and renamed when imported, and the
+ * import will return a relative path to the copied file.
+ * Use getAbsoluteURL() to get an absolute URL to the file at runtime.
+ */
+export async function getUrlOptions(packageName, bundleDest) {
+    const metadata = await collectDbpMetadata(packageName);
+
+    let allIncludes = [];
+    for (const packageMeta of Object.values(metadata)) {
+        const urls = packageMeta.urls || [];
+        for (const url of urls) {
+            const {src, srcPackage} = url;
+            const srcArray = Array.isArray(src) ? src : [src];
+            for (const srcEntry of srcArray) {
+                allIncludes.push(await getPackagePath(srcPackage, srcEntry));
+            }
+        }
+    }
+    allIncludes = Array.from(new Set(allIncludes));
+
+    return {
+        limit: 0,
+        include: allIncludes,
+        exclude: allIncludes.length > 0 ? [] : ['**'],
+        emitFiles: true,
+        fileName: bundleDest + '/[name].[hash][extname]',
+    };
+}
+
+/**
+ * A hack to monkey patch \@rollup/plugin-url to set includes as filter
+ * hooks for better performance with rolldown.
+ */
+function urlPluginHack(options = {}) {
+    // Logic taken from @rollup/pluginutils (spdx:MIT) so we match the patterns
+    // of createFilter() exactly (otherwise relative paths are broken)
+    const normalizePath = function normalizePath(filename) {
+        const normalizePathRegExp = new RegExp(`\\${path.win32.sep}`, 'g');
+        return filename.replace(normalizePathRegExp, path.posix.sep);
+    };
+
+    function getMatcherString(id) {
+        if (path.isAbsolute(id) || id.startsWith('**')) {
+            return normalizePath(id);
+        }
+        const basePath = normalizePath(path.resolve('')).replace(/[-^$*+?.()|[\]{}]/g, '\\$&');
+        return path.posix.join(basePath, normalizePath(id));
+    }
+
+    let plugin = urlPlugin(options);
+    plugin.load = {
+        filter: {
+            id: {
+                include: (options.include ?? []).map((id) => getMatcherString(id)),
+                exclude: (options.exclude ?? []).map((id) => getMatcherString(id)),
+            },
+        },
+        handler: plugin.load,
+    };
+
+    return plugin;
+}
+
+/**
+ * Returns a Rollup plugin which handles asset copying and URL imports.
+ *
+ * @param {string} packageName - The root package name
+ * @param {string} [bundleDest] - The bundle destination directory
+ * @param {object} [options] - Additional options
+ * @param {Array} [options.copyTargets] - Additional copy targets to include
+ * @returns {Promise<Array>} Array of Rollup plugins
+ */
+export async function assetPlugin(packageName, bundleDest = 'dist', options = {}) {
+    return [
+        copyPlugin({
+            copySync: true,
+            hook: 'generateBundle',
+            targets: [
+                ...(options.copyTargets || []),
+                ...(await getCopyTargets(packageName, bundleDest)),
+            ],
+        }),
+        urlPluginHack(await getUrlOptions(packageName, 'shared')),
+    ];
 }

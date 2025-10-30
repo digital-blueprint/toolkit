@@ -1,14 +1,19 @@
-import {globSync} from 'glob';
+import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import process from 'node:process';
+import {createRequire} from 'node:module';
+import {assetPlugin} from '@dbp-toolkit/dev-utils';
 
+const require = createRequire(import.meta.url);
+const pkg = require('./package.json');
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
+const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
 console.log('build: ' + build);
 
 export default {
@@ -19,21 +24,22 @@ export default {
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',
-        chunkFileNames: 'shared/[name].[hash].[format].js',
+        chunkFileNames: 'shared/[name].[hash].js',
         format: 'esm',
         sourcemap: true,
+        ...(isRolldown ? {minify: buildFull, cleanDir: true} : {}),
     },
     plugins: [
         del({
             targets: 'dist/*',
         }),
-        resolve({browser: true}),
-        commonjs(),
-        json(),
-        build !== 'local' && build !== 'test' ? terser() : false,
-        copy({
-            targets: [{src: 'assets/index.html', dest: 'dist'}],
+        !isRolldown && resolve({browser: true}),
+        !isRolldown && commonjs(),
+        !isRolldown && json(),
+        await assetPlugin(pkg.name, 'dist', {
+            copyTargets: [{src: 'assets/index.html', dest: 'dist'}],
         }),
+        buildFull && !isRolldown ? terser() : false,
         process.env.ROLLUP_WATCH === 'true'
             ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
             : false,

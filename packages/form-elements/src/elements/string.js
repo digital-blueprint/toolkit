@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 
@@ -18,6 +18,31 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
             placeholder: {type: String},
             maxLength: {type: Number, attribute: 'maxlength'},
         };
+    }
+
+    static get styles() {
+        return [
+            ...super.styles,
+            // language=css
+            css`
+                :host([layout-type='inline']) fieldset {
+                    display: flex;
+                    gap: var(--dbp-enum-label-gap, 1em);
+                    align-items: center;
+                }
+
+                :host([layout-type='inline'][rows]) fieldset {
+                    display: flex;
+                    gap: var(--dbp-enum-label-gap, 1em);
+                    align-items: flex-start;
+                }
+
+                :host([layout-type='inline']) label {
+                    margin-bottom: 0;
+                    white-space: nowrap;
+                }
+            `,
+        ];
     }
 
     renderInput() {

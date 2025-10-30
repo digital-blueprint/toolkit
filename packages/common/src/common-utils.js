@@ -66,14 +66,10 @@ export const base64EncodeUnicode = (str) => {
  */
 
 /**
- * Same as customElements.define() but with some additional error handling.
+ * Same as customElements.define() but less strict.
  *
  * In case the same component (with the exact same implementation) is already
  * defined then this will do nothing instead of erroring out.
- *
- * In case the browser doesn't support custom elements it will fill all those
- * custom tags with an error message so the user gets some feedback instead of
- * just an empty page.
  *
  * @param {string} name
  * @param {Function} constructor
@@ -83,22 +79,6 @@ export const defineCustomElement = (name, constructor, options) => {
     // In case the constructor is already defined just do nothing
     if (customElements.get(name) === constructor) {
         return true;
-    }
-    // Checks taken from https://github.com/webcomponents/webcomponentsjs/blob/master/webcomponents-loader.js
-    if (
-        !(
-            'attachShadow' in Element.prototype &&
-            'getRootNode' in Element.prototype &&
-            window.customElements
-        )
-    ) {
-        var elements = document.getElementsByTagName(name);
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].innerHTML =
-                "<span style='border: 1px solid red; font-size: 0.8em; " +
-                "opacity: 0.5; padding: 0.2em;'>☹ Your browser is not supported ☹</span>";
-        }
-        return false;
     }
     customElements.define(name, constructor, options);
     return true;
@@ -178,32 +158,52 @@ export const dateToInputTimeString = (date) => {
 };
 
 /**
- * Get an absolute path for assets given a relative path to the js bundle.
+ * Get an absolute URL for shared assets (hashed assets).
  *
- * @param {string} pkg The package which provides the asset
- * @param {string} path The relative path based on the js bundle path
+ * @param {string} path The relative path to the shared asset
  * @param {object} [options] Optional parameters
  * @param {string} [options.metaUrl] Custom meta URL for testing
- * @returns {string} The absolute URL to the asset
+ * @returns {string} The absolute URL to the shared asset
  */
-export const getAssetURL = (pkg, path, options = {}) => {
-    let fullPath = '';
-    if (path === undefined) {
-        // backwards compat: in case only one parameter is passed
-        // assume it is a full path
-        fullPath = pkg;
-    } else {
-        fullPath = 'local/' + pkg + '/' + path;
-    }
+export const getAbsoluteURL = (path, options = {}) => {
+    const baseUrl = getBaseURL(options);
+    return new URL(path, baseUrl).href;
+};
 
+/**
+ * Get an absolute URL for local assets (namespaced by package).
+ *
+ * @param {string} pkgName The package which provides the asset
+ * @param {string} path The relative path within the package
+ * @param {object} [options] Optional parameters
+ * @param {string} [options.metaUrl] Custom meta URL for testing
+ * @returns {string} The absolute URL to the local asset
+ */
+export const getAssetURL = (pkgName, path, options = {}) => {
+    if (path === undefined) {
+        console.warn('getAssetURL called without package name, use getAbsoluteURL instead');
+        return getAbsoluteURL(pkgName, options);
+    }
+    const fullPath = 'local/' + pkgName + '/' + path;
+    const baseUrl = getBaseURL(options);
+    return new URL(fullPath, baseUrl).href;
+};
+
+/**
+ * Get the base URL for asset resolution.
+ *
+ * @param {object} [options] Optional parameters
+ * @param {string} [options.metaUrl] Custom meta URL for testing
+ * @returns {URL} The base URL for asset resolution
+ */
+const getBaseURL = (options = {}) => {
     let baseUrl = new URL(options.metaUrl !== undefined ? options.metaUrl : import.meta.url);
-    // XXX: In case we are under "/shared/" assume we are called from a chunk
-    // and need to go up one level. This assumes that all chunks are stored in
-    // "/shared/" by the bundler.
+    // If we are under "/shared/" assume we are called from a chunk
+    // and need to go up one level
     if (baseUrl.pathname.split('/').slice(-2)[0] === 'shared') {
         baseUrl = new URL('..', baseUrl);
     }
-    return new URL(fullPath, baseUrl).href;
+    return baseUrl;
 };
 
 /**
@@ -372,3 +372,20 @@ export const querySlotted = (root, selector) => {
 
     return matched;
 };
+
+/**
+ * Generates a random UUID (Universally Unique Identifier) version 4.
+ * Same as crypto.randomUUID() but works in unsecure contexts (http).
+ *
+ * @returns {string} A randomly generated UUID v4 string.
+ */
+export function createUUID() {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+
+    bytes[6] = (bytes[6] & 0x0f) | 0x40; // Version 4
+    bytes[8] = (bytes[8] & 0x3f) | 0x80; // Variant 10
+
+    const hex = [...bytes].map((b) => b.toString(16).padStart(2, '0')).join('');
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+}

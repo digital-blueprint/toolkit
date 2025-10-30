@@ -64,6 +64,12 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
                     border-left: 2px solid #ffffff;
                     transform: rotate(-45deg);
                 }
+
+                :host([layout-type='inline']) fieldset {
+                    display: flex;
+                    gap: var(--dbp-enum-label-gap, 1em);
+                    align-items: center;
+                }
             `,
         ];
     }

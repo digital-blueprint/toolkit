@@ -56,6 +56,8 @@ export class Icon extends LitElement {
                 display: inline-block;
                 height: 1em;
                 width: 1em;
+                min-width: 1em;
+                min-height: 1em;
                 top: 0.125em;
                 position: relative;
             }

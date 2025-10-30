@@ -10,7 +10,7 @@ import highlightCSSPath from 'highlight.js/styles/github.css';
 export function getDemoCSS() {
     // language=css
     return css`
-        @import url('${unsafeCSS(commonUtils.getAssetURL(highlightCSSPath))}');
+        @import url('${unsafeCSS(commonUtils.getAbsoluteURL(highlightCSSPath))}');
 
         h1.title {
             margin-bottom: 1em;
