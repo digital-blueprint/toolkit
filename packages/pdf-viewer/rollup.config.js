@@ -1,7 +1,6 @@
 import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import {getPackagePath, getDistPath, assetPlugin} from '@dbp-toolkit/dev-utils';
@@ -39,7 +38,6 @@ export default {
                 preferBuiltins: true,
             }),
         !isRolldown && commonjs(),
-        !isRolldown && json(),
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [
                 {src: 'assets/index.html', dest: 'dist'},

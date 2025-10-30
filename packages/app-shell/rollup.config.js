@@ -5,7 +5,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
-import json from '@rollup/plugin-json';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {getDistPath, assetPlugin} from '@dbp-toolkit/dev-utils';
 import config from '../../demo.common.config.js';
@@ -59,7 +58,6 @@ export default {
         }),
         !isRolldown && resolve({browser: true}),
         !isRolldown && commonjs(),
-        !isRolldown && json(),
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [
                 {src: 'assets/silent-check-sso.html', dest: 'dist'},

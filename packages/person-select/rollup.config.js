@@ -2,7 +2,6 @@ import process from 'node:process';
 import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import {createRequire} from 'node:module';
@@ -45,7 +44,6 @@ export default {
                 {src: 'assets/index.html', dest: 'dist'},
             ],
         }),
-        !isRolldown && json(),
         process.env.ROLLUP_WATCH === 'true'
             ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
             : false,

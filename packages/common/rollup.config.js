@@ -3,7 +3,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
-import json from '@rollup/plugin-json';
 import {assetPlugin} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
@@ -32,7 +31,6 @@ export default {
             }),
         !isRolldown && resolve({browser: true}),
         !isRolldown && commonjs(),
-        !isRolldown && json(),
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [{src: 'assets/index.html', dest: 'dist'}],
         }),
