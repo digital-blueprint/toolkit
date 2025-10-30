@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, registerFeatureFlag} from '@dbp-toolkit/common';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
@@ -18,6 +18,8 @@ import {MatomoElement} from '@dbp-toolkit/matomo/src/matomo';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {LayoutSwitcher} from './layout-switcher.js';
 import {FeatureFlagDropdown} from './feature-flag-dropdown.js';
+
+registerFeatureFlag('app-shell-ng');
 
 /**
  * In case the application gets updated future dynamic imports might fail.

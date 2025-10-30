@@ -1,19 +1,16 @@
 import {html, css} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {getFeatureFlag, setFeatureFlag, listFeatureFlags} from '@dbp-toolkit/common';
 
 export class FeatureFlagDropdown extends AdapterLitElement {
     constructor() {
         super();
-        this.prefix = 'dbp-feature-';
-        this.flags = ['app-shell-ng'];
         this._isOpen = false;
     }
 
     static get properties() {
         return {
-            prefix: {type: String},
-            flags: {type: Array},
             _isOpen: {type: Boolean, state: true},
         };
     }
@@ -22,9 +19,9 @@ export class FeatureFlagDropdown extends AdapterLitElement {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
-          ${commonStyles.getButtonCSS()}
+            ${commonStyles.getButtonCSS()}
 
-          :host {
+            :host {
                 display: inline-block;
                 font-size: 0.7em;
             }
@@ -77,29 +74,33 @@ export class FeatureFlagDropdown extends AdapterLitElement {
     }
 
     _toggleDropdown() {
+        this.requestUpdate();
         this._isOpen = !this._isOpen;
     }
 
     _handleCheckboxChange(e) {
-        const key = this.prefix + e.target.dataset.key;
-        if (e.target.checked) {
-            localStorage.setItem(key, 'true');
-        } else {
-            localStorage.removeItem(key);
-        }
+        const flagName = e.target.dataset.key;
+        setFeatureFlag(flagName, e.target.checked);
+        this.requestUpdate();
     }
 
     _isChecked(flag) {
-        const key = this.prefix + flag;
-        return localStorage.getItem(key) !== null;
+        return getFeatureFlag(flag);
     }
 
     render() {
+        const flags = listFeatureFlags();
+
         return html`
             <div class="dropdown">
                 <button class="button" @click="${this._toggleDropdown}">Feature Flags</button>
                 <div class="dropdown-content ${this._isOpen ? 'active' : ''}">
-                    ${this.flags.map(
+                    ${!flags.length
+                        ? html`
+                              <div class="entry">No feature flags available</div>
+                          `
+                        : ''}
+                    ${flags.map(
                         (flag) => html`
                             <div>
                                 <label class="entry">
