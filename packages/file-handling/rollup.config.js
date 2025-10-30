@@ -1,7 +1,6 @@
 import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
@@ -43,7 +42,6 @@ export default {
         !isRolldown && resolve({browser: true}),
         !isRolldown && commonjs(),
         !isRolldown && json(),
-        buildFull && !isRolldown ? terser() : false,
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [
                 {src: 'assets/index.html', dest: 'dist'},

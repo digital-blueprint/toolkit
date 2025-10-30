@@ -3,7 +3,6 @@ import process from 'node:process';
 import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import license from 'rollup-plugin-license';
@@ -250,8 +249,6 @@ Dependencies:
                     ],
                 ],
             }),
-        // the terser must be used AFTER babel, otherwise it will cause pdfjs to not show SVGs (or other images?)
-        doMinify && !isRolldown ? terser() : false,
         watch
             ? serve({
                   contentBase: '.',

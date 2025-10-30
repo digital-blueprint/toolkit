@@ -4,7 +4,6 @@ import process from 'node:process';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import serve from 'rollup-plugin-serve';
-import terser from '@rollup/plugin-terser';
 import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
 import emitEJS from 'rollup-plugin-emit-ejs';
@@ -67,7 +66,6 @@ export default {
                 {src: 'assets/*.json', dest: 'dist'},
             ],
         }),
-        buildFull && !isRolldown ? terser() : false,
         process.env.ROLLUP_WATCH === 'true'
             ? serve({
                   contentBase: '.',

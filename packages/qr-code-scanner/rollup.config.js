@@ -1,7 +1,6 @@
 import {globSync} from 'node:fs';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
@@ -48,7 +47,6 @@ export default {
                 {src: 'assets/favicon.ico', dest: 'dist'},
             ],
         }),
-        buildFull && !isRolldown ? terser() : false,
         process.env.ROLLUP_WATCH === 'true'
             ? serve({
                   contentBase: 'dist',
