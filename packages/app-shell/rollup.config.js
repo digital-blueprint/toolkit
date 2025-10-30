@@ -1,7 +1,6 @@
 import {globSync} from 'node:fs';
 import url from 'node:url';
 import process from 'node:process';
-import resolve from '@rollup/plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
@@ -55,7 +54,6 @@ export default {
                 keyCloakClientId: config.keyCloakClientId,
             },
         }),
-        !isRolldown && resolve({browser: true}),
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [
                 {src: 'assets/silent-check-sso.html', dest: 'dist'},

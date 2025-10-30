@@ -1,5 +1,4 @@
 import {globSync} from 'node:fs';
-import resolve from '@rollup/plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
 import del from 'rollup-plugin-delete';
 import {assetPlugin} from '@dbp-toolkit/dev-utils';
@@ -28,7 +27,6 @@ export default {
             del({
                 targets: 'dist/*',
             }),
-        !isRolldown && resolve({browser: true}),
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [{src: 'assets/index.html', dest: 'dist'}],
         }),

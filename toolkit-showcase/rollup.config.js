@@ -1,7 +1,6 @@
 import url from 'node:url';
 import process from 'node:process';
 import {globSync} from 'node:fs';
-import resolve from '@rollup/plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
 import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
@@ -124,11 +123,6 @@ export default {
                 shortName: config.shortName,
             },
         }),
-        !isRolldown &&
-            resolve({
-                browser: true,
-                preferBuiltins: true,
-            }),
         checkLicenses &&
             license({
                 banner: {
