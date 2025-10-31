@@ -245,12 +245,21 @@ export function getTabulatorStyles() {
             background-color: unset;
         }
 
+        /* Frozen select checkbox rows styles */
+        .tabulator-col.tabulator-row-header.tabulator-frozen,
+        .tabulator-cell.tabulator-row-header.tabulator-frozen {
+            border: none;
+            background-color: var(--dbp-background);
+        }
+
+        /* Frozen table header styles */
         .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-left,
         .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right {
             border: none;
             background-color: var(--dbp-background);
         }
 
+        /* Frozen table rows styles */
         .tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-left,
         .tabulator-row .tabulator-cell.tabulator-frozen.tabulator-frozen-right {
             border: none;
