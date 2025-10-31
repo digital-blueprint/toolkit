@@ -177,6 +177,15 @@ export class FormElementsDemo extends LangMixin(
                             value=${data.mySpecialString || ''}
                             ?required=${this.isRequired}></dbp-form-string-element>
 
+                        <dbp-form-string-element
+                            subscribe="lang"
+                            name="myComponentLongStringWordLimit"
+                            label="Inline long string with word limit (10)"
+                            value=${data.myComponentLongStringWordLimit || ''}
+                            rows="5"
+                            word-count-limit="10"
+                            ?required=${this.isRequired}></dbp-form-string-element>
+
                         <dbp-form-date-element
                             subscribe="lang"
                             name="myComponentDate"
