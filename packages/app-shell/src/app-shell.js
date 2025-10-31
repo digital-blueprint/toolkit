@@ -553,56 +553,70 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     toggleMenu() {
         const menu = this.shadowRoot.querySelector('ul.menu');
         const subtitle = this.shadowRoot.querySelector('h2.subtitle');
+        const burger = this.shadowRoot.querySelector('#menu-burger-icon');
+        const mainGrid = this.shadowRoot.querySelector('#main');
 
-        if (!menu || !subtitle) return;
+        if (!menu) return;
 
         const isOpening = !menu.classList.contains('is-open');
         menu.classList.toggle('is-open', isOpening);
 
-        const mainGrid = this.shadowRoot.querySelector('#main');
-        if (mainGrid) mainGrid.classList.toggle('menu-open', isOpening);
+        mainGrid?.classList.toggle('menu-open', isOpening);
+        if (burger) burger.name = isOpening ? 'close' : 'menu';
+        subtitle?.setAttribute('aria-expanded', String(isOpening));
 
         // Icon + aria
-        const burger = this.shadowRoot.querySelector('#menu-burger-icon');
+
         if (burger) burger.name = isOpening ? 'close' : 'menu';
         subtitle.setAttribute('aria-expanded', String(isOpening));
 
         // Outside click + initial click guard
-        if (isOpening) {
-            this.initateOpenMenu = true;
-            if (!this._boundCloseMenuHandler) {
-                this._boundCloseMenuHandler = (evt) => {
-                    // ignore the very first click that opened the menu
-                    if (this.initateOpenMenu) {
-                        this.initateOpenMenu = false;
-                        return;
-                    }
-                    const path = evt.composedPath();
-                    const clickedInside = path.includes(menu) || path.includes(subtitle);
-                    if (!clickedInside) this.hideMenu();
-                };
-            }
-
-            document.addEventListener('click', this._boundCloseMenuHandler, {capture: true});
-            document.addEventListener(
-                'keydown',
-                (this._boundEscHandler ||= (e) => {
-                    if (e.key === 'Escape') this.hideMenu();
-                }),
-            );
-        } else {
-            document.removeEventListener('click', this._boundCloseMenuHandler, {capture: true});
+        if (this._boundCloseMenuHandler) {
+            document.removeEventListener('click', this._boundCloseMenuHandler);
+            this._boundCloseMenuHandler = null;
+        }
+        if (this._boundEscHandler) {
             document.removeEventListener('keydown', this._boundEscHandler);
+            this._boundEscHandler = null;
+        }
+
+        if (isOpening) {
+            this._boundCloseMenuHandler = (evt) => {
+                const path = evt.composedPath?.() || [];
+                const clickedInside =
+                    path.includes(menu) || path.includes(subtitle) || path.includes(burger);
+                if (!clickedInside) this.hideMenu();
+            };
+
+            // Attach in the bubble phase and on next tick so the opening click isn't caught
+            setTimeout(() => {
+                document.addEventListener('click', this._boundCloseMenuHandler);
+            }, 0);
+
+            this._boundEscHandler = (e) => {
+                if (e.key === 'Escape') this.hideMenu();
+            };
+            document.addEventListener('keydown', this._boundEscHandler);
         }
     }
 
     hideMenu() {
-        if (this.initateOpenMenu) {
-            this.initateOpenMenu = false;
-            return;
-        }
         const menu = this.shadowRoot.querySelector('ul.menu');
-        if (menu && !menu.classList.contains('hidden')) this.toggleMenu();
+        if (!menu?.classList.contains('is-open')) return;
+        // Close without re-toggling
+        menu.classList.remove('is-open');
+        this.shadowRoot.querySelector('#main')?.classList.remove('menu-open');
+        this.shadowRoot.querySelector('#menu-burger-icon')?.setAttribute('name', 'menu');
+        this.shadowRoot.querySelector('h2.subtitle')?.setAttribute('aria-expanded', 'false');
+
+        if (this._boundCloseMenuHandler) {
+            document.removeEventListener('click', this._boundCloseMenuHandler);
+            this._boundCloseMenuHandler = null;
+        }
+        if (this._boundEscHandler) {
+            document.removeEventListener('keydown', this._boundEscHandler);
+            this._boundEscHandler = null;
+        }
     }
 
     static get styles() {
@@ -835,10 +849,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 text-align: center;
             }
 
-            /* Show/hide via a dedicated class */
             ul.menu {
                 display: none;
             }
+
             ul.menu.is-open {
                 display: block;
             }
@@ -880,55 +894,81 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: none;
             }
 
-            @media (max-width: 768px) {
-                #main {
-                    grid-template-columns: minmax(0, auto);
-                    grid-template-rows: min-content min-content min-content 1fr min-content;
-                    grid-template-areas: 'header' 'headline' 'sidebar' 'main' 'footer';
+            @media (max-width: 870px) {
+                #main,
+                #main.menu-open {
+                    grid-template-columns: minmax(0, 1fr);
+                    grid-template-areas: 'header' 'headline' 'main' 'footer';
                 }
 
-                header {
-                    grid-template-rows: 40px;
-                    grid-template-areas: 'hd1-left hd1-middle hd1-right';
-                }
-
-                header .hd2-left,
-                header .hd2-right {
-                    display: none;
+                header .hd1-left {
+                    z-index: 2000;
+                    background-color: var(--dbp-background);
                 }
 
                 aside {
-                    align-self: start;
                     margin: 0;
-                    position: sticky;
-                    top: 0;
-                    width: 100%;
-                    background-color: var(--dbp-background);
-                    z-index: 10;
                 }
 
-                aside h2.subtitle {
+                aside ul.menu {
                     display: block;
-                    padding: 0.5em 0.5em;
+                    position: fixed;
+                    width: 40vw;
+                    left: 0;
+                    right: auto;
+                    top: 0;
+                    max-height: 100dvh;
+                    margin: 3rem 0 0 0;
+                    box-sizing: border-box;
+                    background: var(--surface, #fff);
+                    transform: translateY(-110%);
+                    transition:
+                        transform 0.28s ease,
+                        box-shadow 0.28s ease;
+                    overflow-y: auto;
+                    padding-block: 0.5rem 1rem;
+                    padding-inline: 0;
+                    z-index: 1500;
+                    background-color: var(--dbp-background);
+                    color: var(--dbp-content);
                 }
 
-                aside .menu {
-                    border-top-width: 0;
-                    width: 100%;
-                    position: absolute;
-                    background-color: var(--dbp-background);
-                    z-index: 10;
+                aside ul.menu h2.subtitle {
+                    display: block;
+                    padding: 0.75rem 1rem;
+                    margin: 0;
+                    font-size: 1rem;
+                    border-bottom: 1px solid var(--border, #eee);
+                }
+
+                #main.menu-open aside ul.menu {
+                    transform: translateY(5%);
+                    box-shadow: 5px 7px 0.4em var(--dbp-muted);
+                }
+
+                #main.menu-open {
+                    overflow: hidden;
+                    touch-action: none;
+                    pointer-events: auto;
+                    content: '';
+                    position: fixed;
+                    inset: 0;
+                    z-index: 900;
                 }
 
                 .menu li {
-                    padding: 7px;
+                    padding: 7px 10px;
                 }
-
                 .menu a {
                     padding: 8px;
                 }
+                .menu a:active {
+                    opacity: 0.8;
+                }
 
-                ul.menu.hidden {
+                /* keep it fully hidden from a11y tree when closed */
+                aside[hidden] {
+                    display: block;
                 }
             }
         `;
@@ -1871,7 +1911,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                 : this.subtitle}
                         </h1>
                     </div>
-                    <aside>
+                    <aside id="mobileMenu">
                         <ul class="menu hidden">
                             ${menuTemplates}
                         </ul>
