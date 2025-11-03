@@ -4,7 +4,6 @@
         "buttons": {
             "add-person-text": "Neue Person hinzufügen",
             "cancel-text": "Abbrechen",
-            "delete-all-text": "Alle löschen",
             "delete-now-text": "Jetzt löschen",
             "delete-text": "Löschen",
             "delete-warning-text": "Are you sure? ({{counter}}s)",
@@ -14,7 +13,6 @@
         "modal-title": "Berechtigungen verwalten",
         "need-login-warning-text": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",
         "notifications": {
-            "all-users-deleted": "Berechtigungen aller Benutzer erfolgreich gelöscht",
             "could-not-delete-grant": "Löschen von Berechtigungen fehlgeschlagen",
             "could-not-fetch-resource-class-actions": "Ressourcenklassenaktionen konnten nicht abgerufen werden",
             "could-not-fetch-user-details": "Benutzerdetails konnten nicht abgerufen werden",

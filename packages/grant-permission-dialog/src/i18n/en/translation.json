@@ -4,7 +4,6 @@
         "buttons": {
             "add-person-text": "Add new person",
             "cancel-text": "Cancel",
-            "delete-all-text": "Delete all",
             "delete-now-text": "Delete now",
             "delete-text": "Delete",
             "delete-warning-text": "Are you sure? ({{counter}}s)",
@@ -14,7 +13,6 @@
         "modal-title": "Manage permissions",
         "need-login-warning-text": "You need to be logged in to use the grant permission modal",
         "notifications": {
-            "all-users-deleted": "All user's permissions successfully deleted",
             "could-not-delete-grant": "Failed to delete permissions",
             "could-not-fetch-resource-class-actions": "Could not fetch resource class actions",
             "could-not-fetch-user-details": "Failed to fetch user details",

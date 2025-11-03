@@ -24,7 +24,6 @@ export class GrantPermissionDialog extends LangMixin(
         this.permissionRows = [];
         this.usersToAdd = new Map();
         this.hasUsersToAdd = false;
-        this.showDeleteAllButton = false;
         this.resourceIdentifier = '';
         this.resourceClassIdentifier = '';
         /** @type {import('lit/directives/ref.js').Ref<Button>} */
@@ -43,7 +42,6 @@ export class GrantPermissionDialog extends LangMixin(
             userList: {type: Map},
             usersToAdd: {type: Map},
             hasUsersToAdd: {type: Boolean},
-            showDeleteAllButton: {type: Boolean},
             permissionRows: {type: Array},
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
@@ -440,51 +438,6 @@ export class GrantPermissionDialog extends LangMixin(
         }
     }
 
-    async handleAllUserDeleteButton() {
-        const i18n = this._i18n;
-        const deleteButton = this._(`#user-delete-button-all`);
-        const buttonAction = deleteButton.getAttribute('data-action');
-
-        // Change button to disabled red, wait 3 second and enable deleting
-        if (buttonAction === 'prepare-delete') {
-            let countdown = 3;
-            deleteButton.setAttribute('type', 'is-danger');
-            // deleteButton.setAttribute('data-action', 'delete');
-            deleteButton.setAttribute('disabled', 'disabled');
-
-            let countdownInterval = setInterval(() => {
-                countdown--;
-                deleteButton.innerText = i18n.t(
-                    'grant-permission-dialog.buttons.delete-warning-text',
-                    {counter: countdown},
-                );
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    deleteButton.removeAttribute('disabled');
-                    deleteButton.setAttribute('data-action', 'delete');
-                    deleteButton.innerHTML = `<dbp-icon name="trash"></dbp-icon> ${i18n.t('grant-permission-dialog.buttons.delete-now-text')}`;
-                }
-            }, 1000);
-        } else if (buttonAction === 'delete') {
-            try {
-                for (const [userId, user] of this.userList) {
-                    console.log('user to delete', userId, user);
-                    await this.deleteUser(userId);
-                }
-                send({
-                    summary: i18n.t('grant-permission-dialog.notifications.success-title'),
-                    // Add username and grant name here
-                    body: i18n.t('grant-permission-dialog.notifications.all-users-deleted'),
-                    type: 'info',
-                    targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
-                });
-            } catch (e) {
-                console.log('Delete all failed', e);
-            }
-        }
-    }
-
     async handleUserDeleteButton(userId) {
         const i18n = this._i18n;
         const deleteButton = this._(`#user-delete-button-${userId}`);
@@ -579,8 +532,6 @@ export class GrantPermissionDialog extends LangMixin(
                             this.userList.set(userId, user);
                         }
                     }
-                    // Update Delete all Button visibility
-                    this.setDeleteAllButtonVisibility();
                     this.requestUpdate();
                 }
                 // console.log('userList', this.userList);
@@ -874,21 +825,6 @@ export class GrantPermissionDialog extends LangMixin(
         `;
     }
 
-    setDeleteAllButtonVisibility() {
-        this.showDeleteAllButton = false;
-        for (const [userId, user] of this.userList) {
-            if (userId === 'emptyPerson') {
-                continue;
-            }
-            user.permissions.forEach((permission) => {
-                if (permission.identifier) {
-                    this.showDeleteAllButton = true;
-                    return;
-                }
-            });
-        }
-    }
-
     async open() {
         const i18n = this._i18n;
 
@@ -1088,8 +1024,6 @@ export class GrantPermissionDialog extends LangMixin(
 
             // Refresh rendered permissions
             await this.setListOfUsersAndPermissions();
-            // Update Delete all Button visibility
-            this.setDeleteAllButtonVisibility();
             // set Save all button visibility
             this.hasUsersToAdd = this.usersToAdd.size > 0;
             this.requestUpdate();
@@ -1173,20 +1107,6 @@ export class GrantPermissionDialog extends LangMixin(
                                 <div class="person-select-header"></div>
                                 <div class="permissions-header">
                                     ${this.renderPermissionLabels()}
-                                </div>
-                                <div class="buttons-header">
-                                    <dbp-button
-                                        type="is-danger"
-                                        class="${classMap({hidden: !this.showDeleteAllButton})}"
-                                        data-action="prepare-delete"
-                                        id="user-delete-button-all"
-                                        no-spinner-on-click
-                                        @click="${() => {
-                                            this.handleAllUserDeleteButton();
-                                        }}">
-                                        <dbp-icon name="trash"></dbp-icon>
-                                        ${i18n.t('grant-permission-dialog.buttons.delete-all-text')}
-                                    </dbp-button>
                                 </div>
                             </div>
                             <!-- END .header-row -->
