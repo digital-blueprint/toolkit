@@ -316,7 +316,7 @@ export class GrantPermissionDialog extends LangMixin(
                 body: i18n.t('grant-permission-dialog.notifications.could-not-delete-grant'),
                 type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
-                timeout: 10,
+                timeout: 0,
             });
         }
     }
@@ -365,7 +365,7 @@ export class GrantPermissionDialog extends LangMixin(
                         ),
                         type: 'danger',
                         targetNotificationId: 'permission-modal-notification',
-                        timeout: 10,
+                        timeout: 0,
                     });
                 } else if (userDetailsResponse.status === 403) {
                     send({
@@ -373,7 +373,7 @@ export class GrantPermissionDialog extends LangMixin(
                         body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
                         targetNotificationId: 'permission-modal-notification',
                         type: 'danger',
-                        timeout: 5,
+                        timeout: 0,
                     });
                 }
             }
@@ -384,7 +384,7 @@ export class GrantPermissionDialog extends LangMixin(
                 body: i18n.t('grant-permission-dialog.notifications.failed-get-user-details'),
                 type: 'error',
                 targetNotificationId: 'permission-modal-notification',
-                timeout: 10,
+                timeout: 0,
             });
         }
     }
@@ -544,7 +544,7 @@ export class GrantPermissionDialog extends LangMixin(
                         ),
                         type: 'danger',
                         targetNotificationId: 'permission-modal-notification',
-                        timeout: 10,
+                        timeout: 0,
                     });
                 } else if (response.status === 403) {
                     send({
@@ -552,7 +552,7 @@ export class GrantPermissionDialog extends LangMixin(
                         body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
                         targetNotificationId: 'permission-modal-notification',
                         type: 'danger',
-                        timeout: 5,
+                        timeout: 0,
                     });
                 }
             }
@@ -563,7 +563,7 @@ export class GrantPermissionDialog extends LangMixin(
                 body: i18n.t('grant-permission-dialog.notifications.unknown-error'),
                 targetNotificationId: 'permission-modal-notification',
                 type: 'danger',
-                timeout: 5,
+                timeout: 0,
             });
         }
     }
@@ -715,7 +715,7 @@ export class GrantPermissionDialog extends LangMixin(
                     body: i18n.t('grant-permission-dialog.notifications.user-already-added'),
                     targetNotificationId: 'permission-modal-notification',
                     type: 'danger',
-                    timeout: 10,
+                    timeout: 0,
                 });
                 return;
             }
@@ -745,7 +745,7 @@ export class GrantPermissionDialog extends LangMixin(
                 body: i18n.t('grant-permission-dialog.notifications.failed-to-get-user-details'),
                 targetNotificationId: 'permission-modal-notification',
                 type: 'danger',
-                timeout: 10,
+                timeout: 0,
             });
         }
     }
@@ -833,7 +833,7 @@ export class GrantPermissionDialog extends LangMixin(
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.need-login-warning-text'),
                 type: 'danger',
-                timeout: 10,
+                timeout: 0,
             });
         } else {
             await this.setModalTitle();
@@ -1047,7 +1047,7 @@ export class GrantPermissionDialog extends LangMixin(
                     body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
                     type: 'danger',
                     targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
+                    timeout: 0,
                 });
                 return Promise.reject();
             }
@@ -1058,7 +1058,7 @@ export class GrantPermissionDialog extends LangMixin(
                 body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
                 type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
-                timeout: 5,
+                timeout: 0,
             });
             return Promise.reject();
         }
