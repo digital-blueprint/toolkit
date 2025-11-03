@@ -9,7 +9,7 @@ export function getGrantPermissionDialogCSS() {
     // language=css
     return css`
         .modal--permissions {
-            --dbp-modal-header-height: 80px;
+            --dbp-modal-header-height: initial;
             --dbp-modal-footer-height: 3em;
             --dbp-modal-min-width: 320px;
             --dbp-modal-max-width: min(90vw, 1300px);
@@ -25,6 +25,7 @@ export function getGrantPermissionDialogCSS() {
 
         dbp-modal .header h3 {
             font-size: 2em;
+            line-height: 1.2;
             font-weight: bold;
             margin: 0 1em 0 0;
             overflow-wrap: anywhere;
