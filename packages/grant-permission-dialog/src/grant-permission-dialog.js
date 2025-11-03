@@ -1194,7 +1194,7 @@ export class GrantPermissionDialog extends LangMixin(
                             <div class="body-container">
                                 <div class="button-container">
                                     <dbp-button
-                                        type="is-primary"
+                                        type="is-secondary"
                                         ${ref(this.addPersonButtonRef)}
                                         id="add-new-person-button"
                                         @click="${() => {
