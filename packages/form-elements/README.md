@@ -73,6 +73,9 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `placeholder` (optional): Placeholder text for the input field
     - Type: Text
     - Example: `<dbp-form-string-element placeholder="Short phrase that hints at the expected data"></dbp-form-string-element>`
+- `word-count-limit` (optional): Limit max word count for textarea
+    - Type: Number
+    - Example: `<dbp-form-string-element word-count-limit="300"></dbp-form-string-element>`
 
 ### Boolean Element
 
