@@ -6,6 +6,9 @@
         },
         "enum": {
             "select-placeholder": "Please select an option"
+        },
+        "string": {
+            "word-count-exceeded": "You have exceeded the maximum number of {{wordCount}} words. The content has been trimmed."
         }
     }
 }

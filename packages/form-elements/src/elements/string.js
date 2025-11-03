@@ -50,7 +50,9 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                     }
                     // Then, check word count limit
                     if (words.length > this.wordCountLimit) {
-                        return `Please enter no more than ${this.wordCountLimit} words. Your input has been trimmed.`;
+                        return this._i18n.t('render-form.string.word-count-exceeded', {
+                            wordCount: this.wordCountLimit,
+                        });
                     }
                     return null; // No errors
                 };
