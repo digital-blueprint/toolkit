@@ -922,7 +922,7 @@ export class GrantPermissionDialog extends LangMixin(
         const i18n = this._i18n;
 
         // If no users to save, show message and return
-        if (this.usersToAdd.size < 1) {
+        if (this.usersToAdd.size === 0) {
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.info-title'),
                 body: i18n.t('grant-permission-dialog.notifications.there-is-no-user-to-save'),
@@ -930,15 +930,25 @@ export class GrantPermissionDialog extends LangMixin(
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 5,
             });
-            return Promise.reject();
+            return;
         }
 
         try {
-            console.log('BEFORE REMOVING USER', this.usersToAdd);
-            let noErrors = true;
-            // Process each user
-            for (const userIdentifier of this.usersToAdd.keys()) {
-                const userToAdd = this.usersToAdd.get(userIdentifier);
+            let errorCount = 0;
+            let successCount = 0;
+
+            let usersToProcess;
+            if (userId) {
+                // Process only the specified user
+                usersToProcess = new Map([[userId, this.usersToAdd.get(userId)]]);
+            } else {
+                // Process all users in the queue
+                usersToProcess = this.usersToAdd;
+            }
+
+            // Process user(s)
+            for (const userIdentifier of usersToProcess.keys()) {
+                const userToAdd = usersToProcess.get(userIdentifier);
                 if (!userToAdd) continue;
 
                 const grantsToPost = [];
@@ -965,15 +975,15 @@ export class GrantPermissionDialog extends LangMixin(
                         summary: i18n.t('grant-permission-dialog.notifications.info-title'),
                         body: i18n.t(
                             'grant-permission-dialog.notifications.there-is-nothing-to-save',
+                            {userFullName: userToAdd.userFullName},
                         ),
                         type: 'info',
                         targetNotificationId: 'permission-modal-notification',
                         timeout: 5,
                     });
                     // Remove user form queue
-                    this.usersToAdd.delete(userId);
-                    // return Promise.reject();
-                    return Promise.resolve();
+                    this.usersToAdd.delete(userIdentifier);
+                    continue;
                 }
 
                 // Add grants
@@ -984,8 +994,10 @@ export class GrantPermissionDialog extends LangMixin(
                             grant.userIdentifier,
                         );
                         if (postResponse.status !== 201) {
-                            noErrors = false;
+                            errorCount++;
                             continue;
+                        } else {
+                            successCount++;
                         }
                     }
                 }
@@ -997,8 +1009,10 @@ export class GrantPermissionDialog extends LangMixin(
                             grant.identifier,
                         );
                         if (deleteResponse.status !== 204) {
-                            noErrors = false;
+                            errorCount++;
                             continue;
+                        } else {
+                            successCount++;
                         }
                     }
                 }
@@ -1024,43 +1038,52 @@ export class GrantPermissionDialog extends LangMixin(
 
             // Refresh rendered permissions
             await this.setListOfUsersAndPermissions();
+
             // set Save all button visibility
             this.hasUsersToAdd = this.usersToAdd.size > 0;
             this.requestUpdate();
 
             // Stop the save button spinner and show success message
             this.savePermissionButtonRef.value.stop();
-            if (noErrors) {
+
+            console.log(`errorCount`, errorCount);
+            console.log(`successCount`, successCount);
+
+            if (successCount > 0) {
                 send({
                     summary: i18n.t('grant-permission-dialog.notifications.success-title'),
                     body: i18n.t(
                         'grant-permission-dialog.notifications.permissions-saved-successfully',
+                        {n: successCount},
                     ),
                     type: 'success',
                     targetNotificationId: 'permission-modal-notification',
                     timeout: 5,
                 });
-                return Promise.resolve();
-            } else {
+            }
+            if (errorCount > 0) {
                 send({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                    body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
+                    body: i18n.t('grant-permission-dialog.notifications.save-permissions-error', {
+                        n: errorCount,
+                    }),
                     type: 'danger',
                     targetNotificationId: 'permission-modal-notification',
                     timeout: 0,
                 });
-                return Promise.reject();
             }
         } catch (e) {
             console.log('Save user permissions error:', e);
             send({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
+                body: i18n.t(
+                    'grant-permission-dialog.notifications.save-permissions-unexpected-error',
+                ),
                 type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 0,
             });
-            return Promise.reject();
+            return;
         }
     }
 
@@ -1150,7 +1173,11 @@ export class GrantPermissionDialog extends LangMixin(
                         ${ref(this.savePermissionButtonRef)}
                         id="permission-save-button"
                         @click="${async () => {
-                            await this.saveUserPermissions();
+                            try {
+                                await this.saveUserPermissions();
+                            } catch (error) {
+                                console.error('Error saving user permissions:', error);
+                            }
 
                             // Revert buttons to edit button
                             this._a(`[id*="user-edit-button"][type="is-primary"]`).forEach(
