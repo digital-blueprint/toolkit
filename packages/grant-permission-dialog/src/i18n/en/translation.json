@@ -8,11 +8,13 @@
             "delete-text": "Delete",
             "delete-warning-text": "Are you sure? ({{counter}}s)",
             "edit-text": "Edit",
-            "save-all-text": "Save all"
+            "save-all-text": "Save all",
+            "save-text": "Save"
         },
         "modal-title": "Manage permissions",
         "need-login-warning-text": "You need to be logged in to use the grant permission modal",
         "notifications": {
+            "cant-remove-last-manager-warning": "You cannot remove the last manage permission from the last manager user.",
             "could-not-delete-grant": "Failed to delete permissions",
             "could-not-fetch-resource-class-actions": "Could not fetch resource class actions",
             "could-not-fetch-user-details": "Failed to fetch user details",

@@ -6,13 +6,15 @@
             "cancel-text": "Abbrechen",
             "delete-now-text": "Jetzt löschen",
             "delete-text": "Löschen",
-            "delete-warning-text": "Are you sure? ({{counter}}s)",
+            "delete-warning-text": "Sind Sie sicher? ({{counter}}s)",
             "edit-text": "Bearbeiten",
-            "save-all-text": "Alle speichern"
+            "save-all-text": "Alle speichern",
+            "save-text": "Speichern"
         },
         "modal-title": "Berechtigungen verwalten",
         "need-login-warning-text": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",
         "notifications": {
+            "cant-remove-last-manager-warning": "[de] You cannot remove the last manage permission from the last manager user.",
             "could-not-delete-grant": "Löschen von Berechtigungen fehlgeschlagen",
             "could-not-fetch-resource-class-actions": "Ressourcenklassenaktionen konnten nicht abgerufen werden",
             "could-not-fetch-user-details": "Benutzerdetails konnten nicht abgerufen werden",
@@ -28,7 +30,7 @@
             "set-available-actions-error-text": "Verfügbare Aktionen konnten nicht festgelegt werden",
             "set-form-name-error-text": "Formularname konnte nicht gesetzt werden",
             "success-title": "Erfolg",
-            "there-is-no-user-to-save": "There is no user to save",
+            "there-is-no-user-to-save": "[de] There is no user to save",
             "there-is-nothing-to-save": "Es gibt keine Änderung der Berechtigungen zum Speichern für den Benutzer {{userFullName}}.",
             "unknown-error": "Unbekannter Fehler beim Abrufen von Benutzerberechtigungen",
             "user-already-added": "Benutzer bereits hinzugefügt",
