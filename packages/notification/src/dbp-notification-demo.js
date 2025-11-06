@@ -354,7 +354,7 @@ export class NotificationDemo extends LangMixin(
         const timeout = getRandomInt(5, 15);
         notify({
             summary: 'Item deleted',
-            body: `Item ${Math.random().toString(36).substring(7)} foo was deleted! <br> Even ID: ${type}-event <span>[${timeout}s]</span>`,
+            body: `Item ${Math.random().toString(36).substring(7)} foo was deleted!\nEven ID: ${type}-event [${timeout}s]`,
             type: type,
             timeout: timeout,
             replaceId: `${type}-event`,
@@ -369,7 +369,7 @@ export class NotificationDemo extends LangMixin(
         const timeout = 0;
         notify({
             summary: 'Modal Notification',
-            body: `Something happened! <br> Even ID: ${type}-event <span>[${timeout}s]</span>`,
+            body: `Something happened!\nEven ID: ${type}-event [${timeout}s]`,
             type: type,
             timeout: timeout,
             replaceId: `${type}-event`,
