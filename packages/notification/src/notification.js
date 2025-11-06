@@ -13,6 +13,7 @@ export class Notification extends LangMixin(DBPLitElement, createInstance) {
         super();
         this.notificationBlock = null;
         this.notifications = {};
+        this._boundNotificationHandler = this._handleNotificationEvent.bind(this);
     }
 
     static get properties() {
@@ -22,107 +23,106 @@ export class Notification extends LangMixin(DBPLitElement, createInstance) {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
+    /**
+     * @param {CustomEvent} customEvent
+     */
+    _handleNotificationEvent(customEvent) {
+        if (typeof customEvent.detail === 'undefined') {
+            return;
+        }
 
-        /**
-         * @param {CustomEvent} e
-         */
-        window.addEventListener('dbp-notification-send', (e) => {
-            const customEvent = /** @type {CustomEvent} */ (e);
-            if (typeof customEvent.detail === 'undefined') {
+        let targetNotificationId = customEvent.detail.targetNotificationId ?? null;
+
+        if (targetNotificationId) {
+            // If targetNotificationId is set, only process notifications for that component
+            if (targetNotificationId !== this.id) {
                 return;
             }
+        } else {
+            // If targetNotificationId is not set, only process notifications for the default notification component in the app-shell
+            if (this.id !== 'dbp-notification') {
+                return;
+            }
+        }
 
-            let targetNotificationId = customEvent.detail.targetNotificationId ?? null;
+        this.notificationBlock = this._('#notification-container');
+        const notificationId = `notification-${createUUID()}`;
+        this.notifications[notificationId] = {};
+        this.notifications[notificationId].id = notificationId;
+        this.notifications[notificationId].messageSelector = `#${notificationId}`;
 
-            if (targetNotificationId) {
-                // If targetNotificationId is set, only process notifications for that component
-                if (targetNotificationId !== this.id) {
-                    return;
-                }
-            } else {
-                // If targetNotificationId is not set, only process notifications for the default notification component in the app-shell
-                if (this.id !== 'dbp-notification') {
-                    return;
+        const type =
+            typeof customEvent.detail.type !== 'undefined' ? customEvent.detail.type : 'info';
+        const body = typeof customEvent.detail.body !== 'undefined' ? customEvent.detail.body : '';
+        const summary =
+            typeof customEvent.detail.summary !== 'undefined' ? customEvent.detail.summary : '';
+        const timeout =
+            typeof customEvent.detail.timeout !== 'undefined' ? customEvent.detail.timeout : 0;
+        const icon = typeof customEvent.detail.icon !== 'undefined' ? customEvent.detail.icon : '';
+        const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : '';
+        const summaryHTML = summary !== '' ? `<h3>${summary}</h3>` : '';
+        const replaceId =
+            typeof customEvent.detail.replaceId !== 'undefined'
+                ? customEvent.detail.replaceId
+                : null;
+
+        if (replaceId) {
+            // Search for notification in this.notifications with the same replaceId and remove it
+            for (const notificationId in this.notifications) {
+                if (this.notifications[notificationId].replaceId === replaceId) {
+                    this.removeMessageById(this.notifications[notificationId]);
                 }
             }
+        }
+        this.notifications[notificationId].replaceId = replaceId;
 
-            this.notificationBlock = this._('#notification-container');
-            const notificationId = `notification-${createUUID()}`;
-            this.notifications[notificationId] = {};
-            this.notifications[notificationId].id = notificationId;
-            this.notifications[notificationId].messageSelector = `#${notificationId}`;
+        const progressBarHTML =
+            timeout > 0
+                ? `<div class="progress-container"><div class="progress" style="--dbp-progress-timeout: ${timeout}s;"></div></div>`
+                : '';
+        const progressClass = timeout > 0 ? 'has-progress-bar' : 'no-progress-bar';
 
-            const type =
-                typeof customEvent.detail.type !== 'undefined' ? customEvent.detail.type : 'info';
-            const body =
-                typeof customEvent.detail.body !== 'undefined' ? customEvent.detail.body : '';
-            const summary =
-                typeof customEvent.detail.summary !== 'undefined' ? customEvent.detail.summary : '';
-            const timeout =
-                typeof customEvent.detail.timeout !== 'undefined' ? customEvent.detail.timeout : 0;
-            const icon =
-                typeof customEvent.detail.icon !== 'undefined' ? customEvent.detail.icon : '';
-            const iconHTML = icon !== '' ? `<dbp-icon name="${icon}"></dbp-icon>` : '';
-            const summaryHTML = summary !== '' ? `<h3>${summary}</h3>` : '';
-            const replaceId =
-                typeof customEvent.detail.replaceId !== 'undefined'
-                    ? customEvent.detail.replaceId
-                    : null;
-
-            if (replaceId) {
-                // Search for notification in this.notifications with the same replaceId and remove it
-                for (const notificationId in this.notifications) {
-                    if (this.notifications[notificationId].replaceId === replaceId) {
-                        this.removeMessageById(this.notifications[notificationId]);
-                    }
-                }
-            }
-            this.notifications[notificationId].replaceId = replaceId;
-
-            const progressBarHTML =
-                timeout > 0
-                    ? `<div class="progress-container"><div class="progress" style="--dbp-progress-timeout: ${timeout}s;"></div></div>`
-                    : '';
-            const progressClass = timeout > 0 ? 'has-progress-bar' : 'no-progress-bar';
-
-            // Create and append notification element
-            const newNotification = document.createElement('div');
-            newNotification.id = notificationId;
-            newNotification.classList.add(
-                'notification',
-                'enter-animation',
-                `is-${type}`,
-                progressClass,
-            );
-            newNotification.innerHTML = `
+        // Create and append notification element
+        const newNotification = document.createElement('div');
+        newNotification.id = notificationId;
+        newNotification.classList.add(
+            'notification',
+            'enter-animation',
+            `is-${type}`,
+            progressClass,
+        );
+        newNotification.innerHTML = `
                 <button id="${notificationId}-button" class="delete"></button>
                 ${summaryHTML}
                 ${iconHTML} ${body}
                 ${progressBarHTML}
             `;
-            this.notificationBlock.appendChild(newNotification);
+        this.notificationBlock.appendChild(newNotification);
 
-            // Add event listener for the delete button
-            const deleteButton = this.notificationBlock.querySelector(`#${notificationId}-button`);
-            deleteButton.addEventListener('click', () =>
-                this.removeMessageById(this.notifications[notificationId]),
-            );
+        // Add event listener for the delete button
+        const deleteButton = this.notificationBlock.querySelector(`#${notificationId}-button`);
+        deleteButton.addEventListener('click', () =>
+            this.removeMessageById(this.notifications[notificationId]),
+        );
 
-            if (timeout > 0) {
-                // Remove notification after timeout
-                this.notifications[notificationId]['progressTimeout'] = setTimeout(() => {
-                    this.removeMessageById(this.notifications[notificationId]);
-                }, timeout * 1000);
-            }
+        if (timeout > 0) {
+            // Remove notification after timeout
+            this.notifications[notificationId]['progressTimeout'] = setTimeout(() => {
+                this.removeMessageById(this.notifications[notificationId]);
+            }, timeout * 1000);
+        }
 
-            // mark the event as handled
-            e.preventDefault();
-        });
+        // mark the event as handled
+        customEvent.preventDefault();
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('dbp-notification-send', this._boundNotificationHandler);
     }
 
     disconnectedCallback() {
+        window.removeEventListener('dbp-notification-send', this._boundNotificationHandler);
         super.disconnectedCallback();
         for (const notification of Object.values(this.notifications)) {
             clearTimeout(notification.progressTimeout);
