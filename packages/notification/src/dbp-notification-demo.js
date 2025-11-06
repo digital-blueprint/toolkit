@@ -99,6 +99,7 @@ export class NotificationDemo extends LangMixin(
         const i18n = this._i18n;
 
         return html`
+            <dbp-notification id="dbp-notification"></dbp-notification>
             <section class="section">
                 <div class="container">
                     <h1 class="title">Notification-Demo</h1>
