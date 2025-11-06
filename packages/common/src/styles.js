@@ -161,6 +161,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
     return css`
         h2 {
             font-weight: 300;
+            text-align: center;
         }
 
         h3 {
