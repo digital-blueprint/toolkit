@@ -13,7 +13,6 @@ export class Notification extends LangMixin(DBPLitElement, createInstance) {
         super();
         this.notificationBlock = null;
         this.notifications = {};
-        this.targetNotificationId = null;
     }
 
     static get properties() {
@@ -35,16 +34,18 @@ export class Notification extends LangMixin(DBPLitElement, createInstance) {
                 return;
             }
 
-            this.targetNotificationId =
-                typeof customEvent.detail.targetNotificationId !== 'undefined'
-                    ? customEvent.detail.targetNotificationId
-                    : null; // If targetNotificationId is set, only process notifications for that component
-            if (this.targetNotificationId && this.targetNotificationId !== this.id) {
-                return;
-            }
-            // If targetNotificationId is not set, only process notifications for the default notification component in the app-shell
-            if (!this.targetNotificationId && this.id !== 'dbp-notification') {
-                return;
+            let targetNotificationId = customEvent.detail.targetNotificationId ?? null;
+
+            if (targetNotificationId) {
+                // If targetNotificationId is set, only process notifications for that component
+                if (targetNotificationId !== this.id) {
+                    return;
+                }
+            } else {
+                // If targetNotificationId is not set, only process notifications for the default notification component in the app-shell
+                if (this.id !== 'dbp-notification') {
+                    return;
+                }
             }
 
             this.notificationBlock = this._('#notification-container');
@@ -145,7 +146,7 @@ export class Notification extends LangMixin(DBPLitElement, createInstance) {
                 this.notificationBlock.removeChild(messageElement);
                 // Send event for modal to recalculate padding top and translate y values
                 const customEvent = new CustomEvent('dbp-notification-close', {
-                    detail: {targetNotificationId: this.targetNotificationId},
+                    detail: {targetNotificationId: this.id},
                     bubbles: true,
                     composed: true,
                 });
