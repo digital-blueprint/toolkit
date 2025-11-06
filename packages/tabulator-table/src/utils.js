@@ -63,15 +63,18 @@ export async function downloadExcel(rows, dataName) {
             let field = cell.getField();
             let title = null;
             if (field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
-                if ('titleFormatter' in definition && typeof definition.titleFormatter === 'function') {
+                if (
+                    'titleFormatter' in definition &&
+                    typeof definition.titleFormatter === 'function'
+                ) {
                     title = definition.titleFormatter(
                         {
                             getValue() {
                                 return field;
-                            }
+                            },
                         },
                         definition['titleFormatterParams'] || {},
-                        null
+                        null,
                     );
                 }
                 let cellValue = cell.getValue();
@@ -80,10 +83,10 @@ export async function downloadExcel(rows, dataName) {
                         {
                             getValue() {
                                 return cellValue;
-                            }
+                            },
                         },
                         definition['formatterParams'] || {},
-                        null
+                        null,
                     );
                 }
                 const headerLabel = title || definition.title || field;
