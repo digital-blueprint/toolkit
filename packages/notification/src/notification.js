@@ -14,18 +14,8 @@ export class Notification extends LangMixin(DBPLitElement, createInstance) {
         this.notificationBlock = null;
         this.notifications = {};
         this.targetNotificationId = null;
-        // notifications = {
-        //     notificationId: {
-        //         id: 'notificationId',
-        //         messageSelector: '#notificationId',
-        //         progressTimeout: 10,
-        //     }
-        // };
     }
 
-    /**
-     * See: https://lit-element.polymer-project.org/guide/properties#initialize
-     */
     static get properties() {
         return {
             ...super.properties,
@@ -35,7 +25,6 @@ export class Notification extends LangMixin(DBPLitElement, createInstance) {
 
     connectedCallback() {
         super.connectedCallback();
-        // const that = this;
 
         /**
          * @param {CustomEvent} e
@@ -207,10 +196,6 @@ export class Notification extends LangMixin(DBPLitElement, createInstance) {
 
             :host([inline]) .notification-container--inside {
                 margin-top: 60px;
-            }
-
-            :host([inline]) .notification:not(:last-child) {
-                /* margin-bottom: 1rem; */
             }
 
             .notification h3 {
