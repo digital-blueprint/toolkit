@@ -12,8 +12,8 @@
  * }
  *
  * @param {object} options - Notification options
- * @param {string} options.body - The main notification message (required)
  * @param {string} [options.summary] - The notification title/summary
+ * @param {string} [options.body] - The main notification message
  * @param {('info'|'success'|'warning'|'danger')} [options.type] - The notification type
  * @param {string} [options.icon] - Icon name to display with the notification (if the handler supports it)
  * @param {number} [options.timeout] - Duration in seconds before auto-dismissing the notification (if the handler supports it)
@@ -31,11 +31,7 @@ function sendNotification(options) {
 
     // true means the event was not handled
     if (result) {
-        alert(
-            (options.summary !== undefined && options.summary !== ''
-                ? options.summary + ': '
-                : '') + options.body,
-        );
+        alert([options.summary, options.body].filter(Boolean).join(':\n\n'));
         console.log('Use the web component dbp-notification to show fancy notifications.');
     }
 }
