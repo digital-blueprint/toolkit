@@ -4,8 +4,15 @@ import {ref, createRef} from 'lit/directives/ref.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {getGrantPermissionDialogCSS} from './styles.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin, Modal, Button, Icon, IconButton, LangMixin} from '@dbp-toolkit/common';
-import {send} from '@dbp-toolkit/common/notification';
+import {
+    ScopedElementsMixin,
+    Modal,
+    Button,
+    Icon,
+    IconButton,
+    LangMixin,
+    sendNotification,
+} from '@dbp-toolkit/common';
 import {Notification} from '@dbp-toolkit/notification';
 import {PersonSelect} from '@dbp-toolkit/person-select';
 import {classMap} from 'lit/directives/class-map.js';
@@ -203,7 +210,7 @@ export class GrantPermissionDialog extends LangMixin(
         }
 
         if (showErrorNotification) {
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t(
                     'grant-permission-dialog.notifications.set-available-actions-error-text',
@@ -273,7 +280,7 @@ export class GrantPermissionDialog extends LangMixin(
                 }
             } catch (e) {
                 console.log('setModalTitle error', e);
-                send({
+                sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                     body: i18n.t('grant-permission-dialog.notifications.set-form-name-error-text'),
                     type: 'error',
@@ -365,7 +372,7 @@ export class GrantPermissionDialog extends LangMixin(
             // @TODO handle multiple errors
         } catch (e) {
             console.log('Error deleting grant', e);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 // Add username and grant name here
                 body: i18n.t('grant-permission-dialog.notifications.could-not-delete-grant'),
@@ -413,7 +420,7 @@ export class GrantPermissionDialog extends LangMixin(
                 return `${userDetailsResponse['givenName']} ${userDetailsResponse['familyName']}`;
             } else {
                 if (userDetailsResponse.status === 500) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                         body: i18n.t(
                             'grant-permission-dialog.notifications.could-not-fetch-user-details',
@@ -423,7 +430,7 @@ export class GrantPermissionDialog extends LangMixin(
                         timeout: 0,
                     });
                 } else if (userDetailsResponse.status === 403) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                         body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
                         targetNotificationId: 'permission-modal-notification',
@@ -434,7 +441,7 @@ export class GrantPermissionDialog extends LangMixin(
             }
         } catch (error) {
             console.log('getUserFullName failed', error);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.notifications.failed-get-user-details'),
                 type: 'error',
@@ -522,7 +529,7 @@ export class GrantPermissionDialog extends LangMixin(
             deleteButton.setAttribute('type', 'is-secondary');
             deleteButton.setAttribute('data-action', 'prepare-delete');
             deleteButton.innerHTML = '<dbp-icon name="trash"></dbp-icon> Delete';
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.success-title'),
                 body: i18n.t('grant-permission-dialog.notifications.user-successfully-deleted', {
                     userFullName: userFullName,
@@ -590,7 +597,7 @@ export class GrantPermissionDialog extends LangMixin(
                 // console.log('userList', this.userList);
             } else {
                 if (responseBody.status === 500) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                         body: i18n.t(
                             'grant-permission-dialog.notifications.could-not-fetch-resource-class-actions',
@@ -600,7 +607,7 @@ export class GrantPermissionDialog extends LangMixin(
                         timeout: 0,
                     });
                 } else if (response.status === 403) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                         body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
                         targetNotificationId: 'permission-modal-notification',
@@ -611,7 +618,7 @@ export class GrantPermissionDialog extends LangMixin(
             }
         } catch (e) {
             console.log('setListOfUsersAndPermissions', e);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.notifications.unknown-error'),
                 targetNotificationId: 'permission-modal-notification',
@@ -791,7 +798,7 @@ export class GrantPermissionDialog extends LangMixin(
 
             // Check if user is already in the list
             if (newUser && this.userList.has(newUser.identifier)) {
-                send({
+                sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                     body: i18n.t('grant-permission-dialog.notifications.user-already-added'),
                     targetNotificationId: 'permission-modal-notification',
@@ -822,7 +829,7 @@ export class GrantPermissionDialog extends LangMixin(
             this.addPersonButtonRef.value.stop();
         } catch (error) {
             console.log('Failed to get user object', error);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.notifications.failed-to-get-user-details'),
                 targetNotificationId: 'permission-modal-notification',
@@ -904,7 +911,7 @@ export class GrantPermissionDialog extends LangMixin(
         const i18n = this._i18n;
 
         if (!this.isLoggedIn()) {
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.need-login-warning-text'),
                 type: 'danger',
@@ -1019,7 +1026,7 @@ export class GrantPermissionDialog extends LangMixin(
 
         // If no users to save, show message and return
         if (this.usersToAdd.size === 0) {
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.info-title'),
                 body: i18n.t('grant-permission-dialog.notifications.there-is-no-user-to-save'),
                 type: 'info',
@@ -1070,7 +1077,7 @@ export class GrantPermissionDialog extends LangMixin(
                 });
 
                 if (grantsToPost.length === 0 && grantsToDelete.length === 0) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.info-title'),
                         body: i18n.t(
                             'grant-permission-dialog.notifications.there-is-nothing-to-save',
@@ -1114,7 +1121,7 @@ export class GrantPermissionDialog extends LangMixin(
                     for (const grant of grantsToDelete) {
                         // Don't delete last manage grant
                         if (grant.action === 'manage' && this.lastSavedManagerId) {
-                            send({
+                            sendNotification({
                                 summary: 'Warning',
                                 body: i18n.t(
                                     'grant-permission-dialog.notifications.cant-remove-last-manager-warning',
@@ -1167,7 +1174,7 @@ export class GrantPermissionDialog extends LangMixin(
             console.log(`successCount`, successCount);
 
             if (successCount > 0) {
-                send({
+                sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.success-title'),
                     body: i18n.t(
                         'grant-permission-dialog.notifications.permissions-saved-successfully',
@@ -1179,7 +1186,7 @@ export class GrantPermissionDialog extends LangMixin(
                 });
             }
             if (errorCount > 0) {
-                send({
+                sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                     body: i18n.t('grant-permission-dialog.notifications.save-permissions-error', {
                         n: errorCount,
@@ -1191,7 +1198,7 @@ export class GrantPermissionDialog extends LangMixin(
             }
         } catch (e) {
             console.log('Save user permissions error:', e);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t(
                     'grant-permission-dialog.notifications.save-permissions-unexpected-error',

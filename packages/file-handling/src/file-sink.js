@@ -1,6 +1,6 @@
 import {createInstance} from './i18n';
 import {css, html} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -9,7 +9,6 @@ import {classMap} from 'lit/directives/class-map.js';
 import FileSaver from 'file-saver';
 import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
-import {send} from '@dbp-toolkit/common/notification';
 import {Clipboard} from '@dbp-toolkit/file-handling/src/clipboard';
 import DbpFileHandlingLitElement from './dbp-file-handling-lit-element';
 import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
@@ -300,7 +299,7 @@ export class FileSink extends LangMixin(
         this.sendDestination();
         MicroModal.close(this._('#modal-picker'));
         if (event.detail > 0) {
-            send({
+            sendNotification({
                 summary: i18n.t('file-sink.upload-success-title'),
                 body: i18n.t('file-sink.upload-success-body', {
                     name: this.nextcloudName,

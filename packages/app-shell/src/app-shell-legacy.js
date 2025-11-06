@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
@@ -12,7 +12,6 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
-import {send as notify} from '@dbp-toolkit/common/notification';
 import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from '@dbp-toolkit/matomo/src/matomo';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -33,7 +32,7 @@ const importNotify = async (i18n, promise) => {
         return await promise;
     } catch (error) {
         console.log(error);
-        notify({
+        sendNotification({
             body: i18n.t('page-updated-needs-reload'),
             type: 'info',
             icon: 'warning',

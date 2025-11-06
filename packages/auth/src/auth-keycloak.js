@@ -1,8 +1,7 @@
 import {createInstance} from './i18n.js';
 import {KeycloakWrapper} from './keycloak.js';
 import {LoginStatus} from './util.js';
-import {AdapterLitElement, combineURLs, LangMixin} from '@dbp-toolkit/common';
-import {send} from '@dbp-toolkit/common/notification';
+import {AdapterLitElement, combineURLs, LangMixin, sendNotification} from '@dbp-toolkit/common';
 
 /**
  * Keycloak auth web component
@@ -234,7 +233,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
             } catch (error) {
                 // In case the keycloak server is offline for example
                 this._setLoginStatus(LoginStatus.LOGGED_OUT);
-                send({
+                sendNotification({
                     summary: this._i18n.t('login-failed'),
                     type: 'danger',
                     timeout: 5,

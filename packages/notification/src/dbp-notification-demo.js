@@ -1,8 +1,7 @@
 import {createInstance} from './i18n';
-import {send as notify} from '@dbp-toolkit/common/notification';
 import {css, html} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import {Notification} from './notification.js';
 import {getRandomInt} from './utils.js';
 import {Modal} from '@dbp-toolkit/common/src/modal';
@@ -352,7 +351,7 @@ export class NotificationDemo extends LangMixin(
         const types = ['primary', 'info', 'success', 'danger', 'warning'];
         const type = types[Math.floor(Math.random() * types.length)];
         const timeout = getRandomInt(5, 15);
-        notify({
+        sendNotification({
             summary: 'Item deleted',
             body: `Item ${Math.random().toString(36).substring(7)} foo was deleted!\nEven ID: ${type}-event [${timeout}s]`,
             type: type,
@@ -367,7 +366,7 @@ export class NotificationDemo extends LangMixin(
         const type = types[Math.floor(Math.random() * types.length)];
         //const timeout = getRandomInt(5, 15);
         const timeout = 0;
-        notify({
+        sendNotification({
             summary: 'Modal Notification',
             body: `Something happened!\nEven ID: ${type}-event [${timeout}s]`,
             type: type,
