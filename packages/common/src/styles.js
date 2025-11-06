@@ -150,8 +150,8 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
               }
               /*here played around*/
               h1 {
-                  font-weight: 300;
-                  margin-bottom: 20px;
+                  /*font-weight: 300;
+                  margin-bottom: 20px;*/
                   text-align: center;
               }
           `
@@ -161,7 +161,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
     return css`
         h2 {
             font-weight: 300;
-            text-align: center;
+            /*text-align: center;*/
         }
 
         h3 {

@@ -43,7 +43,9 @@ class DbpAuthDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
             demoStyles.getDemoCSS(),
             css`
                 h1.title {
-                    margin-bottom: 1em;
+                    /*margin-bottom: 1em;*/
+                    margin-top: 20px;
+                    margin-bottom: 20px;
                 }
 
                 div.container {
@@ -53,6 +55,9 @@ class DbpAuthDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
                 #demo {
                     display: block;
                     padding-top: 50px;
+                }
+                h2 {
+                    text-align: center;
                 }
             `,
         ];

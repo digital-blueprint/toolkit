@@ -13,7 +13,7 @@ export function getDemoCSS() {
         @import url('${unsafeCSS(commonUtils.getAbsoluteURL(highlightCSSPath))}');
 
         h1.title {
-            margin-bottom: 1em;
+            /*margin-bottom: 1em;*/
         }
         div.container {
             margin-bottom: 1.5em;
@@ -27,7 +27,7 @@ export function getDemoCSS() {
         h2,
         h3,
         h4 {
-            margin: 40px 0 10px 0px;
+            /*margin: 40px 0 10px 0px;*/
         }
         p {
             margin: 10px 0;

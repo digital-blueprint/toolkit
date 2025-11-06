@@ -616,15 +616,17 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             }
 
             h1.title {
-                margin-bottom: 0;
+                /*margin-bottom: 0;*/
+                margin-top: 20px;
+                margin-bottom: 20px;
                 font-weight: 300;
             }
 
             #main {
-                /*display: grid;
+                display: grid;
                 grid-template-columns: minmax(180px, 17%) minmax(0, auto);
                 grid-template-rows: min-content min-content 1fr min-content;
-                grid-template-areas: 'header header' 'headline headline' 'sidebar main' 'footer footer';*/
+                grid-template-areas: 'header header' 'headline headline' 'sidebar main' 'footer footer';
                 max-width: 1400px;
                 margin: auto;
                 min-height: 100vh;
@@ -1074,11 +1076,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                         margin: 0 auto;
                     }
 
-                    /*#headline {
+                    #headline {
                         grid-area: headline;
                         margin: 20px 0 30px 0;
                         text-align: center;
-                    }*/
+                    }
 
                     main {
                         grid-area: main;
@@ -2036,7 +2038,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             <slot name="title">${this.topicMetaDataText('name')}</slot>
                         </h1>
                     </div>
-                    <!--<aside>
+                    <aside>
                         <h2 class="subtitle" @click="${this.toggleMenu}">
                             ${this.subtitle}
                             <dbp-icon
@@ -2050,7 +2052,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                 <dbp-icon name="close" style="color: var(--dbp-accent)"></dbp-icon>
                             </li>
                         </ul>
-                    </aside>-->
+                    </aside>
 
                     <main>
                         <div

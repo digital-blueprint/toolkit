@@ -1,4 +1,4 @@
-# Auth Web Components
+## Auth Web Components
 
 You can install the components via npm:
 
