@@ -15,7 +15,7 @@
  *
  * @param options
  */
-function send(options) {
+function sendNotification(options) {
     const event = new CustomEvent('dbp-notification-send', {
         bubbles: true,
         cancelable: true,
@@ -35,4 +35,7 @@ function send(options) {
     }
 }
 
-export {send};
+export {sendNotification};
+
+// @deprecated use sendNotification
+export {sendNotification as send};
