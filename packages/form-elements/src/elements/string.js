@@ -13,6 +13,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
         this.wordCountLimit = null;
         /** @type {import('lit/directives/ref.js').Ref<HTMLTextAreaElement>} */
         this.textareaRef = createRef();
+        this.inputRef = createRef();
         this._userProvidedValidator = null;
     }
 
@@ -34,12 +35,12 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
             this._userProvidedValidator = this.customValidator;
         }
 
-        if (this.wordCountLimit && this.textareaRef.value) {
-            this.textareaRef.value.addEventListener('input', (event) => {
-                const words = this.textareaRef.value.value.trim().split(/\s+/);
-                if (words.length > this.wordCountLimit) {
-                    this.value = words.slice(0, this.wordCountLimit).join(' ');
-                }
+        const formElement = this.rows > 1 ? this.textareaRef.value : this.inputRef.value;
+
+        if (this.wordCountLimit && formElement) {
+
+            formElement.addEventListener('input', (event) => {
+                const words = formElement.value.trim().split(/\s+/);
                 this.customValidator = () => {
                     // First call the user-provided validator if it exists
                     if (this._userProvidedValidator) {
@@ -51,7 +52,8 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                     // Then, check word count limit
                     if (words.length > this.wordCountLimit) {
                         return this._i18n.t('render-form.string.word-count-exceeded', {
-                            wordCount: this.wordCountLimit,
+                            wordLimit: this.wordCountLimit,
+                            wordCount: words.length,
                         });
                     }
                     return null; // No errors
@@ -112,10 +114,12 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                       <input
                           type="text"
                           id="${this.formElementId}"
+                          ${ref(this.inputRef)}
                           name="${this.name}"
                           .value="${this.value}"
                           placeholder="${this.placeholder}"
                           @input="${this.handleInputValue}"
+                          maxlength="${this.maxLength}"
                           ?disabled=${this.disabled}
                           ?required=${this.required} />
                   `}

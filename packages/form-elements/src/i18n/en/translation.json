@@ -8,7 +8,7 @@
             "select-placeholder": "Please select an option"
         },
         "string": {
-            "word-count-exceeded": "You have exceeded the maximum number of {{wordCount}} words. The content has been trimmed."
+            "word-count-exceeded": "You have exceeded the maximum number of allowed {{wordLimit}} words. Entered {{wordCount}} words. Please remove the extra words."
         }
     }
 }

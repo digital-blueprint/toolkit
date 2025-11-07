@@ -8,7 +8,7 @@
             "select-placeholder": "Bitte wählen Sie eine Option aus"
         },
         "string": {
-            "word-count-exceeded": "Sie haben die maximale Wortanzahl von {{wordCount}} überschritten. Der Inhalt wurde gekürzt."
+            "word-count-exceeded": "Sie haben die maximal zulässige Wortanzahl von {{wordLimit}} überschritten. Sie haben {{wordCount}} Wörter eingegeben. Bitte entfernen Sie die überschüssigen Wörter."
         }
     }
 }
