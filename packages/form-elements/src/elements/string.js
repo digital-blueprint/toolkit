@@ -38,7 +38,6 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
         const formElement = this.rows > 1 ? this.textareaRef.value : this.inputRef.value;
 
         if (this.wordCountLimit && formElement) {
-
             formElement.addEventListener('input', (event) => {
                 const words = formElement.value.trim().split(/\s+/);
                 this.customValidator = () => {
