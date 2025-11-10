@@ -3,7 +3,6 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {FormElementsDemo} from '@dbp-toolkit/form-elements/src/demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/form-elements/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
@@ -58,7 +57,7 @@ class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement)
 
     render() {
         return html`
-            ${unsafeHTML(readme)}
+            ${demoStyles.renderMarkdown(readme)}
             <dbp-form-elements-demo id="demo" lang="${this.lang}"></dbp-form-elements-demo>
         `;
     }

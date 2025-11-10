@@ -3,7 +3,6 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {FileSourceDemo} from '@dbp-toolkit/file-handling/src/demo';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/file-handling/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
@@ -59,7 +58,7 @@ export class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitE
 
     render() {
         return html`
-            ${unsafeHTML(readme)}
+            ${demoStyles.renderMarkdown(readme)}
             <dbp-file-source-demo
                 id="demo"
                 lang="${this.lang}"

@@ -3,7 +3,6 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {ResourceSelectDemo} from '@dbp-toolkit/resource-select/src/dbp-resource-select-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/resource-select/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
@@ -59,7 +58,7 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
 
     render() {
         return html`
-            ${unsafeHTML(readme)}
+            ${demoStyles.renderMarkdown(readme)}
             <dbp-resource-select-demo
                 id="demo"
                 lang="${this.lang}"

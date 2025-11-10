@@ -3,7 +3,6 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {PdfViewerDemo} from '@dbp-toolkit/pdf-viewer/src/dbp-pdf-viewer-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/pdf-viewer/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
@@ -59,7 +58,7 @@ class DbpPdfViewerDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         return html`
-            ${unsafeHTML(readme)}
+            ${demoStyles.renderMarkdown(readme)}
             <dbp-pdf-viewer-demo id="demo" lang="${this.lang}"></dbp-pdf-viewer-demo>
         `;
     }

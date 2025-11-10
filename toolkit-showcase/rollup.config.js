@@ -153,11 +153,6 @@ Dependencies:
             }),
         md({
             include: ['**/*.md'],
-            marked: {
-                highlight: function (code) {
-                    return require('highlight.js').highlightAuto(code).value;
-                },
-            },
         }),
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [

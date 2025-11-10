@@ -3,7 +3,6 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {ThemeSwitcherDemo} from '@dbp-toolkit/theme-switcher/src/demo';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/theme-switcher/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
@@ -59,7 +58,7 @@ export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLit
 
     render() {
         return html`
-            ${unsafeHTML(readme)}
+            ${demoStyles.renderMarkdown(readme)}
             <dbp-theme-switcher-demo
                 id="demo"
                 lang="${this.lang}"

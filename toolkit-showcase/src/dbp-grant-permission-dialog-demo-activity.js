@@ -3,7 +3,7 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {GrantPermissionDialogDemo} from '@dbp-toolkit/grant-permission-dialog/src/demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-// import readme from '@dbp-toolkit/tabulator-table/README.md';
+import readme from '@dbp-toolkit/grant-permission-dialog/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
@@ -52,8 +52,8 @@ class DbpGrantPermissionDialogDemoActivity extends ScopedElementsMixin(AdapterLi
     }
 
     render() {
-        // ${unsafeHTML(readme)}
         return html`
+            ${demoStyles.renderMarkdown(readme)}
             <dbp-grant-permission-dialog-demo
                 id="demo"
                 lang="${this.lang}"
