@@ -750,13 +750,6 @@ export class FileSource extends LangMixin(
         }
 
         return html`
-            <!--
-            <button class="button"
-                ?disabled="${this.disabled}"
-                @click="${() => {
-                this.openDialog();
-            }}">${i18n.t('file-source.open-menu')}</button>
--->
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-1" data-micromodal-close>
                     <div

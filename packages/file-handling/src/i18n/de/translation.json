@@ -71,7 +71,6 @@
         "no-usable-files-in-zip": "ZIP Datei enthält keine verwendbaren Dateien",
         "not-allowed-mime-type-file-error-text": "{{filename}} hat nicht erlaubt mime type",
         "not-allowed-mime-type-file-error-title": "Nicht erlaubt MIME-Type",
-        "open-menu": "",
         "too-big-file-body": "Die Datei darf maximal {{size}} haben.",
         "too-big-file-title": "Datei ist zu groß!"
     },
