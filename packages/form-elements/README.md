@@ -157,7 +157,7 @@ Please always use `.value` to set the value of the enum element, as it is a prop
     - Example with tags: `<dbp-form-enum-element display-mode="tags"></dbp-form-enum-element>`
 - `tagPlaceholder` (optional, default: `Please select an option`): Placeholder text to display when using `display-mode`=`tags`
     - Type: Object
-    - Example: `<dbp-form-enum-element display-mode="tags" .tagPlaceholder=${{en: 'Select tags', de: 'Wähle Tags'}}</dbp-form-enum-element>`
+    - Example: `<dbp-form-enum-element display-mode="tags" .tagPlaceholder=${{en: 'Select tags', de: 'Wähle Tags'}}></dbp-form-enum-element>`
 - CSS custom properties for styling:
     - `--dbp-enum-label-gap`
 
