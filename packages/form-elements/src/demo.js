@@ -324,6 +324,7 @@ export class FormElementsDemo extends LangMixin(
                             name="myComponentMultipleEnumTags"
                             label="My multiple enum tags TAGS"
                             display-mode="tags"
+                            .tagPlaceholder=${{en: 'Select tags', de: 'Wähle Tags'}}
                             .value=${data.myComponentMultipleEnumTags || ''}
                             .items=${this.enumItems}
                             multiple
