@@ -59,14 +59,14 @@ export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitE
     }
 
     render() {
-        return html`
-            <!--
-                TODO
-                ${demoStyles.renderMarkdown('readme')}
+        /**
+            return html`
+                ${demoStyles.renderMarkdown(readme)}
                 <dbp-class-name-demo id="demo" lang="${this.lang}" entry-point-url="${this
                 .entryPointUrl}"></dbp-class-name-demo>
-            -->
-        `;
+            `;
+         */
+        return html``;
     }
 }
 
