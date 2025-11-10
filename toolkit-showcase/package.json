@@ -15,6 +15,7 @@
     "devDependencies": {
         "@babel/core": "^7.10.3",
         "@babel/preset-env": "^7.10.3",
+        "@lit-labs/rollup-plugin-minify-html-literals": "^0.1.0",
         "@rollup/plugin-babel": "^6.0.0",
         "@rollup/pluginutils": "^5.2.0",
         "chai": "^6.0.0",
