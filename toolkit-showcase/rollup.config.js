@@ -5,7 +5,7 @@ import serve from 'rollup-plugin-serve';
 import license from 'rollup-plugin-license';
 import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {replacePlugin} from 'rolldown/experimental';
+import {replacePlugin} from 'rolldown/plugins';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import minifyHTML from '@lit-labs/rollup-plugin-minify-html-literals';
 import appConfig from './app.config.js';
