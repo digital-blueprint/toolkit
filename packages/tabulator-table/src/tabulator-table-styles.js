@@ -17,6 +17,10 @@ export function getTabulatorStyles() {
             overflow-y: clip;
         }
 
+        .tabulator .tabulator-header .tabulator-col {
+            justify-content: center;
+        }
+
         .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
             font-weight: normal;
             font-size: 1rem;

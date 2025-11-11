@@ -540,8 +540,6 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
             .tabulator .tabulator-header .tabulator-header-contents .tabulator-headers {
                 min-height: 37px;
-                /*display: flex;
-                align-items: center;*/
             }
 
             .tabulator .tabulator-tableholder :hover {
