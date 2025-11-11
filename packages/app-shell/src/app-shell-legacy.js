@@ -1031,7 +1031,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         }
 
         const prodClassMap = classMap({
-            hidden: this.env === 'production' || this.env === 'demo' || this.env === '',
+            hidden: this.env === 'production' || this.env === '',
         });
 
         this.updatePageTitle();
