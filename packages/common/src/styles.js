@@ -149,11 +149,11 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
                   padding: 0;
               }
               /*here played around*/
-              h1 {
-                  /*font-weight: 300;
-                  margin-bottom: 20px;*/
+              /*h1 {
+                  font-weight: 300;
+                  margin-bottom: 20px;
                   text-align: center;
-              }
+              }*/
           `
         : css``;
 

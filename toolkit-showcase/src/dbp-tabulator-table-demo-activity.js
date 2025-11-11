@@ -41,9 +41,6 @@ class DbpTabulatorTableDemoActivity extends ScopedElementsMixin(AdapterLitElemen
             commonStyles.getGeneralCSS(),
             demoStyles.getDemoCSS(),
             css`
-                h1.title {
-                    margin-bottom: 1em;
-                }
                 div.container {
                     margin-bottom: 1.5em;
                 }
