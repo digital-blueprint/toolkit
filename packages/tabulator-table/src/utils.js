@@ -61,12 +61,36 @@ export async function downloadExcel(rows, dataName) {
                 continue;
             }
             let field = cell.getField();
+            let title = null;
             if (field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
-                let cellValue = cell.getValue();
-                if (Array.isArray(cellValue)) {
-                    cellValue = cellValue.join(', ');
+                if (
+                    'titleFormatter' in definition &&
+                    typeof definition.titleFormatter === 'function'
+                ) {
+                    title = definition.titleFormatter(
+                        {
+                            getValue() {
+                                return field;
+                            },
+                        },
+                        definition['titleFormatterParams'] || {},
+                        null,
+                    );
                 }
-                entry[field] = cellValue;
+                let cellValue = cell.getValue();
+                if ('formatter' in definition && typeof definition.formatter === 'function') {
+                    cellValue = definition.formatter(
+                        {
+                            getValue() {
+                                return cellValue;
+                            },
+                        },
+                        definition['formatterParams'] || {},
+                        null,
+                    );
+                }
+                const headerLabel = title || definition.title || field;
+                entry[headerLabel] = cellValue;
             }
         }
         entries.push(entry);

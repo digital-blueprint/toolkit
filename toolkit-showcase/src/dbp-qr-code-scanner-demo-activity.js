@@ -3,7 +3,6 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {QrCodeScannerDemo} from '@dbp-toolkit/qr-code-scanner/src/dbp-qr-code-scanner-demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import readme from '@dbp-toolkit/qr-code-scanner/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
@@ -52,7 +51,7 @@ class DbpQrCodeScannerDemoActivity extends ScopedElementsMixin(AdapterLitElement
 
     render() {
         return html`
-            ${unsafeHTML(readme)}
+            ${demoStyles.renderMarkdown(readme)}
             <dbp-qr-code-scanner-demo
                 id="scanner-demo"
                 lang="${this.lang}"

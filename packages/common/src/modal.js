@@ -60,21 +60,20 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             this.dispatchEvent(customEvent);
         });
 
-        window.addEventListener('dbp-notification-send', (e) => {
+        this.addEventListener('dbp-notification-added', (e) => {
             const notificationEvent = /** @type {CustomEvent} */ (e);
             const notificationId = notificationEvent.detail.targetNotificationId;
             this.updateModalNotificationPadding(notificationId);
         });
 
-        this.addEventListener('dbp-notification-close', (e) => {
-            e.stopPropagation();
+        this.addEventListener('dbp-notification-removed', (e) => {
             const notificationEvent = /** @type {CustomEvent} */ (e);
             const notificationId = notificationEvent.detail.targetNotificationId;
             this.updateModalNotificationPadding(notificationId);
         });
     }
 
-    updateModalNotificationPadding(notificationId) {
+    async updateModalNotificationPadding(notificationId) {
         const notificationSlot = this.querySelector('[slot="header"]');
         if (!notificationSlot) {
             return;
@@ -88,8 +87,12 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         /** @type {HTMLElement} */
         const notificationContainer =
             notificationComponent.shadowRoot.querySelector('#notification-container');
+
         // Get height of notification and add as padding top to the top of the modal
         if (notificationContainer) {
+            // Wait until next frame to ensure styles are applied
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+
             const modalPosition = this.modalDialog.getBoundingClientRect();
             const modalPaddingTopCurrent = parseInt(
                 window.getComputedStyle(this.modalDialog).getPropertyValue('padding-top'),

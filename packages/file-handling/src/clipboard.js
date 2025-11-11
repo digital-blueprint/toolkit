@@ -9,8 +9,7 @@ import {Icon} from '@dbp-toolkit/common';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
-import {send} from '@dbp-toolkit/common/notification';
-import {AdapterLitElement, LangMixin} from '@dbp-toolkit/common';
+import {AdapterLitElement, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 
 const MODE_TABLE_ONLY = 'table-only';
@@ -431,7 +430,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
             await this.sendFileEvent(files[i].file, files.length);
         }
         this.tabulatorTable.deselectRow();
-        send({
+        sendNotification({
             summary: i18n.t('clipboard.saved-files-title', {count: files.length}),
             body: i18n.t('clipboard.saved-files-body', {count: files.length}),
             type: 'success',
@@ -470,7 +469,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
 
         // we need to handle custom events ourselves
         if (event.target && event.target.activeElement && event.target.activeElement.nodeName) {
-            send({
+            sendNotification({
                 summary: i18n.t('clipboard.file-warning'),
                 body: i18n.t('clipboard.file-warning-body', {
                     count: this.clipboardFiles.files.length,
@@ -554,7 +553,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                 composed: true,
             });
             this.dispatchEvent(event);
-            send({
+            sendNotification({
                 summary: i18n.t('clipboard.saved-files-title', {count: this.filesToSave.length}),
                 body: i18n.t('clipboard.saved-files-body', {count: this.filesToSave.length}),
                 type: 'success',
@@ -570,7 +569,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
      */
     finishedSaveFilesToClipboard(event) {
         const i18n = this._i18n;
-        send({
+        sendNotification({
             summary: i18n.t('clipboard.saved-files-title', {count: event.detail.count}),
             body: i18n.t('clipboard.saved-files-body', {count: event.detail.count}),
             type: 'success',
@@ -622,7 +621,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
             let data = {files: []};
             this.tabulatorTable.getRows().forEach((row) => data.files.push(row.getData().file));
             this.sendSetPropertyEvent('clipboard-files', data);
-            send({
+            sendNotification({
                 summary: i18n.t('clipboard.clear-count-clipboard-title', {count: count}),
                 body: i18n.t('clipboard.clear-count-clipboard-body', {count: count}),
                 type: 'success',
@@ -632,7 +631,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
         } else {
             let data = {files: []};
             this.sendSetPropertyEvent('clipboard-files', data);
-            send({
+            sendNotification({
                 summary: i18n.t('clipboard.clear-clipboard-title'),
                 body: i18n.t('clipboard.clear-clipboard-body'),
                 type: 'success',

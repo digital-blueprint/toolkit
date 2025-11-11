@@ -3,7 +3,6 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 //import {ClassName} from '@dbp-toolkit/package-name/src/dbp-demo-activity-name'; TODO
 import * as commonStyles from '@dbp-toolkit/common/styles';
 //import * as commonUtils from "@dbp-toolkit/common/utils";
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 // import readme from '@dbp-toolkit/class-name/README.md'; TODO
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
@@ -60,14 +59,14 @@ export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitE
     }
 
     render() {
-        return html`
-            <!--
-                TODO
-                ${unsafeHTML('readme')}
+        /**
+            return html`
+                ${demoStyles.renderMarkdown(readme)}
                 <dbp-class-name-demo id="demo" lang="${this.lang}" entry-point-url="${this
                 .entryPointUrl}"></dbp-class-name-demo>
-            -->
-        `;
+            `;
+         */
+        return html``;
     }
 }
 

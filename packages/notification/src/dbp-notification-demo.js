@@ -1,8 +1,7 @@
 import {createInstance} from './i18n';
-import {send as notify} from '@dbp-toolkit/common/notification';
 import {css, html} from 'lit';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import {Notification} from './notification.js';
 import {getRandomInt} from './utils.js';
 import {Modal} from '@dbp-toolkit/common/src/modal';
@@ -99,6 +98,7 @@ export class NotificationDemo extends LangMixin(
         const i18n = this._i18n;
 
         return html`
+            <dbp-notification id="dbp-notification"></dbp-notification>
             <section class="section">
                 <div class="container">
                     <h1 class="title">Notification-Demo</h1>
@@ -351,9 +351,9 @@ export class NotificationDemo extends LangMixin(
         const types = ['primary', 'info', 'success', 'danger', 'warning'];
         const type = types[Math.floor(Math.random() * types.length)];
         const timeout = getRandomInt(5, 15);
-        notify({
+        sendNotification({
             summary: 'Item deleted',
-            body: `Item ${Math.random().toString(36).substring(7)} foo was deleted! <br> Even ID: ${type}-event <span>[${timeout}s]</span>`,
+            body: `Item ${Math.random().toString(36).substring(7)} foo was deleted!\nEven ID: ${type}-event [${timeout}s]`,
             type: type,
             timeout: timeout,
             replaceId: `${type}-event`,
@@ -366,9 +366,9 @@ export class NotificationDemo extends LangMixin(
         const type = types[Math.floor(Math.random() * types.length)];
         //const timeout = getRandomInt(5, 15);
         const timeout = 0;
-        notify({
+        sendNotification({
             summary: 'Modal Notification',
-            body: `Something happened! <br> Even ID: ${type}-event <span>[${timeout}s]</span>`,
+            body: `Something happened!\nEven ID: ${type}-event [${timeout}s]`,
             type: type,
             timeout: timeout,
             replaceId: `${type}-event`,

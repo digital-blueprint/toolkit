@@ -14,6 +14,66 @@
         body {
             margin: 0;
         }
+
+        .light-theme {
+            --dbp-override-background: white;
+            --dbp-override-content: #222120;
+
+            --dbp-override-primary: #3775c1;
+            --dbp-override-on-primary-surface: white;
+
+            --dbp-override-secondary: #222120;
+            --dbp-override-secondary-surface: white;
+            --dbp-override-on-secondary-surface: #222120;
+            --dbp-override-secondary-surface-border-color: #222120;
+
+            --dbp-override-muted: #767676;
+            --dbp-override-accent: #9e1e4d;
+            --dbp-override-info: #38808a;
+
+            --dbp-override-success: #338555;
+            --dbp-override-success-surface: #5ec189;
+            --dbp-override-on-success-surface: #222120;
+
+            --dbp-override-warning: #bf8808;
+            --dbp-override-warning-surface: #f9cc66;
+            --dbp-override-on-warning-surface: #222120;
+
+            --dbp-override-danger: #cc3232;
+
+            --dbp-override-border: 1px solid #222120;
+        }
+
+        .dark-theme {
+            --dbp-override-background: #222120;
+            --dbp-override-content: white;
+
+            --dbp-override-primary: #398bda;
+            --dbp-override-on-primary-surface: white;
+
+            --dbp-override-secondary: white;
+            --dbp-override-secondary-surface: #222120;
+            --dbp-override-on-secondary-surface: white;
+            --dbp-override-secondary-surface-border-color: white;
+
+            --dbp-override-muted: #8d8b8b;
+
+            --dbp-override-accent: #bc3a62;
+
+            --dbp-override-info: #3793a5;
+            --dbp-override-on-info-surface: var(--dbp-override-content);
+
+            --dbp-override-success: #5ec189;
+            --dbp-override-success-surface: #5ec189;
+            --dbp-override-on-success-surface: #222120;
+
+            --dbp-override-warning: #f9cc66;
+
+            --dbp-override-danger: #eb534e;
+            --dbp-override-on-danger-surface: var(--dbp-override-content);
+
+            --dbp-override-border: 1px solid white;
+        }
     </style>
 
     <script type="module" src="<%= getUrl(name + '.js') %>"></script>
@@ -27,6 +87,8 @@
     env="development"
     requested-login-status
     entry-point-url="<%= entryPointURL %>"
+    themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"},
+            {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'
     keycloak-config='{"url": "<%= keyCloakBaseURL %>", "realm": "<%= keyCloakRealm %>", "clientId": "<%= keyCloakClientId %>", "silentCheckSsoRedirectUri": "<%= getUrl('silent-check-sso.html') %>"}'
     src="<%= getUrl('example.topic.metadata.json') %>">
 </dbp-app-shell>

@@ -32,11 +32,11 @@ Or directly via CDN:
 ## Sending notifications
 
 ```javascript
-import { send } from './notification';
+import { sendNotification } from '@dbp-toolkit/common';
 
 ...
 async <your_function_name>(event) {
-    send({
+    sendNotification({
         "summary": "Item deleted",
         "body": "Item foo was deleted!",
         "type": "info",

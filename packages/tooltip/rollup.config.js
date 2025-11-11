@@ -2,7 +2,7 @@ import {globSync} from 'node:fs';
 import url from 'node:url';
 import serve from 'rollup-plugin-serve';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {replacePlugin} from 'rolldown/experimental';
+import {replacePlugin} from 'rolldown/plugins';
 import {getBuildInfo, assetPlugin} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';

@@ -26,6 +26,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         this.selectRef = createRef();
         this.$select = null;
         select2(window, $);
+        this.tagPlaceholder = null;
     }
 
     static get properties() {
@@ -39,6 +40,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             dataValue: {type: String, attribute: 'data-value', reflect: true},
             displayMode: {type: String, attribute: 'display-mode'},
             items: {type: Object},
+            tagPlaceholder: {type: Object},
         };
     }
 
@@ -110,7 +112,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 width: '100%',
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
                 allowClear: true,
-                placeholder: this._i18n.t('render-form.enum.select-placeholder'),
+                placeholder:
+                    this.tagPlaceholder?.[this.lang] ||
+                    this._i18n.t('render-form.enum.select-placeholder'),
                 dropdownParent: this.$('#select-dropdown'),
                 data: commonUtils.keyValueObjectToSelect2DataArray(this.items),
             })
@@ -379,6 +383,16 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     .select2-selection--multiple
                     .select2-selection__choice {
                     border-radius: 0;
+                }
+
+                .select2-container--default .select2-selection--multiple {
+                    border-radius: 0;
+                    border-color: var(--dbp-override-content);
+                }
+
+                .select2-container--default .select2-search--inline .select2-search__field {
+                    /* Needed for the placeholder to be visible. The width of the input is set to 0 by js. */
+                    width: min-content !important;
                 }
             `,
         ];

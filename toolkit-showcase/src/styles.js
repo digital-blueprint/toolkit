@@ -1,6 +1,14 @@
-import {css, CSSResult, unsafeCSS} from 'lit';
+import {css, CSSResult, html} from 'lit';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import highlightCSSPath from 'highlight.js/styles/github.css';
+
+export function renderMarkdown(mdContent) {
+    return html`
+        <link rel="stylesheet" href="${commonUtils.getAbsoluteURL(highlightCSSPath)}" />
+        ${unsafeHTML(mdContent)}
+    `;
+}
 
 /**
  * We want to have "neutral" colors here
@@ -10,8 +18,6 @@ import highlightCSSPath from 'highlight.js/styles/github.css';
 export function getDemoCSS() {
     // language=css
     return css`
-        @import url('${unsafeCSS(commonUtils.getAbsoluteURL(highlightCSSPath))}');
-
         h1.title {
             /*margin-bottom: 1em;*/
         }

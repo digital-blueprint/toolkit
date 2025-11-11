@@ -903,10 +903,10 @@ export class TabulatorTableDemo extends LangMixin(
                             <select name="operator" class="select" id="operator-select">
                                 <option value="=">=</option>
                                 <option value="!=">!=</option>
-                                <option value="<"><</option>
-                                <option value="<="><=</option>
-                                <option value=">">></option>
-                                <option value=">=">>=</option>
+                                <option value="&lt;">&lt;</option>
+                                <option value="&lt;=">&lt;=</option>
+                                <option value="&gt;">&gt;</option>
+                                <option value="&gt;=">&gt;=</option>
                                 <option value="like">${i18n.t('columns.contains')}</option>
                                 <option value="keywords">${i18n.t('columns.keywords')}</option>
                                 <option value="starts">${i18n.t('columns.starts')}</option>

@@ -1,9 +1,8 @@
 import {createInstance} from './i18n';
 import {css, html} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {Icon, MiniSpinner} from '@dbp-toolkit/common';
-import {send} from '@dbp-toolkit/common/notification';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from './nextcloud-file-picker';
 import {classMap} from 'lit/directives/class-map.js';
@@ -229,7 +228,7 @@ export class FileSource extends LangMixin(
         await commonUtils.asyncArrayForEach(files, async (file, index) => {
             if (file.size === 0) {
                 console.log("file '" + file.name + "' has size=0 and is denied!");
-                send({
+                sendNotification({
                     summary: i18n.t('file-source.empty-file-error-title'),
                     body: i18n.t('file-source.empty-file-error-text', {filename: file.name}),
                     type: 'danger',
@@ -266,7 +265,7 @@ export class FileSource extends LangMixin(
                 // const allowedMimeTypes = this.allowedMimeTypes.split(',');
                 // const mimeType = await commonUtils.getMimeTypeOfFile(file);
                 // if (!allowedMimeTypes.includes(mimeType)) {
-                //     send({
+                //     sendNotification({
                 //         summary: i18n.t('file-source.not-allowed-mime-type-file-error-title'),
                 //         body: i18n.t('file-source.not-allowed-mime-type-file-error-text', { filename: file.name}),
                 //         type: 'danger',
@@ -340,7 +339,7 @@ export class FileSource extends LangMixin(
             console.log(
                 `mime type ${file.type} of file '${file.name}' is not compatible with ${this.allowedMimeTypes}`,
             );
-            send({
+            sendNotification({
                 summary: i18n.t('file-source.mime-type-title'),
                 body: i18n.t('file-source.mime-type-body'),
                 type: 'danger',
@@ -354,7 +353,7 @@ export class FileSource extends LangMixin(
     checkSize(file) {
         const i18n = this._i18n;
         if (this.maxFileSize !== '' && this.maxFileSize * 1000 <= file.size) {
-            send({
+            sendNotification({
                 summary: i18n.t('file-source.too-big-file-title'),
                 body: i18n.t('file-source.too-big-file-body', {
                     size: humanFileSize(this.maxFileSize * 1000, true),
@@ -429,7 +428,7 @@ export class FileSource extends LangMixin(
             const i18n = this._i18n;
             console.error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
             //throw new Error('ZIP file does not contain any files of ' + this.allowedMimeTypes);
-            send({
+            sendNotification({
                 summary: i18n.t('file-source.no-usable-files-in-zip'),
                 body: i18n.t('file-source.no-usable-files-hint') + this.allowedMimeTypes,
                 type: 'danger',
@@ -751,13 +750,6 @@ export class FileSource extends LangMixin(
         }
 
         return html`
-            <!--
-            <button class="button"
-                ?disabled="${this.disabled}"
-                @click="${() => {
-                this.openDialog();
-            }}">${i18n.t('file-source.open-menu')}</button>
--->
             <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
                 <div class="modal-overlay" tabindex="-1" data-micromodal-close>
                     <div

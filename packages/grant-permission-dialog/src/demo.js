@@ -1,11 +1,10 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import {GrantPermissionDialog} from './grant-permission-dialog.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {send} from '@dbp-toolkit/common/notification';
 import {httpGetAsync} from './utils.js';
 
 export class GrantPermissionDialogDemo extends LangMixin(
@@ -101,7 +100,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
             }
         } catch (e) {
             console.log('setForms error', e);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.notifications.could-not-get-forms'),
                 type: 'danger',
@@ -131,7 +130,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
                             no-spinner-on-click
                             @click="${() => {
                                 if (!this.auth || !this.auth.token) {
-                                    send({
+                                    sendNotification({
                                         summary: i18n.t(
                                             'grant-permission-dialog.notifications.warning-title',
                                         ),

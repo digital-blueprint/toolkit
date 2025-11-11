@@ -102,9 +102,10 @@ icon (name of an icon, which is displayed infront of the Theme name) and name(Fr
 Attention! Currently we don't support translation of the friendly name, so choose an across languages name.
 
 ```html
-themes='[{"class": "name-of-your-class", "icon": "name-of-the-icon", "name": "Friendly name of your
+<my-element
+    themes='[{"class": "name-of-your-class", "icon": "name-of-the-icon", "name": "Friendly name of your
 theme"}, {"class": "name-of-another-class", "icon": "name-of-the-icon", "name": "Friendly name of
-another theme"}]'
+another theme"}]'></my-element>
 ```
 
 ### Example

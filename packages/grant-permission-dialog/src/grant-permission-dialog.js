@@ -4,8 +4,15 @@ import {ref, createRef} from 'lit/directives/ref.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {getGrantPermissionDialogCSS} from './styles.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin, Modal, Button, Icon, IconButton, LangMixin} from '@dbp-toolkit/common';
-import {send} from '@dbp-toolkit/common/notification';
+import {
+    ScopedElementsMixin,
+    Modal,
+    Button,
+    Icon,
+    IconButton,
+    LangMixin,
+    sendNotification,
+} from '@dbp-toolkit/common';
 import {Notification} from '@dbp-toolkit/notification';
 import {PersonSelect} from '@dbp-toolkit/person-select';
 import {classMap} from 'lit/directives/class-map.js';
@@ -23,7 +30,6 @@ export class GrantPermissionDialog extends LangMixin(
         this.userList = new Map();
         this.permissionRows = [];
         this.usersToAdd = new Map();
-        this.hasUsersToAdd = false;
         this.resourceIdentifier = '';
         this.resourceClassIdentifier = '';
         /** @type {import('lit/directives/ref.js').Ref<Button>} */
@@ -32,6 +38,9 @@ export class GrantPermissionDialog extends LangMixin(
         this.savePermissionButtonRef = createRef();
         /** @type {import('lit/directives/ref.js').Ref<Modal>} */
         this.permissionModalRef = createRef();
+        this.lastManageCheckbox = null;
+        this.lastSavedManagerId = null;
+        this.buttonState = new Map();
     }
 
     static get properties() {
@@ -46,6 +55,9 @@ export class GrantPermissionDialog extends LangMixin(
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            buttonState: {type: Object, attribute: false},
+            lastManageCheckbox: {type: Object, attribute: false},
+            lastSavedManagerId: {type: String, attribute: false},
         };
     }
 
@@ -76,7 +88,57 @@ export class GrantPermissionDialog extends LangMixin(
         this.removeEventListener('dbp-modal-closed', this.modalClosedHandler);
     }
 
-    firstUpdated() {}
+    updated(changedProperties) {
+        super.updated(changedProperties);
+
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case 'userList': {
+                    this.checkSavedManagerCount();
+                    // this.disableLastManageCheckbox();
+                    break;
+                }
+            }
+        });
+    }
+
+    checkSavedManagerCount() {
+        let singleManagerId = null;
+        let multipleManagers = false;
+
+        for (const [userId, user] of this.userList) {
+            const hasManageGrant = user?.permissions?.get('manage')?.identifier;
+            if (!hasManageGrant) continue;
+
+            if (singleManagerId === null) {
+                singleManagerId = userId;
+            } else {
+                multipleManagers = true;
+                break;
+            }
+        }
+
+        this.lastSavedManagerId = multipleManagers ? null : singleManagerId;
+    }
+
+    disableLastManageCheckbox() {
+        const manageCheckboxes = this._a('.permission-checkbox[name="manage"]');
+        const checkedManageCheckboxes = [...manageCheckboxes].filter((checkbox) => {
+            return checkbox.checked === true;
+        });
+
+        if (checkedManageCheckboxes.length === 1) {
+            this.lastManageCheckbox = checkedManageCheckboxes[0];
+            this.lastManageCheckbox.disabled = true;
+        } else if (
+            this.lastManageCheckbox &&
+            this.lastManageCheckbox.classList.contains('edit-mode')
+        ) {
+            // Enable checkboxes in edit-mode if there are multiple checked manage checkboxes
+            this.lastManageCheckbox.disabled = false;
+            this.lastManageCheckbox = null;
+        }
+    }
 
     /**
      * Returns if a person is set in or not
@@ -148,7 +210,7 @@ export class GrantPermissionDialog extends LangMixin(
         }
 
         if (showErrorNotification) {
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t(
                     'grant-permission-dialog.notifications.set-available-actions-error-text',
@@ -218,7 +280,7 @@ export class GrantPermissionDialog extends LangMixin(
                 }
             } catch (e) {
                 console.log('setModalTitle error', e);
-                send({
+                sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                     body: i18n.t('grant-permission-dialog.notifications.set-form-name-error-text'),
                     type: 'error',
@@ -310,13 +372,13 @@ export class GrantPermissionDialog extends LangMixin(
             // @TODO handle multiple errors
         } catch (e) {
             console.log('Error deleting grant', e);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 // Add username and grant name here
                 body: i18n.t('grant-permission-dialog.notifications.could-not-delete-grant'),
                 type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
-                timeout: 10,
+                timeout: 0,
             });
         }
     }
@@ -358,33 +420,33 @@ export class GrantPermissionDialog extends LangMixin(
                 return `${userDetailsResponse['givenName']} ${userDetailsResponse['familyName']}`;
             } else {
                 if (userDetailsResponse.status === 500) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                         body: i18n.t(
                             'grant-permission-dialog.notifications.could-not-fetch-user-details',
                         ),
                         type: 'danger',
                         targetNotificationId: 'permission-modal-notification',
-                        timeout: 10,
+                        timeout: 0,
                     });
                 } else if (userDetailsResponse.status === 403) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                         body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
                         targetNotificationId: 'permission-modal-notification',
                         type: 'danger',
-                        timeout: 5,
+                        timeout: 0,
                     });
                 }
             }
         } catch (error) {
             console.log('getUserFullName failed', error);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.notifications.failed-get-user-details'),
                 type: 'error',
                 targetNotificationId: 'permission-modal-notification',
-                timeout: 10,
+                timeout: 0,
             });
         }
     }
@@ -400,40 +462,36 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     async handleUserEditButton(userId) {
-        const editButton = this._(`#user-edit-button-${userId}`);
-        const buttonType = editButton.getAttribute('type');
-        if (buttonType === 'is-secondary') {
-            // Change to "Save" button
-            editButton.setAttribute('type', 'is-primary');
-            editButton.innerHTML = '<dbp-icon name="save"></dbp-icon> Save';
+        this.setButtonState(userId, 'save');
 
-            const userToAdd = this.userList.get(userId);
-            // @TODO add a function addUserToAddQueue
-            this.usersToAdd.set(userId, userToAdd);
-            this.enableUsersAllCheckboxes(userId);
+        const userToAdd = this.userList.get(userId);
+        this.usersToAdd.set(userId, userToAdd);
 
-            this.savePermissionButtonRef.value.removeAttribute('disabled');
-        } else if (buttonType === 'is-primary') {
-            try {
-                await this.saveUserPermissions(userId);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                // @TODO: make this a function? And call it for save all button to
+        // Check last manager count to prevent unchecking manage checkbox on editing
+        this.checkSavedManagerCount();
+        this.enableUsersAllCheckboxes(userId);
 
-                // Revert button to edit button
-                editButton.setAttribute('type', 'is-secondary');
-                editButton.innerHTML = '<dbp-icon name="pencil"></dbp-icon> Edit';
+        this.savePermissionButtonRef.value.removeAttribute('disabled');
+    }
 
-                // Remove edit styles & disable checkboxes
-                this._a(`[data-user-id="${userId}"]`).forEach((checkbox) => {
-                    const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-                    checkboxElem.classList.remove('changed');
-                    checkboxElem.removeAttribute('data-changed');
-                });
-                this.disableUsersAllCheckboxes(userId);
+    async handleUserSaveButton(userId) {
+        try {
+            await this.saveUserPermissions(userId);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            this.setButtonState(userId, 'edit');
 
-                this.savePermissionButtonRef.value.setAttribute('disabled', 'disabled');
+            // Remove edit styles & disable checkboxes
+            this._a(`[data-user-id="${userId}"]`).forEach((checkbox) => {
+                const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
+                checkboxElem.classList.remove('changed');
+                checkboxElem.removeAttribute('data-changed');
+            });
+            this.disableUsersAllCheckboxes(userId);
+
+            if (this.usersToAdd.size === 0) {
+                this.savePermissionButtonRef.value.disabled = true;
             }
         }
     }
@@ -471,7 +529,7 @@ export class GrantPermissionDialog extends LangMixin(
             deleteButton.setAttribute('type', 'is-secondary');
             deleteButton.setAttribute('data-action', 'prepare-delete');
             deleteButton.innerHTML = '<dbp-icon name="trash"></dbp-icon> Delete';
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.success-title'),
                 body: i18n.t('grant-permission-dialog.notifications.user-successfully-deleted', {
                     userFullName: userFullName,
@@ -499,11 +557,12 @@ export class GrantPermissionDialog extends LangMixin(
                 responseBody['hydra:member'].length > 0
             ) {
                 // Loop trough all grants
+                const newUserList = new Map(this.userList);
                 for (const grant of responseBody['hydra:member']) {
                     if (grant.userIdentifier) {
                         const userId = grant.userIdentifier;
 
-                        if (!this.userList.has(userId)) {
+                        if (!newUserList.has(userId)) {
                             const userFullName = await this.getUserFullName(userId);
                             // Create user object
                             const user = {
@@ -518,10 +577,10 @@ export class GrantPermissionDialog extends LangMixin(
                                 authorizationResource: grant.authorizationResource,
                             });
                             // Add to user list
-                            this.userList.set(userId, user);
+                            newUserList.set(userId, user);
                         } else {
                             // We already have this user in userList
-                            let user = this.userList.get(userId);
+                            let user = newUserList.get(userId);
                             // Set current grant
                             user.permissions.set(grant.action, {
                                 action: grant.action,
@@ -529,41 +588,42 @@ export class GrantPermissionDialog extends LangMixin(
                                 authorizationResource: grant.authorizationResource,
                             });
                             // Add to user list
-                            this.userList.set(userId, user);
+                            newUserList.set(userId, user);
                         }
                     }
-                    this.requestUpdate();
                 }
+                this.userList = newUserList;
+                this.setAllButtonState('edit');
                 // console.log('userList', this.userList);
             } else {
                 if (responseBody.status === 500) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                         body: i18n.t(
                             'grant-permission-dialog.notifications.could-not-fetch-resource-class-actions',
                         ),
                         type: 'danger',
                         targetNotificationId: 'permission-modal-notification',
-                        timeout: 10,
+                        timeout: 0,
                     });
                 } else if (response.status === 403) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                         body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
                         targetNotificationId: 'permission-modal-notification',
                         type: 'danger',
-                        timeout: 5,
+                        timeout: 0,
                     });
                 }
             }
         } catch (e) {
             console.log('setListOfUsersAndPermissions', e);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.notifications.unknown-error'),
                 targetNotificationId: 'permission-modal-notification',
                 type: 'danger',
-                timeout: 5,
+                timeout: 0,
             });
         }
     }
@@ -575,9 +635,11 @@ export class GrantPermissionDialog extends LangMixin(
         const i18n = this._i18n;
 
         return html`
-            ${Array.from(this.userList).map(
-                ([userId, user]) => html`
-                    <div class="user-row" data-user-id="${userId}">
+            ${Array.from(this.userList).map(([userId, user]) => {
+                return html`
+                    <div
+                        class="user-row ${classMap({'edit-mode': this.usersToAdd.has(userId)})}"
+                        data-user-id="${userId}">
                         <div class="person-select-container">
                             ${user.userFullName
                                 ? html`
@@ -599,22 +661,44 @@ export class GrantPermissionDialog extends LangMixin(
                         ${user.userFullName
                             ? html`
                                   <div class="action-buttons">
-                                      <dbp-button
-                                          type="is-secondary"
-                                          data-action="edit"
-                                          id="user-edit-button-${userId}"
-                                          no-spinner-on-click
-                                          @click="${() => {
-                                              this.handleUserEditButton(userId);
-                                          }}">
-                                          <dbp-icon name="pencil"></dbp-icon>
-                                          ${i18n.t('grant-permission-dialog.buttons.edit-text')}
-                                      </dbp-button>
+                                      ${this.buttonState.get(userId).state === 'edit'
+                                          ? html`
+                                                <dbp-button
+                                                    type="is-secondary"
+                                                    id="user-edit-button-${userId}"
+                                                    no-spinner-on-click
+                                                    @click="${() => {
+                                                        this.handleUserEditButton(userId);
+                                                    }}">
+                                                    <dbp-icon name="pencil"></dbp-icon>
+                                                    ${i18n.t(
+                                                        'grant-permission-dialog.buttons.edit-text',
+                                                    )}
+                                                </dbp-button>
+                                            `
+                                          : ''}
+                                      ${this.buttonState.get(userId).state === 'save'
+                                          ? html`
+                                                <dbp-button
+                                                    type="is-primary"
+                                                    id="user-save-button-${userId}"
+                                                    no-spinner-on-click
+                                                    @click="${() => {
+                                                        this.handleUserSaveButton(userId);
+                                                    }}">
+                                                    <dbp-icon name="save"></dbp-icon>
+                                                    ${i18n.t(
+                                                        'grant-permission-dialog.buttons.save-text',
+                                                    )}
+                                                </dbp-button>
+                                            `
+                                          : ''}
                                       <dbp-button
                                           type="is-secondary"
                                           data-action="prepare-delete"
                                           id="user-delete-button-${userId}"
                                           no-spinner-on-click
+                                          ?disabled=${this.lastSavedManagerId === userId}
                                           @click="${() => {
                                               this.handleUserDeleteButton(userId);
                                           }}">
@@ -625,12 +709,13 @@ export class GrantPermissionDialog extends LangMixin(
                               `
                             : ''}
                     </div>
-                `,
-            )}
+                `;
+            })}
         `;
     }
 
     renderPermissionCheckboxes(user) {
+        console.log(`render checkboxes for user ${user.userFullName}`);
         const i18n = this._i18n;
         if (!this.availableActions) {
             return;
@@ -640,6 +725,7 @@ export class GrantPermissionDialog extends LangMixin(
                 <h3 id="permissions-group-label" class="visually-hidden">
                     ${i18n.t('grant-permission-dialog.available-permissions')}
                 </h3>
+
                 ${this.availableActions.map((action) => {
                     const actionValue = Object.keys(action)[0];
                     const actionName = action[actionValue][this.lang];
@@ -649,12 +735,13 @@ export class GrantPermissionDialog extends LangMixin(
 
                     if (user.permissions) {
                         const userPermission = user.permissions.get(actionValue);
-                        if (userPermission.identifier) {
+                        // The permission exists if it has an identifier
+                        if (userPermission?.identifier) {
                             hasThisPermission = true;
                         }
 
                         // Allow editing of newly added permissions
-                        if (userPermission.editable) {
+                        if (userPermission?.editable) {
                             editable = true;
                         }
                     }
@@ -669,7 +756,9 @@ export class GrantPermissionDialog extends LangMixin(
                             <input
                                 id="${actionValue}-${user.userIdentifier}"
                                 name="${actionValue}"
-                                class="permission-checkbox"
+                                class="permission-checkbox ${classMap({
+                                    'edit-mode': this.usersToAdd.has(user.userIdentifier),
+                                })}"
                                 data-user-id="${user.userIdentifier}"
                                 type="checkbox"
                                 @input="${this.handleCheckbox}"
@@ -694,7 +783,6 @@ export class GrantPermissionDialog extends LangMixin(
                 action: actionValue,
                 authorizationResource: null,
                 identifier: null,
-                isNew: true,
                 editable: editable,
             };
             userPermissions.set(actionValue, emptyPermission);
@@ -710,12 +798,12 @@ export class GrantPermissionDialog extends LangMixin(
 
             // Check if user is already in the list
             if (newUser && this.userList.has(newUser.identifier)) {
-                send({
+                sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                     body: i18n.t('grant-permission-dialog.notifications.user-already-added'),
                     targetNotificationId: 'permission-modal-notification',
                     type: 'danger',
-                    timeout: 10,
+                    timeout: 0,
                 });
                 return;
             }
@@ -732,6 +820,7 @@ export class GrantPermissionDialog extends LangMixin(
             this.userList.delete('emptyPerson');
             // Update person in this.userList
             this.userList.set(userToAdd.userIdentifier, userToAdd);
+            this.setButtonState(userToAdd.userIdentifier, 'edit');
             this.requestUpdate();
 
             // Toggle edit button to save button
@@ -740,12 +829,12 @@ export class GrantPermissionDialog extends LangMixin(
             this.addPersonButtonRef.value.stop();
         } catch (error) {
             console.log('Failed to get user object', error);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.notifications.failed-to-get-user-details'),
                 targetNotificationId: 'permission-modal-notification',
                 type: 'danger',
-                timeout: 10,
+                timeout: 0,
             });
         }
     }
@@ -753,12 +842,15 @@ export class GrantPermissionDialog extends LangMixin(
     handleCheckbox(event) {
         const checkbox = event.target;
         checkbox.classList.toggle('changed');
-        // Should I toggle this?
+
         if (!checkbox.getAttribute('data-changed')) {
             checkbox.setAttribute('data-changed', true);
         } else {
             checkbox.removeAttribute('data-changed');
         }
+
+        // Prevent unchecking last manager
+        this.disableLastManageCheckbox();
 
         const userIdentifier = checkbox.getAttribute('data-user-id');
         const permissionName = checkbox.getAttribute('name');
@@ -769,26 +861,16 @@ export class GrantPermissionDialog extends LangMixin(
         const permission = userToAdd.permissions.get(permissionName);
         // Set permission to be saved
         permission.toSave = checkbox.getAttribute('data-changed') ? true : false;
-    }
-
-    /**
-     * Disables a specific checkbox for a given user and action
-     *
-     * @param {string} userId - The unique identifier of the user
-     * @param {string} actionName - The name of the action/permission
-     * @throws {Error} If no matching checkbox is found
-     */
-    disableCheckboxes(userId, actionName) {
-        const checkbox = /** @type {HTMLInputElement} */ (
-            this._(`.permission-checkbox[name="${actionName}"][data-user-id="${userId}"]`)
-        );
-        checkbox.disabled = true;
+        // console.log(`this.usersToAdd`, this.usersToAdd);
     }
 
     enableUsersAllCheckboxes(userId) {
         this._a(`.permission-checkbox[data-user-id="${userId}"]`).forEach((checkbox) => {
             const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-            checkboxElem.disabled = false;
+            // Don't enable the last-manage-checkbox when editing a user
+            if (checkboxElem.id !== `manage-${this.lastSavedManagerId}`) {
+                checkboxElem.disabled = false;
+            }
         });
     }
 
@@ -829,11 +911,11 @@ export class GrantPermissionDialog extends LangMixin(
         const i18n = this._i18n;
 
         if (!this.isLoggedIn()) {
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.need-login-warning-text'),
                 type: 'danger',
-                timeout: 10,
+                timeout: 0,
             });
         } else {
             await this.setModalTitle();
@@ -913,6 +995,27 @@ export class GrantPermissionDialog extends LangMixin(
         this.requestUpdate();
     }
 
+    setButtonState(userId, state) {
+        const updated = new Map(this.buttonState);
+
+        if (state === 'edit') {
+            updated.set(userId, {
+                state: 'edit',
+            });
+        } else if (state === 'save') {
+            updated.set(userId, {
+                state: 'save',
+            });
+        }
+        this.buttonState = updated;
+    }
+
+    setAllButtonState(state) {
+        Array.from(this.userList).forEach(async ([userId, user]) => {
+            this.setButtonState(userId, state);
+        });
+    }
+
     /**
      * Saves user permissions for either a single user or all users in usersToAdd
      * @param {string} [userId] - Optional user ID. If not provided, saves all pending users
@@ -922,23 +1025,33 @@ export class GrantPermissionDialog extends LangMixin(
         const i18n = this._i18n;
 
         // If no users to save, show message and return
-        if (this.usersToAdd.size < 1) {
-            send({
+        if (this.usersToAdd.size === 0) {
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.info-title'),
                 body: i18n.t('grant-permission-dialog.notifications.there-is-no-user-to-save'),
                 type: 'info',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 5,
             });
-            return Promise.reject();
+            return;
         }
 
         try {
-            console.log('BEFORE REMOVING USER', this.usersToAdd);
-            let noErrors = true;
-            // Process each user
-            for (const userIdentifier of this.usersToAdd.keys()) {
-                const userToAdd = this.usersToAdd.get(userIdentifier);
+            let usersToProcess;
+            let errorCount = 0;
+            let successCount = 0;
+
+            if (userId) {
+                // Process only the specified user
+                usersToProcess = new Map([[userId, this.usersToAdd.get(userId)]]);
+            } else {
+                // Process all users in the queue
+                usersToProcess = this.usersToAdd;
+            }
+
+            // Process user(s)
+            for (const userIdentifier of usersToProcess.keys()) {
+                const userToAdd = usersToProcess.get(userIdentifier);
                 if (!userToAdd) continue;
 
                 const grantsToPost = [];
@@ -950,30 +1063,33 @@ export class GrantPermissionDialog extends LangMixin(
 
                     if (permission.identifier) {
                         grantsToDelete.push({
+                            action: permission.action,
                             identifier: permission.identifier,
                         });
+                        permission.identifier = null;
                     } else {
                         grantsToPost.push({
                             action: permission.action,
                             userIdentifier: userToAdd.userIdentifier,
                         });
                     }
+                    permission.toSave = false;
                 });
 
                 if (grantsToPost.length === 0 && grantsToDelete.length === 0) {
-                    send({
+                    sendNotification({
                         summary: i18n.t('grant-permission-dialog.notifications.info-title'),
                         body: i18n.t(
                             'grant-permission-dialog.notifications.there-is-nothing-to-save',
+                            {userFullName: userToAdd.userFullName},
                         ),
                         type: 'info',
                         targetNotificationId: 'permission-modal-notification',
                         timeout: 5,
                     });
                     // Remove user form queue
-                    this.usersToAdd.delete(userId);
-                    // return Promise.reject();
-                    return Promise.resolve();
+                    this.usersToAdd.delete(userIdentifier);
+                    continue;
                 }
 
                 // Add grants
@@ -984,8 +1100,18 @@ export class GrantPermissionDialog extends LangMixin(
                             grant.userIdentifier,
                         );
                         if (postResponse.status !== 201) {
-                            noErrors = false;
+                            errorCount++;
                             continue;
+                        } else {
+                            successCount++;
+
+                            const responseBody = await postResponse.json();
+                            // Set identifier in user permissions
+                            userToAdd.permissions.set(grant.action, {
+                                action: grant.action,
+                                identifier: responseBody.identifier,
+                                authorizationResource: responseBody.authorizationResource,
+                            });
                         }
                     }
                 }
@@ -993,12 +1119,29 @@ export class GrantPermissionDialog extends LangMixin(
                 // Delete grants
                 if (grantsToDelete.length > 0) {
                     for (const grant of grantsToDelete) {
+                        // Don't delete last manage grant
+                        if (grant.action === 'manage' && this.lastSavedManagerId) {
+                            sendNotification({
+                                summary: 'Warning',
+                                body: i18n.t(
+                                    'grant-permission-dialog.notifications.cant-remove-last-manager-warning',
+                                ),
+                                type: 'warning',
+                                targetNotificationId: 'permission-modal-notification',
+                                timeout: 5,
+                            });
+                            continue;
+                        }
                         const deleteResponse = await this.apiDeleteResourceActionGrant(
                             grant.identifier,
                         );
                         if (deleteResponse.status !== 204) {
-                            noErrors = false;
+                            errorCount++;
                             continue;
+                        } else {
+                            successCount++;
+                            // Remove identifier from user permissions
+                            userToAdd.permissions.delete(grant.action);
                         }
                     }
                 }
@@ -1015,52 +1158,56 @@ export class GrantPermissionDialog extends LangMixin(
                 this.userList.set(userToAdd.userIdentifier, {
                     userIdentifier: userToAdd.userIdentifier,
                     userFullName: userToAdd.userFullName,
-                    permissions: this.createEmptyUserPermission(),
+                    permissions: userToAdd.permissions,
                 });
 
                 // Remove processed user from usersToAdd list
                 this.usersToAdd.delete(userToAdd.userIdentifier);
             }
 
-            // Refresh rendered permissions
-            await this.setListOfUsersAndPermissions();
-            // set Save all button visibility
-            this.hasUsersToAdd = this.usersToAdd.size > 0;
-            this.requestUpdate();
+            this.requestUpdate('userList');
 
             // Stop the save button spinner and show success message
             this.savePermissionButtonRef.value.stop();
-            if (noErrors) {
-                send({
+
+            console.log(`errorCount`, errorCount);
+            console.log(`successCount`, successCount);
+
+            if (successCount > 0) {
+                sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.success-title'),
                     body: i18n.t(
                         'grant-permission-dialog.notifications.permissions-saved-successfully',
+                        {n: successCount},
                     ),
                     type: 'success',
                     targetNotificationId: 'permission-modal-notification',
                     timeout: 5,
                 });
-                return Promise.resolve();
-            } else {
-                send({
+            }
+            if (errorCount > 0) {
+                sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                    body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
+                    body: i18n.t('grant-permission-dialog.notifications.save-permissions-error', {
+                        n: errorCount,
+                    }),
                     type: 'danger',
                     targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
+                    timeout: 0,
                 });
-                return Promise.reject();
             }
         } catch (e) {
             console.log('Save user permissions error:', e);
-            send({
+            sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.notifications.save-permissions-error'),
+                body: i18n.t(
+                    'grant-permission-dialog.notifications.save-permissions-unexpected-error',
+                ),
                 type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
-                timeout: 5,
+                timeout: 0,
             });
-            return Promise.reject();
+            return;
         }
     }
 
@@ -1150,17 +1297,14 @@ export class GrantPermissionDialog extends LangMixin(
                         ${ref(this.savePermissionButtonRef)}
                         id="permission-save-button"
                         @click="${async () => {
-                            await this.saveUserPermissions();
+                            try {
+                                await this.saveUserPermissions();
+                            } catch (error) {
+                                console.error('Error saving user permissions:', error);
+                            }
 
                             // Revert buttons to edit button
-                            this._a(`[id*="user-edit-button"][type="is-primary"]`).forEach(
-                                (editButton) => {
-                                    const editButtonElement = /** @type {Button}*/ (editButton);
-                                    editButtonElement.setAttribute('type', 'is-secondary');
-                                    editButtonElement.innerHTML =
-                                        '<dbp-icon name="pencil"></dbp-icon> Edit';
-                                },
-                            );
+                            this.setAllButtonState('edit');
                             // Remove edit styles & disable checkboxes
                             this._a(`input[type="checkbox"][data-user-id]`).forEach((checkbox) => {
                                 const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);

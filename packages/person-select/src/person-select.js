@@ -521,12 +521,6 @@ export class PersonSelect extends LangMixin(
         const select2CSS = commonUtils.getAbsoluteURL(select2CSSPath);
         return html`
             <link rel="stylesheet" href="${select2CSS}" />
-            <style>
-                #${this.selectId} {
-                    width: 100%;
-                }
-            </style>
-
             <div class="select">
                 <div class="field has-addons">
                     <div class="select2-control control">

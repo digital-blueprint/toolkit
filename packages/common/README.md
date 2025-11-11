@@ -10,13 +10,13 @@ npm i @dbp-toolkit/common
 
 First you need to import the class of the element you want to add, for example Button.
 
-```html
+```js
 Import {Button} from '@dbp-toolkit/common';
 ```
 
 Then add the new element to scopedElements and give it a name
 
-```html
+```js
 static get scopedElements() { return { ... 'dbp-button': Button, ... } }
 ```
 
@@ -216,7 +216,14 @@ in the Nextcloud file picker.
 
 The css rules are added to the styles() function in the json file corresponding to a particular activity.
 
-```html
-static get styles() { return [ commonStyles.getThemeCSS(), css` .hidden { display: none; }
-.button-style { --dbp-override-secondary-surface: #3793A5; } `, ]; }
+```js
+static get styles() {
+        return [
+            commonStyles.getThemeCSS(),
+            css`
+                .hidden { display: none; }
+                button-style { --dbp-override-secondary-surface: #3793A5; }
+            `
+        ];
+    }
 ```

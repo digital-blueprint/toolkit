@@ -1,32 +1,5 @@
-import {send as notify} from './notification.js';
+import {sendNotification} from './notification.js';
 import {createInstance} from './i18n.js';
-
-/**
- * Escapes html
- *
- * @param string
- * @returns {string}
- */
-export const escapeHTML = (string) => {
-    const pre = document.createElement('pre');
-    const text = document.createTextNode(string);
-    pre.appendChild(text);
-
-    return pre.innerHTML;
-};
-
-/**
- * Strips html
- *
- * @param string
- * @returns {string}
- */
-export const stripHTML = (string) => {
-    var div = document.createElement('div');
-    div.innerHTML = string;
-
-    return div.textContent || div.innerText || '';
-};
 
 /**
  * We need this mixin so we can use this.sendSetPropertyEvent to post analytics events
@@ -74,9 +47,9 @@ export const errorMixin = {
             body = i18n.t('error.connection-to-server-refused');
         }
 
-        notify({
+        sendNotification({
             summary: i18n.t('error.summary'),
-            body: escapeHTML(stripHTML(body)),
+            body: body,
             icon: icon,
             type: 'danger',
         });
@@ -132,9 +105,9 @@ export const errorMixin = {
             }
         }
 
-        notify({
+        sendNotification({
             summary: summary === '' ? i18n.t('error.summary') : summary,
-            body: escapeHTML(stripHTML(body)),
+            body: body,
             icon: icon,
             type: 'danger',
         });
