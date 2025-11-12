@@ -1,15 +1,95 @@
 import {createInstance} from '../i18n.js';
-import {css, html} from 'lit';
+import {css, html, LitElement} from 'lit';
 import DBPLitElement from '../dbp-lit-element.js';
 import {ScopedElementsMixin} from '../scoped/ScopedElementsMixin.js';
 import * as commonStyles from '../styles.js';
 import {getIconCSS, Icon, LangMixin} from '../index.js';
 import ICONS from './icon-names.js';
 
+/**
+ * A lazy-load wrapper component that uses Intersection Observer to load its content
+ * only when it becomes visible in the viewport.
+ *
+ * Has a placeholder slot that is shown until the content is loaded.
+ */
+export class LazyLoad extends LitElement {
+    constructor() {
+        super();
+        this._isVisible = false;
+        this._observer = null;
+    }
+
+    static get properties() {
+        return {
+            _isVisible: {type: Boolean, state: true},
+            rootMargin: {type: String, attribute: 'root-margin'},
+            threshold: {type: Number},
+        };
+    }
+
+    static get styles() {
+        return css`
+            :host {
+                display: block;
+            }
+        `;
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        this.updateComplete.then(() => {
+            this._setupIntersectionObserver();
+        });
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this._cleanupObserver();
+    }
+
+    _setupIntersectionObserver() {
+        this._observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        this._isVisible = true;
+                        this._cleanupObserver();
+                    }
+                });
+            },
+            {
+                rootMargin: this.rootMargin || '50px',
+                threshold: this.threshold || 0.01,
+            },
+        );
+        this._observer.observe(this);
+    }
+
+    _cleanupObserver() {
+        if (this._observer) {
+            this._observer.disconnect();
+            this._observer = null;
+        }
+    }
+
+    render() {
+        if (!this._isVisible) {
+            return html`
+                <span class="placeholder"></span>
+            `;
+        }
+
+        return html`
+            <slot></slot>
+        `;
+    }
+}
+
 export class DbpIconDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
+            'lazy-load': LazyLoad,
         };
     }
 
@@ -274,11 +354,20 @@ export class DbpIconDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), c
                                       <div
                                           class="icon-item"
                                           @click="${() => navigator.clipboard.writeText(iconName)}">
-                                          <dbp-icon
-                                              name="${iconName}"
-                                              aria-label="${iconName} icon"
-                                              style="width: ${this.iconSize}px; height: ${this
-                                                  .iconSize}px;"></dbp-icon>
+                                          <lazy-load>
+                                              <div
+                                                  slot="placeholder"
+                                                  style="width: ${this.iconSize}px; height: ${this
+                                                      .iconSize}px;">
+                                                  awdad
+                                              </div>
+                                              <dbp-icon
+                                                  name="${iconName}"
+                                                  aria-label="${iconName} icon"
+                                                  style="width: ${this.iconSize}px; height: ${this
+                                                      .iconSize}px;"></dbp-icon>
+                                          </lazy-load>
+
                                           <span class="icon-name">${iconName}</span>
                                       </div>
                                   `,
