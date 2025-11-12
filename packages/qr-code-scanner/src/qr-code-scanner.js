@@ -182,7 +182,7 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
     updated(changedProperties) {
         if (changedProperties.get('stopScan') && !this.stopScan) {
             this.startScanning();
-        } else if (!changedProperties.get('stopScan') && this.stopScan) {
+        } else if (changedProperties.get('stopScan') && this.stopScan) {
             this.stopScanning();
         }
     }

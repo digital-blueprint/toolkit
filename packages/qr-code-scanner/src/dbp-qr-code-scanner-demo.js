@@ -42,6 +42,7 @@ export class QrCodeScannerDemo extends LangMixin(ScopedElementsMixin(LitElement)
                                 @code-detected="${(e) => console.log(e)}"
                                 @scan-started="${(e) => console.log(e)}"
                                 show-output
+                                stop-scan
                                 lang="${this.lang}"></dbp-qr-code-scanner>
                         </div>
                     </div>

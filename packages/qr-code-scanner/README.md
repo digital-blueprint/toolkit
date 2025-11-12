@@ -39,7 +39,7 @@ In this event you can read the data of the qr code with `event.detail`.
 - `match-regex` (optional, default: `.*`): a regular expression that when matching the QR code will result in the user getting feedback
 - `show-output` (optional, default: `false`): set to `true` for showing
   a box under the video canvas with the read QR code data - example `<dbp-qr-code-scanner show-output></dbp-qr-code-scanner>`
-- `stop-scan` (optional, default: `false`): set to `true` when you don't want to start the QR code reader immediatly
+- `stop-scan` (optional, default: `false`): set to `true` when you don't want to start the QR code reader immediately
   after loaded. This attribute is also used to stop the QR code reader or if you don't need it anymore. - example `<dbp-qr-code-scanner stop-scan></dbp-qr-code-scanner>`
 
 ## Events
