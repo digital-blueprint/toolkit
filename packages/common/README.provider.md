@@ -1,32 +1,3 @@
-# Provider Web Components
-
-[GitLab Repository](https://github.com/digital-blueprint/toolkit)
-
-You can install this component via npm:
-
-```bash
-npm i @dbp-toolkit/provider
-```
-
-## Local development
-
-```bash
-# get the source
-git clone git@github.com:digital-blueprint/toolkit.git
-cd toolkit/packages/provider
-
-# install dependencies (make sure you have npm version 4+ installed, so symlinks to the git submodules are created automatically)
-npm install
-
-# constantly build dist/bundle.js and run a local web-server on port 8002
-npm run watch
-
-# run tests
-npm test
-```
-
-Jump to <http://localhost:8002> and you should get a demo page.
-
 ## Provider
 
 ### Usage
@@ -37,15 +8,13 @@ You can provide attributes (e.g. `global-name`) for components inside the provid
 <dbp-provider global-name="value" global-name2="value2">
     <dbp-person-select subscribe="local-name:global-name"></dbp-person-select>
 </dbp-provider>
-<script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
+<script type="module" src="node_modules/@dbp-toolkit/common/dist/components.js"></script>
 ```
 
 Or you can also use the CDN to include the component:
 
 ```html
-<script
-    type="module"
-    src="https://unpkg.com/@dbp-toolkit/provider@0.2.2/dist/dbp-provider.js"></script>
+<script type="module" src="https://unpkg.com/@dbp-toolkit/common/dist/components.js"></script>
 ```
 
 All other components are also inherent providers (see below), so you don't really need `dbp-provider` in the shadow dom
@@ -194,6 +163,5 @@ Multiple attributes can be subscribed when separated by a comma (`,`).
         <third-party-webcomponent></third-party-webcomponent>
     </dbp-provider-adapter>
 </dbp-provider>
-<script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-provider.js"></script>
-<script type="module" src="node_modules/@dbp-toolkit/provider/dist/dbp-adapter.js"></script>
+<script type="module" src="node_modules/@dbp-toolkit/common/dist/components.js"></script>
 ```

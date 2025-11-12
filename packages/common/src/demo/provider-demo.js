@@ -1,11 +1,10 @@
-import {createInstance} from './i18n.js';
+import {createInstance} from '../i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Provider} from '@dbp-toolkit/provider';
-import {Adapter} from '@dbp-toolkit/provider';
+import {Provider} from '../provider/provider.js';
+import {ProviderAdapter} from '../provider/adapter.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 class DemoConsumer extends LangMixin(DBPLitElement, createInstance) {
@@ -19,8 +18,6 @@ class DemoConsumer extends LangMixin(DBPLitElement, createInstance) {
         this.borderColor = 'green';
 
         this.status = 'local';
-
-        console.debug('DemoConsumer constructor()');
     }
 
     connectedCallback() {
@@ -120,15 +117,13 @@ class DemoConsumer extends LangMixin(DBPLitElement, createInstance) {
     }
 }
 
-customElements.define('dbp-consumer', DemoConsumer);
-
-class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+export class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     static get scopedElements() {
         return {
             'dbp-auth-keycloak': AuthKeycloak,
             'dbp-login-button': LoginButton,
             'dbp-provider': Provider,
-            'dbp-provider-adapter': Adapter,
+            'dbp-provider-adapter': ProviderAdapter,
             'dbp-consumer': DemoConsumer,
         };
     }
@@ -264,5 +259,3 @@ class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         `;
     }
 }
-
-commonUtils.defineCustomElement('dbp-provider-demo', ProviderDemo);

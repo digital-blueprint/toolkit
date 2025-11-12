@@ -1,4 +1,4 @@
-export class Adapter extends HTMLElement {
+export class ProviderAdapter extends HTMLElement {
     constructor() {
         super();
         this.connected = false;
@@ -10,8 +10,6 @@ export class Adapter extends HTMLElement {
         // default values
         this.subscribe = '';
         this.unsubscribe = '';
-
-        console.debug('Adapter constructor()');
     }
 
     getPropertyByAttributeName(name) {
@@ -24,8 +22,6 @@ export class Adapter extends HTMLElement {
 
     connectedCallback() {
         this.connected = true;
-
-        const that = this;
 
         // get all *not observed* attributes
         if (this.hasAttributes()) {
@@ -41,16 +37,6 @@ export class Adapter extends HTMLElement {
                     this.getPropertyByAttributeName(attrs[i].name),
                     attrs[i].value,
                 );
-
-                console.debug(
-                    'AdapterProvider (' +
-                        that.tagName +
-                        ') found attribute "' +
-                        attrs[i].name +
-                        '" = "' +
-                        attrs[i].value +
-                        '"',
-                );
             }
         }
     }
@@ -61,9 +47,6 @@ export class Adapter extends HTMLElement {
     }
 
     subscribeProviderFor(element) {
-        console.debug(
-            'AdapterProvider(' + this.tagName + ') subscribeProviderFor( ' + element + ' )',
-        );
         const pair = element.trim().split(':');
         const local = pair[0];
         const global = pair[1] || local;
@@ -74,24 +57,12 @@ export class Adapter extends HTMLElement {
             detail: {
                 name: global,
                 callback: (value) => {
-                    console.debug(
-                        'AdapterProvider(' +
-                            that.tagName +
-                            ') sub/Callback ' +
-                            global +
-                            ' -> ' +
-                            local +
-                            ' = ' +
-                            value,
-                    );
                     that.setPropertiesToChildNodes(local, value);
 
                     // If value is an object set it directly as property
                     if (typeof value === 'object' && value !== null) {
-                        // console.debug("value is object", value);
                         that.setPropertyByAttributeName(local, value);
                     } else {
-                        // console.debug("local, that.getPropertyByAttributeName(local), value", local, that.getPropertyByAttributeName(local), value);
                         that.attributeChangedCallback(
                             local,
                             that.getPropertyByAttributeName(local),
@@ -123,9 +94,6 @@ export class Adapter extends HTMLElement {
     }
 
     unSubscribeProviderFor(element) {
-        console.debug(
-            'AdapterProvider(' + this.tagName + ') unSubscribeProviderFor( ' + element + ' )',
-        );
         const pair = element.trim().split(':');
         const global = pair[1] || pair[0];
         const event = new CustomEvent('dbp-unsubscribe', {
@@ -149,10 +117,8 @@ export class Adapter extends HTMLElement {
     findPropertyName(attributeName) {
         let resultName = attributeName;
         const properties = this.constructor.properties;
-        // console.debug("properties", properties);
 
         for (const propertyName in properties) {
-            // console.debug("findPropertyName", `${propertyName}: ${properties[propertyName]}`);
             const attribute = properties[propertyName].attribute;
             if (attribute === attributeName) {
                 resultName = propertyName;
@@ -166,16 +132,6 @@ export class Adapter extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
             case 'subscribe':
-                console.debug(
-                    'AdapterProvider() attributeChangesCallback( ' +
-                        name +
-                        ', ' +
-                        oldValue +
-                        ', ' +
-                        newValue +
-                        ')',
-                );
-
                 if (this.subscribe && this.subscribe.length > 0) {
                     if (this.connected) {
                         const attrs = this.subscribe.split(',');

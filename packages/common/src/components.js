@@ -10,6 +10,8 @@ import {
     Translated,
     Translation,
     DBPSelect,
+    Provider,
+    ProviderAdapter,
 } from './index.js';
 
 commonUtils.defineCustomElement('dbp-mini-spinner', MiniSpinner);
@@ -22,3 +24,5 @@ commonUtils.defineCustomElement('dbp-inline-notification', InlineNotification);
 commonUtils.defineCustomElement('dbp-translated', Translated);
 commonUtils.defineCustomElement('dbp-translation', Translation);
 commonUtils.defineCustomElement('dbp-select', DBPSelect);
+commonUtils.defineCustomElement('dbp-provider', Provider);
+commonUtils.defineCustomElement('dbp-provider-adapter', ProviderAdapter);

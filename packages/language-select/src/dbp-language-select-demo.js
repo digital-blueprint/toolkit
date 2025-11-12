@@ -2,8 +2,7 @@ import {html} from 'lit';
 import {LanguageSelect} from './language-select.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
-import {AdapterLitElement} from '@dbp-toolkit/common';
-import {Provider} from '@dbp-toolkit/provider';
+import {AdapterLitElement, Provider} from '@dbp-toolkit/common';
 import {createInstance, setOverrides} from './i18n.js';
 
 // This is an example on how to override translations at runtime

@@ -1,4 +1,4 @@
-import {Logger} from '@dbp-toolkit/common';
+import {Logger} from '../logger.js';
 
 export class Provider extends HTMLElement {
     constructor() {
@@ -13,8 +13,6 @@ export class Provider extends HTMLElement {
 
         // We need to store our own "last values" because we cannot be sure what the MutationObserver detects
         this.lastProperties = {};
-
-        Logger.debug('Provider constructor()');
     }
 
     getProperty(name) {

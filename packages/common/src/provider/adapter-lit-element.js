@@ -1,5 +1,5 @@
 import {LitElement} from 'lit';
-import {Logger} from './logger';
+import {Logger} from '../logger.js';
 
 export class AdapterLitElement extends LitElement {
     constructor() {

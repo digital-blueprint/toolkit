@@ -1,4 +1,4 @@
-import {AdapterLitElement} from './adapter-lit-element.js';
+import {AdapterLitElement} from './provider/adapter-lit-element.js';
 import {_parseUrlComponents} from './internal.js';
 
 export default class DBPLitElement extends AdapterLitElement {

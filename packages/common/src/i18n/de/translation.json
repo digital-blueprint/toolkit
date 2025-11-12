@@ -1,9 +1,20 @@
 {
+    "consumer": {
+        "item": "Bezeichnung",
+        "price": "Preis",
+        "sum": "Summe"
+    },
     "dbp-modal": {
         "close": "Schließen"
     },
+    "demo": {
+        "consumer": "Verbraucher",
+        "consumer_description": "Verbraucher \"{{id}}\" abonniert nur {{subscriptions}}",
+        "provider": "Anbieter",
+        "provider_description": "Anbieter \"{{id}}\" {{description}}"
+    },
     "error": {
-        "connection-to-server-refused": "Verbindungs zum Server verweigert!",
+        "connection-to-server-refused": "Verbindung zum Server verweigert!",
         "summary": "Ein Fehler ist aufgetreten"
     }
 }

@@ -9,6 +9,7 @@ import {DbpButtonDemo} from './button-demo.js';
 import {DbpIconDemo} from './icon-demo.js';
 import {DbpMiscDemo} from './misc-demo.js';
 import {DbpSelectDemo} from './dbp-select-demo.js';
+import {ProviderDemo} from './provider-demo.js';
 import {LangMixin} from '../index.js';
 
 export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
@@ -24,6 +25,7 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
             'dbp-icon-demo': DbpIconDemo,
             'dbp-misc-demo': DbpMiscDemo,
             'dbp-select-demo': DbpSelectDemo,
+            'dbp-provider-demo': ProviderDemo,
         };
 
         if (customElements.get('dbp-auth')) {
@@ -85,6 +87,7 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
                 <dbp-button-demo></dbp-button-demo>
                 <dbp-select-demo></dbp-select-demo>
                 <dbp-modal-demo entry-point-url="${this.entryPointUrl}"></dbp-modal-demo>
+                <dbp-provider-demo></dbp-provider-demo>
                 <dbp-icon-demo></dbp-icon-demo>
             </section>
         `;
