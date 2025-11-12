@@ -7,6 +7,9 @@
     "imprint": "Legal Notice",
     "login": "Login",
     "logout": "Logout",
+    "main-page": {
+        "menu": "Menu"
+    },
     "page-not-found": "Requested Page Not Found",
     "page-updated-needs-reload": "The application has been updated. Please reload the page.",
     "privacy-policy": "Privacy Policy",

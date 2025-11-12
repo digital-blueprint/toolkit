@@ -560,8 +560,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (burger) burger.name = isOpening ? 'close' : 'menu';
         menuLable?.setAttribute('aria-expanded', String(isOpening));
 
-        // Icon + aria
-
         if (burger) burger.name = isOpening ? 'close' : 'menu';
         menuLable.setAttribute('aria-expanded', String(isOpening));
 
@@ -583,7 +581,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 if (!clickedInside) this.hideMenu();
             };
 
-            // Attach in the bubble phase and on next tick so the opening click isn't caught
             setTimeout(() => {
                 document.addEventListener('click', this._boundCloseMenuHandler);
             }, 0);
@@ -952,7 +949,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     opacity: 0.8;
                 }
 
-                /* keep it fully hidden from a11y tree when closed */
                 aside[hidden] {
                     display: block;
                 }
@@ -1149,7 +1145,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                         name="menu"
                                         id="menu-burger-icon"
                                         @click="${this.toggleMenu}"></dbp-icon>
-                                    <span class="menu-label" @click="${this.toggleMenu}">menu</span>
+                                    <span class="menu-label" @click="${this.toggleMenu}">
+                                        ${this._i18n.t('main-page.menu')}
+                                    </span>
                                 </nav>
                                 <div class="hd1-left-switches">
                                     <dbp-theme-switcher

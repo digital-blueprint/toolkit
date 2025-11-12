@@ -7,6 +7,9 @@
     "imprint": "Impressum",
     "login": "Anmelden",
     "logout": "Abmelden",
+    "main-page": {
+        "menu": "Menü"
+    },
     "page-not-found": "Die gewünschte Seite wurde nicht gefunden",
     "page-updated-needs-reload": "Die Applikation wurde aktualisiert. Bitte laden Sie die Seite neu.",
     "privacy-policy": "Datenschutz",
