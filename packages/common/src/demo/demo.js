@@ -86,10 +86,18 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
                 ${this.getAuthComponentHtml()}
 
                 <dbp-misc-demo></dbp-misc-demo>
-                ${this.noIcon ? html`` : html`<dbp-icon-demo></dbp-icon-demo>`}
                 <dbp-button-demo></dbp-button-demo>
                 <dbp-select-demo></dbp-select-demo>
-                ${this.noModal ? html`` : html`<dbp-modal-demo entry-point-url="${this.entryPointUrl}"></dbp-modal-demo>`}
+                ${this.noModal
+                    ? html``
+                    : html`
+                          <dbp-modal-demo entry-point-url="${this.entryPointUrl}"></dbp-modal-demo>
+                      `}
+                ${this.noIcon
+                    ? html``
+                    : html`
+                          <dbp-icon-demo></dbp-icon-demo>
+                      `}
             </section>
         `;
     }
