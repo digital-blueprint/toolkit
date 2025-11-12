@@ -45,6 +45,7 @@
         "@dbp-toolkit/notification": "^0.3.4",
         "@dbp-toolkit/pdf-viewer": "^0.1.4",
         "@dbp-toolkit/person-select": "^0.3.5",
+        "@dbp-toolkit/provider": "^0.2.11",
         "@dbp-toolkit/qr-code-scanner": "^0.3.5",
         "@dbp-toolkit/resource-select": "^0.1.4",
         "@dbp-toolkit/tabulator-table": "^0.1.2",
