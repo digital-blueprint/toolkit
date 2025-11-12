@@ -7,7 +7,6 @@ import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {replacePlugin} from 'rolldown/plugins';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
-import minifyHTML from '@lit-labs/rollup-plugin-minify-html-literals';
 import appConfig from './app.config.js';
 import {
     generateTLSConfig,
@@ -202,10 +201,6 @@ Dependencies:
                 preventAssignment: true,
             },
         ),
-        doMinify &&
-            minifyHTML({
-                options: {minifyOptions: {conservativeCollapse: true, removeComments: true}},
-            }),
         useBabel &&
             getBabelOutputPlugin({
                 compact: false,
