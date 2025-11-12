@@ -1,0 +1,18 @@
+{
+    "element": "dbp-common-modal-demo-activity",
+    "module_src": "dbp-common-modal-demo-activity.js",
+    "routing_name": "modal",
+    "name": {
+        "de": "Modal",
+        "en": "Modal"
+    },
+    "short_name": {
+        "de": "Modal",
+        "en": "Modal"
+    },
+    "description": {
+        "de": "Modal-Dialoge",
+        "en": "Modal dialogs"
+    },
+    "subscribe": "lang,entry-point-url,lang-dir"
+}

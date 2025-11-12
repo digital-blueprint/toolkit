@@ -15,6 +15,8 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
     constructor() {
         super();
         this.noAuth = false;
+        this.noIcon = false;
+        this.noModal = false;
     }
 
     static get scopedElements() {
@@ -37,6 +39,8 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
         return {
             ...super.properties,
             noAuth: {type: Boolean, attribute: 'no-auth'},
+            noIcon: {type: Boolean, attribute: 'no-icons'},
+            noModal: {type: Boolean, attribute: 'no-modal'},
         };
     }
 
@@ -82,10 +86,10 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
                 ${this.getAuthComponentHtml()}
 
                 <dbp-misc-demo></dbp-misc-demo>
-                <dbp-icon-demo></dbp-icon-demo>
+                ${this.noIcon ? html`` : html`<dbp-icon-demo></dbp-icon-demo>`}
                 <dbp-button-demo></dbp-button-demo>
                 <dbp-select-demo></dbp-select-demo>
-                <dbp-modal-demo entry-point-url="${this.entryPointUrl}"></dbp-modal-demo>
+                ${this.noModal ? html`` : html`<dbp-modal-demo entry-point-url="${this.entryPointUrl}"></dbp-modal-demo>`}
             </section>
         `;
     }

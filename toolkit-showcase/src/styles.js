@@ -28,12 +28,12 @@ export function getDemoCSS() {
         h2,
         h3,
         h4 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         h2,
         h3,
         h4 {
-            /*margin: 40px 0 10px 0px;*/
+            margin-top: 25px;
         }
         p {
             margin: 10px 0;

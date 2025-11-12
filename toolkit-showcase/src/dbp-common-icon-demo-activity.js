@@ -1,13 +1,13 @@
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
-import {DbpCommonDemo} from '@dbp-toolkit/common/src/demo/demo.js';
+import {DbpIconDemo} from '@dbp-toolkit/common/src/demo/icon-demo.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import readme from '@dbp-toolkit/common/README.md';
+import readme from '@dbp-toolkit/common/README.icon.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
-class DbpCommonDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+class DbpCommonIconDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
         this.lang = 'en';
@@ -17,7 +17,7 @@ class DbpCommonDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     static get scopedElements() {
         return {
-            'dbp-common-demo': DbpCommonDemo,
+            'dbp-icon-demo': DbpIconDemo,
         };
     }
 
@@ -55,15 +55,9 @@ class DbpCommonDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     render() {
         return html`
             ${demoStyles.renderMarkdown(readme)}
-            <dbp-common-demo
-                id="demo"
-                lang="${this.lang}"
-                lang-dir="${this.langDir}"
-                no-icon
-                no-modal
-                entry-point-url="${this.entryPointUrl}"></dbp-common-demo>
+            <dbp-icon-demo></dbp-icon-demo>
         `;
     }
 }
 
-commonUtils.defineCustomElement('dbp-common-demo-activity', DbpCommonDemoActivity);
+commonUtils.defineCustomElement('dbp-common-icon-demo-activity', DbpCommonIconDemoActivity);

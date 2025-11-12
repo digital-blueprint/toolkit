@@ -1,24 +1,23 @@
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
-//import {ClassName} from '@dbp-toolkit/package-name/src/dbp-demo-activity-name'; TODO
+import {DbpModalDemo} from '@dbp-toolkit/common/src/demo/modal-demo.js';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-//import * as commonUtils from "@dbp-toolkit/common/utils";
-// import readme from '@dbp-toolkit/class-name/README.md'; TODO
+import readme from '@dbp-toolkit/common/README.modal.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
-export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
-    //TODO
+class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
         super();
         this.lang = 'en';
         this.entryPointUrl = '';
+        this.langDir = '';
     }
 
     static get scopedElements() {
         return {
-            // TODO
-            //'dbp-class-name-demo': ClassName,
+            'dbp-modal-demo': DbpModalDemo,
         };
     }
 
@@ -26,14 +25,9 @@ export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitE
         return {
             ...super.properties,
             lang: {type: String},
+            langDir: {type: String, attribute: 'lang-dir'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -59,15 +53,11 @@ export class DbpActivityNameDemoActivity extends ScopedElementsMixin(AdapterLitE
     }
 
     render() {
-        /**
-            return html`
-                ${demoStyles.renderMarkdown(readme)}
-                <dbp-class-name-demo id="demo" lang="${this.lang}" entry-point-url="${this
-                .entryPointUrl}"></dbp-class-name-demo>
-            `;
-         */
-        return html``;
+        return html`
+            ${demoStyles.renderMarkdown(readme)}
+            <dbp-modal-demo></dbp-modal-demo>
+        `;
     }
 }
 
-//commonUtils.defineCustomElement('dbp-class-name-demo-activity', DbpClassNameDemoActivity); TODO
+commonUtils.defineCustomElement('dbp-common-modal-demo-activity', DbpCommonModalDemoActivity);

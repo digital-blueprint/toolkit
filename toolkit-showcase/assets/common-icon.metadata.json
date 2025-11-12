@@ -1,0 +1,18 @@
+{
+    "element": "dbp-common-icon-demo-activity",
+    "module_src": "dbp-common-icon-demo-activity.js",
+    "routing_name": "icon",
+    "name": {
+        "de": "Icons",
+        "en": "Icons"
+    },
+    "short_name": {
+        "de": "Icons",
+        "en": "Icons"
+    },
+    "description": {
+        "de": "Icon-Sammlung",
+        "en": "Icon collection"
+    },
+    "subscribe": "lang,entry-point-url,lang-dir"
+}
