@@ -1,0 +1,18 @@
+{
+    "element": "dbp-common-input-demo-activity",
+    "module_src": "dbp-common-input-demo-activity.js",
+    "routing_name": "input",
+    "name": {
+        "de": "Eingabe Komponenten",
+        "en": "Input Components"
+    },
+    "short_name": {
+        "de": "Eingabe Komponenten",
+        "en": "Input Components"
+    },
+    "description": {
+        "de": "Eingabe Komponenten",
+        "en": "Input Components"
+    },
+    "subscribe": "lang,entry-point-url,lang-dir"
+}

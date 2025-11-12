@@ -1,0 +1,18 @@
+{
+    "element": "dbp-common-misc-demo-activity",
+    "module_src": "dbp-common-misc-demo-activity.js",
+    "routing_name": "common",
+    "name": {
+        "de": "Verschiedene Komponenten",
+        "en": "Miscellaneous Components"
+    },
+    "short_name": {
+        "de": "Verschiedenes",
+        "en": "Misc"
+    },
+    "description": {
+        "de": "Verschiedene Komponenten und Hilfselemente",
+        "en": "Miscellaneous components and utility elements"
+    },
+    "subscribe": "lang,entry-point-url,lang-dir"
+}
