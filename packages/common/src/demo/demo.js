@@ -39,7 +39,7 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
         return {
             ...super.properties,
             noAuth: {type: Boolean, attribute: 'no-auth'},
-            noIcon: {type: Boolean, attribute: 'no-icons'},
+            noIcon: {type: Boolean, attribute: 'no-icon'},
             noModal: {type: Boolean, attribute: 'no-modal'},
         };
     }
