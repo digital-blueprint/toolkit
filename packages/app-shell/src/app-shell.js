@@ -699,7 +699,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             .burger-menu-icon {
                 color: var(--dbp-accent);
                 cursor: pointer;
-                padding-top: 2px;
             }
 
             .menu-label {
