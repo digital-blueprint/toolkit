@@ -239,6 +239,7 @@ export class Notification extends ScopedElementsMixin(DBPLitElement) {
             }
         }
         customEvent.preventDefault();
+        customEvent.stopImmediatePropagation();
 
         let replaceId = customEvent.detail.replaceId ?? null;
         let notificationData = {
