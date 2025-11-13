@@ -697,7 +697,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             }
 
             .burger-menu-icon {
-                color: var(--dbp-accent);
+                color: var(--dbp-content);
                 cursor: pointer;
             }
 
@@ -903,12 +903,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 aside ul.menu {
                     display: block;
                     position: fixed;
-                    width: 40vw;
+                    width: 50vw;
                     left: 0;
                     right: auto;
                     top: 0;
                     max-height: 100dvh;
-                    margin: 3rem 0 0 0;
+                    margin: 3.5rem 0 0 0;
                     box-sizing: border-box;
                     background: var(--surface, #fff);
                     transform: translateY(-110%);
@@ -950,6 +950,16 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                 aside[hidden] {
                     display: block;
+                }
+            }
+            @media (max-width: 490px) {
+                aside ul.menu {
+                    width: 100vw;
+                    z-index: 1000;
+                    margin: 3.5rem 0 0 0;
+                }
+                header {
+                    z-index: 2500;
                 }
             }
         `;
