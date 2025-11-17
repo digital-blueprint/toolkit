@@ -258,12 +258,6 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             background-color: var(--dbp-hover-background-color);
         }
 
-        .title {
-            color: var(--dbp-content);
-            font-size: 1em;
-            line-height: 1.125;
-        }
-
         #headline h1 {
             font-size: 2em;
             font-weight: normal;

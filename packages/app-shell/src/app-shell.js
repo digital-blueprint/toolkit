@@ -627,6 +627,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 font-weight: bold;
             }
 
+            .title {
+                color: var(--dbp-content);
+                font-size: 1em;
+                line-height: 1.125;
+            }
+
             #main {
                 display: grid;
                 grid-template-columns: minmax(0, 1fr);

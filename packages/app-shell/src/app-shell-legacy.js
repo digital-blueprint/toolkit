@@ -614,13 +614,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: none;
             }
 
-            h1.title {
-                /*margin-bottom: 0;*/
-                margin-top: 20px;
-                margin-bottom: 20px;
-                font-weight: 300;
-            }
-
             #main {
                 display: grid;
                 grid-template-columns: minmax(180px, 17%) minmax(0, auto);
@@ -2087,7 +2080,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                         </slot>
                     </header>
                     <div id="headline">
-                        <h1>
+                        <h1 class="title">
                             <slot name="title">${this.topicMetaDataText('name')}</slot>
                         </h1>
                     </div>
