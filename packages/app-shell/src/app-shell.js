@@ -331,6 +331,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     update(changedProperties) {
+        this.initializeScrollToTopButton();
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
@@ -614,6 +615,31 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         }
     }
 
+    initializeScrollToTopButton() {
+        const scrollBtn = this.shadowRoot.getElementById('scroll-top');
+        if (!scrollBtn) return;
+
+        const toggleScrollButton = () => {
+            if (window.scrollY > 100) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        };
+        window.addEventListener('scroll', toggleScrollButton);
+
+        window.addEventListener('load', toggleScrollButton);
+
+        scrollBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        });
+        toggleScrollButton();
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -886,7 +912,40 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: none;
             }
 
-            @media (max-width: 870px) {
+            /* scroll to top*/
+
+            .scroll-top-wrapper {
+                display: flex;
+                z-index: 1000;
+                position: fixed;
+                bottom: 8rem;
+                right: max(1.5rem, calc((90vw - 1400px) / 2 + 1.5rem));
+                align-items: center;
+            }
+
+            #scroll-top {
+                padding: 0.5em;
+                opacity: 0;
+                pointer-events: none;
+                color: var(--dbp-content);
+                transition:
+                    opacity 0.3s ease,
+                    color 0.3s ease;
+                cursor: pointer;
+                background-color: var(--dbp-accent);
+                border: none;
+            }
+
+            #scroll-top.visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            @media (max-width: 1400px) {
+                .scroll-top-wrapper {
+                    right: 1rem;
+                }
+
                 header .hd1-right .logo {
                     display: none;
                 }
@@ -1939,8 +1998,33 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                         </div>
                         <p class="description">${this.description}</p>
                         ${this._renderActivity()}
+                        <div class="scroll-top-wrapper">
+                            <button
+                                id="scroll-top"
+                                class="button is-secondary"
+                                aria-label="${i18n.t('buttons.scroll-to-top')}">
+                                <div class="scroll-top-button" aria-hidden="true">
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 106 58"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M5 53L53 5"
+                                            stroke="#ffffff"
+                                            stroke-width="10"
+                                            stroke-linecap="round" />
+                                        <path
+                                            d="M53 5L101 53"
+                                            stroke="#ffffff"
+                                            stroke-width="10"
+                                            stroke-linecap="round" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
                     </main>
-
                     <footer>
                         <slot name="footer">
                             <slot name="footer-links">

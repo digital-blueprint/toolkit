@@ -2,6 +2,9 @@
     "activity-example": {
         "hello-world": "Hello World"
     },
+    "buttons": {
+        "scroll-to-top": "scroll-to-top"
+    },
     "choose-from-menu": "Please choose an activity from the menu.",
     "contact": "Contact",
     "imprint": "Legal Notice",

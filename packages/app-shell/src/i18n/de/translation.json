@@ -2,6 +2,9 @@
     "activity-example": {
         "hello-world": "Hallo Welt"
     },
+    "buttons": {
+        "scroll-to-top": "Zum Seitenanfang"
+    },
     "choose-from-menu": "Bitte wählen Sie eine Aktivität aus dem Menu.",
     "contact": "Kontakt",
     "imprint": "Impressum",

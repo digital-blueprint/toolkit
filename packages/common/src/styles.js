@@ -244,6 +244,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             color: var(--dbp-content);
             cursor: pointer;
             text-decoration: none;
+            word-wrap: break-word;
         }
 
         a.is-download {
