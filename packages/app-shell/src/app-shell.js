@@ -726,15 +726,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 gap: 10px;
                 justify-self: center;
                 align-self: center;
-            }
-
-            .burger-menu-icon {
+                cursor: pointer;
+                padding: 10px 5px;
+                margin: -10px -5px;
                 color: var(--dbp-content);
-                cursor: pointer;
-            }
-
-            .menu-label {
-                cursor: pointer;
             }
 
             .hd1-left-switches {
@@ -1210,13 +1205,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                <nav class="hd1-left-menu">
+                                <nav class="hd1-left-menu" @click="${this.toggleMenu}">
                                     <dbp-icon
                                         class="burger-menu-icon"
                                         name="menu"
-                                        id="menu-burger-icon"
-                                        @click="${this.toggleMenu}"></dbp-icon>
-                                    <span class="menu-label" @click="${this.toggleMenu}">
+                                        id="menu-burger-icon"></dbp-icon>
+                                    <span class="menu-label">
                                         ${this._i18n.t('main-page.menu')}
                                     </span>
                                 </nav>
