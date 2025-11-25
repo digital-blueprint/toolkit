@@ -964,7 +964,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     display: block;
                     position: fixed;
                     visibility: hidden;
-                    width: 50vw;
+                    width: 25vw;
+                    min-width: 250px;
                     left: 0;
                     right: auto;
                     top: 0;
