@@ -908,8 +908,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 grid-area: auto;
             }
 
-            #main:not(.menu-open) ul.menu.is-open {
-                display: none;
+            ul.menu:not(.is-open) {
+                visibility: hidden;
             }
 
             /* scroll to top*/
@@ -956,7 +956,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     grid-template-areas: 'header' 'headline' 'main' 'footer';
                 }
 
-                header .hd1-left {
+                header {
                     z-index: 2000;
                     background-color: var(--dbp-background);
                 }
@@ -968,6 +968,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 aside ul.menu {
                     display: block;
                     position: fixed;
+                    visibility: hidden;
                     width: 50vw;
                     left: 0;
                     right: auto;
@@ -975,11 +976,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     max-height: 100dvh;
                     margin: 3.5rem 0 0 0;
                     box-sizing: border-box;
-                    background: var(--surface, #fff);
                     transform: translateY(-110%);
                     transition:
                         transform 0.28s ease,
-                        box-shadow 0.28s ease;
+                        box-shadow 0.28s ease,
+                        visibility 0s linear 0.28s;
                     overflow-y: auto;
                     padding-block: 0.5rem 1rem;
                     padding-inline: 0;
@@ -988,19 +989,19 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     color: var(--dbp-content);
                 }
 
-                #main.menu-open aside ul.menu {
+                aside ul.menu.is-open {
                     transform: translateY(0);
+                    visibility: visible;
                     box-shadow: 0px 0px 0.4em rgba(0, 0, 0, 0.2);
+                    transition-delay: 0s;
                 }
 
                 #main.menu-open {
                     overflow: hidden;
                     touch-action: none;
                     pointer-events: auto;
-                    content: '';
-                    position: fixed;
-                    inset: 0;
-                    z-index: 900;
+                    height: 100vh;
+                    overflow-y: hidden;
                 }
 
                 .menu li {
@@ -1011,10 +1012,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
                 .menu a:active {
                     opacity: 0.8;
-                }
-
-                aside[hidden] {
-                    display: block;
                 }
             }
             @media (max-width: 490px) {
