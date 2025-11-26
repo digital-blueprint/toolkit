@@ -68,11 +68,7 @@ export async function downloadExcel(rows, dataName) {
                     typeof definition.titleFormatter === 'function'
                 ) {
                     title = definition.titleFormatter(
-                        {
-                            getValue() {
-                                return field;
-                            },
-                        },
+                        cell,
                         definition['titleFormatterParams'] || {},
                         null,
                     );
@@ -80,11 +76,7 @@ export async function downloadExcel(rows, dataName) {
                 let cellValue = cell.getValue();
                 if ('formatter' in definition && typeof definition.formatter === 'function') {
                     cellValue = definition.formatter(
-                        {
-                            getValue() {
-                                return cellValue;
-                            },
-                        },
+                        cell,
                         definition['formatterParams'] || {},
                         null,
                     );
