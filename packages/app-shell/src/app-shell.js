@@ -1978,7 +1978,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     : this.topicMetaDataText('name')}
                             </slot>
                         </p>
-                        <h1>
+                        <h1 title="${this.description}">
                             ${this.activeView === 'welcome'
                                 ? this.topicMetaDataText('name')
                                 : this.subtitle}
