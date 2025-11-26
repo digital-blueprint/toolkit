@@ -490,30 +490,23 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             return;
         }
 
-        let updateFunc = () => {
-            if (changed) {
-                this._scrollToTop();
-            }
-            this.updatePageTitle();
-            this.updatePageMetaDescription();
-            this.subtitle = this.activeMetaDataText('short_name');
-            this.description = this.activeMetaDataText('description');
-        };
+        if (changed) {
+            this._scrollToTop();
+        }
+        this.updatePageTitle();
+        this.updatePageMetaDescription();
+        this.subtitle = this.activeMetaDataText('short_name');
+        this.description = this.activeMetaDataText('description');
 
         // If it is empty assume the element is already registered through other means
         if (!metadata.module_src) {
-            updateFunc();
             return;
         }
 
-        importNotify(this._i18n, import(metadata.module_src))
-            .then(() => {
-                updateFunc();
-            })
-            .catch((e) => {
-                console.error(`Error loading ${metadata.element}`);
-                throw e;
-            });
+        importNotify(this._i18n, import(metadata.module_src)).catch((e) => {
+            console.error(`Error loading ${metadata.element}`);
+            throw e;
+        });
     }
 
     metaDataText(routingName, key) {
