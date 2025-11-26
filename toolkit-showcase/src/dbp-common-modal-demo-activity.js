@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/common/README.modal.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -18,6 +19,7 @@ class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
     static get scopedElements() {
         return {
             'dbp-modal-demo': DbpModalDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -54,7 +56,7 @@ class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-modal-demo></dbp-modal-demo>
         `;
     }

@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/common/README.icon.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpCommonIconDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -18,6 +19,7 @@ class DbpCommonIconDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     static get scopedElements() {
         return {
             'dbp-icon-demo': DbpIconDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -54,7 +56,7 @@ class DbpCommonIconDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-icon-demo></dbp-icon-demo>
         `;
     }

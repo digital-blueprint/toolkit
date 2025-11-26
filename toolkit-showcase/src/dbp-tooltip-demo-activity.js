@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/tooltip/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpTooltipDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -16,6 +17,7 @@ class DbpTooltipDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     static get scopedElements() {
         return {
             'dbp-tooltip-demo': TooltipDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -24,12 +26,6 @@ class DbpTooltipDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
             ...super.properties,
             lang: {type: String},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -56,7 +52,7 @@ class DbpTooltipDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-tooltip-demo id="demo" lang="${this.lang}"></dbp-tooltip-demo>
         `;
     }

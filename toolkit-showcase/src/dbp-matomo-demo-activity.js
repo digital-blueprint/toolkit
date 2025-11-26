@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/matomo/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -17,6 +18,7 @@ class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     static get scopedElements() {
         return {
             'dbp-matomo-demo': MatomoDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -26,12 +28,6 @@ class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
             lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -58,7 +54,7 @@ class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-matomo-demo
                 id="demo"
                 lang="${this.lang}"

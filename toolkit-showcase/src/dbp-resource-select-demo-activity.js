@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/resource-select/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -17,6 +18,7 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
     static get scopedElements() {
         return {
             'dbp-resource-select-demo': ResourceSelectDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -26,12 +28,6 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
             lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -58,7 +54,7 @@ class DbpOrganizationSelectDemoActivity extends ScopedElementsMixin(AdapterLitEl
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-resource-select-demo
                 id="demo"
                 lang="${this.lang}"

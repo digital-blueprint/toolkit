@@ -7,6 +7,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/common/README.input.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpCommonInputDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -20,6 +21,7 @@ class DbpCommonInputDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
         return {
             'dbp-button-demo': DbpButtonDemo,
             'dbp-select-demo': DbpSelectDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -56,7 +58,7 @@ class DbpCommonInputDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-button-demo></dbp-button-demo>
             <dbp-select-demo></dbp-select-demo>
         `;

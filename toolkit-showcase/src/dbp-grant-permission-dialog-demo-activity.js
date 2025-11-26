@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/grant-permission-dialog/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpGrantPermissionDialogDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -17,6 +18,7 @@ class DbpGrantPermissionDialogDemoActivity extends ScopedElementsMixin(AdapterLi
     static get scopedElements() {
         return {
             'dbp-grant-permission-dialog-demo': GrantPermissionDialogDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -26,12 +28,6 @@ class DbpGrantPermissionDialogDemoActivity extends ScopedElementsMixin(AdapterLi
             lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -53,7 +49,7 @@ class DbpGrantPermissionDialogDemoActivity extends ScopedElementsMixin(AdapterLi
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-grant-permission-dialog-demo
                 id="demo"
                 lang="${this.lang}"

@@ -1,14 +1,4 @@
-import {css, CSSResult, html} from 'lit';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import * as commonUtils from '@dbp-toolkit/common/utils';
-import highlightCSSPath from 'highlight.js/styles/github.css';
-
-export function renderMarkdown(mdContent) {
-    return html`
-        <link rel="stylesheet" href="${commonUtils.getAbsoluteURL(highlightCSSPath)}" />
-        ${unsafeHTML(mdContent)}
-    `;
-}
+import {css, CSSResult} from 'lit';
 
 /**
  * We want to have "neutral" colors here

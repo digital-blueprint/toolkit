@@ -6,6 +6,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import readme from '@dbp-toolkit/theme-switcher/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -17,6 +18,7 @@ export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLit
     static get scopedElements() {
         return {
             'dbp-theme-switcher-demo': ThemeSwitcherDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -26,12 +28,6 @@ export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLit
             lang: {type: String},
             langDir: {type: String, attribute: 'lang-dir'},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -58,7 +54,7 @@ export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLit
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-theme-switcher-demo
                 id="demo"
                 lang="${this.lang}"

@@ -6,6 +6,7 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import readme from '@dbp-toolkit/file-handling/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 export class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -17,6 +18,7 @@ export class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitE
     static get scopedElements() {
         return {
             'dbp-file-source-demo': FileSourceDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -26,12 +28,6 @@ export class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitE
             lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -58,7 +54,7 @@ export class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitE
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-file-source-demo
                 id="demo"
                 lang="${this.lang}"

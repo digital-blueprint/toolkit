@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/tabulator-table/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpTabulatorTableDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -17,6 +18,7 @@ class DbpTabulatorTableDemoActivity extends ScopedElementsMixin(AdapterLitElemen
     static get scopedElements() {
         return {
             'dbp-tabulator-table-demo': TabulatorTableDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -26,12 +28,6 @@ class DbpTabulatorTableDemoActivity extends ScopedElementsMixin(AdapterLitElemen
             lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -55,7 +51,7 @@ class DbpTabulatorTableDemoActivity extends ScopedElementsMixin(AdapterLitElemen
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-tabulator-table-demo
                 id="demo"
                 lang="${this.lang}"

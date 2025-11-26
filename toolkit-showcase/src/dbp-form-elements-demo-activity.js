@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import readme from '@dbp-toolkit/form-elements/README.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import {MarkdownElement} from './markdown-element.js';
 
 class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -17,6 +18,7 @@ class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement)
     static get scopedElements() {
         return {
             'dbp-form-elements-demo': FormElementsDemo,
+            'dbp-markdown': MarkdownElement,
         };
     }
 
@@ -25,12 +27,6 @@ class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement)
             ...super.properties,
             lang: {type: String},
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     static get styles() {
@@ -57,7 +53,7 @@ class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement)
 
     render() {
         return html`
-            ${demoStyles.renderMarkdown(readme)}
+            <dbp-markdown .markdown=${readme}></dbp-markdown>
             <dbp-form-elements-demo id="demo" lang="${this.lang}"></dbp-form-elements-demo>
         `;
     }
