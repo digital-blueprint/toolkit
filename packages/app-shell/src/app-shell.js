@@ -176,6 +176,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         else this.switchComponent(this.activeView);
     }
 
+    firstUpdated() {
+        super.firstUpdated();
+
+        if (!this.isMenuFloating()) {
+            this.toggleMenu();
+        }
+    }
+
     initRouter() {
         const routes = [
             {
