@@ -118,12 +118,11 @@ export function getTabulatorStyles() {
             display: none !important;
         }
 
-        .tabulator-col-title input[type="checkbox"],
-        .tabulator-cell.tabulator-row-header input[type="checkbox"] {
+        .tabulator-col-title input[type='checkbox'],
+        .tabulator-cell.tabulator-row-header input[type='checkbox'] {
             width: 24px;
             height: 24px;
         }
-
 
         /* Toggle Button Styles */
         .tabulator-row .tabulator-responsive-collapse {
