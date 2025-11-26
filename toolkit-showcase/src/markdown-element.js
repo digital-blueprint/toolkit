@@ -78,7 +78,7 @@ export class MarkdownElement extends LitElement {
 
     render() {
         return html`
-            ${renderMarkdown(this.markdown, this.tsheme.isDark)}
+            ${renderMarkdown(this.markdown, this.theme.isDark)}
         `;
     }
 }
