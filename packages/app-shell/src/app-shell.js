@@ -756,7 +756,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: flex;
                 justify-content: space-between;
                 -webkit-justify-content: space-between;
-                padding: 0 20px;
+                padding: 0 10px 0 20px;
                 min-width: 0;
                 align-items: center;
                 -webkit-align-items: center;
