@@ -694,6 +694,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 grid-area: headline;
                 margin: 20px 0 20px 0;
                 text-align: center;
+                padding: 0 5px;
             }
 
             main {
