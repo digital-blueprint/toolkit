@@ -716,7 +716,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 grid-area: hd1-left;
                 text-align: right;
                 padding-right: 20px;
-                padding-left: 18px;
+                padding-left: 15px;
                 align-items: center;
                 -webkit-align-items: center;
                 gap: 10px;
@@ -944,6 +944,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                 header .hd1-right .logo {
                     display: none;
+                }
+
+                header .hd1-right {
+                    padding-left: 0px;
                 }
 
                 #main,
