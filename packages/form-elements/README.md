@@ -18,6 +18,11 @@ npm i @dbp-toolkit/form-elements
 <script type="module" src="node_modules/@dbp-toolkit/form-elements/dist/string.js"></script>
 ```
 
+```html
+<dbp-form-number-element></dbp-form-number-element>
+<script type="module" src="node_modules/@dbp-toolkit/form-elements/dist/number.js"></script>
+```
+
 Or directly via CDN:
 
 ```html
@@ -25,6 +30,13 @@ Or directly via CDN:
 <script
     type="module"
     src="https://unpkg.com/@dbp-toolkit/form-elements@0.2.0/dist/string.js"></script>
+```
+
+```html
+<dbp-form-number-element></dbp-form-number-element>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/form-elements@0.2.0/dist/number.js"></script>
 ```
 
 ## Attributes
@@ -76,6 +88,21 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `word-count-limit` (optional): Limit max word count for textarea
     - Type: Number
     - Example: `<dbp-form-string-element word-count-limit="300"></dbp-form-string-element>`
+
+### Number Element
+
+- `placeholder` (optional): Placeholder text for the number input field
+    - Type: Text
+    - Example: `<dbp-form-number-element placeholder="Enter a number"></dbp-form-number-element>`
+- `min` (optional): Minimum value allowed
+    - Type: Number
+    - Example: `<dbp-form-number-element min="0"></dbp-form-number-element>`
+- `max` (optional): Maximum value allowed
+    - Type: Number
+    - Example: `<dbp-form-number-element max="100"></dbp-form-number-element>`
+- `step` (optional): Increment/decrement step value
+    - Type: Number
+    - Example: `<dbp-form-number-element step="0.5"></dbp-form-number-element>`
 
 ### Boolean Element
 

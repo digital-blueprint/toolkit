@@ -7,6 +7,10 @@
         "enum": {
             "select-placeholder": "Please select an option"
         },
+        "number": {
+            "max-exceeded": "The value must be at most {{max}}.",
+            "min-exceeded": "The value must be at least {{min}}."
+        },
         "string": {
             "word-count-exceeded": "You have exceeded the maximum number of allowed {{wordLimit}} words. Entered {{wordCount}} words. Please remove the extra words."
         }

@@ -6,11 +6,13 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {
     DbpStringElement,
+    DbpNumberElement,
     DbpDateElement,
     DbpDateTimeElement,
     DbpEnumElement,
     DbpBooleanElement,
     DbpStringView,
+    DbpNumberView,
     DbpDateView,
     DbpDateTimeView,
     DbpEnumView,
@@ -33,11 +35,13 @@ export class FormElementsDemo extends LangMixin(
     static get scopedElements() {
         return {
             'dbp-form-string-element': DbpStringElement,
+            'dbp-form-number-element': DbpNumberElement,
             'dbp-form-date-element': DbpDateElement,
             'dbp-form-datetime-element': DbpDateTimeElement,
             'dbp-form-enum-element': DbpEnumElement,
             'dbp-form-boolean-element': DbpBooleanElement,
             'dbp-form-string-view': DbpStringView,
+            'dbp-form-number-view': DbpNumberView,
             'dbp-form-date-view': DbpDateView,
             'dbp-form-datetime-view': DbpDateTimeView,
             'dbp-form-enum-view': DbpEnumView,
@@ -185,6 +189,40 @@ export class FormElementsDemo extends LangMixin(
                             rows="5"
                             word-count-limit="10"
                             ?required=${this.isRequired}></dbp-form-string-element>
+
+                        <dbp-form-number-element
+                            subscribe="lang"
+                            name="myComponentNumber"
+                            label="My number"
+                            value=${data.myComponentNumber || ''}
+                            ?required=${this.isRequired}></dbp-form-number-element>
+
+                        <dbp-form-number-element
+                            subscribe="lang"
+                            name="myComponentNumberInline"
+                            label="Inline number"
+                            layout-type="inline"
+                            value=${data.myComponentNumberInline || ''}
+                            ?required=${this.isRequired}></dbp-form-number-element>
+
+                        <dbp-form-number-element
+                            subscribe="lang"
+                            name="myComponentNumberRange"
+                            label="Number with min/max (1-100)"
+                            description="Must be between 1 and 100"
+                            value=${data.myComponentNumberRange || ''}
+                            min="1"
+                            max="100"
+                            ?required=${this.isRequired}></dbp-form-number-element>
+
+                        <dbp-form-number-element
+                            subscribe="lang"
+                            name="myComponentNumberStep"
+                            label="Number with step (0.5)"
+                            description="Increments of 0.5"
+                            value=${data.myComponentNumberStep || ''}
+                            step="0.5"
+                            ?required=${this.isRequired}></dbp-form-number-element>
 
                         <dbp-form-date-element
                             subscribe="lang"
@@ -416,6 +454,27 @@ export class FormElementsDemo extends LangMixin(
                         name="mySpecialString"
                         label="My special string"
                         .value=${data.mySpecialString || ''}></dbp-form-string-view>
+
+                    <dbp-form-number-view
+                        subscribe="lang"
+                        label="My number"
+                        .value=${data.myComponentNumber || ''}></dbp-form-number-view>
+
+                    <dbp-form-number-view
+                        subscribe="lang"
+                        label="My number [layout-type: inline]"
+                        layout-type="inline"
+                        .value=${data.myComponentNumberInline || ''}></dbp-form-number-view>
+
+                    <dbp-form-number-view
+                        subscribe="lang"
+                        label="Number with min/max (1-100)"
+                        .value=${data.myComponentNumberRange || ''}></dbp-form-number-view>
+
+                    <dbp-form-number-view
+                        subscribe="lang"
+                        label="Number with step (0.5)"
+                        .value=${data.myComponentNumberStep || ''}></dbp-form-number-view>
 
                     <dbp-form-date-view
                         subscribe="lang"

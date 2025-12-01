@@ -18,6 +18,7 @@ export default {
                   'src/build/date.js',
                   'src/build/datetime.js',
                   'src/build/enum.js',
+                  'src/build/number.js',
                   'src/build/string.js',
                   'src/build/time.js',
                   'src/demo.js',
