@@ -215,7 +215,7 @@ export class GrantPermissionDialog extends LangMixin(
                 body: i18n.t(
                     'grant-permission-dialog.notifications.set-available-actions-error-text',
                 ),
-                type: 'error',
+                type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 5,
             });
@@ -283,7 +283,7 @@ export class GrantPermissionDialog extends LangMixin(
                 sendNotification({
                     summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                     body: i18n.t('grant-permission-dialog.notifications.set-form-name-error-text'),
-                    type: 'error',
+                    type: 'danger',
                     targetNotificationId: 'permission-modal-notification',
                     timeout: 5,
                 });
@@ -402,7 +402,7 @@ export class GrantPermissionDialog extends LangMixin(
             const deleted = this.userList.delete(userId);
             if (deleted) {
                 rowToAnimate.classList.remove('delete-animation');
-                this.setDeleteAllButtonVisibility();
+                // this.setDeleteAllButtonVisibility();
                 this.requestUpdate();
             }
         } catch (e) {
@@ -444,7 +444,7 @@ export class GrantPermissionDialog extends LangMixin(
             sendNotification({
                 summary: i18n.t('grant-permission-dialog.notifications.error-title'),
                 body: i18n.t('grant-permission-dialog.notifications.failed-get-user-details'),
-                type: 'error',
+                type: 'danger',
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 0,
             });
@@ -594,7 +594,6 @@ export class GrantPermissionDialog extends LangMixin(
                 }
                 this.userList = newUserList;
                 this.setAllButtonState('edit');
-                // console.log('userList', this.userList);
             } else {
                 if (responseBody.status === 500) {
                     sendNotification({
@@ -715,7 +714,6 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     renderPermissionCheckboxes(user) {
-        console.log(`render checkboxes for user ${user.userFullName}`);
         const i18n = this._i18n;
         if (!this.availableActions) {
             return;
@@ -861,7 +859,6 @@ export class GrantPermissionDialog extends LangMixin(
         const permission = userToAdd.permissions.get(permissionName);
         // Set permission to be saved
         permission.toSave = checkbox.getAttribute('data-changed') ? true : false;
-        // console.log(`this.usersToAdd`, this.usersToAdd);
     }
 
     enableUsersAllCheckboxes(userId) {
@@ -957,9 +954,6 @@ export class GrantPermissionDialog extends LangMixin(
                         permissionGroupGap * permissionCount -
                         1) +
                     actionButtons.clientWidth;
-
-                // const halfRowWidth = personSelect.clientWidth + (permissionItems[0].clientWidth * permissionCount/2 + permissionGroupGap * permissionCount/2-1) + actionButtons.clientWidth;
-                // console.log('halfRowWidth', halfRowWidth);
 
                 if (modalWidth < permissionWidth + userRowPadding) {
                     modalContent.classList.add('mobile');
@@ -1169,9 +1163,6 @@ export class GrantPermissionDialog extends LangMixin(
 
             // Stop the save button spinner and show success message
             this.savePermissionButtonRef.value.stop();
-
-            console.log(`errorCount`, errorCount);
-            console.log(`successCount`, successCount);
 
             if (successCount > 0) {
                 sendNotification({
