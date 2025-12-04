@@ -13,10 +13,6 @@ export function getTabulatorStyles() {
             margin-bottom: 1em;
         }
 
-        .tabulator-table {
-            width: 100%;
-        }
-
         .tabulator .tabulator-tableholder {
             overflow-y: clip;
         }
