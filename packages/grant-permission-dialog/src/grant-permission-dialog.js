@@ -36,6 +36,7 @@ export class GrantPermissionDialog extends LangMixin(
         this.addPersonButtonRef = createRef();
         /** @type {import('lit/directives/ref.js').Ref<Button>} */
         this.savePermissionButtonRef = createRef();
+        this.savePermissionButtonIsDisabled = true;
         /** @type {import('lit/directives/ref.js').Ref<Modal>} */
         this.permissionModalRef = createRef();
         this.lastManageCheckbox = null;
@@ -56,6 +57,7 @@ export class GrantPermissionDialog extends LangMixin(
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             buttonState: {type: Object, attribute: false},
+            savePermissionButtonIsDisabled: {type: Boolean, attribute: false},
             lastManageCheckbox: {type: Object, attribute: false},
             lastSavedManagerId: {type: String, attribute: false},
         };
@@ -402,7 +404,6 @@ export class GrantPermissionDialog extends LangMixin(
             const deleted = this.userList.delete(userId);
             if (deleted) {
                 rowToAnimate.classList.remove('delete-animation');
-                // this.setDeleteAllButtonVisibility();
                 this.requestUpdate();
             }
         } catch (e) {
@@ -476,8 +477,7 @@ export class GrantPermissionDialog extends LangMixin(
         // Check last manager count to prevent unchecking manage checkbox on editing
         this.checkSavedManagerCount();
         this.enableUsersAllCheckboxes(userId);
-
-        this.savePermissionButtonRef.value.removeAttribute('disabled');
+        this.savePermissionButtonIsDisabled = false;
     }
 
     async handleUserSaveButton(userId) {
@@ -497,7 +497,7 @@ export class GrantPermissionDialog extends LangMixin(
             this.disableUsersAllCheckboxes(userId);
 
             if (this.usersToAdd.size === 0) {
-                this.savePermissionButtonRef.value.disabled = true;
+                this.savePermissionButtonIsDisabled = true;
             }
         }
     }
@@ -819,6 +819,7 @@ export class GrantPermissionDialog extends LangMixin(
             userToAdd.permissions = this.createEmptyUserPermission(true);
 
             this.usersToAdd.set(userToAdd.userIdentifier, userToAdd);
+            this.savePermissionButtonIsDisabled = false;
 
             // Remove person select
             this.userList.delete('emptyPerson');
@@ -924,6 +925,7 @@ export class GrantPermissionDialog extends LangMixin(
             await this.setModalTitle();
             await this.setAvailableActions();
             await this.setListOfUsersAndPermissions();
+            this.savePermissionButtonIsDisabled = true;
             this.permissionModalRef.value.open();
 
             const modalContent = this._('.content-inner');
@@ -987,6 +989,7 @@ export class GrantPermissionDialog extends LangMixin(
         // Reset add person button state
         this.addPersonButtonRef.value.stop();
         this.permissionModalRef.value.close();
+        this.savePermissionButtonIsDisabled = true;
     }
 
     handleAddNewPerson() {
@@ -1033,6 +1036,7 @@ export class GrantPermissionDialog extends LangMixin(
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 5,
             });
+            this.savePermissionButtonIsDisabled = true;
             return;
         }
 
@@ -1165,6 +1169,10 @@ export class GrantPermissionDialog extends LangMixin(
                 this.usersToAdd.delete(userToAdd.userIdentifier);
             }
 
+            if (this.usersToAdd.size === 0) {
+                this.savePermissionButtonIsDisabled = true;
+            }
+
             this.requestUpdate('userList');
 
             // Stop the save button spinner and show success message
@@ -1293,6 +1301,7 @@ export class GrantPermissionDialog extends LangMixin(
                         no-spinner-on-click
                         ${ref(this.savePermissionButtonRef)}
                         id="permission-save-button"
+                        ?disabled="${this.savePermissionButtonIsDisabled}"
                         @click="${async () => {
                             try {
                                 await this.saveUserPermissions();
@@ -1309,8 +1318,7 @@ export class GrantPermissionDialog extends LangMixin(
                                 checkboxElem.removeAttribute('data-changed');
                             });
                             this.disableAllCheckboxes();
-
-                            this.savePermissionButtonRef.value.setAttribute('disabled', 'disabled');
+                            this.savePermissionButtonIsDisabled = true;
                         }}"
                         type="is-primary">
                         ${i18n.t('grant-permission-dialog.buttons.save-all-text')}
