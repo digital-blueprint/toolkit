@@ -1755,18 +1755,6 @@ export function getDropDownCss() {
             pointer-events: none;
         }
 
-        .trigger {
-            /*display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 0.6rem;
-            border: 1px solid var(--dbp-border);
-            border-radius: 0.5rem;
-            background: var(--dbp-background);
-            cursor: pointer;
-            font: inherit;*/
-        }
-
         .menu {
             position: absolute;
             top: calc(100% + 0.25rem);
@@ -1789,12 +1777,12 @@ export function getDropDownCss() {
             text-align: left;
             border: 0 none;
             color: var(--dbp-content);
-            background-color: var(--dbp-background);
+            background-color: var(--dbp-surface);
         }
 
         .item-button:hover {
             /* @TODO we need a lighter grey than muted */
-            background-color: light-dark(#f7f7f7, #333333);
+            background-color: #b3b2b2;
         }
 
         .item-button:not([disabled]):hover dbp-icon {

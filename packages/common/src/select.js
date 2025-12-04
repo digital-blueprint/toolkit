@@ -155,8 +155,6 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     }
 
     render() {
-        const selected = this.options.find((o) => o?.name === this.value);
-        const triggerText = selected?.title ?? this.label ?? '';
         return html`
             <button
                 id="action-trigger-button"
@@ -168,7 +166,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 aria-haspopup="menu"
                 aria-expanded=${String(this.open)}
                 aria-controls="action-dropdown">
-                ${triggerText}
+                ${this.label}
                 <dbp-icon class="icon-chevron" name="chevron-down" aria-hidden="true"></dbp-icon>
             </button>
 
