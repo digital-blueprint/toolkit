@@ -16,6 +16,7 @@
         "notifications": {
             "cant-remove-last-manager-warning": "[de] You cannot remove the last manage permission from the last manager user.",
             "could-not-delete-grant": "Löschen von Berechtigungen fehlgeschlagen",
+            "could-not-delete-user": "Benutzer konnte nicht gelöscht werden",
             "could-not-fetch-resource-class-actions": "Ressourcenklassenaktionen konnten nicht abgerufen werden",
             "could-not-fetch-user-details": "Benutzerdetails konnten nicht abgerufen werden",
             "could-not-get-forms": "Formulare konnten nicht von der API abgerufen werden",

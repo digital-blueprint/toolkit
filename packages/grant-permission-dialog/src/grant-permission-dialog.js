@@ -384,7 +384,7 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     async deleteUser(userId) {
-        // const i18n = this._i18n;
+        const i18n = this._i18n;
         try {
             await this.deleteUsersAllGrants(userId);
 
@@ -407,7 +407,13 @@ export class GrantPermissionDialog extends LangMixin(
             }
         } catch (e) {
             console.log('delete user error', e);
-            //@TODO add notification
+            sendNotification({
+                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
+                body: i18n.t('grant-permission-dialog.notifications.could-not-delete-user'),
+                type: 'danger',
+                targetNotificationId: 'permission-modal-notification',
+                timeout: 0,
+            });
         }
     }
 
