@@ -25,7 +25,7 @@
         "@rollup/plugin-url": "^8.0.2",
         "find-cache-directory": "^6.0.0",
         "rollup-plugin-copy": "^3.5.0",
-        "selfsigned": "^4.0.0"
+        "selfsigned": "^5.0.0"
     },
     "scripts": {
         "fix": "npm run eslint:fix && npm run prettier:fix",
