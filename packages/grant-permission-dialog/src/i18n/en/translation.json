@@ -4,12 +4,16 @@
         "buttons": {
             "add-person-text": "Add new person",
             "cancel-text": "Cancel",
-            "delete-now-text": "Delete now",
             "delete-text": "Delete",
-            "delete-warning-text": "Are you sure? ({{counter}}s)",
             "edit-text": "Edit",
             "save-all-text": "Save all",
             "save-text": "Save"
+        },
+        "delete-confirmation": {
+            "button-abort-text": "Cancel",
+            "button-delete-text": "Delete",
+            "message": "Are you sure you want to delete the selected grants? This action cannot be undone.",
+            "title": "Confirm deletion"
         },
         "modal-title": "Manage permissions",
         "need-login-warning-text": "You need to be logged in to use the grant permission modal",

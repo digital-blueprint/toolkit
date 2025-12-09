@@ -4,12 +4,16 @@
         "buttons": {
             "add-person-text": "Neue Person hinzufügen",
             "cancel-text": "Abbrechen",
-            "delete-now-text": "Jetzt löschen",
             "delete-text": "Löschen",
-            "delete-warning-text": "Sind Sie sicher? ({{counter}}s)",
             "edit-text": "Bearbeiten",
             "save-all-text": "Alle speichern",
             "save-text": "Speichern"
+        },
+        "delete-confirmation": {
+            "button-abort-text": "Abbrechen",
+            "button-delete-text": "Löschen",
+            "message": "Möchten Sie die ausgewählten Zuschüsse wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "title": "Löschen bestätigen"
         },
         "modal-title": "Berechtigungen verwalten",
         "need-login-warning-text": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",
