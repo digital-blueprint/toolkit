@@ -83,6 +83,28 @@ function findPackageJsonDir(startPath) {
     return findPackageJsonDir(parentPath);
 }
 
+/**
+ * Searches for a package.json file of a specified npm package in node_modules
+ * directories. Traverses up the directory tree from the starting path until the
+ * package is found or the root is reached.
+ *
+ * @param {string} packageName - The name of the npm package to search for.
+ * @param {string} startPath - The directory path to start searching from.
+ * @returns {string} The absolute path to the package.json file of the specified
+ * package.
+ */
+function findPackageJsonInNodeModules(packageName, startPath) {
+    let dir = startPath;
+    while (dir !== path.parse(dir).root) {
+        const candidate = path.join(dir, 'node_modules', packageName, 'package.json');
+        if (fs.existsSync(candidate)) {
+            return candidate;
+        }
+        dir = path.dirname(dir);
+    }
+    throw new Error(`Cannot find package.json for package "${packageName}"`);
+}
+
 function getPackageJsonPath(packageName, parentPath) {
     const require = createRequire(import.meta.url);
     let current = require.resolve(path.join(process.cwd(), './package.json'));
@@ -105,7 +127,13 @@ function getPackageJsonPath(packageName, parentPath) {
                     'package.json',
                 );
             } catch {
-                throw new Error(`Cannot find package.json for package "${packageName}"`);
+                try {
+                    // For packages which don't have a default export we have to search
+                    // manually in node_modules, for example "instantsearch.css"
+                    return findPackageJsonInNodeModules(packageName, parentPath);
+                } catch {
+                    throw new Error(`Cannot find package.json for package "${packageName}"`);
+                }
             }
         }
     }
