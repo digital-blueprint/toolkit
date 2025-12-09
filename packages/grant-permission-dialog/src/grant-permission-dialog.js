@@ -17,6 +17,7 @@ import {Notification} from '@dbp-toolkit/notification';
 import {PersonSelect} from '@dbp-toolkit/person-select';
 import {getDeletionConfirmation, handleDeletionConfirm, handleDeletionCancel} from './utils.js';
 import {classMap} from 'lit/directives/class-map.js';
+import {repeat} from 'lit/directives/repeat.js';
 
 export class GrantPermissionDialog extends LangMixin(
     ScopedElementsMixin(DBPLitElement),
@@ -41,7 +42,6 @@ export class GrantPermissionDialog extends LangMixin(
         this.permissionModalRef = createRef();
         this.lastManageCheckbox = null;
         this.lastSavedManagerId = null;
-        this.buttonState = new Map();
     }
 
     static get properties() {
@@ -56,7 +56,6 @@ export class GrantPermissionDialog extends LangMixin(
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
-            buttonState: {type: Object, attribute: false},
             savePermissionButtonIsDisabled: {type: Boolean, attribute: false},
             lastManageCheckbox: {type: Object, attribute: false},
             lastSavedManagerId: {type: String, attribute: false},
@@ -96,6 +95,7 @@ export class GrantPermissionDialog extends LangMixin(
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'userList': {
+                    console.log(`this.userList`, this.userList);
                     this.checkSavedManagerCount();
                     break;
                 }
@@ -407,8 +407,9 @@ export class GrantPermissionDialog extends LangMixin(
             // Wait for animation to complete before updating the Map
             await animationComplete;
 
-            this.usersToAdd.delete(userId);
-            const deleted = this.userList.delete(userId);
+            this.removeUserFromQueue(userId);
+            const deleted = this.removeUserFromList(userId);
+
             if (deleted) {
                 rowToAnimate.classList.remove('delete-animation');
                 this.requestUpdate();
@@ -478,10 +479,7 @@ export class GrantPermissionDialog extends LangMixin(
     async handleUserEditButton(userId) {
         this.setButtonState(userId, 'save');
 
-        // @TODO: make this work without requestUpdate
-        const userToAdd = this.userList.get(userId);
-        this.usersToAdd.set(userId, userToAdd);
-        this.requestUpdate('usersToAdd');
+        this.addUserToQueue(userId);
 
         // Check last manager count to prevent unchecking manage checkbox on editing
         // @TODO: do we really need this here?
@@ -617,8 +615,10 @@ export class GrantPermissionDialog extends LangMixin(
         const i18n = this._i18n;
 
         return html`
-            ${Array.from(this.userList).map(([userId, user]) => {
-                return html`
+            ${repeat(
+                Array.from(this.userList),
+                ([userId]) => userId, // Key function - uses userId as unique identifier
+                ([userId, user]) => html`
                     <div
                         class="user-row ${classMap({'edit-mode': this.usersToAdd.has(userId)})}"
                         data-user-id="${userId}">
@@ -710,8 +710,8 @@ export class GrantPermissionDialog extends LangMixin(
                               `
                             : ''}
                     </div>
-                `;
-            })}
+                `,
+            )}
         `;
     }
 
@@ -814,13 +814,12 @@ export class GrantPermissionDialog extends LangMixin(
             userToAdd.userFullName = `${newUser['givenName']} ${newUser['familyName']}`;
             userToAdd.permissions = this.createEmptyUserPermission(true);
 
-            this.usersToAdd.set(userToAdd.userIdentifier, userToAdd);
-            this.requestUpdate('usersToAdd');
+            this.addUserToQueue(userToAdd.userIdentifier, userToAdd);
 
             // Remove person select
             this.userList.delete('emptyPerson');
             // Update person in this.userList
-            this.userList.set(userToAdd.userIdentifier, userToAdd);
+            this.addUserToList(userToAdd.userIdentifier, userToAdd);
             this.setButtonState(userToAdd.userIdentifier, 'edit');
 
             // Toggle edit button to save button
@@ -976,7 +975,6 @@ export class GrantPermissionDialog extends LangMixin(
 
     closeModal(event) {
         /* Reset state */
-
         if (event.detail && event.detail.id === 'grant-permission-modal') {
             // Remove person select
             this.userList = new Map();
@@ -989,8 +987,53 @@ export class GrantPermissionDialog extends LangMixin(
 
     handleAddNewPerson() {
         this.addPersonButtonRef.value.start();
-        this.userList.set('emptyPerson', {});
-        this.requestUpdate();
+        this.addUserToList('emptyPerson', {});
+    }
+
+    /**
+     * Add user to the usersToAdd queue
+     * Triggers a re-render
+     * @param {string} userId
+     */
+    addUserToQueue(userId, userToAdd = null) {
+        const _userToAdd = userToAdd === null ? this.userList.get(userId) : userToAdd;
+        this.usersToAdd = new Map(this.usersToAdd).set(userId, _userToAdd);
+    }
+
+    /**
+     * Remove user from the usersToAdd queue
+     * Triggers a re-render
+     * @param {string} userId
+     */
+    removeUserFromQueue(userId) {
+        const newUsersToAdd = new Map(this.usersToAdd);
+        newUsersToAdd.delete(userId);
+        this.usersToAdd = newUsersToAdd;
+    }
+
+    /**
+     * Add user to the userList
+     * Triggers a re-render
+     * @param {string} userId
+     */
+    addUserToList(userId, userToAdd) {
+        this.userList = new Map(this.userList).set(userId, userToAdd);
+    }
+
+    /**
+     * Remove user from the userList
+     * Triggers a re-render
+     * @param {string} userId
+     */
+    removeUserFromList(userId) {
+        const newUserList = new Map(this.userList);
+        const deleted = newUserList.delete(userId);
+        if (deleted) {
+            this.userList = newUserList;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1084,8 +1127,7 @@ export class GrantPermissionDialog extends LangMixin(
                         timeout: 5,
                     });
                     // Remove user form queue
-                    this.usersToAdd.delete(userIdentifier);
-                    this.requestUpdate('usersToAdd');
+                    this.removeUserFromQueue(userIdentifier);
                     continue;
                 }
 
@@ -1152,15 +1194,14 @@ export class GrantPermissionDialog extends LangMixin(
                 this.disableUsersAllCheckboxes(userToAdd.userIdentifier);
 
                 // Update permissions in userList
-                this.userList.set(userToAdd.userIdentifier, {
+                this.addUserToList(userToAdd.userIdentifier, {
                     userIdentifier: userToAdd.userIdentifier,
                     userFullName: userToAdd.userFullName,
                     permissions: userToAdd.permissions,
                 });
 
                 // Remove processed user from usersToAdd list
-                this.usersToAdd.delete(userToAdd.userIdentifier);
-                this.requestUpdate('usersToAdd');
+                this.removeUserFromQueue(userIdentifier);
             }
 
             this.requestUpdate('userList');
