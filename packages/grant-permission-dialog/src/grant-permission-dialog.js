@@ -129,6 +129,9 @@ export class GrantPermissionDialog extends LangMixin(
         this.lastSavedManagerId = multipleManagers ? null : singleManagerId;
     }
 
+    /**
+     * Disable the last checked "manage" checkbox to prevent unchecking it
+     */
     disableLastManageCheckbox() {
         const manageCheckboxes = this._a('.permission-checkbox[name="manage"]');
         const checkedManageCheckboxes = [...manageCheckboxes].filter((checkbox) => {
@@ -138,12 +141,16 @@ export class GrantPermissionDialog extends LangMixin(
         if (checkedManageCheckboxes.length === 1) {
             this.lastManageCheckbox = checkedManageCheckboxes[0];
             this.lastManageCheckbox.disabled = true;
-        } else if (
-            this.lastManageCheckbox &&
-            this.lastManageCheckbox.classList.contains('edit-mode')
-        ) {
-            // Enable checkboxes in edit-mode if there are multiple checked manage checkboxes
-            this.lastManageCheckbox.disabled = false;
+        } else {
+            // Enable the previously disabled checkbox if it exists and is in edit-mode
+            if (
+                this.lastManageCheckbox &&
+                this.lastManageCheckbox instanceof HTMLInputElement &&
+                this.lastManageCheckbox.classList.contains('edit-mode')
+            ) {
+                this.lastManageCheckbox.disabled = false;
+            }
+            // Always clear the reference when there are multiple (or zero) checked
             this.lastManageCheckbox = null;
         }
     }
@@ -481,10 +488,6 @@ export class GrantPermissionDialog extends LangMixin(
 
         this.addUserToQueue(userId);
 
-        // Check last manager count to prevent unchecking manage checkbox on editing
-        // @TODO: do we really need this here?
-        this.checkSavedManagerCount();
-
         this.enableUsersAllCheckboxes(userId);
     }
 
@@ -495,6 +498,7 @@ export class GrantPermissionDialog extends LangMixin(
             console.log(error);
         } finally {
             this.setButtonState(userId, 'edit');
+            this.checkSavedManagerCount();
 
             // Remove edit styles & disable checkboxes
             this._a(`[data-user-id="${userId}"]`).forEach((checkbox) => {
@@ -850,6 +854,7 @@ export class GrantPermissionDialog extends LangMixin(
 
         // Prevent unchecking last manager
         this.disableLastManageCheckbox();
+        this.checkSavedManagerCount();
 
         const userIdentifier = checkbox.getAttribute('data-user-id');
         const permissionName = checkbox.getAttribute('name');
@@ -975,7 +980,7 @@ export class GrantPermissionDialog extends LangMixin(
 
     closeModal(event) {
         /* Reset state */
-        if (event.detail && event.detail.id === 'grant-permission-modal') {
+        if (event && event.detail && event.detail.id === 'grant-permission-modal') {
             // Remove person select
             this.userList = new Map();
 
@@ -1180,7 +1185,11 @@ export class GrantPermissionDialog extends LangMixin(
                         } else {
                             successCount++;
                             // Remove identifier from user permissions
-                            userToAdd.permissions.delete(grant.action);
+                            userToAdd.permissions.set(grant.action, {
+                                action: grant.action,
+                                identifier: null,
+                                authorizationResource: null,
+                            });
                         }
                     }
                 }
@@ -1325,7 +1334,12 @@ export class GrantPermissionDialog extends LangMixin(
                         no-spinner-on-click
                         type="is-secondary"
                         @click="${() => {
-                            this.closeModal();
+                            const customEvent = new CustomEvent('dbp-modal-closed', {
+                                detail: {id: 'grant-permission-modal'},
+                                bubbles: true,
+                                composed: true,
+                            });
+                            this.dispatchEvent(customEvent);
                         }}">
                         ${i18n.t('grant-permission-dialog.buttons.cancel-text')}
                     </dbp-button>
