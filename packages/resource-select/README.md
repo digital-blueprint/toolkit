@@ -1,4 +1,4 @@
-# Resource Select Web Component
+## Resource Select Web Component
 
 You can install this component via npm:
 
@@ -6,7 +6,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/resource-select
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-resource-select></dbp-resource-select>
@@ -24,7 +24,7 @@ Or directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/resource-select@latest/dist/dbp-resource-select.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-resource-select lang="de"></dbp-resource-select>`
@@ -38,21 +38,21 @@ Or directly via CDN:
 - `disabled` (optional): set to disable the selector
     - example `<dbp-resource-select disabled></dbp-resource-select>`
 
-## Properties
+### Properties
 
 - `valueObject` (optional): The resource object corresponding to `value`
 - `auth` {object}: you need to set that object property for the auth token
     - example auth property: `{token: "THE_BEARER_TOKEN"}`
     - note: most often this should be a property that is not set directly, but subscribed at a provider
 
-## Override Properties
+### Override Properties
 
 - `buildUrl` - A function which takes the select and the base URL, can return a
   different URL for fetching the list of resources.
 - `formatResource` - A function which takes the select and a resource, should
   return the text used for displaying the resource.
 
-## Events
+### Events
 
 - `change` - Gets dispatched when either `value` or `valueObject` change.
     - `event.detail.value` - Same as the `value` property

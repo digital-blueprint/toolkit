@@ -1,4 +1,4 @@
-# Notification Web Component
+## Notification Web Component
 
 You can install this component via npm:
 
@@ -6,7 +6,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/notification
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-notification></dbp-notification>
@@ -24,12 +24,12 @@ Or directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/notification@0.2.2/dist/dbp-notification.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-notification lang="de" client-id="my-client-id"></dbp-notification>`
 
-## Sending notifications
+### Sending notifications
 
 ```javascript
 import { sendNotification } from '@dbp-toolkit/common';
@@ -61,7 +61,7 @@ render() {
 }
 ```
 
-## Local development
+### Local development
 
 ```bash
 # get the source

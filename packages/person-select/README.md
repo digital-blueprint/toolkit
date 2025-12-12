@@ -1,4 +1,4 @@
-# Person Select Web Component
+## Person Select Web Component
 
 You can install this component via npm:
 
@@ -6,7 +6,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/person-select
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-person-select></dbp-person-select>
@@ -24,7 +24,7 @@ Or directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/person-select@0.2.2/dist/dbp-person-select.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-person-select lang="de"></dbp-person-select>`
@@ -46,14 +46,14 @@ Or directly via CDN:
     - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 - `disabled` (optional): if set the component will be disabled
 
-## Override Properties
+### Override Properties
 
 - `buildUrlData` - A function which gets passed the select and the current search context and
   should return the query parameters used for searching.
 - `formatPerson` - A function which takes the select and a person object and should
   return the text representation displayed to the user.
 
-## Local development
+### Local development
 
 ```bash
 # get the source

@@ -1,4 +1,4 @@
-# Language Select Web Component
+## Language Select Web Component
 
 You can install this component via npm:
 
@@ -6,7 +6,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/language-select
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-language-select></dbp-language-select>
@@ -24,19 +24,19 @@ Or directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/language-select@0.2.2/dist/dbp-language-select.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English (note that it will be shown the
   other way around to make it easier to switch to a different language)
     - example `<dbp-language-select lang="de"></dbp-language-select>`
 
-### Emitted attributes
+#### Emitted attributes
 
 The component emits `dbp-set-property` events for these attributes:
 
 - `lang` to propagate a language change (possible values `en`, `de`)
 
-## Local development
+### Local development
 
 ```bash
 # get the source

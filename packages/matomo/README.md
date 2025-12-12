@@ -1,4 +1,4 @@
-# Matomo Web Component
+## Matomo Web Component
 
 You can install this component via npm:
 
@@ -6,7 +6,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/matomo
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-matomo></dbp-matomo>
@@ -20,7 +20,7 @@ Or directly via CDN:
 <script type="module" src="https://unpkg.com/@dbp-toolkit/matomo@0.2.4/dist/dbp-matomo.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 - `endpoint` (required): set to your _Matomo_ server
     - example `<dbp-matomo endpoint="https://my-matomo.tld"></dbp-matomo>`
@@ -31,7 +31,7 @@ Or directly via CDN:
     - note: most often this should be an attribute that is not set directly, but subscribed at a provider
 - `analytics-event` object: for sending Matomo events
 
-### Emitted attributes
+#### Emitted attributes
 
 The component receives a `analytics-event` attribute to send Matomo events.
 It looks like this:
@@ -45,7 +45,7 @@ It looks like this:
 }
 ```
 
-## Tracking actions
+### Tracking actions
 
 ```html
 <dbp-provider analytics-event>
@@ -60,7 +60,7 @@ In your AdapterLitElement component:
 this.sendSetPropertyEvent('analytics-event', {category: 'my category', action: 'my action'});
 ```
 
-## Local development
+### Local development
 
 ```bash
 # get the source

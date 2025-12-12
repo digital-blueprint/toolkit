@@ -1,4 +1,4 @@
-# QR code Scanner Web Component
+## QR code Scanner Web Component
 
 You can install this component via npm:
 
@@ -6,11 +6,11 @@ You can install this component via npm:
 npm i @dbp-toolkit/qr-code-scanner
 ```
 
-## Requirements
+### Requirements
 
 For some browsers it might be necessary to host the html using this component via https.
 
-## Usage
+### Usage
 
 ```html
 <dbp-qr-code-scanner></dbp-qr-code-scanner>
@@ -32,7 +32,7 @@ The QR code Scanner Web Component uses a camera device, which you can select (if
 With this camera device you can scan a QR code. If a QR code is detected an event named `dbp-qr-code-scanner-data` will be fired.
 In this event you can read the data of the qr code with `event.detail`.
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-qr-code-scanner lang="de"></dbp-qr-code-scanner>`
@@ -42,12 +42,12 @@ In this event you can read the data of the qr code with `event.detail`.
 - `stop-scan` (optional, default: `false`): set to `true` when you don't want to start the QR code reader immediately
   after loaded. This attribute is also used to stop the QR code reader or if you don't need it anymore. - example `<dbp-qr-code-scanner stop-scan></dbp-qr-code-scanner>`
 
-## Events
+### Events
 
 - `'code-detected'`: Outgoing Event which is fired if a QR code is detected. The data of the detected QR code is in `event.detail`.
 - `'scan-started`: Fired after the first image is drawn. Can be used to scrolling or other layout dependent tasks.
 
-## Local development
+### Local development
 
 ```bash
 # get the source
@@ -69,14 +69,14 @@ npm run build
 
 Jump to <http://localhost:8002> and you should get a demo page.
 
-## Content Security Policy
+### Content Security Policy
 
 The QR code detection worker is loaded via `blob:`, so your CSP needs to allow
 `worker-src blob:`. Since Safari does not support this you also have to set
 `child-src blob:`. Since `child-src` also affects other things make sure this
 doesn't break things.
 
-## Camera for local development
+### Camera for local development
 
 You can use your desktop as a camera, to test the qr code reader
 
@@ -93,7 +93,7 @@ You can try the webcomponent with this example QR Code.
 
 ![QR-Code-Example](qr-code-dummy.png)
 
-### Hint
+#### Hint
 
 Add the attribute `show-output` for debugging propose.
 

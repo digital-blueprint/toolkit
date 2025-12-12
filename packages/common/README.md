@@ -1,4 +1,4 @@
-# Common Code
+## Common Code
 
 You can install these components via npm:
 
@@ -6,7 +6,7 @@ You can install these components via npm:
 npm i @dbp-toolkit/common
 ```
 
-## How to add a Webcomponent
+### How to add a Webcomponent
 
 First you need to import the class of the element you want to add, for example Button.
 
@@ -26,7 +26,7 @@ Finally, add it to the render() function inside return html.
 <dbp-button>...</dbp-button>
 ```
 
-## Translated Web Component
+### Translated Web Component
 
 You can use this web component to show translated html.
 
@@ -42,7 +42,7 @@ You can use this web component to show translated html.
 </dbp-translated>
 ```
 
-## Overriding slots in nested web components
+### Overriding slots in nested web components
 
 If slots are used in web components then it is best to derive your component class from
 [DBPLitElement](https://github.com/digital-blueprint/toolkit/-/blob/main/packages/common/dbp-lit-element.js)
@@ -89,7 +89,7 @@ the Nextcloud file picker component.
 We are using the `dbp-translated` component to insert translated text at the specified position
 in the Nextcloud file picker.
 
-### CSS Rules
+#### CSS Rules
 
 The css rules are added to the styles() function in the json file corresponding to a particular activity.
 
@@ -105,14 +105,14 @@ static get styles() {
     }
 ```
 
-## Icon Web Component
+### Icon Web Component
 
 See [README.icon.md](./README.icon.md)
 
-## Select Web Component
+### Select Web Component
 
 See [README.input.md](./README.input.md)
 
-## Modal Web Component
+### Modal Web Component
 
 See [README.modal.md](./README.modal.md)

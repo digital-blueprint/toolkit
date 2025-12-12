@@ -1,8 +1,8 @@
-# Tabulator table web component
+## Tabulator table web component
 
 This web component allows to create a table with tabulator-tables.
 
-## Installation
+### Installation
 
 You can install these components via npm:
 
@@ -26,13 +26,13 @@ Or you can include the JS files directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/tabulator-table@0.0.1/dist/tabulator-table.js"></script>
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-tabulator-table></dbp-tabulator-table>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-tabulator-table lang="de"></dbp-tabulator-table>`
@@ -57,7 +57,7 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
     - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger
       than 0 (e.g. `responsive:3`) and to set the columns' width so that they will not all fit into the tabulator
 
-## Events
+### Events
 
 | Event                                             | Description                                            |
 | ------------------------------------------------- | ------------------------------------------------------ |
@@ -65,7 +65,7 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
 | `dbp-tabulator-table-row-selection-changed-event` | Tabulator table `rowSelectionChanged` event            |
 | `dbp-tabulator-table-built`                       | Fired after table is built                             |
 
-## Important functions
+### Important functions
 
 - `getData()`: returns the tabulator data.
 - `setData(data)`: sets data of the tabulator table.
@@ -95,19 +95,19 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
 - `setPage()`: sets the current table page.
 - `getLang()`: returns the lang parameter.
 
-## Note
+### Note
 
 In best practice `options` is set if the dom is already rendered.
 You can set this attribute with the css selector. (e.g.: `this._('#my-table-component).options = myoptions`)
 
 Set data only works if the options are set before.
 
-## Requirements
+### Requirements
 
 `dbp-tabulator-table` needs the `tabulator-tables/css/tabulator.min.css` in the package path and
 the icons in `@dbp-toolkit/common/icons/` imported.
 
-## Local development
+### Local development
 
 ```bash
 # get the source

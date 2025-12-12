@@ -1,4 +1,4 @@
-# File handling web components
+## File handling web components
 
 You can install these components via npm:
 
@@ -53,18 +53,18 @@ Or you can include the JS files directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/file-handling@0.2.5/dist/dbp-clipboard.js"></script>
 ```
 
-## FileSource
+### FileSource
 
 This web component allows the selection of local files via file dialog or drag and drop and to select and download
 files from a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
 
-### Usage
+#### Usage
 
 ```html
 <dbp-file-source></dbp-file-source>
 ```
 
-### Attributes
+#### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-file-source lang="de"></dbp-file-source>`
@@ -103,50 +103,50 @@ files from a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
     - example `<dbp-file-source initial-file-handling-state="{target: 'local', path:'my/server/path'}"></dbp-file-source>`
     - example provider `<dbp-file-source subscribe="initial-file-handling-state"></dbp-file-source>`
 
-### Emitted attributes
+#### Emitted attributes
 
 The component emits a `dbp-set-property` event for the attribute `initial-file-handling-state`:
 
 - `initial-file-handling-state.target`: Target that should be selected the first time (possible values `local`, `nextcloud`)
 - `initial-file-handling-state.path`: Path to initially jump to (only supported by target `nextcloud`)
 
-### Outgoing Events
+#### Outgoing Events
 
-#### `dbp-file-source-file-selected`
+##### `dbp-file-source-file-selected`
 
 This event is sent if a file was selected.
 
-#### `dbp-file-source-dialog-closed`
+##### `dbp-file-source-dialog-closed`
 
 This event is sent if the dialog was closed.
 
-#### `dbp-file-source-file-upload-finished`
+##### `dbp-file-source-file-upload-finished`
 
 This event is sent if multiple files are selected.
 
-#### `dbp-nextcloud-file-picker-number-files`
+##### `dbp-nextcloud-file-picker-number-files`
 
 This event is sent from `nextcloud-file-picker` and is sent when files are picked and sends the number of selected files
 
 **Payload**: `{'file': File}` where [File](https://developer.mozilla.org/en-US/docs/Web/API/File) is the binary file that was selected
 
-### Exposed CSS variables
+#### Exposed CSS variables
 
 - `--dbp-override-image-nextcloud` is used to override the cloud image on the connection screen
     - example CSS: `html { --dbp-override-image-nextcloud: url(/icons/nextcloud.svg); }`
 
-## FileSink
+### FileSink
 
 This web component is able to receive files and present as them as ZIP file download or upload
 files to a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
 
-### Usage
+#### Usage
 
 ```html
 <dbp-file-sink></dbp-file-sink>
 ```
 
-### Attributes
+#### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-file-sink lang="de"></dbp-file-sink>`
@@ -176,35 +176,35 @@ files to a [Nextcloud](https://nextcloud.com/) instance or to a dbp-clipboard.
 - `content-length` (optional, default: `-1`): The predicted size of the streamed zip. NOTE: only usable together with `streamed`.
     - example `<dbp-file-sink content-length="1024" streamed></dbp-file-sink>`
 
-### Emitted attributes
+#### Emitted attributes
 
 The component emits a `dbp-set-property` event for the attribute `initial-file-handling-state`:
 
 - `initial-file-handling-state.target`: Target that should be selected the first time (possible values `local`, `nextcloud`)
 - `initial-file-handling-state.path`: Path to initially jump to (only supported by target `nextcloud`)
 
-### Outgoing Events
+#### Outgoing Events
 
-#### `dbp-file-sink-dialog-closed`
+##### `dbp-file-sink-dialog-closed`
 
 This event is sent if the dialog was closed.
 
-### Properties
+#### Properties
 
 - `files`: an array of [File](https://developer.mozilla.org/en-US/docs/Web/API/File) objects which should be downloaded in the dialog
     - if the property is set the dialog opens
     - example: `document.querySelector("dbp-file-sink").files = [file]` where `file` is your File object
 
-### Exposed CSS variables
+#### Exposed CSS variables
 
 - `--dbp-override-image-nextcloud` is used to override the cloud image on the connection screen
     - example CSS: `html { --dbp-override-image-nextcloud: url(/icons/nextcloud.svg); }`
 
-## Clipboard
+### Clipboard
 
 This web component is for a clipboard which saves the files to a provider. These files are available till the page is reload or the browser is closed.
 
-### Depencencies
+#### Depencencies
 
 This web component can only used if a `dbp-provider` is around it.<br>
 This web component depends on:
@@ -212,13 +212,13 @@ This web component depends on:
 - `dbp-file-sink`
 - `dbp-file-source`
 
-### Usage
+#### Usage
 
 ```html
 <dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name"></dbp-clipboard>
 ```
 
-### Attributes
+#### Attributes
 
 - `clipboardFiles` is the object which should be subscribed to the provider to receive and send the clipboard files
   to the provider.
@@ -255,23 +255,23 @@ This web component depends on:
 - `nextcloud-auth-info` (optional): Additional authentication information text that is shown in the Nextcloud file picker
     - example `<dbp-clipboard subscribe="clipboard-files:clipboard-files-global-name" nextcloud-auth-info="You need special permissions for this function"></dbp-clipboard>`
 
-### Exposed CSS variables
+#### Exposed CSS variables
 
 - `--dbp-override-image-nextcloud` is used to override the cloud image on the connection screen
     - example CSS: `html { --dbp-override-image-nextcloud: url(/icons/nextcloud.svg); }`
 
-## Nextcloud file picker
+### Nextcloud file picker
 
 The `dbp-nextcloud-file-picker` component is currently used by the file sink, file source and
 clipboard components. There is a slot you can use to override to provide additional information.
 
-### Usage
+#### Usage
 
 ```html
 <dbp-nextcloud-file-picker></dbp-nextcloud-file-picker>
 ```
 
-### Attributes
+#### Attributes
 
 lang: {type: String},
 authUrl: {type: String, attribute: 'auth-url'},
@@ -311,34 +311,34 @@ maxSelectedItems: {type: Number, attribute: 'max-selected-items'}
   set to true if you don't want to specify a number
     - example `<dbp-nextcloud-file-picker max-selected-items="5"></dbp-nextcloud-file-picker>`
 
-### Outgoing Events
+#### Outgoing Events
 
-#### `dbp-nextcloud-file-picker-number-files`
+##### `dbp-nextcloud-file-picker-number-files`
 
 This event is sent if one or more files are downloaded, the payload has the number of uploaded files.
 **Payload**: `{"count": files.length}`
 
-#### `dbp-nextcloud-file-picker-file-downloaded`
+##### `dbp-nextcloud-file-picker-file-downloaded`
 
 This event is sent if one file is downloaded, the payload has the `file`, `fileData` and the max number of uploaded files.
 **Payload**: `{"file": file, "data": fileData, "maxUpload": maxUpload}`
 
-#### `dbp-nextcloud-file-picker-file-uploaded`
+##### `dbp-nextcloud-file-picker-file-uploaded`
 
 Send the directory to `file-sink`
 **Payload**: `{path: path}`
 
-#### `dbp-nextcloud-file-picker-file-uploaded-finished`
+##### `dbp-nextcloud-file-picker-file-uploaded-finished`
 
 This event is sent if the file upload is finished
 **Payload**: `{this.uploadCount}`
 
-### Slots
+#### Slots
 
 You use template tags to inject slots into the web component.
 These templates will be converted to div containers when the page is loaded and will not show up before that.
 
-#### auth-info
+##### auth-info
 
 The content of this slot will be shown below the other text on the Nextcloud file picker connection page.
 
@@ -374,7 +374,7 @@ Example for `dbp-file-sink`:
 </template>
 ```
 
-## Local development
+### Local development
 
 ```bash
 # get the source

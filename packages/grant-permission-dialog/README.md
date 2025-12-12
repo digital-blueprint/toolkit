@@ -1,4 +1,4 @@
-# Grant Permission Dialog Web Component
+## Grant Permission Dialog Web Component
 
 [GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/grant-permission-dialog) |
 [NPM](https://www.npmjs.com/package/@dbp-toolkit/grant-permission-dialog)
@@ -11,7 +11,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/grant-permission-dialog
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-grant-permission-dialog></dbp-grant-permission-dialog>
@@ -29,7 +29,7 @@ Or directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/grant-permission-dialog@0.1.0/dist/index.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): Language setting
     - Type: String
@@ -42,12 +42,12 @@ Or directly via CDN:
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
     - example `<grant-permission-dialog entry-point-url="http://127.0.0.1:8000"></grant-permission-dialog>`
 
-#### Methods
+##### Methods
 
 - `open()`: Opens the modal.
     - example `this._('#grant-permission-dialog').open();`
 
-## Local development
+### Local development
 
 ```bash
 # get the source

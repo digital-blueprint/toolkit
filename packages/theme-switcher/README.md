@@ -1,8 +1,8 @@
-# Theme-Switcher web component
+## Theme-Switcher web component
 
 This web component allows to switch between multiple predefined themes and can detect browsers default theme.
 
-## Installation
+### Installation
 
 You can install these components via npm:
 
@@ -16,7 +16,7 @@ applied to the body of your html document. To add a style to the specific class 
 
 ```html
 <dbp-theme-switcher
-    themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"}, 
+    themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"},
         {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'></dbp-theme-switcher>
 
 <style>
@@ -82,19 +82,19 @@ Or you can include the JS files directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/theme-switcher@0.0.1/dist/theme-switcher.js"></script>
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-theme-switcher></dbp-theme-switcher>
 ```
 
-## Usage in an application with appshell
+### Usage in an application with appshell
 
 If you want to use multiple themes in the appshell, then you have to define the classes inside the `<head>` tag inside the `<style>` tag.
 
 Then add the themes attribute with your themes to the application tag in the `<body>` tag.
 
-### Themes attribute
+#### Themes attribute
 
 The themes attribute is organized as an array with objects. The objects have following properties: class(name of the class added to the style tag),
 icon (name of an icon, which is displayed infront of the Theme name) and name(Friendly name of your theme).
@@ -108,11 +108,11 @@ theme"}, {"class": "name-of-another-class", "icon": "name-of-the-icon", "name": 
 another theme"}]'></my-element>
 ```
 
-### Example
+#### Example
 
 A full example can be found in each application in the `index.html` of the `app-template` folder. (E.g. [Greenlight app-template](https://gitlab.tugraz.at/dbp/greenlight/greenlight/-/blob/main/app-template/index.html))
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-theme-switcher lang="de"></dbp-file-source>`
@@ -131,7 +131,7 @@ themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"},
 - `dropdown-right` (optional, default: `false`): boolean which indicates that you want the dropdown from the theme menu on the right side, default on the left side
     - example: `<dbp-file-source dropdown-right></dbp-file-source>`
 
-# Themed Component
+## Themed Component
 
 Allows to show different content based on whether a dark or light theme is active.
 
@@ -142,11 +142,11 @@ Allows to show different content based on whether a dark or light theme is activ
 </dbp-themed>
 ```
 
-## Note
+### Note
 
 The classes should be defined outside the body tag.
 
-## Local development
+### Local development
 
 ```bash
 # get the source

@@ -1,9 +1,9 @@
-# Select Web Component
+## Select Web Component
 
 You can use this web component to have select/dropdown with a menu of options (with optional icons).
 Supports full keyboard navigation and “click outside to close,” and emits a change event when an option is selected.
 
-## Key features
+### Key features
 
 - Options via JSON: `{ name, title, iconName? }[]`
 - Optional icons (uses `<dbp-icon>` when iconName is provided)

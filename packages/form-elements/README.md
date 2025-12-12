@@ -1,4 +1,4 @@
-# Form Element Web Components
+## Form Element Web Components
 
 [GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/form-elements) |
 [NPM](https://www.npmjs.com/package/@dbp-toolkit/form-elements)
@@ -11,7 +11,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/form-elements
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-form-string-element></dbp-form-string-element>
@@ -39,11 +39,11 @@ Or directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/form-elements@0.2.0/dist/number.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 Best look at [demo.js](./src/demo.js) for the example implementation.
 
-### General Attributes
+#### General Attributes
 
 - `lang` (optional, default: `de`): Language setting
     - Type: String
@@ -77,7 +77,7 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     - Type: String
     - Example with list: `<dbp-form-enum-view layout-type="inline"></dbp-form-enum-view>`
 
-### String Element
+#### String Element
 
 - `rows` (optional, default: `1`): Number of rows for the text area (1 means a single-line input)
     - Type: Number
@@ -89,7 +89,7 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     - Type: Number
     - Example: `<dbp-form-string-element word-count-limit="300"></dbp-form-string-element>`
 
-### Number Element
+#### Number Element
 
 - `placeholder` (optional): Placeholder text for the number input field
     - Type: Text
@@ -104,7 +104,7 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     - Type: Number
     - Example: `<dbp-form-number-element step="0.5"></dbp-form-number-element>`
 
-### Boolean Element
+#### Boolean Element
 
 - `value`: Use the string `true` or `false` to set the value
     - Type: String
@@ -114,11 +114,11 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
 - `data-value`: Returns the state of the boolean element
     - Type: Boolean
 
-#### Examples
+##### Examples
 
 The `change` event is fired when the state changes. The event contains the new state in `e.detail.state` as a boolean.
 
-##### Boolean Element with String Value
+###### Boolean Element with String Value
 
 ```html
 <dbp-form-boolean-element
@@ -131,7 +131,7 @@ The `change` event is fired when the state changes. The event contains the new s
 </dbp-form-boolean-element>
 ```
 
-##### Boolean Element with Boolean State
+###### Boolean Element with Boolean State
 
 ```html
 <dbp-form-boolean-element
@@ -144,14 +144,14 @@ The `change` event is fired when the state changes. The event contains the new s
 </dbp-form-boolean-element>
 ```
 
-### Date Element
+#### Date Element
 
 - `min`: Indicates the minimum value that can be entered
     - Type: String/Date
 - `max`: Indicates the maximum value that can be entered
     - Type: String/Date
 
-### Enum Element
+#### Enum Element
 
 ```html
 <dbp-form-enum-element
@@ -188,12 +188,12 @@ Please always use `.value` to set the value of the enum element, as it is a prop
 - CSS custom properties for styling:
     - `--dbp-enum-label-gap`
 
-## Form Views
+### Form Views
 
 They are a little similar to the form element components.
 Best look at [demo.js](./src/demo.js) for the example implementation.
 
-### General Attributes
+#### General Attributes
 
 - `lang` (optional, default: `de`): Language setting
     - Type: String
@@ -212,7 +212,7 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     - Type: String
     - Example with list: `<dbp-form-enum-view layout-type="inline"></dbp-form-enum-view>`
 
-### Enum Element
+#### Enum Element
 
 ```html
 <dbp-form-enum-view
@@ -239,7 +239,7 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     - `--dbp-enum-tag-line-height`
     - `--dbp-enum-tag-bg-color`
 
-## Local development
+### Local development
 
 ```bash
 # get the source

@@ -1,4 +1,4 @@
-# PdfViewer Web Component
+## PdfViewer Web Component
 
 [GitHub](https://github.com/digital-blueprint/toolkit/tree/main/packages/pdf-viewer) |
 [NPM](https://www.npmjs.com/package/@dbp-toolkit/pdf-viewer)
@@ -12,7 +12,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/pdf-viewer
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-pdf-viewer></dbp-pdf-viewer>
@@ -28,7 +28,7 @@ Or directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/pdf-viewer@0.0.7/dist/dbp-pdf-viewer.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-pdf-viewer lang="de" client-id="my-client-id"></dbp-pdf-viewer>`
@@ -38,16 +38,16 @@ Or directly via CDN:
       vertically the PDF can exceed the container
     - example `<dbp-pdf-viewer auto-resize="contain"></dbp-pdf-viewer>`
 
-## Methods
+### Methods
 
 - `showPDF(file: File)`: Opens a PDF file. The file must be a `File` object.
     - example `document.querySelector('dbp-pdf-viewer').showPDF(file);`
 
-## Screenshot
+### Screenshot
 
 ![screenshot](screenshot.png)
 
-## Opening a PDF file
+### Opening a PDF file
 
 You can use the `showPDF` method to open a PDF file. This method accepts a `File` object as parameter.
 
@@ -72,7 +72,7 @@ You can use the `showPDF` method to open a PDF file. This method accepts a `File
 
 See [example/index.html](example/index.html) for a working example.
 
-## Local development
+### Local development
 
 ```bash
 # get the source

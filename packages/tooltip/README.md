@@ -1,11 +1,11 @@
-# Tooltip Web Component
+## Tooltip Web Component
 
 The tooltip component provides an icon as an anker for a tooltip.
 There is a generic tooltip `<dbp-tooltip>` which supports any icon the app has bundled.
 Another info tooltip `<dbp-info-tooltip>` shows an embedded info icon (small letter i inside a circle) as a convenient
 shortcut.
 
-## Install
+### Install
 
 You can install this component via npm:
 
@@ -13,7 +13,7 @@ You can install this component via npm:
 npm i @dbp-toolkit/tooltip
 ```
 
-## Usage
+### Usage
 
 ```html
 <dbp-tooltip text-content="text to show" icon-name="information"></dbp-tooltip>
@@ -31,7 +31,7 @@ Or directly via CDN:
     src="https://unpkg.com/@dbp-toolkit/tooltip@0.0.1/dist/dbp-tooltip.js"></script>
 ```
 
-## Attributes
+### Attributes
 
 - `text-content`: Text to show as tooltip (default is 'text missing.' as a reminder!)
 - `icon-name`: (`<dbp-tooltip>` only, default is a skull) Name of the bundled icon (SVG) for `<dbp-icon>`

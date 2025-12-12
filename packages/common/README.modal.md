@@ -1,4 +1,4 @@
-# Modal Web Component
+## Modal Web Component
 
 You can use this web component to show content in a modal.
 This web component has two function which can be called from outside: `open()` - which opens the modal and `close()` - which closes the modal.
@@ -42,7 +42,7 @@ Slotted content can be styled from outside with css.
 </dbp-modal>
 ```
 
-## Attributes
+### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-modal lang="de"></dbp-modal>`
@@ -54,7 +54,7 @@ Slotted content can be styled from outside with css.
     - example `<dbp-modal width="15px" height="100%"></dbp-modal>`
 - `sticky-footer` (optional, boolean): set the footer to stick to the bottom of the modal
 
-## CSS variables
+### CSS variables
 
 You can customize the modal with the following css variables:
 
@@ -71,14 +71,14 @@ You can customize the modal with the following css variables:
 
 `--dbp-modal-animation:` - You can set animation on modal opening. - The value can be `mmFadeIn`, `mmFadeOut`, `mmSlideIn`, `mmSlideOut`
 
-## Callable functions
+### Callable functions
 
 - `open()` opens a specific modal
     - `this._('#my-modal-webcomponent-id').open();`
 - `close()` closes a specific modal
     - `this._('#my-modal-webcomponent-id').close();`
 
-## Events
+### Events
 
 - `dbp-modal-closed` a event which is triggered if the modal is closed. in the detail attribute there is the modal-id of the closed modal. - `<dbp-modal @dbp-modal-closed="${(event) => {
 this.doSomething(event);

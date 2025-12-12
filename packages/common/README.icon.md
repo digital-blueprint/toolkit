@@ -1,4 +1,4 @@
-# Icon Web Component
+## Icon Web Component
 
 The toolkit icons can be seen in ./toolkit/packages/common/assets.
 
@@ -9,7 +9,7 @@ For valid icon names see: [LineIcons](https://lineicons.com/icons/)
 <dbp-icon style="color: red" name="menu-down"></dbp-icon>
 ```
 
-## Exposed CSS variables
+### Exposed CSS variables
 
 Variables like `--dbp-override-icon-<icon-name>` can be used to override the icons.
 
