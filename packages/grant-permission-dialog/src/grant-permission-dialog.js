@@ -1373,7 +1373,7 @@ export class GrantPermissionDialog extends LangMixin(
 
             <!-- Deletion Confirmation Modal -->
             <dbp-modal
-                id="deletion-confirmation-modal"
+                id="deletion-confirmation-modal--grant-permission"
                 class="modal modal--confirmation"
                 modal-id="deletion-confirmation-modal"
                 title="${i18n.t('grant-permission-dialog.delete-confirmation.title')}"
