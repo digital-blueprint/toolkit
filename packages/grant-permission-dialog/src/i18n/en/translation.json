@@ -41,6 +41,9 @@
             "user-already-added": "User already added",
             "user-successfully-deleted": "All permissions of {{userFullName}} successfully deleted",
             "warning-title": "Warning"
+        },
+        "permissions": {
+            "inherited-permission-title": "Inherited permission, can't be changed"
         }
     }
 }

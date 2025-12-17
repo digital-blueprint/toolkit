@@ -546,6 +546,7 @@ export class GrantPermissionDialog extends LangMixin(
                 for (const grant of responseBody['hydra:member']) {
                     if (grant.userIdentifier) {
                         const userId = grant.userIdentifier;
+                        const isInherited = grant.grantedActions.length === 0;
 
                         if (!newUserList.has(userId)) {
                             const userFullName = await this.getUserFullName(userId);
@@ -559,7 +560,7 @@ export class GrantPermissionDialog extends LangMixin(
                             user.permissions.set(grant.action, {
                                 action: grant.action,
                                 identifier: grant.identifier,
-                                authorizationResource: grant.authorizationResource,
+                                inherited: isInherited,
                             });
                             // Add to user list
                             newUserList.set(userId, user);
@@ -570,7 +571,7 @@ export class GrantPermissionDialog extends LangMixin(
                             user.permissions.set(grant.action, {
                                 action: grant.action,
                                 identifier: grant.identifier,
-                                authorizationResource: grant.authorizationResource,
+                                inherited: isInherited,
                             });
                             // Add to user list
                             newUserList.set(userId, user);
@@ -736,9 +737,11 @@ export class GrantPermissionDialog extends LangMixin(
 
                     let hasThisPermission = false;
                     let editable = false;
+                    let checkboxTitle = `${actionName}`;
+                    let userPermission = null;
 
                     if (user.permissions) {
-                        const userPermission = user.permissions.get(actionValue);
+                        userPermission = user.permissions.get(actionValue);
                         // The permission exists if it has an identifier
                         if (userPermission?.identifier) {
                             hasThisPermission = true;
@@ -748,10 +751,20 @@ export class GrantPermissionDialog extends LangMixin(
                         if (userPermission?.editable) {
                             editable = true;
                         }
+
+                        if (userPermission?.inherited) {
+                            editable = false;
+                            checkboxTitle = i18n.t(
+                                'grant-permission-dialog.permissions.inherited-permission-title',
+                            );
+                        }
                     }
 
                     return html`
-                        <div class="checkbox-container">
+                        <div
+                            class="checkbox-container ${classMap({
+                                'inherited-mode': userPermission?.inherited,
+                            })}">
                             <label
                                 for="${actionValue}-${user.userIdentifier}"
                                 class="visually-hidden">
@@ -762,7 +775,9 @@ export class GrantPermissionDialog extends LangMixin(
                                 name="${actionValue}"
                                 class="permission-checkbox ${classMap({
                                     'edit-mode': this.usersToAdd.has(user.userIdentifier),
+                                    'inherited-mode': userPermission?.inherited,
                                 })}"
+                                title="${checkboxTitle}"
                                 data-user-id="${user.userIdentifier}"
                                 type="checkbox"
                                 @input="${this.handleCheckbox}"
@@ -785,7 +800,6 @@ export class GrantPermissionDialog extends LangMixin(
             const actionValue = Object.keys(action)[0];
             const emptyPermission = {
                 action: actionValue,
-                authorizationResource: null,
                 identifier: null,
                 editable: editable,
             };
@@ -824,9 +838,9 @@ export class GrantPermissionDialog extends LangMixin(
             this.userList.delete('emptyPerson');
             // Update person in this.userList
             this.addUserToList(userToAdd.userIdentifier, userToAdd);
+            // Toggle edit button to save button
             this.setButtonState(userToAdd.userIdentifier, 'edit');
 
-            // Toggle edit button to save button
             await this.updateComplete;
             this.handleUserEditButton(userToAdd.userIdentifier);
             this.addPersonButtonRef.value.stop();
@@ -868,26 +882,29 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     enableUsersAllCheckboxes(userId) {
-        this._a(`.permission-checkbox[data-user-id="${userId}"]`).forEach((checkbox) => {
-            const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-            // Don't enable the last-manage-checkbox when editing a user
-            if (checkboxElem.id !== `manage-${this.lastSavedManagerId}`) {
-                checkboxElem.disabled = false;
+        this.userList.get(userId).permissions.forEach((permission) => {
+            if (
+                (permission.action === 'manage' && this.lastSavedManagerId === userId) ||
+                permission.inherited
+            ) {
+                permission.editable = false;
+            } else {
+                permission.editable = true;
             }
         });
     }
 
     disableUsersAllCheckboxes(userId) {
-        this._a(`.permission-checkbox[data-user-id="${userId}"]`).forEach((checkbox) => {
-            const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-            checkboxElem.disabled = true;
+        this.userList.get(userId).permissions.forEach((permission) => {
+            permission.editable = false;
         });
     }
 
     disableAllCheckboxes() {
-        this._a('.permission-checkbox').forEach((checkbox) => {
-            const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-            checkboxElem.disabled = true;
+        this.userList.forEach((user) => {
+            user.permissions.forEach((permission) => {
+                permission.editable = false;
+            });
         });
     }
 
@@ -1154,7 +1171,6 @@ export class GrantPermissionDialog extends LangMixin(
                             userToAdd.permissions.set(grant.action, {
                                 action: grant.action,
                                 identifier: responseBody.identifier,
-                                authorizationResource: responseBody.authorizationResource,
                             });
                         }
                     }
@@ -1188,7 +1204,6 @@ export class GrantPermissionDialog extends LangMixin(
                             userToAdd.permissions.set(grant.action, {
                                 action: grant.action,
                                 identifier: null,
-                                authorizationResource: null,
                             });
                         }
                     }

@@ -41,6 +41,9 @@
             "user-already-added": "Benutzer bereits hinzugefügt",
             "user-successfully-deleted": "Alle Berechtigungen von {{userFullName}} erfolgreich gelöscht",
             "warning-title": "Warnung"
+        },
+        "permissions": {
+            "inherited-permission-title": "[de] Inherited permission, can't be changed"
         }
     }
 }

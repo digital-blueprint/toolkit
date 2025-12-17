@@ -177,6 +177,12 @@ export function getGrantPermissionDialogCSS() {
             cursor: not-allowed;
         }
 
+        input[type='checkbox']:disabled.inherited-mode {
+            cursor: help;
+            box-shadow: 0 0 1px 1px var(--dbp-muted);
+            background: var(--dbp-muted);
+        }
+
         .changed {
             box-shadow: 0 0 3px 3px var(--dbp-accent);
             background: var(--dbp-accent);
