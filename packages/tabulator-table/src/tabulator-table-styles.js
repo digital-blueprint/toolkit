@@ -47,7 +47,7 @@ export function getTabulatorStyles() {
         .tabulator.sticky-header .tabulator-header {
             position: sticky;
             top: 0;
-            z-index: 9;
+            z-index: 12;
             background-color: var(--dbp-background);
             border-bottom: 1px solid var(--dbp-content);
         }
