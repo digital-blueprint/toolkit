@@ -167,6 +167,17 @@ export class FileSink extends LangMixin(
             // create input with file name and url
             let url = document.createElement('input');
             url.type = 'url';
+
+            // add pseudo-random string on duplicate file name
+            if (downloadForm.querySelector(`input[name="${file.name}"]`) !== null) {
+                file.name =
+                    commonUtils.getBaseName(file.name) +
+                    '-' +
+                    Math.random().toString(36).substring(7) +
+                    '.' +
+                    commonUtils.getFileExtension(file.name);
+            }
+
             url.name = file.name;
             url.value = fileUrl.toString();
             downloadForm.appendChild(url);
