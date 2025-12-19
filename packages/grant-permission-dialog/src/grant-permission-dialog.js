@@ -1266,7 +1266,7 @@ export class GrantPermissionDialog extends LangMixin(
                 modal-id="grant-permission-modal"
                 subscribe="lang">
                 <div slot="title">
-                    <h2>${i18n.t('grant-permission-dialog.modal-title')}</h2>
+                    <h2 class="modal-title">${i18n.t('grant-permission-dialog.modal-title')}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">

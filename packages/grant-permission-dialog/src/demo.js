@@ -17,6 +17,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
         this.noAuth = false;
         this.resourceClassIdentifier = 'DbpRelayFormalizeForm';
         this.formIdentifier = '';
+        this.submissionIdentifier = '';
         this.forms = [];
         this.auth = null;
     }
@@ -31,6 +32,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
         return {
             ...super.properties,
             formIdentifier: {type: String},
+            submissionIdentifier: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
@@ -44,6 +46,12 @@ export class GrantPermissionDialogDemo extends LangMixin(
                 h1.title {
                     margin-bottom: 1em;
                 }
+                h2 {
+                    margin-block: 1em 0.5em;
+                }
+                h3 {
+                    margin-block: 1em 0.5em;
+                }
                 div.container {
                     margin-bottom: 1.5em;
                 }
@@ -52,8 +60,15 @@ export class GrantPermissionDialogDemo extends LangMixin(
                     gap: 2em;
                     align-items: center;
                 }
+                label {
+                    display: block;
+                }
                 select:not(.select) {
                     background-size: 6%;
+                }
+                .submission-id-input {
+                    width: 330px;
+                    padding: 0 1em;
                 }
             `,
         ];
@@ -118,10 +133,11 @@ export class GrantPermissionDialogDemo extends LangMixin(
         return html`
             <section class="section" id="grant-permission-demo">
                 <div class="container">
-                    <h1 class="title">Grant permission modal demo</h1>
+                    <h2 class="title">Grant permission modal demo</h2>
                 </div>
 
                 <div class="container">
+                    <h3>Manage SubmissionCollection Permissions</h3>
                     <div class="button-wrap">
                         <dbp-button
                             type="is-primary"
@@ -178,8 +194,44 @@ export class GrantPermissionDialogDemo extends LangMixin(
                             subscribe="auth"
                             entry-point-url="${this.entryPointUrl}"
                             resource-identifier="${this.formIdentifier}"
-                            resource-class-identifier="DbpRelayFormalizeForm"></dbp-grant-permission-dialog>
+                            resource-class-identifier="DbpRelayFormalizeSubmissionCollection"></dbp-grant-permission-dialog>
                     </div>
+                </div>
+                <div class="container">
+                    <h3>Manage Submission Permissions</h3>
+
+                    <label for="form-list">Submission ID</label>
+                    <input id="submission-id" class="submission-id-input" type="text" />
+
+                    <dbp-button
+                        type="is-primary"
+                        id="modal-trigger-basic"
+                        value="Manage submission permissions"
+                        no-spinner-on-click
+                        @click="${() => {
+                            if (!this.auth || !this.auth.token) {
+                                sendNotification({
+                                    summary: i18n.t(
+                                        'grant-permission-dialog.notifications.warning-title',
+                                    ),
+                                    body: i18n.t('grant-permission-dialog.need-login-warning-text'),
+                                    type: 'warning',
+                                    timeout: 10,
+                                });
+                            }
+                            this.submissionIdentifier = this._('#submission-id').value;
+                            if (this.submissionIdentifier) {
+                                this._('#grant-permission-dialog-submission').open();
+                            }
+                        }}"></dbp-button>
+
+                    <dbp-grant-permission-dialog
+                        id="grant-permission-dialog-submission"
+                        lang="${this.lang}"
+                        subscribe="auth"
+                        entry-point-url="${this.entryPointUrl}"
+                        resource-identifier="${this.submissionIdentifier}"
+                        resource-class-identifier="DbpRelayFormalizeSubmission"></dbp-grant-permission-dialog>
                 </div>
             </section>
         `;
