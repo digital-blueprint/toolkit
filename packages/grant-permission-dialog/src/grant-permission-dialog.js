@@ -506,6 +506,15 @@ export class GrantPermissionDialog extends LangMixin(
                 const newUserList = new Map(this.userList);
                 for (const grant of responseBody['hydra:member']) {
                     if (grant.userIdentifier) {
+                        // Don't add inherited item-actions that are not available actions
+                        // We can't set such permissions
+                        const isAnAvailableAction = this.availableActions.find((action) => {
+                            return Object.keys(action)[0] === grant.action;
+                        });
+                        if (!isAnAvailableAction) {
+                            continue;
+                        }
+
                         const userId = grant.userIdentifier;
                         const isInherited = grant.grantedActions.length === 0;
 
