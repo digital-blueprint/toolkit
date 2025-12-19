@@ -33,7 +33,6 @@
             "save-permissions-error": "Failed to save {{n}} user permissions",
             "save-permissions-unexpected-error": "Unexpected error happened during saving grants",
             "set-available-actions-error-text": "Failed to set available actions",
-            "set-form-name-error-text": "Failed to set form name",
             "success-title": "Success",
             "there-is-no-user-to-save": "There is no user to save",
             "there-is-nothing-to-save": "There is no change in permissions to save for user {{userFullName}}",

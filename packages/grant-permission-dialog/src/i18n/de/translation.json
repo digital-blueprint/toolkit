@@ -33,7 +33,6 @@
             "save-permissions-error": "Speichern der {{n}} Benutzerberechtigungen fehlgeschlagen",
             "save-permissions-unexpected-error": "Beim Speichern von Benutzerberechtigungen ist ein unerwarteter Fehler aufgetreten.",
             "set-available-actions-error-text": "Verfügbare Aktionen konnten nicht festgelegt werden",
-            "set-form-name-error-text": "Formularname konnte nicht gesetzt werden",
             "success-title": "Erfolg",
             "there-is-no-user-to-save": "[de] There is no user to save",
             "there-is-nothing-to-save": "Es gibt keine Änderung der Berechtigungen zum Speichern für den Benutzer {{userFullName}}.",

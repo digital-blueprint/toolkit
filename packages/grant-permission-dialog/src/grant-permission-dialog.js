@@ -27,7 +27,6 @@ export class GrantPermissionDialog extends LangMixin(
         super();
         this.auth = {};
         this.entryPointUrl = '';
-        this.modalTitle = '';
         this.availableActions = [];
         this.userList = new Map();
         this.permissionRows = [];
@@ -268,44 +267,6 @@ export class GrantPermissionDialog extends LangMixin(
             this.entryPointUrl + `/base/people/${userIdentifier}`,
             options,
         );
-    }
-
-    async apiGetFormDetails() {
-        const options = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-        };
-        return await this.httpGetAsync(
-            this.entryPointUrl + `/formalize/forms/${this.resourceIdentifier}`,
-            options,
-        );
-    }
-
-    async setModalTitle() {
-        const i18n = this._i18n;
-        if (this.resourceClassIdentifier === 'DbpRelayFormalizeForm') {
-            try {
-                let response = await this.apiGetFormDetails();
-                let responseBody = await response.json();
-                if (responseBody !== undefined && responseBody['name']) {
-                    this.modalTitle = responseBody['name'];
-                }
-            } catch (e) {
-                console.log('setModalTitle error', e);
-                sendNotification({
-                    summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                    body: i18n.t('grant-permission-dialog.notifications.set-form-name-error-text'),
-                    type: 'danger',
-                    targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
-                });
-            }
-        } else {
-            this.modalTitle = i18n.t('grant-permission-dialog.modal-title');
-        }
     }
 
     /**
@@ -938,7 +899,6 @@ export class GrantPermissionDialog extends LangMixin(
                 timeout: 0,
             });
         } else {
-            await this.setModalTitle();
             await this.setAvailableActions();
             await this.setListOfUsersAndPermissions();
             this.permissionModalRef.value.open();
@@ -1296,6 +1256,9 @@ export class GrantPermissionDialog extends LangMixin(
                 class="modal modal--permissions"
                 modal-id="grant-permission-modal"
                 subscribe="lang">
+                <div slot="title">
+                    <h2>${i18n.t('grant-permission-dialog.modal-title')}</h2>
+                </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
                         <dbp-notification
@@ -1303,7 +1266,6 @@ export class GrantPermissionDialog extends LangMixin(
                             inline
                             lang="${this.lang}"></dbp-notification>
                     </div>
-                    <h3>${this.modalTitle}</h3>
                 </div>
                 <div slot="content">
                     <div class="content-container">
