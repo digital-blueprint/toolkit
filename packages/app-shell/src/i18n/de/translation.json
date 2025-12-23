@@ -3,7 +3,8 @@
         "hello-world": "Hallo Welt"
     },
     "buttons": {
-        "scroll-to-top": "Zum Seitenanfang"
+        "scroll-to-bottom-button-label": "Zum Seitenende scrollen",
+        "scroll-to-top-button-label": "Zum Seitenanfang scrollen"
     },
     "choose-from-menu": "Bitte wählen Sie eine Aktivität aus dem Menu.",
     "contact": "Kontakt",

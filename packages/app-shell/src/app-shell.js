@@ -75,6 +75,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.auth = null;
         this.langDir = '';
         this.routingBaseUrl = null;
+        this.isScrollTopButtonVisible = false;
+        this.isScrollBottomButtonVisible = true;
     }
 
     static get scopedElements() {
@@ -182,6 +184,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (!this.isMenuFloating()) {
             this.toggleMenu();
         }
+
+        // Wait for all updates to complete before initializing scroll buttons
+        this.updateComplete.then(() => {
+            this.initializeScrollToTopButton();
+        });
     }
 
     initRouter() {
@@ -307,6 +314,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             langDir: {type: String, attribute: 'lang-dir'},
             routingUrl: {type: String, attribute: 'routing-url'},
             routingBaseUrl: {type: String, attribute: 'routing-base-url'},
+            isScrollTopButtonVisible: {type: Boolean, attribute: false},
+            isScrollBottomButtonVisible: {type: Boolean, attribute: false},
         };
     }
 
@@ -339,7 +348,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     update(changedProperties) {
-        this.initializeScrollToTopButton();
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
@@ -617,28 +625,56 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     initializeScrollToTopButton() {
-        const scrollBtn = this.shadowRoot.getElementById('scroll-top');
-        if (!scrollBtn) return;
+        const buttonDisplayOffset = 600;
+        const scrollTopBtn = this.shadowRoot.getElementById('scroll-top');
+        const scrollBottomBtn = this.shadowRoot.getElementById('scroll-bottom');
+        if (!scrollTopBtn || !scrollBottomBtn) return;
 
         const toggleScrollButton = () => {
-            if (window.scrollY > 100) {
-                scrollBtn.classList.add('visible');
+            const pageHeight = document.documentElement.scrollHeight;
+            let distanceFromTop = window.scrollY;
+            let distanceFromBottom = pageHeight - (window.scrollY + window.innerHeight);
+
+            // Only show the scroll top button if we scroll down buttonDisplayOffset px
+            if (distanceFromTop < buttonDisplayOffset) {
+                this.isScrollTopButtonVisible = false;
             } else {
-                scrollBtn.classList.remove('visible');
+                this.isScrollTopButtonVisible = true;
+            }
+
+            // Only show the scroll bottom button if we start scrolling down or
+            // we are at least buttonDisplayOffset px away from the bottom
+            if (window.scrollY < 100 || distanceFromBottom < buttonDisplayOffset) {
+                this.isScrollBottomButtonVisible = false;
+            } else {
+                this.isScrollBottomButtonVisible = true;
             }
         };
-        window.addEventListener('scroll', toggleScrollButton);
 
-        window.addEventListener('load', toggleScrollButton);
+        // Debounce scroll event for better performance
+        let scrollTimeout;
+        const debouncedToggleScrollButton = () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(toggleScrollButton, 100);
+        };
 
-        scrollBtn.addEventListener('click', (event) => {
+        window.addEventListener('scroll', debouncedToggleScrollButton, {passive: true});
+
+        scrollTopBtn.addEventListener('click', (event) => {
             event.preventDefault();
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
             });
         });
-        toggleScrollButton();
+        scrollBottomBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.scrollTo({
+                top: document.documentElement.scrollHeight,
+                behavior: 'smooth',
+            });
+        });
+        debouncedToggleScrollButton();
     }
 
     static get styles() {
@@ -647,8 +683,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getLinkCss()}
-            
-            
+
+
             h1.title {
                 margin-bottom: 0;
                 font-weight: bold;
@@ -913,6 +949,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
             .scroll-top-wrapper {
                 display: flex;
+                flex-direction: column;
+                gap: 2px;
                 z-index: 1000;
                 position: fixed;
                 bottom: 8rem;
@@ -920,11 +958,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 align-items: center;
             }
 
-            #scroll-top {
+            .scroll-button {
                 padding: 0.5em;
                 opacity: 0;
                 pointer-events: none;
-                color: var(--dbp-content);
+                color: var(--dbp-background);
+                font-size: 1.25em;
                 transition:
                     opacity 0.3s ease,
                     color 0.3s ease;
@@ -933,7 +972,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 border: none;
             }
 
-            #scroll-top.visible {
+            .scroll-button.visible {
                 opacity: 1;
                 pointer-events: auto;
             }
@@ -1999,31 +2038,27 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             <p>${i18n.t('choose-from-menu')}</p>
                         </div>
                         <p class="description">${this.description}</p>
+
                         ${this._renderActivity()}
+
                         <div class="scroll-top-wrapper">
                             <button
                                 id="scroll-top"
-                                class="button is-secondary"
-                                aria-label="${i18n.t('buttons.scroll-to-top')}">
-                                <div class="scroll-top-button" aria-hidden="true">
-                                    <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 106 58"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M5 53L53 5"
-                                            stroke="#ffffff"
-                                            stroke-width="10"
-                                            stroke-linecap="round" />
-                                        <path
-                                            d="M53 5L101 53"
-                                            stroke="#ffffff"
-                                            stroke-width="10"
-                                            stroke-linecap="round" />
-                                    </svg>
-                                </div>
+                                class="scroll-button button is-secondary ${classMap({
+                                    visible: this.isScrollTopButtonVisible,
+                                })}"
+                                title="${i18n.t('buttons.scroll-to-top-button-label')}"
+                                aria-label="${i18n.t('buttons.scroll-to-top-button-label')}">
+                                <dbp-icon name="chevron-up" aria-hidden="true"></dbp-icon>
+                            </button>
+                            <button
+                                id="scroll-bottom"
+                                class="scroll-button button is-secondary ${classMap({
+                                    visible: this.isScrollBottomButtonVisible,
+                                })}"
+                                title="${i18n.t('buttons.scroll-to-bottom-button-label')}"
+                                aria-label="${i18n.t('buttons.scroll-to-bottom-button-label')}">
+                                <dbp-icon name="chevron-down" aria-hidden="true"></dbp-icon>
                             </button>
                         </div>
                     </main>
