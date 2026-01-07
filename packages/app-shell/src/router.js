@@ -1,5 +1,5 @@
 import UniversalRouter from 'universal-router';
-import generateUrls from 'universal-router/generateUrls';
+import generateUrls from 'universal-router/generate-urls';
 
 function stateMatches(a, b) {
     return JSON.stringify(a, Object.keys(a).sort()) === JSON.stringify(b, Object.keys(b).sort());
