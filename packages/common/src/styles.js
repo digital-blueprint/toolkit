@@ -1809,7 +1809,7 @@ export function getDropDownCss() {
         }
 
         :host(:not([align='right'])) .menu {
-            left: 0;
+            right: 0;
             text-align: left;
         }
 
