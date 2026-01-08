@@ -40,8 +40,8 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.options = Array.isArray(opts) ? opts : [];
     }
 
-    select(name) {
-        const opt = this.options.find((o) => o?.name === name);
+    select(value) {
+        const opt = this.options.find((o) => o?.value === value);
         if (!opt) return;
         this._emitChange(opt, null);
         if (this.hideOnSelect) this.closeMenu();
@@ -110,18 +110,18 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     _onItemClick = (e) => {
         const btn = e.currentTarget;
         if (!btn || btn.hasAttribute('disabled')) return;
-        const name = btn.dataset.name;
-        const opt = this.options.find((o) => o?.name === name);
+        const value = btn.dataset.value;
+        const opt = this.options.find((o) => o?.value === value);
         if (!opt) return;
         this._emitChange(opt, e);
         if (this.hideOnSelect) this.closeMenu();
     };
 
     _emitChange(opt, originalEvent) {
-        this.value = opt.name;
+        this.value = opt.value;
         this.dispatchEvent(
             new CustomEvent('change', {
-                detail: {value: opt.name, option: opt, originalEvent},
+                detail: {value: opt.value, option: opt, originalEvent},
                 bubbles: true,
                 composed: true,
             }),
@@ -185,10 +185,10 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                                       <button
                                           class="item-button button"
                                           role="menuitem"
-                                          data-name=${o.name}
+                                          data-value=${String(o.value)}
                                           @click=${this._onItemClick}
                                           ?disabled=${o.disabled ?? false}
-                                          aria-checked=${this.value === o.name ? 'true' : 'false'}>
+                                          aria-checked=${this.value === o.value ? 'true' : 'false'}>
                                           ${o.iconName
                                               ? html`
                                                     <dbp-icon
