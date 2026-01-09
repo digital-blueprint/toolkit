@@ -5,7 +5,7 @@ Supports full keyboard navigation and “click outside to close,” and emits a 
 
 ### Key features
 
-- Options via JSON: `{ value, title, iconName? }[]`
+- Options via JSON: `{value, title, iconName? }[]`
 - Optional icons (uses `<dbp-icon>` when iconName is provided)
 - Accessible: ARIA roles, arrow-key navigation, Escape to close
 
