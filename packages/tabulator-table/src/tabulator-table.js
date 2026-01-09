@@ -13,8 +13,9 @@ import {downloadExcel, generatePDFDownload} from './utils.js';
 export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-
+        // Tabulator table id
         this.identifier = 'table';
+        // Web Component id
         this.id = '';
         /** @type {import('tabulator-tables').Options} */
         this.options = {
@@ -280,7 +281,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
         const tableBuiltEvent = new CustomEvent('dbp-tabulator-table-built', {
             detail: {
-                id: this.id,
+                id: this.identifier,
                 tabulator: this.tabulatorTable,
             },
             bubbles: true,
