@@ -59,11 +59,13 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
 
 ### Events
 
-| Event                                             | Description                                            |
-| ------------------------------------------------- | ------------------------------------------------------ |
-| `dbp-tabulator-table-collapsible-event`           | Event to tell if the component is in collapsible state |
-| `dbp-tabulator-table-row-selection-changed-event` | Tabulator table `rowSelectionChanged` event            |
-| `dbp-tabulator-table-built`                       | Fired after table is built                             |
+| Event                                             | Description                                                |
+| ------------------------------------------------- | -----------------------------------------------------------|
+| `dbp-tabulator-table-collapsible-event`           | Event to tell if the component is in collapsible state     |
+| `dbp-tabulator-table-row-selection-changed-event` | Tabulator table `rowSelectionChanged` event (Column event) |
+| `dbp-tabulator-table-built`                       | Fired after table is built (Table event)                   |
+| `dbp-tabulator-table-page-loaded-event`           | Fired after pagination, when the page is loaded            |
+| `dbp-tabulator-table-render-complete-event`       | Fire after the table has been rendered (Layout Event)      |
 
 ### Important functions
 
