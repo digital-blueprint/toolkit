@@ -212,17 +212,14 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
          * Whenever a page has been loaded, the pageLoaded event is called, passing the current page number as an argument.
          */
         this.tabulatorTable.on('pageLoaded', (pageno) => {
-            const pageLoadedEvent = new CustomEvent(
-                'dbp-tabulator-table-page-loaded-event',
-                {
-                    detail: {
-                        tableId: this.identifier,
-                        pageSize: pageno,
-                    },
-                    bubbles: true,
-                    composed: true,
+            const pageLoadedEvent = new CustomEvent('dbp-tabulator-table-page-loaded-event', {
+                detail: {
+                    tableId: this.identifier,
+                    pageSize: pageno,
                 },
-            );
+                bubbles: true,
+                composed: true,
+            });
             this.dispatchEvent(pageLoadedEvent);
         });
 
