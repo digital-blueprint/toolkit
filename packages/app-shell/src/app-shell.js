@@ -925,7 +925,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             }
 
             #main.menu-open {
-                grid-template-columns: 208px minmax(0, 1fr);
+                grid-template-columns: 240px minmax(0, 1fr);
                 grid-template-areas:
                     'header header'
                     'headline headline'
