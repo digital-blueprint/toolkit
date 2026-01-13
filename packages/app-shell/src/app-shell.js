@@ -954,7 +954,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 z-index: 1000;
                 position: fixed;
                 bottom: 8rem;
-                right: max(1.5rem, calc((90vw - 1400px) / 2 + 1.5rem));
+                right: max(1.5rem, calc((90vw - 1100px) / 2 + 1.5rem));
                 align-items: center;
             }
 
@@ -977,7 +977,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 pointer-events: auto;
             }
 
-            @media (max-width: 1400px) {
+            @media (max-width: 1100px) {
                 .scroll-top-wrapper {
                     right: 1rem;
                 }
