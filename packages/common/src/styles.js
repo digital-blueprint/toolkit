@@ -1801,11 +1801,6 @@ export function getDropDownCss() {
             margin-left: 0.5em;
         }
 
-        :host([align='right']) .menu {
-            right: 0;
-            text-align: right;
-        }
-
         :host(:not([align='right'])) .menu {
             right: 0;
             text-align: left;
