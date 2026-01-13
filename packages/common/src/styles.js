@@ -724,10 +724,8 @@ export function getButtonCSS() {
         }
 
         button.button.is-icon dbp-icon,
-        .button.is-icon dbp-icon,
-        dbp-button-icon {
+        .button.is-icon dbp-icon {
             top: 0px;
-            font-size: 1.2em;
         }
 
         button.button.is-icon:hover:enabled,

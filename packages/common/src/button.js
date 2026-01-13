@@ -290,7 +290,6 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
                 aria-label="${ifDefined(this.ariaLabel ? this.ariaLabel : undefined)}">
                 <slot>
                     <dbp-icon
-                        class="dbp-button-icon"
                         name="${this.iconName}"
                         aria-hidden="true"
                         style="display: ${this.loading ? 'none' : 'inline'}"></dbp-icon>
