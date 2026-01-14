@@ -27,6 +27,7 @@ export class GrantPermissionDialog extends LangMixin(
         super();
         this.auth = {};
         this.entryPointUrl = '';
+        this.modalTitle = '';
         this.availableActions = [];
         this.userList = new Map();
         this.permissionRows = [];
@@ -47,6 +48,7 @@ export class GrantPermissionDialog extends LangMixin(
         return {
             ...super.properties,
             auth: {type: Object},
+            modalTitle: {type: String, attribute: 'modal-title'},
             availableActions: {type: Array},
             userList: {type: Map},
             usersToAdd: {type: Map},
@@ -93,6 +95,14 @@ export class GrantPermissionDialog extends LangMixin(
 
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
+                case 'lang': {
+                    // Set default title if none provided via attribute
+                    if (!this.modalTitle || !this.hasAttribute('modal-title')) {
+                        this.modalTitle = this._i18n.t('grant-permission-dialog.modal-title');
+                    }
+                    break;
+                }
+
                 case 'userList': {
                     console.log(`this.userList`, this.userList);
                     this.checkSavedManagerCount();
@@ -1266,7 +1276,7 @@ export class GrantPermissionDialog extends LangMixin(
                 modal-id="grant-permission-modal"
                 subscribe="lang">
                 <div slot="title">
-                    <h2 class="modal-title">${i18n.t('grant-permission-dialog.modal-title')}</h2>
+                    <h2 class="modal-title">${this.modalTitle}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
