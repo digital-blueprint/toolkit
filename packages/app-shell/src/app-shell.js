@@ -570,9 +570,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (burger) burger.name = isOpening ? 'close' : 'menu';
         menuLabel?.setAttribute('aria-expanded', String(isOpening));
 
-        if (burger) burger.name = isOpening ? 'close' : 'menu';
-        menuLabel.setAttribute('aria-expanded', String(isOpening));
-
         // Outside click + initial click guard
         if (this._boundCloseMenuHandler) {
             document.removeEventListener('click', this._boundCloseMenuHandler);
