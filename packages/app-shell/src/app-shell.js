@@ -326,6 +326,16 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (this.src) {
             this.fetchMetadata(this.src);
         }
+
+        this._boundResizeHandler = () => this.updateMenuIcon();
+        window.addEventListener('resize', this._boundResizeHandler);
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._boundResizeHandler) {
+            window.removeEventListener('resize', this._boundResizeHandler);
+        }
     }
 
     /**
@@ -426,6 +436,19 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (!menu) return false;
         const computedStyle = window.getComputedStyle(menu);
         return computedStyle.position === 'fixed';
+    }
+
+    updateMenuIcon() {
+        const menu = this.shadowRoot.querySelector('ul.menu');
+        const burger = this.shadowRoot.querySelector('#menu-burger-icon');
+        if (!menu || !burger) return;
+
+        const isOpen = menu.classList.contains('is-open');
+        if (isOpen) {
+            burger.name = this.isMenuFloating() ? 'chevron-up' : 'chevron-left';
+        } else {
+            burger.name = 'menu';
+        }
     }
 
     onMenuItemClick(e) {
@@ -567,7 +590,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         menu.classList.toggle('is-open', isOpening);
 
         mainGrid?.classList.toggle('menu-open', isOpening);
-        if (burger) burger.name = isOpening ? 'chevron-left' : 'menu';
+        this.updateMenuIcon();
         menuLabel?.setAttribute('aria-expanded', String(isOpening));
 
         // Outside click + initial click guard
