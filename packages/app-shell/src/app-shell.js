@@ -557,7 +557,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     toggleMenu() {
         const menu = this.shadowRoot.querySelector('ul.menu');
-        const menuLable = this.shadowRoot.querySelector('.menu-label');
+        const menuLabel = this.shadowRoot.querySelector('.menu-label');
         const burger = this.shadowRoot.querySelector('#menu-burger-icon');
         const mainGrid = this.shadowRoot.querySelector('#main');
 
@@ -568,10 +568,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         mainGrid?.classList.toggle('menu-open', isOpening);
         if (burger) burger.name = isOpening ? 'close' : 'menu';
-        menuLable?.setAttribute('aria-expanded', String(isOpening));
+        menuLabel?.setAttribute('aria-expanded', String(isOpening));
 
         if (burger) burger.name = isOpening ? 'close' : 'menu';
-        menuLable.setAttribute('aria-expanded', String(isOpening));
+        menuLabel.setAttribute('aria-expanded', String(isOpening));
 
         // Outside click + initial click guard
         if (this._boundCloseMenuHandler) {
@@ -587,7 +587,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             this._boundCloseMenuHandler = (evt) => {
                 const path = evt.composedPath?.() || [];
                 const clickedInside =
-                    path.includes(menu) || path.includes(menuLable) || path.includes(burger);
+                    path.includes(menu) || path.includes(menuLabel) || path.includes(burger);
                 if (!clickedInside) this.hideMenu();
             };
 
