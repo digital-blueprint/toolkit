@@ -40,6 +40,7 @@ Or directly via CDN:
 - `form-id`: (`<dbp-button-tooltip>` only) Id of the from to submit, if omitted the next form in DOM hierarchy will be used.
 
 ### CSS custom properties
+
 - `--dbp-tooltip-icon-color`: set icon color (default: --dbp-content)
 - `--dbp-tooltip-box-bg-color`: set tooltip background color (default: --dbp-content-surface)
 - `--dbp-tooltip-box-font-color`: set tooltip font color (default: --dbp-on-content-surface)
