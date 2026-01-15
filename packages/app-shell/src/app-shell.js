@@ -567,7 +567,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         menu.classList.toggle('is-open', isOpening);
 
         mainGrid?.classList.toggle('menu-open', isOpening);
-        if (burger) burger.name = isOpening ? 'close' : 'menu';
+        if (burger) burger.name = isOpening ? 'chevron-left' : 'menu';
         menuLabel?.setAttribute('aria-expanded', String(isOpening));
 
         // Outside click + initial click guard
@@ -765,6 +765,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 padding: 10px 5px;
                 margin: -10px -5px;
                 color: var(--dbp-content);
+                align-items: baseline;
             }
 
             .hd1-left-switches {
