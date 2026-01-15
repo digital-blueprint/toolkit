@@ -13,17 +13,11 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
     }
 
     static get scopedElements() {
-        let elements = {
+        return {
             'dbp-icon': Icon,
             'dbp-button': Button,
             'dbp-modal': Modal,
         };
-
-        if (customElements.get('dbp-person-select')) {
-            elements['dbp-person-select'] = customElements.get('dbp-person-select');
-        }
-
-        return elements;
     }
 
     static get properties() {
@@ -107,15 +101,6 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
 
             .modal--sticky .header h4,
             .modal--sticky .header h3 {
-                margin: 0 1em 0 0;
-            }
-
-            .modal--person {
-                --dbp-modal-min-height: 25em;
-                --dbp-modal-animation: mmSlideIn;
-            }
-
-            .modal--person .header h3 {
                 margin: 0 1em 0 0;
             }
 
@@ -407,45 +392,6 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                             <dbp-button
                                 @click="${() => {
                                     this._('#my-modal-sticky').close();
-                                }}">
-                                Cancel
-                            </dbp-button>
-                            <dbp-button type="is-primary">Submit</dbp-button>
-                        </menu>
-                    </dbp-modal>
-                </div>
-
-                <div class="control">
-                    <h3>Modal with person selector (with slide-in effect)</h3>
-                    <dbp-button
-                        type="is-primary"
-                        id="modal-trigger-person"
-                        value="open modal"
-                        no-spinner-on-click
-                        @click="${() => this._('#my-modal-person').open()}"></dbp-button>
-
-                    <dbp-modal
-                        id="my-modal-person"
-                        class="modal modal--person"
-                        modal-id="modal-person"
-                        title="Person selector modal"
-                        min-width="500px"
-                        min-height="400px"
-                        subscribe="lang">
-                        <div slot="header" class="header">
-                            <h3>Person name</h3>
-                            <dbp-icon name="cog"></dbp-icon>
-                        </div>
-                        <div slot="content">
-                            <dbp-person-select
-                                subscribe="auth"
-                                lang="${this.lang}"
-                                entry-point-url="${this.entryPointUrl}"></dbp-person-select>
-                        </div>
-                        <menu slot="footer" class="footer-menu">
-                            <dbp-button
-                                @click="${() => {
-                                    this._('#my-modal-person').close();
                                 }}">
                                 Cancel
                             </dbp-button>
