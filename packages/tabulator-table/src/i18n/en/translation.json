@@ -31,5 +31,11 @@
     "select-all": "Select all",
     "select-column": "Select column:",
     "select-operator": "Select operator:",
+    "tabulator-table": {
+        "download-error-message": "Something went wrong during the export.",
+        "download-success-message": "Successful export. Check your download folder for the exported files.",
+        "error-title": "Error",
+        "success-title": "Success"
+    },
     "update-rows": "Update rows"
 }

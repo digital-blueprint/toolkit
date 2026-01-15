@@ -9,6 +9,7 @@ import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
 import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {downloadExcel, generatePDFDownload} from './utils.js';
+import {sendNotification} from '@dbp-toolkit/common';
 
 export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -519,18 +520,41 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             ? selected_rows.map((row) => row.getData())
             : this.tabulatorTable.getData();
         const downloadMode = hasSelection ? 'selected' : 'all';
-        switch (type) {
-            case 'csv':
-            case 'json':
-            case 'html':
-                this.tabulatorTable.download(type, dataName + '.' + type, {}, downloadMode);
-                break;
-            case 'xlsx':
-                await downloadExcel(rows, dataName);
-                break;
-            case 'pdf':
-                await generatePDFDownload(this.tabulatorTable, data, dataName);
-                break;
+
+        let hasError = false;
+
+        try {
+            switch (type) {
+                case 'csv':
+                case 'json':
+                case 'html':
+                    this.tabulatorTable.download(type, dataName + '.' + type, {}, downloadMode);
+                    break;
+                case 'xlsx':
+                    await downloadExcel(rows, dataName);
+                    break;
+                case 'pdf':
+                    await generatePDFDownload(this.tabulatorTable, data, dataName);
+                    break;
+            }
+        } catch (error) {
+            hasError = true;
+            console.error('Download failed:', error);
+            sendNotification({
+                summary: this._i18n.t('tabulator-table.error-title'),
+                body: this._i18n.t('tabulator-table.download-error-message'),
+                type: 'danger',
+                timeout: 0,
+            });
+        }
+
+        if (!hasError) {
+            sendNotification({
+                summary: this._i18n.t('tabulator-table.success-title'),
+                body: this._i18n.t('tabulator-table.download-success-message'),
+                type: 'success',
+                timeout: 5,
+            });
         }
     }
 

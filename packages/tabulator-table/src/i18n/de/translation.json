@@ -31,5 +31,11 @@
     "select-all": "Alles auswählen",
     "select-column": "Spalte auswählen:",
     "select-operator": "Zeichen auswählen:",
+    "tabulator-table": {
+        "download-error-message": "Beim Export ist ein Fehler aufgetreten.",
+        "download-success-message": "Erfolgreich exportiert. Überprüfen Sie Ihren Download-Ordner auf die exportierten Dateien.",
+        "error-title": "Fehler",
+        "success-title": "Erfolg"
+    },
     "update-rows": "Zeilen aktualisieren"
 }
