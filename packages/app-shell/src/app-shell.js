@@ -580,7 +580,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     toggleMenu() {
         const menu = this.shadowRoot.querySelector('ul.menu');
-        const menuLabel = this.shadowRoot.querySelector('.menu-label');
+        const menuButton = this.shadowRoot.querySelector('.hd1-left-menu');
         const burger = this.shadowRoot.querySelector('#menu-burger-icon');
         const mainGrid = this.shadowRoot.querySelector('#main');
 
@@ -591,7 +591,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         mainGrid?.classList.toggle('menu-open', isOpening);
         this.updateMenuIcon();
-        menuLabel?.setAttribute('aria-expanded', String(isOpening));
+        menuButton?.setAttribute('aria-expanded', String(isOpening));
 
         // Outside click + initial click guard
         if (this._boundCloseMenuHandler) {
@@ -607,7 +607,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             this._boundCloseMenuHandler = (evt) => {
                 const path = evt.composedPath?.() || [];
                 const clickedInside =
-                    path.includes(menu) || path.includes(menuLabel) || path.includes(burger);
+                    path.includes(menu) || path.includes(menuButton) || path.includes(burger);
                 if (!clickedInside) this.hideMenu();
             };
 
@@ -789,6 +789,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 margin: -10px -5px;
                 color: var(--dbp-content);
                 align-items: baseline;
+                background: none;
+                border: none;
+                font: inherit;
+            }
+
+            .hd1-left-menu:focus-visible {
+                outline: 2px solid var(--dbp-accent);
+                outline-offset: 2px;
             }
 
             .hd1-left-switches {
@@ -1276,7 +1284,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                <nav class="hd1-left-menu" @click="${this.toggleMenu}">
+                                <button
+                                    class="hd1-left-menu"
+                                    @click="${this.toggleMenu}"
+                                    aria-expanded="false"
+                                    aria-label="${this._i18n.t('main-page.menu')}">
                                     <dbp-icon
                                         class="burger-menu-icon"
                                         name="menu"
@@ -1284,7 +1296,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     <span class="menu-label">
                                         ${this._i18n.t('main-page.menu')}
                                     </span>
-                                </nav>
+                                </button>
                                 <div class="hd1-left-switches">
                                     <dbp-theme-switcher
                                         subscribe="themes,dark-mode-theme-override"
