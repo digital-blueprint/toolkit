@@ -37,4 +37,11 @@ Or directly via CDN:
 - `icon-name`: (`<dbp-tooltip>` only, default is a skull) Name of the bundled icon (SVG) for `<dbp-icon>`
 - `button-text`: (`<dbp-button-tooltip>` only, default is 'submit') Text on the button
 - `type`: (`<dbp-button-tooltip>` only, default is 'submit') Options are 'submit', 'reset', or any string
-- `form-id`: (`<dbp-button-tooltip>` only) Id of the from to submit, if omitted the next form in DOM hirachy will be used.
+- `form-id`: (`<dbp-button-tooltip>` only) Id of the from to submit, if omitted the next form in DOM hierarchy will be used.
+
+### CSS custom properties
+- `--dbp-tooltip-icon-color`: set icon color (default: --dbp-content)
+- `--dbp-tooltip-box-bg-color`: set tooltip background color (default: --dbp-content-surface)
+- `--dbp-tooltip-box-font-color`: set tooltip font color (default: --dbp-on-content-surface)
+- `--dbp-tooltip-arrow-color`: set tooltip arrow background color (default: --dbp-content)
+- `--dbp-tooltip-box-font-weight`: set tooltip font weight (default: normal)

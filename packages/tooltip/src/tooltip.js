@@ -63,6 +63,7 @@ export class TooltipElement extends ScopedElementsMixin(DBPLitElement) {
             .tippy-box {
                 background-color: var(--dbp-tooltip-box-bg-color, var(--dbp-content-surface));
                 color: var(--dbp-tooltip-box-font-color, var(--dbp-on-content-surface));
+                font-weight: var(--dbp-tooltip-box-font-weight, normal);
             }
 
             .tippy-arrow {
