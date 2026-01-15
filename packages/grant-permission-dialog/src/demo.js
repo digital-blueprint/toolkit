@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, sendNotification, Button} from '@dbp-toolkit/common';
 import {GrantPermissionDialog} from './grant-permission-dialog.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -25,6 +25,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
     static get scopedElements() {
         return {
             'dbp-grant-permission-dialog': GrantPermissionDialog,
+            'dbp-button': Button,
         };
     }
 
