@@ -13,6 +13,10 @@
         {
             "matchPackageNames": ["pdfjs-dist"],
             "allowedVersions": "<4.6"
+        },
+        {
+            "matchPackageNames": ["jquery"],
+            "allowedVersions": "<4"
         }
     ]
 }
