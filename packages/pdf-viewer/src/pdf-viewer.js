@@ -81,6 +81,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.initialClientHeight = 0;
         this.isFirstRendering = true;
         this.autoResize = 'cover';
+        this.textLayer = null;
 
         this._onWindowResize = this._onWindowResize.bind(this);
     }
@@ -320,6 +321,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 // render the page contents in the canvas
                 try {
                     await page.render(render_context).promise;
+                    await that._renderTextLayer(page, viewport);
                 } catch (error) {
                     console.error(error.message);
                 } finally {
@@ -330,6 +332,26 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             console.error(error.message);
             that.isPageRenderingInProgress = false;
         }
+    }
+
+    async _renderTextLayer(page, viewport) {
+        if (this.textLayer) {
+            this.textLayer.cancel();
+            this.textLayer = null;
+        }
+        const textLayerDiv = this._('#text-layer');
+        textLayerDiv.innerHTML = '';
+        textLayerDiv.style.width = viewport.width + 'px';
+        textLayerDiv.style.height = viewport.height + 'px';
+        textLayerDiv.style.setProperty('--scale-factor', this.canvasToPdfScale);
+        const textContent = await page.getTextContent();
+        const pdfjs = await importPdfJs();
+        this.textLayer = new pdfjs.TextLayer({
+            textContentSource: textContent,
+            container: textLayerDiv,
+            viewport: viewport,
+        });
+        await this.textLayer.render();
     }
 
     sendCancelEvent() {
@@ -381,6 +403,27 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 position: absolute;
                 top: 0;
                 left: 0;
+            }
+
+            .textLayer {
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                line-height: 1;
+                z-index: 1;
+            }
+
+            .textLayer * {
+                color: transparent;
+                position: absolute;
+                white-space: pre;
+                cursor: text;
+            }
+
+            .textLayer ::selection {
+                color: transparent;
+                background: color-mix(in srgb, AccentColor, transparent 75%);
             }
 
             .buttons {
@@ -524,6 +567,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                         class="${classMap({hidden: this.isPageRenderingInProgress})}">
                         <div id="canvas-wrapper-inner">
                             <canvas id="pdf-canvas"></canvas>
+                            <div id="text-layer" class="textLayer"></div>
                         </div>
                     </div>
                     <div class="${classMap({hidden: !this.isPageRenderingInProgress})}">
