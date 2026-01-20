@@ -352,7 +352,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 z-index: 1;
             }
 
-            .textLayer * {
+            .textLayer :is(span, br) {
                 color: transparent;
                 position: absolute;
                 white-space: pre;
@@ -360,7 +360,11 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 transform-origin: 0% 0%;
             }
 
-            .textLayer ::selection {
+            .textLayer br {
+                user-select: none;
+            }
+
+            .textLayer span::selection {
                 color: transparent;
                 background: rgba(0, 0, 255, 0.25);
             }
