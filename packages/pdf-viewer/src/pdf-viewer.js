@@ -357,11 +357,12 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 position: absolute;
                 white-space: pre;
                 cursor: text;
+                transform-origin: 0% 0%;
             }
 
             .textLayer ::selection {
                 color: transparent;
-                background: color-mix(in srgb, AccentColor, transparent 75%);
+                background: rgba(0, 0, 255, 0.25);
             }
 
             .buttons {
