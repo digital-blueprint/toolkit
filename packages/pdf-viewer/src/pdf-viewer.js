@@ -373,7 +373,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 --scale-x: 1;
                 --rotate: 0deg;
                 font-size: calc(var(--text-scale-factor) * var(--font-height));
-                transform: rotate(var(--rotate)) scaleX(var(--scale-x))
+                transform: rotate(var(--rotate)) scaleX(var(--scale-x));
             }
 
             .textLayer br {
