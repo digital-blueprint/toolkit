@@ -303,6 +303,11 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             viewport: viewport,
         });
         await this.textLayer.render();
+        // XXX: pdfjs touches the global DOM
+        // see https://github.com/mozilla/pdf.js/issues/18086
+        document
+            .querySelectorAll('.hiddenCanvasElement')
+            .forEach((e) => e.setAttribute('style', 'display: none'));
     }
 
     sendCancelEvent() {
