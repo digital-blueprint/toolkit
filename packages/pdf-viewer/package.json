@@ -31,6 +31,11 @@
                 "srcPackage": "pdfjs-dist",
                 "src": "wasm",
                 "dest": "pdfjs"
+            },
+            {
+                "srcPackage": "@dbp-toolkit/pdf-viewer",
+                "src": "assets/pdfs",
+                "dest": "."
             }
         ]
     },
