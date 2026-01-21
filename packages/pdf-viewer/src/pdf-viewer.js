@@ -46,11 +46,13 @@ export async function importPdfJs() {
  * @returns {import('pdfjs-dist/legacy/build/pdf.mjs').PDFDocumentLoadingTask}
  */
 export function getPdfJsDocument(pdfjs, src = {}) {
-    let cmaps = commonUtils.getAssetURL(pkgName, 'pdfjs/cmaps/');
-
     // Set for cmaps we ship by default
+    let cmaps = commonUtils.getAssetURL(pkgName, 'pdfjs/cmaps/');
     if (src.cMapUrl === undefined) src.cMapUrl = cmaps;
-    if (src.cMapPacked === undefined) src.cMapPacked = true;
+
+    // Set wasm path we ship by default
+    let wasm = commonUtils.getAssetURL(pkgName, 'pdfjs/wasm/');
+    if (src.wasmUrl === undefined) src.wasmUrl = wasm;
 
     // Disable eval by default for security reasons, unless explicitly enabled
     if (src.isEvalSupported === undefined) src.isEvalSupported = false;
@@ -292,6 +294,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         textLayerDiv.style.width = viewport.width + 'px';
         textLayerDiv.style.height = viewport.height + 'px';
         textLayerDiv.style.setProperty('--scale-factor', this.canvasToPdfScale);
+        textLayerDiv.style.setProperty('--user-unit', viewport.userUnit);
         const textContent = await page.getTextContent();
         const pdfjs = await importPdfJs();
         this.textLayer = new pdfjs.TextLayer({
@@ -350,6 +353,10 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 overflow: hidden;
                 line-height: 1;
                 z-index: 1;
+
+                --total-scale-factor: calc(var(--scale-factor) * var(--user-unit));
+                --scale-round-x: 1px;
+                --scale-round-y: 1px;
             }
 
             .textLayer :is(span, br) {
@@ -358,6 +365,15 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 white-space: pre;
                 cursor: text;
                 transform-origin: 0% 0%;
+
+                --font-height: 0;
+                --min-font-size: 1;
+                --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+                --min-font-size-inv: calc(1 / var(--min-font-size));
+                --scale-x: 1;
+                --rotate: 0deg;
+                font-size: calc(var(--text-scale-factor) * var(--font-height));
+                transform: rotate(var(--rotate)) scaleX(var(--scale-x))
             }
 
             .textLayer br {
