@@ -168,6 +168,11 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
         const data = await readBinaryFileContent(file);
 
+        if (this.pdfDoc !== null) {
+            this.pdfDoc.destroy();
+            this.pdfDoc = null;
+        }
+
         // get handle of pdf document
         try {
             let pdfjs = await importPdfJs();
