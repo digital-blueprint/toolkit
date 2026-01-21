@@ -12,7 +12,7 @@
     "packageRules": [
         {
             "matchPackageNames": ["pdfjs-dist"],
-            "allowedVersions": "<4.6"
+            "allowedVersions": "<=5.4.530"
         },
         {
             "matchPackageNames": ["jquery"],
