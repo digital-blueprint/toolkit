@@ -271,6 +271,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
             // page is rendered on <canvas> element
             const render_context = {
+                canvas: null,
                 canvasContext: this.canvas.getContext('2d'),
                 viewport: viewport,
             };
