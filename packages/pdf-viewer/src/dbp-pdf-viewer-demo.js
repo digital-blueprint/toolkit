@@ -41,7 +41,7 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
                 width: 80%;
                 height: 80%;
                 position: relative;
-                background-color: var(--dbp-primary);
+                background-color: var(--dbp-background);
                 overflow-y: auto;
             }
 

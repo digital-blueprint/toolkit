@@ -259,6 +259,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 this.canvas.height = viewport.height;
                 this.canvas.width = viewport.width;
 
+                this._('#canvas-wrapper-inner').style.width = this.canvas.width + 'px';
+                this._('#canvas-wrapper-inner').style.height = this.canvas.height + 'px';
+
                 // setting page loader height for smooth experience
                 this._('#page-loader').style.height = this.canvas.height + 'px';
                 this._('#page-loader').style.lineHeight = this.canvas.height + 'px';
@@ -341,8 +344,11 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             }
 
             #canvas-wrapper {
-                position: relative;
                 border: var(--dbp-border);
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                background-color: var(--dbp-muted-surface);
             }
 
             #canvas-wrapper-inner {
