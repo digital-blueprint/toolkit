@@ -368,7 +368,6 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 left: 0;
                 overflow: hidden;
                 line-height: 1;
-                z-index: 1;
 
                 --total-scale-factor: calc(var(--scale-factor) * var(--user-unit));
                 --scale-round-x: 1px;
