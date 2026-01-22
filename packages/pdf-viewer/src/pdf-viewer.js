@@ -343,12 +343,20 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 justify-content: center;
             }
 
-            #canvas-wrapper {
+            #pdf-content, #pdf-main-container {
+                box-sizing: border-box;
+                height: 100%;
+                background-color: var(--dbp-muted-surface);
+            }
+
+            #pdf-main-container {
                 border: var(--dbp-border);
+            }
+
+            #canvas-wrapper {
                 display: flex;
                 align-items: center;
                 flex-direction: column;
-                background-color: var(--dbp-muted-surface);
             }
 
             #canvas-wrapper-inner {
@@ -432,9 +440,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             }
 
             #pdf-meta {
-                border: var(--dbp-border);
                 padding: 0.54em;
-                border-bottom-width: 0;
+                border-bottom: var(--dbp-border);
+                background-color: var(--dbp-background);
             }
 
             .button.is-cancel {
@@ -471,7 +479,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                     })}">
                     ${i18n.t('pdf-viewer.error-message')}
                 </div>
-                <div class="${classMap({hidden: !this.isPageLoaded})}">
+                <div id="pdf-content" class="${classMap({hidden: !this.isPageLoaded})}">
                     <div id="pdf-meta">
                         <div class="buttons ${classMap({hidden: !this.isPageLoaded})}">
                             <div class="nav-buttons">
