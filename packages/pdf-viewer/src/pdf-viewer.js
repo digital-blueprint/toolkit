@@ -212,83 +212,74 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             return;
         }
 
-        const that = this;
         this.isPageRenderingInProgress = true;
         this.currentPage = pageNumber;
 
         try {
-            // get handle of page
-            await this.pdfDoc.getPage(pageNumber).then(async (page) => {
-                if (that.isFirstRendering) {
-                    that.isFirstRendering = false;
+            let page = await this.pdfDoc.getPage(pageNumber);
 
-                    // we weren't able to get the initial width and height of the container in the connectedCallback (this.updateComplete)
-                    // clientWidth and clientHeight were also not set correctly, getBoundingClientRect() was the only way to get the correct values
-                    that.initialClientWidth = that.getBoundingClientRect().width - 2;
-                    that.initialClientHeight = that.getBoundingClientRect().height - 2;
-                }
+            if (this.isFirstRendering) {
+                this.isFirstRendering = false;
 
-                // original width of the pdf page at scale 1
-                const originalViewport = page.getViewport({scale: 1});
-                this.currentPageOriginalHeight = originalViewport.height;
-                this.currentPageOriginalWidth = originalViewport.width;
-                // const proportion = this.currentPageOriginalWidth / this.currentPageOriginalHeight;
+                // we weren't able to get the initial width and height of the container in the connectedCallback (this.updateComplete)
+                // clientWidth and clientHeight were also not set correctly, getBoundingClientRect() was the only way to get the correct values
+                this.initialClientWidth = this.getBoundingClientRect().width - 2;
+                this.initialClientHeight = this.getBoundingClientRect().height - 2;
+            }
 
-                // set the canvas width to the width of the container (minus the borders)
-                let clientWidth = that.initialClientWidth;
-                let clientHeight = that.initialClientHeight - that._('#pdf-meta').clientHeight;
+            // original width of the pdf page at scale 1
+            const originalViewport = page.getViewport({scale: 1});
+            this.currentPageOriginalHeight = originalViewport.height;
+            this.currentPageOriginalWidth = originalViewport.width;
+            // const proportion = this.currentPageOriginalWidth / this.currentPageOriginalHeight;
 
-                this.canvas.width = clientWidth;
+            // set the canvas width to the width of the container (minus the borders)
+            let clientWidth = this.initialClientWidth;
+            let clientHeight = this.initialClientHeight - this._('#pdf-meta').clientHeight;
 
-                // as the canvas is of a fixed width we need to adjust the scale of the viewport where page is rendered
-                this.canvasToPdfScale = clientWidth / originalViewport.width;
+            this.canvas.width = clientWidth;
+
+            // as the canvas is of a fixed width we need to adjust the scale of the viewport where page is rendered
+            this.canvasToPdfScale = clientWidth / originalViewport.width;
+            // get viewport to render the page at required scale
+            let viewport = page.getViewport({scale: this.canvasToPdfScale});
+
+            // if the height of the viewport is higher than the height of the container and the autoResize is set
+            // to 'contain', then we need to adjust the scale again
+            if (this.autoResize === 'contain' && viewport.height > clientHeight) {
+                // this.canvasToPdfScale = this.canvasToPdfScale * (clientHeight / viewport.height);
+                this.canvasToPdfScale = clientHeight / originalViewport.height;
+
                 // get viewport to render the page at required scale
-                let viewport = page.getViewport({scale: this.canvasToPdfScale});
+                viewport = page.getViewport({scale: this.canvasToPdfScale});
+            }
 
-                // if the height of the viewport is higher than the height of the container and the autoResize is set
-                // to 'contain', then we need to adjust the scale again
-                if (this.autoResize === 'contain' && viewport.height > clientHeight) {
-                    // this.canvasToPdfScale = this.canvasToPdfScale * (clientHeight / viewport.height);
-                    this.canvasToPdfScale = clientHeight / originalViewport.height;
+            // set canvas height same as viewport height
+            this.canvas.height = viewport.height;
+            this.canvas.width = viewport.width;
 
-                    // get viewport to render the page at required scale
-                    viewport = page.getViewport({scale: this.canvasToPdfScale});
-                }
+            this._('#canvas-wrapper-inner').style.width = this.canvas.width + 'px';
+            this._('#canvas-wrapper-inner').style.height = this.canvas.height + 'px';
 
-                // set canvas height same as viewport height
-                this.canvas.height = viewport.height;
-                this.canvas.width = viewport.width;
+            // setting page loader height for smooth experience
+            this._('#page-loader').style.height = this.canvas.height + 'px';
+            this._('#page-loader').style.lineHeight = this.canvas.height + 'px';
 
-                this._('#canvas-wrapper-inner').style.width = this.canvas.width + 'px';
-                this._('#canvas-wrapper-inner').style.height = this.canvas.height + 'px';
+            // setting wrapper height, so that the absolute positions of the pdf-canvas and
+            // the annotation-layer don't disturb the page layout
+            this._('#canvas-wrapper').style.height = this.canvas.height + 'px';
 
-                // setting page loader height for smooth experience
-                this._('#page-loader').style.height = this.canvas.height + 'px';
-                this._('#page-loader').style.lineHeight = this.canvas.height + 'px';
+            // page is rendered on <canvas> element
+            const render_context = {
+                canvasContext: this.canvas.getContext('2d'),
+                viewport: viewport,
+            };
 
-                // setting wrapper height, so that the absolute positions of the pdf-canvas and
-                // the annotation-layer don't disturb the page layout
-                this._('#canvas-wrapper').style.height = this.canvas.height + 'px';
-
-                // page is rendered on <canvas> element
-                const render_context = {
-                    canvasContext: this.canvas.getContext('2d'),
-                    viewport: viewport,
-                };
-
-                // render the page contents in the canvas
-                try {
-                    await page.render(render_context).promise;
-                    await that._renderTextLayer(page, viewport);
-                } catch (error) {
-                    console.error(error.message);
-                } finally {
-                    that.isPageRenderingInProgress = false;
-                }
-            });
-        } catch (error) {
-            console.error(error.message);
-            that.isPageRenderingInProgress = false;
+            // render the page contents in the canvas
+            await page.render(render_context).promise;
+            await this._renderTextLayer(page, viewport);
+        } finally {
+            this.isPageRenderingInProgress = false;
         }
     }
 
