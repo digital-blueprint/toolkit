@@ -343,7 +343,8 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 justify-content: center;
             }
 
-            #pdf-content, #pdf-main-container {
+            #pdf-content,
+            #pdf-main-container {
                 box-sizing: border-box;
                 height: 100%;
                 background-color: var(--dbp-muted-surface);
