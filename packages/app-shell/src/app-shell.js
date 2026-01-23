@@ -717,7 +717,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             }
 
             #main {
-                display: grid;
+                /*display: grid;*/
                 grid-template-columns: minmax(0, 1fr);
                 grid-template-rows: min-content min-content 1fr min-content;
                 grid-template-areas: 'header' 'headline' 'main' 'footer';
@@ -735,10 +735,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: grid;
                 grid-template-columns: 50% 0.5em auto;
                 grid-template-rows: 60px;
-                /*grid-template-areas: 'hd1-left hd1-middle hd1-right';*/
-                grid-template-areas:
-                    'hd1-left hd1-middle hd1-right'
-                    'hd1-bottom-left hd1-bottom hd1-bottom-right';
+                grid-template-areas: 'hd1-left hd1-middle hd1-right';
                 width: 100%;
                 margin: 0 auto;
             }
@@ -771,21 +768,19 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             header .hd1-left {
                 display: flex;
                 flex-direction: row;
-                /*justify-content: space-between;
-                -webkit-justify-content: space-between;*/
+                justify-content: space-between;
+                -webkit-justify-content: space-between;
                 grid-area: hd1-left;
                 text-align: right;
                 padding-right: 20px;
                 padding-left: 15px;
                 align-items: center;
                 -webkit-align-items: center;
-                justify-content: flex-end;
-                -webkit-justify-content: flex-end;
                 gap: 10px;
             }
 
             .hd1-left-menu {
-                display: flex;
+                /*display: flex;*/
                 gap: 10px;
                 justify-self: center;
                 align-self: center;
@@ -957,22 +952,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             #dbp-notification {
                 z-index: 99999;
             }
-            /* here positioned the menu*/
+
             #main.menu-open {
-                margin: auto;
-                width: 50%;
-                text-align: center;
-                /*grid-template-columns: 240px minmax(0, 1fr);
+                grid-template-columns: 240px minmax(0, 1fr);
                 grid-template-areas:
                     'header header'
                     'headline headline'
                     'sidebar main'
-                    'footer footer';*/
-            }
-            .hidden-menu {
-                margin: auto;
-                width: 50%;
-                text-align: center;
+                    'footer footer';
             }
 
             #main.menu-open aside {
@@ -1039,8 +1026,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                 #main,
                 #main.menu-open {
-                    /*grid-template-columns: minmax(0, 1fr);
-                    grid-template-areas: 'header' 'headline' 'main' 'footer';*/
+                    grid-template-columns: minmax(0, 1fr);
+                    grid-template-areas: 'header' 'headline' 'main' 'footer';
                 }
 
                 header {
@@ -1082,6 +1069,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     visibility: visible;
                     box-shadow: 0px 0px 0.4em rgba(0, 0, 0, 0.2);
                     transition-delay: 0s;
+                }
+
+                #main.menu-open {
+                    overflow: hidden;
+                    touch-action: none;
+                    pointer-events: auto;
+                    height: 100vh;
+                    overflow-y: hidden;
                 }
 
                 .menu li {
@@ -1290,15 +1285,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     <header>
                         <slot name="header">
                             <div class="hd1-left">
-                                
-                               <!--<div class="hd1-left-switches">-->
+                                <div class="hd1-left-switches">
                                     <dbp-theme-switcher
                                         subscribe="themes,dark-mode-theme-override"
                                         lang="${this.lang}"></dbp-theme-switcher>
                                     <dbp-language-select
                                         id="lang-select"
                                         lang="${this.lang}"></dbp-language-select>
-                               <!--</div>-->
+                                </div>
                             </div>
                             <div class="hd1-middle"></div>
                             <div class="hd1-right">
@@ -2034,36 +2028,44 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     </slot>
                                 </div>
                             </div>
-                            
                         </slot>
                     </header>
+
                     <div id="headline">
                         <p class="title">
                             <slot name="title">
-                                ${
-                                    this.activeView === 'welcome'
-                                        ? html`
-                                              &#160;
-                                          `
-                                        : this.topicMetaDataText('name')
-                                }
+                                ${this.activeView === 'welcome'
+                                    ? html`
+                                          &#160;
+                                      `
+                                    : this.topicMetaDataText('name')}
                             </slot>
                         </p>
                         <h1 title="${this.description}">
-                            ${
-                                this.activeView === 'welcome'
-                                    ? this.topicMetaDataText('name')
-                                    : this.subtitle
-                            }
+                            ${this.activeView === 'welcome'
+                                ? this.topicMetaDataText('name')
+                                : this.subtitle}
                         </h1>
+                        <button
+                            class="hd1-left-menu"
+                            @click="${this.toggleMenu}"
+                            aria-expanded="false"
+                            aria-label="${this._i18n.t('main-page.menu')}">
+                            <dbp-icon
+                                class="burger-menu-icon"
+                                name="menu"
+                                id="menu-burger-icon"></dbp-icon>
+                            <span class="menu-label">${this._i18n.t('main-page.menu')}</span>
+                        </button>
+                        <ul class="menu hidden">
+                            ${menuTemplates}
+                        </ul>
                     </div>
                     <!--<aside id="mobileMenu">
                         <ul class="menu hidden">
                             ${menuTemplates}
                         </ul>
                     </aside>-->
-
-                    
 
                     <main>
                         <div
@@ -2072,24 +2074,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             <p>${i18n.t('choose-from-menu')}</p>
                         </div>
                         <p class="description">${this.description}</p>
-                        <div class="hidden-menu"
-                            <button
-                                    class="hd1-left-menu"
-                                    @click="${this.toggleMenu}"
-                                    aria-expanded="false"
-                                    aria-label="${this._i18n.t('main-page.menu')}">
-                                <dbp-icon
-                                        <!-class="burger-menu-icon"
-                                        name="menu"
-                                        id="menu-burger-icon"></dbp-icon>
-                                <span class="menu-label">
-                                        ${this._i18n.t('main-page.menu')}
-                                    </span>
-                            </button>
-                            <ul class="menu hidden">
-                                ${menuTemplates}
-                            </ul>
-                        </div>
 
                         ${this._renderActivity()}
 
