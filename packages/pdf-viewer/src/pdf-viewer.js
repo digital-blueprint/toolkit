@@ -214,8 +214,13 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
                 // we weren't able to get the initial width and height of the container in the connectedCallback (this.updateComplete)
                 // clientWidth and clientHeight were also not set correctly, getBoundingClientRect() was the only way to get the correct values
-                this.initialClientWidth = this.getBoundingClientRect().width - 2;
-                this.initialClientHeight = this.getBoundingClientRect().height - 2;
+                let styles = window.getComputedStyle(this._('#pdf-main-container'));
+                let borderWidth =
+                    parseFloat(styles.borderRightWidth) + parseFloat(styles.borderLeftWidth);
+                let borderHeight =
+                    parseFloat(styles.borderTopWidth) + parseFloat(styles.borderBottomWidth);
+                this.initialClientWidth = this.getBoundingClientRect().width - borderWidth;
+                this.initialClientHeight = this.getBoundingClientRect().height - borderHeight;
             }
 
             // original width of the pdf page at scale 1
@@ -245,16 +250,16 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             canvas.height = viewport.height;
             canvas.width = viewport.width;
 
-            this._('#canvas-wrapper-inner').style.width = canvas.width + 'px';
-            this._('#canvas-wrapper-inner').style.height = canvas.height + 'px';
+            this._('#canvas-wrapper-inner').style.width = viewport.width + 'px';
+            this._('#canvas-wrapper-inner').style.height = viewport.height + 'px';
 
             // setting page loader height for smooth experience
-            this._('#page-loader').style.height = canvas.height + 'px';
-            this._('#page-loader').style.lineHeight = canvas.height + 'px';
+            this._('#page-loader').style.height = viewport.height + 'px';
+            this._('#page-loader').style.lineHeight = viewport.height + 'px';
 
             // setting wrapper height, so that the absolute positions of the pdf-canvas and
             // the annotation-layer don't disturb the page layout
-            this._('#canvas-wrapper').style.height = canvas.height + 'px';
+            this._('#canvas-wrapper').style.height = viewport.height + 'px';
 
             // page is rendered on <canvas> element
             const render_context = {
@@ -329,11 +334,17 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 background-color: var(--dbp-muted-surface);
             }
 
+            #pdf-main-container.loading {
+                background-color: var(--dbp-background);
+                padding: 20px;
+            }
+
             #pdf-main-container {
                 border: var(--dbp-border);
             }
 
             #canvas-wrapper {
+                box-sizing: border-box;
                 display: flex;
                 align-items: center;
                 flex-direction: column;
@@ -342,6 +353,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             #canvas-wrapper-inner {
                 display: block;
                 position: relative;
+                background-color: var(--dbp-background);
             }
 
             #canvas-wrapper canvas {
@@ -448,7 +460,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         const i18n = this._i18n;
 
         return html`
-            <div id="pdf-main-container" class="${classMap({hidden: !this.isShowPage})}">
+            <div
+                id="pdf-main-container"
+                class="${classMap({hidden: !this.isShowPage, loading: !this.isPageLoaded})}">
                 <dbp-mini-spinner
                     class="${classMap({
                         hidden: this.isPageLoaded || this.showErrorMessage,
