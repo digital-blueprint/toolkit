@@ -935,6 +935,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
             ul.menu.is-open {
                 display: block;
+                list-style-type: none;
             }
 
             a {
