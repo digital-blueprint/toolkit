@@ -204,6 +204,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         ::placeholder,
         textarea,
         select,
+        button,
         .select select {
             font-size: inherit;
             font-family: inherit;
