@@ -1,6 +1,6 @@
 import {createInstance} from './i18n';
 import {css, html, LitElement} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, Button} from '@dbp-toolkit/common';
 import {PdfViewer} from './pdf-viewer.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -9,6 +9,7 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
     static get scopedElements() {
         return {
             'dbp-pdf-viewer': PdfViewer,
+            'dbp-button': Button,
         };
     }
 
@@ -40,13 +41,20 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
                 width: 80%;
                 height: 80%;
                 position: relative;
-                background-color: var(--dbp-primary);
+                background-color: var(--dbp-background);
                 overflow-y: auto;
             }
 
             .container,
             p {
                 margin: 20px auto;
+            }
+
+            .sample-buttons {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                margin-top: 10px;
             }
         `;
     }
@@ -97,6 +105,20 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
         e.preventDefault();
     }
 
+    async loadSamplePDF(filename, viewer) {
+        let url = commonUtils.getAssetURL('@dbp-toolkit/pdf-viewer', `pdfs/${filename}`);
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const file = new File([blob], filename, {type: 'application/pdf'});
+
+        if (viewer === 'contain') {
+            this._('#modal-container').style.display = 'flex';
+            await this._('#dbp-pdf-viewer-contain').showPDF(file);
+        } else {
+            await this._('#dbp-pdf-viewer-cover').showPDF(file);
+        }
+    }
+
     render() {
         // const i18n = this._i18n;
 
@@ -114,6 +136,21 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
                         </p>
                         <div class="column">
                             <input @change=${this.openFileCover} type="file" />
+                            <div class="sample-buttons">
+                                <dbp-button
+                                    no-spinner-on-click
+                                    type="is-primary"
+                                    @click=${() =>
+                                        this.loadSamplePDF('example_patterns.pdf', 'cover')}>
+                                    Patterns
+                                </dbp-button>
+                                <dbp-button
+                                    no-spinner-on-click
+                                    type="is-primary"
+                                    @click=${() => this.loadSamplePDF('example_text.pdf', 'cover')}>
+                                    Text
+                                </dbp-button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -135,6 +172,22 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
                             <p>
                                 <input @change=${this.openFileContain} type="file" />
                             </p>
+                            <div class="sample-buttons">
+                                <dbp-button
+                                    no-spinner-on-click
+                                    type="is-primary"
+                                    @click=${() =>
+                                        this.loadSamplePDF('example_patterns.pdf', 'contain')}>
+                                    Patterns
+                                </dbp-button>
+                                <dbp-button
+                                    no-spinner-on-click
+                                    type="is-primary"
+                                    @click=${() =>
+                                        this.loadSamplePDF('example_text.pdf', 'contain')}>
+                                    Text
+                                </dbp-button>
+                            </div>
                         </div>
                     </div>
                 </div>

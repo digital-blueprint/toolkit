@@ -2,6 +2,7 @@ import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
 import {live} from 'lit/directives/live.js';
+import {createRef, ref} from 'lit/directives/ref.js';
 import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {MiniSpinner, Icon} from '@dbp-toolkit/common';
@@ -46,11 +47,13 @@ export async function importPdfJs() {
  * @returns {import('pdfjs-dist/legacy/build/pdf.mjs').PDFDocumentLoadingTask}
  */
 export function getPdfJsDocument(pdfjs, src = {}) {
-    let cmaps = commonUtils.getAssetURL(pkgName, 'pdfjs/cmaps/');
-
     // Set for cmaps we ship by default
+    let cmaps = commonUtils.getAssetURL(pkgName, 'pdfjs/cmaps/');
     if (src.cMapUrl === undefined) src.cMapUrl = cmaps;
-    if (src.cMapPacked === undefined) src.cMapPacked = true;
+
+    // Set wasm path we ship by default
+    let wasm = commonUtils.getAssetURL(pkgName, 'pdfjs/wasm/');
+    if (src.wasmUrl === undefined) src.wasmUrl = wasm;
 
     // Disable eval by default for security reasons, unless explicitly enabled
     if (src.isEvalSupported === undefined) src.isEvalSupported = false;
@@ -71,16 +74,12 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.isPageLoaded = false;
         this.showErrorMessage = false;
         this.isPageRenderingInProgress = false;
-        this.isShowPlacement = true;
-        this.canvas = null;
-        this.canvasToPdfScale = 1.0;
-        this.currentPageOriginalHeight = 0;
-        this.currentPageOriginalWidth = 0;
-        this.pdfMainContainer = null;
+        this.canvasRef = createRef();
         this.initialClientWidth = 0;
         this.initialClientHeight = 0;
         this.isFirstRendering = true;
         this.autoResize = 'cover';
+        this.textLayer = null;
 
         this._onWindowResize = this._onWindowResize.bind(this);
     }
@@ -131,53 +130,12 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
     connectedCallback() {
         super.connectedCallback();
-        const that = this;
-
         window.addEventListener('resize', this._onWindowResize);
-
-        this.updateComplete.then(async () => {
-            that.canvas = that._('#pdf-canvas');
-            that.pdfMainContainer = that._('#pdf-main-container');
-
-            // this._('#upload-pdf-input').addEventListener('change', function() {
-            //     that.showPDF(this.files[0]);
-            // });
-        });
-    }
-
-    enforceCanvasBoundaries(obj) {
-        // top-left corner
-        if (obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0) {
-            obj.top = Math.max(obj.top, obj.top - obj.getBoundingRect().top);
-            obj.left = Math.max(obj.left, obj.left - obj.getBoundingRect().left);
-        }
-
-        // bottom-right corner
-        if (
-            obj.getBoundingRect().top + obj.getBoundingRect().height > obj.canvas.height ||
-            obj.getBoundingRect().left + obj.getBoundingRect().width > obj.canvas.width
-        ) {
-            obj.top = Math.min(
-                obj.top,
-                obj.canvas.height -
-                    obj.getBoundingRect().height +
-                    obj.top -
-                    obj.getBoundingRect().top,
-            );
-            obj.left = Math.min(
-                obj.left,
-                obj.canvas.width -
-                    obj.getBoundingRect().width +
-                    obj.left -
-                    obj.getBoundingRect().left,
-            );
-        }
     }
 
     async onPageNumberChanged(e) {
         let obj = e.target;
         const page_no = parseInt(obj.value);
-        console.log('page_no = ', page_no);
 
         if (page_no > 0 && page_no <= this.totalPages) {
             await this.showPage(page_no);
@@ -198,6 +156,11 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.isShowPage = true;
 
         const data = await readBinaryFileContent(file);
+
+        if (this.pdfDoc !== null) {
+            this.pdfDoc.destroy();
+            this.pdfDoc = null;
+        }
 
         // get handle of pdf document
         try {
@@ -238,98 +201,105 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             return;
         }
 
-        const that = this;
         this.isPageRenderingInProgress = true;
         this.currentPage = pageNumber;
 
+        let canvas = /** @type {HTMLCanvasElement} */ (this.canvasRef.value);
+
         try {
-            // get handle of page
-            await this.pdfDoc.getPage(pageNumber).then(async (page) => {
-                if (that.isFirstRendering) {
-                    that.isFirstRendering = false;
+            let page = await this.pdfDoc.getPage(pageNumber);
 
-                    // we weren't able to get the initial width and height of the container in the connectedCallback (this.updateComplete)
-                    // clientWidth and clientHeight were also not set correctly, getBoundingClientRect() was the only way to get the correct values
-                    that.initialClientWidth = that.getBoundingClientRect().width - 2;
-                    that.initialClientHeight = that.getBoundingClientRect().height - 2;
-                    // console.log("that._('#pdf-meta').clientHeight", that._('#pdf-meta').clientHeight);
-                    // console.log("that._('#pdf-meta')", that._('#pdf-meta'));
-                    // console.log("that._('#pdf-meta').getBoundingClientRect().height", that._('#pdf-meta').getBoundingClientRect().height);
-                    // console.log("this.initialClientWidth", that.initialClientWidth);
-                    // console.log("this.initialClientHeight", that.initialClientHeight);
-                }
+            if (this.isFirstRendering) {
+                this.isFirstRendering = false;
 
-                // original width of the pdf page at scale 1
-                const originalViewport = page.getViewport({scale: 1});
-                this.currentPageOriginalHeight = originalViewport.height;
-                this.currentPageOriginalWidth = originalViewport.width;
-                // const proportion = this.currentPageOriginalWidth / this.currentPageOriginalHeight;
+                // we weren't able to get the initial width and height of the container in the connectedCallback (this.updateComplete)
+                // clientWidth and clientHeight were also not set correctly, getBoundingClientRect() was the only way to get the correct values
+                let styles = window.getComputedStyle(this._('#pdf-main-container'));
+                let borderWidth =
+                    parseFloat(styles.borderRightWidth) + parseFloat(styles.borderLeftWidth);
+                let borderHeight =
+                    parseFloat(styles.borderTopWidth) + parseFloat(styles.borderBottomWidth);
+                this.initialClientWidth = this.getBoundingClientRect().width - borderWidth;
+                this.initialClientHeight = this.getBoundingClientRect().height - borderHeight;
+            }
 
-                // set the canvas width to the width of the container (minus the borders)
-                // let clientWidth = this.pdfMainContainer.clientWidth - 2;
-                // let clientHeight = this.pdfMainContainer.clientHeight - 2;
-                let clientWidth = that.initialClientWidth;
-                let clientHeight = that.initialClientHeight - that._('#pdf-meta').clientHeight;
-                console.log('clientWidth', clientWidth);
-                console.log('clientHeight', clientHeight);
+            // original width of the pdf page at scale 1
+            const originalViewport = page.getViewport({scale: 1});
 
-                // let proposedCanvasWidth = clientWidth;
-                // let proposedCanvasHeight = clientHeight;
-                this.canvas.width = clientWidth;
+            // set the canvas width to the width of the container (minus the borders)
+            let clientWidth = this.initialClientWidth;
+            let clientHeight = this.initialClientHeight - this._('#pdf-meta').clientHeight;
 
-                // as the canvas is of a fixed width we need to adjust the scale of the viewport where page is rendered
-                this.canvasToPdfScale = clientWidth / originalViewport.width;
+            canvas.width = clientWidth;
 
-                console.log('this.canvasToPdfScale: ' + this.canvasToPdfScale);
+            // as the canvas is of a fixed width we need to adjust the scale of the viewport where page is rendered
+            let canvasToPdfScale = clientWidth / originalViewport.width;
+            // get viewport to render the page at required scale
+            let viewport = page.getViewport({scale: canvasToPdfScale});
+
+            // if the height of the viewport is higher than the height of the container and the autoResize is set
+            // to 'contain', then we need to adjust the scale again
+            if (this.autoResize === 'contain' && viewport.height > clientHeight) {
+                canvasToPdfScale = clientHeight / originalViewport.height;
 
                 // get viewport to render the page at required scale
-                let viewport = page.getViewport({scale: this.canvasToPdfScale});
+                viewport = page.getViewport({scale: canvasToPdfScale});
+            }
 
-                // if the height of the viewport is higher than the height of the container and the autoResize is set
-                // to 'contain', then we need to adjust the scale again
-                if (this.autoResize === 'contain' && viewport.height > clientHeight) {
-                    // this.canvasToPdfScale = this.canvasToPdfScale * (clientHeight / viewport.height);
-                    this.canvasToPdfScale = clientHeight / originalViewport.height;
-                    console.log(
-                        'viewport.height to high, new this.canvasToPdfScale',
-                        this.canvasToPdfScale,
-                    );
+            // set canvas height same as viewport height
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-                    // get viewport to render the page at required scale
-                    viewport = page.getViewport({scale: this.canvasToPdfScale});
-                }
+            this._('#canvas-wrapper-inner').style.width = viewport.width + 'px';
+            this._('#canvas-wrapper-inner').style.height = viewport.height + 'px';
 
-                // set canvas height same as viewport height
-                this.canvas.height = viewport.height;
-                this.canvas.width = viewport.width;
+            // setting page loader height for smooth experience
+            this._('#page-loader').style.height = viewport.height + 'px';
+            this._('#page-loader').style.lineHeight = viewport.height + 'px';
 
-                // setting page loader height for smooth experience
-                this._('#page-loader').style.height = this.canvas.height + 'px';
-                this._('#page-loader').style.lineHeight = this.canvas.height + 'px';
+            // setting wrapper height, so that the absolute positions of the pdf-canvas and
+            // the annotation-layer don't disturb the page layout
+            this._('#canvas-wrapper').style.height = viewport.height + 'px';
 
-                // setting wrapper height, so that the absolute positions of the pdf-canvas and
-                // the annotation-layer don't disturb the page layout
-                this._('#canvas-wrapper').style.height = this.canvas.height + 'px';
+            // page is rendered on <canvas> element
+            const render_context = {
+                canvas: null,
+                canvasContext: canvas.getContext('2d'),
+                viewport: viewport,
+            };
 
-                // page is rendered on <canvas> element
-                const render_context = {
-                    canvasContext: this.canvas.getContext('2d'),
-                    viewport: viewport,
-                };
-
-                // render the page contents in the canvas
-                try {
-                    await page.render(render_context).promise;
-                } catch (error) {
-                    console.error(error.message);
-                } finally {
-                    that.isPageRenderingInProgress = false;
-                }
-            });
-        } catch (error) {
-            console.error(error.message);
-            that.isPageRenderingInProgress = false;
+            // render the page contents in the canvas
+            await page.render(render_context).promise;
+            await this._renderTextLayer(page, viewport, canvasToPdfScale);
+        } finally {
+            this.isPageRenderingInProgress = false;
         }
+    }
+
+    async _renderTextLayer(page, viewport, scaleFactor) {
+        if (this.textLayer) {
+            this.textLayer.cancel();
+            this.textLayer = null;
+        }
+        const textLayerDiv = this._('#text-layer');
+        textLayerDiv.innerHTML = '';
+        textLayerDiv.style.width = viewport.width + 'px';
+        textLayerDiv.style.height = viewport.height + 'px';
+        textLayerDiv.style.setProperty('--scale-factor', scaleFactor);
+        textLayerDiv.style.setProperty('--user-unit', viewport.userUnit);
+        const textContent = await page.getTextContent();
+        const pdfjs = await importPdfJs();
+        this.textLayer = new pdfjs.TextLayer({
+            textContentSource: textContent,
+            container: textLayerDiv,
+            viewport: viewport,
+        });
+        await this.textLayer.render();
+        // XXX: pdfjs touches the global DOM
+        // see https://github.com/mozilla/pdf.js/issues/18086
+        document
+            .querySelectorAll('.hiddenCanvasElement')
+            .forEach((e) => e.setAttribute('style', 'display: none'));
     }
 
     sendCancelEvent() {
@@ -357,30 +327,77 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 justify-content: center;
             }
 
-            /* it's too risky to adapt the height */
-            /*
-            #pdf-meta button, #pdf-meta input {
-                max-height: 15px;
+            #pdf-content,
+            #pdf-main-container {
+                box-sizing: border-box;
+                height: 100%;
+                background-color: var(--dbp-muted-surface);
             }
-            */
+
+            #pdf-main-container.loading {
+                background-color: var(--dbp-background);
+                padding: 20px;
+            }
+
+            #pdf-main-container {
+                border: var(--dbp-border);
+            }
 
             #canvas-wrapper {
-                position: relative;
-                /*align-items: center;*/
-                /*justify-content: center;*/
-                /*display: flex;*/
-                border: var(--dbp-border);
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
             }
 
             #canvas-wrapper-inner {
                 display: block;
                 position: relative;
+                background-color: var(--dbp-background);
             }
 
             #canvas-wrapper canvas {
                 position: absolute;
                 top: 0;
                 left: 0;
+            }
+
+            .textLayer {
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                line-height: 1;
+
+                --total-scale-factor: calc(var(--scale-factor) * var(--user-unit));
+                --scale-round-x: 1px;
+                --scale-round-y: 1px;
+            }
+
+            .textLayer :is(span, br) {
+                color: transparent;
+                position: absolute;
+                white-space: pre;
+                cursor: text;
+                transform-origin: 0% 0%;
+
+                --font-height: 0;
+                --min-font-size: 1;
+                --text-scale-factor: calc(var(--total-scale-factor) * var(--min-font-size));
+                --min-font-size-inv: calc(1 / var(--min-font-size));
+                --scale-x: 1;
+                --rotate: 0deg;
+                font-size: calc(var(--text-scale-factor) * var(--font-height));
+                transform: rotate(var(--rotate)) scaleX(var(--scale-x));
+            }
+
+            .textLayer br {
+                user-select: none;
+            }
+
+            .textLayer span::selection {
+                color: transparent;
+                background: rgba(0, 0, 255, 0.25);
             }
 
             .buttons {
@@ -415,9 +432,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
             }
 
             #pdf-meta {
-                border: var(--dbp-border);
                 padding: 0.54em;
-                border-bottom-width: 0;
+                border-bottom: var(--dbp-border);
+                background-color: var(--dbp-background);
             }
 
             .button.is-cancel {
@@ -443,12 +460,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         const i18n = this._i18n;
 
         return html`
-            <!--
-            <form>
-                <input type="file" name="pdf" id="upload-pdf-input">
-            </form>
--->
-            <div id="pdf-main-container" class="${classMap({hidden: !this.isShowPage})}">
+            <div
+                id="pdf-main-container"
+                class="${classMap({hidden: !this.isShowPage, loading: !this.isPageLoaded})}">
                 <dbp-mini-spinner
                     class="${classMap({
                         hidden: this.isPageLoaded || this.showErrorMessage,
@@ -459,7 +473,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                     })}">
                     ${i18n.t('pdf-viewer.error-message')}
                 </div>
-                <div class="${classMap({hidden: !this.isPageLoaded})}">
+                <div id="pdf-content" class="${classMap({hidden: !this.isPageLoaded})}">
                     <div id="pdf-meta">
                         <div class="buttons ${classMap({hidden: !this.isPageLoaded})}">
                             <div class="nav-buttons">
@@ -523,7 +537,8 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                         id="canvas-wrapper"
                         class="${classMap({hidden: this.isPageRenderingInProgress})}">
                         <div id="canvas-wrapper-inner">
-                            <canvas id="pdf-canvas"></canvas>
+                            <canvas id="pdf-canvas" ${ref(this.canvasRef)}></canvas>
+                            <div id="text-layer" class="textLayer"></div>
                         </div>
                     </div>
                     <div class="${classMap({hidden: !this.isPageRenderingInProgress})}">

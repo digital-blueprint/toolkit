@@ -46,3 +46,6 @@ Or directly via CDN:
 - `--dbp-tooltip-box-font-color`: set tooltip font color (default: --dbp-on-content-surface)
 - `--dbp-tooltip-arrow-color`: set tooltip arrow background color (default: --dbp-content)
 - `--dbp-tooltip-box-font-weight`: set tooltip font weight (default: normal)
+- `--dbp-tooltip-button-background-color`: set button background (default: --dbp-background)
+- `--dbp-tooltip-button-border`: set button border (default: --dbp-border)
+- `--dbp-tooltip-button-color`: set button font color (default: --dbp-content)

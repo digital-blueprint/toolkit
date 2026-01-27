@@ -215,12 +215,13 @@ export function getTabulatorStyles() {
             color: var(--dbp-muted);
             font-size: 1rem;
             font-weight: initial;
-            text-align: center;
+            text-align: left;
         }
 
-        .tabulator-placeholder {
+        .tabulator .tabulator-tableholder .tabulator-placeholder {
             border-top: 1px solid var(--dbp-muted);
             padding-top: 10px;
+            justify-content: flex-start;
         }
 
         .tabulator-row.no-select.tabulator-selected {

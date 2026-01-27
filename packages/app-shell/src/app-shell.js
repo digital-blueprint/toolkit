@@ -978,6 +978,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             /* scroll to top*/
 
             .scroll-top-wrapper {
+                pointer-events: none;
                 display: flex;
                 flex-direction: column;
                 gap: 2px;

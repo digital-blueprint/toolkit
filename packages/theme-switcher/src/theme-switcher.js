@@ -237,12 +237,14 @@ export class ThemeSwitcher extends LangMixin(
                 <a
                     href="#"
                     class="mode-button"
-                    title="${i18n.t('color-mode')}"
+                    role="button"
+                    aria-haspopup="true"
+                    aria-label="${i18n.t('color-mode')}"
                     @click="${(e) => {
                         this.toggleModeMenu();
                         e.preventDefault();
                     }}">
-                    <dbp-icon name="contrast"></dbp-icon>
+                    <dbp-icon name="contrast" aria-hidden="true" focusable="false"></dbp-icon>
                 </a>
                 <ul class="extended-menu hidden ${classMap({'ul-right': this.dropdownRight})}">
                     ${this.themes.map(

@@ -85,6 +85,12 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
             .tippy-arrow {
                 color: var(--dbp-tooltip-arrow-color, var(--dbp-content));
             }
+
+            .tooltip-button {
+                background-color: var(--dbp-tooltip-button-background-color, var(--dbp-background));
+                border: var(--dbp-tooltip-button-border, var(--dbp-border));
+                color: var(--dbp-tooltip-button-color, var(--dbp-content));
+            }
         `;
     }
 
@@ -95,7 +101,7 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <link rel="stylesheet" href="${tippy2CSS}" />
-            <button id="info-tooltip-button">
+            <button id="info-tooltip-button" class="tooltip-button">
                 <div class="info-icon">
                     <!-- https://icons.getbootstrap.com/icons/info-circle/ -->
                     <svg

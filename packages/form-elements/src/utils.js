@@ -34,6 +34,11 @@ export const getFieldsetCSS = () => {
     `;
 };
 
+/**
+ * Validates all required fields in the form.
+ * @param {HTMLFormElement} formElement
+ * @returns {Promise<boolean>} true if all required fields are valid, false otherwise
+ */
 export const validateRequiredFields = async (formElement) => {
     const elementWebComponents = getElementWebComponents(formElement);
     const data = gatherFormDataFromElement(formElement);
@@ -54,6 +59,11 @@ export const validateRequiredFields = async (formElement) => {
     return !responses.includes(false); // Return true if no component returned false
 };
 
+/**
+ * Gets all web components in the form that match the "dbp-.*-element" pattern
+ * @param {HTMLFormElement} formElement
+ * @returns {Element[]}
+ */
 export const getElementWebComponents = (formElement) => {
     return Array.from(formElement.getElementsByTagName('*')).filter((el) =>
         el.tagName.toLowerCase().match(/^dbp-.*-element$/),
@@ -62,7 +72,7 @@ export const getElementWebComponents = (formElement) => {
 
 /**
  * Converts an object to a string that can be used as a data-value attribute to support non-primitive values
- * @param myObject
+ * @param {object} myObject
  * @returns {string}
  */
 export const stringifyForDataValue = (myObject) => {
