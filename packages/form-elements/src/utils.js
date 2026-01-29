@@ -30,6 +30,8 @@ export const getFieldsetCSS = () => {
             width: 100%;
             padding: 2px 5px;
             border: var(--dbp-border);
+            background-color: var(--dbp-background);
+            color: var(--dbp-content);
         }
     `;
 };
