@@ -1554,7 +1554,8 @@ export function getNativeModalDialogCSS() {
             justify-content: space-between;
             align-items: center;
             padding: 0;
-            margin-bottom: 1em;
+            margin-bottom: 25px;
+            margin-right: 0.5em;
         }
 
         .modal-close {
