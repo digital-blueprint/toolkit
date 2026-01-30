@@ -83,6 +83,11 @@ export class DbpNumberElement extends ScopedElementsMixin(DbpBaseElement) {
                     margin-bottom: 0;
                     white-space: nowrap;
                 }
+
+                input[disabled] {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
             `,
         ];
     }

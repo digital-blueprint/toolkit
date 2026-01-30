@@ -38,6 +38,11 @@ export class DbpDateTimeElement extends ScopedElementsMixin(DbpBaseElement) {
                 :host([layout-type='inline']) input[type='datetime-local'] {
                     width: min-content;
                 }
+
+                input[disabled] {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
             `,
         ];
     }

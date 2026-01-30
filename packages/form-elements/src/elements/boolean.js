@@ -70,6 +70,11 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
                     gap: var(--dbp-enum-label-gap, 1em);
                     align-items: center;
                 }
+
+                input[disabled] {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
             `,
         ];
     }

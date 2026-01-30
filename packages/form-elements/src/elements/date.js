@@ -36,6 +36,11 @@ export class DbpDateElement extends ScopedElementsMixin(DbpBaseElement) {
                 :host([layout-type='inline']) input[type='date'] {
                     width: min-content;
                 }
+
+                input[disabled] {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
             `,
         ];
     }

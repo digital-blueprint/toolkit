@@ -87,6 +87,12 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                 textarea {
                     resize: vertical;
                 }
+
+                textarea[disabled],
+                input[disabled] {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
             `,
         ];
     }

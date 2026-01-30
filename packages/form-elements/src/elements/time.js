@@ -32,6 +32,11 @@ export class DbpTimeElement extends ScopedElementsMixin(DbpBaseElement) {
                 :host([layout-type='inline']) input[type='time'] {
                     width: min-content;
                 }
+
+                input[disabled] {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
             `,
         ];
     }
