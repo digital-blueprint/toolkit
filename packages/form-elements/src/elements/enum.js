@@ -27,6 +27,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         this.$select = null;
         select2(window, $);
         this.tagPlaceholder = null;
+        this.disabledItems = [];
     }
 
     static get properties() {
@@ -41,6 +42,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             displayMode: {type: String, attribute: 'display-mode'},
             items: {type: Object},
             tagPlaceholder: {type: Object},
+            disabledItems: {type: Array},
         };
     }
 
@@ -211,7 +213,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 return html`
                     ${Object.keys(this.items).map(
                         (key) => html`
-                            <label class="checkboxItem">
+                            <label
+                                class="checkboxItem ${this.disabledItems.includes(key)
+                                    ? 'disabled'
+                                    : ''}">
                                 ${this.multiple
                                     ? html`
                                           <input
@@ -222,7 +227,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                                               class="checkbox"
                                               ?checked="${!!this.value?.includes(key)}"
                                               @input="${this.handleInputValue}"
-                                              ?disabled=${this.disabled}
+                                              ?disabled=${this.disabled ||
+                                              this.disabledItems.includes(key)}
                                               ?required=${this.required} />
                                       `
                                     : html`
@@ -234,7 +240,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                                               class="radio"
                                               ?checked="${!!this.value?.includes(key)}"
                                               @input="${this.handleInputValue}"
-                                              ?disabled=${this.disabled}
+                                              ?disabled=${this.disabled ||
+                                              this.disabledItems.includes(key)}
                                               ?required=${this.required} />
                                       `}
                                 ${this.items[key]}
@@ -338,6 +345,15 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
                 .checkboxItem:not(:last-of-type) {
                     margin-bottom: 16px;
+                }
+
+                .checkboxItem.disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+                .checkboxItem.disabled input {
+                    cursor: not-allowed;
                 }
 
                 .checkbox {

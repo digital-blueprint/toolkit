@@ -187,6 +187,7 @@ Please always use `.value` to set the value of the enum element, as it is a prop
     - Example: `<dbp-form-enum-element display-mode="tags" .tagPlaceholder=${{en: 'Select tags', de: 'Wähle Tags'}}></dbp-form-enum-element>`
 - CSS custom properties for styling:
     - `--dbp-enum-label-gap`
+- `disabledItems`: selectively disable individual options for display-mode list (checkbox/radio). Disabled items are visually greyed out and cannot be interacted with (disabled).
 
 ### Form Views
 

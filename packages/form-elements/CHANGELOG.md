@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add `disabledItems` property to `DbpEnumElement` to selectively disable individual options in list mode (checkbox/radio). Disabled items are visually greyed out and cannot be interacted with.
+
 ## 0.2.16
 
 - Expose the `state` property in `dbp-form-boolean-element` to set the state as a boolean
