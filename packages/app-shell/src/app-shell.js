@@ -986,6 +986,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 bottom: 8rem;
                 right: max(1.5rem, calc((90vw - 1100px) / 2 + 1.5rem));
                 align-items: center;
+                pointer-events: none;
             }
 
             .scroll-button {
