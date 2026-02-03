@@ -1360,6 +1360,30 @@ export function getModalDialogCSS() {
             outline: none;
         }
 
+        .modal-title {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-title-icon {
+            color: var(--dbp-accent);
+            margin-top: -5px;
+            font-size: 1.3em;
+        }
+
+        .modal-title h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        #filter-modal-box p {
+            margin: 0;
+            text-align: left;
+            padding-left: 20px;
+        }
+
         /**************************\\
           Modal Animation Style
         \\**************************/
