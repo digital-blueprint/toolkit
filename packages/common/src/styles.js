@@ -1804,15 +1804,6 @@ export function getDropDownCss() {
             background-color: var(--dbp-surface);
         }
 
-        .item-button:hover {
-            /* @TODO we need a lighter grey than muted */
-            background-color: #b3b2b2;
-        }
-
-        .item-button:not([disabled]):hover dbp-icon {
-            transform: scale(1.25);
-        }
-
         .item-button dbp-icon {
             margin-right: 5px;
             transition: transform 150ms ease-in;
@@ -1831,32 +1822,6 @@ export function getDropDownCss() {
             right: 0;
             text-align: left;
         }
-
-        /*
-        ::slotted([slot='item']) {
-            display: flex;
-            width: 100%;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.6rem;
-            border: 0;
-            background: transparent;
-            font: inherit;
-            text-align: left;
-            border-radius: 0.4rem;
-            width: 100%;
-            cursor: pointer;
-        }
-        ::slotted([slot='item']:hover),
-        ::slotted([slot='item']:focus-visible) {
-            background: rgba(0, 0, 0, 0.06);
-            outline: none;
-        }
-        ::slotted([slot='item'][disabled]) {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        */
     `;
 }
 
