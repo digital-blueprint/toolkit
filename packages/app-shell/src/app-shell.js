@@ -983,8 +983,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 gap: 2px;
                 z-index: 1000;
                 position: fixed;
+                justify-content: center;
                 bottom: 8rem;
-                right: max(1.5rem, calc((90vw - 1100px) / 2 + 1.5rem));
+                left: 50%;
+                transform: translateX(1800%);
                 align-items: center;
                 pointer-events: none;
             }
@@ -1008,11 +1010,21 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 pointer-events: auto;
             }
 
-            @media (max-width: 1100px) {
+            @media (max-width: 1600px) {
                 .scroll-top-wrapper {
-                    right: 1rem;
+                    left: 95%;
+                    transform: translateX(0%);
                 }
+            }
 
+            @media (max-width: 900px) {
+                .scroll-top-wrapper {
+                    left: 90%;
+                    transform: translateX(0%);
+                }
+            }
+
+            @media (max-width: 1100px) {
                 header .hd1-right .logo {
                     display: none;
                 }
