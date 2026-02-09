@@ -31,6 +31,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.rowSelected = false;
         this.selectedRows = null;
         this.tableReady = false;
+        this.tableBuilding = false;
         this.initialization = true;
         this.collapseEnabled = false;
         this.isCollapsible = false;
@@ -165,7 +166,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         }
 
         console.log('TABULATOR TABLE INITIALIZED', this.tabulatorTable);
-
+        this.tableBuilding = true;
         this.tabulatorTable.on('tableBuilt', this.tableBuildFunctions.bind(this));
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
         this.tabulatorTable.on('rowSelectionChanged', (data, rows, selected, deselected) => {
@@ -237,8 +238,6 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             );
             this.dispatchEvent(renderCompleteEvent);
         });
-
-        this.tableReady = true;
     }
 
     tableBuildFunctions() {
@@ -286,6 +285,9 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             composed: true,
         });
         this.dispatchEvent(tableBuiltEvent);
+
+        this.tableReady = true;
+        this.tableBuilding = false;
     }
 
     rowClickFunction(e, row) {
