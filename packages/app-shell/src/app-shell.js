@@ -1017,14 +1017,18 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
             }
 
-            @media (max-width: 900px) {
+            @media (max-width: 768px) {
                 .scroll-top-wrapper {
-                    left: 90%;
-                    transform: translateX(0%);
+                    left: 0%;
+                    right: 2rem;
                 }
             }
 
             @media (max-width: 1100px) {
+                .scroll-top-wrapper {
+                    left: 90%;
+                    transform: translateX(0%);
+                }
                 header .hd1-right .logo {
                     display: none;
                 }
