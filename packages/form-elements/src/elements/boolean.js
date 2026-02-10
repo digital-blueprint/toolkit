@@ -108,6 +108,18 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
         this.state = e.target.checked;
         this.dataValue = this.state;
         this.value = this.state ? 'true' : 'false';
+
+        // Dispatch a custom event for the parent form to listen to
+        this.dispatchEvent(
+            new CustomEvent('change', {
+                detail: {
+                    state: this.state,
+                    value: this.value,
+                },
+                bubbles: true,
+                composed: true,
+            }),
+        );
     }
 
     render() {

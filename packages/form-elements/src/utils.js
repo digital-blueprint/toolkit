@@ -39,9 +39,10 @@ export const getFieldsetCSS = () => {
 /**
  * Validates all required fields in the form.
  * @param {HTMLFormElement} formElement
+ * @param {boolean} silent - If true, validates without showing error messages (default: false)
  * @returns {Promise<boolean>} true if all required fields are valid, false otherwise
  */
-export const validateRequiredFields = async (formElement) => {
+export const validateRequiredFields = async (formElement, silent = false) => {
     const elementWebComponents = getElementWebComponents(formElement);
     const data = gatherFormDataFromElement(formElement);
 
@@ -51,6 +52,7 @@ export const validateRequiredFields = async (formElement) => {
                 detail: {
                     data: data,
                     respond: resolve, // Pass a callback for the component to use
+                    silent: silent, // Pass silent flag to prevent showing validation errors
                 },
             });
             element.dispatchEvent(event);

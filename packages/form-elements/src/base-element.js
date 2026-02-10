@@ -70,9 +70,32 @@ export class DbpBaseElement extends LangMixin(
         }
     }
 
-    evaluateCallback(data) {
+    evaluateCallback(data, silent = false) {
         this.evaluationData = data;
-        return this.handleErrors();
+
+        if (silent) {
+            // Silent mode: check errors without updating UI
+            let errorMessages = [];
+
+            if (this.required && this.isValueEmpty()) {
+                errorMessages.push(
+                    this._i18n.t('render-form.base-object.required-field-validation-error'),
+                );
+            } else if (this.customValidator) {
+                const customValidationErrors = this.customValidator(
+                    this.value,
+                    this.evaluationData,
+                );
+                if (customValidationErrors) {
+                    errorMessages = errorMessages.concat(customValidationErrors);
+                }
+            }
+
+            return errorMessages.length === 0;
+        } else {
+            // Normal mode: check errors and update UI
+            return this.handleErrors();
+        }
     }
 
     renderErrorMessages() {
@@ -97,7 +120,8 @@ export class DbpBaseElement extends LangMixin(
 
         this.addEventListener('evaluate', (event) => {
             const detail = event.detail;
-            const result = this.evaluateCallback(detail.data); // Perform your evaluation
+            const silent = detail.silent || false;
+            const result = this.evaluateCallback(detail.data, silent); // Perform your evaluation
             detail.respond(result); // Send the result back to the caller
         });
     }
@@ -139,6 +163,18 @@ export class DbpBaseElement extends LangMixin(
 
     handleInputValue(e) {
         this.value = e.target.value;
+
+        // Dispatch a custom event for the parent form to listen to
+        this.dispatchEvent(
+            new CustomEvent('change', {
+                detail: {
+                    name: this.name,
+                    value: this.value,
+                },
+                bubbles: true,
+                composed: true,
+            }),
+        );
     }
 
     render() {
