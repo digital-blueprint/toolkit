@@ -1,6 +1,7 @@
 {
     "render-form": {
         "base-object": {
+            "max-length": "Only {{maxLength}} character is allowed.",
             "required-field": "*",
             "required-field-validation-error": "Please fill out the required field!"
         },

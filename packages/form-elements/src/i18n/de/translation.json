@@ -1,6 +1,7 @@
 {
     "render-form": {
         "base-object": {
+            "max-length": "Es sind nur {{maxLength}} Zeichen zulässig.",
             "required-field": "*",
             "required-field-validation-error": "Bitte füllen Sie das Pflichtfeld aus!"
         },

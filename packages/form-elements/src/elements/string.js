@@ -37,6 +37,28 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
 
         const formElement = this.rows > 1 ? this.textareaRef.value : this.inputRef.value;
 
+        if (this.maxLength && formElement) {
+            formElement.addEventListener('input', (event) => {
+                this.customValidator = () => {
+                    // First call the user-provided validator if it exists
+                    if (this._userProvidedValidator) {
+                        const userError = this._userProvidedValidator(this.value);
+                        if (userError) {
+                            return userError;
+                        }
+                    }
+                    // Then, check word count limit
+                    if (formElement.value.length >= this.maxLength) {
+                        return this._i18n.t('render-form.base-object.max-length', {
+                            maxLength: this.maxLength,
+                        });
+                    }
+                    return null; // No errors
+                };
+                this.handleErrors();
+            });
+        }
+
         if (this.wordCountLimit && formElement) {
             formElement.addEventListener('input', (event) => {
                 const words = formElement.value.trim().split(/\s+/);
