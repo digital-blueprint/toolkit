@@ -56,7 +56,7 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
                 .checkbox:checked::after {
                     content: '';
                     position: absolute;
-                    top: 5px;
+                    top: 4px;
                     left: 3px;
                     width: 12px;
                     height: 6px;
