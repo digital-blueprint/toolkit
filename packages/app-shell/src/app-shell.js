@@ -1146,6 +1146,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 .hd1-left-switches-aside {
                     display: block;
                 }
+                .menu-label {
+                    display: none;
+                }
             }
         `;
     }
