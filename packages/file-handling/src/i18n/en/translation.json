@@ -63,7 +63,7 @@
         "clipboard": "Clipboard",
         "empty-file-error-text": "{{filename}} has size=0 and is denied!",
         "empty-file-error-title": "Empty files are not allowed",
-        "mime-type-body": "The file format is not supported by this application.",
+        "mime-type-body": "The file format is not supported by this application. For file {{filename}}",
         "mime-type-title": "Unsupported file format",
         "modal-close": "Close dialog",
         "nav-local": "My device",
@@ -71,7 +71,7 @@
         "no-usable-files-in-zip": "ZIP file does not contain any usable files",
         "not-allowed-mime-type-file-error-text": "{{filename}} has not allowed MIME-Type",
         "not-allowed-mime-type-file-error-title": "Not allowed MIME-Type",
-        "too-big-file-body": "The file can have a maximum of {{size}}.",
+        "too-big-file-body": "The file {{filename}} can have a maximum of {{size}}.",
         "too-big-file-title": "The file is too big!"
     },
     "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region.",

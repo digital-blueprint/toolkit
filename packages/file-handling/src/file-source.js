@@ -341,9 +341,9 @@ export class FileSource extends LangMixin(
             );
             sendNotification({
                 summary: i18n.t('file-source.mime-type-title'),
-                body: i18n.t('file-source.mime-type-body'),
+                body: i18n.t('file-source.mime-type-body', {filename: file.name}),
                 type: 'danger',
-                timeout: 5,
+                timeout: 0,
             });
             return false;
         }
@@ -356,10 +356,11 @@ export class FileSource extends LangMixin(
             sendNotification({
                 summary: i18n.t('file-source.too-big-file-title'),
                 body: i18n.t('file-source.too-big-file-body', {
+                    filename: file.name,
                     size: humanFileSize(this.maxFileSize * 1000, true),
                 }),
                 type: 'danger',
-                timeout: 5,
+                timeout: 0,
             });
             return false;
         }
