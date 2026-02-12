@@ -828,6 +828,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 -webkit-align-items: center;
             }
 
+            header .hd1-right-middle-placeholder .auth-button {
+                display: none;
+            }
+
             header .hd1-right .auth-button {
                 min-width: 0;
             }
@@ -1121,6 +1125,21 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 header {
                     z-index: 2500;
                 }
+                header .hd1-middle {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: none;
+                }
+                header .hd1-right .auth-button {
+                    display: none;
+                }
+                header .hd1-right-middle-placeholder {
+                    position: relative;
+                }
+                header .hd1-right-middle-placeholder .auth-button {
+                    display: block;
+                }
                 .hd1-left-switches {
                     display: none;
                 }
@@ -1336,7 +1355,15 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                         lang="${this.lang}"></dbp-language-select>
                                 </div>
                             </div>
-                            <div class="hd1-middle"></div>
+                            <div class="hd1-middle">
+                                <div class="hd1-right-middle-placeholder">
+                                    <dbp-auth-menu-button
+                                        data-testid="dbp-auth-menu-button"
+                                        subscribe="auth"
+                                        class="auth-button"
+                                        lang="${this.lang}"></dbp-auth-menu-button>
+                                </div>
+                            </div>
                             <div class="hd1-right">
                                 <dbp-auth-menu-button
                                     data-testid="dbp-auth-menu-button"
