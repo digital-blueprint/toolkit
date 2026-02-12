@@ -1010,6 +1010,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 pointer-events: auto;
             }
 
+            .hd1-left-switches-aside {
+                display: none;
+            }
+
             @media (max-width: 1600px) {
                 .scroll-top-wrapper {
                     left: 95%;
@@ -1064,9 +1068,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     min-width: 250px;
                     left: 0;
                     right: auto;
-                    top: 0;
+                    bottom: 0;
+                    height: auto;
+                    top: 3.5rem;
                     max-height: 100dvh;
-                    margin: 3.5rem 0 0 0;
+                    margin: 0 0 0 0;
                     box-sizing: border-box;
                     transform: translateY(-110%);
                     transition:
@@ -1110,10 +1116,16 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 aside ul.menu {
                     width: 100vw;
                     z-index: 1000;
-                    margin: 3.5rem 0 0 0;
+                    top: 3rem;
                 }
                 header {
                     z-index: 2500;
+                }
+                .hd1-left-switches {
+                    display: none;
+                }
+                .hd1-left-switches-aside {
+                    display: block;
                 }
             }
         `;
@@ -2079,6 +2091,16 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     <aside id="mobileMenu">
                         <ul class="menu hidden">
                             ${menuTemplates}
+                            <li class="hd1-left-switches-aside">
+                                <dbp-theme-switcher
+                                    subscribe="themes,dark-mode-theme-override"
+                                    lang="${this.lang}"></dbp-theme-switcher>
+                            </li>
+                            <li class="hd1-left-switches-aside">
+                                <dbp-language-select
+                                    id="lang-select"
+                                    lang="${this.lang}"></dbp-language-select>
+                            </li>
                         </ul>
                     </aside>
 
