@@ -283,5 +283,18 @@ export function getTabulatorStyles() {
         .tabulator[tabulator-layout='fitDataFill'] .tabulator-tableHolder .tabulator-table {
             min-width: calc(100% - 41px);
         }
+
+        /* tag styles*/
+        .tag {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            border: 1px solid var(--dbp-muted);
+            background-color: var(--dbp-background);
+            color: var(--dbp-content);
+            white-space: nowrap;
+        }
     `;
 }
