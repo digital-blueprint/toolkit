@@ -1037,9 +1037,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     left: 90%;
                     transform: translateX(0%);
                 }
-                header .hd1-right .logo {
-                    display: none;
-                }
 
                 header .hd1-right {
                     padding-left: 0px;
