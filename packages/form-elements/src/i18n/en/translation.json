@@ -13,6 +13,7 @@
             "min-exceeded": "The value must be at least {{min}}."
         },
         "string": {
+            "invalid-url": "The entered value must be a valid URL.",
             "word-count-exceeded": "You have exceeded the maximum number of allowed {{wordLimit}} words. Entered {{wordCount}} words. Please remove the extra words."
         }
     }

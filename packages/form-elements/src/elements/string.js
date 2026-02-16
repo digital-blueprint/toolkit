@@ -15,6 +15,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
         this.textareaRef = createRef();
         this.inputRef = createRef();
         this._userProvidedValidator = null;
+        this.type = 'text';
     }
 
     static get properties() {
@@ -24,11 +25,26 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
             placeholder: {type: String},
             maxLength: {type: Number, attribute: 'maxlength'},
             wordCountLimit: {type: Number, attribute: 'word-count-limit'},
+            type: {type: String},
         };
     }
 
     firstUpdated() {
         super.firstUpdated();
+
+        if (this.type === 'url') {
+            this.customValidator = (value) => {
+                if (value === '') {
+                    return [];
+                }
+                try {
+                    new URL(value);
+                    return [];
+                } catch {
+                    return [this._i18n.t('render-form.string.invalid-url')];
+                }
+            };
+        }
 
         // Store the user-provided validator if it exists
         if (this.customValidator) {
@@ -139,7 +155,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                   `
                 : html`
                       <input
-                          type="text"
+                          type="${this.type}"
                           id="${this.formElementId}"
                           ${ref(this.inputRef)}
                           name="${this.name}"
