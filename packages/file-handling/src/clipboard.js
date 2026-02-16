@@ -500,7 +500,6 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
      */
     saveFilesToClipboardEvent(event) {
         //save it
-        let data = {};
         let files = [];
         if (this.clipboardFiles && this.clipboardFiles.files.length !== 0) {
             files = files.concat(this.clipboardFiles.files);
@@ -511,7 +510,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
 
         this.filesToSave = files;
         if (files && files.length !== 0) {
-            data = {files: files};
+            let data = {files: files};
             this.sendSetPropertyEvent('clipboard-files', data);
             const event = new CustomEvent('dbp-clipboard-file-picker-file-uploaded', {
                 bubbles: true,
@@ -537,7 +536,6 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
         const i18n = this._i18n;
 
         //save it
-        let data = {};
         let files = [];
         if (this.clipboardFiles && this.clipboardFiles.files.length !== 0) {
             files = files.concat(this.clipboardFiles.files);
@@ -546,7 +544,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
             files = files.concat(this.filesToSave);
         }
         if (this.filesToSave && this.filesToSave.length !== 0) {
-            data = {files: files};
+            let data = {files: files};
             this.sendSetPropertyEvent('clipboard-files', data);
             const event = new CustomEvent('dbp-clipboard-file-picker-file-uploaded', {
                 bubbles: true,

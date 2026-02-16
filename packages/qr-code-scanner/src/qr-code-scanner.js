@@ -240,20 +240,15 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
                 let canvas = canvasElement.getContext('2d');
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 
-                let maskWidth = canvasElement.width;
-                let maskHeight = canvasElement.height;
-                let maskStartX = 0;
-                let maskStartY = 0;
-
                 let maxSize =
                     canvasElement.width > canvasElement.height
                         ? (canvasElement.height / 4) * 3
                         : (canvasElement.width / 4) * 3;
                 console.assert(maxSize <= canvasElement.width && maxSize <= canvasElement.height);
-                maskWidth = maxSize;
-                maskHeight = maxSize;
-                maskStartX = canvasElement.width / 2 - maskWidth / 2;
-                maskStartY = canvasElement.height / 2 - maskHeight / 2;
+                let maskWidth = maxSize;
+                let maskHeight = maxSize;
+                let maskStartX = canvasElement.width / 2 - maskWidth / 2;
+                let maskStartY = canvasElement.height / 2 - maskHeight / 2;
 
                 let lastVideo = video;
                 if (!detectorRunning) {

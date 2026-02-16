@@ -1307,10 +1307,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 </li>
             `);
         }
-        let style;
         const kc = this.keycloakConfig;
         return html`
-            ${style}
             <slot class="${slotClassMap}"></slot>
             <dbp-auth-keycloak
                 subscribe="requested-login-status"
