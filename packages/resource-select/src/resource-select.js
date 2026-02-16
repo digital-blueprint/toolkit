@@ -111,8 +111,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
     }
 
     _setValue(value) {
-        let changed = false;
-        changed = this.value !== value;
+        let changed = this.value !== value;
         this.value = value;
 
         let found = null;

@@ -97,7 +97,7 @@ export class KeycloakWrapper extends EventTarget {
 
     async _onTokenExpired() {
         console.log('Token has expired');
-        let refreshed = false;
+        let refreshed;
 
         try {
             // -1 means force a refresh

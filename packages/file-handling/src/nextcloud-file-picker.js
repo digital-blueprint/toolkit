@@ -1711,7 +1711,7 @@ export class NextcloudFilePicker extends LangMixin(
             this._('#replace_mode_all').checked = false;
             return;
         }
-        let path = '';
+        let path;
         let overwrite = false;
         let file = this.uploadFileObject;
         let directory = this.uploadFileDirectory;
@@ -1779,7 +1779,7 @@ export class NextcloudFilePicker extends LangMixin(
      */
     checkRights(file) {
         // nextcloud permissions
-        let file_perm = 0;
+        let file_perm;
         let active_directory_perm = this.activeDirectoryRights;
         let rows = this.tabulatorTable.searchRows('basename', '=', this.replaceFilename);
         if (typeof rows[0] !== 'undefined' && rows[0]) {
@@ -1911,7 +1911,7 @@ export class NextcloudFilePicker extends LangMixin(
      * @returns {string} The next filename
      */
     getNextFilename() {
-        let nextFilename = '';
+        let nextFilename;
         let splitFilename;
         if (this.forAll && this.customFilename !== '') {
             splitFilename = this.customFilename.split('.');

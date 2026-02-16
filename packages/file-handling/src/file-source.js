@@ -307,7 +307,7 @@ export class FileSource extends LangMixin(
     }
 
     sendSource() {
-        let data = {};
+        let data;
         if (this.activeTarget === 'nextcloud') {
             data = {
                 target: this.activeTarget,
@@ -728,7 +728,7 @@ export class FileSource extends LangMixin(
             allowedMimeTypes += ',application/zip,application/x-zip-compressed';
         }
 
-        let inputFile = html``;
+        let inputFile;
         if (this.multipleFiles > 1 || this.multipleFiles === true) {
             inputFile = html`
                 <input

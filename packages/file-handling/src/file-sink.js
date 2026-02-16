@@ -323,7 +323,7 @@ export class FileSink extends LangMixin(
     }
 
     sendDestination() {
-        let data = {};
+        let data;
         if (this.activeTarget === 'nextcloud') {
             data = {
                 target: this.activeTarget,
