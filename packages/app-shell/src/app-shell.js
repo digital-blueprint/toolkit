@@ -834,6 +834,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
             header .hd1-right .auth-button {
                 min-width: 0;
+                max-width: 150px;
             }
 
             header .hd1-right .logo {
@@ -1128,6 +1129,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     justify-content: center;
                     background: none;
                 }
+
+                /* header .hd1-right .logo {
+                    
+                }*/
+
                 header .hd1-right .auth-button {
                     display: none;
                 }
