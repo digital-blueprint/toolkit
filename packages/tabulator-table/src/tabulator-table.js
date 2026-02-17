@@ -586,6 +586,11 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 min-height: 37px;
             }
 
+            /* Allow scrolling of rows inside "content" area of table */
+            .tabulator .tabulator-tableholder {
+                overflow-y: scroll;
+            }
+
             .tabulator .tabulator-tableholder :hover {
                 cursor: default;
             }
