@@ -1,5 +1,5 @@
-import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {css, html, unsafeCSS} from 'lit';
+import {ScopedElementsMixin, getIconSVGURL} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {stringifyForDataValue} from '../utils.js';
@@ -188,26 +188,28 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             case 'dropdown':
                 // If multiple is true, this.value is an array of selected values!
                 return html`
-                    <select
-                        ${ref(this.selectRef)}
-                        id="${this.formElementId}"
-                        name="${this.name}"
-                        @change="${this.handleInputValue}"
-                        ?disabled=${this.disabled}
-                        ?required=${this.required}
-                        ?multiple=${this.multiple}>
-                        ${Object.keys(this.items).map(
-                            (key) => html`
-                                <option
-                                    value="${key}"
-                                    ?selected=${this.multiple
-                                        ? this.value?.includes(key)
-                                        : key === this.value}>
-                                    ${this.items[key]}
-                                </option>
-                            `,
-                        )}
-                    </select>
+                    <div class="select-wrapper">
+                        <select
+                            ${ref(this.selectRef)}
+                            id="${this.formElementId}"
+                            name="${this.name}"
+                            @change="${this.handleInputValue}"
+                            ?disabled=${this.disabled}
+                            ?required=${this.required}
+                            ?multiple=${this.multiple}>
+                            ${Object.keys(this.items).map(
+                                (key) => html`
+                                    <option
+                                        value="${key}"
+                                        ?selected=${this.multiple
+                                            ? this.value?.includes(key)
+                                            : key === this.value}>
+                                        ${this.items[key]}
+                                    </option>
+                                `,
+                            )}
+                        </select>
+                    </div>
                 `;
             case 'list':
                 return html`
@@ -325,10 +327,6 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     background-size: 1em;
                 }
 
-                :host([multiple]) select:not(.select) {
-                    background: none;
-                }
-
                 label a {
                     text-decoration: underline;
                 }
@@ -409,6 +407,38 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 .select2-container--default .select2-search--inline .select2-search__field {
                     /* Needed for the placeholder to be visible. The width of the input is set to 0 by js. */
                     width: min-content !important;
+                }
+
+                .select-wrapper select {
+                    background: none;
+                    padding-right: 2px;
+                }
+
+                :host(:not([multiple])) .select-wrapper {
+                    position: relative;
+                    display: inline-block;
+                    width: 100%;
+                }
+
+                :host(:not([multiple])) .select-wrapper select {
+                    appearance: none;
+                    padding-right: 1.75em;
+                }
+
+                :host(:not([multiple])) .select-wrapper::after {
+                    content: '';
+                    position: absolute;
+                    right: 0.5rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 1em;
+                    height: 1em;
+                    pointer-events: none;
+                    background-color: currentColor;
+                    mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center/contain
+                        no-repeat;
+                    -webkit-mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center/contain
+                        no-repeat;
                 }
             `,
         ];
