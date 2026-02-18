@@ -72,7 +72,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.boundCloseMenuHandler = this.hideMenu.bind(this);
         this.initateOpenMenu = false;
 
-        this.menuOpen = localStorage.getItem('dbp-app-shell-menu-open') === 'true';
+        this.menuOpen = localStorage.getItem('dbp-app-shell-menu-open') !== 'false';
 
         this.auth = null;
         this.langDir = '';
