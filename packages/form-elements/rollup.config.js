@@ -36,6 +36,10 @@ export default {
     moduleTypes: {
         '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
     },
+    experimental: {
+        // https://github.com/rolldown/rolldown/issues/8361
+        chunkOptimization: false,
+    },
     plugins: [
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [
