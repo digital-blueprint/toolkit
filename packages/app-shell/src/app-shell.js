@@ -72,6 +72,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.boundCloseMenuHandler = this.hideMenu.bind(this);
         this.initateOpenMenu = false;
 
+        this.menuOpen = localStorage.getItem('dbp-app-shell-menu-open') === 'true';
+
         this.auth = null;
         this.langDir = '';
         this.routingBaseUrl = null;
@@ -181,7 +183,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     firstUpdated() {
         super.firstUpdated();
 
-        if (!this.isMenuFloating()) {
+        if (!this.isMenuFloating() && this.menuOpen) {
             this.toggleMenu();
         }
 
@@ -593,6 +595,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.updateMenuIcon();
         menuButton?.setAttribute('aria-expanded', String(isOpening));
 
+        this.menuOpen = isOpening;
+        localStorage.setItem('dbp-app-shell-menu-open', isOpening);
+
         // Outside click + initial click guard
         if (this._boundCloseMenuHandler) {
             document.removeEventListener('click', this._boundCloseMenuHandler);
@@ -633,6 +638,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.shadowRoot.querySelector('#main')?.classList.remove('menu-open');
         this.shadowRoot.querySelector('#menu-burger-icon')?.setAttribute('name', 'menu');
         this.shadowRoot.querySelector('h2.subtitle')?.setAttribute('aria-expanded', 'false');
+
+        this.menuOpen = false;
+        localStorage.setItem('dbp-app-shell-menu-open', false);
 
         if (this._boundCloseMenuHandler) {
             document.removeEventListener('click', this._boundCloseMenuHandler);
@@ -834,7 +842,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
             header .hd1-right .auth-button {
                 min-width: 0;
-                max-width: 150px;
+                max-width: 300px;
             }
 
             header .hd1-right .logo {
@@ -1131,7 +1139,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
 
                 /* header .hd1-right .logo {
-                    
+
                 }*/
 
                 header .hd1-right .auth-button {
