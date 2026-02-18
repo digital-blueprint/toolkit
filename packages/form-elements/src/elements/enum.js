@@ -423,6 +423,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 :host(:not([multiple])) .select-wrapper select {
                     appearance: none;
                     padding-right: 1.75em;
+                    background-color: var(--dbp-background);
                 }
 
                 :host(:not([multiple])) .select-wrapper::after {
