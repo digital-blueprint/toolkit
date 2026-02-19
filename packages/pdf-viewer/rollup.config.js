@@ -24,10 +24,6 @@ export default {
         minify: buildFull,
         cleanDir: true,
     },
-    experimental: {
-        // https://github.com/rolldown/rolldown/issues/8361
-        chunkOptimization: false,
-    },
     plugins: [
         await assetPlugin(pkg.name, 'dist', {
             copyTargets: [
