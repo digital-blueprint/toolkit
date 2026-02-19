@@ -1271,6 +1271,21 @@ export function getSelect2CSS() {
             color: var(--dbp-muted);
         }
 
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+            background-color: var(--dbp-background);
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            background-color: var(--dbp-background);
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: var(--dbp-background);
+        }
+
+        .select2-container--default .select2-results__option[aria-selected='true'] {
+            background-color: var(--dbp-muted);
+        }
+
         /* Work around single selections not wrapping and breaking responsivness */
         .select2-container--default .select2-selection--single {
             height: 100% !important;
