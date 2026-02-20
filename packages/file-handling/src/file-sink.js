@@ -199,7 +199,7 @@ export class FileSink extends LangMixin(
                     );
                 }
 
-                el.name = 'file';
+                el.name = file.name;
                 // Create DataTransfer to simulate file selection
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);

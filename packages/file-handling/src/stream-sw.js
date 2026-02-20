@@ -71,7 +71,7 @@ self.addEventListener('fetch', (event) => {
                     }
                 });
                 data.forEach((value, key) => {
-                    if (value instanceof File && key === 'file') {
+                    if (value instanceof File) {
                         filenames.push(value.name);
                     }
                 });
