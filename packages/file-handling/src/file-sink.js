@@ -127,6 +127,7 @@ export class FileSink extends LangMixin(
     handleStreamedDownload() {
         // create form used to stream-download a zip
         const downloadForm = document.createElement('form');
+        downloadForm.enctype = 'multipart/form-data';
         downloadForm.style.display = 'none';
         downloadForm.action = commonUtils.getAssetURL(pkgName, 'downloadZip/files.zip');
         downloadForm.method = 'POST';
@@ -153,34 +154,60 @@ export class FileSink extends LangMixin(
         this.files.forEach((file) => {
             // check if object is in expected format
             if (
-                !Object.hasOwn(file, 'name') ||
-                !Object.hasOwn(file, 'url') ||
-                file instanceof File
+                (!Object.hasOwn(file, 'name') || !Object.hasOwn(file, 'url')) &&
+                !(file instanceof File)
             ) {
                 console.error('Given object cannot be streamed!');
                 error = true;
                 return;
             }
-            // create URL object to check if its a real and valid url
-            let fileUrl = new URL(file.url);
 
-            // create input with file name and url
-            let url = document.createElement('input');
-            url.type = 'url';
+            let el = document.createElement('input');
+            if (!(file instanceof File)) {
+                // create URL object to check if its a real and valid url
+                let fileUrl = new URL(file.url);
 
-            // add pseudo-random string on duplicate file name
-            if (downloadForm.querySelector(`input[name="${file.name}"]`) !== null) {
-                file.name =
-                    commonUtils.getBaseName(file.name) +
-                    '-' +
-                    Math.random().toString(36).substring(7) +
-                    '.' +
-                    commonUtils.getFileExtension(file.name);
+                // create input with file name and url
+                el.type = 'url';
+
+                // add pseudo-random string on duplicate file name
+                if (downloadForm.querySelector(`input[name="${file.name}"]`) !== null) {
+                    file.name =
+                        commonUtils.getBaseName(file.name) +
+                        '-' +
+                        Math.random().toString(36).substring(7) +
+                        '.' +
+                        commonUtils.getFileExtension(file.name);
+                }
+
+                el.name = file.name;
+                el.value = fileUrl.toString();
+            } else {
+                // create input with file name and url
+                el.type = 'file';
+
+                // add pseudo-random string on duplicate file name
+                if (downloadForm.querySelector(`input[name="${file.name}"]`) !== null) {
+                    file = new File(
+                        [file], // file content
+                        commonUtils.getBaseName(file.name) +
+                            '-' +
+                            Math.random().toString(36).substring(7) +
+                            '.' +
+                            commonUtils.getFileExtension(file.name),
+                        {type: file.type},
+                    );
+                }
+
+                el.name = 'file';
+                // Create DataTransfer to simulate file selection
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+
+                // Assign files to input
+                el.files = dataTransfer.files;
             }
-
-            url.name = file.name;
-            url.value = fileUrl.toString();
-            downloadForm.appendChild(url);
+            downloadForm.appendChild(el);
         });
 
         // if error was thrown, stop
@@ -190,7 +217,7 @@ export class FileSink extends LangMixin(
 
         // start download
         this.appendChild(downloadForm);
-        downloadForm.submit();
+        downloadForm.requestSubmit();
 
         // cleanup
         while (downloadForm.hasChildNodes()) {
