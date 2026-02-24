@@ -94,7 +94,7 @@ export function getTabulatorStyles() {
 
         .tabulator-header {
             padding-top: 10px;
-            padding-bottom: 10px;
+            padding-bottom: 0px;
         }
 
         .tabulator-row .tabulator-cell {
