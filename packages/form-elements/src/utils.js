@@ -88,7 +88,6 @@ export const gatherFormDataFromElement = (formElement) => {
 
     // Gather data from "dbp-.*-element" web components
     const elementWebComponents = getElementWebComponents(formElement);
-    console.log('gatherFormDataFromElement elementWebComponents', elementWebComponents);
     elementWebComponents.forEach((element) => {
         const name = element.getAttribute('name') || element.id;
         customElementValues[name] = element.value;
@@ -112,7 +111,6 @@ export const gatherFormDataFromElement = (formElement) => {
         }
     });
 
-    console.log('gatherFormDataFromElement dataValues', dataValues);
     const data = {};
 
     // 1. First, add all custom element values as the base
@@ -130,8 +128,6 @@ export const gatherFormDataFromElement = (formElement) => {
     for (let [key, value] of Object.entries(dataValues)) {
         setNestedValue(data, key, value);
     }
-
-    console.log('gatherFormDataFromElement data', data);
 
     return data;
 };
