@@ -404,10 +404,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     border-color: var(--dbp-override-content);
                 }
 
-                .select2-container--default .select2-search--inline .select2-search__field {
-                    /* Needed for the placeholder to be visible. The width of the input is set to 0 by js. */
-                    width: min-content !important;
-                }
+                /*  .select2-container--default .select2-search--inline .select2-search__field {
+                    !* Needed for the placeholder to be visible. The width of the input is set to 0 by js. *!
+                    !*width is the reason for the placeholder to shrink, so I removed it*!
+                }*/
 
                 .select-wrapper select {
                     background: none;
