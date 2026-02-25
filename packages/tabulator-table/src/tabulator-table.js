@@ -70,6 +70,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 propName === 'options' &&
                 this.options !== null &&
                 !this.tableReady &&
+                !this.tableBuilding &&
                 !this.initialization
             ) {
                 this.buildTable();
