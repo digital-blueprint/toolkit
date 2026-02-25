@@ -56,6 +56,8 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
     - example `<dbp-tabulator-table collapse-enabled></dbp-tabulator-table>`
     - hint: If you want to set one or more columns into a list of titles and values, you need to set said columns to a responsive value bigger
       than 0 (e.g. `responsive:3`) and to set the columns' width so that they will not all fit into the tabulator
+- `overflow-y-scroll-enabled` (optional bool, default: `false`): enables vertical scrolling within the table body
+    - example `<dbp-tabulator-table overflow-y-scroll-enabled></dbp-tabulator-table>`
 
 ### Events
 

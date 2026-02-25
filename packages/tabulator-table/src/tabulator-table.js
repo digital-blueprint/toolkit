@@ -35,6 +35,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.initialization = true;
         this.collapseEnabled = false;
         this.isCollapsible = false;
+        this.overflowYScrollEnabled = false;
     }
 
     static get properties() {
@@ -54,6 +55,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             collapseEnabled: {type: Boolean, attribute: 'collapse-enabled'},
             expanded: {type: Boolean},
             isCollapsible: {type: Boolean, attribute: false},
+            overflowYScrollEnabled: {type: Boolean, attribute: 'overflow-y-scroll-enabled'},
         };
     }
 
@@ -587,7 +589,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             }
 
             /* Allow scrolling of rows inside "content" area of table */
-            .tabulator .tabulator-tableholder {
+            :host([overflow-y-scroll-enabled]) .tabulator .tabulator-tableholder {
                 overflow-y: scroll;
             }
 
