@@ -23,7 +23,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         open: {type: Boolean, reflect: true},
         disabled: {type: Boolean, reflect: true},
         label: {type: String},
-        align: {type: String},
+        align: {type: String, reflect: true},
         hideOnSelect: {type: Boolean, attribute: 'hide-on-select'},
         options: {type: Array},
         value: {type: String, reflect: true},

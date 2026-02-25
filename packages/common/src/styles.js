@@ -1787,6 +1787,9 @@ export function getDropDownCss() {
         :host {
             display: inline-block;
             position: relative;
+            /* defaults can be overridden per usage */
+            --dbp-select-menu-left: 0;
+            --dbp-select-menu-right: auto;
         }
 
         :host([disabled]) {
@@ -1804,11 +1807,25 @@ export function getDropDownCss() {
             border: 0 none;
             border-radius: 0;
             text-align: left;
+            /* ✅ anchor controlled by vars */
+            left: var(--dbp-select-menu-left);
+            right: var(--dbp-select-menu-right);
             background: var(--dbp-background);
             box-shadow:
                 0 6px 24px rgba(0, 0, 0, 0.08),
                 0 2px 8px rgba(0, 0, 0, 0.06);
             z-index: 10;
+        }
+
+        /* ✅ correct align behaviors */
+        :host([align='left']) {
+            --dbp-select-menu-left: 0;
+            --dbp-select-menu-right: auto;
+        }
+
+        :host([align='right']) {
+            --dbp-select-menu-left: auto;
+            --dbp-select-menu-right: 0;
         }
 
         .item-button {
@@ -1831,11 +1848,6 @@ export function getDropDownCss() {
         .icon-chevron {
             transition: transform 250ms ease-in;
             margin-left: 0.5em;
-        }
-
-        :host(:not([align='right'])) .menu {
-            right: 0;
-            text-align: left;
         }
     `;
 }
