@@ -801,7 +801,7 @@ export class NextcloudFilePicker extends LangMixin(
                     @click="${async () => {
                         this.openFilePicker();
                     }}">
-                <dbp-icon name="reload">
+                <dbp-icon name="reload"></dbp-icon>
             </button>`;
             this.loading = false;
             this.statusText = reloadButton;
@@ -881,7 +881,7 @@ export class NextcloudFilePicker extends LangMixin(
                             @click="${async () => {
                                 this.openFilePicker();
                             }}">
-                        <dbp-icon name="reload">
+                        <dbp-icon name="reload"></dbp-icon>
                     </button>`;
                     this.loading = false;
                     this.statusText = reloadButton;
@@ -928,7 +928,7 @@ export class NextcloudFilePicker extends LangMixin(
                     @click="${async () => {
                         this.openFilePicker();
                     }}">
-                <dbp-icon name="reload">
+                <dbp-icon name="reload"></dbp-icon>
             </button>`;
             this.loading = false;
             this.statusText = reloadButton;
@@ -1044,7 +1044,7 @@ export class NextcloudFilePicker extends LangMixin(
                             @click="${async () => {
                                 this.openFilePicker();
                             }}">
-                        <dbp-icon name="reload">
+                        <dbp-icon name="reload"></dbp-icon>
                     </button>`;
                     this.loading = false;
                     this.statusText = reloadButton;
@@ -1156,7 +1156,7 @@ export class NextcloudFilePicker extends LangMixin(
                     @click="${async () => {
                         this.openFilePicker();
                     }}">
-                <dbp-icon name="reload">
+                <dbp-icon name="reload"></dbp-icon>
             </button>`;
             this.loading = false;
             this.statusText = reloadButton;
@@ -1275,7 +1275,7 @@ export class NextcloudFilePicker extends LangMixin(
                             @click="${async () => {
                                 this.openFilePicker();
                             }}">
-                        <dbp-icon name="reload">
+                        <dbp-icon name="reload"></dbp-icon>
                     </button>`;
                     this.loading = false;
                     this.statusText = reloadButton;
