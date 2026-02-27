@@ -766,7 +766,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                         ${this.getAdditionalButtons()}
                         <link rel="stylesheet" href="${tabulatorCss}" />
                         <div class="table-wrapper">
-                            <table id="clipboard-content-table" class="force-no-select"></table>
+                            <div id="clipboard-content-table" class="force-no-select"></div>
                         </div>
                     </div>
                 </div>
@@ -808,7 +808,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                         ${this.getAdditionalButtons()}
                         <link rel="stylesheet" href="${tabulatorCss}" />
                         <div class="table-wrapper">
-                            <table id="clipboard-content-table" class="force-no-select"></table>
+                            <div id="clipboard-content-table" class="force-no-select"></div>
                         </div>
                     </div>
                 </div>

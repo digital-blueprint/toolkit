@@ -3369,7 +3369,7 @@ export class NextcloudFilePicker extends LangMixin(
                 </div>
                 <div class="nextcloud-content ${classMap({hidden: !this.isPickerActive})}">
                     <div class="table-wrapper">
-                        <table id="directory-content-table" class="force-no-select"></table>
+                        <div id="directory-content-table" class="force-no-select"></div>
                     </div>
                 </div>
 
