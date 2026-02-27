@@ -73,7 +73,11 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
         )
             .then((response) => response.json())
             .then((data) => {
-                this.name = data.givenName + ' ' + data.familyName || '';
+                if (data.givenName && data.familyName) {
+                    this.name = data.givenName + ' ' + data.familyName || '';
+                } else {
+                    this.name = value;
+                }
             });
     }
 }
