@@ -76,6 +76,14 @@ self.addEventListener('fetch', (event) => {
                     }
                 });
 
+                // Notify the client that streaming has begun
+                // includeUncontrolled is required because the SW may not yet control the page
+                const clients = await self.clients.matchAll({
+                    type: 'window',
+                    includeUncontrolled: true,
+                });
+                clients.forEach((client) => client.postMessage({type: 'DOWNLOAD_STARTED'}));
+
                 // ignore undef errors, as the global definitions are not tracked by default
                 // works as expected: https://github.com/eslint/eslint/issues/16904
                 // eslint-disable-next-line no-undef
