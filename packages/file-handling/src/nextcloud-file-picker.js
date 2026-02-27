@@ -795,14 +795,17 @@ export class NextcloudFilePicker extends LangMixin(
             // client is broken reload try to reset & reconnect
             this.tabulatorTable.clearData();
             this.webDavClient = null;
-            let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')}
-            <button class="button"
+            let reloadButton = html`
+                ${i18n.t('nextcloud-file-picker.something-went-wrong')}
+                <button
+                    class="button"
                     title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                     @click="${async () => {
                         this.openFilePicker();
                     }}">
-                <dbp-icon name="reload"></dbp-icon>
-            </button>`;
+                    <dbp-icon name="reload"></dbp-icon>
+                </button>
+            `;
             this.loading = false;
             this.statusText = reloadButton;
         }
@@ -875,14 +878,17 @@ export class NextcloudFilePicker extends LangMixin(
                     this.isPickerActive = false;
                     this.tabulatorTable.clearData();
                     this.webDavClient = null;
-                    let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')}
-                    <button class="button"
+                    let reloadButton = html`
+                        ${i18n.t('nextcloud-file-picker.something-went-wrong')}
+                        <button
+                            class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                             @click="${async () => {
                                 this.openFilePicker();
                             }}">
-                        <dbp-icon name="reload"></dbp-icon>
-                    </button>`;
+                            <dbp-icon name="reload"></dbp-icon>
+                        </button>
+                    `;
                     this.loading = false;
                     this.statusText = reloadButton;
                 }
@@ -922,14 +928,17 @@ export class NextcloudFilePicker extends LangMixin(
             // client is broken reload try to reset & reconnect
             this.tabulatorTable.clearData();
             this.webDavClient = null;
-            let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')}
-            <button class="button"
+            let reloadButton = html`
+                ${i18n.t('nextcloud-file-picker.something-went-wrong')}
+                <button
+                    class="button"
                     title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                     @click="${async () => {
                         this.openFilePicker();
                     }}">
-                <dbp-icon name="reload"></dbp-icon>
-            </button>`;
+                    <dbp-icon name="reload"></dbp-icon>
+                </button>
+            `;
             this.loading = false;
             this.statusText = reloadButton;
         }
@@ -1038,14 +1047,17 @@ export class NextcloudFilePicker extends LangMixin(
                     this.isPickerActive = false;
                     this.tabulatorTable.clearData();
                     this.webDavClient = null;
-                    let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')}
-                    <button class="button"
+                    let reloadButton = html`
+                        ${i18n.t('nextcloud-file-picker.something-went-wrong')}
+                        <button
+                            class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                             @click="${async () => {
                                 this.openFilePicker();
                             }}">
-                        <dbp-icon name="reload"></dbp-icon>
-                    </button>`;
+                            <dbp-icon name="reload"></dbp-icon>
+                        </button>
+                    `;
                     this.loading = false;
                     this.statusText = reloadButton;
                 }
@@ -1150,14 +1162,17 @@ export class NextcloudFilePicker extends LangMixin(
             // client is broken reload try to reset & reconnect
             this.tabulatorTable.clearData();
             this.webDavClient = null;
-            let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')}
-            <button class="button"
+            let reloadButton = html`
+                ${i18n.t('nextcloud-file-picker.something-went-wrong')}
+                <button
+                    class="button"
                     title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                     @click="${async () => {
                         this.openFilePicker();
                     }}">
-                <dbp-icon name="reload"></dbp-icon>
-            </button>`;
+                    <dbp-icon name="reload"></dbp-icon>
+                </button>
+            `;
             this.loading = false;
             this.statusText = reloadButton;
         }
@@ -1269,14 +1284,17 @@ export class NextcloudFilePicker extends LangMixin(
                     this.isPickerActive = false;
                     this.tabulatorTable.clearData();
                     this.webDavClient = null;
-                    let reloadButton = html`${i18n.t('nextcloud-file-picker.something-went-wrong')}
-                    <button class="button"
+                    let reloadButton = html`
+                        ${i18n.t('nextcloud-file-picker.something-went-wrong')}
+                        <button
+                            class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
                             @click="${async () => {
                                 this.openFilePicker();
                             }}">
-                        <dbp-icon name="reload"></dbp-icon>
-                    </button>`;
+                            <dbp-icon name="reload"></dbp-icon>
+                        </button>
+                    `;
                     this.loading = false;
                     this.statusText = reloadButton;
                 }
