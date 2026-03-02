@@ -82,6 +82,10 @@ export async function downloadExcel(rows, dataName) {
                     );
                 }
                 const headerLabel = title || definition.title || field;
+
+                // Skip empty cells without header labels
+                if (!headerLabel && !cellValue) continue;
+
                 entry[headerLabel] = cellValue;
             }
         }
