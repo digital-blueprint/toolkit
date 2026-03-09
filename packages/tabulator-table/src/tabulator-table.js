@@ -603,7 +603,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             }
 
             .tabulator .tabulator-footer .tabulator-paginator .tabulator-page[disabled] {
-                opacity: 0.4;
+                opacity: var(--dbp-hover-background-color);
             }
 
             .tabulator .tabulator-footer {
