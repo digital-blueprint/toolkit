@@ -58,7 +58,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
     // Can be used to set items from the outside
     setItems(items) {
-        this.items = items;
+        this.items = {...items};
     }
 
     isValueEmptyArray() {
