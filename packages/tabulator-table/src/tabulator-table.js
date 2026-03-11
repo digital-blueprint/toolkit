@@ -277,6 +277,17 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     );
                 }
             });
+
+            if (
+                paginationSizeDropdown &&
+                !paginationSizeDropdown.parentElement.classList.contains('page-size-wrapper')
+            ) {
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('page-size-wrapper');
+
+                paginationSizeDropdown.parentNode.insertBefore(wrapper, paginationSizeDropdown);
+                wrapper.appendChild(paginationSizeDropdown);
+            }
         }
 
         const tableBuiltEvent = new CustomEvent('dbp-tabulator-table-built', {
@@ -640,9 +651,31 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 border-radius: var(--dbp-border-radius);
                 padding: calc(0.5em - 1px) 1.7em calc(0.5em - 1px) 0.75em;
                 cursor: pointer;
-                background-position-x: calc(100% - 0.4rem);
-                background-size: auto 45%;
                 min-height: 40px;
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                background: none;
+            }
+
+            .page-size-wrapper {
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .page-size-wrapper::after {
+                content: '';
+                position: absolute;
+                right: 0.6rem;
+                width: 1rem;
+                height: 1rem;
+                pointer-events: none;
+                background-color: var(--dbp-content);
+                mask-image: url('${unsafeCSS(getIconSVGURL('chevron-down'))}');
+                mask-repeat: no-repeat;
+                mask-position: center;
+                mask-size: contain;
             }
 
             .tabulator .tabulator-footer .tabulator-paginator .tabulator-page {
