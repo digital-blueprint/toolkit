@@ -13,7 +13,7 @@ export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
         super.connectedCallback();
 
         if (this.value !== '' && this.auth.token) {
-            this.fetchPersonName(this.value);
+            this.fetchOrganizationName(this.value);
         }
     }
 
@@ -21,7 +21,7 @@ export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
         if (changedProperties.get('name')) {
             this.name = this.name || '';
         } else if (changedProperties.get('auth') && this.name === '') {
-            this.fetchPersonName(this.value);
+            this.fetchOrganizationName(this.value);
         }
     }
 
@@ -73,8 +73,8 @@ export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
         )
             .then((response) => response.json())
             .then((data) => {
-                if (data.givenName && data.familyName) {
-                    this.name = data.givenName + ' ' + data.familyName || '';
+                if (data.name) {
+                    this.name = data.name;
                 } else {
                     this.name = value;
                 }

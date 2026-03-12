@@ -26,6 +26,8 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         this.valueObject = null;
         this.disabled = false;
 
+        this.noDefault = false;
+
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
         select2(window, $);
     }
@@ -36,6 +38,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             auth: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             resourcePath: {type: String, attribute: 'resource-path'},
+            noDefault: {type: Boolean, attribute: 'no-default'},
             value: {type: String, reflect: true},
             disabled: {type: Boolean},
         };
@@ -230,7 +233,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             });
 
         // If none is selected, default to the first one
-        if (this.value === null && data.length) {
+        if (this.value === null && data.length && !this.noDefault) {
             this._setValue(data[0].id);
         }
 
