@@ -10,10 +10,9 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
         this.entryPointUrl = '';
         this.value = '';
         this.resourceSelectRef = createRef();
-        this.resourcePath  = '';
+        this.resourcePath = '';
         this.includeLocal = undefined;
         this.perPage = 30;
-
     }
 
     static get properties() {
@@ -42,10 +41,12 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
 
     renderInput() {
         let buildUrl = (select, url) => {
-            url += '?'+new URLSearchParams({
-                'perPage': this.perPage,
-                ...(this.includeLocal !== undefined && { includeLocal: this.includeLocal })
-            });
+            url +=
+                '?' +
+                new URLSearchParams({
+                    perPage: this.perPage,
+                    ...(this.includeLocal !== undefined && {includeLocal: this.includeLocal}),
+                });
             return url;
         };
 
@@ -57,15 +58,15 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
                 resource-path="${this.resourcePath}"
                 .buildUrl="${buildUrl}"
                 @change="${(event) => {
-            let value = event.target.value;
-            if (!(value instanceof String) && typeof value !== 'string') {
-                return;
-            }
-            if (value.startsWith('/base/organizations/')) {
-                value = value.replace('/base/organizations/', '');
-            }
-            this.value = value;
-        }}"
+                    let value = event.target.value;
+                    if (!(value instanceof String) && typeof value !== 'string') {
+                        return;
+                    }
+                    if (value.startsWith('/base/organizations/')) {
+                        value = value.replace('/base/organizations/', '');
+                    }
+                    this.value = value;
+                }}"
                 entry-point-url="${this.entryPointUrl}"></dbp-resource-select>
         `;
     }
