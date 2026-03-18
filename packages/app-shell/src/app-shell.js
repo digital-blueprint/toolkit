@@ -830,8 +830,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: flex;
                 justify-content: space-between;
                 -webkit-justify-content: space-between;
-                padding: 0 10px 0 10px;
+                padding: 5px 10px 0 10px;
                 min-width: 0;
+                gap: 10px;
                 align-items: center;
                 -webkit-align-items: center;
             }
@@ -1123,24 +1124,33 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
             }
             @media (max-width: 490px) {
+                header {
+                    z-index: 2500;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    gap: 12px;
+                    grid-template-rows: 50px;
+                }
+
                 aside ul.menu {
                     width: 100vw;
                     z-index: 1000;
                     top: 3rem;
-                }
-                header {
-                    z-index: 2500;
                 }
                 header .hd1-middle {
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     background: none;
+                    width: auto;
                 }
 
-                /* header .hd1-right .logo {
+                header .hd1-right {
+                    padding-bottom: 5px;
+                }
 
-                }*/
+                header .hd1-right .logo {
+                    height: 100%;
+                }
 
                 header .hd1-right .auth-button {
                     display: none;
