@@ -309,7 +309,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
         const check =
             this.tabulatorTable.getSelectedRows().length ===
-            this.tabulatorTable.getRows('display').length;
+            this.tabulatorTable.getRows('visible').length;
         /** @type {HTMLInputElement} */ (this._('#select_all')).checked = check;
 
         if (this.tabulatorTable.getSelectedRows().length === 0) this.rowSelected = false;
@@ -356,7 +356,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
     checkAllSelected() {
         if (this.tabulatorTable) {
-            let maxSelected = this.tabulatorTable.getRows('display').length;
+            let maxSelected = this.tabulatorTable.getRows('visible').length;
             let selected = this.tabulatorTable.getSelectedRows().length;
 
             if (selected === maxSelected) {
