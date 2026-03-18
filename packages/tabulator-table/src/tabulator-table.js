@@ -244,7 +244,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     }
 
     tableBuildFunctions() {
-        if (!this.tabulatorTable || !this.tabulatorTable.initialized) return;
+        if (!this.tabulatorTable) return;
         this.tabulatorTable.setLocale(this.lang);
         if (Array.isArray(this.data) && this.data.length > 0) {
             this.tabulatorTable.setData(this.data);
