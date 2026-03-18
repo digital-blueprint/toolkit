@@ -112,7 +112,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             //this.options['autoColumns'] = true;
             this.options['pagination'] = true;
             this.options['paginationSize'] = this.paginationSize;
-            this.options['paginationSizeSelector'] = true;
+            this.options['paginationSizeSelector'] = [5, 10, 20, 50, 100];
             this.options['footerElement'] = '';
             this.options['paginationElement'] = paginationElement;
         }
@@ -126,7 +126,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             }
             this.options['pagination'] = true;
             this.options['paginationSize'] = this.paginationSize;
-            this.options['paginationSizeSelector'] = true;
+            this.options['paginationSizeSelector'] = [5, 10, 20, 50, 100];
             this.options['paginationElement'] = paginationElement;
             this.options['langs']['en']['pagination'] = {
                 page_size: 'Page size',
