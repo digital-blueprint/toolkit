@@ -2,11 +2,28 @@ import {html, LitElement, css} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import * as commonUtils from './common-utils.js';
 import {name as pkgName} from './../package.json';
+import nameMapping from './icon_mapping.json';
 
-export function getIconSVGURL(name) {
-    return commonUtils.getAssetURL(pkgName, 'icons/' + encodeURI(name) + '.svg');
+export function getIconSVGURL(name, iconSet = 'lineicons') {
+    //console.log(iconSet);
+    if ((iconSet === '' && iconSet === undefined) || iconSet === 'lineicons') {
+        return commonUtils.getAssetURL(pkgName, 'icons/' + encodeURI(name) + '.svg');
+    }
+    let mapped = mapName(name, iconSet);
+    console.log(commonUtils.getAssetURL(pkgName, encodeURI(mapped) + '.svg'));
+
+    return commonUtils.getAssetURL(pkgName, encodeURI(mapped) + '.svg');
 }
 
+export function mapName(name, iconSet) {
+    let mappedPath = nameMapping[iconSet][name];
+    if (mappedPath !== undefined && mappedPath !== '') {
+        return mappedPath;
+    }
+    console.warn("Icon name '" + name + "' is not mapped, please add a mapping!");
+    return '';
+    //return 'icons/' + name; // fallback to lineicons should be removed in the future
+}
 /**
  * Gives CSS for showing an icon in cases where there is no way to use a web component.
  * For example: <style> a:after { ${getIconCSS('envelope')}; }</style>
@@ -40,12 +57,14 @@ export class Icon extends LitElement {
         super();
         this.name = 'bolt';
         this.ariaLabel = undefined;
+        this.iconSet = 'lineicons';
     }
 
     static get properties() {
         return {
             name: {type: String},
             ariaLabel: {type: String, attribute: 'aria-label', reflect: true},
+            iconSet: {type: String, attribute: 'icon-set'},
         };
     }
 
@@ -79,7 +98,7 @@ export class Icon extends LitElement {
     }
 
     render() {
-        const iconURL = getIconSVGURL(this.name);
+        const iconURL = getIconSVGURL(this.name, this.iconSet);
         const iconPart = this.name.trim().split(' ').join('');
 
         return html`

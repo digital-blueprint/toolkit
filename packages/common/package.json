@@ -16,6 +16,11 @@
                 "srcPackage": "@dbp-toolkit/common",
                 "src": "assets/icons",
                 "dest": "."
+            },
+            {
+                "srcPackage": "@dbp-toolkit/common",
+                "src": "assets/lineicons_5",
+                "dest": "."
             }
         ]
     },

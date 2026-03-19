@@ -355,12 +355,18 @@ export class DbpIconDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), c
                                           class="icon-item"
                                           @click="${() => navigator.clipboard.writeText(iconName)}">
                                           <lazy-load>
+                                              <b><p style="text-align: center;">new:</p></b>
                                               <div
                                                   slot="placeholder"
                                                   style="width: ${this.iconSize}px; height: ${this
-                                                      .iconSize}px;">
-                                                  awdad
-                                              </div>
+                                                      .iconSize}px;"></div>
+                                              <dbp-icon
+                                                  name="${iconName}"
+                                                  aria-label="${iconName} icon"
+                                                  style="width: ${this.iconSize}px; height: ${this
+                                                      .iconSize}px;"
+                                                  icon-set="lineicons_5"></dbp-icon>
+                                              <b><p style="text-align: center;">old:</p></b>
                                               <dbp-icon
                                                   name="${iconName}"
                                                   aria-label="${iconName} icon"
