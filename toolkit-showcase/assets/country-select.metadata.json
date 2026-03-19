@@ -1,0 +1,18 @@
+{
+    "element": "dbp-country-select-demo-activity",
+    "module_src": "dbp-country-select-demo-activity.js",
+    "routing_name": "country-select",
+    "name": {
+        "de": "Landsuche",
+        "en": "Country search"
+    },
+    "short_name": {
+        "de": "Landsuche",
+        "en": "Country search"
+    },
+    "description": {
+        "de": "Erlaubt das Suchen von Ländern",
+        "en": "Allows searching for countries"
+    },
+    "subscribe": "lang,entry-point-url"
+}

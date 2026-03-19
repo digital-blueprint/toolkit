@@ -1305,6 +1305,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.updatePageTitle();
         this.updatePageMetaDescription();
 
+        console.log('Visible routes');
+        console.log(this.routes);
+        console.log(this.metadata);
+        console.log(this.visibleRoutes);
+
         // build the menu
         let menuTemplates = [];
         for (let routingName of this.visibleRoutes) {

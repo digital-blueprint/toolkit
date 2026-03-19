@@ -1,0 +1,1 @@
+{"version":3,"file":"dbp-country-select.js","names":["commonUtils.defineCustomElement"],"sources":["../src/dbp-country-select.js"],"sourcesContent":["import * as commonUtils from '@dbp-toolkit/common/utils';\nimport {CountrySelect} from './country-select.js';\n\ncommonUtils.defineCustomElement('dbp-country-select', CountrySelect);\n"],"mappings":"0DAGAA,EAAgC,qBAAsB,EAAc"}
