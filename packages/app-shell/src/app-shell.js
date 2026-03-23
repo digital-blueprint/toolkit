@@ -145,15 +145,17 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 .href;
             promises.push([
                 activity.visible === undefined || activity.visible,
+                activity.disabled !== undefined && activity.disabled,
                 actURL,
                 fetchOne(actURL),
             ]);
         }
 
-        for (const [visible, actURL, p] of promises) {
+        for (const [visible, disabled, actURL, p] of promises) {
             try {
                 const activity = await p;
                 activity.visible = visible;
+                activity.disabled = disabled;
                 // Resolve module_src relative to the location of the json file
                 activity.module_src = new URL(activity.module_src, actURL).href;
                 activity.required_roles = activity.required_roles || [];
@@ -537,8 +539,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             this._activityEnabledOverrides.delete(this.activeView);
             const activity = this.visibleRoutes.find((r) => r.name === this.activeView);
             if (activity) {
-                const metaVisible = this.metadata[this.activeView]?.['visible'];
-                activity.disabled = metaVisible === 'disabled';
+                const metaDisabled = this.metadata[this.activeView]?.['disabled'];
+                activity.disabled = metaDisabled === true;
             }
         }
 
@@ -1310,6 +1312,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             const data = this.metadata[routingName];
             const requiredRoles = data['required_roles'];
             let visible = data['visible'];
+            let disabled = data['disabled'];
 
             // Hide them until the user is logged in and we know the roles of the user
             for (let role of requiredRoles) {
@@ -1320,11 +1323,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             }
 
             if (visible === true) {
-                visibleRoutes.push({name: routingName});
-            } else if (visible === 'disabled') {
-                visibleRoutes.push({name: routingName, disabled: true});
+                visibleRoutes.push({
+                    name: routingName,
+                    disabled: disabled === true,
+                });
             }
-            // visible === false: item is hidden, not added to menu
         }
 
         this.visibleRoutes = visibleRoutes;
