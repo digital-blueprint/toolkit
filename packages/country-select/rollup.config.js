@@ -1,5 +1,5 @@
 import process from 'node:process';
-import {globSync} from 'node:fs';
+import {globSync} from 'glob';
 import serve from 'rollup-plugin-serve';
 import {createRequire} from 'node:module';
 import {assetPlugin} from '@dbp-toolkit/dev-utils';

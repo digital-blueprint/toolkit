@@ -1,5 +1,5 @@
 {
-    "person-select": {
+    "country-select": {
         "login-required": "Anmeldung erforderlich",
         "placeholder": "Bitte wählen Sie eine Person aus"
     }

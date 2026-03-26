@@ -1,17 +1,17 @@
 import $ from 'jquery';
-import {findObjectInApiResults} from './utils.js';
 import select2 from 'select2';
 import select2LangDe from './i18n/de/select2';
 import select2LangEn from './i18n/en/select2';
 import {css, html} from 'lit';
 import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {createInstance} from './i18n.js';
-import {Icon, combineURLs} from '@dbp-toolkit/common';
+import {Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from '@dbp-toolkit/common/error';
 import {AdapterLitElement} from '@dbp-toolkit/common';
+import * as dispatchHelper from './utils.js';
 
 export class CountrySelect extends LangMixin(
     ScopedElementsMixin(AdapterLitElement),
@@ -24,8 +24,9 @@ export class CountrySelect extends LangMixin(
         this.entryPointUrl = null;
         this.$select = null;
         this.active = false;
+        this.data = [];
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
-        this.selectId = 'person-select-' + commonUtils.makeId(24);
+        this.selectId = 'country-select-' + commonUtils.makeId(24);
         this.value = '';
         this.object = null;
         this.ignoreValueUpdate = false;
@@ -55,6 +56,7 @@ export class CountrySelect extends LangMixin(
         return {
             ...super.properties,
             active: {type: Boolean, attribute: false},
+            data: {type: Array, attribute: 'data'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             value: {type: String},
             object: {type: Object, attribute: false},
@@ -94,7 +96,11 @@ export class CountrySelect extends LangMixin(
         this.updateComplete.then(() => {
             this.$select = this.$('#' + this.selectId);
             if (!this.select2IsInitialized()) {
-                this.initSelect2();
+                this.initSelect2(
+                    this.lang === 'en'
+                        ? dispatchHelper.getEnglishCountryList()
+                        : dispatchHelper.getGermanCountryList(),
+                );
             }
         });
 
@@ -129,24 +135,20 @@ export class CountrySelect extends LangMixin(
     /**
      * Initializes the Select2 selector
      *
+     * @param countries
      * @param ignorePreset
      */
-    initSelect2(ignorePreset = false) {
+    initSelect2(countries = [], ignorePreset = false) {
         const i18n = this._i18n;
         const that = this;
         const $this = $(this);
 
-        if (this.$select === null || this.entryPointUrl === null) {
-            return false;
-        }
+        if (!this.$select) return false;
 
-        const apiUrl = combineURLs(this.entryPointUrl, '/base/people');
-
-        // we need to destroy Select2 and remove the event listeners before we can initialize it again
-        if (this.$select && this.$select.hasClass('select2-hidden-accessible')) {
+        // Destroy previous Select2 if exists
+        if (this.$select.hasClass('select2-hidden-accessible')) {
             this.$select.select2('destroy');
-            this.$select.off('select2:select');
-            this.$select.off('select2:closing');
+            this.$select.off('select2:select select2:clear select2:closing');
         }
 
         this.$select
@@ -156,138 +158,59 @@ export class CountrySelect extends LangMixin(
                 minimumInputLength: 2,
                 allowClear: true,
                 placeholder: this.authenticated()
-                    ? i18n.t('person-select.placeholder')
-                    : i18n.t('person-select.login-required'),
-                dropdownParent: this.$('#person-select-dropdown'),
-                ajax: {
-                    delay: 500,
-                    url: apiUrl,
-                    contentType: 'application/ld+json',
-                    beforeSend: function (jqXHR) {
-                        jqXHR.setRequestHeader('Authorization', 'Bearer ' + that.auth.token);
-                        that.isSearching = true;
-                    },
-                    data: (params) => {
-                        return this.getCollectionQueryParameters(this, params.term);
-                    },
-                    processResults: function (data) {
-                        that.$('#person-select-dropdown').addClass('select2-bug');
-
-                        that.lastResult = data;
-                        let members = data['hydra:member'];
-                        const results = [];
-                        members.forEach((person) => {
-                            results.push({
-                                id: person['@id'],
-                                text: that.formatPerson(that, person),
-                            });
-                        });
-
-                        return {
-                            results: results,
-                        };
-                    },
-                    error: (jqXHR, textStatus, errorThrown) => {
-                        this.handleXhrError(jqXHR, textStatus, errorThrown);
-                    },
-                    complete: (jqXHR, textStatus) => {
-                        that.isSearching = false;
-                    },
-                },
+                    ? i18n.t('country-select.placeholder')
+                    : i18n.t('country-select.login-required'),
+                dropdownParent: this.$('#country-select-dropdown'),
+                data: Object.entries(countries).map(([code, name]) => ({
+                    id: code,
+                    text: name,
+                })),
             })
-            .on('select2:clear', function (e) {
+            .on('select2:clear', function () {
                 that.clear();
             })
             .on('select2:select', function (e) {
-                that.$('#person-select-dropdown').removeClass('select2-bug');
+                const selectedData = e.params.data;
+                $this.attr('data-object', JSON.stringify(selectedData));
+                $this.data('object', selectedData);
 
-                // set custom element attributes
-                const identifier = e.params.data.id;
-                that.object = findObjectInApiResults(identifier, that.lastResult);
-
-                $this.attr('data-object', JSON.stringify(that.object));
-                $this.data('object', that.object);
-
-                if ($this.attr('value') !== identifier) {
+                if ($this.attr('value') !== selectedData.code) {
                     that.ignoreValueUpdate = true;
-                    $this.attr('value', identifier);
+                    $this.attr('value', selectedData.code);
 
-                    // fire a change event
                     that.dispatchEvent(
                         new CustomEvent('change', {
-                            detail: {
-                                value: identifier,
-                            },
+                            detail: {value: selectedData.code},
                             bubbles: true,
                         }),
                     );
-                }
-            })
-            .on('select2:closing', (e) => {
-                if (that.isSearching) {
-                    e.preventDefault();
                 }
             });
 
-        // TODO: doesn't work here
-        // this.$('.select2-selection__arrow').click(() => {
-        //     console.log("click");
-        // });
+        // Preset a country if value is set
+        if (!ignorePreset && this.value) {
+            const preset = countries.find(
+                (c) => (typeof c === 'string' ? c : c.code) === this.value,
+            );
 
-        // preset a person
-        if (!ignorePreset && this.value !== '' && this.authenticated()) {
-            let itemUrl = combineURLs(this.entryPointUrl, this.value);
-            let params = new URLSearchParams(this.getItemQueryParameters(this)).toString();
-            if (params) {
-                itemUrl += `?${params}`;
+            if (preset) {
+                const option = new Option(
+                    typeof preset === 'string' ? preset : preset.name,
+                    this.value,
+                    true,
+                    true,
+                );
+                $this.append(option).trigger('change');
+                $this.attr('data-object', JSON.stringify(preset));
+                $this.data('object', preset);
             }
-
-            fetch(itemUrl, {
-                headers: {
-                    'Content-Type': 'application/ld+json',
-                    Authorization: 'Bearer ' + this.auth.token,
-                },
-            })
-                .then((result) => {
-                    if (!result.ok) throw result;
-                    return result.json();
-                })
-                .then((person) => {
-                    that.object = person;
-                    const identifier = person['@id'];
-
-                    const option = new Option(
-                        that.formatPerson(this, person),
-                        identifier,
-                        true,
-                        true,
-                    );
-                    $this.attr('data-object', JSON.stringify(person));
-                    $this.data('object', person);
-                    that.$select.append(option).trigger('change');
-
-                    // fire a change event
-                    that.dispatchEvent(
-                        new CustomEvent('change', {
-                            detail: {
-                                value: identifier,
-                            },
-                            bubbles: true,
-                        }),
-                    );
-                })
-                .catch((e) => {
-                    console.log(e);
-                    that.clear();
-                });
         }
 
         return true;
     }
-
     /**
-     * Returns a key-value mapping of query parameters to use for the person get item request.
-     * Gets called if a person is pre-set.
+     * Returns a key-value mapping of query parameters to use for the country get item request.
+     * Gets called if a country is pre-set.
      *
      * @param {object} select
      * @returns {object} The query parameters.
@@ -301,7 +224,7 @@ export class CountrySelect extends LangMixin(
 
     /**
      * Gets passed the search term and returns a key-value mapping of query parameters to use for the
-     * person get collection request.
+     * country get collection request.
      *
      * @param {object} select
      * @param {string} searchTerm
@@ -316,7 +239,7 @@ export class CountrySelect extends LangMixin(
 
     /**
      * Gets passed the search term and returns a key-value mapping of filter parameters (e.g., search, filter, sort)
-     * to use for the person get collection request. Feel free to override.
+     * to use for the country get collection request. Feel free to override.
      *
      * @param {object} select
      * @param {string} searchTerm
@@ -328,7 +251,7 @@ export class CountrySelect extends LangMixin(
 
     /**
      * Gets passed the search term and returns the default key-value mapping of filter parameters
-     * (e.g., search, filter, sort) to use for the person get collection request.
+     * (e.g., search, filter, sort) to use for the country get collection request.
      *
      * @param {object} select
      * @param {string} searchTerm
@@ -348,19 +271,31 @@ export class CountrySelect extends LangMixin(
     }
 
     /**
-     * Gets passed a person object and should return a string representation that will
+     * Gets passed a country object and should return a string representation that will
      * be shown to the user. Feel free to override.
      *
      * @param {object} select
-     * @param {object} person
+     * @param country
      * @returns {string}
      */
-    formatPerson(select, person) {
-        let text = person['givenName'] ?? '';
-        if (person['familyName']) {
-            text += ` ${person['familyName']}`;
+    formatPerson(select, country) {
+        return country['name'] ?? '';
+    }
+
+    /**
+     * Gets passed a country object and returns the default string representation of the selected country.
+     * Feel free to override.
+     *
+     * @param {object} select
+     * @param {object} country
+     * @returns {string}
+     */
+    static formatPersonDefault(select, country) {
+        let text = country['givenName'] ?? '';
+        if (country['familyName']) {
+            text += ` ${country['familyName']}`;
         }
-        const localDataText = this.formatLocalData(select, person);
+        const localDataText = CountrySelect.formatLocalDataDefault(select, country);
         if (localDataText) {
             text += ` ${localDataText}`;
         }
@@ -369,43 +304,22 @@ export class CountrySelect extends LangMixin(
     }
 
     /**
-     * Gets passed a person object and returns the default string representation of the selected person.
+     * Should return a string representation of the selected country's local data attributes.
      * Feel free to override.
      *
      * @param {object} select
-     * @param {object} person
+     * @param {object} country
      * @returns {string}
      */
-    static formatPersonDefault(select, person) {
-        let text = person['givenName'] ?? '';
-        if (person['familyName']) {
-            text += ` ${person['familyName']}`;
-        }
-        const localDataText = CountrySelect.formatLocalDataDefault(select, person);
-        if (localDataText) {
-            text += ` ${localDataText}`;
-        }
-
-        return text;
+    formatLocalData(select, country) {
+        return CountrySelect.formatLocalDataDefault(select, country);
     }
 
     /**
-     * Should return a string representation of the selected person's local data attributes.
-     * Feel free to override.
-     *
-     * @param {object} select
-     * @param {object} person
-     * @returns {string}
+     * Returns the default string representation of the selected country's local data attributes.
      */
-    formatLocalData(select, person) {
-        return CountrySelect.formatLocalDataDefault(select, person);
-    }
-
-    /**
-     * Returns the default string representation of the selected person's local data attributes.
-     */
-    static formatLocalDataDefault(select, person) {
-        const attributes = person.localData ?? {};
+    static formatLocalDataDefault(select, country) {
+        const attributes = country.localData ?? {};
         if (Object.values(attributes).length === 0) {
             return '';
         }
@@ -421,24 +335,42 @@ export class CountrySelect extends LangMixin(
                 case 'lang':
                     if (this.select2IsInitialized()) {
                         // no other way to set an other language at runtime did work
-                        this.initSelect2(true);
+                        this.initSelect2(
+                            this.lang === 'en'
+                                ? dispatchHelper.getEnglishCountryList()
+                                : dispatchHelper.getGermanCountryList(),
+                            true,
+                        );
                     }
                     break;
                 case 'value':
                     if (!this.ignoreValueUpdate && this.select2IsInitialized()) {
-                        this.initSelect2();
+                        this.initSelect2(
+                            this.lang === 'en'
+                                ? dispatchHelper.getEnglishCountryList()
+                                : dispatchHelper.getGermanCountryList(),
+                        );
                     }
 
                     this.ignoreValueUpdate = false;
                     break;
                 case 'entryPointUrl':
                     // we don't need to preset the selector if the entry point url changes
-                    this.initSelect2(true);
+                    this.initSelect2(
+                        this.lang === 'en'
+                            ? dispatchHelper.getEnglishCountryList()
+                            : dispatchHelper.getGermanCountryList(),
+                        true,
+                    );
                     break;
                 case 'auth':
                     this.active = this.authenticated();
                     if (this.active && (!oldValue || !oldValue.token)) {
-                        this.initSelect2();
+                        this.initSelect2(
+                            this.lang === 'en'
+                                ? dispatchHelper.getEnglishCountryList()
+                                : dispatchHelper.getGermanCountryList(),
+                        );
                     }
                     break;
             }
@@ -477,7 +409,7 @@ export class CountrySelect extends LangMixin(
             commonStyles.getFormAddonsCSS(),
             commonStyles.getSelect2CSS(),
             css`
-                #person-select-dropdown {
+                #country-select-dropdown {
                     position: relative;
                 }
 
@@ -527,13 +459,13 @@ export class CountrySelect extends LangMixin(
                         <!-- https://select2.org-->
                         <select
                             id="${this.selectId}"
-                            name="person"
+                            name="country"
                             class="select"
                             ?disabled=${!this.active || this.disabled}>
                             ${!this.authenticated()
                                 ? html`
                                       <option value="" disabled selected>
-                                          ${i18n.t('person-select.login-required')}
+                                          ${i18n.t('country-select.login-required')}
                                       </option>
                                   `
                                 : ''}
@@ -549,7 +481,7 @@ export class CountrySelect extends LangMixin(
                         <dbp-icon name="reload"></dbp-icon>
                     </a>
                 </div>
-                <div id="person-select-dropdown"></div>
+                <div id="country-select-dropdown"></div>
             </div>
         `;
     }

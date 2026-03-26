@@ -88,7 +88,7 @@ export class CountrySelectDemo extends LangMixin(
                                     entry-point-url="${this.entryPointUrl}"></dbp-country-select>
                             </div>
                         </div>
-                        <div class="field">
+                        <!-- <div class="field">
                             <label class="label">Country 2</label>
                             <div class="control">
                                 <dbp-country-select
@@ -125,7 +125,7 @@ export class CountrySelectDemo extends LangMixin(
                                     reload-button-title="Click me"></dbp-country-select>
                             </div>
                             <p>This component is disabled.</p>
-                        </div>
+                        </div>-->
                     </form>
                 </div>
             </section>
