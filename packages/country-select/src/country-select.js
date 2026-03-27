@@ -150,6 +150,17 @@ export class CountrySelect extends LangMixin(
             ? countries
             : Object.entries(countries).map(([code, name]) => ({code, name}));
 
+        const uniqueCountries = [];
+        const seen = new Set();
+
+        for (const c of normalizedCountries) {
+            const key = c.name.toLowerCase(); // or `${c.code}-${c.name}` if needed
+            if (!seen.has(key)) {
+                seen.add(key);
+                uniqueCountries.push(c);
+            }
+        }
+
         const selectedCode = this.value || default_code;
 
         if (!this.$select) return false;
@@ -159,6 +170,8 @@ export class CountrySelect extends LangMixin(
             this.$select.select2('destroy');
             this.$select.off('select2:select select2:clear select2:closing');
         }
+
+        //this.$select.empty();
 
         this.$select
             .select2({
@@ -170,10 +183,36 @@ export class CountrySelect extends LangMixin(
                     ? i18n.t('country-select.placeholder')
                     : i18n.t('country-select.login-required'),
                 dropdownParent: this.$('#country-select-dropdown'),
-                data: normalizedCountries.map((country) => ({
+                data: uniqueCountries.map((country) => ({
                     id: country.code,
                     text: country.name,
                 })),
+                matcher: function (params, data) {
+                    if ($.trim(params.term) === '') {
+                        return data;
+                    }
+
+                    const term = params.term.toLowerCase().trim();
+
+                    // Split input: "austria at" → ["austria", "at"]
+                    const parts = term.split(/\s+/);
+
+                    const name = data.text.toLowerCase();
+                    const code = data.id.toLowerCase();
+                    console.log(uniqueCountries.filter((c) => c.name === 'Österreich'));
+                    if (parts.length === 1) {
+                        if (name.includes(parts[0]) || code.includes(parts[0])) {
+                            return data;
+                        }
+                        return null;
+                    }
+                    // Case 2: multiple parts → ALL parts must match somewhere
+                    const search = parts.every(
+                        (part) => name.includes(part) || code.includes(part),
+                    );
+
+                    return search ? data : null;
+                },
             })
             .on('select2:clear', function () {
                 that.clear();
@@ -201,17 +240,10 @@ export class CountrySelect extends LangMixin(
 
         setTimeout(() => {
             if (selectedCode) {
-                const selectedCountry = normalizedCountries.find((c) => c.code === selectedCode);
+                const selectedCountry = uniqueCountries.find((c) => c.code === selectedCode);
 
                 if (selectedCountry) {
-                    const option = new Option(
-                        selectedCountry.name,
-                        selectedCountry.code,
-                        true,
-                        true,
-                    );
-
-                    this.$select.append(option).trigger('change');
+                    this.$select.val(selectedCode).trigger('change');
                 }
             }
         }, 0);
@@ -232,85 +264,10 @@ export class CountrySelect extends LangMixin(
         return queryParameters;
     }
 
-    /**
-     * Gets passed the search term and returns a key-value mapping of query parameters to use for the
-     * country get collection request.
-     *
-     * @param {object} select
-     * @param {string} searchTerm
-     * @returns {object} The query parameters.
-     */
-    getCollectionQueryParameters(select, searchTerm) {
-        let queryParameters = this.getFilterQueryParameters(select, searchTerm);
-        this.addIncludeLocalQueryParameter(select, queryParameters);
-
-        return queryParameters;
-    }
-
-    /**
-     * Gets passed the search term and returns a key-value mapping of filter parameters (e.g., search, filter, sort)
-     * to use for the country get collection request. Feel free to override.
-     *
-     * @param {object} select
-     * @param {string} searchTerm
-     * @returns {object} The query parameters.
-     */
-    getFilterQueryParameters(select, searchTerm) {
-        return CountrySelect.getFilterQueryParametersDefault(select, searchTerm);
-    }
-
-    /**
-     * Gets passed the search term and returns the default key-value mapping of filter parameters
-     * (e.g., search, filter, sort) to use for the country get collection request.
-     *
-     * @param {object} select
-     * @param {string} searchTerm
-     * @returns {object} The query parameters.
-     */
-    static getFilterQueryParametersDefault(select, searchTerm) {
-        return {
-            search: searchTerm.trim(),
-            sort: 'familyName',
-        };
-    }
-
     addIncludeLocalQueryParameter(select, queryParameters) {
         if (this.localDataAttributes.length > 0) {
             queryParameters['includeLocal'] = this.localDataAttributes.join(',');
         }
-    }
-
-    /**
-     * Gets passed a country object and should return a string representation that will
-     * be shown to the user. Feel free to override.
-     *
-     * @param {object} select
-     * @param country
-     * @returns {string}
-     */
-    formatPerson(select, country) {
-        return country['name'] ?? '';
-    }
-
-    /**
-     * Gets passed a country object and returns the default string representation of the selected country.
-     * Feel free to override.
-     *
-     * @param {object} select
-     * @param {object} country
-     * @returns {string}
-     */
-    static formatPersonDefault(select, country) {
-        let text = country['givenName'] ?? '';
-        if (country['familyName']) {
-            text += ` ${country['familyName']}`;
-        }
-        const localDataText = CountrySelect.formatLocalDataDefault(select, country);
-        if (localDataText) {
-            text += ` ${localDataText}`;
-        }
-
-        return text;
     }
 
     /**
@@ -344,7 +301,7 @@ export class CountrySelect extends LangMixin(
             switch (propName) {
                 case 'lang':
                     if (this.select2IsInitialized()) {
-                        // no other way to set an other language at runtime did work
+                        // no other way to set another language at runtime did work
                         this.initSelect2(
                             this.lang === 'en'
                                 ? dispatchHelper.getEnglishCountryList()
