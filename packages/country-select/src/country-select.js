@@ -100,6 +100,8 @@ export class CountrySelect extends LangMixin(
                     this.lang === 'en'
                         ? dispatchHelper.getEnglishCountryList()
                         : dispatchHelper.getGermanCountryList(),
+                    this.value || 'AT',
+                    false,
                 );
             }
         });
@@ -171,7 +173,6 @@ export class CountrySelect extends LangMixin(
                 data: normalizedCountries.map((country) => ({
                     id: country.code,
                     text: country.name,
-                    selected: country.code === selectedCode,
                 })),
             })
             .on('select2:clear', function () {
@@ -195,17 +196,25 @@ export class CountrySelect extends LangMixin(
                 }
             });
 
-        // Preset a country if value is set
-        if (!ignorePreset && selectedCode) {
-            const preset = normalizedCountries.find((c) => c.code === selectedCode);
+        // Apply value AFTER Select2 is fully initialized
+        // Apply selected value AFTER Select2 is fully initialized
 
-            if (preset) {
-                const option = new Option(preset.name, preset.code, true, true);
-                $this.append(option).trigger('change');
-                $this.attr('data-object', JSON.stringify(preset));
-                $this.data('object', preset);
+        setTimeout(() => {
+            if (selectedCode) {
+                const selectedCountry = normalizedCountries.find((c) => c.code === selectedCode);
+
+                if (selectedCountry) {
+                    const option = new Option(
+                        selectedCountry.name,
+                        selectedCountry.code,
+                        true,
+                        true,
+                    );
+
+                    this.$select.append(option).trigger('change');
+                }
             }
-        }
+        }, 0);
 
         return true;
     }
@@ -340,7 +349,8 @@ export class CountrySelect extends LangMixin(
                             this.lang === 'en'
                                 ? dispatchHelper.getEnglishCountryList()
                                 : dispatchHelper.getGermanCountryList(),
-                            true,
+                            this.value || 'AT',
+                            false,
                         );
                     }
                     break;
@@ -350,6 +360,8 @@ export class CountrySelect extends LangMixin(
                             this.lang === 'en'
                                 ? dispatchHelper.getEnglishCountryList()
                                 : dispatchHelper.getGermanCountryList(),
+                            this.value || 'AT',
+                            false,
                         );
                     }
 
@@ -361,7 +373,8 @@ export class CountrySelect extends LangMixin(
                         this.lang === 'en'
                             ? dispatchHelper.getEnglishCountryList()
                             : dispatchHelper.getGermanCountryList(),
-                        true,
+                        this.value || 'AT',
+                        false,
                     );
                     break;
                 case 'auth':
@@ -371,6 +384,8 @@ export class CountrySelect extends LangMixin(
                             this.lang === 'en'
                                 ? dispatchHelper.getEnglishCountryList()
                                 : dispatchHelper.getGermanCountryList(),
+                            this.value || 'AT',
+                            false,
                         );
                     }
                     break;
