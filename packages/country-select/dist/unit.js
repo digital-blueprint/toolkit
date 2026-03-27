@@ -21279,12 +21279,20 @@ var CountrySelect = class CountrySelect extends LangMixin(
      * Initializes the Select2 selector
      *
      * @param countries
+     * @param default_code
      * @param ignorePreset
      */
-    initSelect2(countries = [], ignorePreset = false) {
+    initSelect2(countries = [], default_code = 'AT', ignorePreset = false) {
         const i18n = this._i18n;
         const that = this;
         const $this = (0, import_jquery.default)(this);
+        const normalizedCountries = Array.isArray(countries)
+            ? countries
+            : Object.entries(countries).map(([code, name]) => ({
+                  code,
+                  name,
+              }));
+        const selectedCode = this.value || default_code;
         if (!this.$select) return false;
         if (this.$select.hasClass('select2-hidden-accessible')) {
             this.$select.select2('destroy');
@@ -21300,9 +21308,10 @@ var CountrySelect = class CountrySelect extends LangMixin(
                     ? i18n.t('country-select.placeholder')
                     : i18n.t('country-select.login-required'),
                 dropdownParent: this.$('#country-select-dropdown'),
-                data: Object.entries(countries).map(([code, name]) => ({
-                    id: code,
-                    text: name,
+                data: normalizedCountries.map((country) => ({
+                    id: country.code,
+                    text: country.name,
+                    selected: country.code === selectedCode,
                 })),
             })
             .on('select2:clear', function () {
@@ -21312,28 +21321,21 @@ var CountrySelect = class CountrySelect extends LangMixin(
                 const selectedData = e.params.data;
                 $this.attr('data-object', JSON.stringify(selectedData));
                 $this.data('object', selectedData);
-                if ($this.attr('value') !== selectedData.code) {
+                if ($this.attr('value') !== selectedData.id) {
                     that.ignoreValueUpdate = true;
-                    $this.attr('value', selectedData.code);
+                    $this.attr('value', selectedData.id);
                     that.dispatchEvent(
                         new CustomEvent('change', {
-                            detail: {value: selectedData.code},
+                            detail: {value: selectedData.id},
                             bubbles: true,
                         }),
                     );
                 }
             });
-        if (!ignorePreset && this.value) {
-            const preset = countries.find(
-                (c) => (typeof c === 'string' ? c : c.code) === this.value,
-            );
+        if (!ignorePreset && selectedCode) {
+            const preset = normalizedCountries.find((c) => c.code === selectedCode);
             if (preset) {
-                const option = new Option(
-                    typeof preset === 'string' ? preset : preset.name,
-                    this.value,
-                    true,
-                    true,
-                );
+                const option = new Option(preset.name, preset.code, true, true);
                 $this.append(option).trigger('change');
                 $this.attr('data-object', JSON.stringify(preset));
                 $this.data('object', preset);
