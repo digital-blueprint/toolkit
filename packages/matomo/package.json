@@ -28,7 +28,7 @@
         "prettier": "^3.0.0",
         "rolldown": "^1.0.0-rc.5",
         "rollup-plugin-serve": "^3.0.0",
-        "typescript": "^5.2.2"
+        "typescript": "^6.0.0"
     },
     "dependencies": {
         "@dbp-toolkit/auth": "^0.3.8",
