@@ -1,5 +1,10 @@
 {
-    "extends": ["config:base", "group:allNonMajor", "schedule:weekends", ":automergePatch"],
+    "extends": [
+        "config:recommended",
+        "group:allNonMajor",
+        "schedule:weekends",
+        ":automergePatch"
+    ],
     "ignorePresets": [":prHourlyLimit2"],
     "rangeStrategy": "update-lockfile",
     "postUpdateOptions": ["npmDedupe"],
