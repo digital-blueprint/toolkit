@@ -13,11 +13,9 @@
     "composer": {
         "enabled": false
     },
+    "internalChecksFilter": "strict",
+    "minimumReleaseAge": "5 days",
     "packageRules": [
-        {
-            "internalChecksFilter": "strict",
-            "minimumReleaseAge": "5 days"
-        },
         {
             "matchUpdateTypes": ["lockFileMaintenance"],
             "minimumReleaseAge": null
