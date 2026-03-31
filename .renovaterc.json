@@ -15,6 +15,14 @@
     },
     "packageRules": [
         {
+            "internalChecksFilter": "strict",
+            "minimumReleaseAge": "5 days"
+        },
+        {
+            "matchUpdateTypes": ["lockFileMaintenance"],
+            "minimumReleaseAge": null
+        },
+        {
             "matchPackageNames": ["pdfjs-dist"],
             "allowedVersions": "<=5.4.530"
         },

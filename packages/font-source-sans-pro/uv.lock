@@ -2,6 +2,10 @@ version = 1
 revision = 3
 requires-python = ">=3.11"
 
+[options]
+exclude-newer = "2026-03-26T12:26:56.903352017Z"
+exclude-newer-span = "P5D"
+
 [[package]]
 name = "brotli"
 version = "1.2.0"
