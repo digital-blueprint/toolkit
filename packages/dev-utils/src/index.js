@@ -115,7 +115,7 @@ function getPackageJsonPath(packageName, parentPath) {
         // Other packages from nodes_modules etc.
         try {
             // For packages that export a package.json
-            // (also non-js like @dbp-toolkit/font-source-sans-pro)
+            // (also non-js like @tugraz/font-source-sans-pro)
             return require.resolve(packageName + '/package.json', {paths: [parentPath]});
         } catch {
             // If there is no package.json export we try the default export
