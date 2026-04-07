@@ -533,8 +533,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
         const rows = hasSelection ? selected_rows : active_rows;
         const data = hasSelection
-            ? selected_rows.map((row) => row.getData())
-            : this.tabulatorTable.getData();
+            ? selected_rows.map((row) => ({...row.getData(), rowIndex: row.getPosition(true)}))
+            : this.tabulatorTable.getData().map((row, index) => ({...row, rowIndex: index}));
         const downloadMode = hasSelection ? 'selected' : 'all';
 
         let hasError = false;
