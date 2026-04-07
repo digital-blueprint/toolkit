@@ -4,9 +4,12 @@ export async function generatePDFDownload(tabulatorTable, data, dataName) {
     let header = [];
     for (let column of columns) {
         let definition = column.getDefinition();
-        if (!column.isVisible()) {
+
+        // Skip row selection columns and hidden columns
+        if (definition.formatter === 'rowSelection' || !column.isVisible()) {
             continue;
         }
+
         let field = column.getField();
         if (field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
             header.push(column.getField());
@@ -16,7 +19,7 @@ export async function generatePDFDownload(tabulatorTable, data, dataName) {
     for (let entry of data) {
         let entry_array = [];
         header.forEach((column) => {
-            let cellValue = entry[column] ? entry[column] : '-';
+            let cellValue = entry[column] != null ? entry[column] : '-';
             if (Array.isArray(cellValue)) {
                 cellValue = cellValue.join(', ');
             }
