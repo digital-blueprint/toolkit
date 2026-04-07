@@ -1,7 +1,11 @@
 export async function generatePDFDownload(tabulatorTable, data, dataName) {
     // Get only displayed columns. [respect Column setting modal state]
+    // getLang() with no argument returns the fully-merged current-locale lang object,
+    // which is the same data Tabulator uses to render column headers.
+    const langObj = tabulatorTable.getLang();
     let columns = tabulatorTable.getColumns();
-    let header = [];
+    let fields = [];
+    let displayHeaders = [];
     for (let column of columns) {
         let definition = column.getDefinition();
 
@@ -11,15 +15,19 @@ export async function generatePDFDownload(tabulatorTable, data, dataName) {
         }
 
         let field = column.getField();
-        if (field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html')
-            header.push(column.getField());
+        if (field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
+            fields.push(field);
+            // Mirror Tabulator's own title resolution: langs.columns[field] → definition.title → field
+            const displayTitle = langObj?.columns?.[field] || definition.title || field;
+            displayHeaders.push(displayTitle);
+        }
     }
 
     let body = [];
     for (let entry of data) {
         let entry_array = [];
-        header.forEach((column) => {
-            let cellValue = entry[column] != null ? entry[column] : '-';
+        fields.forEach((field) => {
+            let cellValue = entry[field] != null ? entry[field] : '-';
             if (Array.isArray(cellValue)) {
                 cellValue = cellValue.join(', ');
             }
@@ -32,7 +40,7 @@ export async function generatePDFDownload(tabulatorTable, data, dataName) {
     let autoTable = (await import('jspdf-autotable')).default;
     const doc = new jsPDF('l', 'pt');
     autoTable(doc, {
-        head: [header],
+        head: [displayHeaders],
         body: body,
         horizontalPageBreak: false,
         tableWidth: 'auto',
