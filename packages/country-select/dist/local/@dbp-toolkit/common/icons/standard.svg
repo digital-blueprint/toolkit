@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="4.4979167mm"
+   height="4.4979167mm"
+   viewBox="0 0 4.4979168 4.4979168"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <linearGradient
+       id="swatch1">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+    </linearGradient>
+  </defs>
+  <g
+     id="layer1"
+     transform="matrix(0.09019415,0,0,0.08602554,-7.3564472,-5.9981934)"
+     style="stroke:none">
+    <rect
+       style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-width:0.982463;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.5"
+       id="rect4"
+       width="49.204563"
+       height="10.220957"
+       x="81.681221"
+       y="69.725739" />
+    <rect
+       style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-width:0.822115;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.5"
+       id="rect5"
+       width="12.737708"
+       height="29.31761"
+       x="81.699257"
+       y="92.305649" />
+    <rect
+       style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-width:0.897244;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.5"
+       id="rect6"
+       width="26.913013"
+       height="29.225723"
+       x="103.97648"
+       y="92.440681" />
+    <rect
+       style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1.63212;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1"
+       width="49.86927"
+       height="52.18927"
+       x="81.562347"
+       y="69.822296" />
+  </g>
+</svg>
