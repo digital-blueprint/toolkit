@@ -1849,6 +1849,10 @@ export function getDropDownCss() {
             transition: transform 250ms ease-in;
             margin-left: 0.5em;
         }
+
+        :host(.select-version) .item-button[aria-checked='true'] {
+            background-color: var(--dbp-override-muted, #767676);
+        }
     `;
 }
 

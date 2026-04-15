@@ -68,6 +68,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         this._attrObserver = new MutationObserver(this.onAttributeObserved);
         this._onShowActivityEvent = this._onShowActivityEvent.bind(this);
+        this._boundHandleActivityEnabled = this._handleActivityEnabled.bind(this);
+        this._activityEnabledOverrides = new Map();
 
         this.boundCloseMenuHandler = this.hideMenu.bind(this);
         this.initateOpenMenu = false;
@@ -143,15 +145,17 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 .href;
             promises.push([
                 activity.visible === undefined || activity.visible,
+                activity.disabled !== undefined && activity.disabled,
                 actURL,
                 fetchOne(actURL),
             ]);
         }
 
-        for (const [visible, actURL, p] of promises) {
+        for (const [visible, disabled, actURL, p] of promises) {
             try {
                 const activity = await p;
                 activity.visible = visible;
+                activity.disabled = disabled;
                 // Resolve module_src relative to the location of the json file
                 activity.module_src = new URL(activity.module_src, actURL).href;
                 activity.required_roles = activity.required_roles || [];
@@ -331,6 +335,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         this._boundResizeHandler = () => this.updateMenuIcon();
         window.addEventListener('resize', this._boundResizeHandler);
+        this.addEventListener('dbp-app-shell-activity-enabled', this._boundHandleActivityEnabled);
     }
 
     disconnectedCallback() {
@@ -338,6 +343,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (this._boundResizeHandler) {
             window.removeEventListener('resize', this._boundResizeHandler);
         }
+        this.removeEventListener(
+            'dbp-app-shell-activity-enabled',
+            this._boundHandleActivityEnabled,
+        );
     }
 
     /**
@@ -456,6 +465,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     onMenuItemClick(e) {
         e.preventDefault();
 
+        // Prevent navigation from keyboard if the menu item is disabled. [pointer-events: none; prevent users to click the link]
+        if (
+            e.currentTarget.hasAttribute('aria-disabled') &&
+            e.currentTarget.getAttribute('aria-disabled') === 'true'
+        ) {
+            return;
+        }
+
         // if not the current page was clicked we need to check if the page can be left
         if (!e.currentTarget.className.includes('selected')) {
             // simulate a "beforeunload" event
@@ -515,6 +532,18 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     switchComponent(componentTag) {
         const changed = componentTag !== this.activeView;
+
+        // When switching away from an activity, clear its dynamic override
+        // so the metadata default (e.g. 'disabled') is restored
+        if (changed && this.activeView) {
+            this._activityEnabledOverrides.delete(this.activeView);
+            const activity = this.visibleRoutes.find((r) => r.name === this.activeView);
+            if (activity) {
+                const metaDisabled = this.metadata[this.activeView]?.['disabled'];
+                activity.disabled = metaDisabled === true;
+            }
+        }
+
         this.activeView = componentTag;
         if (changed) this.router.update();
         const metadata = this.metadata[componentTag];
@@ -870,6 +899,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 overflow-y: auto;
             }
 
+            /* to make the focus indicator visible*/
+            aside ul.menu {
+                padding: 3px;
+            }
+
             footer {
                 display: flex;
                 justify-content: flex-end;
@@ -924,6 +958,13 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 font-weight: bolder;
                 padding-left: 0.5em;
                 padding-right: 0.3em;
+            }
+
+            .menu a.menu-disabled {
+                pointer-events: none;
+                opacity: 0.5;
+                border-left: 0 none;
+                padding-left: 0.3em;
             }
 
             aside h2.subtitle {
@@ -1229,6 +1270,25 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.sendSetPropertyEvent('analytics-event', {category: action, action: message}, true);
     }
 
+    /**
+     * Handles the 'dbp-app-shell-activity-enabled' event to toggle a menu item's disabled state.
+     * Activities can dispatch this event to dynamically enable/disable their menu entry.
+     *
+     * @param {CustomEvent} event - detail: { name: string, enabled: boolean }
+     */
+    _handleActivityEnabled(event) {
+        const name = event.detail?.name;
+        const enabled = event.detail?.enabled;
+        if (name === undefined || enabled === undefined) return;
+
+        this._activityEnabledOverrides.set(name, enabled);
+        const activity = this.visibleRoutes.find((r) => r.name === name);
+        if (activity) {
+            activity.disabled = !enabled;
+            this.requestUpdate();
+        }
+    }
+
     // TODO: This maybe could also be done with static html together with unsafeStatic, see https://lit.dev/docs/templates/expressions/#non-literal-statics
     // Like in https://github.com/digital-blueprint/cabinet-app/commit/8dde8efab6e65a93026289c7ed6b50c0369a55dd
     _renderActivity() {
@@ -1252,6 +1312,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             const data = this.metadata[routingName];
             const requiredRoles = data['required_roles'];
             let visible = data['visible'];
+            let disabled = data['disabled'];
 
             // Hide them until the user is logged in and we know the roles of the user
             for (let role of requiredRoles) {
@@ -1261,12 +1322,22 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 }
             }
 
-            if (visible) {
-                visibleRoutes.push(routingName);
+            if (visible === true) {
+                visibleRoutes.push({
+                    name: routingName,
+                    disabled: disabled === true,
+                });
             }
         }
 
         this.visibleRoutes = visibleRoutes;
+
+        // Apply any dynamic overrides set via dbp-app-shell-activity-enabled events
+        for (const route of this.visibleRoutes) {
+            if (this._activityEnabledOverrides.has(route.name)) {
+                route.disabled = !this._activityEnabledOverrides.get(route.name);
+            }
+        }
 
         const event = new CustomEvent('visibility-changed', {
             bubbles: false,
@@ -1278,8 +1349,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     render() {
         let i18n = this._i18n;
 
-        const getSelectClasses = (name) => {
-            return classMap({selected: this.activeView === name});
+        const getMenuClasses = (routing) => {
+            return classMap({
+                selected: this.activeView === routing.name,
+                'menu-disabled': routing.disabled === true,
+            });
         };
 
         // We hide the app until we are either fully logged in or logged out
@@ -1307,12 +1381,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         // build the menu
         let menuTemplates = [];
-        for (let routingName of this.visibleRoutes) {
+        for (let routing of this.visibleRoutes) {
             let partialState = {
-                component: routingName,
+                component: routing.name,
             };
             // clear the extra state for everything but the current activity
-            if (this.activeView !== routingName) {
+            if (this.activeView !== routing.name) {
                 partialState['extra'] = undefined;
             }
             menuTemplates.push(html`
@@ -1321,9 +1395,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                         @click="${(e) => this.onMenuItemClick(e)}"
                         href="${this.router.getPathname(partialState)}"
                         data-nav
-                        class="${getSelectClasses(routingName)}"
-                        title="${this.metaDataText(routingName, 'description')}">
-                        ${this.metaDataText(routingName, 'short_name')}
+                        aria-disabled=${!!routing.disabled}
+                        class="${getMenuClasses(routing)}"
+                        title="${this.metaDataText(routing.name, 'description')}">
+                        ${this.metaDataText(routing.name, 'short_name')}
                     </a>
                 </li>
             `);

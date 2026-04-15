@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/file-handling",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/file-handling",
-    "version": "0.3.13",
+    "version": "0.3.14",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -52,15 +52,15 @@
         "prettier": "^3.0.0",
         "rolldown": "^1.0.0-rc.5",
         "rollup-plugin-serve": "^3.0.0",
-        "typescript": "^5.2.2"
+        "typescript": "^6.0.0"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.17",
-        "@dbp-toolkit/tabulator-table": "^0.1.5",
+        "@dbp-toolkit/common": "^0.3.18",
+        "@dbp-toolkit/tabulator-table": "^0.1.6",
         "client-zip": "^2.5.0",
         "dl-stream": "^1.0.3",
         "file-saver": "^2.0.2",
-        "i18next": "^23.0.0 || ^24.0.0 || ^25.0.0",
+        "i18next": "^26.0.0",
         "jose": "^5.0.0 || ^6.0.8",
         "jszip": "^3.5.0",
         "lit": "^3.0.0",

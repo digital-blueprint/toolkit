@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/form-elements",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/form-elements",
-    "version": "0.2.17",
+    "version": "0.2.18",
     "type": "module",
     "description": "Form elements for the Digital Blueprint Toolkit",
     "main": "src/index.js",
@@ -37,10 +37,10 @@
         "prettier": "^3.0.0",
         "rolldown": "^1.0.0-rc.5",
         "rollup-plugin-serve": "^3.0.0",
-        "typescript": "^5.2.2"
+        "typescript": "^6.0.0"
     },
     "dependencies": {
-        "@dbp-toolkit/common": "^0.3.17",
+        "@dbp-toolkit/common": "^0.3.18",
         "jquery": "^3.5.1",
         "lit": "^3.0.0",
         "select2": "^4.0.10"

@@ -11,7 +11,7 @@ cd "${ROOT}"
 rm -Rf node_modules
 for d in ./toolkit-showcase ./packages/*; do
 	# Special packages that don't have a build script
-	if [ "$d" = "./packages/dev-utils" ] || [ "$d" = "./packages/font-source-sans-pro" ]; then
+	if [ "$d" = "./packages/dev-utils" ]; then
 		continue
 	fi
 	cd "$d"

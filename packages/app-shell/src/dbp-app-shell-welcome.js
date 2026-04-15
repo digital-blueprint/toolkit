@@ -100,10 +100,10 @@ class AppShellWelcome extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             app.switchComponent(data.routing_name);
         };
 
-        for (let routeName of app.visibleRoutes) {
-            let data = app.metadata[routeName];
+        for (let route of app.visibleRoutes) {
+            let data = app.metadata[route.name];
 
-            if (routeName !== 'welcome') {
+            if (route.name !== 'welcome' && route.disabled !== true) {
                 itemTemplates.push(html`
                     <div class="item">
                         <h2>
