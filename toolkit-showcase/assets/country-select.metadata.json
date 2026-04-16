@@ -1,0 +1,18 @@
+{
+    "element": "dbp-country-select-demo-activity",
+    "module_src": "dbp-country-select-demo-activity.js",
+    "routing_name": "country-select",
+    "name": {
+        "de": "Länderauswahl",
+        "en": "Country select"
+    },
+    "short_name": {
+        "de": "Länderauswahl",
+        "en": "Country select"
+    },
+    "description": {
+        "de": "Erlaubt die Auswahl eines Landes",
+        "en": "Allows selecting a country"
+    },
+    "subscribe": "lang,entry-point-url"
+}
