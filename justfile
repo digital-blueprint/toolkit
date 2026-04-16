@@ -11,3 +11,8 @@ default:
 # Variables
 
 zellijSession := "dbp-toolkit"
+
+# Open a terminal with the toolkit-showcase session
+[group('dev')]
+watch-toolkit-showcase: kill
+    cd toolkit-showcase && npm run watch

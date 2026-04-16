@@ -10,9 +10,8 @@ layout {
     }
     pane split_direction="vertical" size="40%" {
       pane {
-        cwd "./toolkit-showcase"
-        command "npm"
-        args "run" "watch-local"
+        command "just"
+        args "watch-toolkit-showcase"
       }
       pane {
         command "npm"
