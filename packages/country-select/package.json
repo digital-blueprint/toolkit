@@ -1,7 +1,7 @@
 {
     "name": "@dbp-toolkit/country-select",
     "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/country-select",
-    "version": "0.3.8",
+    "version": "0.0.1",
     "type": "module",
     "main": "src/index.js",
     "license": "LGPL-2.1-or-later",
@@ -65,5 +65,6 @@
         "watch-dev": "rolldown -c rollup.config.js --watch --environment BUILD:development",
         "test": "npm run build-test && web-test-runner",
         "tsc": "tsc -p jsconfig.json"
-    }
+    },
+    "private": true
 }

@@ -74,5 +74,3 @@ npm test
 # build local packages in dist directory
 npm run build
 ```
-
-Jump to <http://localhost:8002> and you should get a Single Sign On login page.
