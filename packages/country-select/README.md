@@ -1,4 +1,4 @@
-## Person Select Web Component
+## Country Select Web Component
 
 You can install this component via npm:
 
