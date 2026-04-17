@@ -140,6 +140,9 @@ export class DbpBaseElement extends LangMixin(
                 }
 
                 .description {
+                    color: var(--dbp-muted);
+                    font-size: 0.875rem;
+                    line-height: 1.4;
                     margin-bottom: 0.25em;
                 }
                 .required-mark {
