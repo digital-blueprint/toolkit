@@ -51,6 +51,7 @@ export class ThemeSwitcherDemo extends LangMixin(ScopedElementsMixin(LitElement)
                     --dbp-override-secondary-surface-border-color: black;
 
                     --dbp-override-muted: #767676;
+                    --dbp-override-selected: #eaeaea;
                     --dbp-override-accent: #c24f68;
                     --dbp-override-info: #2a4491;
                     --dbp-override-success: #188018;
@@ -76,13 +77,13 @@ export class ThemeSwitcherDemo extends LangMixin(ScopedElementsMixin(LitElement)
                     --dbp-override-secondary-surface-border-color: #151515;
 
                     --dbp-override-muted: #666666;
+                    --dbp-override-selected: #555555;
                     --dbp-override-accent: #c24f68;
                     --dbp-override-info: #8ca4eb;
                     --dbp-override-success: #7acc79;
                     --dbp-override-warning: #f99a41;
                     --dbp-override-on-warning-surface: black;
                     --dbp-override-danger: #de3535;
-
                     --dbp-override-border: 1px solid white;
 
                     --dbp-override-hover-background-color: white;
