@@ -47,6 +47,18 @@ export function getThemeCSS() {
                 --dbp-override-muted-surface-border-color,
                 var(--dbp-muted)
             );
+
+            --dbp-selected: var(--dbp-override-selected, #eaeaea);
+            --dbp-selected-surface: var(--dbp-override-selected-surface, var(--dbp-selected));
+            --dbp-on-selected-surface: var(
+                --dbp-override-on-selected-surface,
+                var(--dbp-on-content-surface)
+            );
+            --dbp-selected-surface-border-color: var(
+                --dbp-override-selected-surface-border-color,
+                var(--dbp-selected)
+            );
+
             --dbp-accent: var(--dbp-override-accent, #9e1e4d);
             --dbp-accent-surface: var(--dbp-override-accent-surface, var(--dbp-accent));
             --dbp-on-accent-surface: var(
@@ -57,6 +69,7 @@ export function getThemeCSS() {
                 --dbp-override-accent-surface-border-color,
                 var(--dbp-accent)
             );
+
             --dbp-info: var(--dbp-override-info, #38808a);
             --dbp-info-surface: var(--dbp-override-info-surface, var(--dbp-info));
             --dbp-on-info-surface: var(
