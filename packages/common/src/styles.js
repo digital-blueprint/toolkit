@@ -50,10 +50,7 @@ export function getThemeCSS() {
 
             --dbp-selected: var(--dbp-override-selected, #eaeaea);
             --dbp-selected-surface: var(--dbp-override-selected-surface, var(--dbp-selected));
-            --dbp-on-selected-surface: var(
-                --dbp-override-on-selected-surface,
-                var(--dbp-on-content-surface)
-            );
+            --dbp-on-selected-surface: var(--dbp-override-on-selected-surface, var(--dbp-content));
             --dbp-selected-surface-border-color: var(
                 --dbp-override-selected-surface-border-color,
                 var(--dbp-selected)
