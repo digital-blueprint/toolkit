@@ -35,7 +35,8 @@
         "download-error-message": "Something went wrong during the export.",
         "download-success-message": "Successful export. Check your download folder for the exported files.",
         "error-title": "Error",
-        "success-title": "Success"
+        "success-title": "Success",
+        "unsupported-type-error-message": "Unsupported export type"
     },
     "update-rows": "Update rows"
 }

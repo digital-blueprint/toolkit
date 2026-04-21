@@ -552,6 +552,16 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 case 'pdf':
                     await generatePDFDownload(this.tabulatorTable, data, dataName);
                     break;
+                default:
+                    console.error('Unsupported export type:', type);
+                    sendNotification({
+                        summary: this._i18n.t('tabulator-table.error-title'),
+                        body: this._i18n.t('tabulator-table.unsupported-type-error-message'),
+                        type: 'danger',
+                        timeout: 0,
+                    });
+                    hasError = true;
+                    break;
             }
         } catch (error) {
             hasError = true;

@@ -35,7 +35,8 @@
         "download-error-message": "Beim Export ist ein Fehler aufgetreten.",
         "download-success-message": "Erfolgreich exportiert. Überprüfen Sie Ihren Download-Ordner auf die exportierten Dateien.",
         "error-title": "Fehler",
-        "success-title": "Erfolg"
+        "success-title": "Erfolg",
+        "unsupported-type-error-message": "Nicht unterstützter Exporttyp"
     },
     "update-rows": "Zeilen aktualisieren"
 }
