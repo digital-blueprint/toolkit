@@ -1838,6 +1838,12 @@ export function getDropDownCss() {
             --dbp-select-menu-right: 0;
         }
 
+        :host([allow-expand]) .trigger.button {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
         .item-button {
             width: 100%;
             text-align: left;

@@ -23,3 +23,18 @@ sel.setOptions([
     {value: 'delete', title: 'Delete'},
 ]);
 ```
+
+### Attributes & Properties
+
+| Attribute / Property | Type              | Default   | Description                                                                                                           |
+| -------------------- | ----------------- | --------- | --------------------------------------------------------------------------------------------------------------------- |
+| `label`              | `String`          | `' '`     | Label text displayed on the trigger button.                                                                           |
+| `align`              | `String`          | `'right'` | Alignment of the dropdown menu relative to the trigger. Accepts `'left'` or `'right'`.                                |
+| `allow-expand`       | Boolean attribute | —         | When present, the trigger button stretches to full width of its container, with the chevron pushed to the right edge. |
+
+### CSS Custom Properties
+
+| Property                  | Default      | Description                                                                                             |
+| ------------------------- | ------------ | ------------------------------------------------------------------------------------------------------- |
+| `--dbp-select-menu-left`  | `0` / `auto` | Left offset of the dropdown menu. Controlled automatically by `align`; override to fine-tune position.  |
+| `--dbp-select-menu-right` | `auto` / `0` | Right offset of the dropdown menu. Controlled automatically by `align`; override to fine-tune position. |
