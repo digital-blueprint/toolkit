@@ -1,6 +1,8 @@
 import i18next from 'i18next';
 
 // global variable as cache for translations
+// Keyed by `${langDir}::${lng}` so a stale empty-langDir call never
+// poisons the cache for a later call with a real URL.
 const translationCache = {};
 
 // fetches overrides for given language
@@ -14,14 +16,16 @@ async function fetchOverridesByLanguage(overrides, lng) {
 
 // handles translation cache promises
 async function cacheOverrides(overridesFile, lng) {
+    if (!overridesFile) return undefined;
+    const cacheKey = overridesFile + '::' + lng;
     // use global var as cache
-    if (translationCache[lng] === undefined) {
+    if (translationCache[cacheKey] === undefined) {
         // get translation.json for each lang
         let response = fetchOverridesByLanguage(overridesFile, lng);
-        translationCache[lng] = response;
+        translationCache[cacheKey] = response;
         return response;
     } else {
-        return translationCache[lng];
+        return translationCache[cacheKey];
     }
 }
 
@@ -169,12 +173,16 @@ export async function setOverridesByGlobalCache(i18n, element) {
     let overrideNamespace = getOverrideNamespace(namespace);
     let hasOverrides = false;
     for (let lng of i18n.languages) {
+        const cacheKey = element.langDir + '::' + lng;
         cacheOverrides(element.langDir, lng);
-        translationCache[lng] = await translationCache[lng];
+        translationCache[cacheKey] = await translationCache[cacheKey];
         i18n.removeResourceBundle(lng, overrideNamespace);
-        if (translationCache[lng] === undefined || translationCache[lng][tagName] === undefined)
+        if (
+            translationCache[cacheKey] === undefined ||
+            translationCache[cacheKey][tagName] === undefined
+        )
             continue;
-        let resources = translationCache[lng][tagName];
+        let resources = translationCache[cacheKey][tagName];
         hasOverrides = true;
         i18n.addResourceBundle(lng, overrideNamespace, resources);
     }
