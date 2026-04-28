@@ -1867,7 +1867,7 @@ export function getDropDownCss() {
         }
 
         :host(.select-version) .item-button[aria-checked='true'] {
-            background-color: var(--dbp-override-muted, #767676);
+            background-color: var(--dbp-selected, #555555);
         }
     `;
 }
