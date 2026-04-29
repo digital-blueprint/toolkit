@@ -16,9 +16,9 @@ export default function () {
             var remainingChars = args.minimum - args.input.length;
 
             return (
-                'Bitte ' +
+                ' Geben Sie mindestens ' +
                 remainingChars +
-                ' Zeichen mehr eingeben, es kann nach mehreren Teilen von Namen gesucht werden'
+                ' aufeinanderfolgende Zeichen aus dem gesuchten Wort ein.'
             );
         },
         loadingMore: function () {
