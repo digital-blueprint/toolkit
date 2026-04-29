@@ -26,15 +26,9 @@ Or directly via CDN:
 
 ### Attributes
 
-- `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
-    - example `<dbp-country-select entry-point-url="http://127.0.0.1:8000"></dbp-country-select>`
-- `value` (optional): api path of country to preload the selector with
-    - example `<dbp-country-select value="/base/people/testuser"></dbp-country-select>`
-    - the `value` will also be set automatically when a country is chosen in the selector
-- `show-reload-button` (optional): if set a reload button will be viewed next to the select box
-    - the button triggers a `change` event on the web component
-    - the button is disabled if no country is selected
-    - example `<dbp-country-select show-reload-button></dbp-country-select>`
+- `value` (optional): ISO country code to preload the selector with
+    - example `<dbp-country-select value="AT"></dbp-country-select>`
+    - the `value` attribute will also be updated automatically when a country is chosen in the selector
 - `disabled` (optional): if set the component will be disabled
 
 ### Properties
