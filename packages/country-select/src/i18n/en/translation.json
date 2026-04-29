@@ -1,6 +1,15 @@
 {
     "country-select": {
-        "login-required": "Login required",
-        "placeholder": "Please select a person"
+        "placeholder": "Please select a country"
+    },
+    "demo": {
+        "description": "The country selector uses a built-in country list and works without login. Type at least two characters to search by country name or ISO code.",
+        "disabled-label": "Disabled example",
+        "examples-label": "Examples:",
+        "none": "None",
+        "preselected-label": "Preselected example",
+        "select-label": "Select a country",
+        "selected-country-label": "Selected country code:",
+        "title": "Country Select Demo"
     }
 }

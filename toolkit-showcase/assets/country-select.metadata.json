@@ -14,5 +14,5 @@
         "de": "Erlaubt die Auswahl eines Landes",
         "en": "Allows selecting a country"
     },
-    "subscribe": "lang,entry-point-url"
+    "subscribe": "lang"
 }

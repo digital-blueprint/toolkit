@@ -1,6 +1,15 @@
 {
     "country-select": {
-        "login-required": "Anmeldung erforderlich",
-        "placeholder": "Bitte wählen Sie eine Person aus"
+        "placeholder": "Bitte wählen Sie ein Land aus"
+    },
+    "demo": {
+        "description": "Die Länderauswahl verwendet eine eingebaute Länderliste und funktioniert ohne Anmeldung. Geben Sie mindestens zwei Zeichen ein, um nach Ländernamen oder ISO-Code zu suchen.",
+        "disabled-label": "Deaktiviertes Beispiel",
+        "examples-label": "Beispiele:",
+        "none": "Keiner",
+        "preselected-label": "Vorausgewähltes Beispiel",
+        "select-label": "Land auswählen",
+        "selected-country-label": "Ausgewählter Ländercode:",
+        "title": "Länderauswahl Demo"
     }
 }
