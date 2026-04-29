@@ -22,9 +22,9 @@ export default function () {
             var remainingChars = args.minimum - args.input.length;
 
             var message =
-                'Please enter ' +
+                'Enter at least ' +
                 remainingChars +
-                ' or more characters, you can also search for multiple parts of names';
+                ' consecutive characters from the word you are looking for.';
 
             return message;
         },
