@@ -79,13 +79,10 @@ export class CountrySelectDemo extends LangMixin(
                                     lang="${this.lang}"
                                     @change="${this.handleCountryChange}"></dbp-country-select>
                             </div>
+                            <!-- prettier-ignore -->
                             <p class="help">
                                 ${i18n.t('demo.examples-label')}
-                                <code>au</code>
-                                ,
-                                <code>aus</code>
-                                ,
-                                <code>at</code>
+                                <code>au</code>, <code>aus</code>, <code>de</code>, <code>at</code>
                             </p>
                         </div>
                         <div class="field">
