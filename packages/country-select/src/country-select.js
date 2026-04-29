@@ -17,9 +17,7 @@ export class CountrySelect extends LangMixin(
 ) {
     constructor() {
         super();
-        this.auth = {};
         this.$select = null;
-        this.active = false;
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
         this.selectId = 'country-select-' + commonUtils.makeId(24);
         this.value = '';
@@ -38,9 +36,7 @@ export class CountrySelect extends LangMixin(
     static get properties() {
         return {
             ...super.properties,
-            active: {type: Boolean, attribute: false},
             value: {type: String},
-            auth: {type: Object},
             disabled: {type: Boolean, reflect: true},
         };
     }
@@ -131,7 +127,8 @@ export class CountrySelect extends LangMixin(
             this.$select.off('select2:select select2:clear select2:closing');
         }
 
-        //this.$select.empty();
+        // Reset existing options so Select2 picks up translated country names on lang changes.
+        this.$select.empty();
 
         this.$select
             .select2({
@@ -139,9 +136,7 @@ export class CountrySelect extends LangMixin(
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
                 minimumInputLength: 2,
                 allowClear: true,
-                placeholder: this.authenticated()
-                    ? i18n.t('country-select.placeholder')
-                    : i18n.t('country-select.login-required'),
+                placeholder: i18n.t('country-select.placeholder'),
                 dropdownParent: this.$('#country-select-dropdown'),
                 data: uniqueCountries.map((country) => ({
                     id: country.code,
@@ -236,27 +231,12 @@ export class CountrySelect extends LangMixin(
 
                     this.ignoreValueUpdate = false;
                     break;
-                case 'auth':
-                    this.active = this.authenticated();
-                    if (this.active && (!oldValue || !oldValue.token)) {
-                        this.initSelect2(
-                            this.lang === 'en'
-                                ? dispatchHelper.getEnglishCountryList()
-                                : dispatchHelper.getGermanCountryList(),
-                            this.value || 'AT',
-                        );
-                    }
-                    break;
             }
         });
     }
 
     select2IsInitialized() {
         return this.$select !== null && this.$select.hasClass('select2-hidden-accessible');
-    }
-
-    authenticated() {
-        return (this.auth.token || '') !== '';
     }
 
     static get styles() {
@@ -290,7 +270,6 @@ export class CountrySelect extends LangMixin(
     }
 
     render() {
-        const i18n = this._i18n;
         const select2CSS = commonUtils.getAbsoluteURL(select2CSSPath);
         return html`
             <link rel="stylesheet" href="${select2CSS}" />
@@ -302,15 +281,7 @@ export class CountrySelect extends LangMixin(
                             id="${this.selectId}"
                             name="country"
                             class="select"
-                            ?disabled=${!this.active || this.disabled}>
-                            ${!this.authenticated()
-                                ? html`
-                                      <option value="" disabled selected>
-                                          ${i18n.t('country-select.login-required')}
-                                      </option>
-                                  `
-                                : ''}
-                        </select>
+                            ?disabled=${this.disabled}></select>
                     </div>
                 </div>
                 <div id="country-select-dropdown"></div>

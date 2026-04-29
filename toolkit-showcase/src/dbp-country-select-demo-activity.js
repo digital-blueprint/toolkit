@@ -12,7 +12,6 @@ class DbpCountrySelectDemoActivity extends ScopedElementsMixin(AdapterLitElement
     constructor() {
         super();
         this.lang = 'en';
-        this.entryPointUrl = '';
     }
 
     static get scopedElements() {
@@ -26,7 +25,6 @@ class DbpCountrySelectDemoActivity extends ScopedElementsMixin(AdapterLitElement
         return {
             ...super.properties,
             lang: {type: String},
-            entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
 
@@ -55,11 +53,7 @@ class DbpCountrySelectDemoActivity extends ScopedElementsMixin(AdapterLitElement
     render() {
         return html`
             <dbp-markdown .markdown=${readme}></dbp-markdown>
-            <dbp-country-select-demo
-                id="demo"
-                lang="${this.lang}"
-                entry-point-url="${this.entryPointUrl}"
-                no-auth></dbp-country-select-demo>
+            <dbp-country-select-demo id="demo" lang="${this.lang}"></dbp-country-select-demo>
         `;
     }
 }

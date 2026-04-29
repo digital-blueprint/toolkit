@@ -33,9 +33,12 @@ Or directly via CDN:
 
 ### Properties
 
-- `auth` {object}: you need to set that object property for the auth token
-    - example auth property: `{token: "THE_BEARER_TOKEN"}`
-    - note: most often this should be a property that is not set directly, but subscribed at a provider
+- The component uses a built-in country list and does not require authentication.
+
+### Events
+
+- `change`: fired when the selected country changes
+    - `event.detail.value` contains the selected ISO country code
 
 ### Local development
 

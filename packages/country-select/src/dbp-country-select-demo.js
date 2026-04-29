@@ -2,7 +2,6 @@ import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {CountrySelect} from './country-select.js';
-import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -13,14 +12,11 @@ export class CountrySelectDemo extends LangMixin(
 ) {
     constructor() {
         super();
-        this.entryPointUrl = '';
-        this.noAuth = false;
+        this.selectedCountry = '';
     }
 
     static get scopedElements() {
         return {
-            'dbp-auth-keycloak': AuthKeycloak,
-            'dbp-login-button': LoginButton,
             'dbp-country-select': CountrySelect,
         };
     }
@@ -28,8 +24,7 @@ export class CountrySelectDemo extends LangMixin(
     static get properties() {
         return {
             ...super.properties,
-            entryPointUrl: {type: String, attribute: 'entry-point-url'},
-            noAuth: {type: Boolean, attribute: 'no-auth'},
+            selectedCountry: {type: String, attribute: false},
         };
     }
 
@@ -45,49 +40,77 @@ export class CountrySelectDemo extends LangMixin(
                 div.container {
                     margin-bottom: 1.5em;
                 }
+
+                .help {
+                    color: var(--dbp-muted);
+                    margin-top: 0.5rem;
+                }
+
+                .result {
+                    background: var(--dbp-background);
+                    border: var(--dbp-border);
+                    border-radius: var(--dbp-border-radius);
+                    margin-top: 1rem;
+                    padding: 1rem;
+                }
             `,
         ];
     }
 
-    getAuthComponentHtml() {
-        return this.noAuth
-            ? html`
-                  <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
-              `
-            : html`
-                  <div class="container">
-                      <dbp-auth-keycloak
-                          subscribe="requested-login-status"
-                          lang="${this.lang}"
-                          entry-point-url="${this.entryPointUrl}"
-                          silent-check-sso-redirect-uri="/silent-check-sso.html"
-                          url="https://auth-dev.tugraz.at/auth"
-                          realm="tugraz-vpu"
-                          client-id="auth-dev-mw-frontend-local"
-                          try-login></dbp-auth-keycloak>
-                      <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
-                  </div>
-              `;
+    handleCountryChange(event) {
+        this.selectedCountry = event.detail.value;
     }
 
     render() {
+        const i18n = this._i18n;
+
         return html`
             <section class="section">
                 <div class="container">
-                    <h1 class="title">Country-Select-Demo</h1>
+                    <h1 class="title">${i18n.t('demo.title')}</h1>
+                    <p>${i18n.t('demo.description')}</p>
                 </div>
-                ${this.getAuthComponentHtml()}
                 <div class="container">
                     <form>
                         <div class="field">
-                            <label class="label">Country 1</label>
+                            <label class="label">${i18n.t('demo.select-label')}</label>
                             <div class="control">
                                 <dbp-country-select
-                                    subscribe="auth"
-                                    lang="${this.lang}"></dbp-country-select>
+                                    lang="${this.lang}"
+                                    @change="${this.handleCountryChange}"></dbp-country-select>
+                            </div>
+                            <p class="help">
+                                ${i18n.t('demo.examples-label')}
+                                <code>au</code>
+                                ,
+                                <code>aus</code>
+                                ,
+                                <code>at</code>
+                            </p>
+                        </div>
+                        <div class="field">
+                            <label class="label">${i18n.t('demo.preselected-label')}</label>
+                            <div class="control">
+                                <dbp-country-select
+                                    lang="${this.lang}"
+                                    value="AT"></dbp-country-select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">${i18n.t('demo.disabled-label')}</label>
+                            <div class="control">
+                                <dbp-country-select
+                                    lang="${this.lang}"
+                                    value="DE"
+                                    disabled></dbp-country-select>
                             </div>
                         </div>
                     </form>
+
+                    <div class="result">
+                        ${i18n.t('demo.selected-country-label')}
+                        <strong>${this.selectedCountry || i18n.t('demo.none')}</strong>
+                    </div>
                 </div>
             </section>
         `;
