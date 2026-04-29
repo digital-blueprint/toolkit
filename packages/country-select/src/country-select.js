@@ -5,11 +5,9 @@ import select2LangEn from './i18n/en/select2';
 import {css, html} from 'lit';
 import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {createInstance} from './i18n.js';
-import {Icon} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
-import * as errorUtils from '@dbp-toolkit/common/error';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 import * as dispatchHelper from './utils.js';
 
@@ -19,33 +17,18 @@ export class CountrySelect extends LangMixin(
 ) {
     constructor() {
         super();
-        Object.assign(CountrySelect.prototype, errorUtils.errorMixin);
         this.auth = {};
-        this.entryPointUrl = null;
         this.$select = null;
         this.active = false;
-        this.data = [];
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
         this.selectId = 'country-select-' + commonUtils.makeId(24);
         this.value = '';
-        this.object = null;
         this.ignoreValueUpdate = false;
-        this.isSearching = false;
-        this.lastResult = {};
-        this.showReloadButton = false;
-        this.reloadButtonTitle = '';
         this.disabled = false;
-        this.localDataAttributes = [];
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
 
         select2(window, $);
-    }
-
-    static get scopedElements() {
-        return {
-            'dbp-icon': Icon,
-        };
     }
 
     $(selector) {
@@ -56,22 +39,13 @@ export class CountrySelect extends LangMixin(
         return {
             ...super.properties,
             active: {type: Boolean, attribute: false},
-            data: {type: Array, attribute: 'data'},
-            entryPointUrl: {type: String, attribute: 'entry-point-url'},
             value: {type: String},
-            object: {type: Object, attribute: false},
-            localDataAttributes: {type: Array},
-            showReloadButton: {type: Boolean, attribute: 'show-reload-button'},
-            reloadButtonTitle: {type: String, attribute: 'reload-button-title'},
             auth: {type: Object},
             disabled: {type: Boolean, reflect: true},
         };
     }
 
     clear() {
-        this.object = null;
-        $(this).attr('data-object', '');
-        $(this).data('object', null);
         this.value = '';
         // Reset value attribute to really make sure it is empty and will trigger a change event
         // when it is set again with the previous value
@@ -101,22 +75,9 @@ export class CountrySelect extends LangMixin(
                         ? dispatchHelper.getEnglishCountryList()
                         : dispatchHelper.getGermanCountryList(),
                     this.value || 'AT',
-                    false,
                 );
             }
         });
-
-        const localDataAttributes = this.getAttribute('local-data-attributes');
-        if (localDataAttributes) {
-            try {
-                this.localDataAttributes = JSON.parse(localDataAttributes);
-            } catch (error) {
-                console.error(
-                    'local-data-attributes attribute must be a JSON array of strings',
-                    error.message,
-                );
-            }
-        }
     }
 
     disconnectedCallback() {
@@ -138,10 +99,9 @@ export class CountrySelect extends LangMixin(
      * Initializes the Select2 selector
      *
      * @param countries
-     * @param default_code
-     * @param ignorePreset
+     * @param defaultCode
      */
-    initSelect2(countries = [], default_code = 'AT', ignorePreset = false) {
+    initSelect2(countries = [], defaultCode = 'AT') {
         const i18n = this._i18n;
         const that = this;
         const $this = $(this);
@@ -161,7 +121,7 @@ export class CountrySelect extends LangMixin(
             }
         }
 
-        const selectedCode = this.value || default_code;
+        const selectedCode = this.value || defaultCode;
 
         if (!this.$select) return false;
 
@@ -199,7 +159,6 @@ export class CountrySelect extends LangMixin(
 
                     const name = data.text.toLowerCase();
                     const code = data.id.toLowerCase();
-                    console.log(uniqueCountries.filter((c) => c.name === 'Österreich'));
                     if (parts.length === 1) {
                         if (name.includes(parts[0]) || code.includes(parts[0])) {
                             return data;
@@ -219,8 +178,6 @@ export class CountrySelect extends LangMixin(
             })
             .on('select2:select', function (e) {
                 const selectedData = e.params.data;
-                $this.attr('data-object', JSON.stringify(selectedData));
-                $this.data('object', selectedData);
 
                 if ($this.attr('value') !== selectedData.id) {
                     that.ignoreValueUpdate = true;
@@ -250,49 +207,6 @@ export class CountrySelect extends LangMixin(
 
         return true;
     }
-    /**
-     * Returns a key-value mapping of query parameters to use for the country get item request.
-     * Gets called if a country is pre-set.
-     *
-     * @param {object} select
-     * @returns {object} The query parameters.
-     */
-    getItemQueryParameters(select) {
-        let queryParameters = {};
-        this.addIncludeLocalQueryParameter(select, queryParameters);
-
-        return queryParameters;
-    }
-
-    addIncludeLocalQueryParameter(select, queryParameters) {
-        if (this.localDataAttributes.length > 0) {
-            queryParameters['includeLocal'] = this.localDataAttributes.join(',');
-        }
-    }
-
-    /**
-     * Should return a string representation of the selected country's local data attributes.
-     * Feel free to override.
-     *
-     * @param {object} select
-     * @param {object} country
-     * @returns {string}
-     */
-    formatLocalData(select, country) {
-        return CountrySelect.formatLocalDataDefault(select, country);
-    }
-
-    /**
-     * Returns the default string representation of the selected country's local data attributes.
-     */
-    static formatLocalDataDefault(select, country) {
-        const attributes = country.localData ?? {};
-        if (Object.values(attributes).length === 0) {
-            return '';
-        }
-
-        return `(${Object.values(attributes).join(', ')})`;
-    }
 
     update(changedProperties) {
         super.update(changedProperties);
@@ -307,7 +221,6 @@ export class CountrySelect extends LangMixin(
                                 ? dispatchHelper.getEnglishCountryList()
                                 : dispatchHelper.getGermanCountryList(),
                             this.value || 'AT',
-                            false,
                         );
                     }
                     break;
@@ -318,21 +231,10 @@ export class CountrySelect extends LangMixin(
                                 ? dispatchHelper.getEnglishCountryList()
                                 : dispatchHelper.getGermanCountryList(),
                             this.value || 'AT',
-                            false,
                         );
                     }
 
                     this.ignoreValueUpdate = false;
-                    break;
-                case 'entryPointUrl':
-                    // we don't need to preset the selector if the entry point url changes
-                    this.initSelect2(
-                        this.lang === 'en'
-                            ? dispatchHelper.getEnglishCountryList()
-                            : dispatchHelper.getGermanCountryList(),
-                        this.value || 'AT',
-                        false,
-                    );
                     break;
                 case 'auth':
                     this.active = this.authenticated();
@@ -342,7 +244,6 @@ export class CountrySelect extends LangMixin(
                                 ? dispatchHelper.getEnglishCountryList()
                                 : dispatchHelper.getGermanCountryList(),
                             this.value || 'AT',
-                            false,
                         );
                     }
                     break;
@@ -354,22 +255,6 @@ export class CountrySelect extends LangMixin(
         return this.$select !== null && this.$select.hasClass('select2-hidden-accessible');
     }
 
-    reloadClick() {
-        if (this.object === null) {
-            return;
-        }
-
-        // fire a change event
-        this.dispatchEvent(
-            new CustomEvent('change', {
-                detail: {
-                    value: this.value,
-                },
-                bubbles: true,
-            }),
-        );
-    }
-
     authenticated() {
         return (this.auth.token || '') !== '';
     }
@@ -378,8 +263,6 @@ export class CountrySelect extends LangMixin(
         return [
             commonStyles.getThemeCSS(),
             commonStyles.getGeneralCSS(),
-            commonStyles.getButtonCSS(),
-            commonStyles.getFormAddonsCSS(),
             commonStyles.getSelect2CSS(),
             css`
                 #country-select-dropdown {
@@ -388,21 +271,6 @@ export class CountrySelect extends LangMixin(
 
                 .select2-control.control {
                     width: 100%;
-                }
-
-                .field .button.control {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border: var(--dbp-border);
-                    border-color: var(--dbp-muted);
-                    -moz-border-radius-topright: var(--dbp-border-radius);
-                    -moz-border-radius-bottomright: var(--dbp-border-radius);
-                    line-height: 100%;
-                }
-
-                .field .button.control dbp-icon {
-                    top: 0;
                 }
 
                 /* https://github.com/select2/select2/issues/5457 */
@@ -427,7 +295,7 @@ export class CountrySelect extends LangMixin(
         return html`
             <link rel="stylesheet" href="${select2CSS}" />
             <div class="select">
-                <div class="field has-addons">
+                <div class="field">
                     <div class="select2-control control">
                         <!-- https://select2.org-->
                         <select
@@ -444,15 +312,6 @@ export class CountrySelect extends LangMixin(
                                 : ''}
                         </select>
                     </div>
-                    <a
-                        class="control button"
-                        id="reload-button"
-                        ?disabled=${this.object === null}
-                        @click="${this.reloadClick}"
-                        style="display: ${this.showReloadButton ? 'flex' : 'none'}"
-                        title="${this.reloadButtonTitle}">
-                        <dbp-icon name="reload"></dbp-icon>
-                    </a>
                 </div>
                 <div id="country-select-dropdown"></div>
             </div>

@@ -84,48 +84,9 @@ export class CountrySelectDemo extends LangMixin(
                             <div class="control">
                                 <dbp-country-select
                                     subscribe="auth"
-                                    lang="${this.lang}"
-                                    entry-point-url="${this.entryPointUrl}"></dbp-country-select>
+                                    lang="${this.lang}"></dbp-country-select>
                             </div>
                         </div>
-                        <!-- <div class="field">
-                            <label class="label">Country 2</label>
-                            <div class="control">
-                                <dbp-country-select
-                                    subscribe="auth"
-                                    lang="${this.lang}"
-                                    entry-point-url="${this.entryPointUrl}"
-                                    show-reload-button
-                                    reload-button-title="Click me"></dbp-country-select>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Country 3 unsubscribed</label>
-                            <div class="control">
-                                <dbp-country-select
-                                    lang="${this.lang}"
-                                    entry-point-url="${this.entryPointUrl}"
-                                    show-reload-button
-                                    reload-button-title="Click me"></dbp-country-select>
-                            </div>
-                            <p>
-                                This component doesn't get any notification about user's login and
-                                will not become active.
-                            </p>
-                        </div>
-                        <div class="field">
-                            <label class="label">Country 4 disabled</label>
-                            <div class="control">
-                                <dbp-country-select
-                                    subscribe="auth"
-                                    lang="${this.lang}"
-                                    entry-point-url="${this.entryPointUrl}"
-                                    disabled
-                                    show-reload-button
-                                    reload-button-title="Click me"></dbp-country-select>
-                            </div>
-                            <p>This component is disabled.</p>
-                        </div>-->
                     </form>
                 </div>
             </section>
