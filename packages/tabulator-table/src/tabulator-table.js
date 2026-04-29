@@ -163,10 +163,13 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             this.data = this.options.data;
         }
 
-        if (this._(`#${this.identifier}`)) {
-            /** @type {import('tabulator-tables').Tabulator} */
-            this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
+        if (!this._(`#${this.identifier}`)) {
+            console.warn('buildTable: container element not found for', this.identifier);
+            return;
         }
+
+        /** @type {import('tabulator-tables').Tabulator} */
+        this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
 
         console.log('TABULATOR TABLE INITIALIZED', this.tabulatorTable);
         this.tableBuilding = true;
