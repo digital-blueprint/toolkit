@@ -10,9 +10,9 @@
 - For dialogs always use dbp-modal.
 - Don't update files in `dist/` folders as they are generated from the source files in the `src/` folders
 - Packages are placed in the `packages/` folder, each package has its own `src/` and `dist/` folder.
-  - The `src/` folder contains the source code, while the `dist/` folder contains the compiled code that is used in the toolkit.
-  - Never commit the `dist/` folder, as it is generated from the `src/` folder and can be easily regenerated.
+    - The `src/` folder contains the source code, while the `dist/` folder contains the compiled code that is used in the toolkit.
+    - Never commit the `dist/` folder, as it is generated from the `src/` folder and can be easily regenerated.
 - When creating a new package in the `packages/` folder, make sure to add it to the `toolkit-showcase` package as a dependency,
   so that it can be used in the showcase.
-  - Also make sure there is a proper `.gitignore` file in the new package that ignores the `dist/` folder and any other
-    files that shouldn't be committed. Look at `packages/app-shell/.gitignore` for an example.
+    - Also make sure there is a proper `.gitignore` file in the new package that ignores the `dist/` folder and any other
+      files that shouldn't be committed. Look at `packages/app-shell/.gitignore` for an example.
