@@ -144,13 +144,6 @@ The `change` event is fired when the state changes. The event contains the new s
 </dbp-form-boolean-element>
 ```
 
-#### Date Element
-
-- `min`: Indicates the minimum value that can be entered
-    - Type: String/Date
-- `max`: Indicates the maximum value that can be entered
-    - Type: String/Date
-
 #### Enum Element
 
 ```html
@@ -188,6 +181,57 @@ Please always use `.value` to set the value of the enum element, as it is a prop
 - CSS custom properties for styling:
     - `--dbp-enum-label-gap`
 - `disabledItems`: selectively disable individual options for display-mode list (checkbox/radio). Disabled items are visually greyed out and cannot be interacted with (disabled).
+
+#### Date Element
+
+- `min`: Indicates the minimum value that can be entered
+    - Type: String/Date
+- `max`: Indicates the maximum value that can be entered
+    - Type: String/Date
+
+#### DateTime Element
+
+No additional attributes beyond the general ones. The datetime element uses an HTML `datetime-local` input.
+
+#### Person Select Element (form element)
+
+```html
+<dbp-form-person-select-element
+    subscribe="lang auth"
+    name="myPerson"
+    label="My person"
+    entry-point-url="https://api.example.com"
+    required></dbp-form-person-select-element>
+```
+
+- `entry-point-url`: Base URL of the API entry point
+    - Type: String
+    - Required for fetching persons
+
+#### Resource Select Element
+
+```html
+<dbp-form-resource-select-element
+    subscribe="lang auth"
+    name="myResource"
+    label="My resource"
+    entry-point-url="https://api.example.com"
+    resource-path="/base/organizations"
+    required></dbp-form-resource-select-element>
+```
+
+- `entry-point-url`: Base URL of the API entry point
+    - Type: String
+    - Required for fetching resources
+- `resource-path`: API path to the resource collection
+    - Type: String
+    - Example: `<dbp-form-resource-select-element resource-path="/base/organizations"></dbp-form-resource-select-element>`
+- `include-local` (optional): Whether to include local resources
+    - Type: String
+    - Example: `<dbp-form-resource-select-element include-local="true"></dbp-form-resource-select-element>`
+- `per-page` (optional, default: `30`): Number of results per page
+    - Type: Number
+    - Example: `<dbp-form-resource-select-element per-page="50"></dbp-form-resource-select-element>`
 
 ### Form Views
 
@@ -239,6 +283,58 @@ Best look at [demo.js](./src/demo.js) for the example implementation.
     - `--dbp-enum-tag-border-radius`
     - `--dbp-enum-tag-line-height`
     - `--dbp-enum-tag-bg-color`
+
+#### Date View
+
+Displays a date value formatted as `DD.MM.YYYY` using the `de-DE` locale. No additional attributes beyond the general ones.
+
+```html
+<dbp-form-date-view
+    subscribe="lang"
+    label="My date"
+    .value=${'2024-01-15'}></dbp-form-date-view>
+```
+
+#### DateTime View
+
+Displays a datetime value formatted with date, time, and timezone using the `de-DE` locale. No additional attributes beyond the general ones.
+
+```html
+<dbp-form-datetime-view
+    subscribe="lang"
+    label="My datetime"
+    .value=${'2024-01-15T10:30:00'}></dbp-form-datetime-view>
+```
+
+#### Person Select View
+
+Fetches and displays a person's full name from the API using the stored person identifier.
+
+```html
+<dbp-form-person-select-view
+    subscribe="lang auth"
+    label="My person"
+    entry-point-url="https://api.example.com"
+    .value=${'person-identifier'}></dbp-form-person-select-view>
+```
+
+- `entry-point-url`: Base URL of the API entry point used to resolve the person name
+    - Type: String
+
+#### Resource Select View
+
+Fetches and displays a resource's name from the API using the stored resource identifier.
+
+```html
+<dbp-form-resource-select-view
+    subscribe="lang auth"
+    label="My resource"
+    entry-point-url="https://api.example.com"
+    .value=${'organization-identifier'}></dbp-form-resource-select-view>
+```
+
+- `entry-point-url`: Base URL of the API entry point used to resolve the resource name
+    - Type: String
 
 ### Local development
 
