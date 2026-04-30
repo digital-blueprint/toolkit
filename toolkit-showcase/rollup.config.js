@@ -227,5 +227,11 @@ Dependencies:
                   },
               })
             : false,
+        watch && {
+            name: 'log-rebuild',
+            writeBundle() {
+                console.log(`\n[${new Date().toLocaleString()}] dist rebuilt\n`);
+            },
+        },
     ],
 };
