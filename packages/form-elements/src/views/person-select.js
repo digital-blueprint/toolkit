@@ -12,7 +12,7 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
     async connectedCallback() {
         super.connectedCallback();
 
-        if (this.value !== '' && this.auth.token) {
+        if (this.value !== '' && this.auth?.token) {
             this.fetchPersonName(this.value);
         }
     }
@@ -20,7 +20,7 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
     updated(changedProperties) {
         if (changedProperties.get('name')) {
             this.name = this.name || '';
-        } else if (changedProperties.get('auth') && this.name === '') {
+        } else if (changedProperties.get('auth') && this.name === '' && this.auth?.token) {
             this.fetchPersonName(this.value);
         }
     }
@@ -59,6 +59,10 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
     }
 
     fetchPersonName(value) {
+        if (!value || !this.entryPointUrl || !this.auth?.token) {
+            return;
+        }
+
         fetch(
             value.startsWith('/base/people/')
                 ? this.entryPointUrl + value

@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {AuthMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import {FormElementsDemo} from '@dbp-toolkit/form-elements/src/demo';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -8,7 +8,7 @@ import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 import {MarkdownElement} from './markdown-element.js';
 
-class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
+class DbpFormElementsDemoActivity extends AuthMixin(ScopedElementsMixin(AdapterLitElement)) {
     constructor() {
         super();
         this.lang = 'en';
@@ -26,6 +26,7 @@ class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement)
         return {
             ...super.properties,
             lang: {type: String},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
 
@@ -54,7 +55,11 @@ class DbpFormElementsDemoActivity extends ScopedElementsMixin(AdapterLitElement)
     render() {
         return html`
             <dbp-markdown .markdown=${readme}></dbp-markdown>
-            <dbp-form-elements-demo id="demo" lang="${this.lang}"></dbp-form-elements-demo>
+            <dbp-form-elements-demo
+                id="demo"
+                lang="${this.lang}"
+                .auth=${this.auth ?? {}}
+                entry-point-url="${this.entryPointUrl}"></dbp-form-elements-demo>
         `;
     }
 }

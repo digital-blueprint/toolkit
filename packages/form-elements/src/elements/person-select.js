@@ -33,13 +33,21 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
         return [...super.styles];
     }
 
+    getPersonSelectValue() {
+        if (!this.value) {
+            return '';
+        }
+
+        return this.value.startsWith('/base/people/') ? this.value : `/base/people/${this.value}`;
+    }
+
     renderInput() {
-        // With the textarea tag, it's advised to use `.value` to set the value!
-        // https://lit.dev/docs/templates/expressions/#binding-properties
         return html`
             <dbp-person-select
                 ${ref(this.personSelectRef)}
-                subscribe="auth"
+                .auth=${this.auth ?? {}}
+                .value=${this.getPersonSelectValue()}
+                ?disabled=${this.disabled}
                 lang="${this.lang}"
                 @change="${(event) => {
                     let value = event.target.value;

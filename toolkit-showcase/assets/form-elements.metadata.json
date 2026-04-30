@@ -14,5 +14,5 @@
         "de": "Formularelemente für HTML Formulare",
         "en": "Form elements for HTML forms"
     },
-    "subscribe": "lang"
+    "subscribe": "lang,entry-point-url,auth"
 }

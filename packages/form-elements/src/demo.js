@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {AuthMixin, ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -16,12 +16,16 @@ import {
     DbpDateView,
     DbpDateTimeView,
     DbpEnumView,
+    DbpPersonSelectElement,
+    DbpResourceSelectElement,
+    DbpPersonSelectView,
+    DbpResourceSelectView,
 } from './index.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {gatherFormDataFromElement, validateRequiredFields} from './utils.js';
 
 export class FormElementsDemo extends LangMixin(
-    ScopedElementsMixin(DBPLitElement),
+    AuthMixin(ScopedElementsMixin(DBPLitElement)),
     createInstance,
 ) {
     constructor() {
@@ -30,6 +34,7 @@ export class FormElementsDemo extends LangMixin(
         this.data = {};
         this.enumItems = {item1: 'Item 1', item2: 'Item 2'};
         this.isRequired = true;
+        this.entryPointUrl = '';
     }
 
     static get scopedElements() {
@@ -40,11 +45,15 @@ export class FormElementsDemo extends LangMixin(
             'dbp-form-datetime-element': DbpDateTimeElement,
             'dbp-form-enum-element': DbpEnumElement,
             'dbp-form-boolean-element': DbpBooleanElement,
+            'dbp-form-person-select-element': DbpPersonSelectElement,
+            'dbp-form-resource-select-element': DbpResourceSelectElement,
             'dbp-form-string-view': DbpStringView,
             'dbp-form-number-view': DbpNumberView,
             'dbp-form-date-view': DbpDateView,
             'dbp-form-datetime-view': DbpDateTimeView,
             'dbp-form-enum-view': DbpEnumView,
+            'dbp-form-person-select-view': DbpPersonSelectView,
+            'dbp-form-resource-select-view': DbpResourceSelectView,
         };
     }
 
@@ -54,6 +63,7 @@ export class FormElementsDemo extends LangMixin(
             saveButtonEnabled: {type: Boolean, attribute: false},
             isRequired: {type: Boolean, attribute: false},
             data: {type: Object, attribute: false},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
 
@@ -107,6 +117,19 @@ export class FormElementsDemo extends LangMixin(
                 </button>
             </div>
         `;
+    }
+
+    getDemoPersonValue(data) {
+        if (data.myComponentPerson) {
+            return data.myComponentPerson;
+        }
+
+        const personId = this.auth?.['person-id'];
+        if (!personId) {
+            return '';
+        }
+
+        return personId.startsWith('/base/people/') ? personId : `/base/people/${personId}`;
     }
 
     render() {
@@ -394,6 +417,25 @@ export class FormElementsDemo extends LangMixin(
                             layout-type="inline"
                             .state=${data.myComponentBooleanInline}></dbp-form-boolean-element>
 
+                        <dbp-form-person-select-element
+                            subscribe="lang"
+                            name="myComponentPerson"
+                            label="My person"
+                            .auth=${this.auth ?? {}}
+                            .value=${this.getDemoPersonValue(data)}
+                            entry-point-url="${this.entryPointUrl}"
+                            ?required=${this.isRequired}></dbp-form-person-select-element>
+
+                        <dbp-form-resource-select-element
+                            subscribe="lang"
+                            name="myComponentResource"
+                            label="My resource"
+                            .auth=${this.auth ?? {}}
+                            .value=${data.myComponentResource || null}
+                            entry-point-url="${this.entryPointUrl}"
+                            resource-path="/base/organizations"
+                            ?required=${this.isRequired}></dbp-form-resource-select-element>
+
                         ${this.getButtonRowHtml()}
                     </form>
                 </div>
@@ -592,6 +634,20 @@ export class FormElementsDemo extends LangMixin(
                         layout-type="inline"
                         label="Inline boolean"
                         value=${data.myComponentBoolean ? 'true' : 'false'}></dbp-form-string-view>
+
+                    <dbp-form-person-select-view
+                        subscribe="lang"
+                        label="My person"
+                        .auth=${this.auth ?? {}}
+                        entry-point-url="${this.entryPointUrl}"
+                        .value=${this.getDemoPersonValue(data)}></dbp-form-person-select-view>
+
+                    <dbp-form-resource-select-view
+                        subscribe="lang"
+                        label="My resource"
+                        .auth=${this.auth ?? {}}
+                        entry-point-url="${this.entryPointUrl}"
+                        .value=${data.myComponentResource || ''}></dbp-form-resource-select-view>
                 </div>
             </section>
         `;

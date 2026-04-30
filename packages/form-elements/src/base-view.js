@@ -1,9 +1,12 @@
 import {css, html} from 'lit';
 import {createInstance} from './i18n';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {AuthMixin, ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
-export class DbpBaseView extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+export class DbpBaseView extends LangMixin(
+    AuthMixin(ScopedElementsMixin(DBPLitElement)),
+    createInstance,
+) {
     constructor() {
         super();
         this.label = '';

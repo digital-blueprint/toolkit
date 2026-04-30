@@ -39,6 +39,16 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
         return [...super.styles];
     }
 
+    getResourceSelectValue() {
+        if (!this.value) {
+            return null;
+        }
+
+        return this.value.startsWith('/base/organizations/')
+            ? this.value
+            : `/base/organizations/${this.value}`;
+    }
+
     renderInput() {
         let buildUrl = (select, url) => {
             url +=
@@ -53,7 +63,9 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
         return html`
             <dbp-resource-select
                 ${ref(this.resourceSelectRef)}
-                subscribe="auth"
+                .auth=${this.auth ?? {}}
+                .value=${this.getResourceSelectValue()}
+                ?disabled=${this.disabled}
                 lang="${this.lang}"
                 resource-path="${this.resourcePath}"
                 .buildUrl="${buildUrl}"
