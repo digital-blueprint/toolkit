@@ -712,8 +712,11 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             }
 
             .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active {
-                background: var(--dbp-on-secondary-surface);
-                color: var(--dbp-secondary-surface);
+                background: var(--dbp-selected);
+            }
+            .tabulator .tabulator-footer .tabulator-page:not(disabled):hover {
+                color: initial;
+                background: var(--dbp-hover-background-color);
             }
 
             .filename {
