@@ -99,6 +99,8 @@ export class Button extends DbpButton {
 
             ::slotted(dbp-icon) {
                 transition: transform 0.25s ease-in-out;
+                margin-left: var(--dbp-button-icon-margin-left, 0);
+                margin-right: var(--dbp-button-icon-margin-right, 0);
             }
 
             button:hover ::slotted(dbp-icon) {
@@ -161,6 +163,8 @@ export class LoadingButton extends DbpButton {
 
             ::slotted(dbp-icon) {
                 transition: transform 0.25s ease-in-out;
+                margin-left: var(--dbp-button-icon-margin-left, 0);
+                margin-right: var(--dbp-button-icon-margin-right, 0);
             }
 
             button:hover ::slotted(dbp-icon) {
@@ -264,6 +268,8 @@ export class IconButton extends ScopedElementsMixin(LitElement) {
 
             ::slotted(dbp-icon) {
                 transition: transform 0.25s ease-in-out;
+                margin-left: var(--dbp-button-icon-margin-left, 0);
+                margin-right: var(--dbp-button-icon-margin-right, 0);
             }
 
             button:hover ::slotted(dbp-icon) {
