@@ -690,6 +690,9 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 mask-position: center;
                 mask-size: contain;
             }
+            .tabulator .tabulator-footer .tabulator-paginator {
+                color: var(--dbp-content);
+            }
 
             .tabulator .tabulator-footer .tabulator-paginator .tabulator-page {
                 opacity: unset;
