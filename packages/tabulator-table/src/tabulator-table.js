@@ -470,8 +470,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
     getLang() {
         if (!this.tabulatorTable) return;
-        let currentLang = this.tabulatorTable.getLang();
-        return currentLang;
+        let currentLang = this.tabulatorTable.getLang
+            ? this.tabulatorTable.getLang()
+            : this.tabulatorTable.modules?.localize?.getLang();
+        return currentLang ?? this.options.langs?.[this.lang];
     }
 
     setPage(currentPage) {
