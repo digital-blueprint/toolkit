@@ -79,8 +79,8 @@ export function getTabulatorStyles() {
 
         .tabulator-row.tabulator-selectable.tabulator-selected:hover,
         .tabulator-row.tabulator-selected {
-            background-color: var(--dbp-override-muted, var(--dbp-content-surface));
-            color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+            background-color: var(--dbp-selected, var(--dbp-content-surface));
+            color: var(--dbp-on-selected-surface);
         }
 
         .tabulator-selected .tabulator-responsive-collapse-toggle,

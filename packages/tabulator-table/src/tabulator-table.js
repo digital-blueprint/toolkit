@@ -699,7 +699,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 text-align: center;
                 white-space: nowrap;
                 font-size: inherit;
-                font-weight: initial;
+                font-weight: 300;
                 font-family: inherit;
                 transition:
                     all 0.15s ease 0s,
@@ -713,10 +713,12 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
             .tabulator .tabulator-footer .tabulator-paginator .tabulator-page.active {
                 background: var(--dbp-selected);
+                color: var(--dbp-on-selected-surface);
                 font-weight: bold;
             }
+
             .tabulator .tabulator-footer .tabulator-page:not(disabled):hover {
-                color: initial;
+                color: var(--dbp-hover-color);
                 background: var(--dbp-hover-background-color);
             }
 
