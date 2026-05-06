@@ -319,7 +319,7 @@ export class Notification extends ScopedElementsMixin(DBPLitElement) {
             .notification-container {
                 position: fixed;
                 top: 0;
-                max-width: var(--dbp-notification-max-width, 40rem);
+                max-width: var(--dbp-notification-max-width, 100%);
                 width: 100%;
                 margin: 0.75em auto;
                 left: 0;
@@ -329,8 +329,10 @@ export class Notification extends ScopedElementsMixin(DBPLitElement) {
             }
 
             :host([inline]) .notification-container {
-                position: static;
-                max-width: none;
+                top: 0;
+                right: 0;
+                left: 0;
+                max-width: var(--dbp-notification-max-width, 100%);
                 width: 100%;
                 margin: 0 auto;
                 display: flex;
