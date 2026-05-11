@@ -85,11 +85,11 @@ export function getTabulatorStyles() {
 
         .tabulator-selected .tabulator-responsive-collapse-toggle,
         .tabulator-row.tabulator-selected .tabulator-responsive-collapse-toggle {
-            background-color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+            background-color: var(--dbp-hover-color, var(--dbp-on-selected-surface));
         }
 
         .tabulator-row.tabulator-row-even.tabulator-selected {
-            color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+            color: var(--dbp-hover-color, var(--dbp-content));
         }
 
         .tabulator-header {
@@ -105,8 +105,8 @@ export function getTabulatorStyles() {
         }
 
         .tabulator-row.tabulator-selected .tabulator-cell {
-            background-color: var(--dbp-override-muted, var(--dbp-content-surface));
-            color: var(--dbp-hover-color, var(--dbp-on-content-surface));
+            background-color: var(--dbp-selected);
+            color: var(--dbp-on-selected-surface);
         }
 
         /* hide first fake column used by select all checkbox in the header */

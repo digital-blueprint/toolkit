@@ -1293,7 +1293,8 @@ export function getSelect2CSS() {
         }
 
         .select2-container--default .select2-results__option[aria-selected='true'] {
-            background-color: var(--dbp-muted);
+            background-color: var(--dbp-selected);
+            color: var(--dbp-on-selected-surface), var(--dbp-content);
         }
 
         /* Work around single selections not wrapping and breaking responsivness */
