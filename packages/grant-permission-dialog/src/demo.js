@@ -15,7 +15,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
         super();
         this.entryPointUrl = '';
         this.noAuth = false;
-        this.resourceClassIdentifier = 'DbpRelayFormalizeForm';
+        this.resourceClassIdentifier = '';
         this.formIdentifier = '';
         this.submissionIdentifier = '';
         this.forms = [];
@@ -32,6 +32,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
     static get properties() {
         return {
             ...super.properties,
+            resourceClassIdentifier: {type: String},
             formIdentifier: {type: String},
             submissionIdentifier: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
@@ -129,6 +130,10 @@ export class GrantPermissionDialogDemo extends LangMixin(
         this.formIdentifier = event.target.value ? event.target.value : '';
     }
 
+    setResourceClassType(event) {
+        this.resourceClassIdentifier = event.target.value ? event.target.value : '';
+    }
+
     render() {
         const i18n = this._i18n;
         return html`
@@ -179,6 +184,20 @@ export class GrantPermissionDialogDemo extends LangMixin(
                             : ''}
                         ${this.formIdentifier
                             ? html`
+                                  <label for="permission-type">Resource class</label>
+                                  <select
+                                      id="permission-type"
+                                      @change="${this.setResourceClassType}">
+                                      <option value="">- Select a resource class -</option>
+                                      <option value="DbpRelayFormalizeSubmissionCollection">
+                                          Submission collection
+                                      </option>
+                                      <option value="DbpRelayFormalizeForm">Form</option>
+                                  </select>
+                              `
+                            : ''}
+                        ${this.resourceClassIdentifier
+                            ? html`
                                   <dbp-button
                                       type="is-primary"
                                       id="modal-trigger-basic"
@@ -195,7 +214,8 @@ export class GrantPermissionDialogDemo extends LangMixin(
                             subscribe="auth"
                             entry-point-url="${this.entryPointUrl}"
                             resource-identifier="${this.formIdentifier}"
-                            resource-class-identifier="DbpRelayFormalizeSubmissionCollection"></dbp-grant-permission-dialog>
+                            resource-class-identifier="${this
+                                .resourceClassIdentifier}"></dbp-grant-permission-dialog>
                     </div>
                 </div>
                 <div class="container">
