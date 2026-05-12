@@ -850,6 +850,7 @@ export class FileSource extends LangMixin(
                                         class="button is-primary"
                                         for="fileElem"
                                         ?disabled="${this.disabled}">
+                                        <dbp-icon name="select-all" aria-hidden="true"></dbp-icon>
                                         ${this.buttonLabel || i18n.t('upload-label')}
                                     </label>
                                 </div>
