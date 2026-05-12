@@ -151,12 +151,6 @@ export class LoadingButton extends DbpButton {
             :host {
                 display: inline-block;
             }
-
-            .is-not-loading .label {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
             .button {
                 width: 100%;
             }
