@@ -1814,7 +1814,8 @@ export function getDropDownCss() {
         .menu {
             position: absolute;
             top: calc(100% + 0.25rem);
-            min-width: max-content;
+            width: max-content;
+            max-width: var(--dbp-select-menu-max-width, calc(100vw - 2rem));
             padding: 0;
             margin: 0;
             list-style: none;
@@ -1831,7 +1832,7 @@ export function getDropDownCss() {
             z-index: 10;
         }
 
-        /* ✅ correct align behaviors */
+        /* correct align behaviors */
         :host([align='left']) {
             --dbp-select-menu-left: 0;
             --dbp-select-menu-right: auto;
@@ -1849,11 +1850,21 @@ export function getDropDownCss() {
         }
 
         .item-button {
+            display: flex;
             width: 100%;
-            text-align: left;
+            max-width: inherit;
+            justify-content: left;
             border: 0 none;
+            white-space: normal;
             color: var(--dbp-content);
             background-color: var(--dbp-surface);
+        }
+
+        .item-button span {
+            min-width: 0;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            text-align: left;
         }
 
         .item-button dbp-icon {
@@ -1872,6 +1883,19 @@ export function getDropDownCss() {
 
         :host(.select-version) .item-button[aria-checked='true'] {
             background-color: var(--dbp-selected, #555555);
+        }
+
+        .trigger.wrap-label {
+            display: flex;
+            text-align: -webkit-match-parent;
+            text-align: match-parent;
+            justify-content: flex-start !important;
+        }
+
+        .trigger.wrap-label .trigger-label {
+            flex: 0 1 auto;
+            text-wrap: wrap;
+            white-space: normal;
         }
     `;
 }

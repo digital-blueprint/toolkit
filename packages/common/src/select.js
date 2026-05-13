@@ -17,6 +17,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.options = [];
         this.value = '';
         this.buttonType = 'is-secondary';
+        this.wrapLabel = false;
     }
 
     static properties = {
@@ -28,6 +29,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         options: {type: Array},
         value: {type: String, reflect: true},
         buttonType: {type: String, attribute: 'button-type'},
+        wrapLabel: {type: Boolean, attribute: 'wrap-label', reflect: true},
     };
 
     static get scopedElements() {
@@ -158,7 +160,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         return html`
             <button
                 id="action-trigger-button"
-                class="trigger button ${this.buttonType}"
+                class="trigger button ${this.buttonType} ${this.wrapLabel ? 'wrap-label' : ''}"
                 part="trigger"
                 @click=${this.toggle}
                 @keydown=${this._onTriggerKeydown}
@@ -166,7 +168,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 aria-haspopup="menu"
                 aria-expanded=${String(this.open)}
                 aria-controls="action-dropdown">
-                ${this.label}
+                <span class="trigger-label">${this.label}</span>
                 <dbp-icon class="icon-chevron" name="chevron-down" aria-hidden="true"></dbp-icon>
             </button>
 
