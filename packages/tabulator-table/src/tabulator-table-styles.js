@@ -284,6 +284,19 @@ export function getTabulatorStyles() {
             min-width: calc(100% - 41px);
         }
 
+        .spinner-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px dotted var(--dbp-muted);
+        }
+
+        .spinner-container.hidden {
+            display: none;
+        }
+
         /* tag styles*/
         .tag {
             display: inline-block;

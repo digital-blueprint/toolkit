@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {html, css, unsafeCSS} from 'lit';
-import {ScopedElementsMixin, LangMixin, getIconSVGURL} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin, getIconSVGURL, MiniSpinner} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -38,6 +38,13 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.overflowYScrollEnabled = false;
     }
 
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-mini-spinner': MiniSpinner,
+        };
+    }
+
     static get properties() {
         return {
             ...super.properties,
@@ -56,6 +63,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             expanded: {type: Boolean},
             isCollapsible: {type: Boolean, attribute: false},
             overflowYScrollEnabled: {type: Boolean, attribute: 'overflow-y-scroll-enabled'},
+            tableReady: {type: Boolean, attribute: false},
+            tableBuilding: {type: Boolean, attribute: false},
         };
     }
 
@@ -821,7 +830,14 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         return html`
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}" />
+
                 <div class="table-wrapper">
+                    <div class="${classMap({hidden: this.tableReady, 'spinner-container': true})}">
+                        <dbp-mini-spinner
+                            text="${this._i18n.t(
+                                'tabulator-table.loading-table-data',
+                            )}"></dbp-mini-spinner>
+                    </div>
                     <div
                         id=${this.identifier}
                         class="${classMap({'sticky-header': this.stickyHeaderEnabled})}"></div>

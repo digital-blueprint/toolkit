@@ -296,6 +296,35 @@ export class TabulatorTableDemo extends LangMixin(
         deleteButton.disabled = true;
     }
 
+    loadSpinnerTestData() {
+        const table = this._('#tabulator-table-demo-12');
+        const names = [
+            'Oli Bob',
+            'Mary May',
+            'Christine Lobowski',
+            'Brendon Philips',
+            'Margret Marmajuke',
+        ];
+        const colors = ['red', 'blue', 'green', 'orange', 'yellow'];
+        const dobs = ['13/10/1967', '14/05/1982', '22/05/1982', '01/08/1980', '31/01/1999'];
+
+        table.tableReady = false;
+        setTimeout(() => {
+            const largeData = [];
+            for (let i = 0; i < 500; i++) {
+                largeData.push({
+                    id: i + 1,
+                    name: names[Math.floor(Math.random() * names.length)],
+                    age: Math.floor(Math.random() * 100),
+                    col: colors[Math.floor(Math.random() * colors.length)],
+                    dob: dobs[Math.floor(Math.random() * dobs.length)],
+                });
+            }
+            table.setData(largeData);
+            table.tableReady = true;
+        }, 500);
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -1092,6 +1121,23 @@ export class TabulatorTableDemo extends LangMixin(
                             </div>
                         </dbp-modal>
                     </div>
+                </div>
+                <div class="container">
+                    <h3 class="demo-sub-title">Tabulator table - Loading Spinner</h3>
+                    <button
+                        class="button is-primary"
+                        @click="${() => {
+                            this.loadSpinnerTestData();
+                        }}">
+                        ${i18n.t('add-data')}
+                    </button>
+                    <dbp-tabulator-table
+                        lang="${this.lang}"
+                        class="tabulator-table-demo"
+                        id="tabulator-table-demo-12"
+                        pagination-size="10"
+                        pagination-enabled="true"
+                        .options=${options}></dbp-tabulator-table>
                 </div>
             </section>
         `;
