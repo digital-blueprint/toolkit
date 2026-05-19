@@ -2,7 +2,7 @@ import {createInstance} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {Icon, MiniSpinner} from '@dbp-toolkit/common';
+import {Icon, MiniSpinner, Modal} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as tabulatorStyles from '@dbp-toolkit/tabulator-table/src/tabulator-table-styles';
@@ -10,7 +10,6 @@ import {createClient, parseXML} from 'webdav/web';
 import {classMap} from 'lit/directives/class-map.js';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
-import MicroModal from './micromodal.es';
 import {name as pkgName} from './../package.json';
 import * as fileHandlingStyles from './styles';
 import {encrypt, decrypt, parseJwt} from './crypto.js';
@@ -106,6 +105,7 @@ export class NextcloudFilePicker extends LangMixin(
         return {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
+            'dbp-modal': Modal,
         };
     }
 
@@ -1735,7 +1735,7 @@ export class NextcloudFilePicker extends LangMixin(
         let directory = this.uploadFileDirectory;
 
         if (this._("input[name='replacement']:checked").value === 'ignore') {
-            MicroModal.close(this._('#replace-modal'));
+            this.closeModal('#replace-modal');
             this.forAll ? (this.fileList = []) : this.fileList.shift();
             this.uploadFile(directory);
             return true;
@@ -1744,7 +1744,7 @@ export class NextcloudFilePicker extends LangMixin(
                 this.customFilename = this._('#replace-filename').value;
             }
             path = directory + '/' + this._('#replace-filename').value;
-            MicroModal.close(this._('#replace-modal'));
+            this.closeModal('#replace-modal');
             this.replaceFilename = this._('#replace-filename').value;
         } else {
             path = directory + '/' + this.uploadFileObject.name;
@@ -1759,14 +1759,14 @@ export class NextcloudFilePicker extends LangMixin(
             overwrite: overwrite,
         })
             .then((content) => {
-                MicroModal.close(this._('#replace-modal'));
+                this.closeModal('#replace-modal');
                 this.uploadCount += 1;
                 that.fileList.shift();
                 that.uploadFile(directory);
             })
             .catch((error) => {
                 if (error.message.search('412') !== -1) {
-                    MicroModal.close(that._('#replace-modal'));
+                    that.closeModal('#replace-modal');
                     this.generatedFilename = this.getNextFilename();
                     this._('#replace-filename').value = this.generatedFilename;
                     if (this.forAll) {
@@ -1904,13 +1904,7 @@ export class NextcloudFilePicker extends LangMixin(
             this.setInputFieldVisibility();
             this._('#replace-new-name').focus();
         }
-        MicroModal.show(this._('#replace-modal'), {
-            disableScroll: true,
-            onClose: (modal) => {
-                this.statusText = '';
-                this.loading = false;
-            },
-        });
+        this.openModal('#replace-modal');
     }
 
     closeDialog(e) {
@@ -1920,7 +1914,52 @@ export class NextcloudFilePicker extends LangMixin(
         if (this._('#select_all')) {
             this._('#select_all').checked = false;
         }
-        MicroModal.close(this._('#modal-picker'));
+    }
+
+    openModal(selector) {
+        const modal = this._(selector);
+        if (!modal) {
+            return;
+        }
+
+        const open = () => {
+            if (!modal.isOpen()) {
+                modal.open();
+            }
+        };
+
+        if (modal.modalDialog) {
+            open();
+        } else {
+            modal.updateComplete.then(open);
+        }
+    }
+
+    closeModal(selector) {
+        const modal = this._(selector);
+        if (modal && modal.modalDialog && modal.isOpen()) {
+            modal.close();
+        }
+    }
+
+    handleModalClosed(event) {
+        if (event.detail.id === 'replace-modal-dialog') {
+            this.statusText = '';
+            this.loading = false;
+            this.keepPageScrollLockedIfParentModalOpen();
+        }
+
+        if (event.detail.id === 'new-folder-modal-dialog') {
+            this.cleanupNewFolderEntry();
+            this.keepPageScrollLockedIfParentModalOpen();
+        }
+    }
+
+    keepPageScrollLockedIfParentModalOpen() {
+        const parentModal = this.closest('dbp-modal');
+        if (parentModal && parentModal.isOpen()) {
+            parentModal.modalDialog.ownerDocument.documentElement.style.overflow = 'hidden';
+        }
     }
 
     /**
@@ -2041,9 +2080,7 @@ export class NextcloudFilePicker extends LangMixin(
             this._('#tf-new-folder-dialog').select();
         }, 0);
 
-        MicroModal.show(this._('#new-folder-modal'), {
-            disableScroll: true,
-        });
+        this.openModal('#new-folder-modal');
 
         this._('#tf-new-folder-dialog').addEventListener('keydown', ({key}) => {
             //TODO since we do not destroy the modal it is enough to do this once
@@ -2071,21 +2108,27 @@ export class NextcloudFilePicker extends LangMixin(
     }
 
     deleteNewFolderEntry() {
-        const i18n = this._i18n;
-
         if (this.initateOpenNewFolder) {
             this.initateOpenNewFolder = false;
             return;
         }
 
         this.disableRowClick = false;
-        MicroModal.close(this._('#new-folder-modal'));
+        this.closeModal('#new-folder-modal');
+
+        this.cleanupNewFolderEntry();
+    }
+
+    cleanupNewFolderEntry() {
+        const i18n = this._i18n;
 
         document.removeEventListener('click', this.boundClickOutsideNewFolderHandler);
         document.removeEventListener('keydown', this.boundCancelNewFolderHandler);
-        this._('#tf-new-folder-dialog').value = i18n.t(
-            'nextcloud-file-picker.new-folder-dialog-default-name',
-        );
+        if (this._('#tf-new-folder-dialog')) {
+            this._('#tf-new-folder-dialog').value = i18n.t(
+                'nextcloud-file-picker.new-folder-dialog-default-name',
+            );
+        }
     }
 
     addNewFolder() {
@@ -2550,7 +2593,6 @@ export class NextcloudFilePicker extends LangMixin(
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getTextUtilities()}
-            ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${tabulatorStyles.getTabulatorStyles()}
             ${fileHandlingStyles.getFileHandlingCss()}
@@ -3454,197 +3496,156 @@ export class NextcloudFilePicker extends LangMixin(
                 </div>
             </div>
 
-            <div class="modal micromodal-slide" id="replace-modal" aria-hidden="true">
-                <div class="modal-overlay" tabindex="-2" data-micromodal-close>
-                    <div
-                        class="modal-container"
-                        id="replace-modal-box"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="replace-modal-title">
-                        <header class="modal-header">
-                            <button
-                                title="${i18n.t('file-sink.modal-close')}"
-                                class="modal-close"
-                                aria-label="Close modal"
+            <dbp-modal
+                id="replace-modal"
+                modal-id="replace-modal-dialog"
+                class="nextcloud-modal"
+                lang="${this.lang}"
+                @dbp-modal-closed="${(event) => this.handleModalClosed(event)}">
+                <div slot="title">
+                    <h2 id="replace-modal-title">
+                        ${i18n.t('nextcloud-file-picker.replace-title-1')}
+                        <span style="word-break: break-all;">${this.replaceFilename}</span>
+                        ${i18n.t('nextcloud-file-picker.replace-title-2')}.
+                    </h2>
+                </div>
+                <div slot="content" id="replace-modal-box" class="modal-content">
+                    <h3>${i18n.t('nextcloud-file-picker.replace-text')}?</h3>
+                    <div>
+                        <label class="button-container">
+                            <span>${i18n.t('nextcloud-file-picker.replace-new_name')}:</span>
+                            <input
+                                type="radio"
+                                id="replace-new-name"
+                                class="radio-btn"
+                                name="replacement"
+                                value="new-name"
+                                checked
                                 @click="${() => {
-                                    this.closeDialog();
-                                }}">
-                                <dbp-icon
-                                    title="${i18n.t('file-sink.modal-close')}"
-                                    name="close"
-                                    class="close-icon"></dbp-icon>
-                            </button>
-                            <h2 id="replace-modal-title">
-                                ${i18n.t('nextcloud-file-picker.replace-title-1')}
-                                <span style="word-break: break-all;">${this.replaceFilename}</span>
-                                ${i18n.t('nextcloud-file-picker.replace-title-2')}.
-                            </h2>
-                        </header>
-                        <main class="modal-content" id="replace-modal-content">
-                            <h3>${i18n.t('nextcloud-file-picker.replace-text')}?</h3>
-                            <div>
-                                <label class="button-container">
-                                    <span>
-                                        ${i18n.t('nextcloud-file-picker.replace-new_name')}:
-                                    </span>
-                                    <input
-                                        type="radio"
-                                        id="replace-new-name"
-                                        class="radio-btn"
-                                        name="replacement"
-                                        value="new-name"
-                                        checked
-                                        @click="${() => {
-                                            this.setInputFieldVisibility();
-                                        }}" />
-                                    <span class="radiobutton"></span>
-                                    <input
-                                        type="text"
-                                        id="replace-filename"
-                                        class="input"
-                                        name="replace-filename"
-                                        value=""
-                                        onClick="this.select();" />
-                                </label>
-                            </div>
+                                    this.setInputFieldVisibility();
+                                }}" />
+                            <span class="radiobutton"></span>
+                            <input
+                                type="text"
+                                id="replace-filename"
+                                class="input"
+                                name="replace-filename"
+                                value=""
+                                onClick="this.select();" />
+                        </label>
+                    </div>
 
-                            <div>
-                                <label class="button-container">
-                                    <span>${i18n.t('nextcloud-file-picker.replace-replace')}</span>
-                                    <input
-                                        type="radio"
-                                        id="replace-replace"
-                                        name="replacement"
-                                        value="replace"
-                                        @click="${() => {
-                                            this.setInputFieldVisibility();
-                                        }}" />
-                                    <span class="radiobutton"></span>
-                                </label>
-                            </div>
-                            <div>
-                                <label class="button-container">
-                                    <span>${i18n.t('nextcloud-file-picker.replace-skip')}</span>
-                                    <input
-                                        type="radio"
-                                        class="radio-btn"
-                                        name="replacement"
-                                        value="ignore"
-                                        @click="${() => {
-                                            this.setInputFieldVisibility();
-                                        }}" />
-                                    <span class="radiobutton"></span>
-                                </label>
-                            </div>
-                        </main>
-                        <footer class="modal-footer">
-                            <div class="modal-footer-btn">
-                                <button
-                                    class="button"
-                                    data-micromodal-close
-                                    aria-label="Close this dialog window"
-                                    @click="${() => {
-                                        this.cancelOverwrite();
-                                    }}">
-                                    ${this.getCancelText()}
-                                </button>
-                                <button
-                                    class="button select-button is-primary"
-                                    @click="${() => {
-                                        this.uploadFileAfterConflict();
-                                    }}">
-                                    OK
-                                </button>
-                            </div>
-                            <div>
-                                <label class="button-container">
-                                    ${i18n.t('nextcloud-file-picker.replace-mode-all')}
-                                    <input
-                                        type="checkbox"
-                                        id="replace_mode_all"
-                                        name="replace_mode_all"
-                                        value="replace_mode_all"
-                                        @click="${() => {
-                                            this.setRepeatForAllConflicts();
-                                        }}" />
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                        </footer>
+                    <div>
+                        <label class="button-container">
+                            <span>${i18n.t('nextcloud-file-picker.replace-replace')}</span>
+                            <input
+                                type="radio"
+                                id="replace-replace"
+                                name="replacement"
+                                value="replace"
+                                @click="${() => {
+                                    this.setInputFieldVisibility();
+                                }}" />
+                            <span class="radiobutton"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="button-container">
+                            <span>${i18n.t('nextcloud-file-picker.replace-skip')}</span>
+                            <input
+                                type="radio"
+                                class="radio-btn"
+                                name="replacement"
+                                value="ignore"
+                                @click="${() => {
+                                    this.setInputFieldVisibility();
+                                }}" />
+                            <span class="radiobutton"></span>
+                        </label>
                     </div>
                 </div>
-            </div>
-
-            <div class="modal micromodal-slide" id="new-folder-modal" aria-hidden="true">
-                <div class="modal-overlay" tabindex="-2" data-micromodal-close>
-                    <div
-                        class="modal-container"
-                        id="new-folder-modal-box"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="new-folder-modal-title">
-                        <header class="modal-header">
-                            <button
-                                title="${i18n.t('file-sink.modal-close')}"
-                                class="modal-close"
-                                aria-label="Close modal"
+                <div slot="footer" class="modal-footer">
+                    <div class="modal-footer-btn">
+                        <button
+                            class="button"
+                            aria-label="Close this dialog window"
+                            @click="${() => {
+                                this.cancelOverwrite();
+                                this.closeModal('#replace-modal');
+                            }}">
+                            ${this.getCancelText()}
+                        </button>
+                        <button
+                            class="button select-button is-primary"
+                            @click="${() => {
+                                this.uploadFileAfterConflict();
+                            }}">
+                            OK
+                        </button>
+                    </div>
+                    <div>
+                        <label class="button-container">
+                            ${i18n.t('nextcloud-file-picker.replace-mode-all')}
+                            <input
+                                type="checkbox"
+                                id="replace_mode_all"
+                                name="replace_mode_all"
+                                value="replace_mode_all"
                                 @click="${() => {
-                                    this.deleteNewFolderEntry();
-                                }}">
-                                <dbp-icon
-                                    title="${i18n.t('file-sink.modal-close')}"
-                                    name="close"
-                                    class="close-icon"></dbp-icon>
-                            </button>
-                            <h3 id="new-folder-modal-title">
-                                ${i18n.t('nextcloud-file-picker.new-folder-dialog-title')}
-                            </h3>
-                        </header>
-                        <main class="modal-content" id="new-folder-modal-content">
-                            <div class="nf-label">
-                                ${i18n.t('nextcloud-file-picker.new-folder-dialog-label')}
-                            </div>
-                            <div>
-                                <input
-                                    type="text"
-                                    class="input"
-                                    name="tf-new-folder-dialog"
-                                    id="tf-new-folder-dialog"
-                                    value="${i18n.t(
-                                        'nextcloud-file-picker.new-folder-dialog-default-name',
-                                    )}"
-                                    @input="${() => {
-                                        this._atChangeInput();
-                                    }}" />
-                            </div>
-                        </main>
-                        <footer class="modal-footer">
-                            <div class="modal-footer-btn">
-                                <button
-                                    class="button"
-                                    data-micromodal-close
-                                    aria-label="Close this dialog window"
-                                    @click="${() => {
-                                        this.deleteNewFolderEntry();
-                                    }}">
-                                    ${i18n.t(
-                                        'nextcloud-file-picker.new-folder-dialog-button-cancel',
-                                    )}
-                                </button>
-                                <button
-                                    class="button select-button is-primary"
-                                    id="new-folder-confirm-btn"
-                                    @click="${() => {
-                                        this.addNewFolder();
-                                    }}">
-                                    ${i18n.t('nextcloud-file-picker.new-folder-dialog-button-ok')}
-                                </button>
-                            </div>
-                        </footer>
+                                    this.setRepeatForAllConflicts();
+                                }}" />
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
                 </div>
-            </div>
+            </dbp-modal>
+
+            <dbp-modal
+                id="new-folder-modal"
+                modal-id="new-folder-modal-dialog"
+                class="nextcloud-modal"
+                title="${i18n.t('nextcloud-file-picker.new-folder-dialog-title')}"
+                lang="${this.lang}"
+                @dbp-modal-closed="${(event) => this.handleModalClosed(event)}">
+                <div slot="content" id="new-folder-modal-box" class="modal-content">
+                    <div class="nf-label">
+                        ${i18n.t('nextcloud-file-picker.new-folder-dialog-label')}
+                    </div>
+                    <div>
+                        <input
+                            type="text"
+                            class="input"
+                            name="tf-new-folder-dialog"
+                            id="tf-new-folder-dialog"
+                            value="${i18n.t(
+                                'nextcloud-file-picker.new-folder-dialog-default-name',
+                            )}"
+                            @input="${() => {
+                                this._atChangeInput();
+                            }}" />
+                    </div>
+                </div>
+                <div slot="footer" class="modal-footer">
+                    <div class="modal-footer-btn">
+                        <button
+                            class="button"
+                            aria-label="Close this dialog window"
+                            @click="${() => {
+                                this.deleteNewFolderEntry();
+                            }}">
+                            ${i18n.t('nextcloud-file-picker.new-folder-dialog-button-cancel')}
+                        </button>
+                        <button
+                            class="button select-button is-primary"
+                            id="new-folder-confirm-btn"
+                            @click="${() => {
+                                this.addNewFolder();
+                            }}">
+                            ${i18n.t('nextcloud-file-picker.new-folder-dialog-button-ok')}
+                        </button>
+                    </div>
+                </div>
+            </dbp-modal>
         `;
     }
 }

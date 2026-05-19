@@ -2,12 +2,11 @@ import {createInstance} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import {Icon, MiniSpinner} from '@dbp-toolkit/common';
+import {Icon, MiniSpinner, Modal} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from './nextcloud-file-picker';
 import {classMap} from 'lit/directives/class-map.js';
 import FileSaver from 'file-saver';
-import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
 import {Clipboard} from '@dbp-toolkit/file-handling/src/clipboard';
 import DbpFileHandlingLitElement from './dbp-file-handling-lit-element';
@@ -49,6 +48,7 @@ export class FileSink extends LangMixin(
         return {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
+            'dbp-modal': Modal,
             'dbp-nextcloud-file-picker': NextcloudFilePicker,
             'dbp-clipboard': Clipboard,
         };
@@ -335,7 +335,7 @@ export class FileSink extends LangMixin(
     finishedFileUpload(event) {
         const i18n = this._i18n;
         this.sendDestination();
-        MicroModal.close(this._('#modal-picker'));
+        this.closeModal('#modal-picker');
         if (event.detail > 0) {
             sendNotification({
                 summary: i18n.t('file-sink.upload-success-title'),
@@ -360,6 +360,48 @@ export class FileSink extends LangMixin(
             data = {target: this.activeTarget};
         }
         this.sendSetPropertyEvent('initial-file-handling-state', data);
+    }
+
+    openModal(selector) {
+        const modal = this._(selector);
+        if (!modal) {
+            return;
+        }
+
+        const open = () => {
+            if (!modal.isOpen()) {
+                modal.open();
+            }
+        };
+
+        if (modal.modalDialog) {
+            open();
+        } else {
+            modal.updateComplete.then(open);
+        }
+    }
+
+    closeModal(selector) {
+        const modal = this._(selector);
+        if (modal && modal.modalDialog && modal.isOpen()) {
+            modal.close();
+        }
+    }
+
+    handleModalClosed(event) {
+        if (event.detail.id !== 'modal-picker-dialog') {
+            return;
+        }
+
+        this.isDialogOpen = false;
+
+        // Send event that dialog is closed
+        const dialogClosedEvent = new CustomEvent('dbp-file-sink-dialog-closed', {
+            detail: {},
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(dialogClosedEvent);
     }
 
     preventDefaults(e) {
@@ -387,23 +429,7 @@ export class FileSink extends LangMixin(
                 this._('#clipboard-file-picker')._('#select_all').checked = false;
             }
         }
-        const filePicker = this._('#modal-picker');
-        if (filePicker) {
-            MicroModal.show(filePicker, {
-                disableScroll: true,
-                onClose: (modal) => {
-                    this.isDialogOpen = false;
-
-                    // Send event that dialog is closed
-                    const event = new CustomEvent('dbp-file-sink-dialog-closed', {
-                        detail: {},
-                        bubbles: true,
-                        composed: true,
-                    });
-                    this.dispatchEvent(event);
-                },
-            });
-        }
+        this.openModal('#modal-picker');
 
         //check if default destination is set
         if (
@@ -437,7 +463,7 @@ export class FileSink extends LangMixin(
                 }
             }
         }
-        MicroModal.close(this._('#modal-picker'));
+        this.closeModal('#modal-picker');
         this.isDialogOpen = false;
     }
 
@@ -507,13 +533,7 @@ export class FileSink extends LangMixin(
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
-            ${commonStyles.getModalDialogCSS()}
             ${fileHandlingStyles.getFileHandlingCss()}
-
-            .modal-container-full-size {
-                min-width: 100%;
-                min-height: 100%;
-            }
 
             #zip-download-block {
                 height: 100%;
@@ -585,138 +605,121 @@ export class FileSink extends LangMixin(
     render() {
         const i18n = this._i18n;
         return html`
-            <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
-                <div class="modal-overlay" tabindex="-1">
-                    <div
-                        class="modal-container ${classMap({
-                            'modal-container-full-size': this.fullsizeModal,
-                        })}"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="modal-picker-title">
-                        <div class="nav-wrapper modal-nav">
-                            <nav class="modal-nav">
-                                <div
-                                    title="${i18n.t('file-sink.nav-local')}"
-                                    @click="${() => {
-                                        this.activeTarget = 'local';
-                                    }}"
-                                    class="${classMap({
-                                        active: this.activeTarget === 'local',
-                                        hidden: !this.hasEnabledDestination('local'),
-                                    })}">
-                                    <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
-                                    <p>${i18n.t('file-source.nav-local')}</p>
-                                </div>
-                                <div
-                                    title="${this.nextcloudName}"
-                                    @click="${() => {
-                                        this.activeTarget = 'nextcloud';
-                                        this.loadWebdavDirectory();
-                                    }}"
-                                    class="${classMap({
-                                        active: this.activeTarget === 'nextcloud',
-                                        hidden:
-                                            !this.hasEnabledDestination('nextcloud') ||
-                                            this.nextcloudWebDavUrl === '' ||
-                                            this.nextcloudAuthUrl === '',
-                                    })}">
-                                    <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
-                                    <p>${this.nextcloudName}</p>
-                                </div>
-                                <div
-                                    title="${i18n.t('file-sink.clipboard')}"
-                                    @click="${() => {
-                                        this.activeTarget = 'clipboard';
-                                    }}"
-                                    class="${classMap({
-                                        active: this.activeTarget === 'clipboard',
-                                        hidden: !this.hasEnabledDestination('clipboard'),
-                                    })}">
-                                    <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                                    <p>${i18n.t('file-sink.clipboard')}</p>
-                                </div>
-                            </nav>
-                            <div class="paddles">
-                                <dbp-icon
-                                    class="left-paddle paddle hidden"
-                                    name="chevron-left"
-                                    class="close-icon"></dbp-icon>
-                                <dbp-icon
-                                    class="right-paddle paddle"
-                                    name="chevron-right"
-                                    class="close-icon"></dbp-icon>
-                            </div>
-                        </div>
-
-                        <div class="modal-header">
-                            <button
-                                title="${i18n.t('file-sink.modal-close')}"
-                                class="modal-close"
-                                aria-label="Close modal"
+            <dbp-modal
+                id="modal-picker"
+                modal-id="modal-picker-dialog"
+                class="file-handling-modal ${classMap({
+                    'modal-container-full-size': this.fullsizeModal,
+                })}"
+                title="${this.context}"
+                lang="${this.lang}"
+                @dbp-modal-closed="${(event) => this.handleModalClosed(event)}">
+                <div slot="content" class="file-handling-modal-content">
+                    <div class="nav-wrapper modal-nav">
+                        <nav class="modal-nav">
+                            <div
+                                title="${i18n.t('file-sink.nav-local')}"
                                 @click="${() => {
-                                    this.closeDialog();
-                                }}">
-                                <dbp-icon
-                                    title="${i18n.t('file-sink.modal-close')}"
-                                    name="close"
-                                    class="close-icon"></dbp-icon>
-                            </button>
-                            <p class="modal-context">${this.context}</p>
-                        </div>
-
-                        <main class="modal-content" id="modal-picker-content">
-                            <div
-                                class="source-main ${classMap({
-                                    hidden: this.activeTarget !== 'local',
+                                    this.activeTarget = 'local';
+                                }}"
+                                class="${classMap({
+                                    active: this.activeTarget === 'local',
+                                    hidden: !this.hasEnabledDestination('local'),
                                 })}">
-                                <div id="zip-download-block">
-                                    <div class="block">
-                                        ${i18n.t('file-sink.local-intro', {
-                                            count: this.files.length,
-                                        })}
-                                    </div>
-                                    <button
-                                        class="button is-primary"
-                                        ?disabled="${this.disabled}"
-                                        @click="${() => {
-                                            // Custom event to notify about download start, used to show loading indicators in the UI
-                                            const event = new CustomEvent(
-                                                'dbp-file-sink-download-started',
-                                                {
-                                                    detail: {},
-                                                    bubbles: true,
-                                                    composed: true,
-                                                },
-                                            );
-                                            this.dispatchEvent(event);
-                                            this.downloadCompressedFiles();
-                                        }}">
-                                        ${i18n.t('file-sink.local-button', {
-                                            count: this.files.length,
-                                        })}
-                                    </button>
-                                </div>
+                                <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
+                                <p>${i18n.t('file-source.nav-local')}</p>
                             </div>
                             <div
-                                class="source-main ${classMap({
+                                title="${this.nextcloudName}"
+                                @click="${() => {
+                                    this.activeTarget = 'nextcloud';
+                                    this.loadWebdavDirectory();
+                                }}"
+                                class="${classMap({
+                                    active: this.activeTarget === 'nextcloud',
                                     hidden:
-                                        this.activeTarget !== 'nextcloud' ||
+                                        !this.hasEnabledDestination('nextcloud') ||
                                         this.nextcloudWebDavUrl === '' ||
                                         this.nextcloudAuthUrl === '',
                                 })}">
-                                ${this.getNextcloudHtml()}
+                                <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
+                                <p>${this.nextcloudName}</p>
                             </div>
                             <div
-                                class="source-main ${classMap({
-                                    hidden: this.activeTarget !== 'clipboard',
+                                title="${i18n.t('file-sink.clipboard')}"
+                                @click="${() => {
+                                    this.activeTarget = 'clipboard';
+                                }}"
+                                class="${classMap({
+                                    active: this.activeTarget === 'clipboard',
+                                    hidden: !this.hasEnabledDestination('clipboard'),
                                 })}">
-                                ${this.getClipboardHtml()}
+                                <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
+                                <p>${i18n.t('file-sink.clipboard')}</p>
                             </div>
-                        </main>
+                        </nav>
+                        <div class="paddles">
+                            <dbp-icon
+                                class="left-paddle paddle hidden"
+                                name="chevron-left"
+                                class="close-icon"></dbp-icon>
+                            <dbp-icon
+                                class="right-paddle paddle"
+                                name="chevron-right"
+                                class="close-icon"></dbp-icon>
+                        </div>
                     </div>
+                    <main class="modal-content" id="modal-picker-content">
+                        <div
+                            class="source-main ${classMap({
+                                hidden: this.activeTarget !== 'local',
+                            })}">
+                            <div id="zip-download-block">
+                                <div class="block">
+                                    ${i18n.t('file-sink.local-intro', {
+                                        count: this.files.length,
+                                    })}
+                                </div>
+                                <button
+                                    class="button is-primary"
+                                    ?disabled="${this.disabled}"
+                                    @click="${() => {
+                                        // Custom event to notify about download start, used to show loading indicators in the UI
+                                        const event = new CustomEvent(
+                                            'dbp-file-sink-download-started',
+                                            {
+                                                detail: {},
+                                                bubbles: true,
+                                                composed: true,
+                                            },
+                                        );
+                                        this.dispatchEvent(event);
+                                        this.downloadCompressedFiles();
+                                    }}">
+                                    ${i18n.t('file-sink.local-button', {
+                                        count: this.files.length,
+                                    })}
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            class="source-main ${classMap({
+                                hidden:
+                                    this.activeTarget !== 'nextcloud' ||
+                                    this.nextcloudWebDavUrl === '' ||
+                                    this.nextcloudAuthUrl === '',
+                            })}">
+                            ${this.getNextcloudHtml()}
+                        </div>
+                        <div
+                            class="source-main ${classMap({
+                                hidden: this.activeTarget !== 'clipboard',
+                            })}">
+                            ${this.getClipboardHtml()}
+                        </div>
+                    </main>
                 </div>
-            </div>
+            </dbp-modal>
         `;
     }
 }

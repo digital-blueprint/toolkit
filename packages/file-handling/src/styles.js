@@ -7,12 +7,41 @@ export function getFileHandlingCss() {
           Modal Styles
         \\**************************/
 
-        .modal-container {
+        .file-handling-modal {
+            --dbp-modal-height: 70vh;
+            --dbp-modal-width: 70%;
+            --dbp-modal-min-width: 60%;
+            --dbp-modal-max-width: 600px;
+            --dbp-modal-min-height: 50%;
+            --dbp-modal-max-height: 90vh;
+            --dbp-modal-container-height: 100%;
+            --dbp-modal-content-min-height: 0;
+            --dbp-modal-content-overflow-y: hidden;
+        }
+
+        .file-handling-modal.modal-container-full-size {
+            --dbp-modal-height: 100%;
+            --dbp-modal-width: 100%;
+            --dbp-modal-min-width: 100%;
+            --dbp-modal-min-height: 100%;
+            --dbp-modal-max-height: 100%;
+        }
+
+        .nextcloud-modal {
+            --dbp-modal-content-overflow-y: hidden;
+        }
+
+        .file-handling-modal-content {
             grid-template-columns: 150px 1fr;
-            grid-template-rows: auto 1fr;
+            grid-template-rows: 1fr;
             gap: 1px 1px;
-            grid-template-areas: 'sidebar header' 'sidebar main';
+            grid-template-areas: 'sidebar main';
             position: relative;
+            display: grid;
+            height: 100%;
+            width: 100%;
+            min-height: 0;
+            box-sizing: border-box;
         }
 
         .modal-nav {
@@ -56,6 +85,8 @@ export function getFileHandlingCss() {
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            min-height: 0;
+            box-sizing: border-box;
         }
 
         .modal-content .source-main {
@@ -66,6 +97,8 @@ export function getFileHandlingCss() {
             width: 100%;
             display: flex;
             align-items: flex-end;
+            min-height: 0;
+            box-sizing: border-box;
         }
 
         .modal-content .source-main.hidden {
@@ -90,11 +123,6 @@ export function getFileHandlingCss() {
             overflow-x: auto;
         }
 
-        .micromodal-slide .modal-container,
-        .micromodal-slide .modal-overlay {
-            will-change: auto;
-        }
-
         /**************************\\
          Picker Styles
        \\**************************/
@@ -105,6 +133,7 @@ export function getFileHandlingCss() {
             height: 100%;
             margin: var(--FUMargin, 0px);
             padding: var(--FUPadding, 20px);
+            box-sizing: border-box;
         }
 
         #fileElem {
@@ -116,7 +145,7 @@ export function getFileHandlingCss() {
             word-wrap: normal;
         }
 
-        #fileElem:focus + label {
+        #fileElem:focus + button {
             outline: none !important;
             outline-width: 0 !important;
             box-shadow: none;

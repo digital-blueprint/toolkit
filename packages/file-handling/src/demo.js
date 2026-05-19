@@ -81,7 +81,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
     }
 
     addLogEntry(ev) {
-        this.selectedFiles.push(ev.detail.file);
+        this.selectedFiles = [...this.selectedFiles, ev.detail.file];
         this.selectedFilesCount = this.selectedFiles.length;
     }
 
@@ -204,7 +204,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <p>Download uploaded files :</p>
                     <button
                         @click="${() => {
-                            this._('#file-sink').files = this.selectedFiles;
+                            this._('#file-sink').files = [...this.selectedFiles];
                         }}"
                         class="button is-primary">
                         Open download dialog

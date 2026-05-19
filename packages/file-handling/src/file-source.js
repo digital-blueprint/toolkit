@@ -2,11 +2,10 @@ import {createInstance} from './i18n';
 import {css, html} from 'lit';
 import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import {Icon, MiniSpinner} from '@dbp-toolkit/common';
+import {Icon, MiniSpinner, Modal} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from './nextcloud-file-picker';
 import {classMap} from 'lit/directives/class-map.js';
-import MicroModal from './micromodal.es';
 import * as fileHandlingStyles from './styles';
 import {Clipboard} from '@dbp-toolkit/file-handling/src/clipboard';
 import DbpFileHandlingLitElement from './dbp-file-handling-lit-element';
@@ -66,6 +65,7 @@ export class FileSource extends LangMixin(
         return {
             'dbp-icon': Icon,
             'dbp-mini-spinner': MiniSpinner,
+            'dbp-modal': Modal,
             'dbp-nextcloud-file-picker': NextcloudFilePicker,
             'dbp-clipboard': Clipboard,
         };
@@ -296,7 +296,7 @@ export class FileSource extends LangMixin(
      */
     sendFileEvent(file, maxUpload) {
         this.sendSource();
-        MicroModal.close(this._('#modal-picker'));
+        this.closeModal('#modal-picker');
         const data = {file: file, maxUpload: maxUpload};
         const event = new CustomEvent('dbp-file-source-file-selected', {
             detail: data,
@@ -318,6 +318,54 @@ export class FileSource extends LangMixin(
         }
 
         this.sendSetPropertyEvent('initial-file-handling-state', data);
+    }
+
+    openModal(selector) {
+        const modal = this._(selector);
+        if (!modal) {
+            return;
+        }
+
+        const open = () => {
+            if (!modal.isOpen()) {
+                modal.open();
+            }
+        };
+
+        if (modal.modalDialog) {
+            open();
+        } else {
+            modal.updateComplete.then(open);
+        }
+    }
+
+    closeModal(selector) {
+        const modal = this._(selector);
+        if (modal && modal.modalDialog && modal.isOpen()) {
+            modal.close();
+        }
+    }
+
+    handleModalClosed(event) {
+        if (event.detail.id !== 'modal-picker-dialog') {
+            return;
+        }
+
+        this.isDialogOpen = false;
+
+        const filePicker = this._('#nextcloud-file-picker');
+
+        if (filePicker) {
+            filePicker.selectAllButton = true;
+        }
+
+        // Send event that dialog is closed
+        const dialogClosedEvent = new CustomEvent('dbp-file-source-dialog-closed', {
+            detail: {},
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(dialogClosedEvent);
     }
 
     checkFileType(file) {
@@ -491,31 +539,7 @@ export class FileSource extends LangMixin(
             this._('#clipboard-file-picker').generateClipboardTable();
         }
 
-        const filePicker = this._('#modal-picker');
-
-        // check if element is already^ in the dom (for example if "dialog-open" attribute is set)
-        if (filePicker) {
-            MicroModal.show(filePicker, {
-                disableScroll: true,
-                onClose: (modal) => {
-                    this.isDialogOpen = false;
-
-                    const filePicker = this._('#nextcloud-file-picker');
-
-                    if (filePicker) {
-                        filePicker.selectAllButton = true;
-                    }
-
-                    // Send event that dialog is closed
-                    const event = new CustomEvent('dbp-file-source-dialog-closed', {
-                        detail: {},
-                        bubbles: true,
-                        composed: true,
-                    });
-                    this.dispatchEvent(event);
-                },
-            });
-        }
+        this.openModal('#modal-picker');
 
         //check if default source is set
         if (
@@ -557,7 +581,7 @@ export class FileSource extends LangMixin(
                 }
             }
         }
-        MicroModal.close(this._('#modal-picker'));
+        this.closeModal('#modal-picker');
     }
 
     getClipboardHtml() {
@@ -620,7 +644,6 @@ export class FileSource extends LangMixin(
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
-            ${commonStyles.getModalDialogCSS()}
             ${fileHandlingStyles.getFileHandlingCss()}
 
             p {
@@ -645,11 +668,13 @@ export class FileSource extends LangMixin(
                 padding: var(--FUPadding, 20px);
                 flex-grow: 1;
                 height: 100%;
+                min-height: 0;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 text-align: center;
+                box-sizing: border-box;
             }
 
             #dropArea.highlight {
@@ -751,133 +776,122 @@ export class FileSource extends LangMixin(
         }
 
         return html`
-            <div class="modal micromodal-slide" id="modal-picker" aria-hidden="true">
-                <div class="modal-overlay" tabindex="-1" data-micromodal-close>
-                    <div
-                        class="modal-container"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="modal-picker-title">
-                        <div class="nav-wrapper modal-nav">
-                            <nav class="modal-nav" role="tablist">
-                                <button
-                                    role="tab"
-                                    aria-selected="${this.activeTarget === 'local'}"
-                                    aria-controls="select-local"
-                                    title="${i18n.t('file-source.nav-local')}"
-                                    @click="${() => {
-                                        this.activeTarget = 'local';
-                                    }}"
-                                    class="${classMap({
-                                        active: this.activeTarget === 'local',
-                                        hidden: !this.hasEnabledSource('local'),
-                                    })}">
-                                    <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
-                                    <p>${i18n.t('file-source.nav-local')}</p>
-                                </button>
-                                <button
-                                    role="tab"
-                                    aria-selected="${this.activeTarget === 'nextcloud'}"
-                                    aria-controls="select-cloud"
-                                    title="Nextcloud"
-                                    @click="${() => {
-                                        this.activeTarget = 'nextcloud';
-                                    }}"
-                                    class="${classMap({
-                                        active: this.activeTarget === 'nextcloud',
-                                        hidden:
-                                            !this.hasEnabledSource('nextcloud') ||
-                                            this.nextcloudWebDavUrl === '' ||
-                                            this.nextcloudAuthUrl === '',
-                                    })}">
-                                    <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
-                                    <p>${this.nextcloudName}</p>
-                                </button>
-                                <button
-                                    role="tab"
-                                    aria-selected="${this.activeTarget === 'clipboard'}"
-                                    aria-controls="select-clipboard"
-                                    title="${i18n.t('file-source.clipboard')}"
-                                    @click="${() => {
-                                        this.activeTarget = 'clipboard';
-                                    }}"
-                                    class="${classMap({
-                                        active: this.activeTarget === 'clipboard',
-                                        hidden: !this.hasEnabledSource('clipboard'),
-                                    })}">
-                                    <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
-                                    <p>${i18n.t('file-source.clipboard')}</p>
-                                </button>
-                            </nav>
-
-                            <div class="paddles">
-                                <dbp-icon
-                                    class="left-paddle paddle hidden"
-                                    name="chevron-left"
-                                    class="close-icon"></dbp-icon>
-                                <dbp-icon
-                                    class="right-paddle paddle"
-                                    name="chevron-right"
-                                    class="close-icon"></dbp-icon>
-                            </div>
-                        </div>
-                        <div class="modal-header">
+            <dbp-modal
+                id="modal-picker"
+                modal-id="modal-picker-dialog"
+                class="file-handling-modal"
+                title="${this.context}"
+                lang="${this.lang}"
+                @dbp-modal-closed="${(event) => this.handleModalClosed(event)}">
+                <div slot="content" class="file-handling-modal-content">
+                    <div class="nav-wrapper modal-nav">
+                        <nav class="modal-nav" role="tablist">
                             <button
-                                title="${i18n.t('file-source.modal-close')}"
-                                class="modal-close"
-                                aria-label="Close modal"
+                                role="tab"
+                                aria-selected="${this.activeTarget === 'local'}"
+                                aria-controls="select-local"
+                                title="${i18n.t('file-source.nav-local')}"
                                 @click="${() => {
-                                    this.closeDialog();
-                                }}">
-                                <dbp-icon name="close" class="close-icon"></dbp-icon>
-                            </button>
-
-                            <p class="modal-context" id="modal-picker-title">${this.context}</p>
-                        </div>
-                        <main class="modal-content" id="modal-picker-content">
-                            <div
-                                id="select-local"
-                                role="tabpanel"
-                                class="source-main ${classMap({
-                                    hidden: this.activeTarget !== 'local',
+                                    this.activeTarget = 'local';
+                                }}"
+                                class="${classMap({
+                                    active: this.activeTarget === 'local',
+                                    hidden: !this.hasEnabledSource('local'),
                                 })}">
-                                <div id="dropArea">
-                                    <div class="block">
-                                        <p>${i18n.t('intro')}</p>
-                                    </div>
-                                    ${inputFile}
-                                    <label
-                                        class="button is-primary"
-                                        for="fileElem"
-                                        ?disabled="${this.disabled}">
-                                        <dbp-icon name="select-all" aria-hidden="true"></dbp-icon>
-                                        ${this.buttonLabel || i18n.t('upload-label')}
-                                    </label>
-                                </div>
-                            </div>
-                            <div
-                                id="select-cloud"
-                                role="tabpanel"
-                                class="source-main ${classMap({
+                                <dbp-icon class="nav-icon" name="laptop"></dbp-icon>
+                                <p>${i18n.t('file-source.nav-local')}</p>
+                            </button>
+                            <button
+                                role="tab"
+                                aria-selected="${this.activeTarget === 'nextcloud'}"
+                                aria-controls="select-cloud"
+                                title="Nextcloud"
+                                @click="${() => {
+                                    this.activeTarget = 'nextcloud';
+                                }}"
+                                class="${classMap({
+                                    active: this.activeTarget === 'nextcloud',
                                     hidden:
-                                        this.activeTarget !== 'nextcloud' ||
+                                        !this.hasEnabledSource('nextcloud') ||
                                         this.nextcloudWebDavUrl === '' ||
                                         this.nextcloudAuthUrl === '',
                                 })}">
-                                ${this.getNextcloudHtml()}
-                            </div>
-                            <div
-                                id="select-clipboard"
-                                role="tabpanel"
-                                class="source-main ${classMap({
-                                    hidden: this.activeTarget !== 'clipboard',
+                                <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
+                                <p>${this.nextcloudName}</p>
+                            </button>
+                            <button
+                                role="tab"
+                                aria-selected="${this.activeTarget === 'clipboard'}"
+                                aria-controls="select-clipboard"
+                                title="${i18n.t('file-source.clipboard')}"
+                                @click="${() => {
+                                    this.activeTarget = 'clipboard';
+                                }}"
+                                class="${classMap({
+                                    active: this.activeTarget === 'clipboard',
+                                    hidden: !this.hasEnabledSource('clipboard'),
                                 })}">
-                                ${this.getClipboardHtml()}
-                            </div>
-                        </main>
+                                <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
+                                <p>${i18n.t('file-source.clipboard')}</p>
+                            </button>
+                        </nav>
+
+                        <div class="paddles">
+                            <dbp-icon
+                                class="left-paddle paddle hidden"
+                                name="chevron-left"
+                                class="close-icon"></dbp-icon>
+                            <dbp-icon
+                                class="right-paddle paddle"
+                                name="chevron-right"
+                                class="close-icon"></dbp-icon>
+                        </div>
                     </div>
+                    <main class="modal-content" id="modal-picker-content">
+                        <div
+                            id="select-local"
+                            role="tabpanel"
+                            class="source-main ${classMap({
+                                hidden: this.activeTarget !== 'local',
+                            })}">
+                            <div id="dropArea">
+                                <div class="block">
+                                    <p>${i18n.t('intro')}</p>
+                                </div>
+                                ${inputFile}
+                                <button
+                                    class="button is-primary"
+                                    ?disabled="${this.disabled}"
+                                    @click="${() => {
+                                        this._('#fileElem').click();
+                                    }}">
+                                    <dbp-icon name="select-all" aria-hidden="true"></dbp-icon>
+                                    ${this.buttonLabel || i18n.t('upload-label')}
+                                </button>
+                            </div>
+                        </div>
+                        <div
+                            id="select-cloud"
+                            role="tabpanel"
+                            class="source-main ${classMap({
+                                hidden:
+                                    this.activeTarget !== 'nextcloud' ||
+                                    this.nextcloudWebDavUrl === '' ||
+                                    this.nextcloudAuthUrl === '',
+                            })}">
+                            ${this.getNextcloudHtml()}
+                        </div>
+                        <div
+                            id="select-clipboard"
+                            role="tabpanel"
+                            class="source-main ${classMap({
+                                hidden: this.activeTarget !== 'clipboard',
+                            })}">
+                            ${this.getClipboardHtml()}
+                        </div>
+                    </main>
                 </div>
-            </div>
+            </dbp-modal>
         `;
     }
 }
