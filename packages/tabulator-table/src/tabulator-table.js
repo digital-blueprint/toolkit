@@ -36,6 +36,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.collapseEnabled = false;
         this.isCollapsible = false;
         this.overflowYScrollEnabled = false;
+        this.selectedRowCount = 0;
     }
 
     static get scopedElements() {
@@ -65,6 +66,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             overflowYScrollEnabled: {type: Boolean, attribute: 'overflow-y-scroll-enabled'},
             tableReady: {type: Boolean, attribute: false},
             tableBuilding: {type: Boolean, attribute: false},
+            selectedRowCount: {type: Number},
         };
     }
 
@@ -186,13 +188,32 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.tabulatorTable.on('rowClick', this.rowClickFunction.bind(this));
         this.tabulatorTable.on('rowSelectionChanged', (data, rows, selected, deselected) => {
             const allSelectedRows = this.tabulatorTable.getSelectedRows();
-            const collapseEvent = new CustomEvent(
+            const selectedCount = allSelectedRows.length;
+
+            this.selectedRows = allSelectedRows;
+            this.selectedCount = selectedCount;
+            this.rowSelected = this.selectedRowCount > 0;
+
+            const selectionCountChangedEvent = new CustomEvent(
+                'dbp-tabulator-table-selection-count-changed',
+                {
+                    detail: {
+                        count: selectedCount,
+                        rows: allSelectedRows,
+                    },
+                    bubbles: true,
+                    composed: true,
+                },
+            );
+            this.dispatchEvent(selectionCountChangedEvent);
+            const rowSelectionChangedEvent = new CustomEvent(
                 'dbp-tabulator-table-row-selection-changed-event',
                 {
                     detail: {
                         selected: selected,
                         deselected: deselected,
                         allselected: allSelectedRows,
+                        selectedCount: this.selectedCount,
                         rows: rows,
                         data: data,
                     },
@@ -200,7 +221,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     composed: true,
                 },
             );
-            this.dispatchEvent(collapseEvent);
+            this.dispatchEvent(rowSelectionChangedEvent);
         });
         this.tabulatorTable.on('columnVisibilityChanged', (column) => {
             const columnDefinition = column.getDefinition();
@@ -221,6 +242,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     composed: true,
                 });
                 this.dispatchEvent(collapseEvent);
+                this.updateSelectionState();
             }
         });
 
@@ -364,6 +386,31 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         if (!noneSelected) {
             this.tabulatorTable.getSelectedRows().forEach((row) => row.deselect());
         }
+    }
+
+    updateSelectionState(data = null, rows = null, selected = [], deselected = []) {
+        if (!this.tabulatorTable) return;
+
+        const allSelectedRows = rows ?? this.tabulatorTable.getSelectedRows();
+        const allSelectedData = data ?? this.tabulatorTable.getSelectedData();
+
+        this.selectedRows = allSelectedRows;
+        this.selectedRowCount = allSelectedRows.length;
+        this.rowSelected = this.selectedRowCount > 0;
+
+        const selectionCountEvent = new CustomEvent('dbp-tabulator-table-selection-count-changed', {
+            detail: {
+                tableId: this.identifier,
+                count: this.selectedRowCount,
+                selected: selected,
+                deselected: deselected,
+                rows: allSelectedRows,
+                data: allSelectedData,
+            },
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(selectionCountEvent);
     }
 
     checkAllSelected() {
