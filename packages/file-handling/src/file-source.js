@@ -780,6 +780,7 @@ export class FileSource extends LangMixin(
                 id="modal-picker"
                 modal-id="modal-picker-dialog"
                 class="file-handling-modal"
+                full-height-line
                 title="${this.context}"
                 lang="${this.lang}"
                 @dbp-modal-closed="${(event) => this.handleModalClosed(event)}">

@@ -17,6 +17,8 @@ export function getFileHandlingCss() {
             --dbp-modal-container-height: 100%;
             --dbp-modal-content-min-height: 0;
             --dbp-modal-content-overflow-y: hidden;
+            --dbp-modal-full-height-line-left: 150px;
+            --dbp-modal-full-height-line-border: var(--dbp-border);
         }
 
         .file-handling-modal.modal-container-full-size {
@@ -48,7 +50,7 @@ export function getFileHandlingCss() {
             cursor: pointer;
             overflow: hidden;
             background-color: var(--dbp-background);
-            border-right: var(--dbp-border);
+            border-right: none;
             grid-area: sidebar;
         }
 
@@ -245,6 +247,10 @@ export function getFileHandlingCss() {
        \\**************************/
 
         @media only screen and (orientation: portrait) and (max-width: 768px) {
+            .file-handling-modal {
+                --dbp-modal-full-height-line-display: none;
+            }
+
             .modal-nav {
                 display: flex;
                 /*justify-content: space-around;*/

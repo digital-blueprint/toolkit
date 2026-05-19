@@ -611,6 +611,7 @@ export class FileSink extends LangMixin(
                 class="file-handling-modal ${classMap({
                     'modal-container-full-size': this.fullsizeModal,
                 })}"
+                full-height-line
                 title="${this.context}"
                 lang="${this.lang}"
                 @dbp-modal-closed="${(event) => this.handleModalClosed(event)}">
