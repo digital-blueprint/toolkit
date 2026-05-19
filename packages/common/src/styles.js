@@ -1413,84 +1413,11 @@ export function getModalDialogCSS() {
             padding-left: 20px;
         }
 
-        /**************************\\
-          Modal Animation Style
-        \\**************************/
-        @keyframes mmfadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes mmfadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
-
-        @keyframes mmslideIn {
-            from {
-                transform: translateY(15%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes mmslideOut {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(-10%);
-            }
-        }
-
-        .micromodal-slide {
-            display: none;
-        }
-
-        .micromodal-slide.is-open {
-            display: block;
-        }
-
-        .micromodal-slide[aria-hidden='false'] .modal-overlay {
-            animation: mmfadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        .micromodal-slide[aria-hidden='false'] .modal-container {
-            animation: mmslideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        .micromodal-slide[aria-hidden='true'] .modal-overlay {
-            animation: mmfadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        .micromodal-slide[aria-hidden='true'] .modal-container {
-            animation: mmslideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        .micromodal-slide .modal-container,
-        .micromodal-slide .modal-overlay {
-            will-change: transform;
-        }
-
         @media only screen and (orientation: landscape) and (max-width: 768px) {
             .modal-container {
                 width: 100%;
                 height: 100%;
                 max-width: 100%;
-            }
-
-            .micromodal-slide .modal-container {
-                height: 100%;
-                width: 100%;
             }
         }
 
@@ -1560,6 +1487,7 @@ export function getNativeModalDialogCSS() {
             max-width: var(--dbp-modal-max-width, 75vw);
             min-height: var(--dbp-modal-min-height, 200px);
             max-height: var(--dbp-modal-max-height, 90vh);
+            height: var(--dbp-modal-height);
             width: var(--dbp-modal-width);
 
             overflow: hidden;
@@ -1583,6 +1511,7 @@ export function getNativeModalDialogCSS() {
             align-items: start;
             min-height: var(--dbp-modal-min-height);
             max-height: var(--dbp-modal-max-height, 90vh);
+            height: var(--dbp-modal-container-height, auto);
         }
 
         .modal-header {
@@ -1594,8 +1523,19 @@ export function getNativeModalDialogCSS() {
             position: relative;
             overflow-y: var(--dbp-modal-content-overflow-y);
             max-height: 100%;
-            min-height: 100%;
+            min-height: var(--dbp-modal-content-min-height, 100%);
             height: 100%;
+        }
+
+        slot[name='content'] {
+            display: block;
+            height: 100%;
+            min-height: 0;
+        }
+
+        ::slotted([slot='content']) {
+            height: 100%;
+            min-height: 0;
         }
 
         .modal-footer {
