@@ -659,7 +659,7 @@ export class NextcloudFilePicker extends LangMixin(
 
     /**
      *
-     * @param {*} data
+     * @param {Array<object>} data
      * @returns {Array} reduced list of objects, including users files
      */
     filterUserFilesOnly(data) {
@@ -680,7 +680,7 @@ export class NextcloudFilePicker extends LangMixin(
 
     /**
      *
-     * @param {*} path
+     * @param {string} path
      * @returns {Array} including file path and base name
      */
     parseFileAndBaseName(path) {
@@ -714,7 +714,7 @@ export class NextcloudFilePicker extends LangMixin(
 
     /**
      *
-     * @param {*} response
+     * @param {Array<object>} response
      * @returns {Array} list of file objects containing corresponding information
      */
     mapResponseToObject(response) {

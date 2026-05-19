@@ -72,7 +72,7 @@ export const base64EncodeUnicode = (str) => {
  * defined then this will do nothing instead of erroring out.
  *
  * @param {string} name
- * @param {Function} constructor
+ * @param {CustomElementConstructor} constructor
  * @param {object} options
  */
 export const defineCustomElement = (name, constructor, options) => {
@@ -356,7 +356,7 @@ export const getFileExtension = (str) => {
  *
  * @param root
  * @param selector
- * @returns {*[]}
+ * @returns {Element[]}
  */
 export const querySlotted = (root, selector) => {
     let slots = root.querySelectorAll('slot');

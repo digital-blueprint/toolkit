@@ -16,7 +16,7 @@ export class QrCodeScannerEngine {
      * Scan am image like thing for a QR code. Returns null if none is found.
      * The region to scan in can be restricted via "options".
      *
-     * @param {*} image
+     * @param {HTMLCanvasElement|HTMLImageElement|HTMLVideoElement|ImageBitmap|OffscreenCanvas|string} image
      * @param {?object} options
      * @param {number} options.x
      * @param {number} options.y
