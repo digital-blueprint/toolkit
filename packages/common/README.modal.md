@@ -53,6 +53,8 @@ Slotted content can be styled from outside with css.
 - `width`, `height`, `min-width`, `min-height` (optional): set the size of a modal
     - example `<dbp-modal width="15px" height="100%"></dbp-modal>`
 - `sticky-footer` (optional, boolean): set the footer to stick to the bottom of the modal
+- `full-height-line` (optional, boolean): show an opt-in vertical line that spans from the top to the bottom of the modal
+    - example `<dbp-modal full-height-line></dbp-modal>`
 
 ### CSS variables
 
@@ -68,6 +70,10 @@ You can customize the modal with the following css variables:
 `--dbp-modal-footer-height` : set modal footer height
 
 `--dbp-modal-content-overflow-y` : set .modal-content overflow-y
+
+`--dbp-modal-full-height-line-left` : set the horizontal position of the `full-height-line` separator
+`--dbp-modal-full-height-line-border` : set the border style of the `full-height-line` separator
+`--dbp-modal-full-height-line-display` : set the display value of the `full-height-line` separator, defaults to `block` when `full-height-line` is set
 
 `--dbp-modal-animation:` - You can set animation on modal opening. - The value can be `mmFadeIn`, `mmFadeOut`, `mmSlideIn`, `mmSlideOut`
 

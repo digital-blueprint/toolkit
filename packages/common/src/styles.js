@@ -1514,6 +1514,22 @@ export function getNativeModalDialogCSS() {
             height: var(--dbp-modal-container-height, auto);
         }
 
+        .modal-container--full-height-line {
+            position: relative;
+        }
+
+        .modal-container--full-height-line::before {
+            content: '';
+            display: var(--dbp-modal-full-height-line-display, block);
+            position: absolute;
+            top: calc(var(--dbp-modal-padding-top, 15px) * -1);
+            bottom: -20px;
+            left: var(--dbp-modal-full-height-line-left, 0);
+            border-right: var(--dbp-modal-full-height-line-border, var(--dbp-border));
+            z-index: 1;
+            pointer-events: none;
+        }
+
         .modal-header {
             height: var(--dbp-modal-header-height);
             overflow: hidden;

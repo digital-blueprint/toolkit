@@ -18,6 +18,8 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         this.title = '';
         /** @type {boolean} */
         this.stickyFooter = false;
+        /** @type {boolean} */
+        this.fullHeightLine = false;
         /** @type {number} */
         this.modalPaddingTopDefault;
     }
@@ -27,6 +29,7 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             modalId: {type: String, attribute: 'modal-id'},
             title: {type: String},
             stickyFooter: {type: Boolean, attribute: 'sticky-footer'},
+            fullHeightLine: {type: Boolean, attribute: 'full-height-line'},
         };
     }
 
@@ -176,7 +179,10 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                 role="alertdialog"
                 aria-describedby="modal-content"
                 aria-labelledby="modal-title">
-                <div class="modal-container">
+                <div
+                    class="modal-container ${this.fullHeightLine
+                        ? 'modal-container--full-height-line'
+                        : ''}">
                     <header class="modal-header">
                         <div class="header-top">
                             <slot name="title">
