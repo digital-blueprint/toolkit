@@ -1469,6 +1469,7 @@ export function getNativeModalDialogCSS() {
             --dbp-modal-title-font-size: 1rem;
             --dbp-modal-title-font-weight: 300;
             --dbp-modal-content-overflow-y: auto;
+            --dbp-modal-overflow: hidden;
         }
 
         dialog:not([open]) {
@@ -1493,7 +1494,7 @@ export function getNativeModalDialogCSS() {
             max-height: var(--dbp-modal-max-height, 90vh);
             width: var(--dbp-modal-width);
 
-            overflow: hidden;
+            overflow: var(--dbp-modal-overflow);
             padding: var(--dbp-modal-padding-top, 15px) 20px 20px;
             border: 0 none;
             color: var(--dbp-content);
