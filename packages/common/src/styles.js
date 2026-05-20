@@ -1482,12 +1482,15 @@ export function getNativeModalDialogCSS() {
             animation-fill-mode: forwards;
         }
 
+        :host([full-height-line]) dialog[open] {
+            display: grid;
+        }
+
         dialog {
             min-width: var(--dbp-modal-min-width, 250px);
             max-width: var(--dbp-modal-max-width, 75vw);
             min-height: var(--dbp-modal-min-height, 200px);
             max-height: var(--dbp-modal-max-height, 90vh);
-            height: var(--dbp-modal-height);
             width: var(--dbp-modal-width);
 
             overflow: hidden;
@@ -1511,7 +1514,10 @@ export function getNativeModalDialogCSS() {
             align-items: start;
             min-height: var(--dbp-modal-min-height);
             max-height: var(--dbp-modal-max-height, 90vh);
-            height: var(--dbp-modal-container-height, auto);
+        }
+
+        :host([full-height-line]) .modal-container {
+            height: var(--dbp-modal-container-height);
         }
 
         .modal-container--full-height-line {
@@ -1539,19 +1545,31 @@ export function getNativeModalDialogCSS() {
             position: relative;
             overflow-y: var(--dbp-modal-content-overflow-y);
             max-height: 100%;
-            min-height: var(--dbp-modal-content-min-height, 100%);
+            min-height: 100%;
             height: 100%;
+        }
+
+        :host([full-height-line]) .modal-content {
+            min-height: var(--dbp-modal-content-min-height, 100%);
         }
 
         slot[name='content'] {
             display: block;
-            height: 100%;
-            min-height: 0;
+            width: 100%;
+        }
+
+        :host([full-height-line]) slot[name='content'] {
+            height: var(--dbp-modal-content-slot-height);
+            min-height: var(--dbp-modal-content-slot-min-height);
         }
 
         ::slotted([slot='content']) {
-            height: 100%;
-            min-height: 0;
+            width: 100%;
+        }
+
+        :host([full-height-line]) ::slotted([slot='content']) {
+            height: var(--dbp-modal-slotted-content-height);
+            min-height: var(--dbp-modal-slotted-content-min-height);
         }
 
         .modal-footer {

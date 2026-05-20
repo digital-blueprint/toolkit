@@ -16,9 +16,15 @@ export function getFileHandlingCss() {
             --dbp-modal-max-height: 90vh;
             --dbp-modal-container-height: 100%;
             --dbp-modal-content-min-height: 0;
+            --dbp-modal-content-slot-height: 100%;
+            --dbp-modal-content-slot-min-height: 0;
+            --dbp-modal-slotted-content-height: 100%;
+            --dbp-modal-slotted-content-min-height: 0;
             --dbp-modal-content-overflow-y: hidden;
             --dbp-modal-full-height-line-left: 150px;
             --dbp-modal-full-height-line-border: var(--dbp-border);
+            --dbp-modal-title-padding: 0.25em 0 0
+                calc(var(--dbp-modal-full-height-line-left) + 0.75em);
         }
 
         .file-handling-modal.modal-container-full-size {
@@ -249,6 +255,7 @@ export function getFileHandlingCss() {
         @media only screen and (orientation: portrait) and (max-width: 768px) {
             .file-handling-modal {
                 --dbp-modal-full-height-line-display: none;
+                --dbp-modal-title-padding: 0.25em 0 0 0;
             }
 
             .modal-nav {
