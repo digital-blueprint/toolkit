@@ -581,7 +581,6 @@ export class FileSink extends LangMixin(
 
             .nav-wrapper {
                 position: relative;
-                display: block;
                 overflow-x: auto;
                 border: none;
             }
@@ -594,7 +593,7 @@ export class FileSink extends LangMixin(
                 height: 100%;
             }
 
-            @media only screen and (orientation: portrait) and (max-width: 768px) {
+            @media only screen and (max-width: 768px) {
                 .paddles {
                     display: inherit;
                 }

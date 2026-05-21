@@ -714,7 +714,6 @@ export class FileSource extends LangMixin(
 
             .nav-wrapper {
                 position: relative;
-                display: block;
                 overflow-x: auto;
                 border: none;
             }
@@ -727,13 +726,14 @@ export class FileSource extends LangMixin(
                 height: 100%;
             }
 
-            @media only screen and (orientation: portrait) and (max-width: 768px) {
+            @media only screen and (max-width: 768px) {
                 #dropArea {
                     height: 100%;
+                    width: 100%;
                 }
             }
 
-            @media only screen and (orientation: portrait) and (max-width: 340px) {
+            @media only screen and (max-width: 340px) {
                 .paddles {
                     display: inherit;
                 }

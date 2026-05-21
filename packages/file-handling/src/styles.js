@@ -24,7 +24,7 @@ export function getFileHandlingCss() {
             --dbp-modal-full-height-line-left: 150px;
             --dbp-modal-full-height-line-border: var(--dbp-border);
             --dbp-modal-title-padding: 0.25em 0 0
-                calc(var(--dbp-modal-full-height-line-left) + 0.75em);
+                calc(var(--dbp-modal-full-height-line-left) + 20px);
         }
 
         .file-handling-modal.modal-container-full-size {
@@ -236,7 +236,7 @@ export function getFileHandlingCss() {
             font-size: 1rem;
         }
 
-        @media only screen and (orientation: portrait) and (max-width: 768px) {
+        @media only screen and (max-width: 768px) {
             .tabulator .tabulator-tableHolder {
                 white-space: inherit;
             }
@@ -252,50 +252,74 @@ export function getFileHandlingCss() {
          Tablett Portrait Styles
        \\**************************/
 
-        @media only screen and (orientation: portrait) and (max-width: 768px) {
+        @media only screen and (max-width: 768px) {
             .file-handling-modal {
                 --dbp-modal-full-height-line-display: none;
                 --dbp-modal-title-padding: 0.25em 0 0 0;
+                --dbp-modal-width: calc(100% - 40px);
+                --dbp-modal-min-width: calc(100% - 40px);
+                --dbp-modal-max-width: calc(100% - 40px);
+                --dbp-modal-height: 100%;
+                --dbp-modal-min-height: 100%;
+                --dbp-modal-max-height: 100%;
+                --dbp-modal-full-height-line-left: 0;
             }
 
-            .modal-nav {
+            .file-handling-modal-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: minmax(0, 1fr) auto;
+                grid-template-areas: 'main' 'nav';
+                gap: 0;
+            }
+
+            .nav-wrapper.modal-nav {
                 display: flex;
-                /*justify-content: space-around;*/
                 grid-area: nav;
+                width: 100%;
+                height: auto;
                 border: none;
-                border-bottom: var(--dbp-border);
                 border-top: var(--dbp-border);
                 white-space: nowrap;
                 overflow-x: auto;
+                overflow-y: hidden;
                 -webkit-overflow-scrolling: touch;
                 -ms-overflow-style: -ms-autohiding-scrollbar;
             }
 
-            .modal-nav::-webkit-scrollbar {
+            .nav-wrapper.modal-nav::-webkit-scrollbar {
                 display: none;
+            }
+
+            .nav-wrapper.modal-nav > nav.modal-nav {
+                display: flex;
+                width: 100%;
+                height: auto;
+            }
+
+            .modal-nav > button,
+            .modal-nav > div {
+                flex: 1 0 auto;
+            }
+
+            .modal-nav .nav-icon {
+                height: 20px;
             }
 
             .modal-content {
                 grid-area: main;
+                padding: 0;
+                width: 100%;
+                min-width: 0;
+                overflow: auto;
             }
 
-            .modal-container {
-                grid-template-rows: 40px 55px auto;
-                grid-template-areas: 'header' 'nav' 'main';
-                grid-template-columns: auto;
+            .modal-content .source-main {
+                width: 100%;
             }
 
             .modal-header {
                 grid-area: header;
                 padding: 5px;
-            }
-
-            .modal-nav > div {
-                flex-grow: 1;
-            }
-
-            .modal-nav .nav-icon {
-                height: 20px;
             }
 
             #nextcloud-file-picker,
@@ -308,7 +332,7 @@ export function getFileHandlingCss() {
          Mobile Portrait Styles
         \\**************************/
 
-        @media only screen and (orientation: portrait) and (max-width: 768px) {
+        @media only screen and (max-width: 768px) {
         }
     `;
 }
