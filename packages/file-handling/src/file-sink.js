@@ -696,6 +696,7 @@ export class FileSink extends LangMixin(
                                         this.dispatchEvent(event);
                                         this.downloadCompressedFiles();
                                     }}">
+                                    <dbp-icon name="download" aria-hidden="true"></dbp-icon>
                                     ${i18n.t('file-sink.local-button', {
                                         count: this.files.length,
                                     })}

@@ -334,6 +334,10 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 background-color: var(--dbp-muted-surface);
             }
 
+            .pdf-main-container {
+                align-items: end;
+            }
+
             #pdf-main-container.loading {
                 background-color: var(--dbp-background);
                 padding: 20px;
@@ -462,7 +466,10 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         return html`
             <div
                 id="pdf-main-container"
-                class="${classMap({hidden: !this.isShowPage, loading: !this.isPageLoaded})}">
+                class="${classMap({
+                    hidden: !this.isShowPage,
+                    loading: !this.isPageLoaded,
+                })} pdf-main-container">
                 <dbp-mini-spinner
                     class="${classMap({
                         hidden: this.isPageLoaded || this.showErrorMessage,
