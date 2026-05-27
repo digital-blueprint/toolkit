@@ -40,6 +40,8 @@ export class FileSink extends LangMixin(
         this.nextcloudAuthInfo = '';
         this.streamed = false;
         this.sumContentLengths = -1;
+        /** @type {ServiceWorkerRegistration|null} */
+        this._swRegistration = null;
 
         this.initialFileHandlingState = {target: '', path: ''};
     }
@@ -90,6 +92,8 @@ export class FileSink extends LangMixin(
         if (this.streamed) {
             let baseUrl = commonUtils.getAssetURL(pkgName, 'stream-sw.js');
             navigator.serviceWorker.register(baseUrl).then((registration) => {
+                this._swRegistration = registration;
+
                 // start keepalive calls only in Firefox
                 if (window.navigator.userAgent.includes('Firefox')) {
                     // TODO find a way to reliably stop this again
@@ -224,6 +228,20 @@ export class FileSink extends LangMixin(
             downloadForm.removeChild(downloadForm.firstChild);
         }
         this.removeChild(downloadForm);
+    }
+
+    /**
+     * Cancel a streamed download that is currently in progress.
+     * Sends a CANCEL_DOWNLOAD message to the service worker to abort in-flight requests,
+     * then stops the pending navigation caused by the form POST.
+     */
+    cancelStreamedDownload() {
+        if (this._swRegistration && this._swRegistration.active) {
+            this._swRegistration.active.postMessage({type: 'CANCEL_DOWNLOAD'});
+        }
+        // Stop the pending navigation from the form POST so the browser
+        // does not navigate away from the current page
+        window.stop();
     }
 
     async downloadCompressedFiles() {
