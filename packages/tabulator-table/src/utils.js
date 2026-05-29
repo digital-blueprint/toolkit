@@ -68,6 +68,10 @@ export async function downloadExcel(rows, dataName) {
         for (let cell of cells) {
             let column = cell.getColumn();
             let definition = column.getDefinition();
+
+            if (definition.field === 'rowIndex') {
+                continue;
+            }
             if (definition.visible === false) {
                 continue;
             }
