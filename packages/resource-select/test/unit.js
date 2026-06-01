@@ -19,6 +19,15 @@ suite('dbp-resource-select basics', () => {
     test('should render', () => {
         assert.isNotNull(node.shadowRoot);
     });
+
+    test('should use the wrapper as dropdown host', () => {
+        const dropdownHost = node.shadowRoot.querySelector('#select-resource-dropdown');
+        const selectControl = dropdownHost?.querySelector('.select2-control');
+
+        assert.isNotNull(dropdownHost);
+        assert.include(dropdownHost.className, 'select');
+        assert.isNotNull(selectControl);
+    });
 });
 
 suite('dbp-resource-select-demo basics', () => {

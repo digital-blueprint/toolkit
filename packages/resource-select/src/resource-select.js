@@ -262,7 +262,20 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             commonStyles.getNotificationCSS(),
             commonStyles.getSelect2CSS(),
             // language=css
-            css``,
+            css`
+                .select {
+                    position: relative;
+                    overflow: visible;
+                }
+
+                .select > .select2-container--open {
+                    left: 0 !important;
+                    position: absolute !important;
+                    top: 100% !important;
+                    width: 100% !important;
+                    z-index: 1;
+                }
+            `,
         ];
     }
 
@@ -271,7 +284,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         return html`
             <link rel="stylesheet" href="${select2CSS}" />
 
-            <div class="select">
+            <div class="select" id="select-resource-dropdown">
                 <div class="select2-control control">
                     <select
                         id="${this._selectId}"
