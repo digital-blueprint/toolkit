@@ -257,10 +257,16 @@ export function getTabulatorStyles() {
         }
 
         /* Frozen select checkbox rows styles */
-        .tabulator-col.tabulator-row-header.tabulator-frozen,
-        .tabulator-cell.tabulator-row-header.tabulator-frozen {
-            border: none;
+        .tabulator-row:not(.tabulator-selected)
+            .tabulator-col.tabulator-row-header.tabulator-frozen,
+        .tabulator-row:not(.tabulator-selected)
+            .tabulator-cell.tabulator-row-header.tabulator-frozen {
             background-color: var(--dbp-background);
+        }
+
+        .tabulator-row .tabulator-col.tabulator-row-header.tabulator-frozen,
+        .tabulator-row .tabulator-cell.tabulator-row-header.tabulator-frozen {
+            border: none;
         }
 
         /* Frozen table header styles */
