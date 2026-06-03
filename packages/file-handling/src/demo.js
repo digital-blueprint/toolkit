@@ -206,7 +206,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         @click="${() => {
                             setTimeout(() => {
                                 this._('#file-source6').setAttribute('dialog-open', '');
-                            }, 10000);
+                            }, 5000);
                         }}"
                         class="button is-primary">
                         Open dialog
