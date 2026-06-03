@@ -480,7 +480,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                     })}">
                     ${i18n.t('pdf-viewer.error-message')}
                 </div>
-                <div id="pdf-content" class="${classMap({hidden: !this.isPageLoaded})}">
+                <div id="pdf-content" class="${classMap({hidden: !this.isPageLoaded})} pdf-content">
                     <div id="pdf-meta">
                         <div class="buttons ${classMap({hidden: !this.isPageLoaded})}">
                             <div class="nav-buttons">
