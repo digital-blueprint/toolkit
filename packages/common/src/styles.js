@@ -1277,12 +1277,22 @@ export function getSelect2CSS() {
             font-weight: 300;
         }
 
-        .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: var(--dbp-muted);
-        }
-
         .select2-container--default .select2-selection--multiple .select2-selection__rendered {
             background-color: var(--dbp-background);
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            background-color: var(--dbp-background);
+        }
+
+        .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: var(--dbp-primary-surface);
+            color: var(--dbp-on-primary-surface);
+        }
+
+        .select2-container--default .select2-results__option--selected{
+            background-color: var(--dbp-selected);
+            color: var(--dbp-on-selected-surface);
         }
 
         .select2-container--default .select2-selection--multiple {
@@ -1292,9 +1302,13 @@ export function getSelect2CSS() {
             background-color: var(--dbp-background);
         }
 
-        .select2-container--default .select2-results__option[aria-selected='true'] {
-            background-color: var(--dbp-selected);
-            color: var(--dbp-on-selected-surface), var(--dbp-content);
+        .select2-container--default.select2-container--disabled .select2-selection--single {
+            background-color: var(--dbp-muted-surface);
+            color: var(--dbp-on-muted-surface);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: inherit;
         }
 
         /* Work around single selections not wrapping and breaking responsivness */
@@ -1313,6 +1327,7 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--single,
         .select2-dropdown,
+        .select2-search__field,
         select-all-btn
             .select2-container--default
             .select2-search--dropdown
