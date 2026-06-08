@@ -200,25 +200,6 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         decompress-zip
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                         enabled-targets="local,nextcloud"></dbp-file-source>
-
-                    <p>Delayed file download. There is no restriction for a specific file type:</p>
-                    <button
-                        @click="${() => {
-                            setTimeout(() => {
-                                this._('#file-source6').setAttribute('dialog-open', '');
-                            }, 5000);
-                        }}"
-                        class="button is-primary">
-                        Open dialog
-                    </button>
-                    <dbp-file-source
-                        id="file-source6"
-                        class="file-source"
-                        allowed-mime-types="*/*"
-                        subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                        lang="en"
-                        enabled-targets="local,nextcloud"></dbp-file-source>
-
                     <p>Download uploaded files :</p>
                     <button
                         @click="${() => {
