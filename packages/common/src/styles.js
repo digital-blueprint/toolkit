@@ -1329,10 +1329,8 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--single,
         .select2-dropdown,
-        select-all-btn
-            .select2-container--default
-            .select2-search--dropdown
-            .select2-search__field {
+        .select2-search__field,
+        .select2-container--default .select2-search--dropdown .select2-search__field {
             background: var(--dbp-background);
             color: var(--dbp-content);
             border: var(--dbp-border);
