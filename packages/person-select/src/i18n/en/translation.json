@@ -1,5 +1,6 @@
 {
     "person-select": {
+        "component-disabled": "This component is disabled",
         "login-required": "Login required",
         "placeholder": "Please select a person"
     }

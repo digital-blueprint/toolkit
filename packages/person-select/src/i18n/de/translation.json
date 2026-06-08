@@ -1,5 +1,6 @@
 {
     "person-select": {
+        "component-disabled": "Diese Komponente ist deaktiviert",
         "login-required": "Anmeldung erforderlich",
         "placeholder": "Bitte wählen Sie eine Person aus"
     }
