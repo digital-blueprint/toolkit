@@ -13,31 +13,6 @@ import select2CSSPath from 'select2/dist/css/select2.min.css';
 import * as errorUtils from '@dbp-toolkit/common/error';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 
-let select2NormalizeItemPatchApplied = false;
-
-function patchSelect2NormalizeItem(jquery) {
-    if (select2NormalizeItemPatchApplied || !jquery.fn.select2?.amd) {
-        return;
-    }
-
-    const SelectAdapter = jquery.fn.select2.amd.require('select2/data/select');
-    const normalizeItem = SelectAdapter?.prototype?._normalizeItem;
-    if (!normalizeItem || normalizeItem.dbpPersonSelectPatched) {
-        select2NormalizeItemPatchApplied = true;
-        return;
-    }
-
-    const normalizeItemPatched = function (item) {
-        // Select2 4.1.0 calls this method unbound for ajax results, so provide a safe context.
-        const context =
-            this && typeof this.generateResultId === 'function' ? this : {container: null};
-        return normalizeItem.call(context, item);
-    };
-    normalizeItemPatched.dbpPersonSelectPatched = true;
-    SelectAdapter.prototype._normalizeItem = normalizeItemPatched;
-    select2NormalizeItemPatchApplied = true;
-}
-
 export class PersonSelect extends LangMixin(
     ScopedElementsMixin(AdapterLitElement),
     createInstance,
@@ -64,7 +39,6 @@ export class PersonSelect extends LangMixin(
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
 
         select2(window, $);
-        patchSelect2NormalizeItem($);
     }
 
     static get scopedElements() {
