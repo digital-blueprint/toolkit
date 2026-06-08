@@ -1285,6 +1285,17 @@ export function getSelect2CSS() {
             background-color: var(--dbp-background);
         }
 
+        .select2-container--default
+            .select2-results__option--highlighted.select2-results__option--selectable {
+            background-color: var(--dbp-primary-surface);
+            color: var(--dbp-on-primary-surface);
+        }
+
+        .select2-container--default .select2-results__option--selected {
+            background-color: var(--dbp-selected);
+            color: var(--dbp-on-selected-surface);
+        }
+
         .select2-container--default .select2-selection--multiple {
             background-color: var(--dbp-background);
         }
@@ -1292,9 +1303,14 @@ export function getSelect2CSS() {
             background-color: var(--dbp-background);
         }
 
-        .select2-container--default .select2-results__option[aria-selected='true'] {
-            background-color: var(--dbp-selected);
-            color: var(--dbp-on-selected-surface), var(--dbp-content);
+        .select2-container--default.select2-container--disabled .select2-selection--single {
+            background-color: var(--dbp-muted-surface);
+            color: var(--dbp-on-muted-surface);
+            cursor: not-allowed;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: inherit;
         }
 
         /* Work around single selections not wrapping and breaking responsivness */
