@@ -20,6 +20,7 @@ export default {
                   'src/build/enum.js',
                   'src/build/number.js',
                   'src/build/string.js',
+                  'src/build/submission-select.js',
                   'src/build/time.js',
                   'src/demo.js',
               ]

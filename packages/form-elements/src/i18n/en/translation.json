@@ -15,6 +15,13 @@
         "string": {
             "invalid-url": "The entered value must be a valid URL.",
             "word-count-exceeded": "You have exceeded the maximum number of allowed {{wordLimit}} words. Entered {{wordCount}} words. Please remove the extra words."
+        },
+        "submission-select": {
+            "load-error": "Submissions could not be loaded",
+            "loading": "Loading submissions...",
+            "no-submissions": "No submissions available",
+            "not-configured": "Submission select is not configured",
+            "select-placeholder": "Please select a submission"
         }
     }
 }

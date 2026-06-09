@@ -8,6 +8,7 @@ import {DbpEnumElement} from './elements/enum.js';
 import {DbpBooleanElement} from './elements/boolean.js';
 import {DbpPersonSelectElement} from './elements/person-select.js';
 import {DbpResourceSelectElement} from './elements/resource-select.js';
+import {DbpSubmissionSelectElement} from './elements/submission-select.js';
 import {DbpStringView} from './views/string.js';
 import {DbpNumberView} from './views/number.js';
 import {DbpDateView} from './views/date.js';
@@ -27,6 +28,7 @@ export {
     DbpBooleanElement,
     DbpPersonSelectElement,
     DbpResourceSelectElement,
+    DbpSubmissionSelectElement,
     DbpStringView,
     DbpNumberView,
     DbpDateView,
