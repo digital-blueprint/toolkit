@@ -711,8 +711,11 @@ export class FileSink extends LangMixin(
                                                 composed: true,
                                             },
                                         );
+                                        //set here an attribute to check if files have been downloaded and start the spinner if they were not downladed yet
                                         this.dispatchEvent(event);
-                                        this.downloadCompressedFiles();
+                                        setTimeout(() => {
+                                            this.downloadCompressedFiles();
+                                        }, 5000);
                                     }}">
                                     <dbp-icon name="download" aria-hidden="true"></dbp-icon>
                                     ${i18n.t('file-sink.local-button', {

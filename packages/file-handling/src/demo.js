@@ -203,12 +203,21 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <p>Download uploaded files :</p>
                     <button
                         @click="${() => {
-                            this._('#file-sink').files = [...this.selectedFiles];
+                            this._('#file-sink-standard').files = [...this.selectedFiles];
                         }}"
                         class="button is-primary">
                         Open download dialog
                     </button>
-                    <dbp-file-sink id="file-sink" lang="en"></dbp-file-sink>
+                    <dbp-file-sink id="file-sink-standard" lang="en"></dbp-file-sink>
+                    <p>Delayed Download uploaded files :</p>
+                    <button
+                        @click="${() => {
+                            this._('#file-sink-delayed').files = [...this.selectedFiles];
+                        }}"
+                        class="button is-primary">
+                        Open download dialog
+                    </button>
+                    <dbp-file-sink id="file-sink-delayed" lang="en"></dbp-file-sink>
                 </div>
             </section>
         `;
@@ -283,13 +292,17 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         for (let i = 0; i < urls.length; i++) {
                             files.push({name: filenames[i].value, url: urls[i].value});
                         }
-                        this._('#file-sink1').files = files;
+                        this._('#file-sink-streamed').files = files;
                     }
                 }}"
                 class="button is-primary">
                 Open download dialog
             </button>
-            <dbp-file-sink id="file-sink1" lang="en" subscribe="auth" streamed></dbp-file-sink>
+            <dbp-file-sink
+                id="file-sink-streamed"
+                lang="en"
+                subscribe="auth"
+                streamed></dbp-file-sink>
         `;
 
         let end = html`
