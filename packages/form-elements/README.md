@@ -23,6 +23,13 @@ npm i @dbp-toolkit/form-elements
 <script type="module" src="node_modules/@dbp-toolkit/form-elements/dist/number.js"></script>
 ```
 
+```html
+<dbp-form-submission-select-element></dbp-form-submission-select-element>
+<script
+    type="module"
+    src="node_modules/@dbp-toolkit/form-elements/dist/submission-select.js"></script>
+```
+
 Or directly via CDN:
 
 ```html
@@ -37,6 +44,13 @@ Or directly via CDN:
 <script
     type="module"
     src="https://unpkg.com/@dbp-toolkit/form-elements@0.2.0/dist/number.js"></script>
+```
+
+```html
+<dbp-form-submission-select-element></dbp-form-submission-select-element>
+<script
+    type="module"
+    src="https://unpkg.com/@dbp-toolkit/form-elements@0.2.0/dist/submission-select.js"></script>
 ```
 
 ### Attributes
@@ -232,6 +246,34 @@ No additional attributes beyond the general ones. The datetime element uses an H
 - `per-page` (optional, default: `30`): Number of results per page
     - Type: Number
     - Example: `<dbp-form-resource-select-element per-page="50"></dbp-form-resource-select-element>`
+
+#### Submission Select Element
+
+The submission select element loads all forms matching a Formalize `frontendKey`, then loads the submissions of those forms and renders them in a Select2 selector. The selected value is the selected submission identifier.
+
+```html
+<dbp-form-submission-select-element
+    subscribe="lang auth"
+    name="selectedCompany"
+    label="Company"
+    entry-point-url="https://api.example.com"
+    frontend-key="company"
+    submission-element-name="name"
+    required></dbp-form-submission-select-element>
+```
+
+- `entry-point-url`: Base URL of the API entry point
+    - Type: String
+    - Required for fetching forms and submissions
+- `frontend-key`: Formalize frontend key used to find matching forms
+    - Type: String
+    - Example: `<dbp-form-submission-select-element frontend-key="company"></dbp-form-submission-select-element>`
+- `submission-element-name`: Name of the element inside each submission's `dataFeedElement` that should be shown as option text
+    - Type: String
+    - Example: `<dbp-form-submission-select-element submission-element-name="name"></dbp-form-submission-select-element>`
+- `per-page` (optional, default: `9999`): Number of forms and submissions requested per API call
+    - Type: Number
+    - Example: `<dbp-form-submission-select-element per-page="100"></dbp-form-submission-select-element>`
 
 ### Form Views
 

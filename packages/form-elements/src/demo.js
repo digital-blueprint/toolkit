@@ -18,6 +18,7 @@ import {
     DbpEnumView,
     DbpPersonSelectElement,
     DbpResourceSelectElement,
+    DbpSubmissionSelectElement,
     DbpPersonSelectView,
     DbpResourceSelectView,
 } from './index.js';
@@ -47,6 +48,7 @@ export class FormElementsDemo extends LangMixin(
             'dbp-form-boolean-element': DbpBooleanElement,
             'dbp-form-person-select-element': DbpPersonSelectElement,
             'dbp-form-resource-select-element': DbpResourceSelectElement,
+            'dbp-form-submission-select-element': DbpSubmissionSelectElement,
             'dbp-form-string-view': DbpStringView,
             'dbp-form-number-view': DbpNumberView,
             'dbp-form-date-view': DbpDateView,
@@ -435,6 +437,18 @@ export class FormElementsDemo extends LangMixin(
                             entry-point-url="${this.entryPointUrl}"
                             resource-path="/base/organizations"
                             ?required=${this.isRequired}></dbp-form-resource-select-element>
+
+                        <dbp-form-submission-select-element
+                            subscribe="lang"
+                            name="myComponentSubmission"
+                            label="My submission"
+                            description="Loads submissions for forms with frontend-key 'company' and shows their 'name' field."
+                            .auth=${this.auth ?? {}}
+                            .value=${data.myComponentSubmission || ''}
+                            entry-point-url="${this.entryPointUrl}"
+                            frontend-key="company"
+                            submission-element-name="name"
+                            ?required=${this.isRequired}></dbp-form-submission-select-element>
 
                         ${this.getButtonRowHtml()}
                     </form>
