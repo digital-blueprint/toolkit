@@ -44,6 +44,7 @@ export class FileSink extends LangMixin(
         this._swRegistration = null;
 
         this.initialFileHandlingState = {target: '', path: ''};
+        this.delay = false;
     }
 
     static get scopedElements() {
@@ -82,6 +83,7 @@ export class FileSink extends LangMixin(
             streamed: {type: Boolean, attribute: 'streamed'},
             sumContentLengths: {type: Number, attribute: 'content-length'},
             auth: {type: Object},
+            delay: {type: Boolean, attribute: 'delay'},
         };
     }
 
@@ -713,9 +715,14 @@ export class FileSink extends LangMixin(
                                         );
                                         //set here an attribute to check if files have been downloaded and start the spinner if they were not downladed yet
                                         this.dispatchEvent(event);
-                                        setTimeout(() => {
+                                        console.log('delayed or not ' + this.delay.toString());
+                                        if (this.delay) {
+                                            setTimeout(() => {
+                                                this.downloadCompressedFiles();
+                                            }, 5000);
+                                        } else {
                                             this.downloadCompressedFiles();
-                                        }, 5000);
+                                        }
                                     }}">
                                     <dbp-icon name="download" aria-hidden="true"></dbp-icon>
                                     ${i18n.t('file-sink.local-button', {
