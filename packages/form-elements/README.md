@@ -257,7 +257,7 @@ The submission select element loads all forms matching a Formalize `frontendKey`
     name="selectedCompany"
     label="Company"
     entry-point-url="https://api.example.com"
-    frontend-key="company"
+    frontend-key="bulletin-company"
     submission-element-name="name"
     required></dbp-form-submission-select-element>
 ```
@@ -267,7 +267,7 @@ The submission select element loads all forms matching a Formalize `frontendKey`
     - Required for fetching forms and submissions
 - `frontend-key`: Formalize frontend key used to find matching forms
     - Type: String
-    - Example: `<dbp-form-submission-select-element frontend-key="company"></dbp-form-submission-select-element>`
+    - Example: `<dbp-form-submission-select-element frontend-key="bulletin-company"></dbp-form-submission-select-element>`
 - `submission-element-name`: Name of the element inside each submission's `dataFeedElement` that should be shown as option text
     - Type: String
     - Example: `<dbp-form-submission-select-element submission-element-name="name"></dbp-form-submission-select-element>`
