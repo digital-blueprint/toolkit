@@ -17,11 +17,11 @@
             "word-count-exceeded": "Sie haben die maximal zulässige Wortanzahl von {{wordLimit}} überschritten. Sie haben {{wordCount}} Wörter eingegeben. Bitte entfernen Sie die überschüssigen Wörter."
         },
         "submission-select": {
-            "load-error": "Einreichungen konnten nicht geladen werden",
-            "loading": "Einreichungen werden geladen...",
-            "no-submissions": "Keine Einreichungen verfügbar",
-            "not-configured": "Submission Select ist nicht konfiguriert",
-            "select-placeholder": "Bitte wählen Sie eine Einreichung aus"
+            "load-error": "Einträge konnten nicht geladen werden",
+            "loading": "Einträge werden geladen...",
+            "no-submissions": "Keine Einträge verfügbar",
+            "not-configured": "Eintrag Selector ist nicht konfiguriert",
+            "select-placeholder": "Bitte wählen Sie aus"
         }
     }
 }
