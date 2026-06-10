@@ -442,11 +442,11 @@ export class FormElementsDemo extends LangMixin(
                             subscribe="lang"
                             name="myComponentSubmission"
                             label="My submission"
-                            description="Loads submissions for forms with frontend-key 'company' and shows their 'name' field."
+                            description="Loads submissions for forms with frontend-key 'bulletin-company' and shows their 'name' field."
                             .auth=${this.auth ?? {}}
                             .value=${data.myComponentSubmission || ''}
                             entry-point-url="${this.entryPointUrl}"
-                            frontend-key="company"
+                            frontend-key="bulletin-company"
                             submission-element-name="name"
                             ?required=${this.isRequired}></dbp-form-submission-select-element>
 
