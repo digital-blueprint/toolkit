@@ -72,7 +72,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this._activityEnabledOverrides = new Map();
 
         this.boundCloseMenuHandler = this.hideMenu.bind(this);
-        this.initateOpenMenu = false;
 
         this.menuOpen = localStorage.getItem('dbp-app-shell-menu-open') !== 'false';
 
@@ -180,14 +179,16 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.routes = routes;
 
         // Switch to the first route if none is selected
-        if (!this.activeView) this.switchComponent(routes[0]);
+        this._updateVisibleRoutes();
+        if (!this.activeView && this.visibleRoutes.length)
+            this.switchComponent(this.visibleRoutes[0].name);
         else this.switchComponent(this.activeView);
     }
 
     firstUpdated() {
         super.firstUpdated();
 
-        if (!this.isMenuFloating() && this.menuOpen) {
+        if (!this.isMenuFloating() && this.menuOpen && this.visibleRoutes.length > 0) {
             this.toggleMenu();
         }
 
@@ -586,9 +587,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         return this.metaDataText(this.activeView, key);
     }
 
+    _isRealActivityActive() {
+        // An real activity is active, excluding the welcome page which is more of a landing page
+        return this.activeView && this.activeView !== 'welcome' && this.metadata[this.activeView];
+    }
+
     updatePageTitle() {
         let title;
-        if (this.activeView === 'welcome') {
+        if (!this._isRealActivityActive()) {
             title = `${this.topicMetaDataText('short_name')}`;
         } else {
             title = `${this.activeMetaDataText('short_name')} | ${this.topicMetaDataText('short_name')}`;
@@ -598,7 +604,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     updatePageMetaDescription() {
         let metaDesc;
-        if (this.activeView === 'welcome') {
+        if (!this._isRealActivityActive()) {
             metaDesc = `${this.topicMetaDataText('description')}`;
         } else {
             metaDesc = `${this.activeMetaDataText('description')}`;
@@ -1432,6 +1438,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             <div class="hd1-left">
                                 <button
                                     class="hd1-left-menu"
+                                    style="${this.visibleRoutes.length === 0
+                                        ? 'visibility: hidden'
+                                        : ''}"
                                     @click="${this.toggleMenu}"
                                     aria-expanded="false"
                                     aria-label="${this._i18n.t('main-page.menu')}">
@@ -2199,7 +2208,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     <div id="headline">
                         <p class="title">
                             <slot name="title">
-                                ${this.activeView === 'welcome'
+                                ${!this._isRealActivityActive()
                                     ? html`
                                           &#160;
                                       `
@@ -2207,7 +2216,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             </slot>
                         </p>
                         <h1 title="${this.description}">
-                            ${this.activeView === 'welcome'
+                            ${!this._isRealActivityActive()
                                 ? this.topicMetaDataText('name')
                                 : this.subtitle}
                         </h1>
@@ -2230,7 +2239,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                     <main>
                         <div
-                            style="display: ${!this.metadata[this.activeView] ? 'block' : 'none'};">
+                            style="display: ${this.activeView && !this.metadata[this.activeView]
+                                ? 'block'
+                                : 'none'};">
                             <h2>${i18n.t('page-not-found')}</h2>
                             <p>${i18n.t('choose-from-menu')}</p>
                         </div>
