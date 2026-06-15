@@ -130,47 +130,6 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         return true;
     }
 
-    render() {
-        if (this.hidden) {
-            return html``;
-        }
-
-        // Regenerate error messages in case the language has changed
-        this.handleErrorsIfAny();
-
-        // Check if the label slot has any assigned content
-        const hasLabelSlot = this.querySelector('[slot="label"]') !== null;
-
-        return html`
-            <fieldset>
-                <label for="${this.formElementId}">
-                    <slot name="label">${this.label}</slot>
-                    ${this.required && (hasLabelSlot || this.label)
-                        ? html`
-                              <span class="required-mark">
-                                  ${this._i18n.t('render-form.base-object.required-field')}
-                              </span>
-                          `
-                        : html``}
-                </label>
-
-                ${this.description
-                    ? html`
-                          <div class="description">
-                              ${this.description}
-                              ${this.required
-                                  ? html`
-                                        ${this._i18n.t('render-form.base-object.required-field')}
-                                    `
-                                  : html``}
-                          </div>
-                      `
-                    : ''}
-                ${this.renderErrorMessages()} ${this.renderInput()}
-            </fieldset>
-        `;
-    }
-
     renderInput() {
         const validModes = ['dropdown', 'list', 'tag', 'tags'];
         if (!validModes.includes(this.displayMode)) {
