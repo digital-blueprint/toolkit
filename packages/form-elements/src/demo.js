@@ -195,8 +195,7 @@ export class FormElementsDemo extends LangMixin(
                         <dbp-form-string-element
                             subscribe="lang"
                             name="mySpecialString"
-                            description="Shows the evaluation data in the error message if empty"
-                            label="My special string"
+                            label="My special string with slotted description"
                             .customValidator=${(value, evaluationData) => {
                                 // If the value is empty, return an error message with the evaluation data
                                 return value === '' && this.isRequired
@@ -204,7 +203,13 @@ export class FormElementsDemo extends LangMixin(
                                     : [];
                             }}
                             value=${data.mySpecialString || ''}
-                            ?required=${this.isRequired}></dbp-form-string-element>
+                            ?required=${this.isRequired}>
+                            <div slot="description">
+                                Shows the evaluation data in the error
+                                <b>message</b>
+                                if empty
+                            </div>
+                        </dbp-form-string-element>
 
                         <dbp-form-string-element
                             subscribe="lang"
@@ -220,7 +225,12 @@ export class FormElementsDemo extends LangMixin(
                             name="myComponentNumber"
                             label="My number"
                             value=${data.myComponentNumber || ''}
-                            ?required=${this.isRequired}></dbp-form-number-element>
+                            ?required=${this.isRequired}>
+                            <div slot="description">
+                                Number element with a
+                                <b>slot for description</b>
+                            </div>
+                        </dbp-form-number-element>
 
                         <dbp-form-number-element
                             subscribe="lang"
@@ -317,7 +327,12 @@ export class FormElementsDemo extends LangMixin(
                             .value=${data.myComponentMultipleEnum || ''}
                             .items=${this.enumItems}
                             multiple
-                            ?required=${this.isRequired}></dbp-form-enum-element>
+                            ?required=${this.isRequired}>
+                            <div slot="description">
+                                Enum element with a
+                                <b>slot for description</b>
+                            </div>
+                        </dbp-form-enum-element>
 
                         <dbp-form-enum-element
                             subscribe="lang"

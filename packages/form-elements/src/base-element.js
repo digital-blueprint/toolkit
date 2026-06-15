@@ -188,11 +188,16 @@ export class DbpBaseElement extends LangMixin(
         // Regenerate error messages in case the language has changed
         this.handleErrorsIfAny();
 
+        // Check if the label slot has any assigned content
+        const hasLabelSlot = this.querySelector('[slot="label"]') !== null;
+        // Check if the description slot has any assigned content
+        const hasDescriptionSlot = this.querySelector('[slot="description"]') !== null;
+
         return html`
             <fieldset>
                 <label for="${this.formElementId}">
-                    ${this.label}
-                    ${this.required
+                    <slot name="label">${this.label}</slot>
+                    ${this.required && (hasLabelSlot || this.label)
                         ? html`
                               <span class="required-mark">
                                   ${this._i18n.t('render-form.base-object.required-field')}
@@ -200,9 +205,11 @@ export class DbpBaseElement extends LangMixin(
                           `
                         : html``}
                 </label>
-                ${this.description
+                ${hasDescriptionSlot || this.description
                     ? html`
-                          <div class="description">${this.description}</div>
+                          <div class="description">
+                              <slot name="description">${this.description}</slot>
+                          </div>
                       `
                     : ''}
                 ${this.renderErrorMessages()} ${this.renderInput()}
