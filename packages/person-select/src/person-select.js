@@ -181,6 +181,8 @@ export class PersonSelect extends LangMixin(
                         members.forEach((person) => {
                             results.push({
                                 id: person['@id'],
+                                // https://github.com/select2/select2/issues/6423#issuecomment-4691206011
+                                _resultId: `result-${person['@id']}`,
                                 text: that.formatPerson(that, person),
                             });
                         });
