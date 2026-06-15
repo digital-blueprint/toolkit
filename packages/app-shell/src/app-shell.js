@@ -183,14 +183,15 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (!this.activeView && this.visibleRoutes.length)
             this.switchComponent(this.visibleRoutes[0].name);
         else this.switchComponent(this.activeView);
+
+        await this.updateComplete;
+        if (!this.isMenuFloating() && this.menuOpen && this.visibleRoutes.length > 0) {
+            this.toggleMenu();
+        }
     }
 
     firstUpdated() {
         super.firstUpdated();
-
-        if (!this.isMenuFloating() && this.menuOpen && this.visibleRoutes.length > 0) {
-            this.toggleMenu();
-        }
 
         // Wait for all updates to complete before initializing scroll buttons
         this.updateComplete.then(() => {
