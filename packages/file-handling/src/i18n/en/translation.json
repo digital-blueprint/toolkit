@@ -48,6 +48,7 @@
     "demo-title": "File Upload Demo",
     "file-sink": {
         "clipboard": "Clipboard",
+        "loading-message": "Loading...",
         "local-button_one": "Download file",
         "local-button_other": "Download files",
         "local-intro_one": "Download {{count}} file",

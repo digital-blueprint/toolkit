@@ -45,6 +45,7 @@ export class FileSink extends LangMixin(
 
         this.initialFileHandlingState = {target: '', path: ''};
         this.delay = false;
+        this.loadingDownloadFiles = false;
     }
 
     static get scopedElements() {
@@ -84,6 +85,7 @@ export class FileSink extends LangMixin(
             sumContentLengths: {type: Number, attribute: 'content-length'},
             auth: {type: Object},
             delay: {type: Boolean, attribute: 'delay'},
+            loadingDownloadFiles: {type: Boolean, attribute: false},
         };
     }
 
@@ -308,6 +310,7 @@ export class FileSink extends LangMixin(
         }
 
         this.closeDialog();
+        this.loadingDownloadFiles = false;
     }
 
     update(changedProperties) {
@@ -715,6 +718,7 @@ export class FileSink extends LangMixin(
                                         );
                                         //set here an attribute to check if files have been downloaded and start the spinner if they were not downladed yet
                                         this.dispatchEvent(event);
+                                        this.loadingDownloadFiles = true;
                                         console.log('delayed or not ' + this.delay.toString());
                                         if (this.delay) {
                                             setTimeout(() => {
@@ -723,12 +727,24 @@ export class FileSink extends LangMixin(
                                         } else {
                                             this.downloadCompressedFiles();
                                         }
+
+                                        this.loadingDownloadFiles = true;
                                     }}">
                                     <dbp-icon name="download" aria-hidden="true"></dbp-icon>
                                     ${i18n.t('file-sink.local-button', {
                                         count: this.files.length,
                                     })}
                                 </button>
+
+                                <span
+                                    class="loading submissions-spinner ${classMap({
+                                        hidden: !this.loadingDownloadFiles,
+                                    })}">
+                                    <dbp-mini-spinner
+                                        text="${i18n.t(
+                                            'file-sink.loading-message',
+                                        )}"></dbp-mini-spinner>
+                                </span>
                             </div>
                         </div>
                         <div
