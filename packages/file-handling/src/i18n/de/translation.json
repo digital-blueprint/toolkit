@@ -48,12 +48,12 @@
     "demo-title": "Datei Abgabe Demo",
     "file-sink": {
         "clipboard": "Zwischenablage",
-        "loading-message": "Lädt...",
         "local-button_one": "Datei herunterladen",
         "local-button_other": "Dateien herunterladen",
         "local-intro_one": "{{count}} Datei herunterladen",
         "local-intro_other": "{{count}} Dateien herunterladen",
         "nav-local": "Lokaler Computer",
+        "preparing-download": "Dateien werden vorbereitet",
         "select-directory": "",
         "upload-success-body_one": "Sie haben {{count}} Datei erfolgreich in {{name}} hochgeladen.",
         "upload-success-body_other": "Sie haben {{count}} Dateien erfolgreich in {{name}} hochgeladen.",

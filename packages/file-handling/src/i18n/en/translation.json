@@ -48,12 +48,12 @@
     "demo-title": "File Upload Demo",
     "file-sink": {
         "clipboard": "Clipboard",
-        "loading-message": "Loading...",
         "local-button_one": "Download file",
         "local-button_other": "Download files",
         "local-intro_one": "Download {{count}} file",
         "local-intro_other": "Download {{count}} files",
         "nav-local": "My device",
+        "preparing-download": "Preparing files to download",
         "select-directory": "",
         "upload-success-body_one": "You have successfully uploaded {{count}} file to {{name}}.",
         "upload-success-body_other": "You have successfully uploaded {{count}} files to {{name}}.",

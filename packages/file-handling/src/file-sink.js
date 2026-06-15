@@ -735,16 +735,6 @@ export class FileSink extends LangMixin(
                                         count: this.files.length,
                                     })}
                                 </button>
-
-                                <span
-                                    class="loading submissions-spinner ${classMap({
-                                        hidden: !this.loadingDownloadFiles,
-                                    })}">
-                                    <dbp-mini-spinner
-                                        text="${i18n.t(
-                                            'file-sink.loading-message',
-                                        )}"></dbp-mini-spinner>
-                                </span>
                             </div>
                         </div>
                         <div
@@ -762,6 +752,16 @@ export class FileSink extends LangMixin(
                             })}">
                             ${this.getClipboardHtml()}
                         </div>
+                        ${this.loadingDownloadFiles
+                            ? html`
+                                  <div class="loading-indicator">
+                                      <dbp-mini-spinner
+                                          text="${i18n.t(
+                                              'file-sink.preparing-download',
+                                          )}"></dbp-mini-spinner>
+                                  </div>
+                              `
+                            : ''}
                     </main>
                 </div>
             </dbp-modal>
