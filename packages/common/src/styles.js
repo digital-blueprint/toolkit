@@ -1277,11 +1277,11 @@ export function getSelect2CSS() {
             font-weight: 300;
         }
 
-        .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: var(--dbp-muted);
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+            background-color: var(--dbp-background);
         }
 
-        .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        .select2-container--default .select2-search--dropdown .select2-search__field {
             background-color: var(--dbp-background);
         }
 
