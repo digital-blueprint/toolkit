@@ -72,8 +72,7 @@ export class ResourceSelectDemo extends LangMixin(
 
     render() {
         let buildUrl = (select, url) => {
-            url += '?perPage=9999999';
-            url += '&' + new URLSearchParams({lang: select.lang}).toString();
+            url += '?' + new URLSearchParams({lang: select.lang}).toString();
             return url;
         };
 

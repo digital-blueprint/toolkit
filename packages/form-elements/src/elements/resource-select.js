@@ -12,7 +12,7 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
         this.resourceSelectRef = createRef();
         this.resourcePath = '';
         this.includeLocal = undefined;
-        this.perPage = 30;
+        this.perPage = 100;
     }
 
     static get properties() {
@@ -51,12 +51,11 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
 
     renderInput() {
         let buildUrl = (select, url) => {
-            url +=
-                '?' +
-                new URLSearchParams({
-                    perPage: this.perPage,
-                    ...(this.includeLocal !== undefined && {includeLocal: this.includeLocal}),
-                });
+            if (this.includeLocal !== undefined) {
+                url +=
+                    '?' +
+                    new URLSearchParams({includeLocal: this.includeLocal});
+            }
             return url;
         };
 
@@ -65,6 +64,7 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
                 ${ref(this.resourceSelectRef)}
                 .auth=${this.auth ?? {}}
                 .value=${this.getResourceSelectValue()}
+                .perPage=${this.perPage}
                 ?disabled=${this.disabled}
                 lang="${this.lang}"
                 resource-path="${this.resourcePath}"
