@@ -25,6 +25,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         this.value = null;
         this.valueObject = null;
         this.disabled = false;
+        this.perPage = 100;
 
         this.noDefault = false;
 
@@ -41,6 +42,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             noDefault: {type: Boolean, attribute: 'no-default'},
             value: {type: String, reflect: true},
             disabled: {type: Boolean},
+            perPage: {type: Number, attribute: 'per-page'},
         };
     }
 
@@ -106,6 +108,14 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             url = new URL(this.resourcePath, this.entryPointUrl).href;
         }
         url = this.buildUrl(this, url);
+
+        // Inject perPage if the consumer hasn't already set it via buildUrl
+        let parsedUrl = new URL(url);
+        if (!parsedUrl.searchParams.has('perPage')) {
+            parsedUrl.searchParams.set('perPage', String(this.perPage));
+            url = parsedUrl.href;
+        }
+
         return url;
     }
 
@@ -183,7 +193,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             return;
         }
 
-        this._resources = await hydra.getCollection(url, this.lang, this.auth.token);
+        this._resources = await hydra.getCollection(url, this.lang, () => this.auth.token);
         this._url = url;
         this._lang = this.lang;
         this._setValue(this.value);
@@ -195,7 +205,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             return;
         }
 
-        this._resources = await hydra.getCollection(url, this.lang, this.auth.token);
+        this._resources = await hydra.getCollection(url, this.lang, () => this.auth.token);
         this._url = url;
         this._setValue(this.value);
         await this._updateSelect2();
@@ -249,6 +259,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             changedProperties.has('resourcePath') ||
             changedProperties.has('entryPointUrl') ||
             changedProperties.has('auth') ||
+            changedProperties.has('perPage') ||
             changedProperties.has('disabled')
         ) {
             this._updateAll();
