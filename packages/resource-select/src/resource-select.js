@@ -34,6 +34,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         this.fetchMode = 'prefetch';
 
         this.noDefault = false;
+        this.placeholder = null;
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
         select2(window, $);
@@ -50,6 +51,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             disabled: {type: Boolean},
             perPage: {type: Number, attribute: 'per-page'},
             fetchMode: {type: String, attribute: 'fetch-mode'},
+            placeholder: {type: String},
         };
     }
 
@@ -122,7 +124,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             return i18n.t('select.login-required');
         }
 
-        return i18n.t('select.placeholder');
+        return this.placeholder ?? i18n.t('select.placeholder');
     }
 
     getCollectionQueryParameters(select) {
