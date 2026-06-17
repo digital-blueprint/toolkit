@@ -108,6 +108,16 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         return resource.name ?? resource['@id'];
     }
 
+    /**
+     * @param {ResourceSelect} select
+     * @returns {string}
+     */
+    formatPlaceholder(select) {
+        const key =
+            select.fetchMode === 'search' ? 'select.search-placeholder' : 'select.placeholder';
+        return this._i18n.t(key);
+    }
+
     authenticated() {
         return (this.auth.token || '') !== '';
     }
@@ -122,7 +132,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             return i18n.t('select.login-required');
         }
 
-        return i18n.t('select.placeholder');
+        return this.formatPlaceholder(this);
     }
 
     getCollectionQueryParameters(select) {
