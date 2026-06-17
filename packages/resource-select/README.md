@@ -60,6 +60,7 @@ Or directly via CDN:
   query parameters for fetching a preselected resource by `value`.
 - `formatResource` - A function which takes the select and a resource, should
   return the text used for displaying the resource.
+- `formatPlaceholder` - A function which takes the select, should return the placeholder text.
 
 ### Server-side Search Example
 
@@ -86,6 +87,12 @@ personSelect.formatResource = (select, person) => {
     }
 
     return text;
+};
+
+personSelect.formatPlaceholder = (select) => {
+    return select.fetchMode === 'search'
+        ? i18n.t('person-select.search-placeholder')
+        : i18n.t('person-select.placeholder');
 };
 ```
 

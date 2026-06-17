@@ -3,6 +3,7 @@
         "component-disabled": "This component is disabled",
         "loading": "Loading...",
         "login-required": "Login required",
-        "placeholder": "Please select an entry"
+        "placeholder": "Please select an entry",
+        "search-placeholder": "Please search for an entry"
     }
 }
