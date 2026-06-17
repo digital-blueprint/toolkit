@@ -1275,7 +1275,7 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--single .select2-selection__clear {
             font-size: 1.5em;
             font-weight: 300;
-            margin-top: -3.5px;
+            margin-top: -4px;
             color: var(--dbp-muted);
         }
 
