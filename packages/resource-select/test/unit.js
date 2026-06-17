@@ -28,6 +28,13 @@ suite('dbp-resource-select basics', () => {
         assert.include(dropdownHost.className, 'select');
         assert.isNotNull(selectControl);
     });
+
+    test('should build default query parameters', () => {
+        assert.deepEqual(node.getCollectionQueryParameters(node), {});
+        assert.deepEqual(node.getSearchQueryParameters(node, ' test '), {search: 'test'});
+        assert.deepEqual(node.getSearchQueryParameters(node, ''), {});
+        assert.deepEqual(node.getItemParameters(node), {});
+    });
 });
 
 suite('dbp-resource-select-demo basics', () => {

@@ -14,7 +14,7 @@ import {
     sendNotification,
 } from '@dbp-toolkit/common';
 import {Notification} from '@dbp-toolkit/notification';
-import {PersonSelect} from '@dbp-toolkit/person-select';
+import {ResourceSelect} from '@dbp-toolkit/resource-select';
 import {getDeletionConfirmation, handleDeletionConfirm, handleDeletionCancel} from './utils.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {repeat} from 'lit/directives/repeat.js';
@@ -68,7 +68,7 @@ export class GrantPermissionDialog extends LangMixin(
             'dbp-icon': Icon,
             'dbp-button': Button,
             'dbp-icon-button': IconButton,
-            'dbp-person-select': PersonSelect,
+            'dbp-resource-select': ResourceSelect,
             'dbp-modal': Modal,
             'dbp-notification': Notification,
         };
@@ -593,6 +593,22 @@ export class GrantPermissionDialog extends LangMixin(
         }
     }
 
+    getPersonSearchQueryParameters(select, searchTerm) {
+        return {
+            search: searchTerm.trim(),
+            sort: 'familyName',
+        };
+    }
+
+    formatPerson(select, person) {
+        let text = person['givenName'] ?? '';
+        if (person['familyName']) {
+            text += ` ${person['familyName']}`;
+        }
+
+        return text;
+    }
+
     renderUserPermissionRow() {
         if (!this.userList) {
             return;
@@ -613,15 +629,20 @@ export class GrantPermissionDialog extends LangMixin(
                                       <span class="user-name">${user.userFullName}</span>
                                   `
                                 : html`
-                                      <dbp-person-select
+                                      <dbp-resource-select
                                           id="permission-person-select"
                                           subscribe="auth"
                                           lang="${this.lang}"
+                                          resource-path="/base/people"
+                                          fetch-mode="search"
+                                          .getSearchQueryParameters="${this
+                                              .getPersonSearchQueryParameters}"
+                                          .formatResource="${this.formatPerson}"
                                           @change="${(event) => {
                                               this.handlePersonSelected(event);
                                           }}"
                                           entry-point-url="${this
-                                              .entryPointUrl}"></dbp-person-select>
+                                              .entryPointUrl}"></dbp-resource-select>
                                   `}
                         </div>
                         ${user.userFullName ? this.renderPermissionCheckboxes(user) : ''}
@@ -792,7 +813,15 @@ export class GrantPermissionDialog extends LangMixin(
         const i18n = this._i18n;
 
         try {
-            const newUser = JSON.parse(event.target.dataset.object);
+            if (!event.detail?.value) {
+                return;
+            }
+
+            const newUser = event.detail.object;
+
+            if (!newUser) {
+                throw new Error('No user object returned');
+            }
 
             // Check if user is already in the list
             if (newUser && this.userList.has(newUser.identifier)) {

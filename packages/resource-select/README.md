@@ -37,6 +37,11 @@ Or directly via CDN:
     - the `value` will also be set automatically when an organization is chosen in the selector
 - `disabled` (optional): set to disable the selector
     - example `<dbp-resource-select disabled></dbp-resource-select>`
+- `fetch-mode` (optional, default: `prefetch`): set to `search` to search on the server instead of prefetching all resources
+    - example `<dbp-resource-select fetch-mode="search"></dbp-resource-select>`
+- `no-default` (optional): do not automatically select the first prefetched resource
+    - example `<dbp-resource-select no-default></dbp-resource-select>`
+    - selections can be cleared when `fetch-mode="search"`, or when `fetch-mode="prefetch"` is used together with `no-default`
 
 ### Properties
 
@@ -47,10 +52,42 @@ Or directly via CDN:
 
 ### Override Properties
 
-- `buildUrl` - A function which takes the select and the base URL, can return a
-  different URL for fetching the list of resources.
+- `getCollectionQueryParameters` - A function which takes the select and returns query parameters for collection
+  requests in both prefetch and search mode.
+- `getSearchQueryParameters` - Only used with `fetch-mode="search"`. A function which takes the select and the
+  current search term as string, and returns additional query parameters for server-side search requests.
+- `getItemParameters` - Only used with `fetch-mode="search"`. A function which takes the select and returns the
+  query parameters for fetching a preselected resource by `value`.
 - `formatResource` - A function which takes the select and a resource, should
   return the text used for displaying the resource.
+
+### Server-side Search Example
+
+```html
+<dbp-resource-select
+    subscribe="auth"
+    entry-point-url="http://127.0.0.1:8000"
+    resource-path="base/people"
+    fetch-mode="search"></dbp-resource-select>
+```
+
+```js
+const personSelect = document.querySelector('dbp-resource-select');
+
+personSelect.getSearchQueryParameters = (select, searchTerm) => ({
+    search: searchTerm.trim(),
+    sort: 'familyName',
+});
+
+personSelect.formatResource = (select, person) => {
+    let text = person.givenName ?? '';
+    if (person.familyName) {
+        text += ` ${person.familyName}`;
+    }
+
+    return text;
+};
+```
 
 ### Events
 

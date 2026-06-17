@@ -50,13 +50,11 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
     }
 
     renderInput() {
-        let buildUrl = (select, url) => {
+        let getCollectionQueryParameters = () => {
             if (this.includeLocal !== undefined) {
-                url +=
-                    '?' +
-                    new URLSearchParams({includeLocal: this.includeLocal});
+                return {includeLocal: this.includeLocal};
             }
-            return url;
+            return {};
         };
 
         return html`
@@ -68,7 +66,7 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
                 ?disabled=${this.disabled}
                 lang="${this.lang}"
                 resource-path="${this.resourcePath}"
-                .buildUrl="${buildUrl}"
+                .getCollectionQueryParameters="${getCollectionQueryParameters}"
                 @change="${(event) => {
                     let value = event.target.value;
                     if (!(value instanceof String) && typeof value !== 'string') {

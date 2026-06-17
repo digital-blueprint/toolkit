@@ -71,13 +71,28 @@ export class ResourceSelectDemo extends LangMixin(
     }
 
     render() {
-        let buildUrl = (select, url) => {
-            url += '?' + new URLSearchParams({lang: select.lang}).toString();
-            return url;
+        let getOrganizationQueryParameters = (select) => {
+            return {lang: select.lang};
         };
 
         let formatResource = (select, resource) => {
             return resource['name'];
+        };
+
+        let getPersonSearchQueryParameters = (select, searchTerm) => {
+            return {
+                search: searchTerm.trim(),
+                sort: 'familyName',
+            };
+        };
+
+        let formatPerson = (select, person) => {
+            let text = person['givenName'] ?? '';
+            if (person['familyName']) {
+                text += ` ${person['familyName']}`;
+            }
+
+            return text;
         };
 
         let change = (event) => {
@@ -102,8 +117,108 @@ export class ResourceSelectDemo extends LangMixin(
                                     entry-point-url="${this.entryPointUrl}"
                                     resource-path="base/organizations"
                                     @change="${change}"
-                                    .buildUrl="${buildUrl}"
+                                    .getCollectionQueryParameters="${getOrganizationQueryParameters}"
                                     .formatResource="${formatResource}"></dbp-resource-select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="container">
+                    <form>
+                        <div class="field">
+                            <label class="label">Organization without default selection</label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-organization-no-default"
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="base/organizations"
+                                    no-default
+                                    @change="${change}"
+                                    .getCollectionQueryParameters="${getOrganizationQueryParameters}"
+                                    .formatResource="${formatResource}"></dbp-resource-select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="container">
+                    <form>
+                        <div class="field">
+                            <label class="label">Organization disabled</label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-organization-disabled"
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="base/organizations"
+                                    disabled
+                                    @change="${change}"
+                                    .getCollectionQueryParameters="${getOrganizationQueryParameters}"
+                                    .formatResource="${formatResource}"></dbp-resource-select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="container">
+                    <form>
+                        <div class="field">
+                            <label class="label">
+                                Organization disabled without default selection
+                            </label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-organization-disabled-no-default"
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="base/organizations"
+                                    no-default
+                                    disabled
+                                    @change="${change}"
+                                    .getCollectionQueryParameters="${getOrganizationQueryParameters}"
+                                    .formatResource="${formatResource}"></dbp-resource-select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="container">
+                    <form>
+                        <div class="field">
+                            <label class="label">Organization without auth subscription</label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-organization-no-auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="base/organizations"
+                                    @change="${change}"
+                                    .getCollectionQueryParameters="${getOrganizationQueryParameters}"
+                                    .formatResource="${formatResource}"></dbp-resource-select>
+                            </div>
+                            <p>
+                                This component is not subscribed to auth and will not receive a
+                                token.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+                <div class="container">
+                    <form>
+                        <div class="field">
+                            <label class="label">Person search</label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-person-search"
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="base/people"
+                                    fetch-mode="search"
+                                    @change="${change}"
+                                    .getSearchQueryParameters="${getPersonSearchQueryParameters}"
+                                    .formatResource="${formatPerson}"></dbp-resource-select>
                             </div>
                         </div>
                     </form>
