@@ -42,6 +42,8 @@ Or directly via CDN:
 - `no-default` (optional): do not automatically select the first prefetched resource
     - example `<dbp-resource-select no-default></dbp-resource-select>`
     - selections can be cleared when `fetch-mode="search"`, or when `fetch-mode="prefetch"` is used together with `no-default`
+- `placeholder` (optional): placeholder text to show when no resource is selected, overrides the default placeholder text
+    - example `<dbp-resource-select placeholder="Select a person"></dbp-resource-select>`
 
 ### Properties
 
