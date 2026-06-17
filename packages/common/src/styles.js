@@ -1312,7 +1312,11 @@ export function getSelect2CSS() {
         }
 
         .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: inherit;
+            color: var(--dbp-muted);
+        }
+
+        .select2-container--default.select2-container--disabled .select2-selection__placeholder {
+            color: var(--dbp-on-muted-surface);
         }
 
         /* Work around single selections not wrapping and breaking responsivness */
