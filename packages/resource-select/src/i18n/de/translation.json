@@ -3,7 +3,6 @@
         "component-disabled": "Diese Komponente ist deaktiviert",
         "loading": "Wird geladen...",
         "login-required": "Anmeldung erforderlich",
-        "placeholder": "Bitte wählen Sie einen Eintrag aus",
-        "search-placeholder": "Bitte suchen Sie nach einem Eintrag"
+        "placeholder": "Bitte wählen Sie einen Eintrag aus"
     }
 }
