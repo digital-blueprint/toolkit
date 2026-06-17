@@ -1306,8 +1306,8 @@ export function getSelect2CSS() {
         }
 
         .select2-container--default.select2-container--disabled .select2-selection--single {
-            background-color: var(--dbp-muted-surface);
-            color: var(--dbp-on-muted-surface);
+            background-color: var(--dbp-background);
+            color: var(--dbp-muted);
             cursor: not-allowed;
         }
 
@@ -1316,7 +1316,7 @@ export function getSelect2CSS() {
         }
 
         .select2-container--default.select2-container--disabled .select2-selection__placeholder {
-            color: var(--dbp-on-muted-surface);
+            color: var(--dbp-muted);
         }
 
         /* Work around single selections not wrapping and breaking responsivness */
