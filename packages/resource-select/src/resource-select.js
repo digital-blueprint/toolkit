@@ -7,13 +7,13 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2LangDe from '@dbp-toolkit/resource-select/src/i18n/de/select2';
 import select2LangEn from '@dbp-toolkit/resource-select/src/i18n/en/select2';
-import {AdapterLitElement, combineURLs, LangMixin} from '@dbp-toolkit/common';
+import {AdapterLitElement, AuthMixin, combineURLs, LangMixin} from '@dbp-toolkit/common';
 import * as hydra from './hydra.js';
 
 const SEARCH_DELAY = 300;
 const MINIMUM_INPUT_LENGTH = 2;
 
-export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance) {
+export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), createInstance) {
     constructor() {
         super();
         this._resources = [];
@@ -43,7 +43,6 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
     static get properties() {
         return {
             ...super.properties,
-            auth: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             resourcePath: {type: String, attribute: 'resource-path'},
             noDefault: {type: Boolean, attribute: 'no-default'},
@@ -110,8 +109,12 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         return resource.name ?? resource['@id'];
     }
 
-    authenticated() {
-        return (this.auth.token || '') !== '';
+    loginCallback() {
+        this._updateAll();
+    }
+
+    logoutCallback() {
+        this._updateAll();
     }
 
     _getPlaceholder() {
@@ -120,7 +123,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         if (this.disabled) {
             return i18n.t('select.component-disabled');
         }
-        if (!this.authenticated()) {
+        if (!this.isLoggedIn()) {
             return i18n.t('select.login-required');
         }
 
@@ -234,7 +237,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         this._setValue(this.value);
 
         const $select = this._getSelect2();
-        if (!this.authenticated()) {
+        if (!this.isLoggedIn()) {
             await this._setSelect2Placeholder(this._getPlaceholder());
             return;
         }
@@ -288,7 +291,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
     }
 
     async updateResources() {
-        if (!this.authenticated()) {
+        if (!this.isLoggedIn()) {
             await this._setSelect2Placeholder(this._getPlaceholder());
             return;
         }
@@ -475,7 +478,6 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             valueChangedExternally ||
             changedProperties.has('resourcePath') ||
             changedProperties.has('entryPointUrl') ||
-            changedProperties.has('auth') ||
             changedProperties.has('perPage') ||
             changedProperties.has('disabled') ||
             changedProperties.has('noDefault') ||

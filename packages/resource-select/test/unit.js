@@ -35,6 +35,26 @@ suite('dbp-resource-select basics', () => {
         assert.deepEqual(node.getSearchQueryParameters(node, ''), {});
         assert.deepEqual(node.getItemParameters(node), {});
     });
+
+    test('should not refresh select2 when auth token refreshes', async () => {
+        let updateCount = 0;
+        node._updateAll = () => {
+            updateCount += 1;
+        };
+
+        node.auth = {'login-status': 'logged-in', token: 'old-token'};
+        await node.updateComplete;
+        assert.equal(updateCount, 1);
+
+        updateCount = 0;
+        node.auth = {'login-status': 'logged-in', token: 'new-token'};
+        await node.updateComplete;
+        assert.equal(updateCount, 0);
+
+        node.auth = {'login-status': 'logged-out', token: ''};
+        await node.updateComplete;
+        assert.equal(updateCount, 1);
+    });
 });
 
 suite('dbp-resource-select-demo basics', () => {
