@@ -108,6 +108,23 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         return resource.name ?? resource['@id'];
     }
 
+    authenticated() {
+        return (this.auth.token || '') !== '';
+    }
+
+    _getPlaceholder() {
+        const i18n = this._i18n;
+
+        if (this.disabled) {
+            return i18n.t('select.component-disabled');
+        }
+        if (!this.authenticated()) {
+            return i18n.t('select.login-required');
+        }
+
+        return i18n.t('select.placeholder');
+    }
+
     getCollectionQueryParameters(select) {
         return {};
     }
@@ -214,14 +231,15 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
     async _updateAll() {
         this._setValue(this.value);
 
-        // Show a dummy loading variant initially
         const $select = this._getSelect2();
-        if (!this._IsSelect2Initialized($select)) {
-            await this._setSelect2Loading();
+        if (!this.authenticated()) {
+            await this._setSelect2Placeholder(this._getPlaceholder());
+            return;
         }
 
-        if (!this.auth.token) {
-            return;
+        // Show a dummy loading variant initially.
+        if (!this._IsSelect2Initialized($select)) {
+            await this._setSelect2Loading();
         }
 
         if (this.fetchMode === 'search') {
@@ -233,9 +251,8 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         await this._updateSelect2();
     }
 
-    async _setSelect2Loading() {
+    async _setSelect2Placeholder(placeholder) {
         await this.updateComplete;
-        const i18n = this._i18n;
 
         const $select = this._getSelect2();
         console.assert($select.length, 'select2 missing');
@@ -246,10 +263,14 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
         $select.select2({
             width: '100%',
             language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
-            placeholder: i18n.t('select.loading'),
+            placeholder: placeholder,
             data: [],
             disabled: true,
         });
+    }
+
+    async _setSelect2Loading() {
+        await this._setSelect2Placeholder(this._i18n.t('select.loading'));
     }
 
     async _updateResources() {
@@ -265,6 +286,11 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
     }
 
     async updateResources() {
+        if (!this.authenticated()) {
+            await this._setSelect2Placeholder(this._getPlaceholder());
+            return;
+        }
+
         if (this.fetchMode === 'search') {
             await this._updateSelect2Search();
             return;
@@ -319,7 +345,6 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
 
     async _updateSelect2Search() {
         await this.updateComplete;
-        const i18n = this._i18n;
         const url = this._getCollectionUrl();
 
         if (url === null) {
@@ -337,7 +362,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
                 minimumInputLength: MINIMUM_INPUT_LENGTH,
                 allowClear: this._isClearable(),
-                placeholder: i18n.t('select.placeholder'),
+                placeholder: this._getPlaceholder(),
                 dropdownParent: this._$('#select-resource-dropdown'),
                 disabled: this.disabled,
                 ajax: {
@@ -399,7 +424,6 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
 
     async _updateSelect2() {
         await this.updateComplete;
-        const i18n = this._i18n;
 
         const $select = this._getSelect2();
         console.assert($select.length, 'select2 missing');
@@ -418,7 +442,7 @@ export class ResourceSelect extends LangMixin(AdapterLitElement, createInstance)
             .select2({
                 width: '100%',
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
-                placeholder: i18n.t('select.placeholder'),
+                placeholder: this._getPlaceholder(),
                 dropdownParent: this._$('#select-resource-dropdown'),
                 data: data,
                 disabled: this.disabled,

@@ -1,6 +1,8 @@
 {
     "select": {
+        "component-disabled": "This component is disabled",
         "loading": "Loading...",
+        "login-required": "Login required",
         "placeholder": "Please select an entry"
     }
 }
