@@ -2,7 +2,7 @@ import {html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {PersonSelect} from '@dbp-toolkit/person-select';
+import {ResourceSelect} from '@dbp-toolkit/resource-select';
 
 export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
@@ -21,7 +21,7 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
 
     static get scopedElements() {
         return {
-            'dbp-person-select': PersonSelect,
+            'dbp-resource-select': ResourceSelect,
         };
     }
 
@@ -41,16 +41,36 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
         return this.value.startsWith('/base/people/') ? this.value : `/base/people/${this.value}`;
     }
 
+    getPersonSearchQueryParameters(select, searchTerm) {
+        return {
+            search: searchTerm.trim(),
+            sort: 'familyName',
+        };
+    }
+
+    formatPerson(select, person) {
+        let text = person['givenName'] ?? '';
+        if (person['familyName']) {
+            text += ` ${person['familyName']}`;
+        }
+
+        return text;
+    }
+
     renderInput() {
         return html`
-            <dbp-person-select
+            <dbp-resource-select
                 ${ref(this.personSelectRef)}
                 .auth=${this.auth ?? {}}
                 .value=${this.getPersonSelectValue()}
                 ?disabled=${this.disabled}
                 lang="${this.lang}"
+                resource-path="/base/people"
+                fetch-mode="search"
+                .getSearchQueryParameters=${this.getPersonSearchQueryParameters}
+                .formatResource=${this.formatPerson}
                 @change="${(event) => {
-                    let value = event.target.value;
+                    let value = event.detail?.value ?? '';
                     if (!(value instanceof String) && typeof value !== 'string') {
                         return;
                     }
@@ -59,7 +79,7 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
                     }
                     this.value = value;
                 }}"
-                entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+                entry-point-url="${this.entryPointUrl}"></dbp-resource-select>
         `;
     }
 }

@@ -107,12 +107,12 @@ export function getGrantPermissionDialogCSS() {
             flex-basis: 250px;
         }
 
-        /* for the person-select dropdown */
-        .user-row-container:has(dbp-person-select) {
+        /* for the resource-select dropdown */
+        .user-row-container:has(dbp-resource-select) {
             margin-bottom: 180px;
         }
 
-        dbp-person-select {
+        dbp-resource-select {
             width: 320px;
             height: 30px;
         }
