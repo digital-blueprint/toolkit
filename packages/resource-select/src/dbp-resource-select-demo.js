@@ -134,6 +134,7 @@ export class ResourceSelectDemo extends LangMixin(
                                     lang="${this.lang}"
                                     entry-point-url="${this.entryPointUrl}"
                                     resource-path="base/organizations"
+                                    placeholder="Custom placeholder"
                                     no-default
                                     @change="${change}"
                                     .getCollectionQueryParameters="${getOrganizationQueryParameters}"
