@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {Button, ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import {ResourceSelect} from './resource-select.js';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -21,6 +21,7 @@ export class ResourceSelectDemo extends LangMixin(
         return {
             'dbp-auth-keycloak': AuthKeycloak,
             'dbp-login-button': LoginButton,
+            'dbp-button': Button,
             'dbp-resource-select': ResourceSelect,
         };
     }
@@ -70,6 +71,11 @@ export class ResourceSelectDemo extends LangMixin(
               `;
     }
 
+    async resetAll() {
+        const resourceSelects = this.renderRoot.querySelectorAll('dbp-resource-select');
+        await Promise.all(Array.from(resourceSelects).map((select) => select.reset()));
+    }
+
     render() {
         let getOrganizationQueryParameters = (select) => {
             return {lang: select.lang};
@@ -103,6 +109,9 @@ export class ResourceSelectDemo extends LangMixin(
             <section class="section">
                 <div class="container">
                     <h1 class="title">resource-select-Demo</h1>
+                    <dbp-button type="is-secondary" no-spinner-on-click @click="${this.resetAll}">
+                        Reset all
+                    </dbp-button>
                 </div>
                 ${this.getAuthComponentHtml()}
                 <div class="container">

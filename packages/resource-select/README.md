@@ -63,6 +63,10 @@ Or directly via CDN:
 - `formatResource` - A function which takes the select and a resource, should
   return the text used for displaying the resource.
 
+### Methods
+
+- `reset()` - Clears the selection when clearing is allowed, otherwise selects the first prefetched resource.
+
 ### Server-side Search Example
 
 ```html
