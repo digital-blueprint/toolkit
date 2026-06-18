@@ -55,11 +55,14 @@ Or directly via CDN:
 ### Override Properties
 
 - `getCollectionQueryParameters` - A function which takes the select and returns query parameters for collection
-  requests in both prefetch and search mode.
+  requests in both prefetch and search mode. The return value can be anything accepted by the `URLSearchParams`
+  constructor.
 - `getSearchQueryParameters` - Only used with `fetch-mode="search"`. A function which takes the select and the
-  current search term as string, and returns additional query parameters for server-side search requests.
-- `getItemParameters` - Only used with `fetch-mode="search"`. A function which takes the select and returns the
-  query parameters for fetching a preselected resource by `value`.
+  current search term as string, and returns additional query parameters for server-side search requests. The return
+  value can be anything accepted by the `URLSearchParams` constructor.
+- `getItemQueryParameters` - Only used with `fetch-mode="search"`. A function which takes the select and returns the
+  query parameters for fetching a preselected resource by `value`. The return value can be anything accepted by the
+  `URLSearchParams` constructor.
 - `formatResource` - A function which takes the select and a resource, should
   return the text used for displaying the resource.
 

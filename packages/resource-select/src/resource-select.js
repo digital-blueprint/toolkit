@@ -163,10 +163,8 @@ export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), crea
     }
 
     _setQueryParameters(parsedUrl, parameters) {
-        for (const [key, parameterValue] of Object.entries(parameters)) {
-            if (parameterValue !== undefined && parameterValue !== null) {
-                parsedUrl.searchParams.set(key, String(parameterValue));
-            }
+        for (const [key, parameterValue] of new URLSearchParams(parameters)) {
+            parsedUrl.searchParams.append(key, parameterValue);
         }
     }
 
