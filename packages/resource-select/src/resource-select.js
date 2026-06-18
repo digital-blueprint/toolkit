@@ -105,6 +105,21 @@ export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), crea
         return url;
     }
 
+    /**
+     * Resets the selection to empty when clearable, otherwise to the first resource.
+     */
+    async reset() {
+        if (this._isClearable()) {
+            this._setValue(null, null);
+        } else {
+            this._ignoreValueUpdate = true;
+            this.value = null;
+            this.valueObject = null;
+        }
+
+        await this._updateAll();
+    }
+
     formatResource(select, resource) {
         return resource.name ?? resource['@id'];
     }
