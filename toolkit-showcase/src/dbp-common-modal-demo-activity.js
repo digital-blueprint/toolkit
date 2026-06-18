@@ -7,7 +7,7 @@ import readme from '@dbp-toolkit/common/README.modal.md';
 import * as demoStyles from './styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 import {MarkdownElement} from './markdown-element.js';
-import {PersonSelect} from '@dbp-toolkit/person-select';
+import {ResourceSelect} from '@dbp-toolkit/resource-select';
 
 class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
     constructor() {
@@ -21,7 +21,7 @@ class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
         return {
             'dbp-modal-demo': DbpModalDemo,
             'dbp-markdown': MarkdownElement,
-            'dbp-person-select': PersonSelect,
+            'dbp-resource-select': ResourceSelect,
             'dbp-modal': Modal,
             'dbp-button': Button,
             'dbp-icon': Icon,
@@ -118,10 +118,14 @@ class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
                         <dbp-icon name="cog"></dbp-icon>
                     </div>
                     <div slot="content">
-                        <dbp-person-select
+                        <dbp-resource-select
                             subscribe="auth"
                             lang="${this.lang}"
-                            entry-point-url="${this.entryPointUrl}"></dbp-person-select>
+                            resource-path="/base/people"
+                            fetch-mode="search"
+                            .formatResource=${(select, resource) =>
+                                `${resource?.givenName || ''} ${resource?.familyName || ''}`}
+                            entry-point-url="${this.entryPointUrl}"></dbp-resource-select>
                     </div>
                     <menu slot="footer" class="footer-menu">
                         <dbp-button
