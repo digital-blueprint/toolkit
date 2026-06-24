@@ -22,6 +22,7 @@ export class FileSink extends LangMixin(
     constructor() {
         super();
         this.auth = {};
+        this.boundSwMessageHandler = this.handleSwMessage.bind(this);
         this.context = '';
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
@@ -129,6 +130,8 @@ export class FileSink extends LangMixin(
                 }
             }
 
+            navigator.serviceWorker.addEventListener('message', this.boundSwMessageHandler);
+
             document.addEventListener(
                 'dbp-file-sink-download-started',
                 this.boundFileSinkDownloadStartedHandler,
@@ -136,7 +139,12 @@ export class FileSink extends LangMixin(
         });
     }
 
-    // starts a streamed download of all files in this.files
+    /**
+     * Handle the loading indicator modal being closed.
+     * If the download has already started streaming, closing the modal is just
+     * cleanup and we must not cancel. Otherwise the user closed the modal
+     * (via X button or Escape) to abort the in-flight preparation requests.
+     */
     handleStreamedDownload() {
         // create form used to stream-download a zip
         const downloadForm = document.createElement('form');
@@ -637,6 +645,7 @@ export class FileSink extends LangMixin(
      * (via X button or Escape) to abort the in-flight preparation requests.
      */
     handleLoadingIndicatorModalClosed() {
+        console.log('handle closed');
         if (this.loadingDownloadFiles) {
             return;
         }
@@ -649,6 +658,18 @@ export class FileSink extends LangMixin(
         const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
         if (modal) {
             modal.open();
+        }
+    }
+
+    handleSwMessage(event) {
+        if (event.data?.type === 'DOWNLOAD_STARTED') {
+            const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
+            console.log(modal);
+            if (modal) {
+                // Mark streaming as started so the close handler does not cancel the download
+                this._downloadStreamingStarted = true;
+                modal.close();
+            }
         }
     }
 
