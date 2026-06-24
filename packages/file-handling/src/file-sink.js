@@ -42,7 +42,7 @@ export class FileSink extends LangMixin(
         this.sumContentLengths = -1;
         /** @type {ServiceWorkerRegistration|null} */
         this._swRegistration = null;
-
+        this.boundFileSinkDownloadStartedHandler = this.handleFileSinkDownloadStarted.bind(this);
         this.initialFileHandlingState = {target: '', path: ''};
         this.delay = false;
         this.loadingDownloadFiles = false;
@@ -128,6 +128,11 @@ export class FileSink extends LangMixin(
                     paddles.classList.add('hidden');
                 }
             }
+
+            document.addEventListener(
+                'dbp-file-sink-download-started',
+                this.boundFileSinkDownloadStartedHandler,
+            );
         });
     }
 
@@ -554,6 +559,7 @@ export class FileSink extends LangMixin(
         // language=css
         return css`
             ${commonStyles.getThemeCSS()}
+            ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             ${fileHandlingStyles.getFileHandlingCss()}
@@ -622,6 +628,28 @@ export class FileSink extends LangMixin(
                 }
             }
         `;
+    }
+
+    /**
+     * Handle the loading indicator modal being closed.
+     * If the download has already started streaming, closing the modal is just
+     * cleanup and we must not cancel. Otherwise the user closed the modal
+     * (via X button or Escape) to abort the in-flight preparation requests.
+     */
+    handleLoadingIndicatorModalClosed() {
+        if (this.loadingDownloadFiles) {
+            return;
+        }
+        this.cancelStreamedDownload();
+    }
+
+    handleFileSinkDownloadStarted(event) {
+        this.loadingDownloadFiles = false;
+        console.log('open');
+        const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
+        if (modal) {
+            modal.open();
+        }
     }
 
     render() {
@@ -718,7 +746,7 @@ export class FileSink extends LangMixin(
                                         );
                                         //set here an attribute to check if files have been downloaded and start the spinner if they were not downladed yet
                                         this.dispatchEvent(event);
-                                        this.loadingDownloadFiles = true;
+
                                         console.log('delayed or not ' + this.delay.toString());
                                         if (this.delay) {
                                             setTimeout(() => {
@@ -752,17 +780,19 @@ export class FileSink extends LangMixin(
                             })}">
                             ${this.getClipboardHtml()}
                         </div>
-                        ${this.loadingDownloadFiles
-                            ? html`
-                                  <div class="loading-indicator">
-                                      <dbp-mini-spinner
-                                          text="${i18n.t(
-                                              'file-sink.preparing-download',
-                                          )}"></dbp-mini-spinner>
-                                  </div>
-                              `
-                            : ''}
                     </main>
+                </div>
+            </dbp-modal>
+
+            <dbp-modal
+                id="loading-indicator-modal"
+                class="modal modal--loading-indicator"
+                modal-id="loading-indicator-modal"
+                title="${i18n.t('file-sink.preparing-download')}"
+                subscribe="lang"
+                @dbp-modal-closed=${() => this.handleLoadingIndicatorModalClosed()}>
+                <div slot="content">
+                    <dbp-mini-spinner style="font-size: 4em"></dbp-mini-spinner>
                 </div>
             </dbp-modal>
         `;
