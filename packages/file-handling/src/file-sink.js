@@ -272,20 +272,25 @@ export class FileSink extends LangMixin(
             // if it should be streamed and everything
             if (this.streamed) {
                 this.handleStreamedDownload();
+                console.log('streamed download');
             } else {
                 if (!(this.files[0] instanceof File)) {
                     console.error('Given object cannot be saved!');
                     return;
                 }
                 FileSaver.saveAs(this.files[0], this.files[0].filename);
-            }
 
+                this.closeLoadingIndicatorModal();
+            }
+            this.loadingDownloadFiles = false;
             this.closeDialog();
             return;
         }
 
         if (this.streamed) {
             this.handleStreamedDownload();
+            this.loadingDownloadFiles = false;
+            this.closeDialog();
         } else {
             // check if an error was thrown in the forEach. "return does not stop the method call
             let error = false;
@@ -320,10 +325,10 @@ export class FileSink extends LangMixin(
 
             // see: https://github.com/eligrey/FileSaver.js#readme
             FileSaver.saveAs(content, this.filename || 'files.zip');
+            this.closeLoadingIndicatorModal();
         }
-
-        this.closeDialog();
         this.loadingDownloadFiles = false;
+        this.closeDialog();
     }
 
     update(changedProperties) {
@@ -661,10 +666,21 @@ export class FileSink extends LangMixin(
         }
     }
 
+    closeLoadingIndicatorModal() {
+        const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
+        console.log('here');
+        if (modal) {
+            // Mark streaming as started so the close handler does not cancel the download
+            this._downloadStreamingStarted = true;
+            modal.close();
+        }
+    }
+
     handleSwMessage(event) {
-        if (event.data?.type === 'DOWNLOAD_STARTED') {
+        console.log('handleSwMessage ');
+        if (event.data?.type === 'STREAMED_DOWNLOAD_STARTED') {
             const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
-            console.log(modal);
+            console.log('modal ' + modal);
             if (modal) {
                 // Mark streaming as started so the close handler does not cancel the download
                 this._downloadStreamingStarted = true;

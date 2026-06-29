@@ -217,7 +217,11 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         class="button is-primary">
                         Open download dialog
                     </button>
-                    <dbp-file-sink id="file-sink-delayed" lang="en" delay="true"></dbp-file-sink>
+                    <dbp-file-sink
+                        id="file-sink-delayed"
+                        lang="en"
+                        delay="true"
+                        streamed="true"></dbp-file-sink>
                 </div>
             </section>
         `;
