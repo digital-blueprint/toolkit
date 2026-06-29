@@ -133,7 +133,17 @@ export class FileSink extends LangMixin(
         const downloadForm = document.createElement('form');
         downloadForm.enctype = 'multipart/form-data';
         downloadForm.style.display = 'none';
-        downloadForm.action = commonUtils.getAssetURL(pkgName, 'downloadZip/files.zip');
+
+        // Use the configured filename for the streamed zip (falls back to files.zip).
+        let zipName = this.filename || 'files.zip';
+        if (!zipName.toLowerCase().endsWith('.zip')) {
+            zipName += '.zip';
+        }
+        downloadForm.action = commonUtils.getAssetURL(
+            pkgName,
+            'downloadZip/' + encodeURIComponent(zipName),
+        );
+
         downloadForm.method = 'POST';
 
         // detect errors. "return" in forEach does not stop the method call
