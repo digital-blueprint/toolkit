@@ -2,15 +2,13 @@ import {globSync} from 'node:fs';
 import serve from 'rollup-plugin-serve';
 import process from 'node:process';
 import {createRequire} from 'node:module';
-import {generateTLSConfig, assetPlugin} from '@dbp-toolkit/dev-utils';
+import {assetPlugin} from '@dbp-toolkit/dev-utils';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
 console.log('build: ' + build);
 const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
-
-const USE_HTTPS = true;
 
 export default {
     input:
@@ -41,7 +39,6 @@ export default {
                   contentBase: 'dist',
                   host: '127.0.0.1',
                   port: 8002,
-                  https: USE_HTTPS ? await generateTLSConfig() : false,
               })
             : false,
     ],
