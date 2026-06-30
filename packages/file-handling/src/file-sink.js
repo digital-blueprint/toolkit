@@ -785,13 +785,15 @@ export class FileSink extends LangMixin(
                                         this.dispatchEvent(event);
 
                                         console.log('delayed or not ' + this.delay.toString());
-                                        if (this.delay) {
-                                            setTimeout(() => {
-                                                this.downloadCompressedFiles();
-                                            }, 5000);
-                                        } else {
-                                            this.downloadCompressedFiles();
-                                        }
+                                        this.downloadCompressedFiles();
+
+                                        // if (this.delay) {
+                                        //     setTimeout(() => {
+                                        //         this.downloadCompressedFiles();
+                                        //     }, 50000);
+                                        // } else {
+                                        //     this.downloadCompressedFiles();
+                                        // }
 
                                         this.loadingDownloadFiles = true;
                                     }}">
@@ -824,7 +826,7 @@ export class FileSink extends LangMixin(
             <dbp-modal
                 id="loading-indicator-modal"
                 class="modal modal--loading-indicator"
-                modal-id="loading-indicator-modal"
+                modal-id="loading-indicator"
                 title="${i18n.t('file-sink.preparing-download')}"
                 subscribe="lang"
                 @dbp-modal-closed=${() => this.handleLoadingIndicatorModalClosed()}>
