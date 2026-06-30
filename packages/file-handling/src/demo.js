@@ -46,16 +46,6 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
     connectedCallback() {
         super.connectedCallback();
-
-        this.updateComplete.then(() => {
-            this.shadowRoot.querySelectorAll('.file-source').forEach((element) => {
-                // TODO: remove orphaned event listeners
-                element.addEventListener(
-                    'dbp-file-source-file-selected',
-                    this.addLogEntry.bind(this),
-                );
-            });
-        });
     }
 
     authenticated() {
@@ -126,6 +116,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <dbp-file-source
                         id="file-source1"
                         class="file-source"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         allowed-mime-types="*/*"
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                         lang="en"
@@ -142,6 +133,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <dbp-file-source
                         id="file-source2"
                         lang="en"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
                         allowed-mime-types="image/*"
@@ -159,6 +151,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <dbp-file-source
                         id="file-source3"
                         lang="en"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
                         allowed-mime-types="application/pdf"
@@ -177,6 +170,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <dbp-file-source
                         id="file-source4"
                         lang="en"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
                         allowed-mime-types="text/plain,image/*"
@@ -195,6 +189,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         id="file-source5"
                         lang="en"
                         url="${this.url}"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         class="file-source"
                         allowed-mime-types="application/pdf"
                         decompress-zip
