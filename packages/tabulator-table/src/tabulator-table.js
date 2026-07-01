@@ -139,6 +139,11 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             this.options['paginationSize'] = this.paginationSize;
             this.options['paginationSizeSelector'] = [5, 10, 20, 50, 100];
             this.options['paginationElement'] = paginationElement;
+            // Ensure the langs structure exists before injecting pagination
+            // translations, in case the caller didn't provide any langs.
+            this.options['langs'] ??= {};
+            this.options['langs']['en'] ??= {};
+            this.options['langs']['de'] ??= {};
             this.options['langs']['en']['pagination'] = {
                 page_size: 'Page size',
                 page_size_title: 'Page size',
