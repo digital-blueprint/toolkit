@@ -734,6 +734,11 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 background: none;
             }
 
+            .tabulator-page-size option {
+                color: var(--dbp-content);
+                background-color: var(--dbp-background);
+            }
+
             .page-size-wrapper {
                 position: relative;
                 display: inline-flex;
