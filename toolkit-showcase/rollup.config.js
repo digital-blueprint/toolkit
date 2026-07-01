@@ -26,7 +26,7 @@ let doMinify = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
-let useHTTPS = true;
+let useHTTPS = false;
 let nodeEnv = buildFull ? 'production' : 'development';
 
 console.log('APP_ENV: ' + appEnv);

@@ -45,7 +45,6 @@ export class FileSink extends LangMixin(
         this._swRegistration = null;
         this.boundFileSinkDownloadStartedHandler = this.handleFileSinkDownloadStarted.bind(this);
         this.initialFileHandlingState = {target: '', path: ''};
-        this.delay = false;
         this.loadingDownloadFiles = false;
     }
 
@@ -85,7 +84,6 @@ export class FileSink extends LangMixin(
             streamed: {type: Boolean, attribute: 'streamed'},
             sumContentLengths: {type: Number, attribute: 'content-length'},
             auth: {type: Object},
-            delay: {type: Boolean, attribute: 'delay'},
             loadingDownloadFiles: {type: Boolean, attribute: false},
         };
     }
@@ -783,17 +781,7 @@ export class FileSink extends LangMixin(
                                         );
                                         //set here an attribute to check if files have been downloaded and start the spinner if they were not downladed yet
                                         this.dispatchEvent(event);
-
-                                        console.log('delayed or not ' + this.delay.toString());
                                         this.downloadCompressedFiles();
-
-                                        // if (this.delay) {
-                                        //     setTimeout(() => {
-                                        //         this.downloadCompressedFiles();
-                                        //     }, 50000);
-                                        // } else {
-                                        //     this.downloadCompressedFiles();
-                                        // }
 
                                         this.loadingDownloadFiles = true;
                                     }}">
