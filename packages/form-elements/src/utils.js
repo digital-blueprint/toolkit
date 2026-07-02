@@ -13,14 +13,13 @@ export const getFieldsetCSS = () => {
     return css`
         fieldset {
             border: none;
-            margin: 15px 0;
+            margin: 10px 0;
             padding: 0;
         }
 
         fieldset label {
-            font-weight: bold;
+            font-weight: 300;
             display: block;
-            margin-bottom: 0.5em;
         }
 
         fieldset input:not([type='radio']):not([type='checkbox']),

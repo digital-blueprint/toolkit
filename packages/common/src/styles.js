@@ -183,10 +183,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         p {
             font-size: 1em;
         }
-
-        .field:not(:last-child) {
-            margin-bottom: 0.75rem;
-        }
+        
 
         .field.has-addons {
             display: flex;
