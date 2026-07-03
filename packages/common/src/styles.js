@@ -183,7 +183,6 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         p {
             font-size: 1em;
         }
-        
 
         .field.has-addons {
             display: flex;
