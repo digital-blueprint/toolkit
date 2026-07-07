@@ -42,6 +42,7 @@ export class CountrySelect extends LangMixin(
     }
 
     clear() {
+        this.ignoreValueUpdate = true;
         this.value = '';
         // Reset value attribute to really make sure it is empty and will trigger a change event
         // when it is set again with the previous value
