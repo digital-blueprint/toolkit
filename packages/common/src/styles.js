@@ -1269,10 +1269,10 @@ export function getSelect2CSS() {
         }
 
         .select2-container--default .select2-selection--single .select2-selection__clear {
-            font-size: 1.5em;
+            font-size: 1.6em;
             font-weight: 300;
-            margin-top: -4px;
             color: var(--dbp-muted);
+            margin-top: -3px;
         }
 
         .select2-container--default .select2-selection--multiple .select2-selection__rendered {
