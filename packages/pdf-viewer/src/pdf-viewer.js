@@ -246,9 +246,21 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 viewport = page.getViewport({scale: canvasToPdfScale});
             }
 
-            // set canvas height same as viewport height
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
+            // enable retina/HiDPI scaling by rendering the canvas backing store
+            // at the device pixel ratio while keeping the CSS display size
+            const outputScale = window.devicePixelRatio || 1;
+
+            // set the canvas backing store size scaled by the output scale
+            canvas.height = Math.floor(viewport.height * outputScale);
+            canvas.width = Math.floor(viewport.width * outputScale);
+
+            // keep the CSS display size at the (unscaled) viewport size
+            canvas.style.width = Math.floor(viewport.width) + 'px';
+            canvas.style.height = Math.floor(viewport.height) + 'px';
+
+            // transform used to scale the drawing to the higher resolution backing store
+            const renderTransform =
+                outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
 
             this._('#canvas-wrapper-inner').style.width = viewport.width + 'px';
             this._('#canvas-wrapper-inner').style.height = viewport.height + 'px';
@@ -266,6 +278,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 canvas: null,
                 canvasContext: canvas.getContext('2d'),
                 viewport: viewport,
+                transform: renderTransform,
             };
 
             // render the page contents in the canvas
