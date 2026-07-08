@@ -180,9 +180,9 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                 aria-describedby="modal-content"
                 aria-labelledby="modal-title">
                 <div
-                    class="modal-container ${this.fullHeightLine
-                        ? 'modal-container--full-height-line'
-                        : ''}">
+                    class="modal-container ${
+                        this.fullHeightLine ? 'modal-container--full-height-line' : ''
+                    }">
                     <header class="modal-header">
                         <div class="header-top">
                             <slot name="title">
@@ -207,21 +207,25 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                     </header>
                     <main class="modal-content" id="modal-content">
                         <slot name="content"></slot>
-                        ${!this.stickyFooter
+                        ${
+                            !this.stickyFooter
+                                ? html`
+                                      <footer class="modal-footer modal-footer--sticky">
+                                          <slot name="footer"></slot>
+                                      </footer>
+                                  `
+                                : ''
+                        }
+                    </main>
+                    ${
+                        this.stickyFooter
                             ? html`
-                                  <footer class="modal-footer modal-footer--sticky">
+                                  <footer class="modal-footer">
                                       <slot name="footer"></slot>
                                   </footer>
                               `
-                            : ''}
-                    </main>
-                    ${this.stickyFooter
-                        ? html`
-                              <footer class="modal-footer">
-                                  <slot name="footer"></slot>
-                              </footer>
-                          `
-                        : ''}
+                            : ''
+                    }
                 </div>
             </dialog>
         `;

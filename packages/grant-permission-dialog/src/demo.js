@@ -166,47 +166,55 @@ export class GrantPermissionDialogDemo extends LangMixin(
                                 this.setForms();
                             }}"></dbp-button>
 
-                        ${this.forms.length > 0
-                            ? html`
-                                  <label for="form-list">Form List</label>
-                                  <select id="form-list" @change="${this.setFormToManage}">
-                                      <option value="">- Select a form -</option>
-                                      >
-                                      ${this.forms.map((form) => {
-                                          return html`
-                                              <option value="${form.identifier}">
-                                                  ${form.name}
-                                              </option>
-                                          `;
-                                      })}
-                                  </select>
-                              `
-                            : ''}
-                        ${this.formIdentifier
-                            ? html`
-                                  <label for="permission-type">Resource class</label>
-                                  <select
-                                      id="permission-type"
-                                      @change="${this.setResourceClassType}">
-                                      <option value="">- Select a resource class -</option>
-                                      <option value="DbpRelayFormalizeSubmissionCollection">
-                                          Submission collection
-                                      </option>
-                                      <option value="DbpRelayFormalizeForm">Form</option>
-                                  </select>
-                              `
-                            : ''}
-                        ${this.resourceClassIdentifier
-                            ? html`
-                                  <dbp-button
-                                      type="is-primary"
-                                      id="modal-trigger-basic"
-                                      value="Manage permissions"
-                                      no-spinner-on-click
-                                      @click="${() =>
-                                          this._('#grant-permission-dialog').open()}"></dbp-button>
-                              `
-                            : ''}
+                        ${
+                            this.forms.length > 0
+                                ? html`
+                                      <label for="form-list">Form List</label>
+                                      <select id="form-list" @change="${this.setFormToManage}">
+                                          <option value="">- Select a form -</option>
+                                          >
+                                          ${this.forms.map((form) => {
+                                              return html`
+                                                  <option value="${form.identifier}">
+                                                      ${form.name}
+                                                  </option>
+                                              `;
+                                          })}
+                                      </select>
+                                  `
+                                : ''
+                        }
+                        ${
+                            this.formIdentifier
+                                ? html`
+                                      <label for="permission-type">Resource class</label>
+                                      <select
+                                          id="permission-type"
+                                          @change="${this.setResourceClassType}">
+                                          <option value="">- Select a resource class -</option>
+                                          <option value="DbpRelayFormalizeSubmissionCollection">
+                                              Submission collection
+                                          </option>
+                                          <option value="DbpRelayFormalizeForm">Form</option>
+                                      </select>
+                                  `
+                                : ''
+                        }
+                        ${
+                            this.resourceClassIdentifier
+                                ? html`
+                                      <dbp-button
+                                          type="is-primary"
+                                          id="modal-trigger-basic"
+                                          value="Manage permissions"
+                                          no-spinner-on-click
+                                          @click="${() =>
+                                              this._(
+                                                  '#grant-permission-dialog',
+                                              ).open()}"></dbp-button>
+                                  `
+                                : ''
+                        }
 
                         <dbp-grant-permission-dialog
                             id="grant-permission-dialog"
@@ -214,8 +222,9 @@ export class GrantPermissionDialogDemo extends LangMixin(
                             subscribe="auth"
                             entry-point-url="${this.entryPointUrl}"
                             resource-identifier="${this.formIdentifier}"
-                            resource-class-identifier="${this
-                                .resourceClassIdentifier}"></dbp-grant-permission-dialog>
+                            resource-class-identifier="${
+                                this.resourceClassIdentifier
+                            }"></dbp-grant-permission-dialog>
                     </div>
                 </div>
                 <div class="container">

@@ -160,9 +160,11 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                                 (key) => html`
                                     <option
                                         value="${key}"
-                                        ?selected=${this.multiple
-                                            ? this.value?.includes(key)
-                                            : key === this.value}>
+                                        ?selected=${
+                                            this.multiple
+                                                ? this.value?.includes(key)
+                                                : key === this.value
+                                        }>
                                         ${this.items[key]}
                                     </option>
                                 `,
@@ -175,36 +177,42 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     ${Object.keys(this.items).map(
                         (key) => html`
                             <label
-                                class="checkboxItem ${this.disabledItems.includes(key)
-                                    ? 'disabled'
-                                    : ''}">
-                                ${this.multiple
-                                    ? html`
-                                          <input
-                                              type="checkbox"
-                                              id="${this.formElementId}"
-                                              name="${this.name}"
-                                              value="${key}"
-                                              class="checkbox"
-                                              ?checked="${!!this.value?.includes(key)}"
-                                              @input="${this.handleInputValue}"
-                                              ?disabled=${this.disabled ||
-                                              this.disabledItems.includes(key)}
-                                              ?required=${this.required} />
-                                      `
-                                    : html`
-                                          <input
-                                              type="radio"
-                                              id="${this.formElementId}"
-                                              name="${this.name}"
-                                              value="${key}"
-                                              class="radio"
-                                              ?checked="${!!this.value?.includes(key)}"
-                                              @input="${this.handleInputValue}"
-                                              ?disabled=${this.disabled ||
-                                              this.disabledItems.includes(key)}
-                                              ?required=${this.required} />
-                                      `}
+                                class="checkboxItem ${
+                                    this.disabledItems.includes(key) ? 'disabled' : ''
+                                }">
+                                ${
+                                    this.multiple
+                                        ? html`
+                                              <input
+                                                  type="checkbox"
+                                                  id="${this.formElementId}"
+                                                  name="${this.name}"
+                                                  value="${key}"
+                                                  class="checkbox"
+                                                  ?checked="${!!this.value?.includes(key)}"
+                                                  @input="${this.handleInputValue}"
+                                                  ?disabled=${
+                                                      this.disabled ||
+                                                      this.disabledItems.includes(key)
+                                                  }
+                                                  ?required=${this.required} />
+                                          `
+                                        : html`
+                                              <input
+                                                  type="radio"
+                                                  id="${this.formElementId}"
+                                                  name="${this.name}"
+                                                  value="${key}"
+                                                  class="radio"
+                                                  ?checked="${!!this.value?.includes(key)}"
+                                                  @input="${this.handleInputValue}"
+                                                  ?disabled=${
+                                                      this.disabled ||
+                                                      this.disabledItems.includes(key)
+                                                  }
+                                                  ?required=${this.required} />
+                                          `
+                                }
                                 ${this.items[key]}
                             </label>
                         `,

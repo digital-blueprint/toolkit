@@ -672,15 +672,21 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                             this.clearClipboard();
                         }}"
                         class="button"
-                        title="${this.numberOfSelectedFiles > 0
-                            ? i18n.t('clipboard.remove-count', {count: this.numberOfSelectedFiles})
-                            : i18n.t('clipboard.remove-all')}"
+                        title="${
+                            this.numberOfSelectedFiles > 0
+                                ? i18n.t('clipboard.remove-count', {
+                                      count: this.numberOfSelectedFiles,
+                                  })
+                                : i18n.t('clipboard.remove-all')
+                        }"
                         ?disabled="${buttonsAreDisabled}">
-                        ${this.numberOfSelectedFiles > 0
-                            ? i18n.t('clipboard.remove-count-btn', {
-                                  count: this.numberOfSelectedFiles,
-                              })
-                            : i18n.t('clipboard.remove-all-btn')}
+                        ${
+                            this.numberOfSelectedFiles > 0
+                                ? i18n.t('clipboard.remove-count-btn', {
+                                      count: this.numberOfSelectedFiles,
+                                  })
+                                : i18n.t('clipboard.remove-all-btn')
+                        }
                     </button>
                 </div>
                 <div class="btn-flex-container-mobile">
@@ -691,14 +697,20 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                         }}"
                         ?disabled="${buttonsAreDisabled}"
                         class="button"
-                        title="${this.numberOfSelectedFiles > 0
-                            ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles})
-                            : i18n.t('clipboard.save-all')}">
-                        ${this.numberOfSelectedFiles > 0
-                            ? i18n.t('clipboard.save-count-btn', {
-                                  count: this.numberOfSelectedFiles,
-                              })
-                            : i18n.t('clipboard.save-all-btn')}
+                        title="${
+                            this.numberOfSelectedFiles > 0
+                                ? i18n.t('clipboard.save-count', {
+                                      count: this.numberOfSelectedFiles,
+                                  })
+                                : i18n.t('clipboard.save-all')
+                        }">
+                        ${
+                            this.numberOfSelectedFiles > 0
+                                ? i18n.t('clipboard.save-count-btn', {
+                                      count: this.numberOfSelectedFiles,
+                                  })
+                                : i18n.t('clipboard.save-all-btn')
+                        }
                     </button>
                 </div>
             </div>
@@ -712,27 +724,34 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                 nextcloud-file-url="${this.nextcloudFileURL}"
                 nexcloud-auth-info="${this.nextcloudAuthInfo}"
                 ?nextcloud-store-session="${this.nextcloudStoreSession}"
-                enabled-targets="${this.allowNesting
-                    ? this.enabledTargets
-                    : this.enabledTargets.replace('clipboard', '')}"
+                enabled-targets="${
+                    this.allowNesting
+                        ? this.enabledTargets
+                        : this.enabledTargets.replace('clipboard', '')
+                }"
                 decompress-zip
                 lang="${this.lang}"
                 text="${i18n.t('clipboard.upload-area-text')}"
                 button-label="${i18n.t('clipboard.upload-button-label')}"
                 @dbp-file-source-file-selected="${this.saveFilesToClipboardEvent}"
                 @dbp-nextcloud-file-picker-number-files="${this.finishedSaveFilesToClipboard}"
-                @dbp-file-source-file-upload-finished="${this
-                    .finishedSaveFilesToClipboard}"></dbp-file-source>
+                @dbp-file-source-file-upload-finished="${
+                    this.finishedSaveFilesToClipboard
+                }"></dbp-file-source>
             <dbp-file-sink
                 id="file-sink-clipboard"
-                context="${this.numberOfSelectedFiles > 0
-                    ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles})
-                    : i18n.t('clipboard.save-all')}"
+                context="${
+                    this.numberOfSelectedFiles > 0
+                        ? i18n.t('clipboard.save-count', {count: this.numberOfSelectedFiles})
+                        : i18n.t('clipboard.save-all')
+                }"
                 filename="clipboard-documents.zip"
                 allowed-mime-types="${this.allowedMimeTypes}"
-                enabled-targets="${this.allowNesting
-                    ? this.enabledTargets
-                    : this.enabledTargets.replace('clipboard', '')}"
+                enabled-targets="${
+                    this.allowNesting
+                        ? this.enabledTargets
+                        : this.enabledTargets.replace('clipboard', '')
+                }"
                 nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
                 nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
                 nextcloud-name="${this.nextcloudName}"
@@ -819,13 +838,15 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                         @click="${() => {
                             this.sendClipboardFiles(this.tabulatorTable.getSelectedData());
                         }}">
-                        ${this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0
-                            ? i18n.t('clipboard.source-btn', {
-                                  count: this.tabulatorTable
-                                      ? this.tabulatorTable.getSelectedRows().length
-                                      : 0,
-                              })
-                            : i18n.t('clipboard.source-btn-none')}
+                        ${
+                            this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0
+                                ? i18n.t('clipboard.source-btn', {
+                                      count: this.tabulatorTable
+                                          ? this.tabulatorTable.getSelectedRows().length
+                                          : 0,
+                                  })
+                                : i18n.t('clipboard.source-btn-none')
+                        }
                     </button>
                 </div>
             </div>

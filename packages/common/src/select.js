@@ -172,40 +172,44 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                 <dbp-icon class="icon-chevron" name="chevron-down" aria-hidden="true"></dbp-icon>
             </button>
 
-            ${this.open
-                ? html`
-                      <ul
-                          id="action-dropdown"
-                          class="menu"
-                          part="menu"
-                          role="menu"
-                          aria-labelledby="action-trigger-button"
-                          @keydown=${this._onMenuKeydown}>
-                          ${this.options.map(
-                              (o) => html`
-                                  <li role="none">
-                                      <button
-                                          class="item-button button"
-                                          role="menuitem"
-                                          data-value=${String(o.value)}
-                                          @click=${this._onItemClick}
-                                          ?disabled=${o.disabled ?? false}
-                                          aria-checked=${this.value === o.value ? 'true' : 'false'}>
-                                          ${o.iconName
-                                              ? html`
-                                                    <dbp-icon
-                                                        name=${o.iconName}
-                                                        aria-hidden="true"></dbp-icon>
-                                                `
-                                              : null}
-                                          <span>${o.label ?? o.name}</span>
-                                      </button>
-                                  </li>
-                              `,
-                          )}
-                      </ul>
-                  `
-                : null}
+            ${
+                this.open
+                    ? html`
+                          <ul
+                              id="action-dropdown"
+                              class="menu"
+                              part="menu"
+                              role="menu"
+                              aria-labelledby="action-trigger-button"
+                              @keydown=${this._onMenuKeydown}>
+                              ${this.options.map(
+                                  (o) => html`
+                                      <li role="none">
+                                          <button
+                                              class="item-button button"
+                                              role="menuitem"
+                                              data-value=${String(o.value)}
+                                              @click=${this._onItemClick}
+                                              ?disabled=${o.disabled ?? false}
+                                              aria-checked=${this.value === o.value ? 'true' : 'false'}>
+                                              ${
+                                                  o.iconName
+                                                      ? html`
+                                                            <dbp-icon
+                                                                name=${o.iconName}
+                                                                aria-hidden="true"></dbp-icon>
+                                                        `
+                                                      : null
+                                              }
+                                              <span>${o.label ?? o.name}</span>
+                                          </button>
+                                      </li>
+                                  `,
+                              )}
+                          </ul>
+                      `
+                    : null
+            }
         `;
     }
 }

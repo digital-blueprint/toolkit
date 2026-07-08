@@ -26,13 +26,15 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
 
         return html`
             <fieldset>
-                ${hasLabelSlot
-                    ? html`
-                          <slot name="label"></slot>
-                      `
-                    : html`
-                          <label>${this.label}</label>
-                      `}
+                ${
+                    hasLabelSlot
+                        ? html`
+                              <slot name="label"></slot>
+                          `
+                        : html`
+                              <label>${this.label}</label>
+                          `
+                }
                 ${this.renderValue()}
             </fieldset>
         `;
@@ -43,23 +45,27 @@ export class DbpEnumView extends ScopedElementsMixin(DbpBaseView) {
         const items = this.items;
 
         return html`
-            ${Array.isArray(value)
-                ? html`
-                      <ul>
-                          ${value.map(
-                              (v) => html`
-                                  <li>${items[v] || v}</li>
-                              `,
-                          )}
-                      </ul>
-                  `
-                : html`
-                      ${items[value] || value
-                          ? html`
-                                <span>${items[value] || value}</span>
-                            `
-                          : ''}
-                  `}
+            ${
+                Array.isArray(value)
+                    ? html`
+                          <ul>
+                              ${value.map(
+                                  (v) => html`
+                                      <li>${items[v] || v}</li>
+                                  `,
+                              )}
+                          </ul>
+                      `
+                    : html`
+                          ${
+                              items[value] || value
+                                  ? html`
+                                        <span>${items[value] || value}</span>
+                                    `
+                                  : ''
+                          }
+                      `
+            }
         `;
     }
 

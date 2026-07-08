@@ -346,37 +346,43 @@ export class DbpIconDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), c
                     </div>
                 </div>
 
-                ${filteredIcons.length > 0
-                    ? html`
-                          <div class="icon-grid">
-                              ${filteredIcons.map(
-                                  (iconName) => html`
-                                      <div
-                                          class="icon-item"
-                                          @click="${() => navigator.clipboard.writeText(iconName)}">
-                                          <lazy-load>
-                                              <div
-                                                  slot="placeholder"
-                                                  style="width: ${this.iconSize}px; height: ${this
-                                                      .iconSize}px;">
-                                                  awdad
-                                              </div>
-                                              <dbp-icon
-                                                  name="${iconName}"
-                                                  aria-label="${iconName} icon"
-                                                  style="width: ${this.iconSize}px; height: ${this
-                                                      .iconSize}px;"></dbp-icon>
-                                          </lazy-load>
+                ${
+                    filteredIcons.length > 0
+                        ? html`
+                              <div class="icon-grid">
+                                  ${filteredIcons.map(
+                                      (iconName) => html`
+                                          <div
+                                              class="icon-item"
+                                              @click="${() => navigator.clipboard.writeText(iconName)}">
+                                              <lazy-load>
+                                                  <div
+                                                      slot="placeholder"
+                                                      style="width: ${this.iconSize}px; height: ${
+                                                          this.iconSize
+                                                      }px;">
+                                                      awdad
+                                                  </div>
+                                                  <dbp-icon
+                                                      name="${iconName}"
+                                                      aria-label="${iconName} icon"
+                                                      style="width: ${this.iconSize}px; height: ${
+                                                          this.iconSize
+                                                      }px;"></dbp-icon>
+                                              </lazy-load>
 
-                                          <span class="icon-name">${iconName}</span>
-                                      </div>
-                                  `,
-                              )}
-                          </div>
-                      `
-                    : html`
-                          <div class="no-results">No icons found matching "${this.searchTerm}"</div>
-                      `}
+                                              <span class="icon-name">${iconName}</span>
+                                          </div>
+                                      `,
+                                  )}
+                              </div>
+                          `
+                        : html`
+                              <div class="no-results">
+                                  No icons found matching "${this.searchTerm}"
+                              </div>
+                          `
+                }
             </div>
         `;
     }
