@@ -386,6 +386,10 @@ export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), crea
                 ajax: {
                     delay: SEARCH_DELAY,
                     url: (params) => this._getCollectionUrl(params.term ?? ''),
+                    // remove the default query parameters (_type and term) that select2 adds to the request
+                    data: (params) => {
+                        return {};
+                    },
                     contentType: 'application/ld+json',
                     beforeSend: (jqXHR) => {
                         jqXHR.setRequestHeader('Authorization', 'Bearer ' + this.auth.token);
