@@ -16,11 +16,13 @@ function renderTextWithBreaks(text) {
     const lines = text.split('\n');
     return lines.map(
         (line, index) => html`
-            ${line}${index < lines.length - 1
-                ? html`
-                      <br />
-                  `
-                : ''}
+            ${line}${
+                index < lines.length - 1
+                    ? html`
+                          <br />
+                      `
+                    : ''
+            }
         `,
     );
 }
@@ -172,26 +174,32 @@ class NotificationItem extends ScopedElementsMixin(DBPLitElement) {
                     class="delete"
                     @click=${this.handleDelete}
                     aria-label="Close notification"></button>
-                ${this.summary
-                    ? html`
-                          <h3>${this.summary}</h3>
-                      `
-                    : ''}
-                <div class="content">
-                    ${this.icon
+                ${
+                    this.summary
                         ? html`
-                              <dbp-icon name="${this.icon}"></dbp-icon>
+                              <h3>${this.summary}</h3>
                           `
-                        : ''}
+                        : ''
+                }
+                <div class="content">
+                    ${
+                        this.icon
+                            ? html`
+                                  <dbp-icon name="${this.icon}"></dbp-icon>
+                              `
+                            : ''
+                    }
                     <span>${renderTextWithBreaks(this.body)}</span>
                 </div>
-                ${this.timeout > 0
-                    ? html`
-                          <div class="progress-container">
-                              <div class="progress" style="${progressStyle}"></div>
-                          </div>
-                      `
-                    : ''}
+                ${
+                    this.timeout > 0
+                        ? html`
+                              <div class="progress-container">
+                                  <div class="progress" style="${progressStyle}"></div>
+                              </div>
+                          `
+                        : ''
+                }
             </div>
         `;
     }

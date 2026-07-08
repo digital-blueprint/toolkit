@@ -197,21 +197,25 @@ export class DbpBaseElement extends LangMixin(
             <fieldset>
                 <label for="${this.formElementId}">
                     <slot name="label">${this.label}</slot>
-                    ${this.required && (hasLabelSlot || this.label)
-                        ? html`
-                              <span class="required-mark">
-                                  ${this._i18n.t('render-form.base-object.required-field')}
-                              </span>
-                          `
-                        : html``}
+                    ${
+                        this.required && (hasLabelSlot || this.label)
+                            ? html`
+                                  <span class="required-mark">
+                                      ${this._i18n.t('render-form.base-object.required-field')}
+                                  </span>
+                              `
+                            : html``
+                    }
                 </label>
-                ${hasDescriptionSlot || this.description
-                    ? html`
-                          <div class="description">
-                              <slot name="description">${this.description}</slot>
-                          </div>
-                      `
-                    : ''}
+                ${
+                    hasDescriptionSlot || this.description
+                        ? html`
+                              <div class="description">
+                                  <slot name="description">${this.description}</slot>
+                              </div>
+                          `
+                        : ''
+                }
                 ${this.renderErrorMessages()} ${this.renderInput()}
             </fieldset>
         `;

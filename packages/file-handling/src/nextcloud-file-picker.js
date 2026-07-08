@@ -3457,20 +3457,25 @@ export class NextcloudFilePicker extends LangMixin(
                                 this.downloadFiles(this.tabulatorTable.getSelectedData());
                             }}"
                             ?disabled="${this.selectBtnDisabled}">
-                            ${this.tabulatorTable &&
-                            this.tabulatorTable
-                                .getSelectedRows()
-                                .filter(
-                                    (row) =>
-                                        row.getData().type != 'directory' &&
-                                        this.checkFileType(row.getData(), this.allowedMimeTypes),
-                                ).length === 0
-                                ? i18n.t('nextcloud-file-picker.select-files')
-                                : i18n.t('nextcloud-file-picker.select-files-btn', {
-                                      count: this.tabulatorTable
-                                          ? this.tabulatorTable.getSelectedRows().length
-                                          : 0,
-                                  })}
+                            ${
+                                this.tabulatorTable &&
+                                this.tabulatorTable
+                                    .getSelectedRows()
+                                    .filter(
+                                        (row) =>
+                                            row.getData().type != 'directory' &&
+                                            this.checkFileType(
+                                                row.getData(),
+                                                this.allowedMimeTypes,
+                                            ),
+                                    ).length === 0
+                                    ? i18n.t('nextcloud-file-picker.select-files')
+                                    : i18n.t('nextcloud-file-picker.select-files-btn', {
+                                          count: this.tabulatorTable
+                                              ? this.tabulatorTable.getSelectedRows().length
+                                              : 0,
+                                      })
+                            }
                         </button>
                         <button
                             id="abortButton"

@@ -318,19 +318,23 @@ export class LayoutSwitcher extends LangMixin(
                                     <a
                                         href="#"
                                         class="${this.layout === layout.name ? 'active' : ''}"
-                                        title="${layout.name === 'wide'
-                                            ? i18n.t('switch-to-wide-layout-label')
-                                            : i18n.t('switch-to-standard-layout-label')}"
+                                        title="${
+                                            layout.name === 'wide'
+                                                ? i18n.t('switch-to-wide-layout-label')
+                                                : i18n.t('switch-to-standard-layout-label')
+                                        }"
                                         @click="${() => this.toggleLayout(layout.name)}">
                                         <!-- Icon based on layout-->
                                         <dbp-icon
                                             class="icon"
-                                            name="${layout.name === 'wide'
-                                                ? 'wide'
-                                                : 'standard'}"></dbp-icon>
-                                        ${layout.name === 'wide'
-                                            ? i18n.t('wide-layout-name')
-                                            : i18n.t('standard-layout-name')}
+                                            name="${
+                                                layout.name === 'wide' ? 'wide' : 'standard'
+                                            }"></dbp-icon>
+                                        ${
+                                            layout.name === 'wide'
+                                                ? i18n.t('wide-layout-name')
+                                                : i18n.t('standard-layout-name')
+                                        }
                                     </a>
                                 </li>
                             `,

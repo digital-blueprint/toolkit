@@ -180,9 +180,9 @@ export class LoadingButton extends DbpButton {
     render() {
         return html`
             <button
-                class="button ${this.type} loading-container ${!this.loading
-                    ? 'is-not-loading'
-                    : ''}"
+                class="button ${this.type} loading-container ${
+                    !this.loading ? 'is-not-loading' : ''
+                }"
                 ?disabled="${this.disabled}">
                 <span class="label"><slot>${this.value}</slot></span>
                 <dbp-mini-spinner

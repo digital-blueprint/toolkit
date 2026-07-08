@@ -95,11 +95,13 @@ export class FeatureFlagDropdown extends AdapterLitElement {
             <div class="dropdown">
                 <button class="button" @click="${this._toggleDropdown}">Feature Flags</button>
                 <div class="dropdown-content ${this._isOpen ? 'active' : ''}">
-                    ${!flags.length
-                        ? html`
-                              <div class="entry">No feature flags available</div>
-                          `
-                        : ''}
+                    ${
+                        !flags.length
+                            ? html`
+                                  <div class="entry">No feature flags available</div>
+                              `
+                            : ''
+                    }
                     ${flags.map(
                         (flag) => html`
                             <div>

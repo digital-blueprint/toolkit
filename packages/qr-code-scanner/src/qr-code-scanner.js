@@ -559,16 +559,18 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
                         <canvas id="canvas" class="${classMap({hidden: !showCanvas})}"></canvas>
                         <div id="video"></div>
                         <div class="output ${classMap({hidden: !(this.showOutput && showCanvas)})}">
-                            ${this._outputData !== null
-                                ? html`
-                                      <div>
-                                          <b>${i18n.t('data')}:</b>
-                                          <span>${this._outputData}</span>
-                                      </div>
-                                  `
-                                : html`
-                                      <div>${i18n.t('no-qr-detected')}</div>
-                                  `}
+                            ${
+                                this._outputData !== null
+                                    ? html`
+                                          <div>
+                                              <b>${i18n.t('data')}:</b>
+                                              <span>${this._outputData}</span>
+                                          </div>
+                                      `
+                                    : html`
+                                          <div>${i18n.t('no-qr-detected')}</div>
+                                      `
+                            }
                         </div>
                     </div>
                     <div class="${classMap({hidden: hasDevices})}">${noSupportString}</div>

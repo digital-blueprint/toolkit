@@ -71,11 +71,13 @@ export class InlineNotification extends DBPLitElement {
                     <div
                         id="inline-notification"
                         class="notification is-${this.type !== '' ? this.type : 'info'}">
-                        ${this.summary !== ''
-                            ? html`
-                                  <h3>${this.summary}</h3>
-                              `
-                            : ``}
+                        ${
+                            this.summary !== ''
+                                ? html`
+                                      <h3>${this.summary}</h3>
+                                  `
+                                : ``
+                        }
                         ${bodyHtml}
                     </div>
                 </div>

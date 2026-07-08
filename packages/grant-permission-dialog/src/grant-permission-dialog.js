@@ -624,97 +624,109 @@ export class GrantPermissionDialog extends LangMixin(
                         class="user-row ${classMap({'edit-mode': this.usersToAdd.has(userId)})}"
                         data-user-id="${userId}">
                         <div class="person-select-container">
-                            ${user.userFullName
-                                ? html`
-                                      <span class="user-name">${user.userFullName}</span>
-                                  `
-                                : html`
-                                      <dbp-resource-select
-                                          id="permission-person-select"
-                                          subscribe="auth"
-                                          lang="${this.lang}"
-                                          resource-path="/base/people"
-                                          fetch-mode="search"
-                                          .getSearchQueryParameters="${this
-                                              .getPersonSearchQueryParameters}"
-                                          .formatResource="${this.formatPerson}"
-                                          @change="${(event) => {
-                                              this.handlePersonSelected(event);
-                                          }}"
-                                          entry-point-url="${this
-                                              .entryPointUrl}"></dbp-resource-select>
-                                  `}
+                            ${
+                                user.userFullName
+                                    ? html`
+                                          <span class="user-name">${user.userFullName}</span>
+                                      `
+                                    : html`
+                                          <dbp-resource-select
+                                              id="permission-person-select"
+                                              subscribe="auth"
+                                              lang="${this.lang}"
+                                              resource-path="/base/people"
+                                              fetch-mode="search"
+                                              .getSearchQueryParameters="${
+                                                  this.getPersonSearchQueryParameters
+                                              }"
+                                              .formatResource="${this.formatPerson}"
+                                              @change="${(event) => {
+                                                  this.handlePersonSelected(event);
+                                              }}"
+                                              entry-point-url="${
+                                                  this.entryPointUrl
+                                              }"></dbp-resource-select>
+                                      `
+                            }
                         </div>
                         ${user.userFullName ? this.renderPermissionCheckboxes(user) : ''}
-                        ${user.userFullName
-                            ? html`
-                                  <div class="action-buttons">
-                                      ${user.buttonState === 'edit'
-                                          ? html`
-                                                <dbp-button
-                                                    type="is-secondary"
-                                                    id="user-edit-button-${userId}"
-                                                    no-spinner-on-click
-                                                    @click="${() => {
-                                                        this.handleUserEditButton(userId);
-                                                    }}">
-                                                    <dbp-icon name="pencil"></dbp-icon>
-                                                    ${i18n.t(
-                                                        'grant-permission-dialog.buttons.edit-text',
-                                                    )}
-                                                </dbp-button>
-                                            `
-                                          : ''}
-                                      ${user.buttonState === 'save'
-                                          ? html`
-                                                <dbp-button
-                                                    type="is-primary"
-                                                    id="user-save-button-${userId}"
-                                                    no-spinner-on-click
-                                                    @click="${() => {
-                                                        this.handleUserSaveButton(userId);
-                                                    }}">
-                                                    <dbp-icon name="save"></dbp-icon>
-                                                    ${i18n.t(
-                                                        'grant-permission-dialog.buttons.save-text',
-                                                    )}
-                                                </dbp-button>
-                                            `
-                                          : ''}
-                                      <dbp-button
-                                          type="is-secondary"
-                                          id="user-delete-button-${userId}"
-                                          no-spinner-on-click
-                                          ?disabled=${this.lastSavedManagerId === userId}
-                                          @click="${async () => {
-                                              const confirmed = await getDeletionConfirmation(this);
-                                              if (!confirmed) return;
+                        ${
+                            user.userFullName
+                                ? html`
+                                      <div class="action-buttons">
+                                          ${
+                                              user.buttonState === 'edit'
+                                                  ? html`
+                                                        <dbp-button
+                                                            type="is-secondary"
+                                                            id="user-edit-button-${userId}"
+                                                            no-spinner-on-click
+                                                            @click="${() => {
+                                                                this.handleUserEditButton(userId);
+                                                            }}">
+                                                            <dbp-icon name="pencil"></dbp-icon>
+                                                            ${i18n.t(
+                                                                'grant-permission-dialog.buttons.edit-text',
+                                                            )}
+                                                        </dbp-button>
+                                                    `
+                                                  : ''
+                                          }
+                                          ${
+                                              user.buttonState === 'save'
+                                                  ? html`
+                                                        <dbp-button
+                                                            type="is-primary"
+                                                            id="user-save-button-${userId}"
+                                                            no-spinner-on-click
+                                                            @click="${() => {
+                                                                this.handleUserSaveButton(userId);
+                                                            }}">
+                                                            <dbp-icon name="save"></dbp-icon>
+                                                            ${i18n.t(
+                                                                'grant-permission-dialog.buttons.save-text',
+                                                            )}
+                                                        </dbp-button>
+                                                    `
+                                                  : ''
+                                          }
+                                          <dbp-button
+                                              type="is-secondary"
+                                              id="user-delete-button-${userId}"
+                                              no-spinner-on-click
+                                              ?disabled=${this.lastSavedManagerId === userId}
+                                              @click="${async () => {
+                                                  const confirmed =
+                                                      await getDeletionConfirmation(this);
+                                                  if (!confirmed) return;
 
-                                              const userFullName = this.lookupUserFullName(userId);
-                                              await this.deleteUser(userId);
+                                                  const userFullName =
+                                                      this.lookupUserFullName(userId);
+                                                  await this.deleteUser(userId);
 
-                                              sendNotification({
-                                                  summary: i18n.t(
-                                                      'grant-permission-dialog.notifications.success-title',
-                                                  ),
-                                                  body: i18n.t(
-                                                      'grant-permission-dialog.notifications.user-successfully-deleted',
-                                                      {
-                                                          userFullName: userFullName,
-                                                      },
-                                                  ),
-                                                  type: 'info',
-                                                  targetNotificationId:
-                                                      'permission-modal-notification',
-                                                  timeout: 5,
-                                              });
-                                          }}">
-                                          <dbp-icon name="trash"></dbp-icon>
-                                          ${i18n.t('grant-permission-dialog.buttons.delete-text')}
-                                      </dbp-button>
-                                  </div>
-                              `
-                            : ''}
+                                                  sendNotification({
+                                                      summary: i18n.t(
+                                                          'grant-permission-dialog.notifications.success-title',
+                                                      ),
+                                                      body: i18n.t(
+                                                          'grant-permission-dialog.notifications.user-successfully-deleted',
+                                                          {
+                                                              userFullName: userFullName,
+                                                          },
+                                                      ),
+                                                      type: 'info',
+                                                      targetNotificationId:
+                                                          'permission-modal-notification',
+                                                      timeout: 5,
+                                                  });
+                                              }}">
+                                              <dbp-icon name="trash"></dbp-icon>
+                                              ${i18n.t('grant-permission-dialog.buttons.delete-text')}
+                                          </dbp-button>
+                                      </div>
+                                  `
+                                : ''
+                        }
                     </div>
                 `,
             )}

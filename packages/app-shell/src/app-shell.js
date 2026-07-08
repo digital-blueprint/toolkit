@@ -1439,9 +1439,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             <div class="hd1-left">
                                 <button
                                     class="hd1-left-menu"
-                                    style="${this.visibleRoutes.length === 0
-                                        ? 'visibility: hidden'
-                                        : ''}"
+                                    style="${
+                                        this.visibleRoutes.length === 0 ? 'visibility: hidden' : ''
+                                    }"
                                     @click="${this.toggleMenu}"
                                     aria-expanded="false"
                                     aria-label="${this._i18n.t('main-page.menu')}">
@@ -2209,17 +2209,21 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     <div id="headline">
                         <p class="title">
                             <slot name="title">
-                                ${!this._isRealActivityActive()
-                                    ? html`
-                                          &#160;
-                                      `
-                                    : this.topicMetaDataText('name')}
+                                ${
+                                    !this._isRealActivityActive()
+                                        ? html`
+                                              &#160;
+                                          `
+                                        : this.topicMetaDataText('name')
+                                }
                             </slot>
                         </p>
                         <h1 title="${this.description}">
-                            ${!this._isRealActivityActive()
-                                ? this.topicMetaDataText('name')
-                                : this.subtitle}
+                            ${
+                                !this._isRealActivityActive()
+                                    ? this.topicMetaDataText('name')
+                                    : this.subtitle
+                            }
                         </h1>
                     </div>
                     <aside id="mobileMenu">
@@ -2240,9 +2244,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                     <main>
                         <div
-                            style="display: ${this.activeView && !this.metadata[this.activeView]
-                                ? 'block'
-                                : 'none'};">
+                            style="display: ${
+                                this.activeView && !this.metadata[this.activeView]
+                                    ? 'block'
+                                    : 'none'
+                            };">
                             <h2>${i18n.t('page-not-found')}</h2>
                             <p>${i18n.t('choose-from-menu')}</p>
                         </div>

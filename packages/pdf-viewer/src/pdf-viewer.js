@@ -503,8 +503,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                                     @click="${async () => {
                                         await this.showPage(1);
                                     }}"
-                                    ?disabled="${this.isPageRenderingInProgress ||
-                                    this.currentPage === 1}">
+                                    ?disabled="${
+                                        this.isPageRenderingInProgress || this.currentPage === 1
+                                    }">
                                     <dbp-icon name="angle-double-left"></dbp-icon>
                                 </button>
                                 <button
@@ -514,8 +515,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                                         if (this.currentPage > 1)
                                             await this.showPage(--this.currentPage);
                                     }}"
-                                    ?disabled="${this.isPageRenderingInProgress ||
-                                    this.currentPage === 1}">
+                                    ?disabled="${
+                                        this.isPageRenderingInProgress || this.currentPage === 1
+                                    }">
                                     <dbp-icon name="chevron-left"></dbp-icon>
                                 </button>
                                 <input
@@ -536,8 +538,10 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                                         if (this.currentPage < this.totalPages)
                                             await this.showPage(++this.currentPage);
                                     }}"
-                                    ?disabled="${this.isPageRenderingInProgress ||
-                                    this.currentPage === this.totalPages}">
+                                    ?disabled="${
+                                        this.isPageRenderingInProgress ||
+                                        this.currentPage === this.totalPages
+                                    }">
                                     <dbp-icon name="chevron-right"></dbp-icon>
                                 </button>
                                 <button
@@ -546,8 +550,10 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
                                     @click="${async () => {
                                         await this.showPage(this.totalPages);
                                     }}"
-                                    ?disabled="${this.isPageRenderingInProgress ||
-                                    this.currentPage === this.totalPages}">
+                                    ?disabled="${
+                                        this.isPageRenderingInProgress ||
+                                        this.currentPage === this.totalPages
+                                    }">
                                     <dbp-icon name="angle-double-right"></dbp-icon>
                                 </button>
                             </div>
