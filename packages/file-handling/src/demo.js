@@ -204,6 +204,19 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         Open download dialog
                     </button>
                     <dbp-file-sink id="file-sink-standard" lang="en"></dbp-file-sink>
+                    <p>Delayed Download uploaded files :</p>
+                    <button
+                        @click="${() => {
+                            this._('#file-sink-delayed').files = [...this.selectedFiles];
+                        }}"
+                        class="button is-primary">
+                        Open download dialog
+                    </button>
+                    <dbp-file-sink
+                        id="file-sink-delayed"
+                        lang="en"
+                        delay="true"
+                        streamed="true"></dbp-file-sink>
                 </div>
             </section>
         `;
