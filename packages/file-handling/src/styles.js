@@ -223,16 +223,6 @@ export function getFileHandlingCss() {
             white-space: nowrap;
         }
 
-        .modal--loading-indicator {
-            --dbp-modal-width: 300px;
-            --dbp-modal-max-height: 300px;
-            --dbp-modal-content-overflow-y: hidden;
-        }
-
-        .modal--loading-indicator [slot='content'] {
-            text-align: center;
-        }
-
         .select-all-icon {
             height: 40px;
             position: absolute;
