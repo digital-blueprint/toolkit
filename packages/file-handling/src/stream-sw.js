@@ -113,7 +113,9 @@ self.addEventListener('fetch', (event) => {
                         type: 'window',
                         includeUncontrolled: true,
                     });
-                    clients.forEach((client) => client.postMessage({type: 'DOWNLOAD_STARTED'}));
+                    clients.forEach((client) =>
+                        client.postMessage({type: 'STREAMED_DOWNLOAD_STARTED'}),
+                    );
 
                     // Clean up the abort controller reference now that streaming has started
                     currentDownloadAbortController = null;
