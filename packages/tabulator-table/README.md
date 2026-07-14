@@ -59,6 +59,12 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
 - `overflow-y-scroll-enabled` (optional bool, default: `false`): enables vertical scrolling within the table body
     - example `<dbp-tabulator-table overflow-y-scroll-enabled></dbp-tabulator-table>`
 
+- `select-rows-enabled` (optional bool, default: `false`): 
+   allows the user to select rows by clicking on them. 
+   When enabled, the component also emits selection-count updates through the `dbp-tabulator-table-selection-count-changed` event.
+  - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
+      
+
 ### Events
 
 | Event                                             | Description                                                |
@@ -68,6 +74,54 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
 | `dbp-tabulator-table-built`                       | Fired after table is built (Table event)                   |
 | `dbp-tabulator-table-page-loaded-event`           | Fired after pagination, when the page is loaded            |
 | `dbp-tabulator-table-render-complete-event`       | Fire after the table has been rendered (Layout Event)      |
+| `dbp-tabulator-table-selection-count-changed`     | Fired when the selected row count changes                  |
+
+
+### Selection count event
+
+If `select-rows-enabled` is set, the component emits `dbp-tabulator-table-selection-count-changed` whenever rows are selected or deselected.
+
+The event contains the current number of selected rows in `event.detail.count`.
+
+Example:
+
+```html
+<dbp-tabulator-table
+    select-rows-enabled
+    @dbp-tabulator-table-selection-count-changed="${this.handleSelectionCountChanged}">
+</dbp-tabulator-table>
+```
+
+```js
+handleSelectionCountChanged(event) {
+    const selectedCount = event.detail.count;
+}
+```
+
+For apps with multiple tables, pass the table context into the handler:
+
+```html
+<dbp-tabulator-table
+    select-rows-enabled
+    @dbp-tabulator-table-selection-count-changed="${(event) =>
+        this.handleSelectionCountChanged('draft', event)}">
+</dbp-tabulator-table>
+```
+
+```js
+handleSelectionCountChanged(state, event) {
+    const count = event.detail?.count ?? 0;
+
+    this.selectedRowCount = {
+        ...this.selectedRowCount,
+        [state]: count,
+    };
+}
+```
+
+This allows each app shell to decide how and where the selected count should be displayed.
+For example, one app can show it in a status bar, while another app can use it to enable actions, update export labels, or display a counter next to a table title.
+
 
 ### Important functions
 
