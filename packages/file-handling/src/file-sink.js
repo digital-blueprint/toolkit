@@ -22,7 +22,6 @@ export class FileSink extends LangMixin(
     constructor() {
         super();
         this.auth = {};
-        this.boundSwMessageHandler = this.handleSwMessage.bind(this);
         this.context = '';
         this.nextcloudAuthUrl = '';
         this.nextcloudWebDavUrl = '';
@@ -43,11 +42,8 @@ export class FileSink extends LangMixin(
         this.sumContentLengths = -1;
         /** @type {ServiceWorkerRegistration|null} */
         this._swRegistration = null;
+
         this.initialFileHandlingState = {target: '', path: ''};
-        this.loadingDownloadFiles = false;
-        // True while this specific instance has an in-flight streamed download.
-        // Used to ignore STREAMED_DOWNLOAD_STARTED messages meant for other instances.
-        this._streamedDownloadInProgress = false;
     }
 
     static get scopedElements() {
@@ -86,7 +82,6 @@ export class FileSink extends LangMixin(
             streamed: {type: Boolean, attribute: 'streamed'},
             sumContentLengths: {type: Number, attribute: 'content-length'},
             auth: {type: Object},
-            loadingDownloadFiles: {type: Boolean, attribute: false},
         };
     }
 
@@ -129,29 +124,10 @@ export class FileSink extends LangMixin(
                     paddles.classList.add('hidden');
                 }
             }
-
-            // Only streamed instances need to listen for service worker messages.
-            // The SW "message" event is page-global, so a non-streamed instance would
-            // otherwise also react to STREAMED_DOWNLOAD_STARTED messages meant for others.
-            if (this.streamed) {
-                navigator.serviceWorker.addEventListener('message', this.boundSwMessageHandler);
-            }
         });
     }
 
-    disconnectedCallback() {
-        if (this.streamed) {
-            navigator.serviceWorker.removeEventListener('message', this.boundSwMessageHandler);
-        }
-        super.disconnectedCallback();
-    }
-
-    /**
-     * Handle the loading indicator modal being closed.
-     * If the download has already started streaming, closing the modal is just
-     * cleanup and we must not cancel. Otherwise the user closed the modal
-     * (via X button or Escape) to abort the in-flight preparation requests.
-     */
+    // starts a streamed download of all files in this.files
     handleStreamedDownload() {
         // create form used to stream-download a zip
         const downloadForm = document.createElement('form');
@@ -257,12 +233,6 @@ export class FileSink extends LangMixin(
         this.appendChild(downloadForm);
         downloadForm.requestSubmit();
 
-        // Mark that this instance initiated the streamed download, so it knows the
-        // upcoming STREAMED_DOWNLOAD_STARTED message belongs to it (see handleSwMessage).
-        // Set only after a successful submit so error/early-return paths above don't
-        // leave the flag stuck true and steal another instance's SW message.
-        this._streamedDownloadInProgress = true;
-
         // cleanup
         while (downloadForm.hasChildNodes()) {
             downloadForm.removeChild(downloadForm.firstChild);
@@ -276,9 +246,6 @@ export class FileSink extends LangMixin(
      * then stops the pending navigation caused by the form POST.
      */
     cancelStreamedDownload() {
-        // The download is aborted, so this instance should no longer consume the
-        // STREAMED_DOWNLOAD_STARTED message (see handleSwMessage).
-        this._streamedDownloadInProgress = false;
         if (this._swRegistration && this._swRegistration.active) {
             this._swRegistration.active.postMessage({type: 'CANCEL_DOWNLOAD'});
         }
@@ -304,18 +271,14 @@ export class FileSink extends LangMixin(
                     return;
                 }
                 FileSaver.saveAs(this.files[0], this.files[0].filename);
-
-                this.closeLoadingIndicatorModal();
             }
-            this.loadingDownloadFiles = false;
+
             this.closeDialog();
             return;
         }
 
         if (this.streamed) {
             this.handleStreamedDownload();
-            this.loadingDownloadFiles = false;
-            this.closeDialog();
         } else {
             // check if an error was thrown in the forEach. "return does not stop the method call
             let error = false;
@@ -350,9 +313,8 @@ export class FileSink extends LangMixin(
 
             // see: https://github.com/eligrey/FileSaver.js#readme
             FileSaver.saveAs(content, this.filename || 'files.zip');
-            this.closeLoadingIndicatorModal();
         }
-        this.loadingDownloadFiles = false;
+
         this.closeDialog();
     }
 
@@ -597,7 +559,6 @@ export class FileSink extends LangMixin(
         // language=css
         return css`
             ${commonStyles.getThemeCSS()}
-            ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getButtonCSS()}
             ${fileHandlingStyles.getFileHandlingCss()}
@@ -666,56 +627,6 @@ export class FileSink extends LangMixin(
                 }
             }
         `;
-    }
-
-    /**
-     * Handle the loading indicator modal being closed.
-     * If the download has already started streaming, closing the modal is just
-     * cleanup and we must not cancel. Otherwise the user closed the modal
-     * (via X button or Escape) to abort the in-flight preparation requests.
-     */
-    handleLoadingIndicatorModalClosed() {
-        if (this.loadingDownloadFiles) {
-            return;
-        }
-        this.cancelStreamedDownload();
-    }
-
-    // Show the loading indicator modal for this instance while the download is being prepared.
-    showLoadingIndicatorModal() {
-        this.loadingDownloadFiles = false;
-        const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
-        if (modal) {
-            modal.open();
-        }
-    }
-
-    closeLoadingIndicatorModal() {
-        const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
-        if (modal) {
-            // Mark streaming as started so the close handler does not cancel the download
-            this._downloadStreamingStarted = true;
-            modal.close();
-        }
-    }
-
-    handleSwMessage(event) {
-        if (event.data?.type === 'STREAMED_DOWNLOAD_STARTED') {
-            // The SW broadcasts this message to all window clients, so every file-sink
-            // instance on the page receives it. Only react if this instance is the one
-            // that started the streamed download.
-            if (!this._streamedDownloadInProgress) {
-                return;
-            }
-            this._streamedDownloadInProgress = false;
-
-            const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
-            if (modal) {
-                // Mark streaming as started so the close handler does not cancel the download
-                this._downloadStreamingStarted = true;
-                modal.close();
-            }
-        }
     }
 
     render() {
@@ -801,11 +712,17 @@ export class FileSink extends LangMixin(
                                     class="button is-primary"
                                     ?disabled="${this.disabled}"
                                     @click="${() => {
-                                        // Show the loading indicator while the download is being prepared.
-                                        this.showLoadingIndicatorModal();
+                                        // Custom event to notify about download start, used to show loading indicators in the UI
+                                        const event = new CustomEvent(
+                                            'dbp-file-sink-download-started',
+                                            {
+                                                detail: {},
+                                                bubbles: true,
+                                                composed: true,
+                                            },
+                                        );
+                                        this.dispatchEvent(event);
                                         this.downloadCompressedFiles();
-
-                                        this.loadingDownloadFiles = true;
                                     }}">
                                     <dbp-icon name="download" aria-hidden="true"></dbp-icon>
                                     ${i18n.t('file-sink.local-button', {
@@ -830,18 +747,6 @@ export class FileSink extends LangMixin(
                             ${this.getClipboardHtml()}
                         </div>
                     </main>
-                </div>
-            </dbp-modal>
-
-            <dbp-modal
-                id="loading-indicator-modal"
-                class="modal modal--loading-indicator"
-                modal-id="loading-indicator"
-                title="${i18n.t('file-sink.preparing-download')}"
-                subscribe="lang"
-                @dbp-modal-closed=${() => this.handleLoadingIndicatorModalClosed()}>
-                <div slot="content">
-                    <dbp-mini-spinner style="font-size: 4em"></dbp-mini-spinner>
                 </div>
             </dbp-modal>
         `;
