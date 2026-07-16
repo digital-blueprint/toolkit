@@ -75,7 +75,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         changedProperties.forEach((oldValue, propName) => {
             if (propName === 'lang') {
                 if (this.tabulatorTable) {
-                    this.tabulatorTable.setLocale(this.lang);
+                    this.setTableLocale();
                 }
             } else if (
                 propName === 'options' &&
@@ -106,6 +106,19 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         }
 
         super.disconnectedCallback();
+    }
+
+    setTableLocale() {
+        if (!this.tabulatorTable) return;
+
+        if (typeof this.tabulatorTable.setLocale === 'function') {
+            this.tabulatorTable.setLocale(this.lang);
+            return;
+        }
+
+        if (typeof this.tabulatorTable.modules?.localize?.setLocale === 'function') {
+            this.tabulatorTable.modules.localize.setLocale(this.lang);
+        }
     }
 
     buildTable() {
@@ -284,7 +297,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
     tableBuildFunctions() {
         if (!this.tabulatorTable) return;
-        this.tabulatorTable.setLocale(this.lang);
+        this.setTableLocale();
         if (Array.isArray(this.data) && this.data.length > 0) {
             this.tabulatorTable.setData(this.data);
         }
