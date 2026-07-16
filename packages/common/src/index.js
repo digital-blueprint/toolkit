@@ -4,6 +4,7 @@ export {MiniSpinner} from './mini-spinner.js';
 export {Button, LoadingButton, IconButton} from './button.js';
 export {Spinner} from './spinner.js';
 export {InlineNotification} from './inline-notification.js';
+export {DBPLoginRequired, loginNotification} from './login-required.js';
 export {Translated} from './translated.js';
 export {Translation} from './translation.js';
 export {AdapterLitElement} from './provider/adapter-lit-element.js';

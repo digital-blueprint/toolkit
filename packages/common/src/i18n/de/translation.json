@@ -16,5 +16,9 @@
     "error": {
         "connection-to-server-refused": "Verbindung zum Server verweigert!",
         "summary": "Ein Fehler ist aufgetreten"
+    },
+    "login-notification": {
+        "error-login-link": "Anmelden",
+        "error-login-message": "Sie müssen angemeldet sein, um diese Anwendung zu nutzen"
     }
 }

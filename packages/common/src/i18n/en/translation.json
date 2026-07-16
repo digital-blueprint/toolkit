@@ -16,5 +16,9 @@
     "error": {
         "connection-to-server-refused": "Connection to server refused!",
         "summary": "An error occurred"
+    },
+    "login-notification": {
+        "error-login-link": "Log in",
+        "error-login-message": "You need to be logged in to use this app"
     }
 }
