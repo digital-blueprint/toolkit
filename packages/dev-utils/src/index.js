@@ -8,6 +8,7 @@ import selfsigned from 'selfsigned';
 import findCacheDir from 'find-cache-directory';
 import copyPlugin from 'rollup-plugin-copy';
 import urlPlugin from '@rollup/plugin-url';
+import _getPort, {portNumbers} from 'get-port';
 
 /**
  * Returns true if git is installed and we are inside a git working tree
@@ -401,4 +402,23 @@ export function getResolveModules() {
         // not running with npm, return the default
         return ['node_modules'];
     }
+}
+
+/**
+ * Find an available TCP port for the given host within the provided range.
+ *
+ * @param {string} [host] Host/interface to bind against.
+ * @param {[number, number]} [range] Inclusive port range [start, end].
+ * @returns {Promise<number>} First available port in range.
+ */
+export async function getPort(host, range) {
+    if (!Array.isArray(range) || range.length !== 2) {
+        throw new TypeError('range must be a [start, end] tuple');
+    }
+    const [start, end] = range;
+    let port = await _getPort({port: portNumbers(start, end), host: host});
+    if (port < start || port > end) {
+        throw new Error(`No free port available in range ${start}-${end}`);
+    }
+    return port;
 }

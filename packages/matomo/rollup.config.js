@@ -1,7 +1,7 @@
 import {globSync} from 'node:fs';
 import serve from 'rollup-plugin-serve';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getBuildInfo, assetPlugin, getResolveModules} from '@dbp-toolkit/dev-utils';
+import {getBuildInfo, assetPlugin, getResolveModules, getPort} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 import url from 'node:url';
@@ -58,7 +58,11 @@ export default {
             ],
         }),
         process.env.ROLLUP_WATCH === 'true'
-            ? serve({contentBase: 'dist', host: '127.0.0.1', port: 8002})
+            ? serve({
+                  contentBase: 'dist',
+                  host: '127.0.0.1',
+                  port: await getPort('127.0.0.1', [8002, 8004]),
+              })
             : false,
     ],
 };
