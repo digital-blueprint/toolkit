@@ -376,3 +376,29 @@ export async function assetPlugin(packageName, bundleDest = 'dist', options = {}
         urlPluginHack(await getUrlOptions(packageName, 'shared')),
     ];
 }
+
+/**
+ * By default we install our packages in hoisted mode, and for our frontend
+ * dependencies we don't allow duplicate versions, so everything we need is in
+ * the npm prefix node_modules folder. In case of a workspace the prefix is the
+ * root of the workspace.
+ *
+ * Sadly npm doesn't support nested workspaces, running "npm prefix" in a
+ * submodule gives us the top level workspace root, which is not what we want.
+ * But at least with this we only resolve packages that "npm install" also
+ * touches.
+ *
+ * To make a nested workspace work with its own lockfile/prefix you can
+ * temporarily rename the `package.json` of the top level workspace.
+ *
+ * @returns {Array<string>} array to pass to rolldown's resolve.modules option
+ */
+export function getResolveModules() {
+    // same as the output of "npm prefix" in an "npm run" context
+    if (process.env.npm_config_local_prefix !== undefined) {
+        return [process.env.npm_config_local_prefix + '/node_modules'];
+    } else {
+        // not running with npm, return the default
+        return ['node_modules'];
+    }
+}

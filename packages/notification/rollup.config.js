@@ -2,7 +2,7 @@ import {globSync} from 'node:fs';
 import serve from 'rollup-plugin-serve';
 import process from 'node:process';
 import {createRequire} from 'node:module';
-import {assetPlugin} from '@dbp-toolkit/dev-utils';
+import {assetPlugin, getResolveModules} from '@dbp-toolkit/dev-utils';
 
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
@@ -23,6 +23,9 @@ export default {
         sourcemap: true,
         minify: buildFull,
         cleanDir: true,
+    },
+    resolve: {
+        modules: getResolveModules(),
     },
     plugins: [
         await assetPlugin(pkg.name, 'dist', {

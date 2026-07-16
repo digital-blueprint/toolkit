@@ -8,7 +8,13 @@ import emitEJS from 'rollup-plugin-emit-ejs';
 import {replacePlugin} from 'rolldown/plugins';
 import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
-import {getBuildInfo, getPackagePath, getDistPath, assetPlugin} from '@dbp-toolkit/dev-utils';
+import {
+    getBuildInfo,
+    getPackagePath,
+    getDistPath,
+    assetPlugin,
+    getResolveModules,
+} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -77,6 +83,9 @@ export default {
         sourcemap: true,
         minify: doMinify,
         cleanDir: true,
+    },
+    resolve: {
+        modules: getResolveModules(),
     },
     moduleTypes: {
         '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab

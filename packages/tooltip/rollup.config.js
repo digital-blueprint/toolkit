@@ -3,7 +3,7 @@ import url from 'node:url';
 import serve from 'rollup-plugin-serve';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {replacePlugin} from 'rolldown/plugins';
-import {getBuildInfo, assetPlugin} from '@dbp-toolkit/dev-utils';
+import {getBuildInfo, assetPlugin, getResolveModules} from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 import process from 'node:process';
 
@@ -28,6 +28,9 @@ export default {
         sourcemap: true,
         minify: buildFull,
         cleanDir: true,
+    },
+    resolve: {
+        modules: getResolveModules(),
     },
     moduleTypes: {
         '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab

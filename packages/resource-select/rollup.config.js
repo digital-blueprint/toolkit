@@ -1,6 +1,6 @@
 import {globSync} from 'node:fs';
 import serve from 'rollup-plugin-serve';
-import {assetPlugin} from '@dbp-toolkit/dev-utils';
+import {assetPlugin, getResolveModules} from '@dbp-toolkit/dev-utils';
 import process from 'node:process';
 import {createRequire} from 'node:module';
 
@@ -23,6 +23,9 @@ export default {
         sourcemap: true,
         minify: buildFull,
         cleanDir: true,
+    },
+    resolve: {
+        modules: getResolveModules(),
     },
     moduleTypes: {
         '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab

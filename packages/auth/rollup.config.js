@@ -3,7 +3,7 @@ import url from 'node:url';
 import process from 'node:process';
 import serve from 'rollup-plugin-serve';
 import emitEJS from 'rollup-plugin-emit-ejs';
-import {getDistPath, assetPlugin} from '@dbp-toolkit/dev-utils';
+import {getDistPath, assetPlugin, getResolveModules} from '@dbp-toolkit/dev-utils';
 import config from '../../demo.common.config.js';
 import {createRequire} from 'node:module';
 
@@ -30,6 +30,9 @@ export default {
         sourcemap: true,
         minify: buildFull,
         cleanDir: true,
+    },
+    resolve: {
+        modules: getResolveModules(),
     },
     plugins: [
         emitEJS({
