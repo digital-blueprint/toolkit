@@ -5,6 +5,10 @@
     "type": "module",
     "description": "Grant permission modal",
     "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-grant-permission-dialog.js",
+        "src/demo.js"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/digital-blueprint/toolkit.git",

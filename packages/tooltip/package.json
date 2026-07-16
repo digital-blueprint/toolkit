@@ -4,6 +4,11 @@
     "version": "0.1.7",
     "type": "module",
     "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-info-tooltip.js",
+        "src/dbp-button-tooltip.js",
+        "src/dbp-tooltip.js"
+    ],
     "license": "LGPL-2.1-or-later",
     "repository": {
         "type": "git",

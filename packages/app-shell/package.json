@@ -4,6 +4,11 @@
     "version": "0.3.18",
     "type": "module",
     "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-app-shell.js",
+        "src/dbp-app-shell-welcome.js",
+        "src/dbp-activity-example.js"
+    ],
     "license": "LGPL-2.1-or-later",
     "repository": {
         "type": "git",

@@ -5,6 +5,9 @@
     "type": "module",
     "description": "PDF Viewer Web Component",
     "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-pdf-viewer.js"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/digital-blueprint/toolkit.git",

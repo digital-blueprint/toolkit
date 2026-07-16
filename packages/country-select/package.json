@@ -5,6 +5,11 @@
     "private": true,
     "type": "module",
     "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-country-select.js",
+        "src/dbp-country-select-demo.js",
+        "src/demo.js"
+    ],
     "license": "LGPL-2.1-or-later",
     "repository": {
         "type": "git",

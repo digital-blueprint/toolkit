@@ -4,6 +4,9 @@
     "version": "0.3.9",
     "type": "module",
     "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-qr-code-scanner.js"
+    ],
     "license": "LGPL-2.1-or-later",
     "repository": {
         "type": "git",

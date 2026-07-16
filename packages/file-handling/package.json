@@ -4,6 +4,13 @@
     "version": "0.3.14",
     "type": "module",
     "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-file-source.js",
+        "src/dbp-file-sink.js",
+        "src/dbp-clipboard.js",
+        "src/dbp-nextcloud-file-picker.js",
+        "src/demo.js"
+    ],
     "license": "LGPL-2.1-or-later",
     "dbp": {
         "assets": [

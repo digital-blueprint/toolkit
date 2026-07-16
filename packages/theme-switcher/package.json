@@ -4,6 +4,10 @@
     "version": "0.1.6",
     "type": "module",
     "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-theme-switcher.js",
+        "src/demo.js"
+    ],
     "license": "LGPL-2.1-or-later",
     "repository": {
         "type": "git",

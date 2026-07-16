@@ -1,7 +1,10 @@
 {
     "name": "dbp-toolkit-showcase",
     "type": "module",
-    "main": "src/toolkit-showcase.js",
+    "main": "src/dbp-toolkit-showcase.js",
+    "sideEffects": [
+        "src/dbp-*.js"
+    ],
     "license": "LGPL-2.1-or-later",
     "private": true,
     "dbp": {
