@@ -19,6 +19,6 @@
     },
     "login-notification": {
         "error-login-link": "Anmelden",
-        "error-login-message": "Bitte melden Sie sich an, um diese Funktion nutzen zu können"
+        "error-login-message": "Bitte melden Sie sich an, um diese Funktion nutzen zu können."
     }
 }
