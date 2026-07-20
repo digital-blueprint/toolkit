@@ -46,16 +46,6 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
     connectedCallback() {
         super.connectedCallback();
-
-        this.updateComplete.then(() => {
-            this.shadowRoot.querySelectorAll('.file-source').forEach((element) => {
-                // TODO: remove orphaned event listeners
-                element.addEventListener(
-                    'dbp-file-source-file-selected',
-                    this.addLogEntry.bind(this),
-                );
-            });
-        });
     }
 
     authenticated() {
@@ -126,6 +116,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <dbp-file-source
                         id="file-source1"
                         class="file-source"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         allowed-mime-types="*/*"
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                         lang="en"
@@ -142,6 +133,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <dbp-file-source
                         id="file-source2"
                         lang="en"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
                         allowed-mime-types="image/*"
@@ -159,6 +151,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <dbp-file-source
                         id="file-source3"
                         lang="en"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
                         allowed-mime-types="application/pdf"
@@ -177,6 +170,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     <dbp-file-source
                         id="file-source4"
                         lang="en"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
                         allowed-mime-types="text/plain,image/*"
@@ -195,21 +189,21 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         id="file-source5"
                         lang="en"
                         url="${this.url}"
+                        @dbp-file-source-file-selected="${this.addLogEntry}"
                         class="file-source"
                         allowed-mime-types="application/pdf"
                         decompress-zip
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
                         enabled-targets="local,nextcloud"></dbp-file-source>
-
                     <p>Download uploaded files :</p>
                     <button
                         @click="${() => {
-                            this._('#file-sink').files = [...this.selectedFiles];
+                            this._('#file-sink-standard').files = [...this.selectedFiles];
                         }}"
                         class="button is-primary">
                         Open download dialog
                     </button>
-                    <dbp-file-sink id="file-sink" lang="en"></dbp-file-sink>
+                    <dbp-file-sink id="file-sink-standard" lang="en"></dbp-file-sink>
                 </div>
             </section>
         `;
@@ -284,13 +278,17 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         for (let i = 0; i < urls.length; i++) {
                             files.push({name: filenames[i].value, url: urls[i].value});
                         }
-                        this._('#file-sink1').files = files;
+                        this._('#file-sink-streamed').files = files;
                     }
                 }}"
                 class="button is-primary">
                 Open download dialog
             </button>
-            <dbp-file-sink id="file-sink1" lang="en" subscribe="auth" streamed></dbp-file-sink>
+            <dbp-file-sink
+                id="file-sink-streamed"
+                lang="en"
+                subscribe="auth"
+                streamed></dbp-file-sink>
         `;
 
         let end = html`
