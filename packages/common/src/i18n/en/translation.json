@@ -19,6 +19,6 @@
     },
     "login-notification": {
         "error-login-link": "Log in",
-        "error-login-message": "Please log in to use this feature."
+        "error-login-message": "Please log in to use this functionality."
     }
 }
