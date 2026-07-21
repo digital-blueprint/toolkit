@@ -11,10 +11,6 @@ export const sanitizeForHtmlId = (str) => {
 export const getFieldsetCSS = () => {
     // language=css
     return css`
-        :host {
-            --dbp-label-font-weight: 500;
-        }
-
         fieldset {
             border: none;
             margin: 10px 0;
