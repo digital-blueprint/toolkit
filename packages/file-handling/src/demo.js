@@ -119,7 +119,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         allowed-mime-types="*/*"
                         subscribe="nextcloud-auth-url:nextcloud-auth-url,nextcloud-web-dav-url:nextcloud-web-dav-url,nextcloud-name:nextcloud-name,nextcloud-file-url:nextcloud-file-url"
-                        lang="en"
+                        lang="${this.lang}"
                         enabled-targets="local,nextcloud"></dbp-file-source>
 
                     <p>Only images are allowed here (JPG, PNG, GIF, TIF, ...):</p>
@@ -132,7 +132,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source2"
-                        lang="en"
+                        lang="${this.lang}"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
@@ -150,7 +150,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source3"
-                        lang="en"
+                        lang="${this.lang}"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
@@ -169,7 +169,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source4"
-                        lang="en"
+                        lang="${this.lang}"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
                         class="file-source"
@@ -187,7 +187,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source5"
-                        lang="en"
+                        lang="${this.lang}"
                         url="${this.url}"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         class="file-source"
@@ -203,7 +203,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         class="button is-primary">
                         Open download dialog
                     </button>
-                    <dbp-file-sink id="file-sink-standard" lang="en"></dbp-file-sink>
+                    <dbp-file-sink id="file-sink-standard" lang="${this.lang}"></dbp-file-sink>
                 </div>
             </section>
         `;
@@ -286,7 +286,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
             </button>
             <dbp-file-sink
                 id="file-sink-streamed"
-                lang="en"
+                lang="${this.lang}"
                 subscribe="auth"
                 streamed></dbp-file-sink>
         `;

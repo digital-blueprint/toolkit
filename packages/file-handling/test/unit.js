@@ -37,4 +37,18 @@ suite('dbp-file-source demo', () => {
     test('should render', () => {
         assert.isNotNull(node.shadowRoot);
     });
+
+    test('should propagate language changes to file handling components', async () => {
+        node.lang = 'en';
+        await node.updateComplete;
+
+        const components = node.shadowRoot.querySelectorAll('dbp-file-source, dbp-file-sink');
+        assert.lengthOf(components, 6);
+        components.forEach((component) => assert.equal(component.lang, 'en'));
+
+        node.lang = 'de';
+        await node.updateComplete;
+
+        components.forEach((component) => assert.equal(component.lang, 'de'));
+    });
 });
