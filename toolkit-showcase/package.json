@@ -57,7 +57,7 @@
         "lit": "^3.0.0"
     },
     "scripts": {
-        "build": "rolldown -c rollup.config.js",
+        "build": "rolldown -c rolldown.config.js",
         "fix": "npm run eslint:fix && npm run prettier:fix && npm run i18next:fix",
         "check": "npm run eslint && npm run prettier && npm run i18next",
         "eslint:fix": "eslint \"**/*.{js,ts}\" --fix --cache",
@@ -66,11 +66,11 @@
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
         "i18next:fix": "i18next-cli extract",
         "i18next": "i18next-cli extract --ci --dry-run",
-        "watch": "rolldown -c rollup.config.js --watch",
+        "watch": "rolldown -c rolldown.config.js --watch",
         "watch-local": "npm run watch",
-        "watch-full": "rolldown -c rollup.config.js --watch --environment FORCE_FULL",
-        "watch-bs": "rolldown -c rollup.config.js --watch --environment APP_ENV:bs",
-        "build-test": "rolldown -c rollup.config.js --environment APP_ENV:test",
+        "watch-full": "rolldown -c rolldown.config.js --watch --environment FORCE_FULL",
+        "watch-bs": "rolldown -c rolldown.config.js --watch --environment APP_ENV:bs",
+        "build-test": "rolldown -c rolldown.config.js --environment APP_ENV:test",
         "test": "npm run build-test && web-test-runner",
         "tsc": "tsc -p jsconfig.json"
     }

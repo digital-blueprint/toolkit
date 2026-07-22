@@ -4,5 +4,5 @@
         "maxNodeModuleJsDepth": 0
     },
     "include": ["src", "./*.js"],
-    "exclude": ["node_modules", "dist", "vendor", "rollup.config.js"]
+    "exclude": ["node_modules", "dist", "vendor", "rolldown.config.js"]
 }
