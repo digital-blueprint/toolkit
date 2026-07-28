@@ -7,13 +7,23 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import select2LangDe from '@dbp-toolkit/resource-select/src/i18n/de/select2';
 import select2LangEn from '@dbp-toolkit/resource-select/src/i18n/en/select2';
-import {AdapterLitElement, AuthMixin, combineURLs, LangMixin} from '@dbp-toolkit/common';
+import {
+    AdapterLitElement,
+    AuthMixin,
+    combineURLs,
+    LangMixin,
+    MiniSpinner,
+    ScopedElementsMixin,
+} from '@dbp-toolkit/common';
 import * as hydra from './hydra.js';
 
 const SEARCH_DELAY = 300;
 const MINIMUM_INPUT_LENGTH = 2;
 
-export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), createInstance) {
+export class ResourceSelect extends LangMixin(
+    AuthMixin(ScopedElementsMixin(AdapterLitElement)),
+    createInstance,
+) {
     constructor() {
         super();
         this._resources = [];
@@ -51,6 +61,13 @@ export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), crea
             perPage: {type: Number, attribute: 'per-page'},
             fetchMode: {type: String, attribute: 'fetch-mode'},
             placeholder: {type: String},
+        };
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-mini-spinner': MiniSpinner,
         };
     }
 
@@ -361,6 +378,30 @@ export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), crea
         this._setValue(id, resource);
     }
 
+    /**
+     * Renders one entry of the select2 dropdown. While a search request is running select2
+     * adds a "Searching…" entry, which we replace with a spinner plus the same text, so the
+     * user gets some moving feedback while waiting.
+     *
+     * @param {object} result - The select2 result object
+     * @returns {HTMLElement|string} An element for the loading entry, the plain text otherwise
+     */
+    _renderResult(result) {
+        if (!result.loading) {
+            // Returning a string makes select2 escape the markup for us
+            return result.text;
+        }
+
+        // We don't use the "text" attribute of the spinner here, because it would render
+        // the text smaller than the other entries of the dropdown.
+        const entry = document.createElement('span');
+        entry.classList.add('loading-entry');
+        entry.appendChild(this.createScopedElement('dbp-mini-spinner'));
+        entry.appendChild(document.createTextNode(result.text));
+
+        return entry;
+    }
+
     async _updateSelect2Search() {
         await this.updateComplete;
         const url = this._getCollectionUrl();
@@ -383,6 +424,7 @@ export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), crea
                 placeholder: this._getPlaceholder(),
                 dropdownParent: this._$('#select-resource-dropdown'),
                 disabled: this.disabled,
+                templateResult: (result) => this._renderResult(result),
                 ajax: {
                     delay: SEARCH_DELAY,
                     url: (params) => this._getCollectionUrl(params.term ?? ''),
@@ -531,6 +573,13 @@ export class ResourceSelect extends LangMixin(AuthMixin(AdapterLitElement), crea
                 /* https://github.com/select2/select2/issues/5457 */
                 .select2-bug .loading-results {
                     display: none !important;
+                }
+
+                /* The "Searching…" entry of the dropdown, see _renderResult() */
+                .loading-entry {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5em;
                 }
             `,
         ];
