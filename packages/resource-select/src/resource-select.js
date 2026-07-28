@@ -439,8 +439,6 @@ export class ResourceSelect extends LangMixin(
                         this._isSearching = true;
                     },
                     processResults: (data) => {
-                        this._$('#select-resource-dropdown').addClass('select2-bug');
-
                         const members = data['hydra:member'] ?? [];
                         this._resources = members;
 
@@ -464,7 +462,6 @@ export class ResourceSelect extends LangMixin(
                 this._setValue(null, null);
             })
             .on('select2:select', (event) => {
-                this._$('#select-resource-dropdown').removeClass('select2-bug');
                 const data = event.params.data;
                 this._setValue(data.id, data.resource ?? null);
             })
@@ -568,11 +565,6 @@ export class ResourceSelect extends LangMixin(
                     top: 100% !important;
                     width: 100% !important;
                     z-index: 1;
-                }
-
-                /* https://github.com/select2/select2/issues/5457 */
-                .select2-bug .loading-results {
-                    display: none !important;
                 }
 
                 /* The "Searching…" entry of the dropdown, see _renderResult() */
