@@ -5,38 +5,24 @@ import {DbpBaseView} from '../base-view.js';
 export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
     constructor() {
         super();
-        this.label = 'A string field';
         this.name = '';
-    }
-
-    async connectedCallback() {
-        super.connectedCallback();
-
-        if (this.value !== '' && this.auth?.token) {
-            this.fetchPersonName(this.value);
-        }
-    }
-
-    updated(changedProperties) {
-        if (changedProperties.get('name')) {
-            this.name = this.name || '';
-        } else if (changedProperties.get('auth') && this.name === '' && this.auth?.token) {
-            this.fetchPersonName(this.value);
-        }
+        this.multiple = false;
+        this._loadGeneration = 0;
     }
 
     static get properties() {
         return {
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            value: {attribute: 'value'},
             name: {type: String, attribute: 'name'},
+            multiple: {type: Boolean},
         };
     }
 
     static get styles() {
         return [
             ...super.styles,
-            // language=css
             css`
                 :host([layout-type='inline']) fieldset {
                     display: flex;
@@ -52,36 +38,101 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
         ];
     }
 
+    connectedCallback() {
+        super.connectedCallback();
+        this.loadPersonNames();
+    }
+
+    updated(changedProperties) {
+        super.updated(changedProperties);
+
+        if (
+            changedProperties.has('value') ||
+            changedProperties.has('auth') ||
+            changedProperties.has('entryPointUrl') ||
+            changedProperties.has('multiple')
+        ) {
+            this.loadPersonNames();
+        }
+    }
+
+    normalizePersonId(value) {
+        if (typeof value !== 'string') {
+            return '';
+        }
+
+        return value.startsWith('/base/people/') ? value.replace('/base/people/', '') : value;
+    }
+
+    normalizeValues() {
+        const values = this.multiple
+            ? Array.isArray(this.value)
+                ? this.value
+                : this.value
+                  ? [this.value]
+                  : []
+            : this.value
+              ? [this.value]
+              : [];
+
+        return values.map((value) => this.normalizePersonId(value)).filter(Boolean);
+    }
+
+    getPersonUrl(personId) {
+        return new URL(`/base/people/${personId}`, this.entryPointUrl).href;
+    }
+
+    async fetchPersonName(personId) {
+        const response = await fetch(this.getPersonUrl(personId), {
+            headers: {
+                Accept: 'application/ld+json',
+                Authorization: `Bearer ${this.auth.token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+
+        const person = await response.json();
+        const name = [person.givenName, person.familyName].filter(Boolean).join(' ').trim();
+
+        return name || personId;
+    }
+
+    async loadPersonNames() {
+        const personIds = this.normalizeValues();
+        const generation = ++this._loadGeneration;
+
+        if (personIds.length === 0) {
+            this.name = '';
+            return;
+        }
+
+        if (!this.entryPointUrl || !this.auth?.token) {
+            this.name = personIds.join('\n');
+            return;
+        }
+
+        const names = await Promise.all(
+            personIds.map(async (personId) => {
+                try {
+                    return await this.fetchPersonName(personId);
+                } catch (error) {
+                    console.error(error);
+                    return personId;
+                }
+            }),
+        );
+
+        if (generation === this._loadGeneration) {
+            this.name = names.join('\n');
+        }
+    }
+
     renderValue() {
         return html`
             <div style="white-space: pre-line">${this.name}</div>
         `;
-    }
-
-    fetchPersonName(value) {
-        if (!value || !this.entryPointUrl || !this.auth?.token) {
-            return;
-        }
-
-        fetch(
-            value.startsWith('/base/people/')
-                ? this.entryPointUrl + value
-                : this.entryPointUrl + '/base/people/' + value,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${this.auth.token}`,
-                },
-            },
-        )
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.givenName && data.familyName) {
-                    this.name = data.givenName + ' ' + data.familyName || '';
-                } else {
-                    this.name = value;
-                }
-            });
     }
 }
