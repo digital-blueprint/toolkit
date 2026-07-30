@@ -35,6 +35,14 @@ export function getDemoCSS() {
             margin-left: 14px;
         }
 
+        /*
+         * While a linked sub document is shown we only want to see the documentation,
+         * the demo components of the activity belong to the main document only.
+         */
+        dbp-markdown[sub-document] ~ * {
+            display: none !important;
+        }
+
         a {
             transition:
                 background-color 0.15s,

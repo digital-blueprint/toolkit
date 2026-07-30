@@ -1,14 +1,65 @@
 // SPDX-Identifier: ISC
 // Fork of abandoned https://github.com/xiaofuzi/rollup-plugin-md to support newer rollup
 
+import fs from 'node:fs';
+import path from 'node:path';
 import {Marked} from 'marked';
 import {markedHighlight} from 'marked-highlight';
 import hljs from 'highlight.js';
 
 const ext = /\.md$/;
 
-export default function md(options = {}) {
-    const marked = new Marked(
+// Maximum amount of linked documents that get pulled in, just to be safe
+const MAX_DOCUMENTS = 50;
+
+/**
+ * The document that is currently being parsed. Needed because the marked renderer
+ * has no other way of knowing which file a link originates from. Parsing is
+ * synchronous, so a module global is fine here.
+ *
+ * @type {{dir: string, register: function(string): string}|null}
+ */
+let parseContext = null;
+
+function escapeAttribute(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+/**
+ * Checks if a markdown link points to another markdown file next to the current one.
+ *
+ * @param {string} href The link target
+ * @returns {boolean} true if it is a relative link to a markdown file
+ */
+function isRelativeMarkdownLink(href) {
+    if (!href) return false;
+    // Skip absolute URLs, protocol relative URLs, root relative URLs and pure anchors
+    if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return false;
+    if (href.startsWith('//') || href.startsWith('/') || href.startsWith('#')) return false;
+    return /\.md$/i.test(href.split('#')[0].split('?')[0]);
+}
+
+/**
+ * Builds a stable and attribute/URL safe ID for a linked document.
+ *
+ * @param {string} relativePath The document path relative to the main document
+ * @returns {string} The ID
+ */
+function createDocumentId(relativePath) {
+    return relativePath
+        .replace(/\\/g, '/')
+        .replace(/[^a-z0-9]+/gi, '-')
+        .replace(/^-+|-+$/g, '')
+        .toLowerCase();
+}
+
+function createMarked() {
+    return new Marked(
         markedHighlight({
             emptyLangClass: 'hljs',
             langPrefix: 'hljs language-',
@@ -17,7 +68,52 @@ export default function md(options = {}) {
                 return hljs.highlight(code, {language}).value;
             },
         }),
+        {
+            renderer: {
+                link(token) {
+                    const text = this.parser.parseInline(token.tokens);
+                    const title = token.title ? ` title="${escapeAttribute(token.title)}"` : '';
+
+                    if (parseContext !== null && isRelativeMarkdownLink(token.href)) {
+                        const relative = token.href.split('#')[0].split('?')[0];
+                        const target = path.resolve(parseContext.dir, relative);
+                        if (fs.existsSync(target)) {
+                            const documentId = parseContext.register(target);
+                            // The document is embedded in the same page, the ID is
+                            // resolved by the markdown web component.
+                            return (
+                                `<a href="#${escapeAttribute(documentId)}"` +
+                                ` data-markdown-link="${escapeAttribute(documentId)}"${title}>` +
+                                `${text}</a>`
+                            );
+                        }
+                    }
+
+                    return `<a href="${escapeAttribute(token.href)}"${title}>${text}</a>`;
+                },
+            },
+        },
     );
+}
+
+/**
+ * Wraps the rendered HTML of one document so the web component can show/hide it.
+ *
+ * @param {string} documentId The document ID, empty for the main document
+ * @param {string} name The human readable document name
+ * @param {string} content The rendered HTML
+ * @returns {string} The wrapped HTML
+ */
+function wrapDocument(documentId, name, content) {
+    const hidden = documentId === '' ? '' : ' hidden';
+    return (
+        `<div class="markdown-document" data-markdown-document="${escapeAttribute(documentId)}"` +
+        ` data-markdown-name="${escapeAttribute(name)}"${hidden}>\n${content}\n</div>\n`
+    );
+}
+
+export default function md(options = {}) {
+    const marked = createMarked();
 
     return {
         name: 'md',
@@ -32,9 +128,49 @@ export default function md(options = {}) {
             handler: function (md, id) {
                 if (!ext.test(id)) return null;
 
-                const data = marked.parse(md);
+                const mainPath = path.resolve(id);
+                const mainDir = path.dirname(mainPath);
+
+                // Maps absolute file paths to document IDs, the main document has an empty ID
+                const documentIds = new Map([[mainPath, '']]);
+                const queue = [];
+
+                const register = (absolutePath) => {
+                    if (documentIds.has(absolutePath)) {
+                        return documentIds.get(absolutePath);
+                    }
+                    const relative = path.relative(mainDir, absolutePath);
+                    const documentId = createDocumentId(relative);
+                    documentIds.set(absolutePath, documentId);
+                    queue.push({absolutePath, documentId, name: relative});
+                    return documentId;
+                };
+
+                let output;
+                try {
+                    parseContext = {dir: mainDir, register};
+                    output = wrapDocument('', path.basename(mainPath), marked.parse(md).toString());
+
+                    // Linked documents may link to further documents, so keep going
+                    let count = 0;
+                    while (queue.length > 0 && count < MAX_DOCUMENTS) {
+                        const doc = queue.shift();
+                        count++;
+                        this.addWatchFile(doc.absolutePath);
+                        const content = fs.readFileSync(doc.absolutePath, 'utf8');
+                        parseContext = {dir: path.dirname(doc.absolutePath), register};
+                        output += wrapDocument(
+                            doc.documentId,
+                            doc.name,
+                            marked.parse(content).toString(),
+                        );
+                    }
+                } finally {
+                    parseContext = null;
+                }
+
                 return {
-                    code: `export default ${JSON.stringify(data.toString())};`,
+                    code: `export default ${JSON.stringify(output)};`,
                     map: {mappings: ''},
                 };
             },
