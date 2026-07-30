@@ -54,7 +54,7 @@ class DbpMatomoDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-matomo-demo
                 id="demo"
                 lang="${this.lang}"

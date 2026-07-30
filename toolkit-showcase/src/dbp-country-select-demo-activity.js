@@ -52,7 +52,7 @@ class DbpCountrySelectDemoActivity extends ScopedElementsMixin(AdapterLitElement
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-country-select-demo id="demo" lang="${this.lang}"></dbp-country-select-demo>
         `;
     }

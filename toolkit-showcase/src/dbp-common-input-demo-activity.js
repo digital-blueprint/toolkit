@@ -58,7 +58,7 @@ class DbpCommonInputDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-button-demo></dbp-button-demo>
             <dbp-select-demo></dbp-select-demo>
         `;

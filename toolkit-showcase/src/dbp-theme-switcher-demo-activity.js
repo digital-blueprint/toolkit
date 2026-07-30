@@ -54,7 +54,7 @@ export class DbpThemeSwitcherDemoActivity extends ScopedElementsMixin(AdapterLit
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-theme-switcher-demo
                 id="demo"
                 lang="${this.lang}"

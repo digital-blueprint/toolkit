@@ -54,7 +54,7 @@ export class DbpFileHandlingDemoActivity extends ScopedElementsMixin(AdapterLitE
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-file-source-demo
                 id="demo"
                 lang="${this.lang}"

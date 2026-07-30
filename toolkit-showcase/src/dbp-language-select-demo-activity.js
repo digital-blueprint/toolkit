@@ -54,7 +54,7 @@ class DbpLanguageSelectDemoActivity extends ScopedElementsMixin(AdapterLitElemen
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-language-select-demo
                 id="demo"
                 lang="${this.lang}"

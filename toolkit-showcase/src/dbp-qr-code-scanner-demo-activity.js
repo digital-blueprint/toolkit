@@ -47,7 +47,7 @@ class DbpQrCodeScannerDemoActivity extends ScopedElementsMixin(AdapterLitElement
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-qr-code-scanner-demo
                 id="scanner-demo"
                 lang="${this.lang}"

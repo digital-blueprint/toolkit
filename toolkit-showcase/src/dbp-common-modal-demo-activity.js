@@ -92,7 +92,7 @@ class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-modal-demo></dbp-modal-demo>
 
             <div class="control">

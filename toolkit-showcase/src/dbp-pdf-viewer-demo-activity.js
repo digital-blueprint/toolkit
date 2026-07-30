@@ -54,7 +54,7 @@ class DbpPdfViewerDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-pdf-viewer-demo id="demo" lang="${this.lang}"></dbp-pdf-viewer-demo>
         `;
     }

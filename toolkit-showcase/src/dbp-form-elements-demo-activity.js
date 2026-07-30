@@ -54,7 +54,7 @@ class DbpFormElementsDemoActivity extends AuthMixin(ScopedElementsMixin(AdapterL
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-form-elements-demo
                 id="demo"
                 lang="${this.lang}"

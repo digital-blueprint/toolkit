@@ -52,7 +52,7 @@ class DbpTooltipDemoActivity extends ScopedElementsMixin(AdapterLitElement) {
 
     render() {
         return html`
-            <dbp-markdown .markdown=${readme}></dbp-markdown>
+            <dbp-markdown lang="${this.lang}" .markdown=${readme}></dbp-markdown>
             <dbp-tooltip-demo id="demo" lang="${this.lang}"></dbp-tooltip-demo>
         `;
     }
