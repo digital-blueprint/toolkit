@@ -90,7 +90,9 @@ export const gatherFormDataFromElement = (formElement) => {
     const elementWebComponents = getElementWebComponents(formElement);
     elementWebComponents.forEach((element) => {
         const name = element.getAttribute('name') || element.id;
-        customElementValues[name] = element.value;
+        if (!element.shouldOmitEmptyValue?.()) {
+            customElementValues[name] = element.value;
+        }
     });
 
     // Check if any elements have a "data-value" attribute, because we want to use that value instead of the form value
@@ -98,6 +100,8 @@ export const gatherFormDataFromElement = (formElement) => {
     const elementsWithDataValue = formElement.querySelectorAll('[data-value]');
     let dataValues = {};
     elementsWithDataValue.forEach((element) => {
+        if (element.shouldOmitEmptyValue?.()) return;
+
         const name = element.getAttribute('name') || element.id;
         const rawValue = element.getAttribute('data-value');
         // Reverse encoding before parsing

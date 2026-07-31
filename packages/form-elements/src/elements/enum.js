@@ -69,6 +69,17 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         return this.value === '' || this.isValueEmptyArray();
     }
 
+    /**
+     * Determines whether the empty value should be omitted from the form submission.
+     * This is the case when the display mode is 'list', the field is *not* required, and the value is empty.
+     * @returns {boolean}
+     */
+    shouldOmitEmptyValue() {
+        return (
+            !this.required && !this.multiple && this.displayMode === 'list' && this.isValueEmpty()
+        );
+    }
+
     connectedCallback() {
         super.connectedCallback();
 
