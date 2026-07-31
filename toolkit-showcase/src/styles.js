@@ -81,7 +81,7 @@ export function getDemoCSS() {
             animation: 0s linkIconIn;
             font-size: 103%;
         }
-        
+
          */
 
         @keyframes linkIconOut {
@@ -101,6 +101,7 @@ export function getDemoCSS() {
             padding: 0.4em;
             overflow-x: auto;
             border: 1px solid #ddd;
+            margin-bottom: 1em;
         }
 
         code {

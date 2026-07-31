@@ -79,9 +79,16 @@ export class FormElementsDemo extends LangMixin(
                 h1.title {
                     margin-bottom: 1em;
                 }
+
+                .subtitle {
+                    margin-top: 2em;
+                    margin-bottom: 0.5em;
+                }
+
                 div.container {
                     margin-bottom: 1.5em;
                 }
+
                 [slot='label'] a {
                     text-decoration: underline;
                     text-underline-offset: 2px;
@@ -146,7 +153,7 @@ export class FormElementsDemo extends LangMixin(
         return html`
             <section class="section">
                 <div class="container">
-                    <h1 class="title">Form Elements Demo</h1>
+                    <h2 class="title">Form Elements Demo</h2>
                 </div>
                 <div class="container">
                     <form>
@@ -160,6 +167,7 @@ export class FormElementsDemo extends LangMixin(
                             }}
                             .state=${this.isRequired}></dbp-form-boolean-element>
 
+                        <h3 class="subtitle">String elements</h3>
                         <dbp-form-string-element
                             subscribe="lang"
                             name="myComponentString"
@@ -220,6 +228,7 @@ export class FormElementsDemo extends LangMixin(
                             word-count-limit="10"
                             ?required=${this.isRequired}></dbp-form-string-element>
 
+                        <h3 class="subtitle">Number elements</h3>
                         <dbp-form-number-element
                             subscribe="lang"
                             name="myComponentNumber"
@@ -259,6 +268,7 @@ export class FormElementsDemo extends LangMixin(
                             step="0.5"
                             ?required=${this.isRequired}></dbp-form-number-element>
 
+                        <h3 class="subtitle">Date elements</h3>
                         <dbp-form-date-element
                             subscribe="lang"
                             name="myComponentDate"
@@ -303,6 +313,7 @@ export class FormElementsDemo extends LangMixin(
                             value=${data.myComponentDateTimeInline || ''}
                             ?required=${this.isRequired}></dbp-form-datetime-element>
 
+                        <h3 class="subtitle">Enum elements</h3>
                         <dbp-form-enum-element
                             subscribe="lang"
                             name="myComponentEnum"
@@ -419,6 +430,7 @@ export class FormElementsDemo extends LangMixin(
                             multiple
                             ?required=${this.isRequired}></dbp-form-enum-element>
 
+                        <h3 class="subtitle">Boolean elements</h3>
                         <dbp-form-boolean-element
                             subscribe="lang"
                             name="myComponentBoolean"
@@ -434,6 +446,7 @@ export class FormElementsDemo extends LangMixin(
                             layout-type="inline"
                             .state=${data.myComponentBooleanInline}></dbp-form-boolean-element>
 
+                        <h3 class="subtitle">Select elements</h3>
                         <dbp-form-person-select-element
                             subscribe="lang"
                             name="myComponentPerson"
@@ -493,9 +506,10 @@ export class FormElementsDemo extends LangMixin(
         return html`
             <section class="section">
                 <div class="container">
-                    <h1 class="title">Form Views Demo</h1>
+                    <h2 class="title">Form Views Demo</h2>
                 </div>
                 <div class="container">
+                    <h3 class="subtitle">String elements</h3>
                     <dbp-form-string-view
                         subscribe="lang"
                         label="My string"
@@ -526,6 +540,7 @@ export class FormElementsDemo extends LangMixin(
                         label="My special string"
                         .value=${data.mySpecialString || ''}></dbp-form-string-view>
 
+                    <h3 class="subtitle">Number elements</h3>
                     <dbp-form-number-view
                         subscribe="lang"
                         label="My number"
@@ -547,6 +562,7 @@ export class FormElementsDemo extends LangMixin(
                         label="Number with step (0.5)"
                         .value=${data.myComponentNumberStep || ''}></dbp-form-number-view>
 
+                    <h3 class="subtitle">Date elements</h3>
                     <dbp-form-date-view
                         subscribe="lang"
                         label="My date"
@@ -563,6 +579,7 @@ export class FormElementsDemo extends LangMixin(
                         label="My datetime"
                         .value=${data.myComponentDateTime || ''}></dbp-form-datetime-view>
 
+                    <h3 class="subtitle">Enum elements</h3>
                     <dbp-form-enum-view
                         subscribe="lang"
                         label="My enum"
@@ -653,6 +670,7 @@ export class FormElementsDemo extends LangMixin(
                         .value=${data.myComponentMultipleEnumTags || ''}
                         .items=${this.enumItems}></dbp-form-enum-view>
 
+                    <h3 class="subtitle">Boolean elements</h3>
                     <dbp-form-string-view
                         subscribe="lang"
                         label="My boolean"
@@ -664,6 +682,7 @@ export class FormElementsDemo extends LangMixin(
                         label="Inline boolean"
                         value=${data.myComponentBoolean ? 'true' : 'false'}></dbp-form-string-view>
 
+                    <h3 class="subtitle">Select elements</h3>
                     <dbp-form-person-select-view
                         subscribe="lang"
                         label="My person"
