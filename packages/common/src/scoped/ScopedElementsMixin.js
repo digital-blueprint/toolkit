@@ -16,7 +16,7 @@ export function supportsScopedRegistry() {
     return Boolean(
         // @ts-expect-error
         globalThis.ShadowRoot?.prototype.createElement &&
-            globalThis.ShadowRoot?.prototype.importNode,
+        globalThis.ShadowRoot?.prototype.importNode,
     );
 }
 
