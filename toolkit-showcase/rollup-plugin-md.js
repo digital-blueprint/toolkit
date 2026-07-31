@@ -17,7 +17,7 @@ const MAX_DOCUMENTS = 50;
  * has no other way of knowing which file a link originates from. Parsing is
  * synchronous, so a module global is fine here.
  *
- * @type {{dir: string, register: function(string): string}|null}
+ * @type {{dir: string, register: function(string): string, registerImage: function(string): (string|null)}|null}
  */
 let parseContext = null;
 
@@ -42,6 +42,20 @@ function isRelativeMarkdownLink(href) {
     if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return false;
     if (href.startsWith('//') || href.startsWith('/') || href.startsWith('#')) return false;
     return /\.md$/i.test(href.split('#')[0].split('?')[0]);
+}
+
+/**
+ * Checks if a markdown image points to a relative file next to the current document.
+ *
+ * @param {string} href The image source
+ * @returns {boolean} true if it is a relative image reference
+ */
+function isRelativeImage(href) {
+    if (!href) return false;
+    // Skip absolute URLs, protocol relative URLs, root relative URLs and data URLs
+    if (/^[a-z][a-z0-9+.-]*:/i.test(href)) return false;
+    if (href.startsWith('//') || href.startsWith('/') || href.startsWith('#')) return false;
+    return true;
 }
 
 /**
@@ -70,6 +84,20 @@ function createMarked() {
         }),
         {
             renderer: {
+                image(token) {
+                    const text = escapeAttribute(token.text ?? '');
+                    const title = token.title ? ` title="${escapeAttribute(token.title)}"` : '';
+
+                    if (parseContext !== null && isRelativeImage(token.href)) {
+                        const placeholder = parseContext.registerImage(token.href);
+                        if (placeholder !== null) {
+                            // The placeholder is replaced with the emitted asset URL later.
+                            return `<img src="${placeholder}" alt="${text}"${title}>`;
+                        }
+                    }
+
+                    return `<img src="${escapeAttribute(token.href)}" alt="${text}"${title}>`;
+                },
                 link(token) {
                     const text = this.parser.parseInline(token.tokens);
                     const title = token.title ? ` title="${escapeAttribute(token.title)}"` : '';
@@ -146,9 +174,34 @@ export default function md(options = {}) {
                     return documentId;
                 };
 
+                // Maps absolute image paths to the emitted asset reference id, so the same
+                // image is only emitted once. The placeholders are replaced with the final
+                // asset URLs after parsing has finished.
+                const imageReferences = new Map();
+                const emitFile = this.emitFile.bind(this);
+                const addWatchFile = this.addWatchFile.bind(this);
+
+                const registerImage = (href) => {
+                    const cleaned = href.split('#')[0].split('?')[0];
+                    const absolutePath = path.resolve(parseContext.dir, cleaned);
+                    if (!fs.existsSync(absolutePath)) {
+                        return null;
+                    }
+                    if (!imageReferences.has(absolutePath)) {
+                        addWatchFile(absolutePath);
+                        const referenceId = emitFile({
+                            type: 'asset',
+                            name: path.basename(absolutePath),
+                            source: fs.readFileSync(absolutePath),
+                        });
+                        imageReferences.set(absolutePath, referenceId);
+                    }
+                    return `\0md-image:${imageReferences.get(absolutePath)}\0`;
+                };
+
                 let output;
                 try {
-                    parseContext = {dir: mainDir, register};
+                    parseContext = {dir: mainDir, register, registerImage};
                     output = wrapDocument('', path.basename(mainPath), marked.parse(md).toString());
 
                     // Linked documents may link to further documents, so keep going
@@ -158,7 +211,11 @@ export default function md(options = {}) {
                         count++;
                         this.addWatchFile(doc.absolutePath);
                         const content = fs.readFileSync(doc.absolutePath, 'utf8');
-                        parseContext = {dir: path.dirname(doc.absolutePath), register};
+                        parseContext = {
+                            dir: path.dirname(doc.absolutePath),
+                            register,
+                            registerImage,
+                        };
                         output += wrapDocument(
                             doc.documentId,
                             doc.name,
@@ -169,8 +226,27 @@ export default function md(options = {}) {
                     parseContext = null;
                 }
 
+                // Build the module code. If images were emitted, splice their final URLs
+                // (resolved by the bundler via import.meta.ROLLUP_FILE_URL_*) into the string.
+                const placeholder = /\0md-image:([\w$]+)\0/g;
+                let code;
+                if (imageReferences.size === 0) {
+                    code = `export default ${JSON.stringify(output)};`;
+                } else {
+                    let expression = '';
+                    let lastIndex = 0;
+                    let match;
+                    while ((match = placeholder.exec(output)) !== null) {
+                        const literal = output.slice(lastIndex, match.index);
+                        expression += `${JSON.stringify(literal)} + import.meta.ROLLUP_FILE_URL_${match[1]} + `;
+                        lastIndex = placeholder.lastIndex;
+                    }
+                    expression += JSON.stringify(output.slice(lastIndex));
+                    code = `export default ${expression};`;
+                }
+
                 return {
-                    code: `export default ${JSON.stringify(output)};`,
+                    code,
                     map: {mappings: ''},
                 };
             },
