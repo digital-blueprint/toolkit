@@ -27,6 +27,6 @@
     "author": "",
     "license": "LGPL-2.1-or-later",
     "devDependencies": {
-        "lerna": "^9.0.0"
+        "lerna": "^10.0.0"
     }
 }
