@@ -1268,11 +1268,37 @@ export function getSelect2CSS() {
             color: inherit;
         }
 
+        /*
+           Select2 renders the clear button as a "×" text character. Its shape,
+           size and vertical position depend on the font in use, so we hide it
+           and draw an icon instead, which we can center reliably.
+        */
         .select2-container--default .select2-selection--single .select2-selection__clear {
-            font-size: 1.6em;
-            font-weight: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Matches the line height of the rendered selection, so the icon
+               ends up vertically centered on the first line */
+            height: 28px;
+            /* Slightly wider than the icon, to get a reasonable click target.
+               The browser default button padding varies, so reset it. */
+            width: 1em;
+            padding: 0;
             color: var(--dbp-muted);
-            margin-top: -3px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear > span {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear::before {
+            content: '';
+            display: block;
+            width: 0.75em;
+            height: 0.75em;
+            background-color: currentColor;
+            mask: url('${unsafeCSS(getIconSVGURL('close'))}') center / contain no-repeat;
+            -webkit-mask: url('${unsafeCSS(getIconSVGURL('close'))}') center / contain no-repeat;
         }
 
         .select2-container--default .select2-selection--multiple .select2-selection__rendered {
