@@ -141,6 +141,15 @@ export class FormElementsDemo extends LangMixin(
         return personId.startsWith('/base/people/') ? personId : `/base/people/${personId}`;
     }
 
+    getDemoPeopleValue(data) {
+        if (Array.isArray(data.myComponentPeople)) {
+            return data.myComponentPeople;
+        }
+
+        const personId = this.auth?.['person-id'];
+        return personId ? [personId] : [];
+    }
+
     render() {
         return html`
             ${this.renderFormElements()} ${this.renderFormViews()}
@@ -456,6 +465,16 @@ export class FormElementsDemo extends LangMixin(
                             entry-point-url="${this.entryPointUrl}"
                             ?required=${this.isRequired}></dbp-form-person-select-element>
 
+                        <dbp-form-person-select-element
+                            subscribe="lang"
+                            name="myComponentPeople"
+                            label="My people (multiple)"
+                            .auth=${this.auth ?? {}}
+                            .value=${this.getDemoPeopleValue(data)}
+                            entry-point-url="${this.entryPointUrl}"
+                            multiple
+                            ?required=${this.isRequired}></dbp-form-person-select-element>
+
                         <dbp-form-resource-select-element
                             subscribe="lang"
                             name="myComponentResource"
@@ -689,6 +708,14 @@ export class FormElementsDemo extends LangMixin(
                         .auth=${this.auth ?? {}}
                         entry-point-url="${this.entryPointUrl}"
                         .value=${this.getDemoPersonValue(data)}></dbp-form-person-select-view>
+
+                    <dbp-form-person-select-view
+                        subscribe="lang"
+                        label="My people (multiple)"
+                        .auth=${this.auth ?? {}}
+                        entry-point-url="${this.entryPointUrl}"
+                        .value=${this.getDemoPeopleValue(data)}
+                        multiple></dbp-form-person-select-view>
 
                     <dbp-form-resource-select-view
                         subscribe="lang"
