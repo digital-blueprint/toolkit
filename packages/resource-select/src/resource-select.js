@@ -30,13 +30,18 @@ export class ResourceSelect extends LangMixin(
         this._url = null;
         this._lang = null;
         this._isSearching = false;
-        this._ignoreValueUpdate = false;
+        // Remembers the resource objects of the current selection, so they survive a new
+        // search overwriting this._resources in search mode.
+        this._selectedObjects = new Map();
         // For some reason using the same ID on the whole page twice breaks select2 (regardless if they are in different custom elements)
         this._selectId = 'select-resource-' + commonUtils.makeId(24);
 
         this.auth = {};
         this.entryPointUrl = null;
         this.resourcePath = null;
+        this.multiple = false;
+        this.values = [];
+        this.valueObjects = [];
         this.value = null;
         this.valueObject = null;
         this.disabled = false;
@@ -45,6 +50,12 @@ export class ResourceSelect extends LangMixin(
 
         this.noDefault = false;
         this.placeholder = null;
+
+        // The selection we applied ourselves the last time. Comparing against it tells us whether
+        // "value"/"values" were changed from the outside, without having to guess from the
+        // changed properties (multiple writes can end up in the same update cycle).
+        this._appliedValue = this.value;
+        this._appliedValues = this.values;
 
         this._onDocumentClicked = this._onDocumentClicked.bind(this);
         select2(window, $);
@@ -56,7 +67,9 @@ export class ResourceSelect extends LangMixin(
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             resourcePath: {type: String, attribute: 'resource-path'},
             noDefault: {type: Boolean, attribute: 'no-default'},
+            multiple: {type: Boolean, reflect: true},
             value: {type: String, reflect: true},
+            values: {type: Array},
             disabled: {type: Boolean},
             perPage: {type: Number, attribute: 'per-page'},
             fetchMode: {type: String, attribute: 'fetch-mode'},
@@ -111,6 +124,7 @@ export class ResourceSelect extends LangMixin(
         // we need to destroy Select2 and remove the event listeners before we can initialize it again
         if (this._IsSelect2Initialized($select)) {
             $select.off('select2:select');
+            $select.off('select2:unselect');
             $select.off('select2:clear');
             $select.off('select2:closing');
             $select.empty().trigger('change');
@@ -127,11 +141,17 @@ export class ResourceSelect extends LangMixin(
      */
     async reset() {
         if (this._isClearable()) {
-            this._setValue(null, null);
+            this._setSelection([], []);
         } else {
-            this._ignoreValueUpdate = true;
+            // Clear without emitting a change event, _updateAll() will select the first
+            // resource again right after.
+            this._selectedObjects.clear();
+            this.values = [];
+            this.valueObjects = [];
             this.value = null;
             this.valueObject = null;
+            this._appliedValues = this.values;
+            this._appliedValue = null;
         }
 
         await this._updateAll();
@@ -225,30 +245,80 @@ export class ResourceSelect extends LangMixin(
 
     _isClearable() {
         // Allow clearing only when there is a meaningful empty state to return to.
-        return this.fetchMode === 'search' || this.noDefault;
+        // With multiple selections the empty state is always meaningful.
+        return this.multiple || this.fetchMode === 'search' || this.noDefault;
     }
 
-    _setValue(value, valueObject) {
-        const valueChanged = this.value !== value;
-        let changed = valueChanged;
-        if (valueChanged) {
-            this._ignoreValueUpdate = true;
-        }
-        this.value = value;
-
-        let found = arguments.length > 1 ? (valueObject ?? null) : null;
-        if (arguments.length < 2) {
-            for (let res of this._resources) {
-                if (res['@id'] === this.value) {
-                    found = res;
-                    break;
-                }
+    /**
+     * Looks up the resource object belonging to an ID. Falls back to the object of a previous
+     * selection, since in search mode this._resources only contains the last search results.
+     *
+     * @param {string} value - The resource ID
+     * @returns {object|null} The resource object, or null if unknown
+     */
+    _findResource(value) {
+        for (let res of this._resources) {
+            if (res['@id'] === value) {
+                return res;
             }
         }
-        changed = changed || this.valueObject !== found;
-        this.valueObject = found;
 
-        if (!changed) {
+        return this._selectedObjects.get(value) ?? null;
+    }
+
+    /**
+     * The one place where the selection gets changed. Keeps "value"/"valueObject" in sync with
+     * "values"/"valueObjects" and emits a "change" event if anything actually changed.
+     *
+     * @param {string[]} values - The selected resource IDs
+     * @param {(object|null)[]|null} [objects] - The matching resource objects, may contain null
+     *     for resources we have no object for. If omitted they get looked up.
+     */
+    _setSelection(values, objects = null) {
+        // Keep the selection to what select2 can actually show, so "values" never claims
+        // something different than what the user sees
+        let newValues = (values ?? []).filter((value, index, all) => {
+            return this._hasValue(value) && all.indexOf(value) === index;
+        });
+        if (!this.multiple) {
+            newValues = newValues.slice(0, 1);
+        }
+
+        const newObjects = newValues.map((value, index) => {
+            return objects === null ? this._findResource(value) : (objects[index] ?? null);
+        });
+
+        const valuesChanged =
+            this.values.length !== newValues.length ||
+            newValues.some((value, index) => this.values[index] !== value);
+        const objectsChanged =
+            this.valueObjects.length !== newObjects.length ||
+            newObjects.some((object, index) => this.valueObjects[index] !== object);
+
+        this._selectedObjects.clear();
+        newValues.forEach((value, index) => {
+            if (newObjects[index] !== null) {
+                this._selectedObjects.set(value, newObjects[index]);
+            }
+        });
+
+        // Only assign if the content really changed, since lit compares arrays by identity and
+        // would otherwise schedule an endless stream of updates.
+        if (valuesChanged) {
+            this.values = newValues;
+        }
+        if (objectsChanged) {
+            this.valueObjects = newObjects;
+        }
+        // "value" and "valueObject" always mirror the first selection, like the native
+        // HTMLSelectElement.value does for a <select multiple>.
+        this.value = newValues[0] ?? null;
+        this.valueObject = newObjects[0] ?? null;
+
+        this._appliedValues = this.values;
+        this._appliedValue = this.value;
+
+        if (!valuesChanged && !objectsChanged) {
             return;
         }
 
@@ -258,13 +328,32 @@ export class ResourceSelect extends LangMixin(
             detail: {
                 value: this.value,
                 object: this.valueObject,
+                values: this.values,
+                objects: this.valueObjects,
             },
         });
         this.dispatchEvent(event);
     }
 
+    /**
+     * The selection to apply, taking external changes to "value" or "values" into account.
+     * If both were changed, "values" wins, since it can express more.
+     *
+     * @returns {string[]} The resource IDs to select
+     */
+    _getRequestedValues() {
+        if (this.values !== this._appliedValues) {
+            return this.values;
+        }
+        if (this.value !== this._appliedValue) {
+            return this._hasValue(this.value) ? [/** @type {string} */ (this.value)] : [];
+        }
+
+        return this.values;
+    }
+
     async _updateAll() {
-        this._setValue(this.value);
+        this._setSelection(this._getRequestedValues());
 
         const $select = this._getSelect2();
         if (!this.isLoggedIn()) {
@@ -317,7 +406,7 @@ export class ResourceSelect extends LangMixin(
         this._resources = await hydra.getCollection(url, this.lang, () => this.auth.token);
         this._url = url;
         this._lang = this.lang;
-        this._setValue(this.value);
+        this._setSelection(this.values);
     }
 
     async updateResources() {
@@ -338,7 +427,7 @@ export class ResourceSelect extends LangMixin(
 
         this._resources = await hydra.getCollection(url, this.lang, () => this.auth.token);
         this._url = url;
-        this._setValue(this.value);
+        this._setSelection(this.values);
         await this._updateSelect2();
     }
 
@@ -350,14 +439,8 @@ export class ResourceSelect extends LangMixin(
         return parsedUrl.href;
     }
 
-    async _updateSearchValue() {
-        if (!this._hasValue()) {
-            this._setValue(this.value, null);
-            return;
-        }
-
-        const $select = this._getSelect2();
-        const response = await fetch(this._getResourceUrl(this.value), {
+    async _fetchResource(value) {
+        const response = await fetch(this._getResourceUrl(value), {
             headers: {
                 'Content-Type': 'application/ld+json',
                 'Accept-Language': this.lang,
@@ -369,13 +452,46 @@ export class ResourceSelect extends LangMixin(
             throw new Error(response.statusText);
         }
 
-        const resource = await response.json();
-        const id = resource['@id'] ?? this.value;
-        this._resources = [resource];
+        return await response.json();
+    }
 
-        const option = new Option(this._getText(resource), id, true, true);
-        $select.append(option).trigger('change');
-        this._setValue(id, resource);
+    async _updateSearchValue() {
+        if (!this.values.length) {
+            this._setSelection([], []);
+            return;
+        }
+
+        const $select = this._getSelect2();
+        const results = await Promise.allSettled(
+            this.values.map((value) => this._fetchResource(value)),
+        );
+
+        /** @type {string[]} */
+        const ids = [];
+        /** @type {(object|null)[]} */
+        const objects = [];
+        this.values.forEach((value, index) => {
+            const result = results[index];
+            if (result.status !== 'fulfilled') {
+                // Keep the selection, but we have no resource object to show for it
+                console.log(result.reason);
+                ids.push(value);
+                objects.push(null);
+                return;
+            }
+
+            const resource = result.value;
+            const id = resource['@id'] ?? value;
+            ids.push(id);
+            objects.push(resource);
+
+            const option = new Option(this._getText(resource), id, true, true);
+            $select.append(option);
+        });
+
+        $select.trigger('change');
+        this._resources = objects.filter((object) => object !== null);
+        this._setSelection(ids, objects);
     }
 
     /**
@@ -420,6 +536,7 @@ export class ResourceSelect extends LangMixin(
                 width: '100%',
                 language: this.lang === 'de' ? select2LangDe() : select2LangEn(),
                 minimumInputLength: MINIMUM_INPUT_LENGTH,
+                multiple: this.multiple,
                 allowClear: this._isClearable(),
                 placeholder: this._getPlaceholder(),
                 dropdownParent: this._$('#select-resource-dropdown'),
@@ -459,11 +576,28 @@ export class ResourceSelect extends LangMixin(
                 },
             })
             .on('select2:clear', () => {
-                this._setValue(null, null);
+                this._setSelection([], []);
             })
             .on('select2:select', (event) => {
                 const data = event.params.data;
-                this._setValue(data.id, data.resource ?? null);
+                const object = data.resource ?? null;
+                if (this.multiple) {
+                    this._setSelection([...this.values, data.id], [...this.valueObjects, object]);
+                } else {
+                    this._setSelection([data.id], [object]);
+                }
+            })
+            .on('select2:unselect', (event) => {
+                const index = this.values.indexOf(event.params.data.id);
+                if (index === -1) {
+                    return;
+                }
+
+                const values = [...this.values];
+                const objects = [...this.valueObjects];
+                values.splice(index, 1);
+                objects.splice(index, 1);
+                this._setSelection(values, objects);
             })
             .on('select2:closing', (event) => {
                 if (this._isSearching) {
@@ -471,12 +605,16 @@ export class ResourceSelect extends LangMixin(
                 }
             });
 
-        if (this._hasValue()) {
+        if (this.values.length) {
             try {
                 await this._updateSearchValue();
             } catch (error) {
                 console.log(error);
-                this._setValue(this.value, null);
+                // Keep the selection, but without the resource objects we failed to fetch
+                this._setSelection(
+                    this.values,
+                    this.values.map(() => null),
+                );
             }
         } else {
             $select.val(null).trigger('change');
@@ -507,39 +645,51 @@ export class ResourceSelect extends LangMixin(
                 dropdownParent: this._$('#select-resource-dropdown'),
                 data: data,
                 disabled: this.disabled,
+                multiple: this.multiple,
                 allowClear: this._isClearable(),
             })
             .on('select2:clear', () => {
-                this._setValue(null, null);
+                this._setSelection([], []);
             })
-            .on('select2:select', () => {
-                let id = $select.select2('data')[0].id;
-                this._setValue(id);
+            .on('select2:select select2:unselect', () => {
+                this._setSelection($select.select2('data').map((entry) => entry.id));
             });
 
-        // If none is selected, default to the first one
-        if (this.value === null && data.length && !this.noDefault) {
-            this._setValue(data[0].id);
+        // If none is selected, default to the first one. With "multiple" an empty selection
+        // is a valid state, so we never preselect anything there.
+        if (!this.multiple && !this.values.length && data.length && !this.noDefault) {
+            this._setSelection([data[0].id]);
         }
 
         // Apply the selection
-        $select.val(this.value).trigger('change');
+        $select.val(this.multiple ? this.values : this.value).trigger('change');
     }
 
     update(changedProperties) {
+        // select2 has to be destroyed before lit changes the "multiple" attribute of the
+        // select element it has wrapped, otherwise it can't clean up after itself anymore.
+        if (changedProperties.has('multiple') && changedProperties.get('multiple') !== undefined) {
+            this._clearSelect2();
+        }
+
         super.update(changedProperties);
-        const valueChangedExternally = changedProperties.has('value') && !this._ignoreValueUpdate;
+
+        // We don't look at the changed properties for the selection, because our own writes to
+        // "value"/"values" can end up in the same update cycle as one from the outside, which
+        // would hide the latter. Comparing against what we applied last can't miss anything.
+        const selectionChangedExternally =
+            this.values !== this._appliedValues || this.value !== this._appliedValue;
+
         const needsUpdate =
             changedProperties.has('lang') ||
-            valueChangedExternally ||
+            selectionChangedExternally ||
             changedProperties.has('resourcePath') ||
             changedProperties.has('entryPointUrl') ||
             changedProperties.has('perPage') ||
             changedProperties.has('disabled') ||
             changedProperties.has('noDefault') ||
+            changedProperties.has('multiple') ||
             changedProperties.has('fetchMode');
-
-        this._ignoreValueUpdate = false;
 
         if (needsUpdate) {
             this._updateAll();
@@ -588,6 +738,7 @@ export class ResourceSelect extends LangMixin(
                         id="${this._selectId}"
                         name="select-resources"
                         class="select"
+                        ?multiple="${this.multiple}"
                         style="visibility: hidden;"></select>
                 </div>
                 <div id="select-resource-dropdown"></div>

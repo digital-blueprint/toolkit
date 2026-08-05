@@ -1260,7 +1260,8 @@ export function getSelect2CSS() {
             border-radius: var(--dbp-border-radius);
         }
 
-        .select2-container--default .select2-selection--single {
+        .select2-container--default .select2-selection--single,
+        .select2-container--default .select2-selection--multiple {
             border-radius: var(--dbp-border-radius);
         }
 
@@ -1268,11 +1269,60 @@ export function getSelect2CSS() {
             color: inherit;
         }
 
-        .select2-container--default .select2-selection--single .select2-selection__clear {
-            font-size: 1.6em;
-            font-weight: 300;
+        /*
+           Select2 renders the clear button as a "×" text character. Its shape,
+           size and vertical position depend on the font in use, so we hide it
+           and draw an icon instead, which we can center reliably.
+        */
+        .select2-container--default .select2-selection--single .select2-selection__clear,
+        .select2-container--default .select2-selection--multiple .select2-selection__clear {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Slightly wider than the icon, to get a reasonable click target.
+               The browser default button padding varies, so reset it. */
+            width: 1em;
+            padding: 0;
             color: var(--dbp-muted);
-            margin-top: -3px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            /* Matches the line height of the rendered selection, so the icon
+               ends up vertically centered on the first line */
+            height: 28px;
+        }
+
+        /* Like for a single selection the clear button is centered on the first line, so it
+           stays in place while entries are added and removed. It shares its height with the
+           entries, so both are centered on the same line regardless of the font metrics. */
+        .select2-container--default .select2-selection--multiple .select2-selection__clear {
+            top: 0;
+            /* Same as the margin-top of the entries below */
+            margin-top: 5px;
+            margin-right: 6px;
+            height: 1.5em;
+            box-sizing: border-box;
+        }
+
+        /* Reserve room for the clear button, so entries can't end up underneath it */
+        .select2-container--default .select2-selection--multiple.select2-selection--clearable {
+            padding-right: calc(1em + 12px);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear > span,
+        .select2-container--default .select2-selection--multiple .select2-selection__clear > span {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear::before,
+        .select2-container--default .select2-selection--multiple .select2-selection__clear::before {
+            content: '';
+            display: block;
+            width: 0.75em;
+            height: 0.75em;
+            background-color: currentColor;
+            mask: url('${unsafeCSS(getIconSVGURL('close'))}') center / contain no-repeat;
+            -webkit-mask: url('${unsafeCSS(getIconSVGURL('close'))}') center / contain no-repeat;
         }
 
         .select2-container--default .select2-selection--multiple .select2-selection__rendered {
@@ -1297,17 +1347,87 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--multiple {
             background-color: var(--dbp-background);
         }
+
+        /* The tags of a multiple selection, styled like the rest of the control instead of
+           the grey default of select2 */
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             background-color: var(--dbp-background);
+            color: inherit;
+            border: var(--dbp-border);
+            border-color: var(--dbp-muted);
+            border-radius: var(--dbp-border-radius);
+            /* Shared with the clear button above, see there. Only a minimum, so that long
+               entries can grow instead of getting cut off. */
+            min-height: 1.5em;
+            box-sizing: border-box;
+            display: inline-flex;
+            align-items: center;
+            /* Wrap long entries instead of cutting them off, like for a single selection */
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            overflow-wrap: break-word;
         }
 
-        .select2-container--default.select2-container--disabled .select2-selection--single {
+        /* Same as for the clear button of a single selection, we replace the "×" text
+           character with an icon we can center reliably */
+        .select2-container--default
+            .select2-selection--multiple
+            .select2-selection__choice__remove {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--dbp-muted);
+            border-right: var(--dbp-border);
+            border-color: var(--dbp-muted);
+            border-top-left-radius: var(--dbp-border-radius);
+            border-bottom-left-radius: var(--dbp-border-radius);
+        }
+
+        .select2-container--default
+            .select2-selection--multiple
+            .select2-selection__choice__remove
+            > span {
+            display: none;
+        }
+
+        .select2-container--default
+            .select2-selection--multiple
+            .select2-selection__choice__remove::before {
+            content: '';
+            display: block;
+            width: 0.75em;
+            height: 0.75em;
+            background-color: currentColor;
+            mask: url('${unsafeCSS(getIconSVGURL('close'))}') center / contain no-repeat;
+            -webkit-mask: url('${unsafeCSS(getIconSVGURL('close'))}') center / contain no-repeat;
+        }
+
+        .select2-container--default
+            .select2-selection--multiple
+            .select2-selection__choice__remove:hover,
+        .select2-container--default
+            .select2-selection--multiple
+            .select2-selection__choice__remove:focus {
+            background-color: transparent;
+            color: var(--dbp-content);
+            outline: none;
+        }
+
+        .select2-container--default.select2-container--disabled .select2-selection--single,
+        .select2-container--default.select2-container--disabled .select2-selection--multiple {
             background-color: var(--dbp-background);
             color: var(--dbp-muted);
             cursor: not-allowed;
         }
 
         .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: var(--dbp-muted);
+        }
+
+        /* With a multiple selection the placeholder is rendered into the inline search field */
+        .select2-container--default .select2-search--inline .select2-search__field::placeholder {
             color: var(--dbp-muted);
         }
 
@@ -1330,6 +1450,7 @@ export function getSelect2CSS() {
         }
 
         .select2-container--default .select2-selection--single,
+        .select2-container--default .select2-selection--multiple,
         .select2-dropdown,
         .select2-search__field,
         .select2-container--default .select2-search--dropdown .select2-search__field {
