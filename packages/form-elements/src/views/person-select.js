@@ -38,11 +38,6 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
         ];
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        this.loadPersonNames();
-    }
-
     updated(changedProperties) {
         super.updated(changedProperties);
 
