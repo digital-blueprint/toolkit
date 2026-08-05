@@ -105,6 +105,10 @@ export class ResourceSelectDemo extends LangMixin(
             console.log('change:', event.detail.value, event.detail.object);
         };
 
+        let changeMultiple = (event) => {
+            console.log('change:', event.detail.values, event.detail.objects);
+        };
+
         return html`
             <section class="section">
                 <div class="container">
@@ -227,6 +231,45 @@ export class ResourceSelectDemo extends LangMixin(
                                     resource-path="base/people"
                                     fetch-mode="search"
                                     @change="${change}"
+                                    .getSearchQueryParameters="${getPersonSearchQueryParameters}"
+                                    .formatResource="${formatPerson}"></dbp-resource-select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="container">
+                    <form>
+                        <div class="field">
+                            <label class="label">Multiple organizations</label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-organization-multiple"
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="base/organizations"
+                                    multiple
+                                    @change="${changeMultiple}"
+                                    .getCollectionQueryParameters="${getOrganizationQueryParameters}"
+                                    .formatResource="${formatResource}"></dbp-resource-select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="container">
+                    <form>
+                        <div class="field">
+                            <label class="label">Multiple persons via search</label>
+                            <div class="control">
+                                <dbp-resource-select
+                                    id="resource-select-person-search-multiple"
+                                    subscribe="auth"
+                                    lang="${this.lang}"
+                                    entry-point-url="${this.entryPointUrl}"
+                                    resource-path="base/people"
+                                    fetch-mode="search"
+                                    multiple
+                                    @change="${changeMultiple}"
                                     .getSearchQueryParameters="${getPersonSearchQueryParameters}"
                                     .formatResource="${formatPerson}"></dbp-resource-select>
                             </div>

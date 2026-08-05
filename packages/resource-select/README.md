@@ -35,6 +35,13 @@ Or directly via CDN:
 - `value` (optional): api path of recource to preload the selector with
     - example `<dbp-resource-select value="/base/people/testuser"></dbp-resource-select>`
     - the `value` will also be set automatically when an organization is chosen in the selector
+- `multiple` (optional): set to allow selecting more than one resource
+    - example `<dbp-resource-select multiple></dbp-resource-select>`
+    - implies `no-default`, since an empty selection is a valid state
+- `values` (optional): api paths of the resources to preload the selector with, as a JSON array
+    - example `<dbp-resource-select multiple values='["/base/people/testuser"]'></dbp-resource-select>`
+    - unlike `value` this attribute is only read once and not updated when resources are chosen,
+      use the `values` property or the `change` event to read the current selection
 - `disabled` (optional): set to disable the selector
     - example `<dbp-resource-select disabled></dbp-resource-select>`
 - `fetch-mode` (optional, default: `prefetch`): set to `search` to search on the server instead of prefetching all resources
@@ -47,6 +54,11 @@ Or directly via CDN:
 
 ### Properties
 
+- `values` {Array}: The api paths of all selected resources. Always an array, also without
+  `multiple`, where it holds at most one entry. Unlike `value` it isn't reflected back to the
+  attribute, so use the property or the `change` event to read the current selection.
+- `valueObjects` {Array}: The resource objects corresponding to `values`. Entries are `null` for
+  resources that couldn't be fetched.
 - `valueObject` (optional): The resource object corresponding to `value`
 - `auth` {object}: you need to set that object property for the auth token
     - example auth property: `{token: "THE_BEARER_TOKEN"}`
@@ -68,7 +80,41 @@ Or directly via CDN:
 
 ### Methods
 
-- `reset()` - Clears the selection when clearing is allowed, otherwise selects the first prefetched resource.
+- `reset()` - Clears the selection when clearing is allowed, otherwise selects the first prefetched
+  resource. With `multiple` the selection is always cleared.
+
+### Multiple Selections
+
+Add the `multiple` attribute to let the user select more than one resource. This works with both
+`fetch-mode="prefetch"` and `fetch-mode="search"`.
+
+`value` and `valueObject` keep working and always mirror the _first_ selected resource, the same
+way `HTMLSelectElement.value` behaves for a native `<select multiple>`. Use `values` and
+`valueObjects` to get the full selection.
+
+```html
+<dbp-resource-select
+    subscribe="auth"
+    entry-point-url="http://127.0.0.1:8000"
+    resource-path="base/people"
+    fetch-mode="search"
+    multiple></dbp-resource-select>
+```
+
+```js
+const personSelect = document.querySelector('dbp-resource-select');
+
+personSelect.addEventListener('change', (event) => {
+    console.log(event.detail.values); // ["/base/people/testuser", ...]
+    console.log(event.detail.objects); // [{...}, ...]
+});
+
+// Preselecting resources
+personSelect.values = ['/base/people/testuser'];
+```
+
+Since `values` is always an array, code that has to work with and without `multiple` can just use
+`values`/`valueObjects` and never has to check whether `multiple` is set.
 
 ### Server-side Search Example
 
@@ -100,6 +146,8 @@ personSelect.formatResource = (select, person) => {
 
 ### Events
 
-- `change` - Gets dispatched when either `value` or `valueObject` change.
+- `change` - Gets dispatched when the selection changes.
     - `event.detail.value` - Same as the `value` property
     - `event.detail.object` - Same as the `valueObject` property
+    - `event.detail.values` - Same as the `values` property
+    - `event.detail.objects` - Same as the `valueObjects` property
