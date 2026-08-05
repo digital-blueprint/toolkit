@@ -470,7 +470,7 @@ export class FormElementsDemo extends LangMixin(
                             name="myComponentPeople"
                             label="My people (multiple)"
                             .auth=${this.auth ?? {}}
-                            .value=${this.getDemoPeopleValue(data)}
+                            .values=${this.getDemoPeopleValue(data)}
                             entry-point-url="${this.entryPointUrl}"
                             multiple
                             ?required=${this.isRequired}></dbp-form-person-select-element>
@@ -714,7 +714,7 @@ export class FormElementsDemo extends LangMixin(
                         label="My people (multiple)"
                         .auth=${this.auth ?? {}}
                         entry-point-url="${this.entryPointUrl}"
-                        .value=${this.getDemoPeopleValue(data)}
+                        .values=${this.getDemoPeopleValue(data)}
                         multiple></dbp-form-person-select-view>
 
                     <dbp-form-resource-select-view
