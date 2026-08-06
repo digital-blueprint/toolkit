@@ -8,6 +8,7 @@ import '../src/build/date';
 import '../src/build/enum';
 import '../src/demo';
 import {DbpPersonSelectElement} from '../src/elements/person-select.js';
+import {DbpPersonSelectView} from '../src/views/person-select.js';
 
 const personSelectTestTag = 'test-dbp-form-person-select-element';
 
@@ -15,6 +16,14 @@ class TestDbpPersonSelectElement extends DbpPersonSelectElement {}
 
 if (!customElements.get(personSelectTestTag)) {
     customElements.define(personSelectTestTag, TestDbpPersonSelectElement);
+}
+
+const personSelectViewTestTag = 'test-dbp-form-person-select-view';
+
+class TestDbpPersonSelectView extends DbpPersonSelectView {}
+
+if (!customElements.get(personSelectViewTestTag)) {
+    customElements.define(personSelectViewTestTag, TestDbpPersonSelectView);
 }
 suite('dbp-form-boolean-element', () => {
     let node;
@@ -204,15 +213,46 @@ suite('dbp-form-person-select-element', () => {
         assert.deepEqual(resourceSelect.values, ['/base/people/person-1', '/base/people/person-2']);
     });
 
-    test('keeps only the first value in single mode', async () => {
-        node.multiple = false;
+    test('normalizes the public value when switching to single mode', async () => {
+        node.multiple = true;
         node.value = ['person-1', 'person-2'];
+
+        await node.updateComplete;
+
+        node.multiple = false;
 
         await node.updateComplete;
 
         const resourceSelect = node.shadowRoot.querySelector('dbp-resource-select');
 
+        assert.equal(node.value, 'person-1');
         assert.isFalse(resourceSelect.multiple);
         assert.deepEqual(resourceSelect.values, ['/base/people/person-1']);
+    });
+    suite('dbp-form-person-select-view', () => {
+        let node;
+
+        setup(async () => {
+            node = document.createElement(personSelectViewTestTag);
+            document.body.appendChild(node);
+            await node.updateComplete;
+        });
+
+        teardown(() => {
+            node.remove();
+        });
+
+        test('keeps the first person when switching to single mode', async () => {
+            node.multiple = true;
+            node.value = ['person-1', 'person-2'];
+
+            await node.updateComplete;
+
+            node.multiple = false;
+            await node.loadPersonNames();
+
+            assert.deepEqual(node.normalizeValues(), ['person-1']);
+            assert.equal(node.name, 'person-1');
+        });
     });
 });

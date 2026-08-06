@@ -36,6 +36,17 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
 
         return value.startsWith('/base/people/') ? value.replace('/base/people/', '') : value;
     }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+
+        if (
+            !this.multiple &&
+            Array.isArray(this.value) &&
+            (changedProperties.has('multiple') || changedProperties.has('value'))
+        ) {
+            this.value = this.normalizePersonValues(this.value)[0] ?? '';
+        }
+    }
 
     normalizePersonValues(value = this.value) {
         const values = Array.isArray(value) ? value : value ? [value] : [];

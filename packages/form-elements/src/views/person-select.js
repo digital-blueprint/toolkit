@@ -37,7 +37,6 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
             `,
         ];
     }
-
     updated(changedProperties) {
         super.updated(changedProperties);
 
@@ -60,17 +59,11 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
     }
 
     normalizeValues() {
-        const values = this.multiple
-            ? Array.isArray(this.value)
-                ? this.value
-                : this.value
-                  ? [this.value]
-                  : []
-            : this.value
-              ? [this.value]
-              : [];
+        const values = Array.isArray(this.value) ? this.value : this.value ? [this.value] : [];
 
-        return values.map((value) => this.normalizePersonId(value)).filter(Boolean);
+        const selectedValues = this.multiple ? values : values.slice(0, 1);
+
+        return selectedValues.map((value) => this.normalizePersonId(value)).filter(Boolean);
     }
 
     getPersonUrl(personId) {
