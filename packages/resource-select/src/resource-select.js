@@ -461,10 +461,14 @@ export class ResourceSelect extends LangMixin(
             return;
         }
 
-        const $select = this._getSelect2();
         const results = await Promise.allSettled(
             this.values.map((value) => this._fetchResource(value)),
         );
+
+        // Another update may have added the entries already while we were fetching, so we
+        // start from scratch instead of showing the same entry multiple times
+        const $select = this._getSelect2();
+        $select.empty();
 
         /** @type {string[]} */
         const ids = [];

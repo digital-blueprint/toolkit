@@ -276,6 +276,40 @@ suite('dbp-resource-select basics', () => {
         assert.equal(node.value, null);
     });
 
+    test('should not duplicate the selected entries on overlapping updates', async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = async (url) => {
+            const id = String(url).replace(/^.*(\/base\/organizations\/[^?]*).*$/, '$1');
+            return new Response(JSON.stringify({'@id': id, name: 'Alpha'}), {
+                status: 200,
+                headers: {'Content-Type': 'application/ld+json'},
+            });
+        };
+
+        try {
+            node.multiple = true;
+            node.fetchMode = 'search';
+            node.entryPointUrl = 'https://api.example.com';
+            node.auth = {'login-status': 'logged-in', token: 'token'};
+            node.values = ['/base/organizations/1'];
+            await node.updateComplete;
+
+            // Several properties arriving after each other start overlapping updates, which
+            // must not add the same entry to the selection more than once
+            await Promise.all([
+                node._updateSearchValue(),
+                node._updateSearchValue(),
+                node._updateSearchValue(),
+            ]);
+
+            const options = node.shadowRoot.querySelectorAll('#' + node._selectId + ' option');
+            assert.equal(options.length, 1);
+            assert.deepEqual(node.values, ['/base/organizations/1']);
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+    });
+
     test('should not refresh select2 when auth token refreshes', async () => {
         let updateCount = 0;
         node._updateAll = () => {
