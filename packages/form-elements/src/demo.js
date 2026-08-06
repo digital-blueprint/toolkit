@@ -36,6 +36,10 @@ export class FormElementsDemo extends LangMixin(
         this.enumItems = {item1: 'Item 1', item2: 'Item 2'};
         this.isRequired = true;
         this.entryPointUrl = '';
+        // The current selection of the person select elements, so it survives a rerender of the
+        // demo, which happens for example when the auth token gets refreshed after a focus change
+        this.personValue = null;
+        this.peopleValue = null;
     }
 
     static get scopedElements() {
@@ -66,6 +70,8 @@ export class FormElementsDemo extends LangMixin(
             isRequired: {type: Boolean, attribute: false},
             data: {type: Object, attribute: false},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            personValue: {type: String, attribute: false},
+            peopleValue: {type: Array, attribute: false},
         };
     }
 
@@ -148,6 +154,14 @@ export class FormElementsDemo extends LangMixin(
 
         const personId = this.auth?.['person-id'];
         return personId ? [personId] : [];
+    }
+
+    getDemoPersonElementValue(data) {
+        return this.personValue ?? this.getDemoPersonValue(data);
+    }
+
+    getDemoPeopleElementValue(data) {
+        return this.peopleValue ?? this.getDemoPeopleValue(data);
     }
 
     render() {
@@ -461,7 +475,10 @@ export class FormElementsDemo extends LangMixin(
                             name="myComponentPerson"
                             label="My person"
                             .auth=${this.auth ?? {}}
-                            .value=${this.getDemoPersonValue(data)}
+                            .value=${this.getDemoPersonElementValue(data)}
+                            @change=${(e) => {
+                                this.personValue = e.detail.value;
+                            }}
                             entry-point-url="${this.entryPointUrl}"
                             ?required=${this.isRequired}></dbp-form-person-select-element>
 
@@ -470,7 +487,10 @@ export class FormElementsDemo extends LangMixin(
                             name="myComponentPeople"
                             label="My people (multiple)"
                             .auth=${this.auth ?? {}}
-                            .value=${this.getDemoPeopleValue(data)}
+                            .value=${this.getDemoPeopleElementValue(data)}
+                            @change=${(e) => {
+                                this.peopleValue = e.detail.values;
+                            }}
                             entry-point-url="${this.entryPointUrl}"
                             multiple
                             ?required=${this.isRequired}></dbp-form-person-select-element>

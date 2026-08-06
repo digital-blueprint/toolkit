@@ -9,12 +9,18 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
         this.entryPointUrl = '';
         this.value = '';
         this.multiple = false;
+        this._personSelectValues = [];
     }
 
     static get properties() {
         return {
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            // With "multiple" the value is an array, which must not be reflected: the attribute
+            // would become a comma separated string and the attribute observer of
+            // AdapterLitElement would write that string back into the value, turning the whole
+            // selection into a single unknown person identifier
+            value: {type: String, reflect: false},
             multiple: {type: Boolean},
         };
     }
@@ -57,7 +63,16 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
     }
 
     getPersonSelectValues() {
-        return this.normalizePersonValues().map((personId) => `/base/people/${personId}`);
+        const values = this.normalizePersonValues().map((personId) => `/base/people/${personId}`);
+
+        if (
+            values.length !== this._personSelectValues.length ||
+            values.some((value, index) => value !== this._personSelectValues[index])
+        ) {
+            this._personSelectValues = values;
+        }
+
+        return this._personSelectValues;
     }
 
     getPersonSearchQueryParameters(select, searchTerm) {
@@ -102,6 +117,18 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
               : [];
 
         const personIds = this.normalizePersonValues(resourceValues);
+        const currentPersonIds = this.normalizePersonValues();
+
+        if (
+            personIds.length === currentPersonIds.length &&
+            personIds.every((personId, index) => personId === currentPersonIds[index])
+        ) {
+            return;
+        }
+
+        if (Array.isArray(event.detail?.values)) {
+            this._personSelectValues = event.detail.values;
+        }
 
         this.value = this.multiple ? personIds : (personIds[0] ?? '');
         this.dispatchValueChange();
@@ -115,8 +142,8 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
         return html`
             <dbp-resource-select
                 .auth=${this.auth ?? {}}
+                .multiple=${this.multiple}
                 .values=${this.getPersonSelectValues()}
-                ?multiple=${this.multiple}
                 ?disabled=${this.disabled}
                 lang="${this.lang}"
                 resource-path="/base/people"
