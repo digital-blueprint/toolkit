@@ -7,14 +7,13 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
         super();
         this.name = '';
         this.multiple = false;
-        this._loadGeneration = 0;
+        this._loadRequestId = 0;
     }
 
     static get properties() {
         return {
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
-            value: {attribute: 'value'},
             name: {type: String, attribute: 'name'},
             multiple: {type: Boolean},
         };
@@ -90,7 +89,7 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
 
     async loadPersonNames() {
         const personIds = this.normalizeValues();
-        const generation = ++this._loadGeneration;
+        const loadRequestId = ++this._loadRequestId;
 
         if (personIds.length === 0) {
             this.name = '';
@@ -113,7 +112,7 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
             }),
         );
 
-        if (generation === this._loadGeneration) {
+        if (loadRequestId === this._loadRequestId) {
             this.name = names.join('\n');
         }
     }
