@@ -209,6 +209,8 @@ No additional attributes beyond the general ones. The datetime element uses an H
 
 #### Person Select Element (form element)
 
+Lets the user search for persons and select one, or several with `multiple`.
+
 ```html
 <dbp-form-person-select-element
     subscribe="lang auth"
@@ -218,9 +220,35 @@ No additional attributes beyond the general ones. The datetime element uses an H
     required></dbp-form-person-select-element>
 ```
 
+Multiple selection, the value is an array of person identifiers:
+
+```html
+<dbp-form-person-select-element
+    subscribe="lang auth"
+    name="myPeople"
+    label="My people"
+    entry-point-url="https://api.example.com"
+    .value=${['person-identifier-1', 'person-identifier-2']}
+    multiple></dbp-form-person-select-element>
+```
+
 - `entry-point-url`: Base URL of the API entry point
     - Type: String
     - Required for fetching persons
+- `multiple` (optional, default: `false`): Indicates if several persons can be selected
+    - Type: Boolean
+    - Example: `<dbp-form-person-select-element multiple></dbp-form-person-select-element>`
+- `value`: The selected person identifier, or an array of identifiers with `multiple`
+    - Type: String/Array
+    - Identifiers are stored without the `/base/people/` prefix, both notations are accepted as input
+    - Always use the `.value` property for `multiple`, since an array cannot be passed as an attribute
+
+The `change` event contains the selected person identifiers, `values` is always an array:
+
+```js
+// {fieldName: 'myPeople', name: 'myPeople', value: ['person-1'], values: ['person-1']}
+event.detail;
+```
 
 #### Resource Select Element
 
@@ -351,6 +379,7 @@ Displays a datetime value formatted with date, time, and timezone using the `de-
 #### Person Select View
 
 Fetches and displays a person's full name from the API using the stored person identifier.
+With `multiple` all selected persons are resolved and shown one per line.
 
 ```html
 <dbp-form-person-select-view
@@ -360,8 +389,23 @@ Fetches and displays a person's full name from the API using the stored person i
     .value=${'person-identifier'}></dbp-form-person-select-view>
 ```
 
+```html
+<dbp-form-person-select-view
+    subscribe="lang auth"
+    label="My people"
+    entry-point-url="https://api.example.com"
+    .value=${['person-identifier-1', 'person-identifier-2']}
+    multiple></dbp-form-person-select-view>
+```
+
 - `entry-point-url`: Base URL of the API entry point used to resolve the person name
     - Type: String
+- `multiple` (optional, default: `false`): Indicates if several persons should be displayed
+    - Type: Boolean
+    - Without `multiple` only the first person of an array value is shown
+- `value`: The person identifier, or an array of identifiers with `multiple`
+    - Type: String/Array
+    - Always use the `.value` property for `multiple`, since an array cannot be passed as an attribute
 
 #### Resource Select View
 
