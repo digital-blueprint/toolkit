@@ -1,6 +1,12 @@
 import {createInstance} from './i18n.js';
 import {html, css, unsafeCSS} from 'lit';
-import {ScopedElementsMixin, LangMixin, getIconSVGURL, MiniSpinner} from '@dbp-toolkit/common';
+import {
+    ScopedElementsMixin,
+    LangMixin,
+    getIconSVGURL,
+    MiniSpinner,
+    IconButton,
+} from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -10,6 +16,12 @@ import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {downloadExcel, generatePDFDownload} from './utils.js';
 import {sendNotification} from '@dbp-toolkit/common';
+import {ColumnConfigurationModal} from './column-configuration-modal.js';
+import {
+    cloneColumnDefinitions,
+    createColumnConfiguration,
+    reconcileColumnConfiguration,
+} from './column-configuration.js';
 
 export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -37,12 +49,21 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.isCollapsible = false;
         this.overflowYScrollEnabled = false;
         this.selectedRowCount = 0;
+        this.columnConfigurationEnabled = false;
+        this.columnConfigurationStorageKey = '';
+        this.columnConfigurationExcludedFields = [];
+        this.defaultColumnDefinitions = [];
+        this.defaultColumnConfiguration = [];
+        this.currentColumnConfiguration = [];
+        this.columnConfigurationApplying = false;
     }
 
     static get scopedElements() {
         return {
             ...super.scopedElements,
             'dbp-mini-spinner': MiniSpinner,
+            'dbp-icon-button': IconButton,
+            'dbp-tabulator-column-configuration-modal': ColumnConfigurationModal,
         };
     }
 
@@ -67,6 +88,16 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             tableReady: {type: Boolean, attribute: false},
             tableBuilding: {type: Boolean, attribute: false},
             selectedRowCount: {type: Number},
+            columnConfigurationEnabled: {
+                type: Boolean,
+                attribute: 'column-configuration-enabled',
+            },
+            columnConfigurationStorageKey: {
+                type: String,
+                attribute: 'column-configuration-storage-key',
+            },
+            columnConfigurationExcludedFields: {type: Array, attribute: false},
+            currentColumnConfiguration: {type: Array, attribute: false},
         };
     }
 
@@ -76,6 +107,18 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             if (propName === 'lang') {
                 if (this.tabulatorTable) {
                     this.setTableLocale();
+                    if (this.columnConfigurationEnabled) {
+                        const currentConfiguration = this.currentColumnConfiguration;
+                        this.defaultColumnConfiguration = createColumnConfiguration(
+                            this.defaultColumnDefinitions,
+                            this.columnConfigurationExcludedFields,
+                            this.getLang()?.columns,
+                        );
+                        this.currentColumnConfiguration = reconcileColumnConfiguration(
+                            this.defaultColumnConfiguration,
+                            currentConfiguration,
+                        );
+                    }
                 }
             } else if (
                 propName === 'options' &&
@@ -85,6 +128,35 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 !this.initialization
             ) {
                 this.buildTable();
+            } else if (
+                propName === 'columnConfigurationEnabled' &&
+                this.columnConfigurationEnabled &&
+                this.tableReady
+            ) {
+                this.initializeColumnConfiguration();
+            } else if (
+                propName === 'columnConfigurationExcludedFields' &&
+                this.columnConfigurationEnabled &&
+                this.tableReady
+            ) {
+                this.defaultColumnConfiguration = createColumnConfiguration(
+                    this.defaultColumnDefinitions,
+                    this.columnConfigurationExcludedFields,
+                    this.getLang()?.columns,
+                );
+                this.syncCurrentColumnConfiguration();
+            } else if (
+                propName === 'columnConfigurationStorageKey' &&
+                this.columnConfigurationEnabled &&
+                this.tableReady
+            ) {
+                this.applyColumnConfiguration(
+                    reconcileColumnConfiguration(
+                        this.defaultColumnConfiguration,
+                        this.loadColumnConfiguration(),
+                    ),
+                    {persist: false, dispatchEvent: false},
+                );
             }
         });
     }
@@ -102,6 +174,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             this.tabulatorTable.off('tableBuilt');
             this.tabulatorTable.off('rowClick');
             this.tabulatorTable.off('columnVisibilityChanged');
+            this.tabulatorTable.off('columnMoved');
             this.tabulatorTable.off('pageLoaded');
         }
 
@@ -262,6 +335,15 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 this.dispatchEvent(collapseEvent);
                 this.updateSelectionState();
             }
+
+            if (this.columnConfigurationEnabled && !this.columnConfigurationApplying) {
+                this.syncCurrentColumnConfiguration();
+            }
+        });
+        this.tabulatorTable.on('columnMoved', () => {
+            if (this.columnConfigurationEnabled && !this.columnConfigurationApplying) {
+                this.syncCurrentColumnConfiguration();
+            }
         });
 
         /**
@@ -295,11 +377,11 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         });
     }
 
-    tableBuildFunctions() {
+    async tableBuildFunctions() {
         if (!this.tabulatorTable) return;
         this.setTableLocale();
         if (Array.isArray(this.data) && this.data.length > 0) {
-            this.tabulatorTable.setData(this.data);
+            await this.tabulatorTable.setData(this.data);
         }
         /**
          * Change cursor to pointer on hover if rows are selectable
@@ -340,6 +422,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 paginationSizeDropdown.parentNode.insertBefore(wrapper, paginationSizeDropdown);
                 wrapper.appendChild(paginationSizeDropdown);
             }
+        }
+
+        if (this.columnConfigurationEnabled) {
+            this.initializeColumnConfiguration();
         }
 
         const tableBuiltEvent = new CustomEvent('dbp-tabulator-table-built', {
@@ -457,7 +543,15 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     setData(data) {
         if (!this.tabulatorTable) return;
         this.data = data;
-        this.tabulatorTable.setData(this.data);
+        const setDataResult = this.tabulatorTable.setData(this.data);
+        if (
+            this.columnConfigurationEnabled &&
+            this.options.autoColumns &&
+            (!Array.isArray(data) || data.length > 0)
+        ) {
+            Promise.resolve(setDataResult).then(() => this.refreshAutoColumnConfiguration());
+        }
+        return setDataResult;
     }
 
     clearData() {
@@ -502,11 +596,270 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     setColumns(newColumns) {
         if (!this.tabulatorTable) return;
         this.tabulatorTable.setColumns(newColumns);
+        if (this.columnConfigurationEnabled) {
+            this.initializeColumnConfiguration();
+        }
     }
 
     getColumnDefinitions() {
         if (!this.tabulatorTable) return;
         return this.tabulatorTable.getColumnDefinitions();
+    }
+
+    initializeColumnConfiguration() {
+        if (!this.tabulatorTable) return;
+
+        const definitions = this.getColumnDefinitions();
+        if (!Array.isArray(definitions)) return;
+
+        this.defaultColumnDefinitions = cloneColumnDefinitions(definitions);
+        this.defaultColumnConfiguration = createColumnConfiguration(
+            this.defaultColumnDefinitions,
+            this.columnConfigurationExcludedFields,
+            this.getLang()?.columns,
+        );
+
+        const storedConfiguration = this.loadColumnConfiguration();
+        this.currentColumnConfiguration = reconcileColumnConfiguration(
+            this.defaultColumnConfiguration,
+            storedConfiguration,
+        );
+
+        if (storedConfiguration) {
+            this.applyColumnConfigurationToTable(this.currentColumnConfiguration);
+        } else {
+            this.syncCurrentColumnConfiguration();
+        }
+    }
+
+    refreshAutoColumnConfiguration() {
+        const currentConfiguration = this.currentColumnConfiguration;
+        this.defaultColumnDefinitions = cloneColumnDefinitions(this.getColumnDefinitions());
+        this.defaultColumnConfiguration = createColumnConfiguration(
+            this.defaultColumnDefinitions,
+            this.columnConfigurationExcludedFields,
+            this.getLang()?.columns,
+        );
+        this.currentColumnConfiguration = reconcileColumnConfiguration(
+            this.defaultColumnConfiguration,
+            currentConfiguration,
+        );
+        this.applyColumnConfigurationToTable(this.currentColumnConfiguration);
+    }
+
+    async openColumnConfiguration() {
+        if (!this.columnConfigurationEnabled || !this.tabulatorTable) return;
+
+        const modal = this.renderRoot.querySelector('dbp-tabulator-column-configuration-modal');
+        if (!modal) return;
+
+        modal.columns = this.currentColumnConfiguration;
+        modal.defaultColumns = this.defaultColumnConfiguration;
+        await modal.open();
+    }
+
+    getColumnConfiguration() {
+        return this.currentColumnConfiguration.map(({field, visible}) => ({field, visible}));
+    }
+
+    applyColumnConfiguration(configuration, options = {}) {
+        if (!this.tabulatorTable || !Array.isArray(configuration)) return;
+
+        const reconciledConfiguration = reconcileColumnConfiguration(
+            this.defaultColumnConfiguration,
+            configuration,
+        );
+        this.currentColumnConfiguration = reconciledConfiguration;
+        this.applyColumnConfigurationToTable(reconciledConfiguration);
+
+        if (options.persist !== false) {
+            this.storeColumnConfiguration();
+        }
+
+        if (options.dispatchEvent !== false) {
+            this.dispatchEvent(
+                new CustomEvent('dbp-tabulator-table-column-configuration-changed', {
+                    detail: {
+                        tableId: this.identifier,
+                        columns: this.getColumnConfiguration(),
+                    },
+                    bubbles: true,
+                    composed: true,
+                }),
+            );
+        }
+    }
+
+    resetColumnConfiguration() {
+        this.removeStoredColumnConfiguration();
+        this.applyColumnConfiguration(this.defaultColumnConfiguration, {persist: false});
+    }
+
+    handleColumnConfigurationSave(event) {
+        this.applyColumnConfiguration(event.detail.columns);
+    }
+
+    applyColumnConfigurationToTable(configuration) {
+        const configurationByField = new Map(
+            configuration.map((column, index) => [column.field, {...column, index}]),
+        );
+        const columns = this.tabulatorTable.getColumns(true);
+
+        this.columnConfigurationApplying = true;
+        try {
+            this.updateColumnVisibility(columns, configurationByField);
+            const responsiveLayout = this.tabulatorTable.modules?.responsiveLayout;
+            responsiveLayout?.initializeResponsivity?.();
+            responsiveLayout?.update?.();
+            this.reorderColumnComponents(columns, configurationByField);
+        } finally {
+            this.columnConfigurationApplying = false;
+            this.syncCurrentColumnConfiguration();
+        }
+    }
+
+    updateColumnVisibility(columns, configurationByField) {
+        for (const column of columns) {
+            const subColumns = column.getSubColumns?.() || [];
+            if (subColumns.length > 0) {
+                this.updateColumnVisibility(subColumns, configurationByField);
+                continue;
+            }
+
+            const configured = configurationByField.get(column.getField?.());
+            if (!configured) continue;
+
+            const responsiveState = column._column?.modules?.responsive;
+            const wasConfiguredVisible = responsiveState?.visible;
+            if (responsiveState && typeof responsiveState.visible === 'boolean') {
+                responsiveState.visible = configured.visible;
+            }
+
+            if (
+                configured.visible &&
+                !column.isVisible() &&
+                (!responsiveState || wasConfiguredVisible === false)
+            ) {
+                column.show();
+            } else if (!configured.visible && column.isVisible()) {
+                column.hide();
+            }
+        }
+    }
+
+    reorderColumnComponents(columns, configurationByField) {
+        for (const column of columns) {
+            const subColumns = column.getSubColumns?.() || [];
+            if (subColumns.length > 0) {
+                this.reorderColumnComponents(subColumns, configurationByField);
+            }
+        }
+
+        const currentColumns = [...columns];
+        const configurableIndexes = [];
+        const configuredColumns = [];
+        currentColumns.forEach((column, index) => {
+            const field = column.getField?.();
+            if ((column.getSubColumns?.() || []).length === 0 && configurationByField.has(field)) {
+                configurableIndexes.push(index);
+                configuredColumns.push(column);
+            }
+        });
+        configuredColumns.sort(
+            (first, second) =>
+                configurationByField.get(first.getField()).index -
+                configurationByField.get(second.getField()).index,
+        );
+
+        configurableIndexes.forEach((targetIndex, configuredIndex) => {
+            const sourceColumn = configuredColumns[configuredIndex];
+            const sourceIndex = currentColumns.indexOf(sourceColumn);
+            if (sourceIndex === targetIndex) return;
+
+            const targetColumn = currentColumns[targetIndex];
+            const moveAfterTarget = sourceIndex < targetIndex;
+            this.tabulatorTable.moveColumn(sourceColumn, targetColumn, moveAfterTarget);
+            currentColumns.splice(sourceIndex, 1);
+            const updatedTargetIndex = currentColumns.indexOf(targetColumn);
+            currentColumns.splice(updatedTargetIndex + (moveAfterTarget ? 1 : 0), 0, sourceColumn);
+        });
+    }
+
+    syncCurrentColumnConfiguration() {
+        const liveConfiguration = createColumnConfiguration(
+            this.getColumnDefinitions(),
+            this.columnConfigurationExcludedFields,
+            this.getLang()?.columns,
+        );
+        const columnsByField = new Map();
+        this.collectLeafColumnComponents(this.tabulatorTable.getColumns(true), columnsByField);
+        this.currentColumnConfiguration = liveConfiguration.map((column) => ({
+            ...column,
+            visible: this.getConfiguredColumnVisibility(columnsByField.get(column.field), column),
+        }));
+    }
+
+    getConfiguredColumnVisibility(column, fallbackConfiguration) {
+        const responsiveVisibility = column?._column?.modules?.responsive?.visible;
+        if (typeof responsiveVisibility === 'boolean') return responsiveVisibility;
+        return column?.isVisible() ?? fallbackConfiguration.visible;
+    }
+
+    collectLeafColumnComponents(columns, columnsByField) {
+        for (const column of columns) {
+            const subColumns = column.getSubColumns?.() || [];
+            if (subColumns.length > 0) {
+                this.collectLeafColumnComponents(subColumns, columnsByField);
+            } else if (column.getField?.()) {
+                columnsByField.set(column.getField(), column);
+            }
+        }
+    }
+
+    getColumnConfigurationStorageKey() {
+        if (!this.columnConfigurationStorageKey) return null;
+        return `dbp-tabulator-table-column-configuration-${this.columnConfigurationStorageKey}`;
+    }
+
+    loadColumnConfiguration() {
+        const storageKey = this.getColumnConfigurationStorageKey();
+        if (!storageKey) return null;
+
+        try {
+            const value = localStorage.getItem(storageKey);
+            if (!value) return null;
+
+            const stored = JSON.parse(value);
+            return stored?.version === 1 && Array.isArray(stored.columns) ? stored.columns : null;
+        } catch (error) {
+            console.warn('Unable to restore the Tabulator column configuration.', error);
+            return null;
+        }
+    }
+
+    storeColumnConfiguration() {
+        const storageKey = this.getColumnConfigurationStorageKey();
+        if (!storageKey) return;
+
+        try {
+            localStorage.setItem(
+                storageKey,
+                JSON.stringify({version: 1, columns: this.getColumnConfiguration()}),
+            );
+        } catch (error) {
+            console.warn('Unable to store the Tabulator column configuration.', error);
+        }
+    }
+
+    removeStoredColumnConfiguration() {
+        const storageKey = this.getColumnConfigurationStorageKey();
+        if (!storageKey) return;
+
+        try {
+            localStorage.removeItem(storageKey);
+        } catch (error) {
+            console.warn('Unable to remove the Tabulator column configuration.', error);
+        }
     }
 
     getColumnsFields() {
@@ -669,7 +1022,18 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
+            ${commonStyles.getButtonCSS()}
             ${tabulatorStyles.getTabulatorStyles()}
+
+            .column-configuration-toolbar {
+                display: flex;
+                justify-content: flex-end;
+                min-height: 2.5rem;
+            }
+
+            .column-configuration-toolbar dbp-icon-button {
+                font-size: 1.25rem;
+            }
 
             .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
                 padding-top: 4px;
@@ -900,6 +1264,34 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         return html`
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}" />
+
+                ${
+                    this.columnConfigurationEnabled
+                        ? html`
+                              <div class="column-configuration-toolbar">
+                                  <dbp-icon-button
+                                      no-spinner-on-click
+                                      type="is-secondary"
+                                      icon-name="cog"
+                                      ?disabled=${!this.tableReady}
+                                      title=${this._i18n.t(
+                                          'tabulator-table.column-configuration.open',
+                                      )}
+                                      aria-label=${this._i18n.t(
+                                          'tabulator-table.column-configuration.open',
+                                      )}
+                                      @click=${() =>
+                                          this.openColumnConfiguration()}></dbp-icon-button>
+                              </div>
+                              <dbp-tabulator-column-configuration-modal
+                                  .lang=${this.lang}
+                                  @column-configuration-save=${(event) =>
+                                      this.handleColumnConfigurationSave(
+                                          event,
+                                      )}></dbp-tabulator-column-configuration-modal>
+                          `
+                        : ''
+                }
 
                 <div class="table-wrapper">
                     <div class="${classMap({hidden: this.tableReady, 'spinner-container': true})}">

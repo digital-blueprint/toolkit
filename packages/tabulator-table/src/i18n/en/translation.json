@@ -1,7 +1,6 @@
 {
     "add-data": "Add data",
     "collapse-all": "Collapse all",
-    "column-settings": "Column settings",
     "columns": {
         "age": "Age",
         "all": "All columns",
@@ -17,6 +16,8 @@
         "starts": "starts with"
     },
     "delete-rows": "Delete selected rows",
+    "demo-column-configuration-description": "Use the settings button to reorder columns or change their visibility. The configuration is persisted for this demo table.",
+    "demo-column-configuration-title": "Tabulator table - column configuration",
     "demo-title": "Tabulator Table Demo",
     "deselect-all": "Deselect all",
     "download": "Download",
@@ -25,13 +26,24 @@
     "filter": "Filter table",
     "new-age": "new age",
     "remove-filters": "Remove filters",
-    "reset-settings": "Reset all",
-    "save-settings": "Save",
     "search-bar": "Search",
     "select-all": "Select all",
     "select-column": "Select column:",
     "select-operator": "Select operator:",
     "tabulator-table": {
+        "column-configuration": {
+            "cancel": "Cancel",
+            "hide-all": "Hide all",
+            "hide-column": "Hide {{column}}",
+            "move-down": "Move {{column}} down",
+            "move-up": "Move {{column}} up",
+            "open": "Configure columns",
+            "reset": "Reset",
+            "save": "Save",
+            "show-all": "Show all",
+            "show-column": "Show {{column}}",
+            "title": "Column settings"
+        },
         "download-error-message": "Something went wrong during the export.",
         "download-success-message": "Successful export. Check your download folder for the exported files.",
         "error-title": "Error",

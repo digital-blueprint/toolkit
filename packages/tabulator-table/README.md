@@ -58,6 +58,11 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
       than 0 (e.g. `responsive:3`) and to set the columns' width so that they will not all fit into the tabulator
 - `overflow-y-scroll-enabled` (optional bool, default: `false`): enables vertical scrolling within the table body
     - example `<dbp-tabulator-table overflow-y-scroll-enabled></dbp-tabulator-table>`
+- `column-configuration-enabled` (optional bool, default: `false`): shows a dialog for changing column visibility and order
+    - example `<dbp-tabulator-table column-configuration-enabled></dbp-tabulator-table>`
+- `column-configuration-storage-key` (optional string): persists column visibility and order under the provided application-specific key
+    - example `<dbp-tabulator-table column-configuration-enabled column-configuration-storage-key="people-table"></dbp-tabulator-table>`
+- `columnConfigurationExcludedFields` (optional string array, property only): fields that must not be changed in the column configuration dialog
 - `select-rows-enabled` (optional bool, default: `false`):
   allows the user to select rows by clicking on them.
   When enabled, the component also emits selection-count updates through the `dbp-tabulator-table-selection-count-changed` event.
@@ -65,14 +70,15 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
 
 ### Events
 
-| Event                                             | Description                                                |
-| ------------------------------------------------- | ---------------------------------------------------------- |
-| `dbp-tabulator-table-collapsible-event`           | Event to tell if the component is in collapsible state     |
-| `dbp-tabulator-table-row-selection-changed-event` | Tabulator table `rowSelectionChanged` event (Column event) |
-| `dbp-tabulator-table-built`                       | Fired after table is built (Table event)                   |
-| `dbp-tabulator-table-page-loaded-event`           | Fired after pagination, when the page is loaded            |
-| `dbp-tabulator-table-render-complete-event`       | Fire after the table has been rendered (Layout Event)      |
-| `dbp-tabulator-table-selection-count-changed`     | Fired when the selected row count changes                  |
+| Event                                              | Description                                                |
+| -------------------------------------------------- | ---------------------------------------------------------- |
+| `dbp-tabulator-table-collapsible-event`            | Event to tell if the component is in collapsible state     |
+| `dbp-tabulator-table-row-selection-changed-event`  | Tabulator table `rowSelectionChanged` event (Column event) |
+| `dbp-tabulator-table-built`                        | Fired after table is built (Table event)                   |
+| `dbp-tabulator-table-page-loaded-event`            | Fired after pagination, when the page is loaded            |
+| `dbp-tabulator-table-render-complete-event`        | Fire after the table has been rendered (Layout Event)      |
+| `dbp-tabulator-table-selection-count-changed`      | Fired when the selected row count changes                  |
+| `dbp-tabulator-table-column-configuration-changed` | Fired after a column configuration is applied              |
 
 ### Selection count event
 
@@ -146,6 +152,32 @@ For example, one app can show it in a status bar, while another app can use it t
 - `getPage()`: returns the current table page.
 - `setPage()`: sets the current table page.
 - `getLang()`: returns the lang parameter.
+- `openColumnConfiguration()`: opens the column configuration dialog.
+- `getColumnConfiguration()`: returns the current field order and visibility.
+- `applyColumnConfiguration(configuration, options)`: applies a field order and visibility configuration.
+- `resetColumnConfiguration()`: restores the initial column definitions and removes persisted settings.
+
+### Column configuration
+
+Column configuration is opt-in and works with explicit and automatically generated columns. Frozen columns, responsive-collapse columns, fieldless columns, duplicate fields, and fields listed in `columnConfigurationExcludedFields` are not configurable. Within grouped headers, columns can only be reordered among siblings.
+
+Only field order and visibility are persisted. Complete definitions, formatter callbacks, sorter callbacks, and translated titles remain in the current application configuration.
+
+```js
+const table = document.querySelector('dbp-tabulator-table');
+table.columnConfigurationEnabled = true;
+table.columnConfigurationStorageKey = 'people-table-current-user';
+table.columnConfigurationExcludedFields = ['actions'];
+table.options = {
+    columns: [
+        {title: 'Name', field: 'name'},
+        {title: 'Email', field: 'email'},
+        {title: '', field: 'actions', frozen: true, formatter: actionsFormatter},
+    ],
+};
+```
+
+The storage key must include any application, table, or user namespace needed to prevent settings from being shared unintentionally.
 
 ### Note
 
