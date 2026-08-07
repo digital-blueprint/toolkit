@@ -1,16 +1,16 @@
 ## Login notification Web Component
 
-you can use this web component to show a login notification.
-dbp-login-required web component informs users that they must log in before they can use an application.
+You can use this web component to show a login notification.
+`dbp-login-required-warning` web component informs users that they must log in before they can use an application.
 
 It replaces duplicated login-warning markup in individual applications and provides one consistent implementation for:
 
-- displaying the login-required message;
-- hiding the message while authentication or translations are loading;
-- hiding the message after the user has logged in;
-- translating the message and login-link text;
-- notifying the consuming application when login is requested;
-- applying the app-shell notification styles.
+- Displaying the login-required message
+- Hiding the message while authentication or translations are loading
+- Hiding the message after the user has logged in
+- Translating the message and login-link text
+- Notifying the consuming application when login is requested
+- Applying the app-shell notification styles
 
 The component does not perform authentication itself.
 
@@ -144,7 +144,7 @@ Global application-level defaults can be set on :root:
 
 ### Accessibility
 
-use `role="alert"` for the login-required message;
+Use `role="alert"` for the login-required message;
 
 ```html
 <div class="notification is-warning" role="alert">...</div>
