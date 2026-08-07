@@ -45,12 +45,29 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
     willUpdate(changedProperties) {
         super.willUpdate(changedProperties);
 
+        if (!changedProperties.has('multiple') && !changedProperties.has('value')) {
+            return;
+        }
+
+        // The value can be handed in from the outside as a resource path like
+        // "/base/people/<id>", as a plain identifier, or as an array of both. We always keep it
+        // normalized to plain identifiers, so whoever reads the form data never sees the path.
+        const personIds = this.normalizePersonValues(this.value);
+
+        if (!this.multiple) {
+            this.value = personIds[0] ?? '';
+            return;
+        }
+
+        // Only assign if the content really changed, since lit compares arrays by identity and
+        // would otherwise schedule an endless stream of updates.
+        const currentPersonIds = Array.isArray(this.value) ? this.value : null;
         if (
-            !this.multiple &&
-            Array.isArray(this.value) &&
-            (changedProperties.has('multiple') || changedProperties.has('value'))
+            currentPersonIds === null ||
+            currentPersonIds.length !== personIds.length ||
+            currentPersonIds.some((personId, index) => personId !== personIds[index])
         ) {
-            this.value = this.normalizePersonValues(this.value)[0] ?? '';
+            this.value = personIds;
         }
     }
 

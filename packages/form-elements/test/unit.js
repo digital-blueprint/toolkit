@@ -244,6 +244,43 @@ suite('dbp-form-person-select-element', () => {
         });
     });
 
+    test('normalizes a resource path handed in as single value', async () => {
+        node.value = '/base/people/person-1';
+
+        await node.updateComplete;
+
+        assert.equal(node.value, 'person-1');
+
+        const resourceSelect = node.shadowRoot.querySelector('dbp-resource-select');
+        assert.deepEqual(resourceSelect.values, ['/base/people/person-1']);
+    });
+
+    test('keeps a normalized single value untouched when the selection is confirmed', async () => {
+        node.value = '/base/people/person-1';
+
+        await node.updateComplete;
+
+        // This is what the resource selector emits once it has loaded the preselected person
+        node.handlePersonChange(
+            new CustomEvent('change', {
+                detail: {values: ['/base/people/person-1']},
+            }),
+        );
+
+        await node.updateComplete;
+
+        assert.equal(node.value, 'person-1');
+    });
+
+    test('normalizes resource paths handed in as multiple values', async () => {
+        node.multiple = true;
+        node.value = ['/base/people/person-1', 'person-2'];
+
+        await node.updateComplete;
+
+        assert.deepEqual(node.value, ['person-1', 'person-2']);
+    });
+
     test('dispatches normalized multiple values', async () => {
         node.multiple = true;
         await node.updateComplete;
