@@ -87,7 +87,7 @@ jobs:
 
       - name: Deploy and wait for completion
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo'
-        uses: digital-blueprint/gitlab-pipeline-trigger-action@ea146cbf06786a3f1637a830b799495136c026b1 # v1.4.2
+        uses: digital-blueprint/gitlab-pipeline-trigger-action@9ce6377a88205c23d9978fd64b6fb0bef7320be4 # v1.4.3
         with:
           host: "gitlab.tugraz.at"
           trigger_token: ${{ secrets.DEPLOY_TRIGGER_TOKEN }}
