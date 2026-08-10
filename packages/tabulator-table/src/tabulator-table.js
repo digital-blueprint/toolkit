@@ -5,7 +5,8 @@ import {
     LangMixin,
     getIconSVGURL,
     MiniSpinner,
-    IconButton,
+    Button,
+    Icon,
 } from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
@@ -62,7 +63,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         return {
             ...super.scopedElements,
             'dbp-mini-spinner': MiniSpinner,
-            'dbp-icon-button': IconButton,
+            'dbp-button': Button,
+            'dbp-icon': Icon,
             'dbp-tabulator-column-configuration-modal': ColumnConfigurationModal,
         };
     }
@@ -1031,8 +1033,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 min-height: 2.5rem;
             }
 
-            .column-configuration-toolbar dbp-icon-button {
-                font-size: 1.25rem;
+            .column-configuration-toolbar dbp-button {
+                --dbp-button-icon-margin-right: 0.5rem;
             }
 
             .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
@@ -1269,19 +1271,21 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     this.columnConfigurationEnabled
                         ? html`
                               <div class="column-configuration-toolbar">
-                                  <dbp-icon-button
+                                  <dbp-button
                                       no-spinner-on-click
                                       type="is-secondary"
-                                      icon-name="cog"
                                       ?disabled=${!this.tableReady}
                                       title=${this._i18n.t(
                                           'tabulator-table.column-configuration.open',
                                       )}
-                                      aria-label=${this._i18n.t(
-                                          'tabulator-table.column-configuration.open',
-                                      )}
-                                      @click=${() =>
-                                          this.openColumnConfiguration()}></dbp-icon-button>
+                                      @click=${() => this.openColumnConfiguration()}>
+                                      <dbp-icon name="cog" aria-hidden="true"></dbp-icon>
+                                      <span>
+                                          ${this._i18n.t(
+                                              'tabulator-table.column-configuration.open',
+                                          )}
+                                      </span>
+                                  </dbp-button>
                               </div>
                               <dbp-tabulator-column-configuration-modal
                                   .lang=${this.lang}

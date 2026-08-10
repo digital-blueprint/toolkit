@@ -37,7 +37,7 @@
             "hide-column": "{{column}} ausblenden",
             "move-down": "{{column}} nach unten verschieben",
             "move-up": "{{column}} nach oben verschieben",
-            "open": "Spalten konfigurieren",
+            "open": "Tabellenkonfiguration",
             "reset": "Zurücksetzen",
             "save": "Speichern",
             "show-all": "Alle einblenden",

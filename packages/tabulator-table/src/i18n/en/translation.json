@@ -37,7 +37,7 @@
             "hide-column": "Hide {{column}}",
             "move-down": "Move {{column}} down",
             "move-up": "Move {{column}} up",
-            "open": "Configure columns",
+            "open": "Table configuration",
             "reset": "Reset",
             "save": "Save",
             "show-all": "Show all",
