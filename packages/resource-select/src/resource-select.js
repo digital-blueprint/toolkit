@@ -179,7 +179,11 @@ export class ResourceSelect extends LangMixin(
             return i18n.t('select.login-required');
         }
 
-        return this.placeholder ?? i18n.t('select.placeholder');
+        if (this.placeholder !== null) {
+            return this.placeholder;
+        }
+
+        return this.multiple ? i18n.t('select.placeholder-multiple') : i18n.t('select.placeholder');
     }
 
     getCollectionQueryParameters(select) {

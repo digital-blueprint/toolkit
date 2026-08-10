@@ -3,6 +3,7 @@
         "component-disabled": "This component is disabled",
         "loading": "Loading...",
         "login-required": "Login required",
-        "placeholder": "Please select an entry"
+        "placeholder": "Please select an entry",
+        "placeholder-multiple": "Please select one or more entries"
     }
 }
