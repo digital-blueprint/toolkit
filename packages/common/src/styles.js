@@ -1264,6 +1264,9 @@ export function getSelect2CSS() {
             --dbp-select2-icon-size: 0.75em;
             --dbp-select2-icon-edge: 8px;
             --dbp-select2-icon-gap: 16px;
+            /* Left padding of the selection content, so the placeholder and the selected
+               value/entries start at the same position in both modes */
+            --dbp-select2-content-padding-left: 8px;
         }
 
         .select2-dropdown {
@@ -1277,6 +1280,7 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: inherit;
+            padding-left: var(--dbp-select2-content-padding-left);
             /* Clear the chevron, which we shifted left of select2's default position */
             padding-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
         }
@@ -1447,6 +1451,13 @@ export function getSelect2CSS() {
             overflow-wrap: break-word;
         }
 
+        /* Space between the remove button and the entry's label */
+        .select2-container--default
+            .select2-selection--multiple
+            .select2-selection__choice__display {
+            padding-left: 5px;
+        }
+
         /* Same as for the clear button of a single selection, we replace the "×" text
            character with an icon we can center reliably */
         .select2-container--default
@@ -1509,6 +1520,10 @@ export function getSelect2CSS() {
         .select2-container--default .select2-search--inline .select2-search__field {
             font-size: inherit;
             font-family: inherit;
+            /* Select2 offsets the field (and thus the placeholder) with a left margin. Match
+               the single selection's content padding so both placeholders start at the same
+               position, without shrinking the container (which would wrap the placeholder). */
+            margin-left: var(--dbp-select2-content-padding-left);
         }
 
         /* With a multiple selection the placeholder is rendered into the inline search field */
