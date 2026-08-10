@@ -1256,6 +1256,16 @@ export function getDocumentationCSS() {
 export function getSelect2CSS() {
     // language=css
     return css`
+        .select2-container--default .select2-selection--single,
+        .select2-container--default .select2-selection--multiple {
+            /* Size of the chevron and clear icons, the offset of the chevron from the right
+               edge, and the total gap we reserve to the right for it. Kept as variables so
+               the icons and the padding around them stay in sync. */
+            --dbp-select2-icon-size: 0.75em;
+            --dbp-select2-icon-edge: 8px;
+            --dbp-select2-icon-gap: 16px;
+        }
+
         .select2-dropdown {
             border-radius: var(--dbp-border-radius);
         }
@@ -1267,6 +1277,8 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: inherit;
+            /* Clear the chevron, which we shifted left of select2's default position */
+            padding-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
         }
 
         /*
@@ -1290,23 +1302,23 @@ export function getSelect2CSS() {
             /* Matches the line height of the rendered selection, so the icon
                ends up vertically centered on the first line */
             height: 28px;
+            /* Leave room for the chevron, which we shifted left of select2's default
+               position, so the clear button stays to its left without overlapping */
+            margin-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
         }
 
         /* Like for a single selection the clear button is centered on the first line, so it
            stays in place while entries are added and removed. It shares its height with the
-           entries, so both are centered on the same line regardless of the font metrics. */
+           entries, so both are centered on the same line regardless of the font metrics.
+           The right margin leaves room for the chevron drawn at the far right, so the clear
+           button sits to its left, matching the single-selection layout. */
         .select2-container--default .select2-selection--multiple .select2-selection__clear {
             top: 0;
             /* Same as the margin-top of the entries below */
             margin-top: 5px;
-            margin-right: 6px;
+            margin-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
             height: 1.5em;
             box-sizing: border-box;
-        }
-
-        /* Reserve room for the clear button, so entries can't end up underneath it */
-        .select2-container--default .select2-selection--multiple.select2-selection--clearable {
-            padding-right: calc(1em + 12px);
         }
 
         .select2-container--default .select2-selection--single .select2-selection__clear > span,
@@ -1318,8 +1330,8 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--multiple .select2-selection__clear::before {
             content: '';
             display: block;
-            width: 0.75em;
-            height: 0.75em;
+            width: var(--dbp-select2-icon-size);
+            height: var(--dbp-select2-icon-size);
             background-color: currentColor;
             mask: url('${unsafeCSS(getIconSVGURL('close'))}') center / contain no-repeat;
             -webkit-mask: url('${unsafeCSS(getIconSVGURL('close'))}') center / contain no-repeat;
@@ -1346,6 +1358,72 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--multiple {
             background-color: var(--dbp-background);
+            /* Make room for the chevron drawn via ::after below, so entries and the
+               inline search field can't end up underneath it */
+            padding-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
+            position: relative;
+        }
+
+        /* Select2 only draws a dropdown arrow for a single selection (a CSS-border triangle
+           inside a <b>), and none for a multiple selection. We hide the triangle and draw our
+           own chevron via ::after in both modes, so they look consistent. */
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            display: none;
+        }
+
+        /* Shared chevron appearance for both modes. Positioning differs per mode below. */
+        .select2-container--default .select2-selection--multiple::after,
+        .select2-container--default .select2-selection--single .select2-selection__arrow::after {
+            content: '';
+            width: var(--dbp-select2-icon-size);
+            height: var(--dbp-select2-icon-size);
+            background-color: var(--dbp-muted);
+            mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center / contain no-repeat;
+            -webkit-mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center / contain
+                no-repeat;
+            pointer-events: none;
+        }
+
+        /* Single selection: select2 already provides an absolutely positioned arrow container
+           flush against the right edge. We shift it left to match the multiple-selection
+           spacing and center our chevron inside it. */
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            right: var(--dbp-select2-icon-edge);
+        }
+
+        /* Nudge down slightly to sit centered on the line */
+        .select2-container--default .select2-selection--single .select2-selection__arrow::after {
+            margin-top: 2px;
+        }
+
+        /* Multiple selection: no arrow container exists, so we position the chevron ourselves,
+           pinned to the first line (entries have margin-top 5px and height 1.5em) so it stays
+           at the top when entries wrap. */
+        .select2-container--default .select2-selection--multiple::after {
+            position: absolute;
+            top: calc(5px + var(--dbp-select2-icon-size) - 2px);
+            right: var(--dbp-select2-icon-edge);
+            transform: translateY(-50%);
+        }
+
+        /* When clearable, reserve room for both the chevron (far right) and the clear button
+           to its left, so entries can't end up underneath either */
+        .select2-container--default .select2-selection--multiple.select2-selection--clearable {
+            padding-right: calc(var(--dbp-select2-icon-size) + 1em + 28px);
+        }
+
+        /* Flip the chevron while the dropdown is open, like select2 does by default */
+        .select2-container--default.select2-container--open
+            .select2-selection--single
+            .select2-selection__arrow::after {
+            transform: rotate(180deg);
+        }
+
+        .select2-container--default.select2-container--open .select2-selection--multiple::after {
+            transform: translateY(-50%) rotate(180deg);
         }
 
         /* The tags of a multiple selection, styled like the rest of the control instead of
@@ -1424,6 +1502,13 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--single .select2-selection__placeholder {
             color: var(--dbp-muted);
+        }
+
+        /* The inline search field of a multiple selection uses the browser's default input
+           font otherwise, which doesn't match the rest of the control */
+        .select2-container--default .select2-search--inline .select2-search__field {
+            font-size: inherit;
+            font-family: inherit;
         }
 
         /* With a multiple selection the placeholder is rendered into the inline search field */
