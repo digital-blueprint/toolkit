@@ -147,7 +147,8 @@ export class ScrollRestoration {
             this._log('locationchanged -> restore');
             this.restore();
         } else {
-            this._log('locationchanged -> no saved position, leaving scroll as is');
+            this._log('locationchanged -> new entry, seeding current position');
+            this._savePosition();
         }
     }
 

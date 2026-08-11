@@ -232,17 +232,22 @@ suite('scroll restoration', () => {
         restoration.stop();
     });
 
-    test('keeps the scroll position on history entries without a saved position', () => {
+    test('seeds the current position into a fresh history entry', () => {
         const browserWindow = createWindow();
+        browserWindow.scrollX = 12;
         browserWindow.scrollY = 500;
         const restoration = new ScrollRestoration(browserWindow);
         restoration.start();
 
+        // A fresh entry (e.g. opening/closing a modal) has no saved position.
         browserWindow.history.state = {};
         browserWindow.dispatchEvent(new Event('locationchanged'));
 
+        // The scroll position must not change, but it must be persisted into the new
+        // entry so a later reload can restore it.
         assert.deepEqual(browserWindow.scrollCalls, []);
         assert.equal(browserWindow.scrollY, 500);
+        assert.deepEqual(browserWindow.history.state.dbpScrollPosition, {x: 12, y: 500});
         restoration.stop();
     });
 
