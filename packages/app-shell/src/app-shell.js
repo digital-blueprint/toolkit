@@ -16,6 +16,7 @@ import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from '@dbp-toolkit/matomo/src/matomo';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {FeatureFlagDropdown} from './feature-flag-dropdown.js';
+import {ScrollRestoration} from './scroll-restoration.js';
 
 /**
  * In case the application gets updated future dynamic imports might fail.
@@ -70,6 +71,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this._onShowActivityEvent = this._onShowActivityEvent.bind(this);
         this._boundHandleActivityEnabled = this._handleActivityEnabled.bind(this);
         this._activityEnabledOverrides = new Map();
+        this.scrollRestoration = new ScrollRestoration();
 
         this.boundCloseMenuHandler = this.hideMenu.bind(this);
 
@@ -185,6 +187,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         else this.switchComponent(this.activeView);
 
         await this.updateComplete;
+        this.scrollRestoration.restore();
         if (!this.isMenuFloating() && this.menuOpen && this.visibleRoutes.length > 0) {
             this.toggleMenu();
         }
@@ -192,6 +195,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     firstUpdated() {
         super.firstUpdated();
+
+        if (!this.src) this.scrollRestoration.restore();
 
         // Wait for all updates to complete before initializing scroll buttons
         this.updateComplete.then(() => {
@@ -330,6 +335,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     connectedCallback() {
         super.connectedCallback();
 
+        this.scrollRestoration.start(false);
         this.initRouter();
         if (this.src) {
             this.fetchMetadata(this.src);
@@ -342,6 +348,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     disconnectedCallback() {
         super.disconnectedCallback();
+        this.scrollRestoration.stop();
         if (this._boundResizeHandler) {
             window.removeEventListener('resize', this._boundResizeHandler);
         }
@@ -497,41 +504,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.hideMenu();
     }
 
-    /**
-     * Scroll the page to the top of the active view. Used when switching views.
-     */
-    _scrollToTop() {
-        let offset = window.pageYOffset;
-        if (offset > 0) {
-            const header = this.shadowRoot.querySelector('header');
-            const title = this.shadowRoot.querySelector('#headline');
-
-            if (header === null || title === null) {
-                return;
-            }
-
-            let style = getComputedStyle(title);
-            let marginTop = isNaN(parseInt(style.marginTop, 10))
-                ? 0
-                : parseInt(style.marginTop, 10);
-            let marginBottom = isNaN(parseInt(style.marginBottom, 10))
-                ? 0
-                : parseInt(style.marginBottom, 10);
-
-            let topValue =
-                header.getBoundingClientRect().height +
-                title.getBoundingClientRect().height +
-                marginTop +
-                marginBottom;
-
-            if (offset < topValue) {
-                window.scrollTo(0, offset);
-            } else {
-                window.scrollTo(0, topValue);
-            }
-        }
-    }
-
     switchComponent(componentTag) {
         const changed = componentTag !== this.activeView;
 
@@ -554,9 +526,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             return;
         }
 
-        if (changed) {
-            this._scrollToTop();
-        }
         this.updatePageTitle();
         this.updatePageMetaDescription();
         this.subtitle = this.activeMetaDataText('short_name');
