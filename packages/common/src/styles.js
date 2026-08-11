@@ -1518,8 +1518,7 @@ export function getSelect2CSS() {
         /* The inline search field of a multiple selection uses the browser's default input
            font otherwise, which doesn't match the rest of the control */
         .select2-container--default .select2-search--inline .select2-search__field {
-            font-size: inherit;
-            font-family: inherit;
+            font: inherit;
             /* Select2 offsets the field (and thus the placeholder) with a left margin. Match
                the single selection's content padding so both placeholders start at the same
                position, without shrinking the container (which would wrap the placeholder). */
