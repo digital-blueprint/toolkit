@@ -125,9 +125,12 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
                 }
 
                 .columns {
+                    box-sizing: border-box;
                     display: grid;
                     list-style: none;
                     margin: 0;
+                    max-width: 100%;
+                    min-width: 0;
                     padding: 0;
                     width: 100%;
                 }
@@ -135,10 +138,13 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
                 .column {
                     align-items: center;
                     border: 1px solid var(--dbp-muted);
+                    box-sizing: border-box;
                     color: var(--dbp-content);
                     display: flex;
                     height: 50px;
                     margin-bottom: 5px;
+                    max-width: 100%;
+                    min-width: 0;
                 }
 
                 .position {
@@ -186,13 +192,18 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
                 }
 
                 .footer {
+                    box-sizing: border-box;
                     display: flex;
                     flex-direction: column;
                     gap: 10px;
+                    max-width: 100%;
+                    min-width: 0;
+                    width: 100%;
                 }
 
                 .footer-group {
                     gap: 10px;
+                    min-width: 0;
                 }
 
                 .footer-group:first-child {
@@ -208,7 +219,10 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
 
                 .footer button {
                     align-items: center;
+                    box-sizing: border-box;
                     display: inline-flex;
+                    max-width: 100%;
+                    min-width: 0;
                 }
 
                 button dbp-icon {
@@ -219,8 +233,9 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
 
                 @media only screen and (max-width: 768px) {
                     dbp-modal {
-                        --dbp-modal-width: calc(100vw - 40px);
-                        --dbp-modal-max-width: calc(100vw - 40px);
+                        /* Account for the modal's 40px horizontal padding. */
+                        --dbp-modal-width: calc(100vw - 80px);
+                        --dbp-modal-max-width: calc(100vw - 80px);
                         --dbp-modal-min-width: 0;
                     }
 
@@ -235,6 +250,25 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
 
                     .footer button {
                         width: 100%;
+                    }
+                }
+
+                @media only screen and (max-width: 490px) {
+                    dbp-modal {
+                        --dbp-modal-width: calc(100vw - 60px);
+                        --dbp-modal-max-width: calc(100vw - 60px);
+                    }
+
+                    .position {
+                        flex-basis: 40px;
+                    }
+
+                    .column > dbp-icon-button {
+                        flex-basis: 36px;
+                    }
+
+                    .move-buttons {
+                        padding-right: 0;
                     }
                 }
             `,

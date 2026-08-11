@@ -720,9 +720,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     updateColumnConfigurationHeaderButtonLabel() {
         if (!this.columnConfigurationHeaderButton) return;
 
-        const label = this._i18n.t('tabulator-table.column-configuration.open');
+        const label = this._i18n.t('tabulator-table.column-configuration.open-description');
+        const title = this._i18n.t('tabulator-table.column-configuration.open');
         this.columnConfigurationHeaderButton.setAttribute('aria-label', label);
-        this.columnConfigurationHeaderButton.setAttribute('title', label);
+        this.columnConfigurationHeaderButton.setAttribute('title', title);
     }
 
     refreshAutoColumnConfiguration() {

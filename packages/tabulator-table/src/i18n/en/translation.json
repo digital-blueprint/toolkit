@@ -39,6 +39,7 @@
             "move-down": "Move {{column}} down",
             "move-up": "Move {{column}} up",
             "open": "Table configuration",
+            "open-description": "Configure which columns to display",
             "reset": "Reset",
             "save": "Save",
             "show-all": "Show all",

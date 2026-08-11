@@ -39,6 +39,7 @@
             "move-down": "{{column}} nach unten verschieben",
             "move-up": "{{column}} nach oben verschieben",
             "open": "Tabellenkonfiguration",
+            "open-description": "Konfigurieren Sie, welche Spalten angezeigt werden sollen",
             "reset": "Zurücksetzen",
             "save": "Speichern",
             "show-all": "Alle einblenden",

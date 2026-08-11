@@ -55,7 +55,12 @@ suite('dbp-tabulator-table basics', () => {
             ['first', 'last'],
         );
         assert.isTrue(lastHeader.classList.contains('column-configuration-header'));
-        assert.isNotNull(lastHeader.querySelector('[icon-name="cog"]'));
+        const configurationButton = lastHeader.querySelector('[icon-name="cog"]');
+        assert.equal(
+            configurationButton.getAttribute('aria-label'),
+            'Configure which columns to display',
+        );
+        assert.equal(configurationButton.getAttribute('title'), 'Table configuration');
         assert.isNull(node.shadowRoot.querySelector('.column-configuration-toolbar'));
     });
 });
