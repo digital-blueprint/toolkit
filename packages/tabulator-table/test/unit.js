@@ -14,6 +14,7 @@ suite('dbp-tabulator-table basics', () => {
 
     setup(async () => {
         node = document.createElement('dbp-tabulator-table');
+        node.setAttribute('lang', 'en');
         document.body.appendChild(node);
         await node.updateComplete;
     });
