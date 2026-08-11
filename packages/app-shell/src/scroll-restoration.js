@@ -147,13 +147,23 @@ export class ScrollRestoration {
             this._log('locationchanged -> restore');
             this.restore();
         } else {
-            this._log('locationchanged -> scrollToTop');
-            this.scrollToTop();
+            this._log('locationchanged -> no saved position, leaving scroll as is');
         }
     }
 
-    /** Scroll to the top of the page. */
-    scrollToTop() {
+    /**
+     * Scroll to the top of the page unless a saved position is about to be restored.
+     *
+     * This is a no-op if the current history entry has a saved scroll position, since
+     * that position is (or is about to be) restored and must not be clobbered. This
+     * matters on history navigation where the order of scrollToTopUnlessRestoring() and
+     * restore() is not guaranteed.
+     */
+    scrollToTopUnlessRestoring() {
+        if (this._browserWindow.history.state?.[STATE_KEY] !== undefined) {
+            this._log('scrollToTopUnlessRestoring -> skipped, saved position present');
+            return;
+        }
         this._cancelRestore();
         this._scrollTo(0, 0);
     }

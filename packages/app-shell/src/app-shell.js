@@ -519,7 +519,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         }
 
         this.activeView = componentTag;
-        if (changed) this.router.update();
+        if (changed) {
+            this.router.update();
+            this.scrollRestoration.scrollToTopUnlessRestoring();
+        }
         const metadata = this.metadata[componentTag];
 
         if (metadata === undefined) {

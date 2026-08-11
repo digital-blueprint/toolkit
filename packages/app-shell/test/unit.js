@@ -232,7 +232,7 @@ suite('scroll restoration', () => {
         restoration.stop();
     });
 
-    test('scrolls to the top on new history entries', () => {
+    test('keeps the scroll position on history entries without a saved position', () => {
         const browserWindow = createWindow();
         browserWindow.scrollY = 500;
         const restoration = new ScrollRestoration(browserWindow);
@@ -241,7 +241,34 @@ suite('scroll restoration', () => {
         browserWindow.history.state = {};
         browserWindow.dispatchEvent(new Event('locationchanged'));
 
+        assert.deepEqual(browserWindow.scrollCalls, []);
+        assert.equal(browserWindow.scrollY, 500);
+        restoration.stop();
+    });
+
+    test('scrollToTopUnlessRestoring scrolls to the top on demand', () => {
+        const browserWindow = createWindow();
+        browserWindow.scrollY = 500;
+        const restoration = new ScrollRestoration(browserWindow);
+        restoration.start();
+
+        restoration.scrollToTopUnlessRestoring();
+
         assert.deepEqual(browserWindow.scrollCalls, [{x: 0, y: 0}]);
+        restoration.stop();
+    });
+
+    test('scrollToTopUnlessRestoring is a no-op when a saved position is present', () => {
+        const browserWindow = createWindow();
+        browserWindow.scrollY = 500;
+        const restoration = new ScrollRestoration(browserWindow);
+        restoration.start();
+
+        browserWindow.history.state = {dbpScrollPosition: {x: 0, y: 300}};
+        restoration.scrollToTopUnlessRestoring();
+
+        assert.deepEqual(browserWindow.scrollCalls, []);
+        assert.equal(browserWindow.scrollY, 500);
         restoration.stop();
     });
 });
