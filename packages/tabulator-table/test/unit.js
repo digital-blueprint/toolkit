@@ -25,6 +25,39 @@ suite('dbp-tabulator-table basics', () => {
     test('should render', () => {
         assert.isNotNull(node.shadowRoot);
     });
+
+    test('optionally places column configuration in the rightmost header', async () => {
+        const tableBuilt = new Promise((resolve) =>
+            node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),
+        );
+        node.options = {
+            layout: 'fitColumns',
+            columns: [
+                {title: 'First', field: 'first'},
+                {title: 'Last', field: 'last'},
+            ],
+        };
+        node.columnConfigurationEnabled = true;
+        await node.updateComplete;
+        await tableBuilt;
+        await node.updateComplete;
+
+        assert.isNotNull(node.shadowRoot.querySelector('.column-configuration-toolbar dbp-button'));
+
+        node.columnConfigurationInHeader = true;
+        await node.updateComplete;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        const definitions = node.getColumnDefinitions();
+        const lastHeader = node.tabulatorTable.getColumn('last').getElement();
+        assert.deepEqual(
+            definitions.map((definition) => definition.field),
+            ['first', 'last'],
+        );
+        assert.isTrue(lastHeader.classList.contains('column-configuration-header'));
+        assert.isNotNull(lastHeader.querySelector('[icon-name="cog"]'));
+        assert.isNull(node.shadowRoot.querySelector('.column-configuration-toolbar'));
+    });
 });
 
 suite('column configuration', () => {

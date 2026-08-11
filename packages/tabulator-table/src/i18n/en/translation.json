@@ -17,6 +17,7 @@
     },
     "delete-rows": "Delete selected rows",
     "demo-column-configuration-description": "Use the settings button to reorder columns or change their visibility. The configuration is persisted for this demo table.",
+    "demo-column-configuration-in-header": "Show table configuration in the table header",
     "demo-column-configuration-title": "Tabulator table - Column Configuration",
     "demo-title": "Tabulator Table Demo",
     "deselect-all": "Deselect all",

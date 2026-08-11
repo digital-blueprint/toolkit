@@ -24,6 +24,7 @@ export class TabulatorTableDemo extends LangMixin(
         this.expandedTabulator = true;
         this.selectedRow = this.rowClick.bind(this);
         this.selected = false;
+        this.columnConfigurationInHeader = true;
     }
 
     static get scopedElements() {
@@ -41,6 +42,7 @@ export class TabulatorTableDemo extends LangMixin(
             selectAllTable7: {type: Boolean},
             expandedTabulator: {type: Boolean},
             selected: {type: Boolean},
+            columnConfigurationInHeader: {type: Boolean},
         };
     }
 
@@ -244,6 +246,13 @@ export class TabulatorTableDemo extends LangMixin(
 
             .select-container {
                 margin-top: 15px;
+            }
+
+            .column-configuration-placement {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
             }
         `;
     }
@@ -916,11 +925,21 @@ export class TabulatorTableDemo extends LangMixin(
                 <div class="container">
                     <h3 class="demo-sub-title">${i18n.t('demo-column-configuration-title')}</h3>
                     <p>${i18n.t('demo-column-configuration-description')}</p>
+                    <label class="column-configuration-placement">
+                        <input
+                            type="checkbox"
+                            .checked=${this.columnConfigurationInHeader}
+                            @change=${(event) => {
+                                this.columnConfigurationInHeader = event.target.checked;
+                            }} />
+                        ${i18n.t('demo-column-configuration-in-header')}
+                    </label>
                     <dbp-tabulator-table
                         lang="${this.lang}"
                         class="tabulator-table-demo"
                         id="tabulator-table-demo-11"
                         column-configuration-enabled
+                        .columnConfigurationInHeader=${this.columnConfigurationInHeader}
                         column-configuration-storage-key="toolkit-demo-edit-columns"
                         data=${JSON.stringify(data)}
                         .options=${options_basic}></dbp-tabulator-table>

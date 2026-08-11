@@ -60,6 +60,8 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
     - example `<dbp-tabulator-table overflow-y-scroll-enabled></dbp-tabulator-table>`
 - `column-configuration-enabled` (optional bool, default: `false`): shows a dialog for changing column visibility and order
     - example `<dbp-tabulator-table column-configuration-enabled></dbp-tabulator-table>`
+- `column-configuration-in-header` (optional bool, default: `false`): places the column configuration cog in the rightmost visible column header instead of showing the labeled button above the table
+    - example `<dbp-tabulator-table column-configuration-enabled column-configuration-in-header></dbp-tabulator-table>`
 - `column-configuration-storage-key` (optional string): persists column visibility and order under the provided application-specific key
     - example `<dbp-tabulator-table column-configuration-enabled column-configuration-storage-key="people-table"></dbp-tabulator-table>`
 - `columnConfigurationExcludedFields` (optional string array, property only): fields that must not be changed in the column configuration dialog

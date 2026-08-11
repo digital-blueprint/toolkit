@@ -7,6 +7,7 @@ import {
     MiniSpinner,
     Button,
     Icon,
+    IconButton,
 } from '@dbp-toolkit/common';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
@@ -51,12 +52,15 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.overflowYScrollEnabled = false;
         this.selectedRowCount = 0;
         this.columnConfigurationEnabled = false;
+        this.columnConfigurationInHeader = false;
         this.columnConfigurationStorageKey = '';
         this.columnConfigurationExcludedFields = [];
         this.defaultColumnDefinitions = [];
         this.defaultColumnConfiguration = [];
         this.currentColumnConfiguration = [];
         this.columnConfigurationApplying = false;
+        this.columnConfigurationHeaderButton = null;
+        this.columnConfigurationHeaderElement = null;
     }
 
     static get scopedElements() {
@@ -65,6 +69,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             'dbp-mini-spinner': MiniSpinner,
             'dbp-button': Button,
             'dbp-icon': Icon,
+            'dbp-icon-button': IconButton,
             'dbp-tabulator-column-configuration-modal': ColumnConfigurationModal,
         };
     }
@@ -94,6 +99,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 type: Boolean,
                 attribute: 'column-configuration-enabled',
             },
+            columnConfigurationInHeader: {
+                type: Boolean,
+                attribute: 'column-configuration-in-header',
+            },
             columnConfigurationStorageKey: {
                 type: String,
                 attribute: 'column-configuration-storage-key',
@@ -107,6 +116,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         super.update(changedProperties);
         changedProperties.forEach((oldValue, propName) => {
             if (propName === 'lang') {
+                this.updateColumnConfigurationHeaderButtonLabel();
                 if (this.tabulatorTable) {
                     this.setTableLocale();
                     if (this.columnConfigurationEnabled) {
@@ -130,12 +140,14 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 !this.initialization
             ) {
                 this.buildTable();
-            } else if (
-                propName === 'columnConfigurationEnabled' &&
-                this.columnConfigurationEnabled &&
-                this.tableReady
-            ) {
-                this.initializeColumnConfiguration();
+            } else if (propName === 'columnConfigurationEnabled' && this.tableReady) {
+                if (this.columnConfigurationEnabled) {
+                    this.initializeColumnConfiguration();
+                } else {
+                    this.clearColumnConfigurationHeaderButton();
+                }
+            } else if (propName === 'columnConfigurationInHeader' && this.tableReady) {
+                this.updateColumnConfigurationTriggerPlacement();
             } else if (
                 propName === 'columnConfigurationExcludedFields' &&
                 this.columnConfigurationEnabled &&
@@ -341,11 +353,13 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             if (this.columnConfigurationEnabled && !this.columnConfigurationApplying) {
                 this.syncCurrentColumnConfiguration();
             }
+            this.placeColumnConfigurationButtonInHeader();
         });
         this.tabulatorTable.on('columnMoved', () => {
             if (this.columnConfigurationEnabled && !this.columnConfigurationApplying) {
                 this.syncCurrentColumnConfiguration();
             }
+            this.placeColumnConfigurationButtonInHeader();
         });
 
         /**
@@ -365,6 +379,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         });
 
         this.tabulatorTable.on('renderComplete', () => {
+            this.placeColumnConfigurationButtonInHeader();
             const renderCompleteEvent = new CustomEvent(
                 'dbp-tabulator-table-render-complete-event',
                 {
@@ -632,6 +647,82 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         } else {
             this.syncCurrentColumnConfiguration();
         }
+        this.updateColumnConfigurationTriggerPlacement();
+    }
+
+    updateColumnConfigurationTriggerPlacement() {
+        if (this.columnConfigurationEnabled && this.columnConfigurationInHeader) {
+            this.placeColumnConfigurationButtonInHeader();
+        } else {
+            this.clearColumnConfigurationHeaderButton();
+        }
+    }
+
+    placeColumnConfigurationButtonInHeader() {
+        if (
+            !this.tabulatorTable ||
+            !this.columnConfigurationEnabled ||
+            !this.columnConfigurationInHeader
+        ) {
+            return;
+        }
+
+        const column = this.getRightmostVisibleLeafColumn(this.tabulatorTable.getColumns(true));
+        const headerElement = column?.getElement?.();
+        const contentElement = headerElement?.querySelector('.tabulator-col-content');
+        if (!contentElement) {
+            this.clearColumnConfigurationHeaderButton();
+            return;
+        }
+
+        if (!this.columnConfigurationHeaderButton) {
+            const button = this.createScopedElement('dbp-icon-button');
+            button.setAttribute('icon-name', 'cog');
+            button.setAttribute('no-spinner-on-click', '');
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                this.openColumnConfiguration();
+            });
+            this.columnConfigurationHeaderButton = button;
+        }
+
+        if (
+            this.columnConfigurationHeaderElement !== headerElement ||
+            this.columnConfigurationHeaderButton.parentElement !== contentElement
+        ) {
+            this.columnConfigurationHeaderElement?.classList.remove('column-configuration-header');
+            headerElement.classList.add('column-configuration-header');
+            contentElement.append(this.columnConfigurationHeaderButton);
+            this.columnConfigurationHeaderElement = headerElement;
+        }
+
+        this.updateColumnConfigurationHeaderButtonLabel();
+    }
+
+    getRightmostVisibleLeafColumn(columns) {
+        for (let index = columns.length - 1; index >= 0; index--) {
+            const column = columns[index];
+            const subColumns = column.getSubColumns?.() || [];
+            const leafColumn = this.getRightmostVisibleLeafColumn(subColumns);
+            if (leafColumn) return leafColumn;
+            if (subColumns.length === 0 && column.isVisible()) return column;
+        }
+
+        return null;
+    }
+
+    clearColumnConfigurationHeaderButton() {
+        this.columnConfigurationHeaderButton?.remove();
+        this.columnConfigurationHeaderElement?.classList.remove('column-configuration-header');
+        this.columnConfigurationHeaderElement = null;
+    }
+
+    updateColumnConfigurationHeaderButtonLabel() {
+        if (!this.columnConfigurationHeaderButton) return;
+
+        const label = this._i18n.t('tabulator-table.column-configuration.open');
+        this.columnConfigurationHeaderButton.setAttribute('aria-label', label);
+        this.columnConfigurationHeaderButton.setAttribute('title', label);
     }
 
     refreshAutoColumnConfiguration() {
@@ -717,6 +808,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         } finally {
             this.columnConfigurationApplying = false;
             this.syncCurrentColumnConfiguration();
+            this.placeColumnConfigurationButtonInHeader();
         }
     }
 
@@ -1037,6 +1129,23 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 --dbp-button-icon-margin-right: 0.5rem;
             }
 
+            .tabulator .tabulator-header .column-configuration-header .tabulator-arrow {
+                display: none;
+            }
+
+            .tabulator .tabulator-header .column-configuration-header .tabulator-col-content {
+                padding-right: 2.75rem;
+                position: relative;
+            }
+
+            .column-configuration-header dbp-icon-button {
+                position: absolute;
+                top: 50%;
+                right: 0.25rem;
+                z-index: 1;
+                transform: translateY(-50%);
+            }
+
             .tabulator .tabulator-header .tabulator-col .tabulator-col-title {
                 padding-top: 4px;
                 padding-bottom: 4px;
@@ -1270,23 +1379,31 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 ${
                     this.columnConfigurationEnabled
                         ? html`
-                              <div class="column-configuration-toolbar">
-                                  <dbp-button
-                                      no-spinner-on-click
-                                      type="is-secondary"
-                                      ?disabled=${!this.tableReady}
-                                      title=${this._i18n.t(
-                                          'tabulator-table.column-configuration.open',
-                                      )}
-                                      @click=${() => this.openColumnConfiguration()}>
-                                      <dbp-icon name="cog" aria-hidden="true"></dbp-icon>
-                                      <span>
-                                          ${this._i18n.t(
-                                              'tabulator-table.column-configuration.open',
-                                          )}
-                                      </span>
-                                  </dbp-button>
-                              </div>
+                              ${
+                                  !this.columnConfigurationInHeader
+                                      ? html`
+                                            <div class="column-configuration-toolbar">
+                                                <dbp-button
+                                                    no-spinner-on-click
+                                                    type="is-secondary"
+                                                    ?disabled=${!this.tableReady}
+                                                    title=${this._i18n.t(
+                                                        'tabulator-table.column-configuration.open',
+                                                    )}
+                                                    @click=${() => this.openColumnConfiguration()}>
+                                                    <dbp-icon
+                                                        name="cog"
+                                                        aria-hidden="true"></dbp-icon>
+                                                    <span>
+                                                        ${this._i18n.t(
+                                                            'tabulator-table.column-configuration.open',
+                                                        )}
+                                                    </span>
+                                                </dbp-button>
+                                            </div>
+                                        `
+                                      : ''
+                              }
                               <dbp-tabulator-column-configuration-modal
                                   .lang=${this.lang}
                                   @column-configuration-save=${(event) =>

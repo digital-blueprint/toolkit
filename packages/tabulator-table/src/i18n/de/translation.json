@@ -17,6 +17,7 @@
     },
     "delete-rows": "Asugewählte Zeilen löschen",
     "demo-column-configuration-description": "Mit der Schaltfläche für Einstellungen können Spalten neu angeordnet oder ein- und ausgeblendet werden. Die Konfiguration wird für diese Demotabelle gespeichert.",
+    "demo-column-configuration-in-header": "Tabellenkonfiguration im Tabellenkopf anzeigen",
     "demo-column-configuration-title": "Tabulator-Tabelle - Spaltenkonfiguration",
     "demo-title": "Tabulator Table Demo",
     "deselect-all": "Alles abwählen",
