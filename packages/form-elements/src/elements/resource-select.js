@@ -1,7 +1,6 @@
 import {html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {DbpBaseElement} from '../base-element.js';
-import {ref, createRef} from 'lit/directives/ref.js';
 import {ResourceSelect} from '@dbp-toolkit/resource-select';
 
 export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement) {
@@ -9,9 +8,7 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
         super();
         this.entryPointUrl = '';
         this.value = '';
-        this.resourceSelectRef = createRef();
         this.resourcePath = '';
-        this.includeLocal = undefined;
         this.perPage = 100;
     }
 
@@ -20,9 +17,14 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             resourcePath: {type: String, attribute: 'resource-path'},
-            includeLocal: {type: String, attribute: 'include-local'},
             perPage: {type: Number, attribute: 'per-page'},
         };
+    }
+
+    // Override this to add query parameters to the collection request, same as
+    // the getCollectionQueryParameters method on dbp-resource-select.
+    getCollectionQueryParameters(select) {
+        return {};
     }
 
     static get scopedElements() {
@@ -31,51 +33,36 @@ export class DbpResourceSelectElement extends ScopedElementsMixin(DbpBaseElement
         };
     }
 
-    firstUpdated() {
-        super.firstUpdated();
-    }
-
     static get styles() {
         return [...super.styles];
     }
 
-    getResourceSelectValue() {
+    _getResourceSelectValue() {
         if (!this.value) {
             return null;
         }
 
-        return this.value.startsWith('/base/organizations/')
-            ? this.value
-            : `/base/organizations/${this.value}`;
+        return `${this.resourcePath}/${encodeURIComponent(this.value)}`;
     }
 
     renderInput() {
-        let getCollectionQueryParameters = () => {
-            if (this.includeLocal !== undefined) {
-                return {includeLocal: this.includeLocal};
-            }
-            return {};
-        };
-
         return html`
             <dbp-resource-select
-                ${ref(this.resourceSelectRef)}
-                .auth=${this.auth ?? {}}
-                .value=${this.getResourceSelectValue()}
+                .auth=${this.auth}
+                .value=${this._getResourceSelectValue()}
                 .perPage=${this.perPage}
-                ?disabled=${this.disabled}
                 lang="${this.lang}"
+                ?disabled=${this.disabled}
                 resource-path="${this.resourcePath}"
-                .getCollectionQueryParameters="${getCollectionQueryParameters}"
+                .getCollectionQueryParameters="${this.getCollectionQueryParameters.bind(this)}"
                 @change="${(event) => {
                     let value = event.target.value;
-                    if (!(value instanceof String) && typeof value !== 'string') {
-                        return;
+                    if (value) {
+                        const segments = value.split('/');
+                        this.value = decodeURIComponent(segments[segments.length - 1]);
+                    } else {
+                        this.value = '';
                     }
-                    if (value.startsWith('/base/organizations/')) {
-                        value = value.replace('/base/organizations/', '');
-                    }
-                    this.value = value;
                 }}"
                 entry-point-url="${this.entryPointUrl}"></dbp-resource-select>
         `;
