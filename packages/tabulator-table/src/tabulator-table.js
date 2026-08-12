@@ -474,8 +474,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     deleteRow(row) {
         if (!this.tabulatorTable) return;
         this.tabulatorTable.deleteRow(row);
-        console.log('all data', this.data);
-        console.log('row data', row.getData());
+        let allRows = this.tabulatorTable.getRows();
+        let rowData = allRows[row - 1].getData();
+        let index = this.data.indexOf(rowData);
+        this.data = this.data.filter((e) => e.id !== index);
     }
 
     /**
