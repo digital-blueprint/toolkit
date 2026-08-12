@@ -58,7 +58,7 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
     }
 
     getPersonUrl(personId) {
-        return new URL(`/base/people/${personId}`, this.entryPointUrl).href;
+        return new URL(`/base/people/${encodeURIComponent(personId)}`, this.entryPointUrl).href;
     }
 
     async fetchPersonName(personId) {
