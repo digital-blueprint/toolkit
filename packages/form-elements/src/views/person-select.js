@@ -49,20 +49,12 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
         }
     }
 
-    normalizePersonId(value) {
-        if (typeof value !== 'string') {
-            return '';
-        }
-
-        return value.startsWith('/base/people/') ? value.replace('/base/people/', '') : value;
-    }
-
     normalizeValues() {
         const values = Array.isArray(this.value) ? this.value : this.value ? [this.value] : [];
 
         const selectedValues = this.multiple ? values : values.slice(0, 1);
 
-        return selectedValues.map((value) => this.normalizePersonId(value)).filter(Boolean);
+        return selectedValues.filter(Boolean);
     }
 
     getPersonUrl(personId) {

@@ -143,8 +143,7 @@ export class FormElementsDemo extends LangMixin(
         if (!personId) {
             return '';
         }
-
-        return personId.startsWith('/base/people/') ? personId : `/base/people/${personId}`;
+        return personId;
     }
 
     getDemoPeopleValue(data) {
