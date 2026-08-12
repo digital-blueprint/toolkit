@@ -1,27 +1,29 @@
 import {css, html} from 'lit';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, combineURLs} from '@dbp-toolkit/common';
 import {DbpBaseView} from '../base-view.js';
 
 export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
     constructor() {
         super();
-        this.label = 'A string field';
+        this.label = 'A resource field';
         this.name = '';
-    }
-
-    async connectedCallback() {
-        super.connectedCallback();
-
-        if (this.value !== '' && this.auth?.token) {
-            this.fetchOrganizationName(this.value);
-        }
+        this.entryPointUrl = '';
+        this.resourcePath = '';
+        this._abortController = null;
     }
 
     updated(changedProperties) {
-        if (changedProperties.get('name')) {
-            this.name = this.name || '';
-        } else if (changedProperties.get('auth') && this.name === '' && this.auth?.token) {
-            this.fetchOrganizationName(this.value);
+        super.updated(changedProperties);
+
+        // Re-fetch the display name whenever the value, auth, entry point or
+        // language changes, since any of them affects the resolved resource.
+        if (
+            changedProperties.has('value') ||
+            changedProperties.has('auth') ||
+            changedProperties.has('entryPointUrl') ||
+            changedProperties.has('lang')
+        ) {
+            this.fetchResourceName(this.value);
         }
     }
 
@@ -29,6 +31,7 @@ export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
         return {
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            resourcePath: {type: String, attribute: 'resource-path'},
             name: {type: String, attribute: 'name'},
         };
     }
@@ -58,30 +61,44 @@ export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
         `;
     }
 
-    fetchOrganizationName(value) {
+    async fetchResourceName(value) {
+        // Cancel any request that is still in flight so only the latest one
+        // can update the displayed name.
+        if (this._abortController) {
+            this._abortController.abort();
+            this._abortController = null;
+        }
+
         if (!value || !this.entryPointUrl || !this.auth?.token) {
             return;
         }
 
-        fetch(
-            value.startsWith('/base/organizations/')
-                ? this.entryPointUrl + value
-                : this.entryPointUrl + '/base/organizations/' + value,
-            {
+        const url = combineURLs(
+            combineURLs(this.entryPointUrl, this.resourcePath),
+            encodeURIComponent(value),
+        );
+
+        this._abortController = new AbortController();
+        const signal = this._abortController.signal;
+
+        try {
+            const response = await fetch(url, {
                 method: 'GET',
+                signal,
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept-Language': this.lang,
                     Authorization: `Bearer ${this.auth.token}`,
                 },
-            },
-        )
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.name) {
-                    this.name = data.name;
-                } else {
-                    this.name = value;
-                }
             });
+            const data = await response.json();
+            this.name = data.name ? data.name : value;
+        } catch (error) {
+            // Ignore aborted requests, they were superseded by a newer one.
+            if (error.name === 'AbortError') {
+                return;
+            }
+            this.name = value;
+        }
     }
 }

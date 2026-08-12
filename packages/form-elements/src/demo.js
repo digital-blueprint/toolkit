@@ -155,6 +155,15 @@ export class FormElementsDemo extends LangMixin(
         return personId ? [personId] : [];
     }
 
+    getDemoResourceValue(data) {
+        if (data.myComponentResource) {
+            return data.myComponentResource;
+        }
+
+        // Fallback default organization identifier so the view renders on load.
+        return '37';
+    }
+
     getDemoPersonElementValue(data) {
         return this.personValue ?? this.getDemoPersonValue(data);
     }
@@ -741,7 +750,8 @@ export class FormElementsDemo extends LangMixin(
                         label="My resource"
                         .auth=${this.auth ?? {}}
                         entry-point-url="${this.entryPointUrl}"
-                        .value=${data.myComponentResource || ''}></dbp-form-resource-select-view>
+                        resource-path="/base/organizations"
+                        .value=${this.getDemoResourceValue(data)}></dbp-form-resource-select-view>
                 </div>
             </section>
         `;

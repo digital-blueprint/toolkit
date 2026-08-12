@@ -416,11 +416,15 @@ Fetches and displays a resource's name from the API using the stored resource id
     subscribe="lang auth"
     label="My resource"
     entry-point-url="https://api.example.com"
+    resource-path="/base/organizations"
     .value=${'organization-identifier'}></dbp-form-resource-select-view>
 ```
 
 - `entry-point-url`: Base URL of the API entry point used to resolve the resource name
     - Type: String
+- `resource-path`: Path of the resource collection the identifier belongs to (must match the corresponding `dbp-form-resource-select-element`)
+    - Type: String
+    - Example: `<dbp-form-resource-select-view resource-path="/base/organizations"></dbp-form-resource-select-view>`
 
 ### Local development
 
