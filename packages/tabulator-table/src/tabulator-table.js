@@ -36,6 +36,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.options = {
             layout: 'fitColumns',
             autoColumns: true,
+            index: 'id',
         };
         this.data = [];
         this.paginationEnabled = false;
