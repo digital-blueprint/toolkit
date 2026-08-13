@@ -471,14 +471,20 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         else this.rowSelected = true;
     }
 
-    deleteRow(row) {
+    deleteRow(rowID) {
         if (!this.tabulatorTable) return;
-        this.tabulatorTable.deleteRow(row);
-        let allRows = this.tabulatorTable.getRows();
-        let rowData = allRows[row - 1].getData();
-        let index = this.data.indexOf(rowData);
-        this.data = this.data.filter((e) => e.id !== index);
-        this.tabulatorTable.redraw(true);
+
+        let row = this.tabulatorTable.getRow(rowID);
+
+        let rowData = row.getData();
+
+        row.delete();
+
+        if (rowData && rowData.id !== undefined) {
+            this.data = this.data.filter((item) => item.id !== rowData.id);
+        } else {
+            this.data = this.data.filter((item) => item !== rowData);
+        }
     }
 
     /**
