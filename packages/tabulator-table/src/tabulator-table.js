@@ -196,6 +196,14 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         super.disconnectedCallback();
     }
 
+    updated(changedProperties) {
+        super.updated(changedProperties);
+
+        if (changedProperties.has('data') && this.tableReady && this.tabulatorTable) {
+            this.tabulatorTable.setData(this.data || []);
+        }
+    }
+
     setTableLocale() {
         if (!this.tabulatorTable) return;
 
@@ -476,15 +484,24 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         if (!this.tabulatorTable) return;
 
         let row = this.tabulatorTable.getRow(rowID);
+        if (!row) {
+            console.warn('Row not found for identifier:', rowID);
+            return;
+        }
 
         let rowData = row.getData();
 
         row.delete();
 
-        if (rowData && rowData.id !== undefined) {
-            this.data = this.data.filter((item) => item.id !== rowData.id);
-        } else {
-            this.data = this.data.filter((item) => item !== rowData);
+        if (Array.isArray(this.data)) {
+            if (rowData && rowData.id !== undefined) {
+                // Remove by unique primary key
+                this.data = this.data.filter((item) => item.id !== rowData.id);
+            } else {
+                // Remove by value match using JSON stringification in case references broke
+                const targetJson = JSON.stringify(rowData);
+                this.data = this.data.filter((item) => JSON.stringify(item) !== targetJson);
+            }
         }
     }
 
