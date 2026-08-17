@@ -523,7 +523,7 @@ export class TabulatorTableDemo extends LangMixin(
                 {
                     title: 'dob',
                     field: 'dob',
-                    hozAlign: 'center',
+                    hozAlign: 'left',
                     sorter: (a, b, aRow, bRow, column, dir, sorterParams) => {
                         //a, b - the two values being compared
                         //aRow, bRow - the row components for the values being compared (useful if you need to access additional fields in the row data for the sort)
