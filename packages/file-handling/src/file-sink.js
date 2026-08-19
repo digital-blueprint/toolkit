@@ -800,7 +800,7 @@ export class FileSink extends LangMixin(
                                 <button
                                     class="button is-primary"
                                     ?disabled="${this.disabled}"
-                                    @click="${() => {
+                                    @click="${async () => {
                                         // Custom event to notify about download start.
                                         const event = new CustomEvent(
                                             'dbp-file-sink-download-started',
@@ -813,7 +813,7 @@ export class FileSink extends LangMixin(
                                         this.dispatchEvent(event);
                                         // Show the loading indicator while the download is being prepared.
                                         this.showLoadingIndicatorModal();
-                                        this.downloadCompressedFiles();
+                                        await this.downloadCompressedFiles();
 
                                         this.loadingDownloadFiles = true;
                                     }}">
