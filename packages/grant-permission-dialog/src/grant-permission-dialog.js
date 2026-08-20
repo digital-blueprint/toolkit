@@ -454,7 +454,7 @@ export class GrantPermissionDialog extends LangMixin(
         return this.userList.get(userId)?.userFullName;
     }
 
-    async handleUserEditButton(userId) {
+    _handleUserEditButton(userId) {
         this.setButtonState(userId, 'save');
 
         this.addUserToQueue(userId);
@@ -662,7 +662,7 @@ export class GrantPermissionDialog extends LangMixin(
                                                             id="user-edit-button-${userId}"
                                                             no-spinner-on-click
                                                             @click="${() => {
-                                                                this.handleUserEditButton(userId);
+                                                                this._handleUserEditButton(userId);
                                                             }}">
                                                             <dbp-icon name="pencil"></dbp-icon>
                                                             ${i18n.t(
@@ -863,7 +863,7 @@ export class GrantPermissionDialog extends LangMixin(
             this.setButtonState(userToAdd.userIdentifier, 'edit');
 
             await this.updateComplete;
-            this.handleUserEditButton(userToAdd.userIdentifier);
+            this._handleUserEditButton(userToAdd.userIdentifier);
             this.addPersonButtonRef.value.stop();
         } catch (error) {
             console.log('Failed to get user object', error);

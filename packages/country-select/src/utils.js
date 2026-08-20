@@ -38,7 +38,7 @@ export const getReferenceNumberFromPDF = async (file) => {
         // Get the annotations for the page
         await page.getAnnotations().then(async (annotations) => {
             // Loop through the annotations
-            await commonUtils.asyncArrayForEach(annotations, async (annotation) => {
+            await commonUtils.asyncArrayForEach(annotations, (annotation) => {
                 // Check if the annotation is a business number, and we haven't found one yet
                 if (
                     referenceNumber === null &&

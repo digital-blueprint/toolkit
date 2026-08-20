@@ -243,6 +243,7 @@ export class KeycloakWrapper extends EventTarget {
      * Logs the user out locally, but not with keycloak. Login will instantly log the user back in without
      * requiring a re-auth.
      */
+    // eslint-disable-next-line @typescript-eslint/require-await
     async localLogout() {
         this._keycloak.clearToken();
     }

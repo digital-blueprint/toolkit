@@ -52,7 +52,7 @@ export class DbpAuthDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), c
         div.innerHTML = JSON.stringify(person);
     }
 
-    async _onShowToken() {
+    _onShowToken() {
         const div = this._('#token-info');
         if (!this.auth.token) {
             console.error('not logged in');

@@ -423,10 +423,10 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
      *
      * @param files
      */
-    async sendClipboardFiles(files) {
+    _sendClipboardFiles(files) {
         const i18n = this._i18n;
         for (let i = 0; i < files.length; i++) {
-            await this.sendFileEvent(files[i].file, files.length);
+            this._sendFileEvent(files[i].file, files.length);
         }
         this.tabulatorTable.deselectRow();
         sendNotification({
@@ -443,7 +443,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
         this.dispatchEvent(event);
     }
 
-    async sendFileEvent(file, maxFiles) {
+    _sendFileEvent(file, maxFiles) {
         const data = {file: file, data: file, maxUpload: maxFiles};
         const event = new CustomEvent('dbp-clipboard-file-picker-file-downloaded', {
             detail: data,
@@ -835,7 +835,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                         class="button select-button is-primary"
                         ?disabled="${this.clipboardSelectBtnDisabled}"
                         @click="${() => {
-                            this.sendClipboardFiles(this.tabulatorTable.getSelectedData());
+                            this._sendClipboardFiles(this.tabulatorTable.getSelectedData());
                         }}">
                         ${
                             this.tabulatorTable && this.tabulatorTable.getSelectedRows().length > 0

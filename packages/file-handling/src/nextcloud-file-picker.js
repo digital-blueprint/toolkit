@@ -579,7 +579,7 @@ export class NextcloudFilePicker extends LangMixin(
         return !deny;
     }
 
-    async openFilePicker() {
+    _openFilePicker() {
         const i18n = this._i18n;
         this.disableRowClick = false;
         if (this.webDavClient === null) {
@@ -801,8 +801,8 @@ export class NextcloudFilePicker extends LangMixin(
                 <button
                     class="button"
                     title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                    @click="${async () => {
-                        this.openFilePicker();
+                    @click="${() => {
+                        this._openFilePicker();
                     }}">
                     <dbp-icon name="reload"></dbp-icon>
                 </button>
@@ -884,8 +884,8 @@ export class NextcloudFilePicker extends LangMixin(
                         <button
                             class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => {
-                                this.openFilePicker();
+                            @click="${() => {
+                                this._openFilePicker();
                             }}">
                             <dbp-icon name="reload"></dbp-icon>
                         </button>
@@ -934,8 +934,8 @@ export class NextcloudFilePicker extends LangMixin(
                 <button
                     class="button"
                     title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                    @click="${async () => {
-                        this.openFilePicker();
+                    @click="${() => {
+                        this._openFilePicker();
                     }}">
                     <dbp-icon name="reload"></dbp-icon>
                 </button>
@@ -1053,8 +1053,8 @@ export class NextcloudFilePicker extends LangMixin(
                         <button
                             class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => {
-                                this.openFilePicker();
+                            @click="${() => {
+                                this._openFilePicker();
                             }}">
                             <dbp-icon name="reload"></dbp-icon>
                         </button>
@@ -1168,8 +1168,8 @@ export class NextcloudFilePicker extends LangMixin(
                 <button
                     class="button"
                     title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                    @click="${async () => {
-                        this.openFilePicker();
+                    @click="${() => {
+                        this._openFilePicker();
                     }}">
                     <dbp-icon name="reload"></dbp-icon>
                 </button>
@@ -1290,8 +1290,8 @@ export class NextcloudFilePicker extends LangMixin(
                         <button
                             class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => {
-                                this.openFilePicker();
+                            @click="${() => {
+                                this._openFilePicker();
                             }}">
                             <dbp-icon name="reload"></dbp-icon>
                         </button>
@@ -1339,8 +1339,8 @@ export class NextcloudFilePicker extends LangMixin(
                 <button
                     class="button"
                     title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                    @click="${async () => {
-                        this.openFilePicker();
+                    @click="${() => {
+                        this._openFilePicker();
                     }}">
                     <dbp-icon name="reload"></dbp-icon>
                 </button>
@@ -1430,8 +1430,8 @@ export class NextcloudFilePicker extends LangMixin(
                         <button
                             class="button"
                             title="${i18n.t('nextcloud-file-picker.refresh-nextcloud-file-picker')}"
-                            @click="${async () => {
-                                this.openFilePicker();
+                            @click="${() => {
+                                this._openFilePicker();
                             }}">
                             <dbp-icon name="reload"></dbp-icon>
                         </button>
@@ -3300,8 +3300,8 @@ export class NextcloudFilePicker extends LangMixin(
                             title="${i18n.t('nextcloud-file-picker.open-nextcloud-file-picker', {
                                 name: this.nextcloudName,
                             })}"
-                            @click="${async () => {
-                                this.openFilePicker();
+                            @click="${() => {
+                                this._openFilePicker();
                             }}">
                             ${i18n.t('nextcloud-file-picker.connect-nextcloud', {
                                 name: this.nextcloudName,

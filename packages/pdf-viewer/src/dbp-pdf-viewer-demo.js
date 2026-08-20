@@ -95,7 +95,7 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
         await this._('#dbp-pdf-viewer-cover').showPDF(file);
     }
 
-    async closeModal(e) {
+    _closeModal(e) {
         if (e.target.id !== 'modal-container') {
             return;
         }
@@ -191,7 +191,7 @@ export class PdfViewerDemo extends LangMixin(ScopedElementsMixin(LitElement), cr
                         </div>
                     </div>
                 </div>
-                <div class="container" id="modal-container" @click=${this.closeModal}>
+                <div class="container" id="modal-container" @click=${this._closeModal}>
                     <div class="container" id="pdf-container">
                         <dbp-pdf-viewer
                             id="dbp-pdf-viewer-contain"
