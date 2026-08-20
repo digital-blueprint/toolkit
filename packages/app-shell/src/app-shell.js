@@ -1129,7 +1129,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     overflow: hidden;
                     touch-action: none;
                     pointer-events: auto;
-                    height: 100vh;
                     overflow-y: hidden;
                 }
 
