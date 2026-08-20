@@ -2,7 +2,7 @@
  * Returns the content of the file
  *
  * @param {File} file The file to read
- * @returns {string} The content
+ * @returns {Promise<string>} The content
  */
 export const readBinaryFileContent = async (file) => {
     return new Promise((resolve, reject) => {

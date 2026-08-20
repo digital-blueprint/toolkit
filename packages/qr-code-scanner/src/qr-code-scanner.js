@@ -33,7 +33,7 @@ function getPrimaryDevice(devices) {
  * Moreimportant devices first.
  *
  * @param i18n
- * @returns {Map<string,string>} the map of devices
+ * @returns {Promise<Map<string,string>>} the map of devices
  */
 async function getVideoDevices(i18n) {
     let devices_map = new Map();
@@ -78,7 +78,7 @@ async function getVideoDevices(i18n) {
  * Checks if user Agent is IOS, but not Safari browser
  *
  * @param {string} devices_map
- * @returns {object|null} a video element or null
+ * @returns {boolean} whether the browser is unsupported
  */
 function checkIosMobileSupport(devices_map) {
     return /(iPhone|iPad|iPod).*(CriOS|FxiOS|OPT|EdgiOS|YaBrowser|AlohaBrowser)/i.test(
@@ -88,7 +88,7 @@ function checkIosMobileSupport(devices_map) {
 
 /**
  * @param {string} deviceId
- * @returns {object|null} a video element or null
+ * @returns {Promise<HTMLVideoElement|null>} a video element or null
  */
 async function createVideoElement(deviceId) {
     let videoId = deviceId;

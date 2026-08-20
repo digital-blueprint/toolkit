@@ -276,7 +276,7 @@ export class FileSource extends LangMixin(
                 // }
             }
 
-            await this.sendFileEvent(file, fileCount);
+            this.sendFileEvent(file, fileCount);
         });
 
         // this.dispatchEvent(new CustomEvent("dbp-file-source-selection-finished",
