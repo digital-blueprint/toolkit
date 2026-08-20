@@ -66,13 +66,13 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         this.addEventListener('dbp-notification-added', (e) => {
             const notificationEvent = /** @type {CustomEvent} */ (e);
             const notificationId = notificationEvent.detail.targetNotificationId;
-            this.updateModalNotificationPadding(notificationId);
+            void this.updateModalNotificationPadding(notificationId);
         });
 
         this.addEventListener('dbp-notification-removed', (e) => {
             const notificationEvent = /** @type {CustomEvent} */ (e);
             const notificationId = notificationEvent.detail.targetNotificationId;
-            this.updateModalNotificationPadding(notificationId);
+            void this.updateModalNotificationPadding(notificationId);
         });
     }
 

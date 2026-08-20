@@ -95,7 +95,7 @@ export class DbpSubmissionSelectElement extends ScopedElementsMixin(DbpBaseEleme
             changedProperties.has('auth') ||
             changedProperties.has('perPage')
         ) {
-            this.loadSubmissions();
+            void this.loadSubmissions();
         }
 
         if (

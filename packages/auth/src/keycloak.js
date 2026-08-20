@@ -77,7 +77,7 @@ export class KeycloakWrapper extends EventTarget {
     _onVisibilityChanged() {
         let isVisible = document.visibilityState === 'visible';
         if (isVisible) {
-            this._checkTokeHasExpired();
+            void this._checkTokeHasExpired();
         }
     }
 
@@ -253,6 +253,6 @@ export class KeycloakWrapper extends EventTarget {
      */
     async logout() {
         await this._ensureInit();
-        this._keycloak.logout();
+        await this._keycloak.logout();
     }
 }

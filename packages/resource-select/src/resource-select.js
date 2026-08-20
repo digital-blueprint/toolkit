@@ -99,7 +99,7 @@ export class ResourceSelect extends LangMixin(
     connectedCallback() {
         super.connectedCallback();
         document.addEventListener('click', this._onDocumentClicked);
-        this._updateAll();
+        void this._updateAll();
     }
 
     disconnectedCallback() {
@@ -162,11 +162,11 @@ export class ResourceSelect extends LangMixin(
     }
 
     loginCallback() {
-        this._updateAll();
+        void this._updateAll();
     }
 
     logoutCallback() {
-        this._updateAll();
+        void this._updateAll();
     }
 
     _getPlaceholder() {
@@ -700,7 +700,7 @@ export class ResourceSelect extends LangMixin(
             changedProperties.has('fetchMode');
 
         if (needsUpdate) {
-            this._updateAll();
+            void this._updateAll();
         }
     }
 

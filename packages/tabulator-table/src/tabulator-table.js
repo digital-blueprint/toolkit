@@ -566,7 +566,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             this.options.autoColumns &&
             (!Array.isArray(data) || data.length > 0)
         ) {
-            Promise.resolve(setDataResult).then(() => this.refreshAutoColumnConfiguration());
+            return Promise.resolve(setDataResult).then(() => {
+                this.refreshAutoColumnConfiguration();
+                return setDataResult;
+            });
         }
         return setDataResult;
     }
@@ -681,7 +684,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             button.setAttribute('no-spinner-on-click', '');
             button.addEventListener('click', (event) => {
                 event.stopPropagation();
-                this.openColumnConfiguration();
+                void this.openColumnConfiguration();
             });
             this.columnConfigurationHeaderButton = button;
         }

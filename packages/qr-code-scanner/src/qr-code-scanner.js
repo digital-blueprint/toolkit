@@ -181,9 +181,9 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
 
     updated(changedProperties) {
         if (changedProperties.get('stopScan') && !this.stopScan) {
-            this.startScanning();
+            void this.startScanning();
         } else if (changedProperties.get('stopScan') && this.stopScan) {
-            this.stopScanning();
+            void this.stopScanning();
         }
     }
 
@@ -366,7 +366,7 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
 
         if (video !== null) {
             video.setAttribute('playsinline', true); // required to tell iOS safari we don't want fullscreen
-            video.play();
+            await video.play();
             this._videoRunning = true;
 
             console.assert(this._requestID === null);

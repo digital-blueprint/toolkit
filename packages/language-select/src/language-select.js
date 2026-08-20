@@ -56,7 +56,7 @@ export class LanguageSelect extends AdapterLitElement {
             // Unlike other cases we use the next language for the translations so that
             // users not knowing the current language can understand it.
             // In case of more than two this doesn't make that much sense, but for now..
-            this._i18n.changeLanguage(this.next);
+            void this._i18n.changeLanguage(this.next);
         }
     }
 

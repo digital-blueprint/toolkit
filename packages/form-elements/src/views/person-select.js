@@ -45,7 +45,7 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
             changedProperties.has('entryPointUrl') ||
             changedProperties.has('multiple')
         ) {
-            this.loadPersonNames();
+            void this.loadPersonNames();
         }
     }
 

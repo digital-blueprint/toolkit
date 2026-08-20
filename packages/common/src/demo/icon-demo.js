@@ -37,7 +37,7 @@ export class LazyLoad extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             this._setupIntersectionObserver();
         });
     }

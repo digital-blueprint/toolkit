@@ -51,7 +51,7 @@ export class ThemeSwitcher extends LangMixin(
             this.detectInitialMode();
         });
         if (this.langDir) {
-            setOverridesByGlobalCache(this._i18n, this);
+            void setOverridesByGlobalCache(this._i18n, this);
         }
     }
 

@@ -22,7 +22,7 @@ export const errorMixin = {
 
         let body;
         const i18n = createInstance();
-        i18n.changeLanguage(lang);
+        void i18n.changeLanguage(lang);
 
         if (
             jqXHR.responseJSON !== undefined &&
@@ -75,7 +75,7 @@ export const errorMixin = {
 
         let body;
         const i18n = createInstance();
-        i18n.changeLanguage(lang);
+        await i18n.changeLanguage(lang);
 
         try {
             await error

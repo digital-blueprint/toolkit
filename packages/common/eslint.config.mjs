@@ -3,7 +3,13 @@ import commonConfigTyped from '../../eslint-typescript.common.config.mjs';
 
 export default [
     {
-        ignores: ['dist/', '*.js', 'src/scoped/ScopedElementsMixin.js', 'misc/browser-check.js', 'test/'],
+        ignores: [
+            'dist/',
+            '*.js',
+            'src/scoped/ScopedElementsMixin.js',
+            'misc/browser-check.js',
+            'test/',
+        ],
     },
     ...commonConfig,
     ...commonConfigTyped,

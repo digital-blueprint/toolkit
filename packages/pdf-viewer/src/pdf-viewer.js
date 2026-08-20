@@ -121,7 +121,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
     _onWindowResize() {
         this.isFirstRendering = true;
-        this.showPage(this.currentPage);
+        void this.showPage(this.currentPage);
     }
 
     disconnectedCallback() {
@@ -159,7 +159,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         const data = await readBinaryFileContent(file);
 
         if (this.pdfDoc !== null) {
-            this.pdfDoc.destroy();
+            await this.pdfDoc.destroy();
             this.pdfDoc = null;
         }
 

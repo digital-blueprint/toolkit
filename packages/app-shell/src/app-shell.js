@@ -277,7 +277,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             },
         );
 
-        this.router.setStateFromCurrentLocation();
+        void this.router.setStateFromCurrentLocation();
     }
 
     sendRoutingUrl() {
@@ -338,7 +338,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.scrollRestoration.start(false);
         this.initRouter();
         if (this.src) {
-            this.fetchMetadata(this.src);
+            void this.fetchMetadata(this.src);
         }
 
         this._boundResizeHandler = () => this.updateMenuIcon();
@@ -370,7 +370,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         }
         if (this.lang !== lang) {
             this.lang = lang;
-            this.router.update();
+            void this.router.update();
 
             // tell a dbp-provider to update the "lang" property
             this.sendSetPropertyEvent('lang', lang, true);
@@ -384,7 +384,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     // For screen readers
                     document.documentElement.setAttribute('lang', this.lang);
 
-                    this.router.update();
+                    void this.router.update();
                     this.subtitle = this.activeMetaDataText('short_name');
                     this.description = this.activeMetaDataText('description');
 
@@ -448,7 +448,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         // Generate a full routing URL from the routingUrl
         const fullUrl = this.basePath + this.lang + '/' + this.activeView + routingUrl;
         console.log('handleRoutingUrlChange fullUrl', fullUrl);
-        this.router.updateFromUrl(fullUrl);
+        void this.router.updateFromUrl(fullUrl);
     }
 
     isMenuFloating() {
@@ -500,7 +500,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         const link = e.composedPath()[0];
         const location = link.getAttribute('href');
-        this.router.updateFromUrl(location);
+        void this.router.updateFromUrl(location);
         this.hideMenu();
     }
 
@@ -520,7 +520,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         this.activeView = componentTag;
         if (changed) {
-            this.router.update();
+            void this.router.update();
             this.scrollRestoration.scrollToTopUnlessRestoring();
         }
         const metadata = this.metadata[componentTag];
@@ -1211,7 +1211,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.track('renderActivity', activity.element);
 
         // After it is loaded and registered globally, we get it and register it locally
-        customElements.whenDefined(activity.element).then(() => {
+        void customElements.whenDefined(activity.element).then(() => {
             this.defineScopedElement(activity.element, customElements.get(activity.element));
         });
 

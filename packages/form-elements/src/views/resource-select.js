@@ -23,7 +23,7 @@ export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
             changedProperties.has('entryPointUrl') ||
             changedProperties.has('lang')
         ) {
-            this.fetchResourceName(this.value);
+            void this.fetchResourceName(this.value);
         }
     }
 

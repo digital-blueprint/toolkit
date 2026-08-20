@@ -42,12 +42,12 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
         this.allowNesting = false;
 
         // To avoid a cyclic dependency
-        import('./file-sink').then(({FileSink}) =>
-            this.defineScopedElement('dbp-file-sink', FileSink),
-        );
-        import('./file-source').then(({FileSource}) =>
-            this.defineScopedElement('dbp-file-source', FileSource),
-        );
+        import('./file-sink')
+            .then(({FileSink}) => this.defineScopedElement('dbp-file-sink', FileSink))
+            .catch((error) => console.error(error));
+        import('./file-source')
+            .then(({FileSource}) => this.defineScopedElement('dbp-file-source', FileSource))
+            .catch((error) => console.error(error));
 
         this.mode = MODE_TABLE_ONLY;
     }

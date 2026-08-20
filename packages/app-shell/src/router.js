@@ -35,7 +35,7 @@ export class Router {
         this.router = new UniversalRouter(routes, unioptions);
 
         window.addEventListener('popstate', (event) => {
-            this.setStateFromCurrentLocation();
+            void this.setStateFromCurrentLocation();
             this._dispatchLocationChanged();
         });
     }

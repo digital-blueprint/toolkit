@@ -471,7 +471,7 @@ export class NextcloudFilePicker extends LangMixin(
 
         if (this.isLoggedIn() && !this._loginCalled) {
             this._loginCalled = true;
-            this.checkLocalStorage();
+            void this.checkLocalStorage();
         }
     }
 
@@ -1587,7 +1587,7 @@ export class NextcloudFilePicker extends LangMixin(
      * @param files
      * @param directory
      */
-    uploadFiles(files, directory) {
+    async uploadFiles(files, directory) {
         const i18n = this._i18n;
         this.loading = true;
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
@@ -1601,7 +1601,7 @@ export class NextcloudFilePicker extends LangMixin(
         }
         this.forAll = false;
         this.setRepeatForAllConflicts();
-        this.uploadFile(directory);
+        await this.uploadFile(directory);
     }
 
     /**
@@ -1629,7 +1629,7 @@ export class NextcloudFilePicker extends LangMixin(
             await customPutFileContents(this.webDavClient, path, file, {
                 overwrite: false,
             })
-                .then((success) => {
+                .then(async (success) => {
                     if (!success) {
                         this.generatedFilename = this.getNextFilename();
                         this._('#replace-filename').value = this.generatedFilename;
@@ -1637,14 +1637,14 @@ export class NextcloudFilePicker extends LangMixin(
                             this.uploadFileObject = file;
                             this.uploadFileDirectory = directory;
                             this.abortUploadButton = true;
-                            this.uploadFileAfterConflict();
+                            await this.uploadFileAfterConflict();
                         } else {
                             this.replaceModalDialog(file, directory);
                         }
                     } else {
                         this.uploadCount += 1;
                         this.fileList.shift();
-                        this.uploadFile(directory);
+                        await this.uploadFile(directory);
                     }
                 })
                 .catch((error) => {
@@ -1741,7 +1741,7 @@ export class NextcloudFilePicker extends LangMixin(
             } else {
                 this.fileList.shift();
             }
-            this.uploadFile(directory);
+            await this.uploadFile(directory);
             return true;
         } else if (this._("input[name='replacement']:checked").value === 'new-name') {
             if (this.generatedFilename !== this._('#replace-filename').value) {
@@ -1761,13 +1761,13 @@ export class NextcloudFilePicker extends LangMixin(
         await customPutFileContents(this.webDavClient, path, file, {
             overwrite: overwrite,
         })
-            .then((content) => {
+            .then(async (content) => {
                 this.closeModal('#replace-modal');
                 this.uploadCount += 1;
                 this.fileList.shift();
-                this.uploadFile(directory);
+                await this.uploadFile(directory);
             })
-            .catch((error) => {
+            .catch(async (error) => {
                 if (error.message.search('412') !== -1) {
                     this.closeModal('#replace-modal');
                     this.generatedFilename = this.getNextFilename();
@@ -1776,7 +1776,7 @@ export class NextcloudFilePicker extends LangMixin(
                         this.uploadFileObject = file;
                         this.uploadFileDirectory = directory;
                         this.abortUploadButton = true;
-                        this.uploadFileAfterConflict();
+                        await this.uploadFileAfterConflict();
                     } else {
                         this.replaceModalDialog(file, directory);
                     }
@@ -3586,7 +3586,9 @@ export class NextcloudFilePicker extends LangMixin(
                         <button
                             class="button select-button is-primary"
                             @click="${() => {
-                                this.uploadFileAfterConflict();
+                                this.uploadFileAfterConflict().catch((error) =>
+                                    this.uploadError(error),
+                                );
                             }}">
                             OK
                         </button>

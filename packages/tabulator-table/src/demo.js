@@ -49,7 +49,7 @@ export class TabulatorTableDemo extends LangMixin(
     connectedCallback() {
         super.connectedCallback();
         if (this.langDir) {
-            setOverridesByGlobalCache(this._i18n, this);
+            void setOverridesByGlobalCache(this._i18n, this);
         }
 
         this.updateComplete.then(() => {

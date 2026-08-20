@@ -61,7 +61,7 @@ export class Translation extends DBPLitElement {
         this._i18n = createInstanceGivenResources(en, de);
 
         if (this.langDir) {
-            setOverridesByGlobalCache(this._i18n, this);
+            void setOverridesByGlobalCache(this._i18n, this);
         }
     }
 
@@ -70,7 +70,7 @@ export class Translation extends DBPLitElement {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    this._i18n.changeLanguage(lang);
+                    void this._i18n.changeLanguage(lang);
                     break;
             }
         });

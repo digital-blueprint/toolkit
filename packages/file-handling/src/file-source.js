@@ -197,7 +197,7 @@ export class FileSource extends LangMixin(
         // console.dir(dt);
         let files = dt.files;
 
-        this.handleFiles(files);
+        void this.handleFiles(files);
     }
 
     async handleChange(element) {

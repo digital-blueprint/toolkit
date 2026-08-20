@@ -163,7 +163,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
                                         timeout: 10,
                                     });
                                 }
-                                this.setForms();
+                                void this.setForms();
                             }}"></dbp-button>
 
                         ${

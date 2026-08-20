@@ -35,7 +35,7 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
 
     update(changedProperties) {
         if (changedProperties.has('lang')) {
-            this._i18n.changeLanguage(this.lang);
+            void this._i18n.changeLanguage(this.lang);
         }
         super.update(changedProperties);
     }

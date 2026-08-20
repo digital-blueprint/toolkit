@@ -96,18 +96,21 @@ export class FileSink extends LangMixin(
         // only activate file streaming mode when the file-sink set the streamed property during connection
         if (this.streamed) {
             let baseUrl = commonUtils.getAssetURL(pkgName, 'stream-sw.js');
-            navigator.serviceWorker.register(baseUrl).then((registration) => {
-                this._swRegistration = registration;
+            navigator.serviceWorker
+                .register(baseUrl)
+                .then((registration) => {
+                    this._swRegistration = registration;
 
-                // start keepalive calls only in Firefox
-                if (window.navigator.userAgent.includes('Firefox')) {
-                    // TODO find a way to reliably stop this again
-                    // clearInterval works, but when should it be called? callback from sw?
-                    setInterval(function keepAlive() {
-                        registration.active.postMessage('keep-alive');
-                    }, 3000);
-                }
-            });
+                    // start keepalive calls only in Firefox
+                    if (window.navigator.userAgent.includes('Firefox')) {
+                        // TODO find a way to reliably stop this again
+                        // clearInterval works, but when should it be called? callback from sw?
+                        setInterval(function keepAlive() {
+                            registration.active.postMessage('keep-alive');
+                        }, 3000);
+                    }
+                })
+                .catch((error) => console.error(error));
         }
 
         this.updateComplete.then(() => {
@@ -581,8 +584,12 @@ export class FileSink extends LangMixin(
                     directory-path="${this.nextcloudPath}"
                     nextcloud-file-url="${this.nextcloudFileURL}"
                     ?store-nextcloud-session="${this.nextcloudStoreSession}"
-                    @dbp-nextcloud-file-picker-file-uploaded="${(event) => {
-                        this.uploadToNextcloud(event.detail);
+                    @dbp-nextcloud-file-picker-file-uploaded="${async (event) => {
+                        try {
+                            await this.uploadToNextcloud(event.detail);
+                        } catch (error) {
+                            console.error(error);
+                        }
                     }}"
                     @dbp-nextcloud-file-picker-file-uploaded-finished="${(event) => {
                         this.finishedFileUpload(event);

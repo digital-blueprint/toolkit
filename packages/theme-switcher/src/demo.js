@@ -31,7 +31,7 @@ export class ThemeSwitcherDemo extends LangMixin(ScopedElementsMixin(LitElement)
     connectedCallback() {
         super.connectedCallback();
         if (this.langDir) {
-            setOverridesByGlobalCache(this._i18n, this);
+            void setOverridesByGlobalCache(this._i18n, this);
         }
     }
 

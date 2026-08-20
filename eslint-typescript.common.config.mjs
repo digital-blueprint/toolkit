@@ -9,7 +9,6 @@ export default [
             }
         },
         rules:  {
-            '@typescript-eslint/no-floating-promises': 'off',
             '@typescript-eslint/no-unsafe-argument': 'off',
             '@typescript-eslint/no-unsafe-assignment': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',

@@ -59,7 +59,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
                     this.requestedLoginStatus = LoginStatus.UNKNOWN;
                     switch (newStatus) {
                         case LoginStatus.LOGGED_IN:
-                            this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
+                            void this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
                             break;
                         case LoginStatus.LOGGED_OUT:
                             // Keycloak will redirect right away without emitting events, so we have
@@ -67,12 +67,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
                             if (this._loginStatus === LoginStatus.LOGGED_IN) {
                                 this._setLoginStatus(LoginStatus.LOGGING_OUT);
                             }
-                            this._kcwrapper.logout();
-                            // In case logout was aborted, for example with beforeunload,
-                            // revert back to being logged in
-                            if (this._loginStatus === LoginStatus.LOGGING_OUT) {
-                                this._setLoginStatus(LoginStatus.LOGGED_IN);
-                            }
+                            void this._logout();
                             break;
                     }
                     break;
@@ -81,6 +76,14 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
         });
 
         super.update(changedProperties);
+    }
+
+    async _logout() {
+        await this._kcwrapper.logout();
+        // In case logout was aborted, for example with beforeunload, revert back to being logged in.
+        if (this._loginStatus === LoginStatus.LOGGING_OUT) {
+            this._setLoginStatus(LoginStatus.LOGGED_IN);
+        }
     }
 
     async _fetchUser(userId, token) {
@@ -244,7 +247,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
             }
         };
 
-        handleLogin();
+        void handleLogin();
     }
 
     disconnectedCallback() {

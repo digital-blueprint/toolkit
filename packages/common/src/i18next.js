@@ -118,7 +118,7 @@ export function createInstance(languages, lng, fallback, namespace) {
     });
 
     var i18n = i18next.createInstance();
-    i18n.init(options);
+    void i18n.init(options);
     console.assert(i18n.isInitialized);
 
     return i18n;
@@ -174,7 +174,7 @@ export async function setOverridesByGlobalCache(i18n, element) {
     let hasOverrides = false;
     for (let lng of i18n.languages) {
         const cacheKey = element.langDir + '::' + lng;
-        cacheOverrides(element.langDir, lng);
+        await cacheOverrides(element.langDir, lng);
         translationCache[cacheKey] = await translationCache[cacheKey];
         i18n.removeResourceBundle(lng, overrideNamespace);
         if (

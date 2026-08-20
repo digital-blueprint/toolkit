@@ -641,7 +641,7 @@ export class GrantPermissionDialog extends LangMixin(
                                               }"
                                               .formatResource="${this.formatPerson}"
                                               @change="${(event) => {
-                                                  this.handlePersonSelected(event);
+                                                  void this.handlePersonSelected(event);
                                               }}"
                                               entry-point-url="${
                                                   this.entryPointUrl
@@ -680,7 +680,9 @@ export class GrantPermissionDialog extends LangMixin(
                                                             id="user-save-button-${userId}"
                                                             no-spinner-on-click
                                                             @click="${() => {
-                                                                this.handleUserSaveButton(userId);
+                                                                void this.handleUserSaveButton(
+                                                                    userId,
+                                                                );
                                                             }}">
                                                             <dbp-icon name="save"></dbp-icon>
                                                             ${i18n.t(
