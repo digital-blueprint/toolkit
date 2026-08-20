@@ -21,7 +21,7 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         /** @type {boolean} */
         this.fullHeightLine = false;
         /** @type {number} */
-        this.modalPaddingTopDefault;
+        this.modalPaddingTopDefault = 0;
     }
 
     static get properties() {

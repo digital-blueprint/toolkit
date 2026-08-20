@@ -50,39 +50,38 @@ export class ProviderAdapter extends HTMLElement {
         const pair = element.trim().split(':');
         const local = pair[0];
         const global = pair[1] || local;
-        const that = this;
         const event = new CustomEvent('dbp-subscribe', {
             bubbles: true,
             composed: true,
             detail: {
                 name: global,
                 callback: (value) => {
-                    that.setPropertiesToChildNodes(local, value);
+                    this.setPropertiesToChildNodes(local, value);
 
                     // If value is an object set it directly as property
                     if (typeof value === 'object' && value !== null) {
-                        that.setPropertyByAttributeName(local, value);
+                        this.setPropertyByAttributeName(local, value);
                     } else {
-                        that.attributeChangedCallback(
+                        this.attributeChangedCallback(
                             local,
-                            that.getPropertyByAttributeName(local),
+                            this.getPropertyByAttributeName(local),
                             value,
                         );
 
                         // check if an attribute also exists in the tag
-                        if (that.getAttribute(local) !== null) {
+                        if (this.getAttribute(local) !== null) {
                             // we don't support attributes and provider values at the same time
                             console.warn(
                                 'Provider callback: "' +
                                     local +
                                     '" is also an attribute in tag "' +
-                                    that.tagName +
+                                    this.tagName +
                                     '", this is not supported!',
                             );
 
                             // update attribute if reflectAttribute is enabled
-                            if (that.reflectAttribute) {
-                                that.setAttribute(local, value);
+                            if (this.reflectAttribute) {
+                                this.setAttribute(local, value);
                             }
                         }
                     }

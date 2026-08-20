@@ -78,30 +78,28 @@ export class AdapterLitElement extends LitElement {
 
         this._connected = true;
 
-        const that = this;
-
         this.addEventListener(
             'dbp-subscribe',
             /**
              * @param {CustomEvent} e
              */
-            function (e) {
+            (e) => {
                 const name = e.detail.name;
-                if (that.hasProperty(name) || that.providerRoot) {
+                if (this.hasProperty(name) || this.providerRoot) {
                     Logger.debug(
                         'AdapterLitElementProvider(' +
-                            that.tagName +
+                            this.tagName +
                             ') eventListener("dbp-subscribe",..) name "' +
                             name +
                             '" found.',
                     );
-                    that._callbackStore.push({
+                    this._callbackStore.push({
                         name: name,
                         callback: e.detail.callback,
                         sender: e.detail.sender,
                     });
 
-                    e.detail.callback(that.getProperty(name));
+                    e.detail.callback(this.getProperty(name));
                     e.stopPropagation();
                 }
             },
@@ -113,24 +111,24 @@ export class AdapterLitElement extends LitElement {
             /**
              * @param {CustomEvent} e
              */
-            function (e) {
+            (e) => {
                 const name = e.detail.name;
                 const sender = e.detail.sender;
-                if (that.hasProperty(name) || that.providerRoot) {
+                if (this.hasProperty(name) || this.providerRoot) {
                     Logger.debug(
                         'AdapterLitElementProvider(' +
-                            that.tagName +
+                            this.tagName +
                             ') eventListener("dbp-unsubscribe",..) name "' +
                             name +
                             '" found.',
                     );
-                    that._callbackStore.forEach((item) => {
+                    this._callbackStore.forEach((item) => {
                         if (item.sender === sender && item.name === name) {
-                            const index = that._callbackStore.indexOf(item);
-                            that._callbackStore.splice(index, 1);
+                            const index = this._callbackStore.indexOf(item);
+                            this._callbackStore.splice(index, 1);
                             Logger.debug(
                                 'AdapterLitElementProvider(' +
-                                    that.tagName +
+                                    this.tagName +
                                     ') eventListener for name "' +
                                     name +
                                     '" removed.',
@@ -147,21 +145,21 @@ export class AdapterLitElement extends LitElement {
         // listen to property changes
         this.addEventListener(
             'dbp-set-property',
-            function (e) {
+            (e) => {
                 const name = e.detail.name;
                 const value = e.detail.value;
 
-                if (that.hasProperty(name) || that.providerRoot) {
+                if (this.hasProperty(name) || this.providerRoot) {
                     Logger.debug(
                         'AdapterLitElementProvider(' +
-                            that.tagName +
+                            this.tagName +
                             ') eventListener("dbp-set-property",..) name "' +
                             name +
                             '" found.',
                     );
-                    that.setProperty(name, value);
+                    this.setProperty(name, value);
 
-                    that._callbackStore.forEach((item) => {
+                    this._callbackStore.forEach((item) => {
                         if (item.name === name) {
                             item.callback(value);
                         }
@@ -177,24 +175,24 @@ export class AdapterLitElement extends LitElement {
         const config = {attributes: true, childList: false, subtree: false};
 
         // Callback function to execute when mutations are observed
-        const callback = function (mutationsList, observer) {
+        const callback = (mutationsList, observer) => {
             // Use traditional 'for loops' for IE 11
             for (const mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
                     const name = mutation.attributeName;
-                    const value = that.getAttribute(name);
+                    const value = this.getAttribute(name);
 
-                    if (that.hasPropertyChanged(name, value)) {
+                    if (this.hasPropertyChanged(name, value)) {
                         Logger.debug(
                             'AdapterLitElementProvider (' +
-                                that.tagName +
+                                this.tagName +
                                 ') observed attribute "' +
                                 name +
                                 '" changed',
                         );
-                        that.setProperty(name, value);
+                        this.setProperty(name, value);
 
-                        that._callbackStore.forEach((item) => {
+                        this._callbackStore.forEach((item) => {
                             if (item.name === name) {
                                 item.callback(value);
                             }
@@ -221,7 +219,7 @@ export class AdapterLitElement extends LitElement {
                 this.setProperty(attrs[i].name, attrs[i].value);
                 Logger.debug(
                     'AdapterLitElementProvider (' +
-                        that.tagName +
+                        this.tagName +
                         ') found attribute "' +
                         attrs[i].name +
                         '" = "' +
@@ -246,7 +244,6 @@ export class AdapterLitElement extends LitElement {
         const pair = element.trim().split(':');
         const local = pair[0];
         const global = pair[1] || local;
-        const that = this;
         const event = new CustomEvent('dbp-subscribe', {
             bubbles: true,
             composed: true,
@@ -262,7 +259,7 @@ export class AdapterLitElement extends LitElement {
 
                     Logger.debug(
                         'AdapterLitElement(' +
-                            that.tagName +
+                            this.tagName +
                             ') sub/Callback ' +
                             global +
                             ' -> ' +
@@ -273,28 +270,28 @@ export class AdapterLitElement extends LitElement {
 
                     // If value is an object set it directly as property
                     if (typeof value === 'object' && value !== null) {
-                        that.setPropertyByAttributeName(local, value);
+                        this.setPropertyByAttributeName(local, value);
                     } else {
-                        that.attributeChangedCallback(
+                        this.attributeChangedCallback(
                             local,
-                            that.getPropertyByAttributeName(local),
+                            this.getPropertyByAttributeName(local),
                             value,
                         );
 
                         // check if an attribute also exists in the tag
-                        if (that.getAttribute(local) !== null) {
+                        if (this.getAttribute(local) !== null) {
                             // we don't support attributes and provider values at the same time
                             console.warn(
                                 'Provider callback: "' +
                                     local +
                                     '" is also an attribute in tag "' +
-                                    that.tagName +
+                                    this.tagName +
                                     '", this is not supported!',
                             );
 
                             // update attribute if reflectAttribute is enabled
-                            if (that.reflectAttribute) {
-                                that.setAttribute(local, value);
+                            if (this.reflectAttribute) {
+                                this.setAttribute(local, value);
                             }
                         }
                     }

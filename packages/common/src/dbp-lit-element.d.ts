@@ -8,7 +8,8 @@ export default class DBPLitElement extends AdapterLitElement {
      */
     _(selector: string): HTMLElement | null;
 
-    /** Query selector within the shadow DOM or light DOM.
+    /**
+     * Query selector within the shadow DOM or light DOM.
      * @param selector - The selector to query.
      * @returns The selected elements as a NodeList or null if not found.
      */
