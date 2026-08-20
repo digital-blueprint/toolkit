@@ -18,7 +18,6 @@ export default [
             '@typescript-eslint/no-unsafe-member-access': 'off',
             '@typescript-eslint/no-unsafe-return': 'off',
             '@typescript-eslint/no-unused-vars': ['error', {args: 'none'}],
-            '@typescript-eslint/only-throw-error': 'off',
             '@typescript-eslint/require-await': 'off',
             '@typescript-eslint/unbound-method': 'off',
         }

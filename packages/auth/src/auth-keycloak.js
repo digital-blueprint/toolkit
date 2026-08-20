@@ -93,7 +93,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
             },
         });
         if (!response.ok) {
-            throw response;
+            throw new Error(response.statusText, {cause: response});
         }
         let user = await response.json();
         let dummyUser = {

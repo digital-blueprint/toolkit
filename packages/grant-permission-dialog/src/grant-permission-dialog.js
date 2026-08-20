@@ -181,7 +181,7 @@ export class GrantPermissionDialog extends LangMixin(
     async httpGetAsync(url, options) {
         let response = await fetch(url, options)
             .then((result) => {
-                if (!result.ok) throw result;
+                if (!result.ok) throw new Error(result.statusText, {cause: result});
                 return result;
             })
             .catch((error) => {

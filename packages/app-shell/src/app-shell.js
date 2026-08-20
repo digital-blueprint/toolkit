@@ -131,7 +131,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             const result = await fetch(url, {
                 headers: {'Content-Type': 'application/json'},
             });
-            if (!result.ok) throw result;
+            if (!result.ok) throw new Error(result.statusText, {cause: result});
 
             const jsondata = await result.json();
             if (jsondata['element'] === undefined)
