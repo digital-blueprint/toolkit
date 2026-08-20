@@ -3,6 +3,6 @@
     "compilerOptions": {
         "maxNodeModuleJsDepth": 0
     },
-    "include": ["src"],
+    "include": ["src", "./*.js"],
     "exclude": ["node_modules", "dist", "vendor"]
 }
