@@ -1019,10 +1019,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 .classList.add('open');
         });
 
-        const that = this;
-
-        setTimeout(function () {
-            that.tabulatorTable.redraw();
+        setTimeout(() => {
+            this.tabulatorTable.redraw();
         }, 0);
     }
 
@@ -1040,10 +1038,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 .classList.remove('open');
         });
 
-        const that = this;
-
-        setTimeout(function () {
-            that.tabulatorTable.redraw();
+        setTimeout(() => {
+            this.tabulatorTable.redraw();
         }, 0);
     }
 
