@@ -109,8 +109,7 @@ export const gatherFormDataFromElement = (formElement) => {
 
         try {
             dataValues[name] = JSON.parse(decodedValue);
-            // eslint-disable-next-line no-unused-vars
-        } catch (e) {
+        } catch {
             dataValues[name] = rawValue; // If JSON parsing fails, return the raw string
         }
     });
