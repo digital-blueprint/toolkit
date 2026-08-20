@@ -1092,7 +1092,7 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     setAllButtonState(state) {
-        Array.from(this.userList).forEach(async ([userId, user]) => {
+        Array.from(this.userList).forEach(([userId, user]) => {
             this.setButtonState(userId, state);
         });
     }

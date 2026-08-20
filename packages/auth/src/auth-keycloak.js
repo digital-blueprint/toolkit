@@ -38,7 +38,9 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
         this.scope = null;
         this.idpHint = '';
 
-        this._onKCChanged = this._onKCChanged.bind(this);
+        this._onKCChangedListener = (event) => {
+            void this._onKCChanged(event);
+        };
 
         // inject a data-testid attribute for Playwright
         if (window.playwright) {
@@ -214,7 +216,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
             !this.noCheckLoginIframe,
             this.idpHint,
         );
-        this._kcwrapper.addEventListener('changed', this._onKCChanged);
+        this._kcwrapper.addEventListener('changed', this._onKCChangedListener);
 
         const handleLogin = async () => {
             try {
@@ -247,7 +249,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
 
     disconnectedCallback() {
         this._kcwrapper.close();
-        this._kcwrapper.removeEventListener('changed', this._onKCChanged);
+        this._kcwrapper.removeEventListener('changed', this._onKCChangedListener);
 
         super.disconnectedCallback();
     }

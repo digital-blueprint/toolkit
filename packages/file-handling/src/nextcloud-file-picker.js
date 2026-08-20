@@ -62,7 +62,9 @@ export class NextcloudFilePicker extends LangMixin(
         this.directoriesOnly = false;
         this.maxSelectedItems = Number.MAX_VALUE;
         this.loading = false;
-        this._onReceiveWindowMessage = this.onReceiveWindowMessage.bind(this);
+        this._onReceiveWindowMessage = (event) => {
+            void this.onReceiveWindowMessage(event);
+        };
 
         this.folderIsSelected = this._i18n.t('nextcloud-file-picker.load-in-folder');
         this.generatedFilename = '';

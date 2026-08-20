@@ -130,7 +130,7 @@ export class KeycloakWrapper extends EventTarget {
         if (this.DEBUG && refreshed) console.log('token has been refreshed');
     }
 
-    async _onAuthSuccess() {
+    _onAuthSuccess() {
         // We check every once in a while if the token is still valid and
         // and refresh it if needed.
         if (this._checkId !== null) {
@@ -138,14 +138,14 @@ export class KeycloakWrapper extends EventTarget {
             this._checkId = null;
         }
         this._checkId = setInterval(
-            this._checkTokeHasExpired.bind(this),
+            () => void this._checkTokeHasExpired(),
             this.CHECK_INTERVAL * 1000,
         );
 
         this._onChanged();
     }
 
-    async _onAuthLogout() {
+    _onAuthLogout() {
         if (this._checkId !== null) {
             clearInterval(this._checkId);
             this._checkId = null;
@@ -163,7 +163,7 @@ export class KeycloakWrapper extends EventTarget {
             clientId: this._clientId,
         });
 
-        this._keycloak.onTokenExpired = this._onTokenExpired.bind(this);
+        this._keycloak.onTokenExpired = () => void this._onTokenExpired();
         this._keycloak.onAuthRefreshSuccess = this._onChanged.bind(this);
         this._keycloak.onAuthRefreshError = this._onChanged.bind(this);
         this._keycloak.onAuthLogout = this._onAuthLogout.bind(this);
