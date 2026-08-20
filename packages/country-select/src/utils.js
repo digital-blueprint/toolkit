@@ -18,7 +18,8 @@ export const readBinaryFileContent = async (file) => {
             resolve(reader.result);
         };
         reader.onerror = () => {
-            reject(reader.error);
+            const error = /** @type {DOMException} */ (reader.error);
+            reject(error);
         };
         reader.readAsBinaryString(file);
     });

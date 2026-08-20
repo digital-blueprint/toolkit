@@ -6,7 +6,7 @@ const promiseTimeout = function (ms, promise) {
     let timeout = new Promise((resolve, reject) => {
         let id = setTimeout(() => {
             clearTimeout(id);
-            reject('Timed out in ' + ms + 'ms.');
+            reject(new Error('Timed out in ' + ms + 'ms.'));
         }, ms);
     });
 

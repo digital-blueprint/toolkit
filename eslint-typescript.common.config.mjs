@@ -19,7 +19,6 @@ export default [
             '@typescript-eslint/no-unsafe-return': 'off',
             '@typescript-eslint/no-unused-vars': ['error', {args: 'none'}],
             '@typescript-eslint/only-throw-error': 'off',
-            '@typescript-eslint/prefer-promise-reject-errors': 'off',
             '@typescript-eslint/require-await': 'off',
             '@typescript-eslint/unbound-method': 'off',
         }
