@@ -280,17 +280,16 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
 
     dataChangedFunction() {
         if (this.tabulatorTable !== null) {
-            const that = this;
-            setTimeout(function () {
-                if (that._('.tabulator-responsive-collapse-toggle-open')) {
-                    that._a('.tabulator-responsive-collapse-toggle-open').forEach((element) =>
-                        element.addEventListener('click', that.toggleCollapse.bind(that)),
+            setTimeout(() => {
+                if (this._('.tabulator-responsive-collapse-toggle-open')) {
+                    this._a('.tabulator-responsive-collapse-toggle-open').forEach((element) =>
+                        element.addEventListener('click', this.toggleCollapse.bind(this)),
                     );
                 }
 
-                if (that._('.tabulator-responsive-collapse-toggle-close')) {
-                    that._a('.tabulator-responsive-collapse-toggle-close').forEach((element) =>
-                        element.addEventListener('click', that.toggleCollapse.bind(that)),
+                if (this._('.tabulator-responsive-collapse-toggle-close')) {
+                    this._a('.tabulator-responsive-collapse-toggle-close').forEach((element) =>
+                        element.addEventListener('click', this.toggleCollapse.bind(this)),
                     );
                 }
             }, 0);
@@ -582,7 +581,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
     openFileSink() {
         const fileSink = this._('#file-sink-clipboard');
         if (fileSink) {
-            let files = Array();
+            let files = [];
             if (this.tabulatorTable.getSelectedData().length > 0) {
                 this.tabulatorTable.getSelectedData().forEach((fileObject) => {
                     files.push(fileObject.file);

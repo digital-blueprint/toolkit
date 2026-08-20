@@ -392,8 +392,7 @@ export class FileSink extends LangMixin(
     }
 
     async uploadToNextcloud(directory) {
-        let that = this;
-        const element = that._('#nextcloud-file-picker');
+        const element = this._('#nextcloud-file-picker');
         const files = [...this.files];
         await element.uploadFiles(files, directory);
     }

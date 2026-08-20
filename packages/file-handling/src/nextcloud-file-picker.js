@@ -437,17 +437,16 @@ export class NextcloudFilePicker extends LangMixin(
 
     dataLoadedFunction(data) {
         if (this.tabulatorTable !== null) {
-            const that = this;
-            setTimeout(function () {
-                if (that._('.tabulator-responsive-collapse-toggle-open')) {
-                    that._a('.tabulator-responsive-collapse-toggle-open').forEach((element) =>
-                        element.addEventListener('click', that.toggleCollapse.bind(that)),
+            setTimeout(() => {
+                if (this._('.tabulator-responsive-collapse-toggle-open')) {
+                    this._a('.tabulator-responsive-collapse-toggle-open').forEach((element) =>
+                        element.addEventListener('click', this.toggleCollapse.bind(this)),
                     );
                 }
 
-                if (that._('.tabulator-responsive-collapse-toggle-close')) {
-                    that._a('.tabulator-responsive-collapse-toggle-close').forEach((element) =>
-                        element.addEventListener('click', that.toggleCollapse.bind(that)),
+                if (this._('.tabulator-responsive-collapse-toggle-close')) {
+                    this._a('.tabulator-responsive-collapse-toggle-close').forEach((element) =>
+                        element.addEventListener('click', this.toggleCollapse.bind(this)),
                     );
                 }
             }, 0);
@@ -1623,28 +1622,27 @@ export class NextcloudFilePicker extends LangMixin(
             let file = this.fileList[0];
             this.replaceFilename = file.name;
             let path = directory + '/' + file.name;
-            let that = this;
             this.loading = true;
             this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
             await customPutFileContents(this.webDavClient, path, file, {
                 overwrite: false,
             })
-                .then(function (success) {
+                .then((success) => {
                     if (!success) {
-                        that.generatedFilename = that.getNextFilename();
-                        that._('#replace-filename').value = that.generatedFilename;
-                        if (that.forAll) {
-                            that.uploadFileObject = file;
-                            that.uploadFileDirectory = directory;
-                            that.abortUploadButton = true;
-                            that.uploadFileAfterConflict();
+                        this.generatedFilename = this.getNextFilename();
+                        this._('#replace-filename').value = this.generatedFilename;
+                        if (this.forAll) {
+                            this.uploadFileObject = file;
+                            this.uploadFileDirectory = directory;
+                            this.abortUploadButton = true;
+                            this.uploadFileAfterConflict();
                         } else {
-                            that.replaceModalDialog(file, directory);
+                            this.replaceModalDialog(file, directory);
                         }
                     } else {
-                        that.uploadCount += 1;
-                        that.fileList.shift();
-                        that.uploadFile(directory);
+                        this.uploadCount += 1;
+                        this.fileList.shift();
+                        this.uploadFile(directory);
                     }
                 })
                 .catch((error) => {
@@ -1736,7 +1734,11 @@ export class NextcloudFilePicker extends LangMixin(
 
         if (this._("input[name='replacement']:checked").value === 'ignore') {
             this.closeModal('#replace-modal');
-            this.forAll ? (this.fileList = []) : this.fileList.shift();
+            if (this.forAll) {
+                this.fileList = [];
+            } else {
+                this.fileList.shift();
+            }
             this.uploadFile(directory);
             return true;
         } else if (this._("input[name='replacement']:checked").value === 'new-name') {
@@ -1754,19 +1756,18 @@ export class NextcloudFilePicker extends LangMixin(
         this.loading = true;
         this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
 
-        let that = this;
         await customPutFileContents(this.webDavClient, path, file, {
             overwrite: overwrite,
         })
             .then((content) => {
                 this.closeModal('#replace-modal');
                 this.uploadCount += 1;
-                that.fileList.shift();
-                that.uploadFile(directory);
+                this.fileList.shift();
+                this.uploadFile(directory);
             })
             .catch((error) => {
                 if (error.message.search('412') !== -1) {
-                    that.closeModal('#replace-modal');
+                    this.closeModal('#replace-modal');
                     this.generatedFilename = this.getNextFilename();
                     this._('#replace-filename').value = this.generatedFilename;
                     if (this.forAll) {
