@@ -98,11 +98,9 @@ export class MatomoElement extends DBPLitElement {
             this.pushEvent(['trackPageView']);
             this.pushEvent(['enableLinkTracking']);
 
-            const that = this;
-
-            (function (endpoint, siteId) {
-                that.pushEvent(['setTrackerUrl', endpoint + 'matomo.php']);
-                that.pushEvent(['setSiteId', siteId]);
+            ((endpoint, siteId) => {
+                this.pushEvent(['setTrackerUrl', endpoint + 'matomo.php']);
+                this.pushEvent(['setSiteId', siteId]);
 
                 var g = document.createElement('script');
                 var s = document.getElementsByTagName('script')[0];
@@ -114,29 +112,29 @@ export class MatomoElement extends DBPLitElement {
             })(this.endpoint, this.siteId);
 
             // track changed locations
-            window.addEventListener('locationchanged', function (e) {
-                that.pushEvent(['setReferrerUrl', e.detail.referrerUrl]);
-                that.pushEvent(['setCustomUrl', location.href]);
-                // that.pushEvent(['setDocumentTitle', '']);
-                that.pushEvent(['trackPageView']);
+            window.addEventListener('locationchanged', (e) => {
+                this.pushEvent(['setReferrerUrl', e.detail.referrerUrl]);
+                this.pushEvent(['setCustomUrl', location.href]);
+                // this.pushEvent(['setDocumentTitle', '']);
+                this.pushEvent(['trackPageView']);
 
                 // make Matomo aware of newly added content
                 const content = document.getElementById('content');
-                that.pushEvent(['MediaAnalytics::scanForMedia', content]);
-                that.pushEvent(['FormAnalytics::scanForForms', content]);
-                that.pushEvent(['trackContentImpressionsWithinNode', content]);
+                this.pushEvent(['MediaAnalytics::scanForMedia', content]);
+                this.pushEvent(['FormAnalytics::scanForForms', content]);
+                this.pushEvent(['trackContentImpressionsWithinNode', content]);
             });
 
             // track errors
-            window.addEventListener('error', function (e) {
-                that.pushEvent([
+            window.addEventListener('error', (e) => {
+                this.pushEvent([
                     'trackEvent',
                     'Error',
                     e.error ? e.error.message + '\n' + e.error.stack : e.message,
                 ]);
             });
 
-            window.addEventListener('unhandledrejection', function (e) {
+            window.addEventListener('unhandledrejection', (e) => {
                 let name = e.reason;
 
                 // TypeError objects have no toJSON() method, so we can't serialize them by themselves
@@ -152,7 +150,7 @@ export class MatomoElement extends DBPLitElement {
                     };
                 }
 
-                that.pushEvent(['trackEvent', 'UnhandledRejection', name]);
+                this.pushEvent(['trackEvent', 'UnhandledRejection', name]);
             });
 
             // https://developer.mozilla.org/en-US/docs/Web/API/Element/securitypolicyviolation_event
@@ -188,7 +186,7 @@ export class MatomoElement extends DBPLitElement {
                         ', ' +
                         this.lastEvent[2],
                 );
-                that.pushEvent(this.lastEvent);
+                this.pushEvent(this.lastEvent);
                 this.lastEvent = [];
             }
             return;
