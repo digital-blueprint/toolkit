@@ -100,7 +100,6 @@ export class CountrySelect extends LangMixin(
      */
     initSelect2(countries = [], defaultCode = 'AT') {
         const i18n = this._i18n;
-        const that = this;
         const $this = $(this);
 
         const normalizedCountries = Array.isArray(countries)
@@ -169,17 +168,17 @@ export class CountrySelect extends LangMixin(
                     return search ? data : null;
                 },
             })
-            .on('select2:clear', function () {
-                that.clear();
+            .on('select2:clear', () => {
+                this.clear();
             })
-            .on('select2:select', function (e) {
+            .on('select2:select', (e) => {
                 const selectedData = e.params.data;
 
                 if ($this.attr('value') !== selectedData.id) {
-                    that.ignoreValueUpdate = true;
+                    this.ignoreValueUpdate = true;
                     $this.attr('value', selectedData.id);
 
-                    that.dispatchEvent(
+                    this.dispatchEvent(
                         new CustomEvent('change', {
                             detail: {value: selectedData.id},
                             bubbles: true,
