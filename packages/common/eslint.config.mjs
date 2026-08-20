@@ -1,20 +1,10 @@
 import commonConfig from '../../eslint.common.config.mjs';
-import tseslint from 'typescript-eslint';
+import commonConfigTyped from '../../eslint-typescript.common.config.mjs';
 
 export default [
     {
         ignores: ['dist/', '*.js', 'src/scoped/ScopedElementsMixin.js', 'misc/browser-check.js', 'test/'],
     },
-    ...tseslint.configs.recommended,
     ...commonConfig,
-    {
-        languageOptions: {
-            parserOptions: {
-                projectService: true,
-            }
-        },
-        rules:  {
-            '@typescript-eslint/no-unused-vars': ['error', {args: 'none'}],
-        }
-    },
+    ...commonConfigTyped,
 ];
