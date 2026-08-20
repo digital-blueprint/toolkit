@@ -282,7 +282,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     sendRoutingUrl() {
         const routingBaseUrl =
-            new URL(this.basePath, window.location.href) +
+            new URL(this.basePath, window.location.href).href +
             encodeURIComponent(this.lang) +
             '/' +
             encodeURIComponent(this.activeView);
