@@ -10,7 +10,7 @@ import {ScopedElementsMixin} from './scoped/ScopedElementsMixin.js';
 /**
  * Displays a warning when login is required.
  */
-export class DBPLoginRequired extends AuthMixin(
+export class DBPLoginRequiredWarning extends AuthMixin(
     LangMixin(ScopedElementsMixin(DBPLitElement), createInstance),
 ) {
     static get properties() {
@@ -73,6 +73,5 @@ export class DBPLoginRequired extends AuthMixin(
         `;
     }
 }
-
 // Backwards-compatible exports.
-export {DBPLoginRequired as loginNotif, DBPLoginRequired as loginNotification};
+export {DBPLoginRequiredWarning as loginNotif, DBPLoginRequiredWarning as loginNotification};

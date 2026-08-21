@@ -3,7 +3,7 @@ import {
     Button,
     Icon,
     InlineNotification,
-    DBPLoginRequired,
+    DBPLoginRequiredWarning,
     LoadingButton,
     IconButton,
     MiniSpinner,
@@ -22,7 +22,7 @@ commonUtils.defineCustomElement('dbp-button', Button);
 commonUtils.defineCustomElement('dbp-loading-button', LoadingButton);
 commonUtils.defineCustomElement('dbp-icon-button', IconButton);
 commonUtils.defineCustomElement('dbp-inline-notification', InlineNotification);
-commonUtils.defineCustomElement('dbp-login-required', DBPLoginRequired);
+commonUtils.defineCustomElement('dbp-login-required-warning', DBPLoginRequiredWarning);
 commonUtils.defineCustomElement('dbp-translated', Translated);
 commonUtils.defineCustomElement('dbp-translation', Translation);
 commonUtils.defineCustomElement('dbp-select', DBPSelect);

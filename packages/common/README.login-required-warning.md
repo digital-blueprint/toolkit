@@ -3,9 +3,9 @@
 You can use this web component to show a login notification.
 `dbp-login-required-warning` web component informs users that they must log in before they can use an application.
 
-It replaces duplicated login-warning markup in individual applications and provides one consistent implementation for:
+It replaces duplicated login-required-warning markup in individual applications and provides one consistent implementation for:
 
-- Displaying the login-required message
+- Displaying the login-required-warning message
 - Hiding the message while authentication or translations are loading
 - Hiding the message after the user has logged in
 - Translating the message and login-link text
@@ -15,20 +15,20 @@ It replaces duplicated login-warning markup in individual applications and provi
 The component does not perform authentication itself.
 
 ```javascript
-import {DBPLoginRequired} from '@dbp-toolkit/common';
+import {DBPLoginRequiredWarning} from '@dbp-toolkit/common';
 
 class Nameclass extends DBPLitElement {
     static get scopedElements() {
         return {
-            'dbp-login-required': DBPLoginRequired,
+            'dbp-login-required-warning': DBPLoginRequiredWarning,
         };
     }
 
     render() {
         return html`
-            <dbp-login-required
+            <dbp-login-required-warning
                 subscribe="auth,lang"
-                @dbp-login-requested=${this._onLoginClicked}></dbp-login-required>
+                @dbp-login-requested=${this._onLoginClicked}></dbp-login-required-warning>
         `;
     }
 }
@@ -52,13 +52,13 @@ with:
 
 ```javascript
 html`
-    <dbp-login-required
+    <dbp-login-required-warning
         subscribe="auth,lang"
-        @dbp-login-requested=${this._onLoginClicked}></dbp-login-required>
+        @dbp-login-requested=${this._onLoginClicked}></dbp-login-required-warning>
 `;
 ```
 
-This keeps login-warning behavior, styling, and translations in the app shell instead of duplicating them in every application.
+This keeps login-required-warning behavior, styling, and translations in the app shell instead of duplicating them in every application.
 
 ### Attributes
 
@@ -72,7 +72,8 @@ An existing login handler can be reused directly:
 
 ```javascript
 html`
-    <dbp-login-required @dbp-login-requested=${this._onLoginClicked}></dbp-login-required>
+    <dbp-login-required-warning
+        @dbp-login-requested=${this._onLoginClicked}></dbp-login-required-warning>
 `;
 ```
 
@@ -114,10 +115,10 @@ This ensures that the component matches other app-shell warnings and notificatio
 After the custom properties are implemented, an application can configure them on the host element:
 
 ```css
-dbp-login-required {
-    --dbp-login-required-padding: 1.25rem;
-    --dbp-login-required-border-radius: 0.25rem;
-    --dbp-login-required-font-size: 1rem;
+dbp-login-required-warning {
+    --dbp-login-required-warning-padding: 1.25rem;
+    --dbp-login-required-warning-border-radius: 0.25rem;
+    --dbp-login-required-warning-font-size: 1rem;
 }
 ```
 
@@ -125,11 +126,11 @@ They can also be configured inline:
 
 ```javascript
 html`
-    <dbp-login-required
+    <dbp-login-required-warning
         style="
-            --dbp-login-required-padding: 1.25rem;
-            --dbp-login-required-border-radius: 0.25rem;
-        "></dbp-login-required>
+            --dbp-login-required-warning-padding: 1.25rem;
+            --dbp-login-required-warning-border-radius: 0.25rem;
+        "></dbp-login-required-warning>
 `;
 ```
 
@@ -137,14 +138,14 @@ Global application-level defaults can be set on :root:
 
 ```css
 :root {
-    --dbp-login-required-padding: 1.25rem;
-    --dbp-login-required-border-radius: 0.25rem;
+    --dbp-login-required-warning-padding: 1.25rem;
+    --dbp-login-required-warning-border-radius: 0.25rem;
 }
 ```
 
 ### Accessibility
 
-Use `role="alert"` for the login-required message;
+Use `role="alert"` for the login-required-warning message;
 
 ```html
 <div class="notification is-warning" role="alert">...</div>
