@@ -26,6 +26,7 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
 
     static get properties() {
         return {
+            ...super.properties,
             modalId: {type: String, attribute: 'modal-id'},
             title: {type: String},
             stickyFooter: {type: Boolean, attribute: 'sticky-footer'},
@@ -95,7 +96,7 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             return;
         }
 
-        /** @type {HTMLElement} */
+        /** @type {HTMLElement | null} */
         const notificationContainer =
             notificationComponent.shadowRoot.querySelector('#notification-container');
 
@@ -167,7 +168,9 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         if (notificationSlot) {
             const notificationComponent = notificationSlot.querySelector('dbp-notification');
             if (notificationComponent && notificationComponent.shadowRoot) {
-                notificationComponent.removeAllNotifications();
+                /** @type {HTMLElement & {removeAllNotifications: () => void}} */ (
+                    notificationComponent
+                ).removeAllNotifications();
             }
         }
         // Reset modal padding and translation
