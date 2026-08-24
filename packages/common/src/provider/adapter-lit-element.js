@@ -13,6 +13,7 @@ export class AdapterLitElement extends LitElement {
         // default values
         this.subscribe = '';
         this.unsubscribe = '';
+        this.providerRoot = false;
 
         this._callbackStore = [];
 
@@ -145,6 +146,9 @@ export class AdapterLitElement extends LitElement {
         // listen to property changes
         this.addEventListener(
             'dbp-set-property',
+            /**
+             * @param {CustomEvent} e
+             */
             (e) => {
                 const name = e.detail.name;
                 const value = e.detail.value;
@@ -330,7 +334,7 @@ export class AdapterLitElement extends LitElement {
 
     findPropertyName(attributeName) {
         let resultName = attributeName;
-        const properties = this.constructor.properties;
+        const properties = /** @type {typeof AdapterLitElement} */ (this.constructor).properties;
 
         for (const propertyName in properties) {
             const attribute = properties[propertyName].attribute;

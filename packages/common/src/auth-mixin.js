@@ -5,7 +5,7 @@ export const AuthMixin = dedupeMixin(
         class extends superClass {
             static properties = {
                 auth: {type: Object},
-                ...superClass.properties,
+                .../** @type {{properties?: object}} */ (superClass).properties,
             };
 
             constructor() {

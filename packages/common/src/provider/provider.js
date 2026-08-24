@@ -37,6 +37,9 @@ export class Provider extends HTMLElement {
 
         this.addEventListener(
             'dbp-subscribe',
+            /**
+             * @param {CustomEvent} e
+             */
             (e) => {
                 const name = e.detail.name;
                 if (this.hasProperty(name) || this.root) {
@@ -62,6 +65,9 @@ export class Provider extends HTMLElement {
 
         this.addEventListener(
             'dbp-unsubscribe',
+            /**
+             * @param {CustomEvent} e
+             */
             (e) => {
                 const name = e.detail.name;
                 const sender = e.detail.sender;
@@ -96,6 +102,9 @@ export class Provider extends HTMLElement {
         // listen to property changes
         this.addEventListener(
             'dbp-set-property',
+            /**
+             * @param {CustomEvent} e
+             */
             (e) => {
                 const name = e.detail.name;
                 const value = e.detail.value;
@@ -178,6 +187,6 @@ export class Provider extends HTMLElement {
     }
 
     get id() {
-        return this.getAttribute('id');
+        return this.getAttribute('id') ?? '';
     }
 }

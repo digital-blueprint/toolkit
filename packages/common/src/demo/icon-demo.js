@@ -17,6 +17,8 @@ export class LazyLoad extends LitElement {
         super();
         this._isVisible = false;
         this._observer = null;
+        this.rootMargin = '';
+        this.threshold = 0;
     }
 
     static get properties() {

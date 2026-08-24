@@ -22,6 +22,7 @@ export class InlineNotification extends DBPLitElement {
 
     static get properties() {
         return {
+            ...super.properties,
             type: {type: String},
             summary: {type: String},
             body: {type: String},

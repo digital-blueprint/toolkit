@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {dedupeMixin} from '@open-wc/dedupe-mixin';
 import {adoptStyles, isServer} from 'lit';
 import {ScopedElementsMixin as OpenWcLitScopedElementsMixin} from '@open-wc/scoped-elements/lit-element.js';

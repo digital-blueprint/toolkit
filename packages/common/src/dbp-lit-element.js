@@ -76,9 +76,12 @@ export default class DBPLitElement extends AdapterLitElement {
         // Now extract slots from templates contained in the light dom
         let lightTemplateSlots = this.querySelectorAll(':scope > template[slot]:not([slot=""]');
         for (let templateElem of lightTemplateSlots) {
+            if (!(templateElem instanceof HTMLTemplateElement)) {
+                continue;
+            }
             // create a slot div container to put in the cloned template content
             const divElem = document.createElement('div');
-            divElem.slot = templateElem.getAttribute('slot');
+            divElem.slot = templateElem.getAttribute('slot') ?? '';
             divElem.appendChild(templateElem.content.cloneNode(true));
             // remove the old template
             templateElem.remove();
@@ -101,12 +104,16 @@ export default class DBPLitElement extends AdapterLitElement {
         let globalOverrideTemplateElem = document.querySelector('template#' + this.htmlOverrides);
         if (globalOverrideTemplateElem !== null) {
             // we need to clone the element so we can access the content
-            const overrideTemplateElemClone = globalOverrideTemplateElem.content.cloneNode(true);
+            const overrideTemplateElemClone = /** @type {DocumentFragment} */ (
+                globalOverrideTemplateElem.content.cloneNode(true)
+            );
             const templateOverrideElem = overrideTemplateElemClone.querySelector(
                 'template#' + this.tagName.toLowerCase(),
             );
-            if (templateOverrideElem !== null) {
-                const templateOverrideElemClone = templateOverrideElem.content.cloneNode(true);
+            if (templateOverrideElem instanceof HTMLTemplateElement) {
+                const templateOverrideElemClone = /** @type {DocumentFragment} */ (
+                    templateOverrideElem.content.cloneNode(true)
+                );
 
                 // Find all slots which are direct children (somehow :scope doesn't work here so check parentNode)
                 let globalTemplateSlots = [];

@@ -50,7 +50,7 @@ export const base64EncodeUnicode = (str) => {
     // First we escape the string using encodeURIComponent to get the UTF-8 encoding of the characters,
     // then we convert the percent encodings into raw bytes, and finally feed it to btoa() function.
     const utf8Bytes = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-        return String.fromCharCode('0x' + p1);
+        return String.fromCharCode(Number.parseInt(p1, 16));
     });
 
     return btoa(utf8Bytes);
@@ -73,7 +73,7 @@ export const base64EncodeUnicode = (str) => {
  *
  * @param {string} name
  * @param {CustomElementConstructor} constructor
- * @param {object} options
+ * @param {object} [options]
  */
 export const defineCustomElement = (name, constructor, options) => {
     // In case the constructor is already defined just do nothing
@@ -305,20 +305,23 @@ export async function getMimeTypeOfFile(file) {
     return await new Promise((resolve) => {
         let fileReader = new FileReader();
 
-        fileReader.onloadend = function (evt) {
-            if (evt.target.readyState === FileReader.DONE) {
-                const uint = new Uint8Array(evt.target.result);
-                let bytes = [];
-
-                uint.forEach((byte) => {
-                    bytes.push(byte.toString(16));
-                });
-
-                const hex = bytes.join('').toUpperCase();
-                const mimeType = getMimeType(hex);
-
-                resolve(mimeType);
+        fileReader.onloadend = function () {
+            if (!(fileReader.result instanceof ArrayBuffer)) {
+                resolve('Unknown filetype');
+                return;
             }
+
+            const uint = new Uint8Array(fileReader.result);
+            let bytes = [];
+
+            uint.forEach((byte) => {
+                bytes.push(byte.toString(16));
+            });
+
+            const hex = bytes.join('').toUpperCase();
+            const mimeType = getMimeType(hex);
+
+            resolve(mimeType);
         };
 
         fileReader.readAsArrayBuffer(file.slice(0, 4));

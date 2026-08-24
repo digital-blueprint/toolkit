@@ -115,7 +115,7 @@ export class ProviderAdapter extends HTMLElement {
 
     findPropertyName(attributeName) {
         let resultName = attributeName;
-        const properties = this.constructor.properties;
+        const properties = /** @type {typeof ProviderAdapter} */ (this.constructor).properties;
 
         for (const propertyName in properties) {
             const attribute = properties[propertyName].attribute;

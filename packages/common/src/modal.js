@@ -10,7 +10,7 @@ import {LangMixin} from './lang-mixin.js';
 export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        /** @type {HTMLDialogElement} */
+        /** @type {HTMLDialogElement | null} */
         this.modalDialog = null;
         /** @type {string} */
         this.modalId = 'dbp-modal-id';
@@ -42,17 +42,20 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
     }
 
     firstUpdated() {
-        this.modalDialog = /** @type {HTMLDialogElement} */ (this._('#' + this.modalId));
-        dialogPolyfill.registerDialog(this.modalDialog);
+        const modalElement = this._('#' + this.modalId);
+        if (modalElement?.localName !== 'dialog') {
+            return;
+        }
+        const modalDialog = /** @type {HTMLDialogElement} */ (modalElement);
+        this.modalDialog = modalDialog;
+        dialogPolyfill.registerDialog(modalDialog);
 
         // Save default value of padding top changed when adding/removing notifications
-        this.modalPaddingTopDefault = parseInt(
-            window.getComputedStyle(this.modalDialog).paddingTop,
-        );
+        this.modalPaddingTopDefault = parseInt(window.getComputedStyle(modalDialog).paddingTop);
 
-        this.modalDialog.addEventListener('close', (event) => {
+        modalDialog.addEventListener('close', () => {
             // Re allow scrolling the page when dialog is closed
-            const htmlElement = this.modalDialog.ownerDocument.documentElement;
+            const htmlElement = modalDialog.ownerDocument.documentElement;
             htmlElement.style.removeProperty('overflow');
 
             const customEvent = new CustomEvent('dbp-modal-closed', {
@@ -77,6 +80,11 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
     }
 
     async updateModalNotificationPadding(notificationId) {
+        const modalDialog = this.modalDialog;
+        if (!modalDialog) {
+            return;
+        }
+
         const notificationSlot = this.querySelector('[slot="header"]');
         if (!notificationSlot) {
             return;
@@ -96,9 +104,9 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             // Wait until next frame to ensure styles are applied
             await new Promise((resolve) => requestAnimationFrame(resolve));
 
-            const modalPosition = this.modalDialog.getBoundingClientRect();
+            const modalPosition = modalDialog.getBoundingClientRect();
             const modalPaddingTopCurrent = parseInt(
-                window.getComputedStyle(this.modalDialog).getPropertyValue('padding-top'),
+                window.getComputedStyle(modalDialog).getPropertyValue('padding-top'),
             );
             const modalPaddingTopDefault = this.modalPaddingTopDefault;
             const notificationContainerHeight =
@@ -107,11 +115,11 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             // Until there is more than 1 notification place over the modal add padding top and translate the modal up
             // If the padding top is greater than the notification container height, reduce the padding top and translate the modal up
             if (modalPosition.top > 150 || modalPaddingTopCurrent > notificationContainerHeight) {
-                this.modalDialog.style.setProperty(
+                modalDialog.style.setProperty(
                     '--dbp-modal-padding-top',
                     notificationContainerHeight + 'px',
                 );
-                this.modalDialog.style.setProperty(
+                modalDialog.style.setProperty(
                     '--dbp-modal-translate-y',
                     notificationContainerHeight / -2 + 'px',
                 );
@@ -126,24 +134,34 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
     }
 
     isOpen() {
-        return this.modalDialog.open;
+        return this.modalDialog?.open ?? false;
     }
 
     open() {
+        const modalDialog = this.modalDialog;
+        if (!modalDialog) {
+            return;
+        }
+
         // Don't open the dialog if it is already open
-        if (this.modalDialog.open) {
+        if (modalDialog.open) {
             return;
         }
 
         // Prevent scrolling the page when dialog is open
-        const htmlElement = this.modalDialog.ownerDocument.documentElement;
+        const htmlElement = modalDialog.ownerDocument.documentElement;
         htmlElement.style.overflow = 'hidden';
 
-        this.modalDialog.showModal();
+        modalDialog.showModal();
     }
 
     close() {
-        this.modalDialog.close();
+        const modalDialog = this.modalDialog;
+        if (!modalDialog) {
+            return;
+        }
+
+        modalDialog.close();
         // Remove all notifications if modal is closed
         const notificationSlot = this.querySelector('[slot="header"]');
         if (notificationSlot) {
@@ -153,11 +171,11 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             }
         }
         // Reset modal padding and translation
-        this.modalDialog.style.setProperty(
+        modalDialog.style.setProperty(
             '--dbp-modal-padding-top',
             this.modalPaddingTopDefault + 'px',
         );
-        this.modalDialog.style.removeProperty('--dbp-modal-translate-y');
+        modalDialog.style.removeProperty('--dbp-modal-translate-y');
     }
 
     static get styles() {

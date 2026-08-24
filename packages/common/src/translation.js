@@ -70,7 +70,7 @@ export class Translation extends DBPLitElement {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    void this._i18n.changeLanguage(lang);
+                    void (/** @type {import('i18next').i18n} */ (this._i18n).changeLanguage(lang));
                     break;
             }
         });
@@ -79,12 +79,13 @@ export class Translation extends DBPLitElement {
     }
 
     render() {
+        const i18n = /** @type {import('i18next').i18n} */ (this._i18n);
         // request to i18n translation
         const translation = (() => {
             if (this.interpolation && this.unsafe)
-                return unsafeHTML(this._i18n.t(this.key, this.interpolation));
-            else if (this.interpolation) return this._i18n.t(this.key, this.interpolation);
-            else return this._i18n.t(this.key);
+                return unsafeHTML(i18n.t(this.key, this.interpolation));
+            else if (this.interpolation) return i18n.t(this.key, this.interpolation);
+            else return i18n.t(this.key);
         })();
 
         // if translation == "" key was not found

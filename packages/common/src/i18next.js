@@ -160,7 +160,7 @@ export function setOverrides(i18n, element, overrides) {
  * Expects overrides as promise and requests update after overrides have been set.
  *
  * @param {import("i18next").i18n} i18n - The i18next instance
- * @param {import("lit").LitElement} element - The element at which the overrides are targeted
+ * @param {import("lit").LitElement & {langDir: string}} element - The element at which the overrides are targeted
  */
 export async function setOverridesByGlobalCache(i18n, element) {
     // We add a special namespace which gets used with priority and falls back
