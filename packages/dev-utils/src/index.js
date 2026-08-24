@@ -39,9 +39,10 @@ export function getBuildInfo(build) {
         }
 
         let parsed = url.parse(remote);
-        let newPath = parsed.path.slice(
+        const parsedPath = parsed.path ?? '';
+        let newPath = parsedPath.slice(
             0,
-            parsed.path.lastIndexOf('.') > -1 ? parsed.path.lastIndexOf('.') : undefined,
+            parsedPath.lastIndexOf('.') > -1 ? parsedPath.lastIndexOf('.') : undefined,
         );
         commitUrl = parsed.protocol + '//' + parsed.host + newPath + '/commit/' + commitHash;
     } else {
@@ -152,6 +153,11 @@ export async function getPackagePath(packageName, assetPath) {
  */
 export async function generateTLSConfig() {
     const certDir = findCacheDir({name: 'dbp-dev-server-cert'});
+    if (certDir === undefined) {
+        throw new Error(
+            'Unable to determine a cache directory for the development TLS certificate',
+        );
+    }
     const keyPath = path.join(certDir, 'server.key');
     const certPath = path.join(certDir, 'server.cert');
 
@@ -181,6 +187,10 @@ export async function generateTLSConfig() {
 /**
  * Given a root package name, recursively collects all dbp metadata from the
  * package and its (runtime) dependencies.
+ *
+ * @param {string} packageName
+ * @param {Set<string>} [_visited]
+ * @param {string | null} [_path]
  */
 async function collectDbpMetadata(packageName, _visited = new Set(), _path = null) {
     const packageJsonPath = getPackageJsonPath(packageName, _path || process.cwd());
@@ -343,6 +353,10 @@ function urlPluginHack(options = {}) {
     }
 
     let plugin = urlPlugin(options);
+    const load = plugin.load;
+    if (load === undefined) {
+        throw new Error('@rollup/plugin-url does not provide a load hook');
+    }
     plugin.load = {
         filter: {
             id: {
@@ -350,7 +364,7 @@ function urlPluginHack(options = {}) {
                 exclude: (options.exclude ?? []).map((id) => getMatcherString(id)),
             },
         },
-        handler: plugin.load,
+        handler: typeof load === 'function' ? load : load.handler,
     };
 
     return plugin;
