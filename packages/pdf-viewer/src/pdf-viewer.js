@@ -11,6 +11,15 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {name as pkgName} from './../package.json';
 import {readBinaryFileContent} from './utils.js';
 
+/**
+ * @typedef {typeof import('pdfjs-dist/legacy/build/pdf.mjs')} PdfJs
+ * @typedef {import('pdfjs-dist/types/src/display/api').DocumentInitParameters} PdfDocumentInitParameters
+ * @typedef {import('pdfjs-dist/legacy/build/pdf.mjs').PDFDocumentLoadingTask} PdfDocumentLoadingTask
+ * @typedef {import('pdfjs-dist/legacy/build/pdf.mjs').PDFDocumentProxy} PdfDocumentProxy
+ * @typedef {import('pdfjs-dist/legacy/build/pdf.mjs').TextLayer} PdfTextLayer
+ */
+
+/** @type {Promise<PdfJs> | null} */
 let pdfjsPromise = null;
 
 /**
@@ -19,7 +28,7 @@ let pdfjsPromise = null;
  * is loaded and set up.
  *
  * @async
- * @returns {Promise<object>} A promise that resolves to the imported PDF.js module.
+ * @returns {Promise<PdfJs>} A promise that resolves to the imported PDF.js module.
  */
 // oxlint-disable-next-line typescript/require-await
 export async function importPdfJs() {
@@ -43,9 +52,9 @@ export async function importPdfJs() {
  * cmap URL and cmap packed setting, as well as disabling eval for security
  * reasons unless explicitly enabled.
  *
- * @param {import('pdfjs-dist/legacy/build/pdf.mjs')} pdfjs - The PDF.js library instance.
- * @param {object} [src] - The source configuration object for the PDF document.
- * @returns {import('pdfjs-dist/legacy/build/pdf.mjs').PDFDocumentLoadingTask}
+ * @param {PdfJs} pdfjs - The PDF.js library instance.
+ * @param {PdfDocumentInitParameters} [src] - The source configuration object for the PDF document.
+ * @returns {PdfDocumentLoadingTask}
  */
 export function getPdfJsDocument(pdfjs, src = {}) {
     // Set for cmaps we ship by default
@@ -68,7 +77,7 @@ export function getPdfJsDocument(pdfjs, src = {}) {
 export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this.pdfDoc = null;
+        this.pdfDoc = /** @type {PdfDocumentProxy | null} */ (null);
         this.currentPage = 0;
         this.totalPages = 0;
         this.isShowPage = false;
@@ -80,7 +89,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.initialClientHeight = 0;
         this.isFirstRendering = true;
         this.autoResize = 'cover';
-        this.textLayer = null;
+        this.textLayer = /** @type {PdfTextLayer | null} */ (null);
 
         this._onWindowResize = this._onWindowResize.bind(this);
     }
@@ -261,7 +270,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
             // transform used to scale the drawing to the higher resolution backing store
             const renderTransform =
-                outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+                outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
 
             this._('#canvas-wrapper-inner').style.width = viewport.width + 'px';
             this._('#canvas-wrapper-inner').style.height = viewport.height + 'px';
@@ -276,8 +285,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
             // page is rendered on <canvas> element
             const render_context = {
-                canvas: null,
-                canvasContext: canvas.getContext('2d'),
+                canvas,
                 viewport: viewport,
                 transform: renderTransform,
             };
