@@ -21,6 +21,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     }
 
     static properties = {
+        ...super.properties,
         open: {type: Boolean, reflect: true},
         disabled: {type: Boolean, reflect: true},
         label: {type: String},
@@ -52,7 +53,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     openMenu() {
         if (!this.open && !this.disabled) {
             this.open = true;
-            this.updateComplete.then(() => this._focusFirstItem());
+            void this.updateComplete.then(() => this._focusFirstItem());
             this._bindOutside();
         }
     }
@@ -67,7 +68,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     toggle = () => (this.open ? this.closeMenu() : this.openMenu());
 
     _focusTrigger() {
-        const btn = this.renderRoot.querySelector('.trigger');
+        const btn = /** @type {HTMLElement | null} */ (this.renderRoot.querySelector('.trigger'));
         btn?.focus();
     }
 
@@ -77,7 +78,9 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     }
 
     _items() {
-        return Array.from(this.renderRoot.querySelectorAll('.item-button'));
+        return Array.from(this.renderRoot.querySelectorAll('button.item-button')).filter(
+            (item) => item instanceof HTMLButtonElement,
+        );
     }
 
     _onTriggerKeydown = (e) => {
@@ -89,8 +92,11 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
     _onMenuKeydown = (e) => {
         const items = this._items().filter((i) => !i.hasAttribute('disabled'));
-        const active = this.renderRoot?.activeElement ?? document.activeElement;
-        const idx = items.indexOf(active);
+        const active =
+            this.renderRoot instanceof ShadowRoot
+                ? this.renderRoot.activeElement
+                : document.activeElement;
+        const idx = active instanceof HTMLButtonElement ? items.indexOf(active) : -1;
         if (e.key === 'Escape') {
             e.preventDefault();
             this.closeMenu();
