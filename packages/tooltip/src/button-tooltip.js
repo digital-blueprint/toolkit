@@ -31,16 +31,20 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
     }
 
     setOrUpdateTippy() {
-        if (this._('#info-tooltip-button')) {
-            if (this._('#info-tooltip-button')._tippy) {
-                this._('#info-tooltip-button')._tippy.setProps({
+        const button = this._('#info-tooltip-button');
+        const shadowRoot = this.shadowRoot;
+        if (button && shadowRoot) {
+            // Tippy supports ShadowRoot at runtime, but its appendTo type only declares Element.
+            const appendTo = /** @type {Element} */ (/** @type {unknown} */ (shadowRoot));
+            if (button._tippy) {
+                button._tippy.setProps({
                     content: this.textContent,
-                    appendTo: this.shadowRoot,
+                    appendTo,
                 });
             } else {
-                tippy(this._('#info-tooltip-button'), {
+                tippy(button, {
                     content: this.textContent,
-                    appendTo: this.shadowRoot,
+                    appendTo,
                 });
             }
         }
@@ -49,7 +53,7 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
     _handleClick(event) {
         const form = this.formId ? document.getElementById(this.formId) : this.closest('form');
 
-        if (form) {
+        if (form instanceof HTMLFormElement) {
             switch (this.type) {
                 case 'reset':
                     form.reset();

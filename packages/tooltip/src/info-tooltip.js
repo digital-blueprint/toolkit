@@ -33,19 +33,23 @@ export class InfoTooltip extends ScopedElementsMixin(DBPLitElement) {
     }
 
     setOrUpdateTippy() {
-        if (this._('#info-tooltip-icon')) {
-            if (this._('#info-tooltip-icon')._tippy) {
-                this._('#info-tooltip-icon')._tippy.setProps({
+        const icon = this._('#info-tooltip-icon');
+        const shadowRoot = this.shadowRoot;
+        if (icon && shadowRoot) {
+            // Tippy supports ShadowRoot at runtime, but its appendTo type only declares Element.
+            const appendTo = /** @type {Element} */ (/** @type {unknown} */ (shadowRoot));
+            if (icon._tippy) {
+                icon._tippy.setProps({
                     content: this.textContent,
-                    appendTo: this.shadowRoot,
+                    appendTo,
                     interactive: this.interactive,
                     allowHTML: this.interactive ? true : false,
                     hideOnClick: this.interactive ? false : true,
                 });
             } else {
-                tippy(this._('#info-tooltip-icon'), {
+                tippy(icon, {
                     content: this.textContent,
-                    appendTo: this.shadowRoot,
+                    appendTo,
                     interactive: this.interactive,
                     allowHTML: this.interactive ? true : false,
                     hideOnClick: this.interactive ? false : true,
