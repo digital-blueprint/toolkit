@@ -38,7 +38,7 @@ export class ThemeSwitcher extends LangMixin(
 
     connectedCallback() {
         super.connectedCallback();
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             if (this.darkModeThemeOverride === null) {
                 this.detectBrowserDarkMode = true;
             } else if (this.darkModeThemeOverride === '') {
@@ -83,15 +83,14 @@ export class ThemeSwitcher extends LangMixin(
     }
 
     toggleModeMenu() {
-        const button = this.shadowRoot.querySelector('.mode-button');
+        const button = this.renderRoot.querySelector('.mode-button');
         if (!button) {
             return;
         }
         if (button.classList.contains('active')) button.classList.remove('active');
         else button.classList.add('active');
-        const menu = this.shadowRoot.querySelector('ul.extended-menu');
-        const menuStart = this.shadowRoot.querySelector('.mode-button');
-        if (menu === null || menuStart === null) {
+        const menu = this.renderRoot.querySelector('ul.extended-menu');
+        if (menu === null) {
             return;
         }
 
@@ -112,14 +111,14 @@ export class ThemeSwitcher extends LangMixin(
             return;
         }
 
-        const menu = this.shadowRoot.querySelector('ul.extended-menu');
+        const menu = this.renderRoot.querySelector('ul.extended-menu');
         if (menu && !menu.classList.contains('hidden')) this.toggleModeMenu();
     }
 
     loadTheme(themeName) {
-        const button = this.shadowRoot.querySelector('.button-' + themeName);
-        const otherButtons = this.shadowRoot.querySelectorAll('.button-theme');
-        const body = this.shadowRoot.host.getRootNode({composed: true}).body;
+        const button = this.renderRoot.querySelector('.button-' + themeName);
+        const otherButtons = this.renderRoot.querySelectorAll('.button-theme');
+        const body = this.ownerDocument.body;
 
         if (button === null || otherButtons.length === 0 || body === null) {
             return;

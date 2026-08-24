@@ -39,7 +39,7 @@ export class Themed extends AdapterLitElement {
     }
 
     disconnectedCallback() {
-        this._observer.disconnect();
+        /** @type {MutationObserver} */ (this._observer).disconnect();
         this._observer = null;
 
         super.disconnectedCallback();
