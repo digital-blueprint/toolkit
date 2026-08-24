@@ -1579,6 +1579,10 @@ export function getSelect2CSS() {
         /* Work around single selections not wrapping and breaking responsivness */
         .select2-container--default .select2-selection--single {
             height: 100% !important;
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            position: relative;
         }
         .select2-container--default .select2-selection__rendered {
             word-wrap: break-word !important;
