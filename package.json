@@ -9,7 +9,7 @@
         "toolkit-showcase"
     ],
     "engines": {
-        "node": ">=20.0.0",
+        "node": ">=22.0.0",
         "npm": ">=7.0.0"
     },
     "scripts": {
@@ -27,6 +27,7 @@
     "author": "",
     "license": "LGPL-2.1-or-later",
     "devDependencies": {
+        "@types/node": "^22.20.1",
         "lerna": "^10.0.0",
         "oxlint": "^1.79.0",
         "oxlint-tsgolint": "^7.0.2001"
