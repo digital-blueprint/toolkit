@@ -21,8 +21,6 @@
         "@rollup/plugin-babel": "^7.0.0",
         "@rollup/pluginutils": "^5.2.0",
         "chai": "^6.0.0",
-        "eslint": "^10.0.0",
-        "eslint-plugin-jsdoc": "^64.0.0",
         "i18next-cli": "^1.7.1",
         "marked": "^18.0.0",
         "marked-highlight": "^2.2.3",
@@ -34,8 +32,7 @@
         "rollup-plugin-emit-ejs": "^3.1.0",
         "rollup-plugin-license": "^3.0.0",
         "rollup-plugin-serve": "^3.0.0",
-        "typescript": "^6.0.0",
-        "typescript-eslint": "^8.67.0"
+        "typescript": "^7.0.2"
     },
     "dependencies": {
         "@dbp-toolkit/app-shell": "^0.3.13",
@@ -59,10 +56,8 @@
     },
     "scripts": {
         "build": "rolldown -c rolldown.config.js",
-        "fix": "npm run eslint:fix && npm run prettier:fix && npm run i18next:fix",
-        "check": "npm run eslint && npm run prettier && npm run i18next",
-        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix --cache",
-        "eslint": "eslint \"**/*.{js,ts}\" --cache",
+        "fix": "npm run oxlint:fix && npm run prettier:fix && npm run i18next:fix",
+        "check": "npm run oxlint && npm run prettier && npm run i18next",
         "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write --cache",
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
         "i18next:fix": "i18next-cli extract",
@@ -73,6 +68,8 @@
         "watch-bs": "rolldown -c rolldown.config.js --watch --environment APP_ENV:bs",
         "build-test": "rolldown -c rolldown.config.js --environment APP_ENV:test",
         "test": "npm run build-test && web-test-runner",
-        "tsc": "tsc -p jsconfig.json"
+        "tsc": "tsc -p jsconfig.json",
+        "oxlint": "oxlint",
+        "oxlint:fix": "oxlint --fix"
     }
 }

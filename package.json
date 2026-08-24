@@ -27,6 +27,8 @@
     "author": "",
     "license": "LGPL-2.1-or-later",
     "devDependencies": {
-        "lerna": "^10.0.0"
+        "lerna": "^10.0.0",
+        "oxlint": "^1.79.0",
+        "oxlint-tsgolint": "^7.0.2001"
     }
 }

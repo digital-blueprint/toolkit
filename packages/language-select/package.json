@@ -24,17 +24,13 @@
         "@web/test-runner": "^1.0.0",
         "@web/test-runner-playwright": "^1.0.0",
         "chai": "^6.0.0",
-        "eslint": "^10.0.0",
-        "eslint-plugin-jsdoc": "^64.0.0",
-        "globals": "^17.0.0",
         "i18next-cli": "^1.7.1",
         "mocha": "^11.0.0",
         "playwright": "^1.34.0",
         "playwright-core": "^1.20.2",
         "rolldown": "^1.0.0-rc.5",
         "rollup-plugin-serve": "^3.0.0",
-        "typescript": "^6.0.0",
-        "typescript-eslint": "^8.67.0"
+        "typescript": "^7.0.2"
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.18",
@@ -42,12 +38,10 @@
     },
     "scripts": {
         "clean": "rm dist/*",
-        "fix": "npm run eslint:fix && npm run prettier:fix && npm run i18next:fix",
-        "check": "npm run eslint && npm run prettier && npm run i18next",
+        "fix": "npm run oxlint:fix && npm run prettier:fix && npm run i18next:fix",
+        "check": "npm run oxlint && npm run prettier && npm run i18next",
         "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
-        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix",
-        "eslint": "eslint \"**/*.{js,ts}\"",
         "build": "rolldown -c rolldown.config.js",
         "build-local": "rolldown -c rolldown.config.js",
         "build-dev": "rolldown -c rolldown.config.js --environment BUILD:development",
@@ -60,6 +54,8 @@
         "watch-local": "rolldown -c rolldown.config.js --watch",
         "watch-dev": "rolldown -c rolldown.config.js --watch --environment BUILD:development",
         "test": "npm run build-test && web-test-runner",
-        "tsc": "tsc -p jsconfig.json"
+        "tsc": "tsc -p jsconfig.json",
+        "oxlint": "oxlint",
+        "oxlint:fix": "oxlint --fix"
     }
 }

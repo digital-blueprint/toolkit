@@ -1,10 +1,10 @@
-import {css, unsafeCSS, CSSResult} from 'lit';
+import {css, unsafeCSS} from 'lit';
 import {getIconSVGURL} from './icon.js';
 
 /**
  * We want to have "neutral" colors here
  *
- * @returns {CSSResult}
+ * @returns {import('lit').CSSResult}
  */
 export function getThemeCSS() {
     // language=css

@@ -29,9 +29,7 @@ export class ScrollRestoration {
         // The position we last set programmatically, used to tell our own scroll events
         // apart from the user taking over.
         this._commandedPosition = undefined;
-        this._originalScrollRestoration = /** @type {'auto' | 'manual'} */ (
-            browserWindow.history.scrollRestoration
-        );
+        this._originalScrollRestoration = browserWindow.history.scrollRestoration;
 
         this._savePosition = this._savePosition.bind(this);
         this._handleScroll = this._handleScroll.bind(this);

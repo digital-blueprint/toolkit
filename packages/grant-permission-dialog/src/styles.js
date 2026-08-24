@@ -1,9 +1,9 @@
-import {css, CSSResult} from 'lit';
+import {css} from 'lit';
 
 /**
  * We want to have "neutral" colors here
  *
- * @returns {CSSResult}
+ * @returns {import('lit').CSSResult}
  */
 export function getGrantPermissionDialogCSS() {
     // language=css

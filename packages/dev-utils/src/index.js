@@ -140,7 +140,7 @@ function getPackageJsonPath(packageName, parentPath) {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
+// oxlint-disable-next-line typescript/require-await
 export async function getPackagePath(packageName, assetPath) {
     // this does not support nested packages
     let packageRoot = path.dirname(getPackageJsonPath(packageName, process.cwd()));

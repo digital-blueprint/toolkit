@@ -7,7 +7,7 @@ import {Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 import {Mutex} from 'async-mutex';
 import {getIconSVGURL} from '@dbp-toolkit/common';
-import {QrCodeScannerEngine, ScanResult} from './engine.js';
+import {QrCodeScannerEngine} from './engine.js';
 
 /**
  * Returns the ID for the most important device
@@ -223,7 +223,7 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
         }
         this._askPermission = false;
 
-        /** @type {?ScanResult} */
+        /** @type {?import('./engine.js').ScanResult} */
         let lastCode = null;
         let lastSentData = null;
 

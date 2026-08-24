@@ -15,12 +15,7 @@
         "access": "public"
     },
     "devDependencies": {
-        "@eslint/js": "^10.0.0",
-        "eslint": "^10.0.0",
-        "eslint-plugin-jsdoc": "^64.0.0",
-        "globals": "^17.0.0",
-        "prettier": "^3.0.0",
-        "typescript-eslint": "^8.67.0"
+        "prettier": "^3.0.0"
     },
     "dependencies": {
         "@rollup/plugin-url": "^8.0.2",
@@ -30,12 +25,12 @@
         "selfsigned": "^5.0.0"
     },
     "scripts": {
-        "fix": "npm run eslint:fix && npm run prettier:fix",
-        "check": "npm run eslint && npm run prettier",
-        "eslint:fix": "eslint \"**/*.{js,ts}\" --fix --cache",
-        "eslint": "eslint \"**/*.{js,ts}\" --cache",
+        "fix": "npm run oxlint:fix && npm run prettier:fix",
+        "check": "npm run oxlint && npm run prettier",
         "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write --cache",
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
-        "tsc": "tsc -p jsconfig.json"
+        "tsc": "tsc -p jsconfig.json",
+        "oxlint": "oxlint",
+        "oxlint:fix": "oxlint --fix"
     }
 }

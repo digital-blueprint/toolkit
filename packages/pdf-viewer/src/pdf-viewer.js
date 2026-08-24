@@ -21,7 +21,7 @@ let pdfjsPromise = null;
  * @async
  * @returns {Promise<object>} A promise that resolves to the imported PDF.js module.
  */
-// eslint-disable-next-line @typescript-eslint/require-await
+// oxlint-disable-next-line typescript/require-await
 export async function importPdfJs() {
     if (!pdfjsPromise) {
         pdfjsPromise = (async () => {

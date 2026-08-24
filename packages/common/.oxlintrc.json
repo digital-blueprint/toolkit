@@ -1,0 +1,12 @@
+{
+    "$schema": "../../node_modules/oxlint/configuration_schema.json",
+    "extends": ["../../.oxlintrc.json"],
+    "ignorePatterns": [
+        "dist/",
+        "/*.js",
+        "/*.mjs",
+        "src/scoped/ScopedElementsMixin.js",
+        "misc/browser-check.js",
+        "test/"
+    ]
+}
