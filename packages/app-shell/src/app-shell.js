@@ -199,7 +199,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (!this.src) this.scrollRestoration.restore();
 
         // Wait for all updates to complete before initializing scroll buttons
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             this.initializeScrollToTopButton();
         });
     }
@@ -1342,7 +1342,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         if (!appHidden) {
             // if app is loaded correctly, remove spinner
-            this.updateComplete.then(() => {
+            void this.updateComplete.then(() => {
                 const slot = this.shadowRoot.querySelector('slot:not([name])');
 
                 // remove for safari 12 support. safari 13+ supports display: none on slots.

@@ -105,11 +105,11 @@ export class DbpSubmissionSelectElement extends ScopedElementsMixin(DbpBaseEleme
             changedProperties.has('lang') ||
             changedProperties.has('disabled')
         ) {
-            this.updateComplete.then(() => this.updateSelect2());
+            void this.updateComplete.then(() => this.updateSelect2());
         }
 
         if (changedProperties.has('value')) {
-            this.updateComplete.then(() => this.syncSelect2Value());
+            void this.updateComplete.then(() => this.syncSelect2Value());
         }
     }
 

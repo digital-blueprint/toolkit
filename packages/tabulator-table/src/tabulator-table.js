@@ -178,7 +178,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     connectedCallback() {
         super.connectedCallback();
 
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             this.initialization = false;
         });
     }

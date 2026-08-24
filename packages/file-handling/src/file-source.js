@@ -133,7 +133,7 @@ export class FileSource extends LangMixin(
 
     connectedCallback() {
         super.connectedCallback();
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             this.dropArea = this._('#dropArea');
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
                 this.dropArea.addEventListener(eventName, this.preventDefaults, false);

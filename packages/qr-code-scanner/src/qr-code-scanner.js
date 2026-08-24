@@ -162,9 +162,12 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
         };
     }
 
-    async connectedCallback() {
+    connectedCallback() {
         super.connectedCallback();
+        void this._initializeScanner();
+    }
 
+    async _initializeScanner() {
         let devices = await getVideoDevices(this._i18n);
         this._activeCamera = getPrimaryDevice(devices) || '';
         this._devices = devices;
@@ -174,8 +177,8 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
         }
     }
 
-    async disconnectedCallback() {
-        await this.stopScanning();
+    disconnectedCallback() {
+        void this.stopScanning();
         super.disconnectedCallback();
     }
 

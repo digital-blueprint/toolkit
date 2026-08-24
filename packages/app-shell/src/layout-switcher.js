@@ -100,7 +100,7 @@ export class LayoutSwitcher extends LangMixin(
         super.connectedCallback();
         this.updateLayoutBasedOnWindowSize();
         window.addEventListener('resize', this.updateLayoutBasedOnWindowSize.bind(this));
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             if (this.disabledLayout) {
                 /** Disable layout switcher if disabledLayout is set and only one layout is available */
                 this.isDisabled = true;

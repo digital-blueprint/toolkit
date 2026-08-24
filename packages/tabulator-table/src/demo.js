@@ -52,7 +52,7 @@ export class TabulatorTableDemo extends LangMixin(
             void setOverridesByGlobalCache(this._i18n, this);
         }
 
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             this._a('.tabulator-table-demo').forEach((table) => {
                 table.buildTable();
                 document.addEventListener('keyup', this.boundPressEnterAndSubmitSearchHandler);

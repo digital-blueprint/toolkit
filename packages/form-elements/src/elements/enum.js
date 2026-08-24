@@ -83,7 +83,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     connectedCallback() {
         super.connectedCallback();
 
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             this.$select = this.$('#' + this.formElementId);
             this.initSelect2IfNeeded();
         });

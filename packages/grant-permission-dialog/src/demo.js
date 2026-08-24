@@ -78,8 +78,6 @@ export class GrantPermissionDialogDemo extends LangMixin(
 
     connectedCallback() {
         super.connectedCallback();
-
-        this.updateComplete.then(() => {});
     }
 
     firstUpdated() {

@@ -187,7 +187,7 @@ export class NextcloudFilePicker extends LangMixin(
         this._loginState = [];
         this._loginCalled = false;
 
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
             window.addEventListener('message', this._onReceiveWindowMessage);
             // see: http://tabulator.info/docs/5.1

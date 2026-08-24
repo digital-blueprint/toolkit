@@ -113,7 +113,7 @@ export class FileSink extends LangMixin(
                 .catch((error) => console.error(error));
         }
 
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             this._('nav.modal-nav').addEventListener('scroll', this.handleScroll.bind(this));
 
             if (this.enabledTargets.split(',') > 1) {

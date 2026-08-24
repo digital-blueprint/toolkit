@@ -113,7 +113,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
     connectedCallback() {
         const i18n = this._i18n;
         super.connectedCallback();
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             // see: http://tabulator.info/docs/4.7
             this.tabulatorTable = new Tabulator(this._('#clipboard-content-table'), {
                 layout: 'fitColumns',
