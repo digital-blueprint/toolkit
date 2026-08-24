@@ -97,6 +97,7 @@ export class DbpIconDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), c
 
     static get properties() {
         return {
+            ...super.properties,
             searchTerm: {type: String, attribute: false},
             iconSize: {type: Number, attribute: false},
         };

@@ -42,9 +42,11 @@ export class DbpButtonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
         e.target.classList.add('button-clicked');
 
         setTimeout(() => {
-            this.shadowRoot.querySelectorAll('dbp-button').forEach((element) => {
-                element.stop();
-            });
+            this.shadowRoot
+                ?.querySelectorAll('dbp-button')
+                .forEach((element) =>
+                    /** @type {import('../button.js').Button} */ (element).stop(),
+                );
         }, 1000);
     }
 

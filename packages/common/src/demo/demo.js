@@ -16,6 +16,7 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
     constructor() {
         super();
         this.noAuth = false;
+        this.entryPointUrl = '';
     }
 
     static get scopedElements() {
@@ -39,6 +40,7 @@ export class DbpCommonDemo extends LangMixin(ScopedElementsMixin(DBPLitElement),
         return {
             ...super.properties,
             noAuth: {type: Boolean, attribute: 'no-auth'},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
         };
     }
 

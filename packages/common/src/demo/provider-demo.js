@@ -77,12 +77,12 @@ class DemoConsumer extends LangMixin(DBPLitElement, createInstance) {
     }
 
     get id() {
-        return this.getAttribute('id');
+        return this.getAttribute('id') ?? '';
     }
 
     render() {
         const i18n = this._i18n;
-        if (!this.connected) {
+        if (!this._connected) {
             return `not connected!`;
         }
         console.debug('DemoConsumer(' + this.id + ') render()');
@@ -118,6 +118,18 @@ class DemoConsumer extends LangMixin(DBPLitElement, createInstance) {
 }
 
 export class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+    constructor() {
+        super();
+        this.entryPointUrl = '';
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+        };
+    }
+
     static get scopedElements() {
         return {
             'dbp-auth-keycloak': AuthKeycloak,
@@ -168,7 +180,7 @@ export class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
     }
 
     get id() {
-        return this.getAttribute('id');
+        return this.getAttribute('id') ?? '';
     }
 
     render() {
