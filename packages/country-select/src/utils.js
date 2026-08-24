@@ -2,6 +2,11 @@ import {importPdfJs} from '@dbp-toolkit/pdf-viewer';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 //import keys from "../dist/shared/index.es.DXc8AeoU.es.js";
 
+/**
+ * @typedef {{code: string, name: string}} Country
+ * @typedef {Record<string, string>} CountryMapping
+ */
+
 export const getPDFFileBase64Content = (file) => {
     return file.contentUrl.replace(/data:\s*application\/pdf;\s*base64,/, '');
 };
@@ -15,7 +20,11 @@ export const readBinaryFileContent = async (file) => {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
         reader.onload = () => {
-            resolve(reader.result);
+            if (typeof reader.result === 'string') {
+                resolve(reader.result);
+            } else {
+                reject(new TypeError('Failed to read file as a binary string'));
+            }
         };
         reader.onerror = () => {
             const error = /** @type {DOMException} */ (reader.error);
@@ -76,22 +85,21 @@ export const getDataURIContentType = (dataURI) => {
     return dataURI.substring(5, base64Index);
 };
 
+/** @returns {Country[]} */
 export function getGermanCountryList() {
-    const selectedCountries = getGermanCountryMapping();
-    const sortedCountries = Object.fromEntries(
-        Object.entries(selectedCountries).sort(([, a], [, b]) => a.localeCompare(b, 'de')),
-    );
-    return sortedCountries;
+    return Object.entries(getGermanCountryMapping())
+        .sort(([, a], [, b]) => a.localeCompare(b, 'de'))
+        .map(([code, name]) => ({code, name}));
 }
 
+/** @returns {Country[]} */
 export function getEnglishCountryList() {
-    const selectedCountries = getEnglishCountryMapping();
-    const sortedCountries = Object.fromEntries(
-        Object.entries(selectedCountries).sort(([, a], [, b]) => a.localeCompare(b, 'en')),
-    );
-    return sortedCountries;
+    return Object.entries(getEnglishCountryMapping())
+        .sort(([, a], [, b]) => a.localeCompare(b, 'en'))
+        .map(([code, name]) => ({code, name}));
 }
 
+/** @returns {CountryMapping} */
 export function getGermanCountryMapping() {
     let allCountries = new Intl.DisplayNames(['de-AT'], {type: 'region'});
     const countryCodes = [
@@ -292,12 +300,13 @@ export function getGermanCountryMapping() {
         'SD',
     ];
     const countryNames = Object.fromEntries(
-        countryCodes.map((code) => [code, allCountries.of(code)]),
+        countryCodes.map((code) => [code, allCountries.of(code) ?? code]),
     );
 
     return countryNames;
 }
 
+/** @returns {CountryMapping} */
 export function getEnglishCountryMapping() {
     let allCountries = new Intl.DisplayNames(['en-AT'], {type: 'region'});
     const countryCodes = [
@@ -498,7 +507,7 @@ export function getEnglishCountryMapping() {
         'SD',
     ];
     const countryNames = Object.fromEntries(
-        countryCodes.map((code) => [code, allCountries.of(code)]),
+        countryCodes.map((code) => [code, allCountries.of(code) ?? code]),
     );
     return countryNames;
 }

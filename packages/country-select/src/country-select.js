@@ -11,6 +11,8 @@ import select2CSSPath from 'select2/dist/css/select2.min.css';
 import {AdapterLitElement} from '@dbp-toolkit/common';
 import * as dispatchHelper from './utils.js';
 
+/** @typedef {{code: string, name: string}} Country */
+
 export class CountrySelect extends LangMixin(
     ScopedElementsMixin(AdapterLitElement),
     createInstance,
@@ -30,7 +32,7 @@ export class CountrySelect extends LangMixin(
     }
 
     $(selector) {
-        return $(this.shadowRoot.querySelector(selector));
+        return $(this.renderRoot.querySelector(selector));
     }
 
     static get properties() {
@@ -64,10 +66,10 @@ export class CountrySelect extends LangMixin(
         super.connectedCallback();
         document.addEventListener('click', this._onDocumentClicked);
 
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             this.$select = this.$('#' + this.selectId);
             if (!this.select2IsInitialized()) {
-                this.initSelect2(
+                this._initSelect2(
                     this.lang === 'en'
                         ? dispatchHelper.getEnglishCountryList()
                         : dispatchHelper.getGermanCountryList(),
@@ -95,21 +97,18 @@ export class CountrySelect extends LangMixin(
     /**
      * Initializes the Select2 selector
      *
-     * @param countries
-     * @param defaultCode
+     * @param {Country[]} [countries]
+     * @param {string} [defaultCode]
      */
-    initSelect2(countries = [], defaultCode = 'AT') {
+    _initSelect2(countries = [], defaultCode = 'AT') {
         const i18n = this._i18n;
         const $this = $(this);
 
-        const normalizedCountries = Array.isArray(countries)
-            ? countries
-            : Object.entries(countries).map(([code, name]) => ({code, name}));
-
+        /** @type {Country[]} */
         const uniqueCountries = [];
         const seen = new Set();
 
-        for (const c of normalizedCountries) {
+        for (const c of countries) {
             const key = c.name.toLowerCase(); // or `${c.code}-${c.name}` if needed
             if (!seen.has(key)) {
                 seen.add(key);
@@ -211,7 +210,7 @@ export class CountrySelect extends LangMixin(
                 case 'lang':
                     if (this.select2IsInitialized()) {
                         // no other way to set another language at runtime did work
-                        this.initSelect2(
+                        this._initSelect2(
                             this.lang === 'en'
                                 ? dispatchHelper.getEnglishCountryList()
                                 : dispatchHelper.getGermanCountryList(),
@@ -221,7 +220,7 @@ export class CountrySelect extends LangMixin(
                     break;
                 case 'value':
                     if (!this.ignoreValueUpdate && this.select2IsInitialized()) {
-                        this.initSelect2(
+                        this._initSelect2(
                             this.lang === 'en'
                                 ? dispatchHelper.getEnglishCountryList()
                                 : dispatchHelper.getGermanCountryList(),
