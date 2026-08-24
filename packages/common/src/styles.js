@@ -1369,6 +1369,9 @@ export function getSelect2CSS() {
             display: flex;
             gap: 5px;
             margin-left: 5px;
+            flex-wrap: wrap;
+            max-width: 100%;
+            margin: 5px;
         }
 
         .select2-container--default .select2-search--dropdown .select2-search__field {
@@ -1469,14 +1472,13 @@ export function getSelect2CSS() {
                entries can grow instead of getting cut off. */
             min-height: 1.5em;
             box-sizing: border-box;
-            display: inline-flex;
-            align-items: center;
+
             /* Wrap long entries instead of cutting them off, like for a single selection */
             white-space: normal;
             overflow: visible;
             text-overflow: clip;
             overflow-wrap: break-word;
-            width: max-content;
+
             margin: 0;
         }
 
@@ -1486,6 +1488,7 @@ export function getSelect2CSS() {
             .select2-selection__choice__display {
             padding-left: 5px;
             word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Same as for the clear button of a single selection, we replace the "×" text
@@ -1550,6 +1553,7 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-search--inline {
             width: 100%;
+            flex: 1;
         }
 
         .select2-container--default .select2-search--inline .select2-search__field {
@@ -1558,7 +1562,7 @@ export function getSelect2CSS() {
                the single selection's content padding so both placeholders start at the same
                position, without shrinking the container (which would wrap the placeholder). */
             margin: 0;
-            margin-left: var(--dbp-select2-content-padding-left);
+
             display: flex;
             align-content: center;
         }
