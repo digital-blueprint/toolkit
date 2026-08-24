@@ -36,6 +36,7 @@ export class LanguageSelect extends AdapterLitElement {
 
     static get properties() {
         return {
+            ...super.properties,
             lang: {type: String},
             next: {type: String},
             languages: {type: Array},
