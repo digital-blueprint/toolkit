@@ -1,5 +1,7 @@
 /**
- * @typedef {import('keycloak-js')} Keycloak
+ * @typedef {import('keycloak-js').default} Keycloak
+ * @typedef {import('keycloak-js').KeycloakPkceMethod} KeycloakPkceMethod
+ * @typedef {import('keycloak-js').KeycloakOnLoad} KeycloakOnLoad
  */
 
 const promiseTimeout = function (ms, promise) {
@@ -74,6 +76,13 @@ export class KeycloakWrapper extends EventTarget {
         document.removeEventListener('visibilitychange', this._onVisibilityChanged);
     }
 
+    _getKeycloak() {
+        if (!this._keycloak) {
+            throw new Error('Keycloak is not initialized');
+        }
+        return this._keycloak;
+    }
+
     _onVisibilityChanged() {
         let isVisible = document.visibilityState === 'visible';
         if (isVisible) {
@@ -98,10 +107,11 @@ export class KeycloakWrapper extends EventTarget {
     async _onTokenExpired() {
         console.log('Token has expired');
         let refreshed;
+        const keycloak = this._getKeycloak();
 
         try {
             // -1 means force a refresh
-            refreshed = await this._keycloak.updateToken(-1);
+            refreshed = await keycloak.updateToken(-1);
         } catch (error) {
             console.log('Failed to refresh the token', error);
             return;
@@ -172,7 +182,7 @@ export class KeycloakWrapper extends EventTarget {
         this._keycloak.onReady = this._onReady.bind(this);
 
         const options = {};
-        options['pkceMethod'] = /** @type {Keycloak.KeycloakPkceMethod} */ ('S256');
+        options['pkceMethod'] = /** @type {KeycloakPkceMethod} */ ('S256');
 
         if (this.DEBUG) {
             options['enableLogging'] = true;
@@ -181,7 +191,7 @@ export class KeycloakWrapper extends EventTarget {
         options['checkLoginIframe'] = this._checkLoginIframe;
 
         if (this._silentCheckSsoUri) {
-            options['onLoad'] = /** @type {Keycloak.KeycloakOnLoad} */ ('check-sso');
+            options['onLoad'] = /** @type {KeycloakOnLoad} */ ('check-sso');
             options['silentCheckSsoRedirectUri'] = ensureURL(this._silentCheckSsoUri);
 
             // When silent-sso-check is active but the iframe doesn't load/work we will
@@ -215,16 +225,18 @@ export class KeycloakWrapper extends EventTarget {
      *
      * @param {object} options
      * @param {string} [options.lang] - The locale to use on the keycloak login page
+     * @param {string} [options.scope] - The scopes to request
      */
     async login(options) {
         await this._ensureInit();
+        const keycloak = this._getKeycloak();
 
         options = options || {};
         const language = options['lang'] || 'en';
         const scope = options['scope'] || '';
 
-        if (!this._keycloak.authenticated) {
-            await this._keycloak.login({
+        if (!keycloak.authenticated) {
+            await keycloak.login({
                 locale: language,
                 scope: scope,
                 idpHint: this._idpHint,
@@ -245,7 +257,7 @@ export class KeycloakWrapper extends EventTarget {
      */
     // oxlint-disable-next-line typescript/require-await
     async localLogout() {
-        this._keycloak.clearToken();
+        this._getKeycloak().clearToken();
     }
 
     /**
@@ -253,6 +265,6 @@ export class KeycloakWrapper extends EventTarget {
      */
     async logout() {
         await this._ensureInit();
-        await this._keycloak.logout();
+        await this._getKeycloak().logout();
     }
 }

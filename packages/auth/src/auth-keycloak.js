@@ -26,8 +26,12 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
         this._user = null;
         this._userId = '';
         this._authenticated = false;
+        /** @type {(typeof LoginStatus)[keyof typeof LoginStatus]} */
         this._loginStatus = LoginStatus.UNKNOWN;
+        /** @type {(typeof LoginStatus)[keyof typeof LoginStatus]} */
         this.requestedLoginStatus = LoginStatus.UNKNOWN;
+        /** @type {KeycloakWrapper | null} */
+        this._kcwrapper = null;
 
         // Keycloak config
         this.keycloakUrl = null;
@@ -43,7 +47,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
         };
 
         // inject a data-testid attribute for Playwright
-        if (window.playwright) {
+        if ('playwright' in window) {
             this.setAttribute('data-testid', 'dbp-auth-keycloak');
         }
     }
@@ -59,7 +63,10 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
                     this.requestedLoginStatus = LoginStatus.UNKNOWN;
                     switch (newStatus) {
                         case LoginStatus.LOGGED_IN:
-                            void this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
+                            void this._getKCWrapper().login({
+                                lang: this.lang,
+                                scope: this.scope || '',
+                            });
                             break;
                         case LoginStatus.LOGGED_OUT:
                             // Keycloak will redirect right away without emitting events, so we have
@@ -79,7 +86,7 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
     }
 
     async _logout() {
-        await this._kcwrapper.logout();
+        await this._getKCWrapper().logout();
         // In case logout was aborted, for example with beforeunload, revert back to being logged in.
         if (this._loginStatus === LoginStatus.LOGGING_OUT) {
             this._setLoginStatus(LoginStatus.LOGGED_IN);
@@ -159,6 +166,13 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
         this._setLoginStatus(LoginStatus.LOGGED_OUT);
     }
 
+    _getKCWrapper() {
+        if (!this._kcwrapper) {
+            throw new Error('Keycloak wrapper is not initialized');
+        }
+        return this._kcwrapper;
+    }
+
     sendSetPropertyEvents() {
         const auth = {
             'login-status': this._loginStatus,
@@ -222,13 +236,15 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
         this._kcwrapper.addEventListener('changed', this._onKCChangedListener);
 
         const handleLogin = async () => {
+            const kcwrapper = this._getKCWrapper();
+
             try {
-                if (this.forceLogin || this._kcwrapper.isLoggingIn()) {
+                if (this.forceLogin || kcwrapper.isLoggingIn()) {
                     this._setLoginStatus(LoginStatus.LOGGING_IN);
-                    await this._kcwrapper.login({lang: this.lang, scope: this.scope || ''});
+                    await kcwrapper.login({lang: this.lang, scope: this.scope || ''});
                 } else if (this.tryLogin) {
                     this._setLoginStatus(LoginStatus.LOGGING_IN);
-                    await this._kcwrapper.tryLogin();
+                    await kcwrapper.tryLogin();
                     if (!this._authenticated) {
                         this._setLoginStatus(LoginStatus.LOGGED_OUT);
                     }
@@ -251,8 +267,9 @@ export class AuthKeycloak extends LangMixin(AdapterLitElement, createInstance) {
     }
 
     disconnectedCallback() {
-        this._kcwrapper.close();
-        this._kcwrapper.removeEventListener('changed', this._onKCChangedListener);
+        const kcwrapper = this._getKCWrapper();
+        kcwrapper.close();
+        kcwrapper.removeEventListener('changed', this._onKCChangedListener);
 
         super.disconnectedCallback();
     }
