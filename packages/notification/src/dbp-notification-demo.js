@@ -14,10 +14,8 @@ export class NotificationDemo extends LangMixin(
 ) {
     constructor() {
         super();
-        /** @type {Modal} */
-        this.modal = null;
-        /** @type {Modal} */
-        this.modalLarge = null;
+        this.modal = /** @type {Modal | null} */ (null);
+        this.modalLarge = /** @type {Modal | null} */ (null);
     }
 
     static get scopedElements() {
@@ -33,16 +31,18 @@ export class NotificationDemo extends LangMixin(
 
     firstUpdated(changedProperties) {
         super.firstUpdated(changedProperties);
-        this.modal = this.shadowRoot.querySelector('#modal-notification-test');
-        this.modalLarge = this.shadowRoot.querySelector('#modal-notification-test--large');
+        const modal = this.renderRoot.querySelector('#modal-notification-test');
+        const modalLarge = this.renderRoot.querySelector('#modal-notification-test--large');
+        this.modal = modal instanceof Modal ? modal : null;
+        this.modalLarge = modalLarge instanceof Modal ? modalLarge : null;
     }
 
     openModal() {
-        this.modal.open();
+        this.modal?.open();
     }
 
     openModalLarge() {
-        this.modalLarge.open();
+        this.modalLarge?.open();
     }
 
     static get styles() {
@@ -348,6 +348,7 @@ export class NotificationDemo extends LangMixin(
     }
 
     send() {
+        /** @type {Array<'primary' | 'info' | 'success' | 'danger' | 'warning'>} */
         const types = ['primary', 'info', 'success', 'danger', 'warning'];
         const type = types[Math.floor(Math.random() * types.length)];
         const timeout = getRandomInt(5, 15);
@@ -361,6 +362,7 @@ export class NotificationDemo extends LangMixin(
     }
 
     sendModal(targetNotificationId) {
+        /** @type {Array<'info' | 'success' | 'danger' | 'warning'>} */
         const types = ['info', 'success', 'danger', 'warning'];
         // const types = ['success', 'danger'];
         const type = types[Math.floor(Math.random() * types.length)];

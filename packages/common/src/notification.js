@@ -14,7 +14,7 @@
  * @param {object} options - Notification options
  * @param {string} [options.summary] - The notification title/summary
  * @param {string} [options.body] - The main notification message
- * @param {('info'|'success'|'warning'|'danger')} [options.type] - The notification type
+ * @param {('primary'|'info'|'success'|'warning'|'danger')} [options.type] - The notification type
  * @param {string} [options.icon] - Icon name to display with the notification (if the handler supports it)
  * @param {number} [options.timeout] - Duration in seconds before auto-dismissing the notification (if the handler supports it)
  * @param {string} [options.targetNotificationId] - ID of specific notification component to target (if the handler supports it)

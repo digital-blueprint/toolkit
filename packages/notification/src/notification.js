@@ -50,6 +50,7 @@ class NotificationItem extends ScopedElementsMixin(DBPLitElement) {
 
     static get properties() {
         return {
+            ...super.properties,
             type: {type: String},
             body: {type: String},
             summary: {type: String},
@@ -266,7 +267,7 @@ export class Notification extends ScopedElementsMixin(DBPLitElement) {
         this.notifications.push(notificationData);
         this.requestUpdate('notifications');
 
-        this.updateComplete.then(() => {
+        void this.updateComplete.then(() => {
             const notificationEvent = new CustomEvent('dbp-notification-added', {
                 detail: {targetNotificationId: this.id},
                 bubbles: true,
@@ -290,7 +291,7 @@ export class Notification extends ScopedElementsMixin(DBPLitElement) {
     }
 
     _removeById(notificationId, noAnimation = false) {
-        const item = this.shadowRoot.querySelector(
+        const item = this.renderRoot.querySelector(
             `dbp-notification-item[notificationId="${notificationId}"]`,
         );
 
