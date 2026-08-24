@@ -1256,6 +1256,10 @@ export function getDocumentationCSS() {
 export function getSelect2CSS() {
     // language=css
     return css`
+        .select2-container {
+            border-color: var(--dbp-content);
+        }
+
         .select2-container--default .select2-selection--single,
         .select2-container--default .select2-selection--multiple {
             /* Size of the chevron and clear icons, the offset of the chevron from the right
@@ -1276,6 +1280,20 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--single,
         .select2-container--default .select2-selection--multiple {
             border-radius: var(--dbp-border-radius);
+            min-height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container--below .select2-selection--single {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            position: relative;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            margin-right: 30px;
         }
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -1283,6 +1301,10 @@ export function getSelect2CSS() {
             padding-left: var(--dbp-select2-content-padding-left);
             /* Clear the chevron, which we shifted left of select2's default position */
             padding-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            margin-right: auto;
         }
 
         /*
@@ -1290,6 +1312,7 @@ export function getSelect2CSS() {
            size and vertical position depend on the font in use, so we hide it
            and draw an icon instead, which we can center reliably.
         */
+
         .select2-container--default .select2-selection--single .select2-selection__clear,
         .select2-container--default .select2-selection--multiple .select2-selection__clear {
             display: flex;
@@ -1304,11 +1327,11 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--single .select2-selection__clear {
             /* Matches the line height of the rendered selection, so the icon
-               ends up vertically centered on the first line */
-            height: 28px;
+               ends up vertically centered on the first line 
+            height: 28px;*/
             /* Leave room for the chevron, which we shifted left of select2's default
-               position, so the clear button stays to its left without overlapping */
-            margin-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
+               position, so the clear button stays to its left without overlapping 
+            margin-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));*/
         }
 
         /* Like for a single selection the clear button is centered on the first line, so it
@@ -1343,6 +1366,10 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--multiple .select2-selection__rendered {
             background-color: var(--dbp-background);
+            display: flex;
+            align-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
         }
 
         .select2-container--default .select2-search--dropdown .select2-search__field {
@@ -1395,6 +1422,7 @@ export function getSelect2CSS() {
             display: flex;
             align-items: center;
             justify-content: center;
+            height: calc(100% - 3px);
             right: var(--dbp-select2-icon-edge);
         }
 
@@ -1416,7 +1444,7 @@ export function getSelect2CSS() {
         /* When clearable, reserve room for both the chevron (far right) and the clear button
            to its left, so entries can't end up underneath either */
         .select2-container--default .select2-selection--multiple.select2-selection--clearable {
-            padding-right: calc(var(--dbp-select2-icon-size) + 1em + 28px);
+            padding: 0;
         }
 
         /* Flip the chevron while the dropdown is open, like select2 does by default */
@@ -1436,7 +1464,7 @@ export function getSelect2CSS() {
             background-color: var(--dbp-background);
             color: inherit;
             border: var(--dbp-border);
-            border-color: var(--dbp-muted);
+            border-color: var(--dbp-content);
             border-radius: var(--dbp-border-radius);
             /* Shared with the clear button above, see there. Only a minimum, so that long
                entries can grow instead of getting cut off. */
@@ -1449,6 +1477,8 @@ export function getSelect2CSS() {
             overflow: visible;
             text-overflow: clip;
             overflow-wrap: break-word;
+            width: max-content;
+            margin: 0;
         }
 
         /* Space between the remove button and the entry's label */
@@ -1456,6 +1486,7 @@ export function getSelect2CSS() {
             .select2-selection--multiple
             .select2-selection__choice__display {
             padding-left: 5px;
+            word-break: break-word;
         }
 
         /* Same as for the clear button of a single selection, we replace the "×" text
@@ -1469,7 +1500,7 @@ export function getSelect2CSS() {
             height: 100%;
             color: var(--dbp-muted);
             border-right: var(--dbp-border);
-            border-color: var(--dbp-muted);
+            border-color: var(--dbp-content);
             border-top-left-radius: var(--dbp-border-radius);
             border-bottom-left-radius: var(--dbp-border-radius);
         }
@@ -1517,12 +1548,20 @@ export function getSelect2CSS() {
 
         /* The inline search field of a multiple selection uses the browser's default input
            font otherwise, which doesn't match the rest of the control */
+
+        .select2-container--default .select2-search--inline {
+            width: 100%;
+        }
+
         .select2-container--default .select2-search--inline .select2-search__field {
             font: inherit;
             /* Select2 offsets the field (and thus the placeholder) with a left margin. Match
                the single selection's content padding so both placeholders start at the same
                position, without shrinking the container (which would wrap the placeholder). */
+            margin: 0;
             margin-left: var(--dbp-select2-content-padding-left);
+            display: flex;
+            align-content: center;
         }
 
         /* With a multiple selection the placeholder is rendered into the inline search field */
@@ -1542,6 +1581,7 @@ export function getSelect2CSS() {
             word-wrap: break-word !important;
             text-overflow: inherit !important;
             white-space: normal !important;
+            margin: 0;
         }
 
         .select2-dropdown {
