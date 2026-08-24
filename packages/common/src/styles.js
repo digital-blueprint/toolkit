@@ -1367,9 +1367,8 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--multiple .select2-selection__rendered {
             background-color: var(--dbp-background);
             display: flex;
-            align-content: center;
             gap: 5px;
-            flex-wrap: wrap;
+            margin-left: 5px;
         }
 
         .select2-container--default .select2-search--dropdown .select2-search__field {
