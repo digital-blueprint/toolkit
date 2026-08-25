@@ -1,7 +1,8 @@
 import {dedupeMixin} from '@open-wc/dedupe-mixin';
 
 /**
- * @typedef {{auth: object | null, isAuthPending: () => boolean, isLoggedIn: () => boolean}} AuthMixinHost
+ * @typedef {{token?: string, 'login-status'?: string, 'person-id'?: string} & Record<string, unknown>} AuthState
+ * @typedef {{auth: AuthState | null, isAuthPending: () => boolean, isLoggedIn: () => boolean}} AuthMixinHost
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} LitElementConstructor
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<AuthMixinHost>} AuthMixinHostConstructor
  */
@@ -67,7 +68,7 @@ const AuthMixinImplementation = (superClass) => {
 
         /**
          * Called when user logs in, or on load when the user is logged in.
-         * @param {object} auth - The auth state with login information, same as this.auth
+         * @param {AuthState} auth - The auth state with login information, same as this.auth
          */
         loginCallback(auth) {}
 

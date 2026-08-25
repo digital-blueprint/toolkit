@@ -10,6 +10,7 @@ export class DbpBaseView extends LangMixin(
     constructor() {
         super();
         this.label = '';
+        /** @type {string | string[]} */
         this.value = '';
         this.hidden = false;
     }

@@ -6,7 +6,10 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
     constructor() {
         super();
         this.name = '';
+        this.entryPointUrl = '';
         this.multiple = false;
+        /** @type {string | string[]} */
+        this.value = '';
         this._loadRequestId = 0;
     }
 
@@ -62,10 +65,15 @@ export class DbpPersonSelectView extends ScopedElementsMixin(DbpBaseView) {
     }
 
     async fetchPersonName(personId) {
+        const token = this.auth?.token;
+        if (!token) {
+            throw new Error('Authentication token is missing');
+        }
+
         const response = await fetch(this.getPersonUrl(personId), {
             headers: {
                 Accept: 'application/ld+json',
-                Authorization: `Bearer ${this.auth.token}`,
+                Authorization: `Bearer ${token}`,
             },
         });
 

@@ -69,7 +69,8 @@ export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
             this._abortController = null;
         }
 
-        if (!value || !this.entryPointUrl || !this.auth?.token) {
+        const token = this.auth?.token;
+        if (!value || !this.entryPointUrl || !token) {
             return;
         }
 
@@ -88,7 +89,7 @@ export class DbpResourceSelectView extends ScopedElementsMixin(DbpBaseView) {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept-Language': this.lang,
-                    Authorization: `Bearer ${this.auth.token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             const data = await response.json();

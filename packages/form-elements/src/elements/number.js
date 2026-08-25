@@ -7,6 +7,8 @@ export class DbpNumberElement extends ScopedElementsMixin(DbpBaseElement) {
     constructor() {
         super();
         this.label = 'A number field';
+        /** @type {string} */
+        this.value = '';
         this.placeholder = '';
         this.min = null;
         this.max = null;

@@ -15,6 +15,7 @@ export class DbpBaseElement extends LangMixin(
         this.name = '';
         this.description = '';
         this.label = '';
+        /** @type {string | string[]} */
         this.value = '';
         this.required = false;
         this.disabled = false;
@@ -24,6 +25,7 @@ export class DbpBaseElement extends LangMixin(
         this.hidden = false;
     }
 
+    /** @returns {typeof DBPLitElement.properties & import('@lit/reactive-element').PropertyDeclarations} */
     static get properties() {
         return {
             ...super.properties,
@@ -119,7 +121,7 @@ export class DbpBaseElement extends LangMixin(
         super.connectedCallback();
 
         this.addEventListener('evaluate', (event) => {
-            const detail = event.detail;
+            const detail = /** @type {CustomEvent} */ (event).detail;
             const silent = detail.silent || false;
             const result = this.evaluateCallback(detail.data, silent); // Perform your evaluation
             detail.respond(result); // Send the result back to the caller

@@ -17,6 +17,7 @@ export class DbpSubmissionSelectElement extends ScopedElementsMixin(DbpBaseEleme
         this.entryPointUrl = '';
         this.frontendKey = '';
         this.submissionElementName = '';
+        this.value = '';
         this.perPage = 9999;
         this.submissions = [];
         this.loading = false;
@@ -78,7 +79,7 @@ export class DbpSubmissionSelectElement extends ScopedElementsMixin(DbpBaseEleme
     }
 
     $(selector) {
-        return $(this.shadowRoot.querySelector(selector));
+        return $(this.renderRoot.querySelector(selector));
     }
 
     firstUpdated() {
@@ -196,9 +197,14 @@ export class DbpSubmissionSelectElement extends ScopedElementsMixin(DbpBaseEleme
     }
 
     getRequestHeaders() {
+        const token = this.auth?.token;
+        if (!token) {
+            throw new Error('Authentication token is missing');
+        }
+
         return {
             'Content-Type': 'application/ld+json',
-            Authorization: 'Bearer ' + this.auth.token,
+            Authorization: 'Bearer ' + token,
         };
     }
 

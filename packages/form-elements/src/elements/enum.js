@@ -20,6 +20,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         this.items = {};
         this.multiple = false;
         // Since this.multiple === false, we set an empty string as this.value
+        /** @type {string | string[]} */
         this.value = '';
         this.dataValue = '';
         this.displayMode = 'dropdown';
@@ -36,7 +37,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             multiple: {type: Boolean},
             // We will treat this.value as an object and will not reflect it outside
             // Although we might write a string into this.value anyway for this.multiple === false
-            value: {type: Object},
+            value: {type: Object, reflect: false},
             // That's the only thing we will reflect, and which will be used for gathering the data in the form
             dataValue: {type: String, attribute: 'data-value', reflect: true},
             displayMode: {type: String, attribute: 'display-mode'},
@@ -47,7 +48,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     $(selector) {
-        return $(this.shadowRoot.querySelector(selector));
+        return $(this.renderRoot.querySelector(selector));
     }
 
     closeSelect2() {
@@ -156,7 +157,6 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
         switch (this._displayMode) {
             case 'dropdown':
-                // If multiple is true, this.value is an array of selected values!
                 return html`
                     <div class="select-wrapper">
                         <select
@@ -244,10 +244,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     <div id="select-dropdown"></div>
                 `;
             default:
-                console.warn(
-                    `Unsupported display mode: ${this._displayMode}. Defaulting to 'dropdown'.`,
-                );
-                break;
+                return html``;
         }
     }
 
@@ -512,7 +509,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         if (this.multiple) {
             this.dataValue = stringifyForDataValue(this.value);
         } else {
-            this.dataValue = this.value;
+            this.dataValue = Array.isArray(this.value) ? (this.value[0] ?? '') : this.value;
         }
     }
 }

@@ -7,6 +7,7 @@ export class DbpPersonSelectElement extends ScopedElementsMixin(DbpBaseElement) 
     constructor() {
         super();
         this.entryPointUrl = '';
+        /** @type {string | string[]} */
         this.value = '';
         this.multiple = false;
         this._personSelectValues = [];

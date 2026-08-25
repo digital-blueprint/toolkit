@@ -106,7 +106,10 @@ export class FormElementsDemo extends LangMixin(
     async validate(event) {
         event.preventDefault();
 
-        const formElement = this.shadowRoot.querySelector('form');
+        const formElement = this.renderRoot.querySelector('form');
+        if (!formElement) {
+            throw new Error('Demo form was not rendered');
+        }
 
         // Validate the form before proceeding
         const validationResult = await validateRequiredFields(formElement);

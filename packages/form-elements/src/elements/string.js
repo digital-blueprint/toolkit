@@ -13,6 +13,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
         this.wordCountLimit = null;
         /** @type {import('lit/directives/ref.js').Ref<HTMLTextAreaElement>} */
         this.textareaRef = createRef();
+        /** @type {import('lit/directives/ref.js').Ref<HTMLInputElement>} */
         this.inputRef = createRef();
         this._userProvidedValidator = null;
         this.type = 'text';

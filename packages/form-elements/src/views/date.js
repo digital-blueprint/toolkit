@@ -6,6 +6,8 @@ export class DbpDateView extends ScopedElementsMixin(DbpBaseView) {
     constructor() {
         super();
         this.label = 'A date field';
+        /** @type {string} */
+        this.value = '';
     }
 
     static get styles() {
@@ -23,15 +25,10 @@ export class DbpDateView extends ScopedElementsMixin(DbpBaseView) {
     }
 
     renderValue() {
-        let date = this.value;
-
-        // If date is a non-empty string, parse it to a Date object
-        if (typeof date === 'string' && date !== '') {
-            date = new Date(date);
-        }
+        const date = this.value ? new Date(this.value) : null;
 
         const dateString =
-            !date || date === ''
+            date === null
                 ? '-'
                 : date.toLocaleDateString('de-DE', {
                       day: '2-digit',

@@ -1,5 +1,9 @@
 import {css} from 'lit';
 
+/**
+ * @typedef {Element & {value: unknown, shouldOmitEmptyValue?: () => boolean}} FormElementComponent
+ */
+
 export const sanitizeForHtmlId = (str) => {
     return str
         .replace(/[^a-z0-9]/gi, '-') // Replace non-alphanumeric characters with hyphens
@@ -67,17 +71,19 @@ export const validateRequiredFields = async (formElement, silent = false) => {
 /**
  * Gets all web components in the form that match the "dbp-.*-element" pattern
  * @param {HTMLFormElement} formElement
- * @returns {Element[]}
+ * @returns {FormElementComponent[]}
  */
 export const getElementWebComponents = (formElement) => {
-    return Array.from(formElement.getElementsByTagName('*')).filter((el) =>
-        el.tagName.toLowerCase().match(/^dbp-.*-element$/),
+    return /** @type {FormElementComponent[]} */ (
+        Array.from(formElement.getElementsByTagName('*')).filter((el) =>
+            el.tagName.toLowerCase().match(/^dbp-.*-element$/),
+        )
     );
 };
 
 /**
  * Converts an object to a string that can be used as a data-value attribute to support non-primitive values
- * @param {object} myObject
+ * @param {unknown} myObject
  * @returns {string}
  */
 export const stringifyForDataValue = (myObject) => {
@@ -101,7 +107,8 @@ export const gatherFormDataFromElement = (formElement) => {
     const elementsWithDataValue = formElement.querySelectorAll('[data-value]');
     let dataValues = {};
     elementsWithDataValue.forEach((element) => {
-        if (element.shouldOmitEmptyValue?.()) return;
+        const formElement = /** @type {FormElementComponent} */ (element);
+        if (formElement.shouldOmitEmptyValue?.()) return;
 
         const name = element.getAttribute('name') || element.id;
         const rawValue = element.getAttribute('data-value');

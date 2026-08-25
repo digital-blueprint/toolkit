@@ -154,7 +154,7 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
                     ?checked=${this.state}
                     @input="${this.handleInputValue}"
                     ?disabled=${this.disabled}
-                    ?required=${this.isRequired} />
+                    ?required=${this.required} />
                 ${this.description}
             </label>
         `;
