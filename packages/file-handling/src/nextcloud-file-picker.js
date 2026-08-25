@@ -14,6 +14,8 @@ import {name as pkgName} from './../package.json';
 import * as fileHandlingStyles from './styles';
 import {encrypt, decrypt, parseJwt} from './crypto.js';
 
+/** @typedef {import('lit').TemplateResult} TemplateResult */
+
 /**
  * A wrapper for the webdav putFileContents method that also handles Blob/File
  * (inefficiently, but works). In theory this could be fixed upstream, if someone
@@ -53,7 +55,8 @@ export class NextcloudFilePicker extends LangMixin(
         this.nextcloudFileURL = '';
         this.loginWindow = null;
         this.isPickerActive = false;
-        this.statusText = '';
+        /** @type {TemplateResult | null} */
+        this.statusText = null;
         this.lastDirectoryPath = '/';
         this.directoryPath = '';
         this.webDavClient = null;
@@ -101,6 +104,9 @@ export class NextcloudFilePicker extends LangMixin(
         this.boundRefreshOnWindowSizeChange = this.refreshOnWindowSizeChange.bind(this);
         this.boundCancelNewFolderHandler = this.cancelNewFolder.bind(this);
         this.boundSelectHandler = this.selectAllFiles.bind(this);
+        this._loginStatus = '';
+        /** @type {boolean[]} */
+        this._loginState = [];
     }
 
     static get scopedElements() {
@@ -124,7 +130,7 @@ export class NextcloudFilePicker extends LangMixin(
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
             isPickerActive: {type: Boolean, attribute: false},
-            statusText: {type: String, attribute: false},
+            statusText: {type: Object, attribute: false},
             folderIsSelected: {type: String, attribute: false},
             authInfo: {type: String, attribute: 'auth-info'},
             directoryPath: {type: String, attribute: 'directory-path'},
@@ -513,28 +519,16 @@ export class NextcloudFilePicker extends LangMixin(
         }
         const publicId = this.auth['user-id'];
         const token = this.auth.token ? parseJwt(this.auth.token) : null;
-        const sessionId = token ? token.sid : '';
+        const sessionId = typeof token?.sid === 'string' ? token.sid : '';
+        const storedUserName = localStorage.getItem('nextcloud-webdav-username-' + publicId);
+        const storedPassword = localStorage.getItem('nextcloud-webdav-password-' + publicId);
+        const storedUrl = localStorage.getItem('nextcloud-webdav-url-' + publicId);
 
-        if (
-            this.storeSession &&
-            sessionId &&
-            localStorage.getItem('nextcloud-webdav-username-' + publicId) &&
-            localStorage.getItem('nextcloud-webdav-password-' + publicId) &&
-            localStorage.getItem('nextcloud-webdav-url-' + publicId)
-        ) {
+        if (this.storeSession && sessionId && storedUserName && storedPassword && storedUrl) {
             try {
-                const userName = await decrypt(
-                    sessionId,
-                    localStorage.getItem('nextcloud-webdav-username-' + publicId),
-                );
-                const password = await decrypt(
-                    sessionId,
-                    localStorage.getItem('nextcloud-webdav-password-' + publicId),
-                );
-                this.fullWebDavUrl = await decrypt(
-                    sessionId,
-                    localStorage.getItem('nextcloud-webdav-url-' + publicId),
-                );
+                const userName = await decrypt(sessionId, storedUserName);
+                const password = await decrypt(sessionId, storedPassword);
+                this.fullWebDavUrl = await decrypt(sessionId, storedUrl);
                 this.webDavClient = createClient(this.fullWebDavUrl, {
                     username: userName,
                     password: password,
@@ -584,7 +578,9 @@ export class NextcloudFilePicker extends LangMixin(
         this.disableRowClick = false;
         if (this.webDavClient === null) {
             this.loading = true;
-            this.statusText = i18n.t('nextcloud-file-picker.auth-progress');
+            this.statusText = html`
+                ${i18n.t('nextcloud-file-picker.auth-progress')}
+            `;
             const authUrl =
                 this.authUrl + '?target-origin=' + encodeURIComponent(window.location.href);
             this.loginWindow = window.open(
@@ -593,7 +589,7 @@ export class NextcloudFilePicker extends LangMixin(
                 'width=400,height=400,menubar=no,scrollbars=no,status=no,titlebar=no,toolbar=no',
             );
         } else {
-            this.loadDirectory(this.directoryPath, this.webDavClient);
+            this.loadDirectory(this.directoryPath);
         }
     }
 
@@ -629,7 +625,7 @@ export class NextcloudFilePicker extends LangMixin(
                 ) {
                     const publicId = this.auth['user-id'];
                     const token = this.auth.token ? parseJwt(this.auth.token) : null;
-                    const sessionId = token ? token.sid : '';
+                    const sessionId = typeof token?.sid === 'string' ? token.sid : '';
                     if (sessionId) {
                         const encrytedName = await encrypt(sessionId, data.loginName);
                         const encrytedToken = await encrypt(sessionId, data.token);
@@ -660,8 +656,8 @@ export class NextcloudFilePicker extends LangMixin(
 
     /**
      *
-     * @param {Array<object>} data
-     * @returns {Array} reduced list of objects, including users files
+     * @param {Array<{props: {permissions: string}}>} data
+     * @returns {Array<{props: {permissions: string}}>} reduced list of objects, including users files
      */
     filterUserFilesOnly(data) {
         // R = Share, S = Shared Folder, M = Group folder or external source, G = Read, D = Delete, NV / NVW = Write, CK = Create
@@ -715,7 +711,7 @@ export class NextcloudFilePicker extends LangMixin(
 
     /**
      *
-     * @param {Array<object>} response
+     * @param {Array<{href: string, propstat: {prop: Record<string, any>}}>} response
      * @returns {Array} list of file objects containing corresponding information
      */
     mapResponseToObject(response) {
@@ -783,9 +779,11 @@ export class NextcloudFilePicker extends LangMixin(
         console.log('load nextcloud favorites');
         this.selectAllButton = true;
         this.loading = true;
-        this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {
-            name: this.nextcloudName,
-        });
+        this.statusText = html`
+            ${i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {
+                name: this.nextcloudName,
+            })}
+        `;
         this.lastDirectoryPath = this.directoryPath;
         this.directoryPath = '';
         this.isInRecent = false;
@@ -839,7 +837,7 @@ export class NextcloudFilePicker extends LangMixin(
                     let dataObject = this.mapResponseToObject(davResp.multistatus.response);
 
                     this.loading = false;
-                    this.statusText = '';
+                    this.statusText = null;
                     this.tabulatorTable.setData(dataObject);
                     this.tabulatorTable.setSort([
                         {column: 'basename', dir: 'asc'},
@@ -912,9 +910,11 @@ export class NextcloudFilePicker extends LangMixin(
         console.log('load recent files');
         this.selectAllButton = true;
         this.loading = true;
-        this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {
-            name: this.nextcloudName,
-        });
+        this.statusText = html`
+            ${i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {
+                name: this.nextcloudName,
+            })}
+        `;
         this.lastDirectoryPath = this.directoryPath;
         this.directoryPath = '';
         this.isInFavorites = false;
@@ -1012,7 +1012,7 @@ export class NextcloudFilePicker extends LangMixin(
                     // console.log("-contents.data-----", dataObject);
 
                     this.loading = false;
-                    this.statusText = '';
+                    this.statusText = null;
                     this.tabulatorTable.setData(dataObject);
                     this.tabulatorTable.setSort([{column: 'lastmod', dir: 'desc'}]);
 
@@ -1070,11 +1070,7 @@ export class NextcloudFilePicker extends LangMixin(
     getMimeTypes() {
         let mimePart = '';
 
-        if (
-            this.allowedMimeTypes &&
-            this.allowedMimeTypes !== 0 &&
-            this.allowedMimeTypes !== '*/*'
-        ) {
+        if (this.allowedMimeTypes && this.allowedMimeTypes !== '*/*') {
             const mimeTypes = this.allowedMimeTypes.split(',');
 
             mimeTypes.forEach((str) => {
@@ -1146,9 +1142,11 @@ export class NextcloudFilePicker extends LangMixin(
         console.log('load only my recent files');
         this.selectAllButton = true;
         this.loading = true;
-        this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {
-            name: this.nextcloudName,
-        });
+        this.statusText = html`
+            ${i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {
+                name: this.nextcloudName,
+            })}
+        `;
         this.lastDirectoryPath = this.directoryPath;
         this.directoryPath = '';
         this.isInFavorites = false;
@@ -1249,7 +1247,7 @@ export class NextcloudFilePicker extends LangMixin(
                     dataObject = this.filterUserFilesOnly(dataObject);
 
                     this.loading = false;
-                    this.statusText = '';
+                    this.statusText = null;
                     this.tabulatorTable.setData(dataObject);
                     this.tabulatorTable.setSort([{column: 'lastmod', dir: 'desc'}]);
 
@@ -1322,9 +1320,11 @@ export class NextcloudFilePicker extends LangMixin(
 
         this.disableRowClick = false;
         this.loading = true;
-        this.statusText = i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {
-            name: this.nextcloudName,
-        });
+        this.statusText = html`
+            ${i18n.t('nextcloud-file-picker.loadpath-nextcloud-file-picker', {
+                name: this.nextcloudName,
+            })}
+        `;
         this.lastDirectoryPath = this.directoryPath;
         this.directoryPath = path;
         if (this._('#select_all')) this._('#select_all').checked = false;
@@ -1371,7 +1371,7 @@ export class NextcloudFilePicker extends LangMixin(
             })
             .then((contents) => {
                 this.loading = false;
-                this.statusText = '';
+                this.statusText = null;
                 this.tabulatorTable.setData(contents.data);
                 this.tabulatorTable.setSort([
                     {column: 'basename', dir: 'asc'},
@@ -1510,7 +1510,9 @@ export class NextcloudFilePicker extends LangMixin(
     downloadFile(fileData, maxUpload) {
         const i18n = this._i18n;
         this.loading = true;
-        this.statusText = 'Loading ' + fileData.filename + '...';
+        this.statusText = html`
+            Loading ${fileData.filename}...
+        `;
 
         // https://github.com/perry-mitchell/webdav-client#getfilecontents
         this.webDavClient
@@ -1527,7 +1529,7 @@ export class NextcloudFilePicker extends LangMixin(
                 });
                 this.dispatchEvent(event);
                 this.loading = false;
-                this.statusText = '';
+                this.statusText = null;
             })
             .catch((error) => {
                 console.error(error.message);
@@ -1571,7 +1573,9 @@ export class NextcloudFilePicker extends LangMixin(
             path = directory[0].filename;
         }
         this.loading = true;
-        this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
+        this.statusText = html`
+            ${i18n.t('nextcloud-file-picker.upload-to', {path: path})}
+        `;
 
         const event = new CustomEvent('dbp-nextcloud-file-picker-file-uploaded', {
             detail: path,
@@ -1590,7 +1594,9 @@ export class NextcloudFilePicker extends LangMixin(
     async uploadFiles(files, directory) {
         const i18n = this._i18n;
         this.loading = true;
-        this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: directory});
+        this.statusText = html`
+            ${i18n.t('nextcloud-file-picker.upload-to', {path: directory})}
+        `;
         this.fileList = [...files];
         if (this.fileList !== undefined && this.fileList.length > 0) {
             this.sendSetPropertyEvent('analytics-event', {
@@ -1616,7 +1622,9 @@ export class NextcloudFilePicker extends LangMixin(
             this.abortUploadButton = false;
             this.forAll = false;
             this.loading = false;
-            this.statusText = i18n.t('nextcloud-file-picker.abort-message');
+            this.statusText = html`
+                ${i18n.t('nextcloud-file-picker.abort-message')}
+            `;
             this._('#replace_mode_all').checked = false;
             return;
         }
@@ -1625,7 +1633,9 @@ export class NextcloudFilePicker extends LangMixin(
             this.replaceFilename = file.name;
             let path = directory + '/' + file.name;
             this.loading = true;
-            this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
+            this.statusText = html`
+                ${i18n.t('nextcloud-file-picker.upload-to', {path: path})}
+            `;
             await customPutFileContents(this.webDavClient, path, file, {
                 overwrite: false,
             })
@@ -1653,7 +1663,7 @@ export class NextcloudFilePicker extends LangMixin(
         } else {
             this.loadDirectory(this.directoryPath);
             this.loading = false;
-            this.statusText = '';
+            this.statusText = null;
             this._('#replace_mode_all').checked = false;
             this.forAll = false;
             this.customFilename = '';
@@ -1725,7 +1735,9 @@ export class NextcloudFilePicker extends LangMixin(
             this.abortUploadButton = false;
             this.forAll = false;
             this.loading = false;
-            this.statusText = i18n.t('nextcloud-file-picker.abort-message');
+            this.statusText = html`
+                ${i18n.t('nextcloud-file-picker.abort-message')}
+            `;
             this._('#replace_mode_all').checked = false;
             return;
         }
@@ -1756,7 +1768,9 @@ export class NextcloudFilePicker extends LangMixin(
         }
 
         this.loading = true;
-        this.statusText = i18n.t('nextcloud-file-picker.upload-to', {path: path});
+        this.statusText = html`
+            ${i18n.t('nextcloud-file-picker.upload-to', {path: path})}
+        `;
 
         await customPutFileContents(this.webDavClient, path, file, {
             overwrite: overwrite,
@@ -1873,13 +1887,17 @@ export class NextcloudFilePicker extends LangMixin(
         // read only directory or read only file
         if (rights === 0) {
             this.loading = false;
-            this.statusText = i18n.t('nextcloud-file-picker.readonly');
+            this.statusText = html`
+                ${i18n.t('nextcloud-file-picker.readonly')}
+            `;
             return;
         }
         // read only file but you can write to directory = only create and no edit
         else if (rights === 1) {
             this.loading = false;
-            this.statusText = i18n.t('nextcloud-file-picker.onlycreate');
+            this.statusText = html`
+                ${i18n.t('nextcloud-file-picker.onlycreate')}
+            `;
             this._('#replace-replace').setAttribute('disabled', 'true');
             this._('#replace-new-name').removeAttribute('disabled');
             this._('#replace-replace').checked = false;
@@ -1890,7 +1908,9 @@ export class NextcloudFilePicker extends LangMixin(
         // only edit and no create
         else if (rights === 2) {
             this.loading = false;
-            this.statusText = i18n.t('nextcloud-file-picker.onlyedit');
+            this.statusText = html`
+                ${i18n.t('nextcloud-file-picker.onlyedit')}
+            `;
             this._('#replace-new-name').setAttribute('disabled', 'true');
             this._('#replace-replace').removeAttribute('disabled');
             this._('#replace-new-name').checked = false;
@@ -1947,7 +1967,7 @@ export class NextcloudFilePicker extends LangMixin(
 
     handleModalClosed(event) {
         if (event.detail.id === 'replace-modal-dialog') {
-            this.statusText = '';
+            this.statusText = null;
             this.loading = false;
             this.keepPageScrollLockedIfParentModalOpen();
         }
@@ -1959,9 +1979,10 @@ export class NextcloudFilePicker extends LangMixin(
     }
 
     keepPageScrollLockedIfParentModalOpen() {
-        const parentModal = this.closest('dbp-modal');
-        if (parentModal && parentModal.isOpen()) {
-            parentModal.modalDialog.ownerDocument.documentElement.style.overflow = 'hidden';
+        const parentModal = /** @type {Modal | null} */ (this.closest('dbp-modal'));
+        const modalDialog = parentModal?.modalDialog;
+        if (parentModal?.isOpen() && modalDialog) {
+            modalDialog.ownerDocument.documentElement.style.overflow = 'hidden';
         }
     }
 
@@ -2025,7 +2046,7 @@ export class NextcloudFilePicker extends LangMixin(
      *
      */
     cancelOverwrite() {
-        this.statusText = '';
+        this.statusText = null;
         this.loading = false;
         this.fileList = [];
     }
@@ -2160,9 +2181,9 @@ export class NextcloudFilePicker extends LangMixin(
                         },
                         true,
                     );
-                    this.statusText = i18n.t('nextcloud-file-picker.add-folder-success', {
-                        folder: folderName,
-                    });
+                    this.statusText = html`
+                        ${i18n.t('nextcloud-file-picker.add-folder-success', {folder: folderName})}
+                    `;
                     this.loading = false;
                 })
                 .catch((error) => {
@@ -2221,9 +2242,9 @@ export class NextcloudFilePicker extends LangMixin(
                         },
                         true,
                     );
-                    this.statusText = i18n.t('nextcloud-file-picker.add-folder-success', {
-                        folder: folderName,
-                    });
+                    this.statusText = html`
+                        ${i18n.t('nextcloud-file-picker.add-folder-success', {folder: folderName})}
+                    `;
                     this.loading = false;
                 })
                 .catch((error) => {
@@ -2305,13 +2326,14 @@ export class NextcloudFilePicker extends LangMixin(
     /**
      * Returns the directory path as clickable breadcrumbs
      *
-     * @returns {string} clickable breadcrumb path
+     * @returns {TemplateResult[]} clickable breadcrumb path
      */
     getBreadcrumb() {
         const i18n = this._i18n;
         if (typeof this.directoryPath === 'undefined') {
             this.directoryPath = '';
         }
+        /** @type {TemplateResult[]} */
         let htmlpath = [];
         htmlpath[0] = html`
             <span class="breadcrumb">
@@ -2477,8 +2499,8 @@ export class NextcloudFilePicker extends LangMixin(
     }
 
     toggleBreadcrumbMenu() {
-        const menu = this.shadowRoot.querySelector('ul.extended-breadcrumb-menu');
-        const menuStart = this.shadowRoot.querySelector('a.extended-breadcrumb-link');
+        const menu = this.renderRoot.querySelector('ul.extended-breadcrumb-menu');
+        const menuStart = this.renderRoot.querySelector('a.extended-breadcrumb-link');
 
         if (menu === null || menuStart === null) {
             return;
@@ -2537,7 +2559,7 @@ export class NextcloudFilePicker extends LangMixin(
             this.initateOpenBreadcrumbMenu = false;
             return;
         }
-        const menu = this.shadowRoot.querySelector('ul.extended-breadcrumb-menu');
+        const menu = this.renderRoot.querySelector('ul.extended-breadcrumb-menu');
         if (menu && !menu.classList.contains('hidden')) this.toggleBreadcrumbMenu();
     }
 
@@ -2555,8 +2577,8 @@ export class NextcloudFilePicker extends LangMixin(
     }
 
     toggleMoreMenu() {
-        const menu = this.shadowRoot.querySelector('ul.extended-menu');
-        const menuStart = this.shadowRoot.querySelector('a.extended-menu-link');
+        const menu = this.renderRoot.querySelector('ul.extended-menu');
+        const menuStart = this.renderRoot.querySelector('a.extended-menu-link');
 
         if (menu === null || menuStart === null) {
             return;
@@ -2578,7 +2600,7 @@ export class NextcloudFilePicker extends LangMixin(
             this.initateOpenAdditionalMenu = false;
             return;
         }
-        const menu = this.shadowRoot.querySelector('ul.extended-menu');
+        const menu = this.renderRoot.querySelector('ul.extended-menu');
         if (menu && !menu.classList.contains('hidden')) {
             this.toggleMoreMenu();
         }
@@ -3493,7 +3515,10 @@ export class NextcloudFilePicker extends LangMixin(
                             ${i18n.t('nextcloud-file-picker.abort')}
                         </button>
 
-                        <div class="block info-box ${classMap({hidden: this.statusText === ''})}">
+                        <div
+                            class="block info-box ${classMap({
+                                hidden: this.statusText === null,
+                            })}">
                             <dbp-mini-spinner
                                 class="spinner ${classMap({
                                     hidden: this.loading === false,
