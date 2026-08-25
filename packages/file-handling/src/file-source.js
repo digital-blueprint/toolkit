@@ -55,7 +55,8 @@ export class FileSource extends LangMixin(
         this.isDialogOpen = false;
         this.firstOpen = true;
         this.nextcloudAuthInfo = '';
-        this.maxFileSize = '';
+        /** @type {number | null} */
+        this.maxFileSize = null;
         this.multipleFiles = Number.MAX_VALUE;
 
         this.initialFileHandlingState = {target: '', path: ''};
@@ -400,7 +401,7 @@ export class FileSource extends LangMixin(
 
     checkSize(file) {
         const i18n = this._i18n;
-        if (this.maxFileSize !== '' && this.maxFileSize * 1000 <= file.size) {
+        if (this.maxFileSize !== null && this.maxFileSize * 1000 <= file.size) {
             sendNotification({
                 summary: i18n.t('file-source.too-big-file-title'),
                 body: i18n.t('file-source.too-big-file-body', {
@@ -754,7 +755,7 @@ export class FileSource extends LangMixin(
         }
 
         let inputFile;
-        if (this.multipleFiles > 1 || this.multipleFiles === true) {
+        if (this.multipleFiles > 1) {
             inputFile = html`
                 <input
                     ?disabled="${this.disabled}"
