@@ -1,7 +1,10 @@
 importScripts('client-zip/worker.js', 'dl-stream/worker.js');
 
 // AbortController for the current download, so it can be cancelled from the main page
+/** @type {AbortController | null} */
 let currentDownloadAbortController = null;
+
+const serviceWorker = /** @type {ServiceWorkerGlobalScope} */ (/** @type {unknown} */ (self));
 
 async function* nameFile(responses, names) {
     for await (const response of responses) {
@@ -17,12 +20,13 @@ async function* appendFiles(stream, files) {
         yield file;
     }
 }
-self.addEventListener('fetch', (event) => {
+
+serviceWorker.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
     // This will intercept all request with a URL starting in /downloadZip/
     // eslint-disable-next-line no-sparse-arrays
     const [, name] = url.pathname.match(/\/downloadZip\/(.+)/i) || [,];
-    if (url.origin === self.origin && name && name !== 'keep-alive') {
+    if (url.origin === serviceWorker.location.origin && name && name !== 'keep-alive') {
         // Create a new AbortController for this download
         currentDownloadAbortController = new AbortController();
         const signal = currentDownloadAbortController.signal;
@@ -33,16 +37,19 @@ self.addEventListener('fetch', (event) => {
                 .then(async (data) => {
                     let requests;
                     let files = [];
+                    /** @type {string | null} */
                     let auth = null;
                     let sumContentLengths = -1;
 
                     // check meta information given to the sw, and set it if necessary
                     if (data.has('authorization')) {
-                        auth = data.get('authorization');
+                        auth = /** @type {string} */ (data.get('authorization'));
                         data.delete('authorization');
                     }
                     if (data.has('sumContentLengths')) {
-                        sumContentLengths = parseInt(data.get('sumContentLengths'));
+                        sumContentLengths = parseInt(
+                            /** @type {string} */ (data.get('sumContentLengths')),
+                        );
                         data.delete('sumContentLengths');
                     }
 
@@ -53,10 +60,16 @@ self.addEventListener('fetch', (event) => {
                                 files.push(data);
                                 return undefined;
                             } else
-                                return new Request(data, {headers: {Authorization: auth}, signal});
+                                return new Request(data, {
+                                    headers: {Authorization: auth},
+                                    signal,
+                                });
                         }).filter((x) => x !== undefined);
                     } else {
-                        requests = Array.from(data.values(), (data) => new Request(data, {signal}));
+                        requests = Array.from(
+                            data.values(),
+                            (data) => new Request(/** @type {string} */ (data), {signal}),
+                        );
                     }
 
                     // if sum of content-lengths is given, trust it
@@ -70,11 +83,11 @@ self.addEventListener('fetch', (event) => {
                             if (auth != null) {
                                 init['headers'] = {Authorization: auth};
                             }
-                            await fetch(item, init)
+                            await fetch(/** @type {string} */ (item), init)
                                 .then(
                                     (r) =>
                                         (sumContentLengths += parseInt(
-                                            r.headers.get('Content-Length'),
+                                            /** @type {string} */ (r.headers.get('Content-Length')),
                                         )),
                                 )
                                 .catch((e) => {
@@ -109,7 +122,7 @@ self.addEventListener('fetch', (event) => {
 
                     // Notify the client that streaming has begun
                     // includeUncontrolled is required because the SW may not yet control the page
-                    const clients = await self.clients.matchAll({
+                    const clients = await serviceWorker.clients.matchAll({
                         type: 'window',
                         includeUncontrolled: true,
                     });
@@ -123,9 +136,11 @@ self.addEventListener('fetch', (event) => {
                     // ignore undef errors, as the global definitions are not tracked by default
                     // works as expected: https://github.com/eslint/eslint/issues/16904
                     // eslint-disable-next-line no-undef
+                    // @ts-expect-error Loaded globally by client-zip/worker.js.
                     return downloadZip(
                         nameFile(
                             // eslint-disable-next-line no-undef
+                            // @ts-expect-error Loaded globally by dl-stream/worker.js.
                             appendFiles(new DownloadStream(requests, {highWaterMark: 1}), files),
                             filenames[Symbol.iterator](),
                         ),
@@ -148,7 +163,7 @@ self.addEventListener('fetch', (event) => {
 // for some reason, in Firefox (tested on version 140.0.2) the fetch event listener is not enough
 // to keep the sw alive, even when periodically fetching something.
 // thus, we register a "message" event listener and periodically send messages
-self.addEventListener('message', (event) => {
+serviceWorker.addEventListener('message', (event) => {
     if (event.data === 'CANCEL_DOWNLOAD' || event.data?.type === 'CANCEL_DOWNLOAD') {
         if (currentDownloadAbortController) {
             currentDownloadAbortController.abort();

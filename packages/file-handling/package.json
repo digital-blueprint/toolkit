@@ -31,7 +31,7 @@
             },
             {
                 "srcPackage": "@dbp-toolkit/file-handling",
-                "src": "src/stream-sw.js",
+                "src": "src/worker/stream-sw.js",
                 "dest": "."
             }
         ]
@@ -90,7 +90,7 @@
         "watch-local": "rolldown -c rolldown.config.js --watch",
         "watch-dev": "rolldown -c rolldown.config.js --watch --environment BUILD:development",
         "test": "npm run build-test && web-test-runner",
-        "tsc": "tsc -p jsconfig.json",
+        "tsc": "tsc -p jsconfig.json && tsc -p src/worker/jsconfig.json",
         "oxlint": "oxlint",
         "oxlint:fix": "oxlint --fix"
     }

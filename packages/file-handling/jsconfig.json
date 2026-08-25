@@ -4,5 +4,5 @@
         "maxNodeModuleJsDepth": 0
     },
     "include": ["src", "./*.js", "./*.mjs"],
-    "exclude": ["node_modules", "dist", "vendor"]
+    "exclude": ["node_modules", "dist", "vendor", "src/worker"]
 }
