@@ -1,3 +1,5 @@
+/// <reference path="./select2-css.d.ts" />
+
 import $ from 'jquery';
 import select2 from 'select2';
 import select2LangDe from './i18n/de/select2';

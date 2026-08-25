@@ -1,3 +1,5 @@
+/// <reference path="./tippy-css.d.ts" />
+
 import {css, html} from 'lit';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
