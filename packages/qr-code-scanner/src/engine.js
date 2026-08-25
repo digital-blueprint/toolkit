@@ -1,9 +1,19 @@
 export class ScanResult {
     constructor() {
+        /** @type {string|null} */
         this.data = null;
+        /** @type {Array<{x: number, y: number}>|null} */
         this.cornerPoints = null;
     }
 }
+
+/**
+ * @typedef {object} ScanRegion
+ * @property {number} x Horizontal offset.
+ * @property {number} y Vertical offset.
+ * @property {number} width Region width.
+ * @property {number} height Region height.
+ */
 
 export class QrCodeScannerEngine {
     constructor() {
@@ -13,16 +23,12 @@ export class QrCodeScannerEngine {
     }
 
     /**
-     * Scan am image like thing for a QR code. Returns null if none is found.
+     * Scan an image-like object for a QR code. Returns null if none is found.
      * The region to scan in can be restricted via "options".
      *
      * @param {HTMLCanvasElement|HTMLImageElement|HTMLVideoElement|ImageBitmap|OffscreenCanvas|string} image
-     * @param {?object} options
-     * @param {number} options.x
-     * @param {number} options.y
-     * @param {number} options.width
-     * @param {number} options.height
-     * @returns {?ScanResult}
+     * @param {ScanRegion|null} options
+     * @returns {Promise<ScanResult|null>}
      */
     async scanImage(image, options = null) {
         if (this._scanner === null) {

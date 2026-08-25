@@ -12,7 +12,7 @@ import {QrCodeScannerEngine} from './engine.js';
 /**
  * Returns the ID for the most important device
  *
- * @param {Map} devices
+ * @param {Map<string, string>} devices
  * @returns {string|null} the ID
  */
 function getPrimaryDevice(devices) {
@@ -36,15 +36,17 @@ function getPrimaryDevice(devices) {
  * @returns {Promise<Map<string,string>>} the map of devices
  */
 async function getVideoDevices(i18n) {
+    /** @type {Map<string, string>} */
     let devices_map = new Map();
+    const mediaDevices = navigator.mediaDevices;
     if (
-        navigator.mediaDevices &&
-        navigator.mediaDevices.enumerateDevices &&
-        navigator.mediaDevices.getUserMedia
+        mediaDevices &&
+        typeof mediaDevices.enumerateDevices === 'function' &&
+        typeof mediaDevices.getUserMedia === 'function'
     ) {
         let devices;
         try {
-            devices = await navigator.mediaDevices.enumerateDevices();
+            devices = await mediaDevices.enumerateDevices();
         } catch (err) {
             console.log(err.name + ': ' + err.message);
             return devices_map;
@@ -62,7 +64,7 @@ async function getVideoDevices(i18n) {
                     devices_map.set('user', i18n.t('front-camera'));
                 } else {
                     devices_map.set(
-                        id ? id : true,
+                        id || '',
                         device.label || i18n.t('camera') + (devices_map.size + 1),
                     );
                 }
@@ -77,10 +79,9 @@ async function getVideoDevices(i18n) {
 /**
  * Checks if user Agent is IOS, but not Safari browser
  *
- * @param {string} devices_map
  * @returns {boolean} whether the browser is unsupported
  */
-function checkIosMobileSupport(devices_map) {
+function checkIosMobileSupport() {
     return /(iPhone|iPad|iPod).*(CriOS|FxiOS|OPT|EdgiOS|YaBrowser|AlohaBrowser)/i.test(
         navigator.userAgent,
     );
@@ -92,15 +93,17 @@ function checkIosMobileSupport(devices_map) {
  */
 async function createVideoElement(deviceId) {
     let videoId = deviceId;
+    /** @type {MediaStreamConstraints} */
     let constraint = {video: {deviceId: videoId}};
     if (videoId === 'environment' || videoId === '') {
         console.log('vid:', videoId);
         constraint = {video: {facingMode: 'environment'}};
     } else if (videoId === 'user') {
         console.log('vid2:', videoId);
-        constraint = {video: {facingMode: 'user', mirrored: true}};
+        constraint = {video: {facingMode: 'user'}};
     }
 
+    /** @type {MediaStream|null} */
     let stream = null;
     try {
         stream = await navigator.mediaDevices.getUserMedia(constraint);
@@ -128,12 +131,17 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
 
         this._activeCamera = '';
 
+        /** @type {Map<string, string>} */
         this._devices = new Map();
+        /** @type {number|null} */
         this._requestID = null;
+        /** @type {string|import('lit').TemplateResult} */
         this._loadingMessage = '';
 
         this.matchRegex = '.*';
+        /** @type {HTMLVideoElement|null} */
         this._videoElement = null;
+        /** @type {string|null} */
         this._outputData = null;
         this._videoRunning = false;
         this._lock = new Mutex();
@@ -160,6 +168,22 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
             _askPermission: {type: Boolean, attribute: false},
             _videoRunning: {type: Boolean, attribute: false},
         };
+    }
+
+    get #canvas() {
+        const canvas = this._('#canvas');
+        if (!(canvas instanceof HTMLCanvasElement)) {
+            throw new Error('QR code scanner canvas is missing');
+        }
+        return canvas;
+    }
+
+    get #videoContainer() {
+        const container = this._('#video');
+        if (!(container instanceof HTMLElement)) {
+            throw new Error('QR code scanner video container is missing');
+        }
+        return container;
     }
 
     connectedCallback() {
@@ -209,8 +233,8 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
         console.assert(this._lock.isLocked());
         await this.updateComplete;
 
-        let targetCanvas = this._('#canvas');
-        let targetvideo = this._('#video');
+        let targetCanvas = this.#canvas;
+        let targetVideoContainer = this.#videoContainer;
         let canvasElement = document.createElement('canvas');
         let firstDrawDone = false;
 
@@ -221,13 +245,13 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
             ${i18n.t('check-access')}
         `;
         let video = await createVideoElement(this._activeCamera);
-        if (video !== null) {
-            targetvideo.appendChild(video);
-        }
         this._askPermission = false;
+        if (video === null) return;
+        targetVideoContainer.appendChild(video);
 
         /** @type {?import('./engine.js').ScanResult} */
         let lastCode = null;
+        /** @type {string|null} */
         let lastSentData = null;
 
         let detector = new QrCodeScannerEngine();
@@ -241,6 +265,9 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
                 canvasElement.height = video.videoHeight;
                 canvasElement.width = video.videoWidth;
                 let canvas = canvasElement.getContext('2d');
+                if (canvas === null) {
+                    throw new Error('Unable to create QR code scanner canvas context');
+                }
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
 
                 let maxSize =
@@ -286,10 +313,17 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
                                 this._outputData = null;
                                 lastSentData = null;
                             }
+                        })
+                        .catch((error) => {
+                            detectorRunning = false;
+                            console.error(error);
                         });
                 }
 
-                let matched = lastCode ? lastCode.data.match(this.matchRegex) !== null : false;
+                let matched =
+                    lastCode !== null && lastCode.data !== null
+                        ? lastCode.data.match(this.matchRegex) !== null
+                        : false;
 
                 //draw mask
                 canvas.beginPath();
@@ -354,7 +388,11 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
 
                 targetCanvas.height = canvasElement.height;
                 targetCanvas.width = canvasElement.width;
-                targetCanvas.getContext('2d').drawImage(canvasElement, 0, 0);
+                const targetContext = targetCanvas.getContext('2d');
+                if (targetContext === null) {
+                    throw new Error('Unable to create QR code scanner output context');
+                }
+                targetContext.drawImage(canvasElement, 0, 0);
 
                 if (!firstDrawDone) {
                     this.dispatchEvent(
@@ -367,17 +405,15 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
             this._requestID = requestAnimationFrame(tick);
         };
 
-        if (video !== null) {
-            video.setAttribute('playsinline', true); // required to tell iOS safari we don't want fullscreen
-            await video.play();
-            this._videoRunning = true;
+        video.setAttribute('playsinline', ''); // Required to prevent fullscreen video on iOS Safari.
+        await video.play();
+        this._videoRunning = true;
 
-            console.assert(this._requestID === null);
-            this._videoElement = video;
-            this._loading = true;
-            this._loadingMessage = i18n.t('loading-video');
-            this._requestID = requestAnimationFrame(tick);
-        }
+        console.assert(this._requestID === null);
+        this._videoElement = video;
+        this._loading = true;
+        this._loadingMessage = i18n.t('loading-video');
+        this._requestID = requestAnimationFrame(tick);
     }
 
     /**
@@ -401,9 +437,12 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
         try {
             if (this._videoElement !== null) {
                 let video = this._videoElement;
-                video.srcObject.getTracks().forEach(function (track) {
-                    track.stop();
-                });
+                const stream = video.srcObject;
+                if (stream instanceof MediaStream) {
+                    stream.getTracks().forEach(function (track) {
+                        track.stop();
+                    });
+                }
                 this._videoElement = null;
             }
 
@@ -515,7 +554,7 @@ export class QrCodeScanner extends LangMixin(ScopedElementsMixin(DBPLitElement),
         const i18n = this._i18n;
         let hasDevices = this._devices.size > 0;
         let showCanvas = this._videoRunning && !this._askPermission && !this._loading;
-        let noSupportString = checkIosMobileSupport(this._devices)
+        let noSupportString = checkIosMobileSupport()
             ? i18n.t('no-ios-support')
             : i18n.t('no-support');
 
