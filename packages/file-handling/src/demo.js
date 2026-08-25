@@ -29,6 +29,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
     static get properties() {
         return {
+            ...super.properties,
             url: {type: String},
             selectedFiles: {type: Array, attribute: false},
             selectedFilesCount: {type: Number, attribute: false},
@@ -241,14 +242,19 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     let urlInputText = document.createTextNode('url: ');
                     let br1 = document.createElement('br');
                     let br2 = document.createElement('br');
-                    urlInput.placeholder = document.getElementsByClassName('logo-light')[0].src;
+                    const logo = /** @type {HTMLImageElement} */ (
+                        document.querySelector('.logo-light')
+                    );
+                    urlInput.placeholder = logo.src;
                     urlInput.type = 'url';
                     urlInput.required = true;
                     urlInput.name = 'streamUrl';
                     input.placeholder = 'dir/filename.svg';
                     input.required = true;
                     input.name = 'streamFilenames';
-                    let parent = this.shadowRoot.getElementById('inputs-list');
+                    const parent = /** @type {HTMLUListElement} */ (
+                        this.renderRoot.querySelector('#inputs-list')
+                    );
                     listItem.appendChild(inputText);
                     listItem.appendChild(input);
                     listItem.appendChild(br1);
@@ -263,20 +269,23 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
             <p>Download the zip:</p>
             <button
                 @click="${() => {
+                    /** @type {{name: string, url: string}[]} */
                     let files = [];
-                    let inputsParent = this.parentNode
-                        .querySelector('#demo')
-                        .shadowRoot.querySelector('#inputs-list-form');
+                    const inputsParent = /** @type {HTMLFormElement} */ (
+                        this.renderRoot.querySelector('#inputs-list-form')
+                    );
                     let valid = inputsParent.reportValidity();
-                    let urls = this.parentNode
-                        .querySelector('#demo')
-                        .shadowRoot.querySelectorAll('input[name="streamUrl"]');
-                    let filenames = this.parentNode
-                        .querySelector('#demo')
-                        .shadowRoot.querySelectorAll('input[name="streamFilenames"]');
+                    const urls = /** @type {NodeListOf<HTMLInputElement>} */ (
+                        this.renderRoot.querySelectorAll('input[name="streamUrl"]')
+                    );
+                    const filenames = /** @type {NodeListOf<HTMLInputElement>} */ (
+                        this.renderRoot.querySelectorAll('input[name="streamFilenames"]')
+                    );
                     if (valid) {
                         for (let i = 0; i < urls.length; i++) {
-                            files.push({name: filenames[i].value, url: urls[i].value});
+                            const filename = filenames[i];
+                            const url = urls[i];
+                            files.push({name: filename.value, url: url.value});
                         }
                         this._('#file-sink-streamed').files = files;
                     }
