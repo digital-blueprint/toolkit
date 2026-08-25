@@ -32,10 +32,10 @@ export class Router {
         // If we need more we need to pass the route name to each function
         this.routeName = options.routeName;
 
-        console.assert(this.getState);
-        console.assert(this.setState);
-        console.assert(this.getDefaultState);
-        console.assert(this.routeName);
+        console.assert(Boolean(this.getState));
+        console.assert(Boolean(this.setState));
+        console.assert(Boolean(this.getDefaultState));
+        console.assert(Boolean(this.routeName));
 
         // https://github.com/kriasoft/universal-router
         this.router = new UniversalRouter(routes, unioptions);

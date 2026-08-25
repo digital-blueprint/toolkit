@@ -138,7 +138,9 @@ export class MarkdownElement extends ScopedElementsMixin(LitElement) {
      * @param {boolean} documentChanged If the requested document has changed
      */
     _updateVisibleDocument(documentChanged) {
-        const documents = Array.from(this.shadowRoot.querySelectorAll('[data-markdown-document]'));
+        const documents = Array.from(
+            this.renderRoot.querySelectorAll('[data-markdown-document]'),
+        ).filter((document) => document instanceof HTMLElement);
         if (documents.length === 0) {
             this._documentName = '';
             this.subDocument = false;
@@ -154,7 +156,8 @@ export class MarkdownElement extends ScopedElementsMixin(LitElement) {
             doc.hidden = doc !== active;
         }
 
-        const name = active.dataset.markdownDocument === '' ? '' : active.dataset.markdownName;
+        const name =
+            active.dataset.markdownDocument === '' ? '' : (active.dataset.markdownName ?? '');
         const nameChanged = this._documentName !== name;
         this._documentName = name;
         this.subDocument = name !== '';

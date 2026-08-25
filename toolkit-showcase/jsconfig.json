@@ -1,5 +1,8 @@
 {
     "extends": "../jsconfig.json",
-    "include": ["src", "./*.js", "./*.mjs"],
+    "compilerOptions": {
+        "maxNodeModuleJsDepth": 0
+    },
+    "include": ["src"],
     "exclude": ["node_modules", "dist", "vendor"]
 }

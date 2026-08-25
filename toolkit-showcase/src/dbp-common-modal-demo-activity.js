@@ -28,6 +28,14 @@ class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
         };
     }
 
+    _getPersonModal() {
+        const modal = this.renderRoot.querySelector('#my-modal-person');
+        if (!(modal instanceof Modal)) {
+            throw new Error('Person modal not found');
+        }
+        return modal;
+    }
+
     static get properties() {
         return {
             ...super.properties,
@@ -102,8 +110,7 @@ class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
                     id="modal-trigger-person"
                     value="open modal"
                     no-spinner-on-click
-                    @click="${() =>
-                        this.renderRoot.querySelector('#my-modal-person').open()}"></dbp-button>
+                    @click="${() => this._getPersonModal().open()}"></dbp-button>
 
                 <dbp-modal
                     id="my-modal-person"
@@ -130,7 +137,7 @@ class DbpCommonModalDemoActivity extends ScopedElementsMixin(AdapterLitElement) 
                     <menu slot="footer" class="footer-menu">
                         <dbp-button
                             @click="${() => {
-                                this.renderRoot.querySelector('#my-modal-person').close();
+                                this._getPersonModal().close();
                             }}">
                             Cancel
                         </dbp-button>
