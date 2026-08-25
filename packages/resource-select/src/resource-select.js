@@ -507,7 +507,7 @@ export class ResourceSelect extends LangMixin(
      * adds a "Searching…" entry, which we replace with a spinner plus the same text, so the
      * user gets some moving feedback while waiting.
      *
-     * @param {object} result - The select2 result object
+     * @param {{loading?: boolean, text: string}} result - The select2 result object
      * @returns {HTMLElement|string} An element for the loading entry, the plain text otherwise
      */
     _renderResult(result) {

@@ -4,7 +4,7 @@ import {adoptStyles, isServer} from 'lit';
 import {ScopedElementsMixin as OpenWcLitScopedElementsMixin} from '@open-wc/scoped-elements/lit-element.js';
 
 /**
- * @typedef {import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost>} ScopedElementsHostConstructor
+ * @typedef {import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost> & import('@open-wc/scoped-elements/lit-element.js').ScopedElementsHostConstructor} ScopedElementsHostConstructor
  * @typedef {import('@open-wc/scoped-elements/lit-element.js').ScopedElementsHost} ScopedElementsHost
  * @typedef {import('./types.js').ScopedElementsHostV2Constructor} ScopedElementsHostV2Constructor
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<LitElement>} LitElementConstructor

@@ -73,7 +73,11 @@ export class ResourceSelectDemo extends LangMixin(
 
     async resetAll() {
         const resourceSelects = this.renderRoot.querySelectorAll('dbp-resource-select');
-        await Promise.all(Array.from(resourceSelects).map((select) => select.reset()));
+        await Promise.all(
+            Array.from(resourceSelects).map((select) =>
+                /** @type {ResourceSelect} */ (select).reset(),
+            ),
+        );
     }
 
     render() {

@@ -3,8 +3,8 @@
  *
  * @param {string} url
  * @param {string} lang
- * @param {function(): string} tokenGetter - Called before each request to get a fresh auth token
- * @returns {Promise<Array>}
+ * @param {() => string} tokenGetter - Called before each request to get a fresh auth token
+ * @returns {Promise<object[]>}
  */
 export async function getCollection(url, lang, tokenGetter) {
     let allMembers = [];
