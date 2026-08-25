@@ -1301,7 +1301,6 @@ export function getSelect2CSS() {
             padding-left: var(--dbp-select2-content-padding-left);
             /* Clear the chevron, which we shifted left of select2's default position */
             padding-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
-            min-height: 32px;
             display: flex;
             align-items: center;
             margin-right: auto;
@@ -1368,10 +1367,9 @@ export function getSelect2CSS() {
             background-color: var(--dbp-background);
             display: flex;
             gap: 5px;
-            margin-left: 5px;
             flex-wrap: wrap;
             max-width: 100%;
-            margin: 5px;
+            margin: 4px;
         }
 
         .select2-container--default .select2-search--dropdown .select2-search__field {
