@@ -5,7 +5,6 @@ import {GrantPermissionDialog} from './grant-permission-dialog.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {httpGetAsync} from './utils.js';
 
 export class GrantPermissionDialogDemo extends LangMixin(
     ScopedElementsMixin(DBPLitElement),
@@ -86,7 +85,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
 
     /**
      * Gets the actions for our resource class
-     * @returns {Promise<object>} response
+     * @returns {Promise<Response>} response
      */
     async apiGetForms() {
         const options = {
@@ -96,7 +95,7 @@ export class GrantPermissionDialogDemo extends LangMixin(
                 Authorization: 'Bearer ' + this.auth.token,
             },
         };
-        return await httpGetAsync(this.entryPointUrl + '/formalize/forms?perPage=9999', options);
+        return await fetch(this.entryPointUrl + '/formalize/forms?perPage=9999', options);
     }
 
     async setForms() {

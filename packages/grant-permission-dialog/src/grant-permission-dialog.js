@@ -19,6 +19,23 @@ import {getDeletionConfirmation, handleDeletionConfirm, handleDeletionCancel} fr
 import {classMap} from 'lit/directives/class-map.js';
 import {repeat} from 'lit/directives/repeat.js';
 
+/**
+ * @typedef {{
+ *   action: string,
+ *   identifier: string|null,
+ *   editable?: boolean,
+ *   inherited?: boolean,
+ *   toSave?: boolean
+ * }} UserPermission
+ * @typedef {{
+ *   userIdentifier: string,
+ *   userFullName: string|undefined,
+ *   permissions: Map<string, UserPermission>,
+ *   buttonState?: string
+ * }} UserEntry
+ * @typedef {Record<string, Record<string, string>>} AvailableAction
+ */
+
 export class GrantPermissionDialog extends LangMixin(
     ScopedElementsMixin(DBPLitElement),
     createInstance,
@@ -28,9 +45,12 @@ export class GrantPermissionDialog extends LangMixin(
         this.auth = {};
         this.entryPointUrl = '';
         this.modalTitle = '';
+        /** @type {AvailableAction[]} */
         this.availableActions = [];
+        /** @type {Map<string, UserEntry>} */
         this.userList = new Map();
         this.permissionRows = [];
+        /** @type {Map<string, UserEntry>} */
         this.usersToAdd = new Map();
         this.resourceIdentifier = '';
         this.resourceClassIdentifier = '';
@@ -41,7 +61,56 @@ export class GrantPermissionDialog extends LangMixin(
         /** @type {import('lit/directives/ref.js').Ref<Modal>} */
         this.permissionModalRef = createRef();
         this.lastManageCheckbox = null;
+        /** @type {string|null} */
         this.lastSavedManagerId = null;
+    }
+
+    get #addPersonButton() {
+        const button = this.addPersonButtonRef.value;
+        if (!button) {
+            throw new Error('Add person button is unavailable');
+        }
+        return button;
+    }
+
+    get #savePermissionButton() {
+        const button = this.savePermissionButtonRef.value;
+        if (!button) {
+            throw new Error('Save permission button is unavailable');
+        }
+        return button;
+    }
+
+    get #permissionModal() {
+        const modal = this.permissionModalRef.value;
+        if (!modal) {
+            throw new Error('Permission modal is unavailable');
+        }
+        return modal;
+    }
+
+    /**
+     * @param {string} userId
+     * @returns {UserEntry}
+     */
+    #getUser(userId) {
+        const user = this.userList.get(userId);
+        if (!user) {
+            throw new Error(`Unknown user "${userId}"`);
+        }
+        return user;
+    }
+
+    /**
+     * @param {string} userId
+     * @returns {UserEntry}
+     */
+    #getQueuedUser(userId) {
+        const user = this.usersToAdd.get(userId);
+        if (!user) {
+            throw new Error(`User "${userId}" is not queued for editing`);
+        }
+        return user;
     }
 
     static get properties() {
@@ -120,6 +189,7 @@ export class GrantPermissionDialog extends LangMixin(
      * Set lastSavedManagerId to prevent deleting the last manager
      */
     checkSavedManagerCount() {
+        /** @type {string|null} */
         let singleManagerId = null;
         let multipleManagers = false;
 
@@ -173,27 +243,8 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     /**
-     * Send a fetch to given url with given options
-     * @param url
-     * @param options
-     * @returns {Promise<object>} response (error or result)
-     */
-    async httpGetAsync(url, options) {
-        let response = await fetch(url, options)
-            .then((result) => {
-                if (!result.ok) throw new Error(result.statusText, {cause: result});
-                return result;
-            })
-            .catch((error) => {
-                return error;
-            });
-
-        return response;
-    }
-
-    /**
      * Gets the actions for our resource class
-     * @returns {Promise<object>} response
+     * @returns {Promise<Response>} response
      */
     async apiGetAvailableActions() {
         const options = {
@@ -203,7 +254,7 @@ export class GrantPermissionDialog extends LangMixin(
                 Authorization: 'Bearer ' + this.auth.token,
             },
         };
-        return await this.httpGetAsync(
+        return await fetch(
             this.entryPointUrl +
                 `/authorization/available-resource-class-actions/${this.resourceClassIdentifier}?perPage=9999`,
             options,
@@ -215,19 +266,25 @@ export class GrantPermissionDialog extends LangMixin(
         let showErrorNotification = false;
         const i18n = this._i18n;
         try {
-            let responseBody = null;
             const response = await this.apiGetAvailableActions();
-            if (response.status !== 200 || (responseBody = await response.json()) === undefined) {
+            if (response.status !== 200) {
                 showErrorNotification = true;
             } else {
-                this.availableActions = Object.keys(responseBody.itemActions).map((actionKey) => {
-                    return {
-                        [actionKey]: {
-                            [this.lang]:
-                                responseBody.itemActions[actionKey][this.lang] ?? actionKey,
+                const responseBody = await response.json();
+                if (responseBody === undefined || responseBody === null) {
+                    showErrorNotification = true;
+                } else {
+                    this.availableActions = Object.keys(responseBody.itemActions).map(
+                        (actionKey) => {
+                            return {
+                                [actionKey]: {
+                                    [this.lang]:
+                                        responseBody.itemActions[actionKey][this.lang] ?? actionKey,
+                                },
+                            };
                         },
-                    };
-                });
+                    );
+                }
             }
         } catch {
             showErrorNotification = true;
@@ -248,7 +305,7 @@ export class GrantPermissionDialog extends LangMixin(
 
     /**
      * Gets the list of Resource Action Grants
-     * @returns {Promise<object>} response
+     * @returns {Promise<Response>} response
      */
     async apiGetResourceActionGrants() {
         const options = {
@@ -258,7 +315,7 @@ export class GrantPermissionDialog extends LangMixin(
                 Authorization: 'Bearer ' + this.auth.token,
             },
         };
-        return await this.httpGetAsync(
+        return await fetch(
             this.entryPointUrl +
                 `/authorization/resource-action-grants?resourceClass=${this.resourceClassIdentifier}&resourceIdentifier=${this.resourceIdentifier}&page=1&perPage=9999`,
             options,
@@ -273,20 +330,17 @@ export class GrantPermissionDialog extends LangMixin(
                 Authorization: 'Bearer ' + this.auth.token,
             },
         };
-        return await this.httpGetAsync(
-            this.entryPointUrl + `/base/people/${userIdentifier}`,
-            options,
-        );
+        return await fetch(this.entryPointUrl + `/base/people/${userIdentifier}`, options);
     }
 
     /**
      * Delete user's Resource Action Grant
      * @param {string} grantIdentifier - Authorization Resource Action Grant identifier
-     * @returns {Promise<object>} response
+     * @returns {Promise<Response>} response
      */
     async apiDeleteResourceActionGrant(grantIdentifier) {
         if (!grantIdentifier) {
-            return false;
+            throw new Error('Grant identifier is required');
         }
         const options = {
             method: 'DELETE',
@@ -295,7 +349,7 @@ export class GrantPermissionDialog extends LangMixin(
                 Authorization: 'Bearer ' + this.auth.token,
             },
         };
-        return await this.httpGetAsync(
+        return await fetch(
             this.entryPointUrl + `/authorization/resource-action-grants/${grantIdentifier}`,
             options,
         );
@@ -305,7 +359,7 @@ export class GrantPermissionDialog extends LangMixin(
      * Save user's Resource Action Grant
      * @param {string} action
      * @param {string} userIdentifier
-     * @returns {Promise<object>} response
+     * @returns {Promise<Response>} response
      */
     async apiPostResourceActionGrant(action, userIdentifier) {
         /* {
@@ -329,16 +383,13 @@ export class GrantPermissionDialog extends LangMixin(
             },
             body: JSON.stringify(body),
         };
-        return await this.httpGetAsync(
-            this.entryPointUrl + `/authorization/resource-action-grants`,
-            options,
-        );
+        return await fetch(this.entryPointUrl + `/authorization/resource-action-grants`, options);
     }
 
     async deleteUsersAllGrants(userId) {
         const i18n = this._i18n;
 
-        const userToDelete = this.userList.get(userId);
+        const userToDelete = this.#getUser(userId);
         const grantsToDelete = [];
 
         // Collect grants to delete
@@ -528,7 +579,8 @@ export class GrantPermissionDialog extends LangMixin(
                         const userId = grant.userIdentifier;
                         const isInherited = grant.grantedActions.length === 0;
 
-                        if (!newUserList.has(userId)) {
+                        const existingUser = newUserList.get(userId);
+                        if (!existingUser) {
                             const userFullName = await this.getUserFullName(userId);
                             // Create user object
                             const user = {
@@ -546,15 +598,14 @@ export class GrantPermissionDialog extends LangMixin(
                             newUserList.set(userId, user);
                         } else {
                             // We already have this user in userList
-                            let user = newUserList.get(userId);
                             // Set current grant
-                            user.permissions.set(grant.action, {
+                            existingUser.permissions.set(grant.action, {
                                 action: grant.action,
                                 identifier: grant.identifier,
                                 inherited: isInherited,
                             });
                             // Add to user list
-                            newUserList.set(userId, user);
+                            newUserList.set(userId, existingUser);
                         }
                     }
                 }
@@ -735,6 +786,9 @@ export class GrantPermissionDialog extends LangMixin(
         `;
     }
 
+    /**
+     * @param {UserEntry} user
+     */
     renderPermissionCheckboxes(user) {
         const i18n = this._i18n;
         if (!this.availableActions) {
@@ -753,32 +807,28 @@ export class GrantPermissionDialog extends LangMixin(
                     let hasThisPermission = false;
                     let editable = false;
                     let checkboxTitle = `${actionName}`;
-                    let userPermission = null;
+                    const userPermission = user.permissions.get(actionValue);
+                    // The permission exists if it has an identifier
+                    if (userPermission?.identifier) {
+                        hasThisPermission = true;
+                    }
 
-                    if (user.permissions) {
-                        userPermission = user.permissions.get(actionValue);
-                        // The permission exists if it has an identifier
-                        if (userPermission?.identifier) {
-                            hasThisPermission = true;
-                        }
+                    // Allow editing of newly added permissions
+                    if (userPermission?.editable) {
+                        editable = true;
+                    }
 
-                        // Allow editing of newly added permissions
-                        if (userPermission?.editable) {
-                            editable = true;
-                        }
-
-                        if (userPermission?.inherited) {
-                            editable = false;
-                            checkboxTitle = i18n.t(
-                                'grant-permission-dialog.permissions.inherited-permission-title',
-                            );
-                        }
+                    if (userPermission?.inherited) {
+                        editable = false;
+                        checkboxTitle = i18n.t(
+                            'grant-permission-dialog.permissions.inherited-permission-title',
+                        );
                     }
 
                     return html`
                         <div
                             class="checkbox-container ${classMap({
-                                'inherited-mode': userPermission?.inherited,
+                                'inherited-mode': Boolean(userPermission?.inherited),
                             })}">
                             <label
                                 for="${actionValue}-${user.userIdentifier}"
@@ -790,7 +840,7 @@ export class GrantPermissionDialog extends LangMixin(
                                 name="${actionValue}"
                                 class="permission-checkbox ${classMap({
                                     'edit-mode': this.usersToAdd.has(user.userIdentifier),
-                                    'inherited-mode': userPermission?.inherited,
+                                    'inherited-mode': Boolean(userPermission?.inherited),
                                 })}"
                                 title="${checkboxTitle}"
                                 data-user-id="${user.userIdentifier}"
@@ -806,11 +856,12 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     createEmptyUserPermission(editable = false) {
+        /** @type {Map<string, UserPermission>} */
+        const userPermissions = new Map();
         if (!Array.isArray(this.availableActions) || this.availableActions.length < 1) {
-            return;
+            return userPermissions;
         }
 
-        const userPermissions = new Map();
         this.availableActions.forEach((action) => {
             const actionValue = Object.keys(action)[0];
             const emptyPermission = {
@@ -850,10 +901,11 @@ export class GrantPermissionDialog extends LangMixin(
             }
 
             // Set new user data
-            let userToAdd = {};
-            userToAdd.userIdentifier = newUser['identifier'];
-            userToAdd.userFullName = `${newUser['givenName']} ${newUser['familyName']}`;
-            userToAdd.permissions = this.createEmptyUserPermission(true);
+            const userToAdd = {
+                userIdentifier: newUser['identifier'],
+                userFullName: `${newUser['givenName']} ${newUser['familyName']}`,
+                permissions: this.createEmptyUserPermission(true),
+            };
 
             this.addUserToQueue(userToAdd.userIdentifier, userToAdd);
 
@@ -866,7 +918,7 @@ export class GrantPermissionDialog extends LangMixin(
 
             await this.updateComplete;
             this._handleUserEditButton(userToAdd.userIdentifier);
-            this.addPersonButtonRef.value.stop();
+            this.#addPersonButton.stop();
         } catch (error) {
             console.log('Failed to get user object', error);
             sendNotification({
@@ -897,15 +949,21 @@ export class GrantPermissionDialog extends LangMixin(
         const permissionName = checkbox.getAttribute('name');
 
         // Get users to add
-        const userToAdd = this.usersToAdd.get(userIdentifier);
+        const userToAdd = this.#getQueuedUser(userIdentifier);
         // Get clicked permission
         const permission = userToAdd.permissions.get(permissionName);
+        if (!permission) {
+            throw new Error(
+                `Permission "${permissionName}" does not exist for user "${userIdentifier}"`,
+            );
+        }
         // Set permission to be saved
         permission.toSave = checkbox.getAttribute('data-changed') ? true : false;
     }
 
     enableUsersAllCheckboxes(userId) {
-        this.userList.get(userId).permissions.forEach((permission) => {
+        const user = this.#getUser(userId);
+        user.permissions.forEach((permission) => {
             if (
                 (permission.action === 'manage' && this.lastSavedManagerId === userId) ||
                 permission.inherited
@@ -918,7 +976,8 @@ export class GrantPermissionDialog extends LangMixin(
     }
 
     disableUsersAllCheckboxes(userId) {
-        this.userList.get(userId).permissions.forEach((permission) => {
+        const user = this.#getUser(userId);
+        user.permissions.forEach((permission) => {
             permission.editable = false;
         });
     }
@@ -963,7 +1022,7 @@ export class GrantPermissionDialog extends LangMixin(
         } else {
             await this.setAvailableActions();
             await this.setListOfUsersAndPermissions();
-            this.permissionModalRef.value.open();
+            this.#permissionModal.open();
 
             const modalContent = this._('.content-inner');
 
@@ -1024,23 +1083,28 @@ export class GrantPermissionDialog extends LangMixin(
             this.userList = new Map();
 
             // Reset add person button state
-            this.addPersonButtonRef.value.stop();
-            this.permissionModalRef.value.close();
+            this.#addPersonButton.stop();
+            this.#permissionModal.close();
         }
     }
 
     handleAddNewPerson() {
-        this.addPersonButtonRef.value.start();
-        this.addUserToList('emptyPerson', {});
+        this.#addPersonButton.start();
+        this.addUserToList('emptyPerson', {
+            userIdentifier: 'emptyPerson',
+            userFullName: undefined,
+            permissions: new Map(),
+        });
     }
 
     /**
      * Add user to the usersToAdd queue
      * Triggers a re-render
      * @param {string} userId
+     * @param {UserEntry|null} [userToAdd]
      */
     addUserToQueue(userId, userToAdd = null) {
-        const _userToAdd = userToAdd === null ? this.userList.get(userId) : userToAdd;
+        const _userToAdd = userToAdd === null ? this.#getUser(userId) : userToAdd;
         this.usersToAdd = new Map(this.usersToAdd).set(userId, _userToAdd);
     }
 
@@ -1059,6 +1123,7 @@ export class GrantPermissionDialog extends LangMixin(
      * Add user to the userList
      * Triggers a re-render
      * @param {string} userId
+     * @param {UserEntry} userToAdd
      */
     addUserToList(userId, userToAdd) {
         this.userList = new Map(this.userList).set(userId, userToAdd);
@@ -1086,8 +1151,9 @@ export class GrantPermissionDialog extends LangMixin(
      * @param {string} state  - edit | save | prepare-delete | delete
      */
     setButtonState(userId, state) {
+        const user = this.#getUser(userId);
         this.userList.set(userId, {
-            ...this.userList.get(userId),
+            ...user,
             buttonState: state,
         });
         this.requestUpdate('userList');
@@ -1126,7 +1192,7 @@ export class GrantPermissionDialog extends LangMixin(
 
             if (userId) {
                 // Process only the specified user
-                usersToProcess = new Map([[userId, this.usersToAdd.get(userId)]]);
+                usersToProcess = new Map([[userId, this.#getQueuedUser(userId)]]);
             } else {
                 // Process all users in the queue
                 usersToProcess = this.usersToAdd;
@@ -1253,7 +1319,7 @@ export class GrantPermissionDialog extends LangMixin(
             this.requestUpdate('userList');
 
             // Stop the save button spinner and show success message
-            this.savePermissionButtonRef.value.stop();
+            this.#savePermissionButton.stop();
 
             if (successCount > 0) {
                 sendNotification({

@@ -1,3 +1,5 @@
+/// <reference path="./select2-css.d.ts" />
+
 import $ from 'jquery';
 import select2 from 'select2';
 import select2CSSPath from 'select2/dist/css/select2.min.css';
