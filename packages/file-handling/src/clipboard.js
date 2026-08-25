@@ -12,6 +12,8 @@ import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
 import {AdapterLitElement, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 
+/** @typedef {import('lit').TemplateResult} TemplateResult */
+
 const MODE_TABLE_ONLY = 'table-only';
 const MODE_FILE_SINK = 'file-sink';
 const MODE_FILE_SOURCE = 'file-source';
@@ -20,7 +22,8 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
     constructor() {
         super();
         this.allowedMimeTypes = '';
-        this.clipboardFiles = {files: ''};
+        /** @type {{files: File[]}} */
+        this.clipboardFiles = {files: []};
         this.clipboardSelectBtnDisabled = true;
         this.tabulatorTable = null;
         this._onReceiveBeforeUnload = this.onReceiveBeforeUnload.bind(this);
@@ -230,9 +233,10 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
         });
 
         //Register only one beforeunload Event for the clipboard warning
-        if (!window.clipboardWarning) {
+        const clipboardWindow = /** @type {Window & {clipboardWarning?: boolean}} */ (window);
+        if (!clipboardWindow.clipboardWarning) {
             window.addEventListener('beforeunload', this._onReceiveBeforeUnload, false);
-            window.clipboardWarning = true;
+            clipboardWindow.clipboardWarning = true;
         }
     }
 
@@ -321,8 +325,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
                     .getRows()
                     .filter(
                         (row) =>
-                            row.getData().type != 'directory' &&
-                            this.checkFileType(row.getData(), this.allowedMimeTypes),
+                            row.getData().type != 'directory' && this.checkFileType(row.getData()),
                     ),
             );
             this.numberOfSelectedFiles = this.tabulatorTable.getSelectedRows().length;
@@ -340,9 +343,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
             let maxSelected = this.tabulatorTable
                 .getRows()
                 .filter(
-                    (row) =>
-                        row.getData().type != 'directory' &&
-                        this.checkFileType(row.getData(), this.allowedMimeTypes),
+                    (row) => row.getData().type != 'directory' && this.checkFileType(row.getData()),
                 ).length;
             let selected = this.tabulatorTable.getSelectedRows().length;
             if (selected === maxSelected) {
@@ -615,6 +616,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
         if (this.tabulatorTable && this.tabulatorTable.getSelectedData().length > 0) {
             let count = this.tabulatorTable.getSelectedData().length;
             this.tabulatorTable.deleteRow(this.tabulatorTable.getSelectedRows());
+            /** @type {{files: File[]}} */
             let data = {files: []};
             this.tabulatorTable.getRows().forEach((row) => data.files.push(row.getData().file));
             this.sendSetPropertyEvent('clipboard-files', data);
@@ -642,7 +644,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
      * If this.mode === MODE_FILE_SINK or MODE_FILE_SOURCE then there are only delete and save files buttons available
      * Else there are the add, delete and save files buttons available
      *
-     * @returns {html}
+     * @returns {TemplateResult}
      */
     getAdditionalButtons() {
         const i18n = this._i18n;
@@ -764,7 +766,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
     /**
      * Get the clipboard sink html
      *
-     * @returns {html}
+     * @returns {TemplateResult}
      */
     getClipboardSink() {
         const i18n = this._i18n;
@@ -806,7 +808,7 @@ export class Clipboard extends LangMixin(ScopedElementsMixin(AdapterLitElement),
     /**
      * Get the clipboard source html
      *
-     * @returns {html}
+     * @returns {TemplateResult}
      */
     getClipboardSource() {
         const tabulatorCss = commonUtils.getAssetURL(
