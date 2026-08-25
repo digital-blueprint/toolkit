@@ -1,8 +1,22 @@
 /**
+ * @typedef {object} ColumnDefinition
+ * @property {ColumnDefinition[]} [columns] Nested column definitions.
+ */
+
+/**
+ * @typedef {object} ColumnConfiguration
+ * @property {string} field Unique column field.
+ * @property {string} title Display title.
+ * @property {boolean} visible Current visibility.
+ * @property {string} parentPath Parent group path.
+ * @property {string} parentTitle Parent group title.
+ */
+
+/**
  * Clone column definitions while retaining callbacks and other non-serializable values.
  *
- * @param {object[]} definitions
- * @returns {object[]}
+ * @param {ColumnDefinition[]} definitions
+ * @returns {ColumnDefinition[]}
  */
 export function cloneColumnDefinitions(definitions) {
     if (!Array.isArray(definitions)) return [];
@@ -22,7 +36,7 @@ export function cloneColumnDefinitions(definitions) {
  * @param {object[]} definitions
  * @param {string[]} excludedFields
  * @param {object} localizedTitles
- * @returns {{field: string, title: string, visible: boolean, parentPath: string, parentTitle: string}[]}
+ * @returns {ColumnConfiguration[]}
  */
 export function createColumnConfiguration(definitions, excludedFields = [], localizedTitles = {}) {
     const fieldCounts = countFields(definitions);
@@ -65,9 +79,9 @@ export function applyColumnConfiguration(definitions, configuration, excludedFie
 /**
  * Reconcile stored preferences with current definitions.
  *
- * @param {{field: string, visible: boolean}[]} currentConfiguration
+ * @param {ColumnConfiguration[]} currentConfiguration
  * @param {{field: string, visible: boolean}[]} storedConfiguration
- * @returns {{field: string, title: string, visible: boolean, parentPath: string, parentTitle: string}[]}
+ * @returns {ColumnConfiguration[]}
  */
 export function reconcileColumnConfiguration(currentConfiguration, storedConfiguration) {
     if (!Array.isArray(storedConfiguration)) return currentConfiguration;

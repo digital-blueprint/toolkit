@@ -38,6 +38,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             autoColumns: true,
         };
         this.data = [];
+        this.paginationNoLangsEnabled = false;
         this.paginationEnabled = false;
         this.paginationSize = 10;
         this.stickyHeaderEnabled = false;
@@ -413,7 +414,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             const paginationSizeDropdown = this._('#custom-pagination .tabulator-page-size');
 
             const paginationSize = parseInt(
-                localStorage.getItem(`tabulator-${this.identifier}-pagination-size`),
+                localStorage.getItem(`tabulator-${this.identifier}-pagination-size`) ?? '',
             );
             if (paginationSize) {
                 this.paginationSize = paginationSize;
@@ -747,7 +748,9 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     async openColumnConfiguration() {
         if (!this.columnConfigurationEnabled || !this.tabulatorTable) return;
 
-        const modal = this.renderRoot.querySelector('dbp-tabulator-column-configuration-modal');
+        const modal = /** @type {ColumnConfigurationModal | null} */ (
+            this.renderRoot.querySelector('dbp-tabulator-column-configuration-modal')
+        );
         if (!modal) return;
 
         modal.columns = this.currentColumnConfiguration;

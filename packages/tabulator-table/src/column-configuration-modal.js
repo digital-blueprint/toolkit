@@ -33,6 +33,14 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
         };
     }
 
+    get #modal() {
+        const modal = this.renderRoot.querySelector('dbp-modal');
+        if (!(modal instanceof Modal)) {
+            throw new Error('Column configuration modal is unavailable');
+        }
+        return modal;
+    }
+
     update(changedProperties) {
         if (changedProperties.has('lang')) {
             void this._i18n.changeLanguage(this.lang);
@@ -43,11 +51,11 @@ export class ColumnConfigurationModal extends ScopedElementsMixin(DBPLitElement)
     async open() {
         this.workingColumns = this.columns.map((column) => ({...column}));
         await this.updateComplete;
-        this.renderRoot.querySelector('dbp-modal')?.open();
+        this.#modal.open();
     }
 
     close() {
-        this.renderRoot.querySelector('dbp-modal')?.close();
+        this.#modal.close();
     }
 
     toggleColumn(field) {

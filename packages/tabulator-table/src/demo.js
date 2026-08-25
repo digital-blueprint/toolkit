@@ -64,7 +64,7 @@ export class TabulatorTableDemo extends LangMixin(
 
     pressEnterAndSubmitSearch(event) {
         if (event.keyCode === 13) {
-            const activeElement = this.shadowRoot.activeElement;
+            const activeElement = this.shadowRoot?.activeElement;
             if (activeElement && activeElement.id === 'searchbar') {
                 event.preventDefault();
                 this.filterTable();
@@ -365,7 +365,9 @@ export class TabulatorTableDemo extends LangMixin(
 
         for (let row = 1; row < 6; row++) {
             //let btn_delete = this.createScopedElement('button');
-            let btn_delete = this.createScopedElement('dbp-icon-button');
+            let btn_delete = /** @type {IconButton} */ (
+                this.createScopedElement('dbp-icon-button')
+            );
             btn_delete.iconName = 'trash';
             btn_delete.addEventListener('click', (e) => {
                 this.deleteRow(e, row);
