@@ -42,7 +42,7 @@ export async function decrypt(token, payload) {
  * Note that there is no signature verification.
  *
  * @param {string} token
- * @returns {object}
+ * @returns {Record<string, unknown>}
  */
 export function parseJwt(token) {
     let parts = token.split('.');
@@ -50,6 +50,6 @@ export function parseJwt(token) {
         throw new Error('invalid JWT');
     }
     let payload = parts[1];
-    const bytes = Uint8Array.from(atob(payload), (m) => m.codePointAt(0));
+    const bytes = Uint8Array.from(atob(payload), (m) => m.charCodeAt(0));
     return JSON.parse(new TextDecoder().decode(bytes));
 }
