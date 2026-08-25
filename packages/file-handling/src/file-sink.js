@@ -106,7 +106,7 @@ export class FileSink extends LangMixin(
                         // TODO find a way to reliably stop this again
                         // clearInterval works, but when should it be called? callback from sw?
                         setInterval(function keepAlive() {
-                            registration.active.postMessage('keep-alive');
+                            registration.active?.postMessage('keep-alive');
                         }, 3000);
                     }
                 })
@@ -116,7 +116,7 @@ export class FileSink extends LangMixin(
         void this.updateComplete.then(() => {
             this._('nav.modal-nav').addEventListener('scroll', this.handleScroll.bind(this));
 
-            if (this.enabledTargets.split(',') > 1) {
+            if (this.enabledTargets.split(',').length > 1) {
                 this._('.right-paddle').addEventListener(
                     'click',
                     this.handleScrollRight.bind(this, this._('nav.modal-nav')),
@@ -181,7 +181,7 @@ export class FileSink extends LangMixin(
         if (this.sumContentLengths >= 0) {
             let contentLength = document.createElement('input');
             contentLength.name = 'sumContentLengths';
-            contentLength.value = this.sumContentLengths;
+            contentLength.value = String(this.sumContentLengths);
             downloadForm.appendChild(contentLength);
         }
 
@@ -268,7 +268,10 @@ export class FileSink extends LangMixin(
 
         // cleanup
         while (downloadForm.hasChildNodes()) {
-            downloadForm.removeChild(downloadForm.firstChild);
+            const child = downloadForm.firstChild;
+            if (child) {
+                downloadForm.removeChild(child);
+            }
         }
         this.removeChild(downloadForm);
     }
@@ -306,7 +309,7 @@ export class FileSink extends LangMixin(
                     console.error('Given object cannot be saved!');
                     return;
                 }
-                FileSaver.saveAs(this.files[0], this.files[0].filename);
+                FileSaver.saveAs(this.files[0], this.files[0].name);
 
                 this.closeLoadingIndicatorModal();
             }
@@ -574,7 +577,6 @@ export class FileSink extends LangMixin(
                     directories-only
                     max-selected-items="1"
                     select-button-text="${i18n.t('file-sink.select-directory')}"
-                    ?disabled="${this.disabled}"
                     lang="${this.lang}"
                     subscribe="html-overrides,auth"
                     auth-url="${this.nextcloudAuthUrl}"
@@ -690,6 +692,7 @@ export class FileSink extends LangMixin(
     // Show the loading indicator modal for this instance while the download is being prepared.
     showLoadingIndicatorModal() {
         this.loadingDownloadFiles = false;
+        /** @type {Modal|null} */
         const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
         if (modal) {
             modal.open();
@@ -697,6 +700,7 @@ export class FileSink extends LangMixin(
     }
 
     closeLoadingIndicatorModal() {
+        /** @type {Modal|null} */
         const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
         if (modal) {
             // Mark streaming as started so the close handler does not cancel the download
@@ -715,6 +719,7 @@ export class FileSink extends LangMixin(
             }
             this._streamedDownloadInProgress = false;
 
+            /** @type {Modal|null} */
             const modal = this.renderRoot?.querySelector('#loading-indicator-modal');
             if (modal) {
                 // Mark streaming as started so the close handler does not cancel the download
@@ -805,7 +810,6 @@ export class FileSink extends LangMixin(
                                 </div>
                                 <button
                                     class="button is-primary"
-                                    ?disabled="${this.disabled}"
                                     @click="${async () => {
                                         // Custom event to notify about download start.
                                         const event = new CustomEvent(
