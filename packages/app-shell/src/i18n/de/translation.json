@@ -17,12 +17,7 @@
     "page-not-found": "Die gewünschte Seite wurde nicht gefunden",
     "page-updated-needs-reload": "Die Applikation wurde aktualisiert. Bitte laden Sie die Seite neu.",
     "privacy-policy": "Datenschutz",
-    "standard-layout-name": "Standard",
-    "switch-layout": "Layout wechseln",
-    "switch-to-standard-layout-label": "Zum Standardlayout wechseln",
-    "switch-to-wide-layout-label": "Zum Weiten Layout wechseln",
     "welcome": {
         "headline": "Willkommen!"
-    },
-    "wide-layout-name": "Erweitert"
+    }
 }

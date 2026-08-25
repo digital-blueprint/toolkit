@@ -17,12 +17,7 @@
     "page-not-found": "Requested Page Not Found",
     "page-updated-needs-reload": "The application has been updated. Please reload the page.",
     "privacy-policy": "Privacy Policy",
-    "standard-layout-name": "Standard",
-    "switch-layout": "Switch layout",
-    "switch-to-standard-layout-label": "Switch to Standard Layout",
-    "switch-to-wide-layout-label": "Switch to Wide Layout",
     "welcome": {
         "headline": "Welcome!"
-    },
-    "wide-layout-name": "Wide"
+    }
 }
