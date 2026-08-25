@@ -44,7 +44,7 @@ export class AuthMenuButton extends AuthMixin(
      * We need to set the width manually because a percent width is in relation to the viewport
      */
     updateDropdownWidth() {
-        const dropdown = this.shadowRoot.querySelector('div.dropdown-menu');
+        const dropdown = this.renderRoot.querySelector('div.dropdown-menu');
 
         if (!dropdown) {
             return;
@@ -214,9 +214,9 @@ export class AuthMenuButton extends AuthMixin(
     }
 
     setChevron(name) {
-        const chevron = this.shadowRoot.querySelector('#menu-chevron-icon');
+        const chevron = this.renderRoot.querySelector('#menu-chevron-icon');
         if (chevron !== null) {
-            chevron.name = name;
+            chevron.setAttribute('name', name);
         }
     }
 
@@ -230,7 +230,7 @@ export class AuthMenuButton extends AuthMixin(
     }
 
     closeDropdown() {
-        var dropdowns = this.shadowRoot.querySelectorAll('.dropdown');
+        var dropdowns = this.renderRoot.querySelectorAll('.dropdown');
         dropdowns.forEach(function (el) {
             el.classList.remove('is-active');
         });
@@ -244,7 +244,7 @@ export class AuthMenuButton extends AuthMixin(
             <div class="dropdown" @click="${this.onDropdownClick}">
                 <a href="#">
                     <div class="dropdown-trigger login-button">
-                        <div class="name">${this.auth['user-full-name']}</div>
+                        <div class="name">${this.auth?.['user-full-name'] ?? ''}</div>
                         <dbp-icon
                             class="menu-icon"
                             name="chevron-down"

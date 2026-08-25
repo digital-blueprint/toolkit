@@ -1,6 +1,16 @@
 import UniversalRouter from 'universal-router';
 import generateUrls from 'universal-router/generate-urls';
 
+/**
+ * @typedef {{[key: string]: any}} RouterState
+ * @typedef {{
+ *   routeName: string,
+ *   getState: () => RouterState,
+ *   setState: (state: RouterState) => void,
+ *   getDefaultState: () => RouterState,
+ * }} RouterIntegrationOptions
+ */
+
 function stateMatches(a, b) {
     return JSON.stringify(a, Object.keys(a).sort()) === JSON.stringify(b, Object.keys(b).sort());
 }
@@ -10,13 +20,9 @@ function stateMatches(a, b) {
  */
 export class Router {
     /**
-     * @param {Array} routes The routes passed to UniversalRouter
-     * @param {object} options Options
-     * @param {string} options.routeName The main route name
-     * @param {function(): object} options.getState Function which should return the current state
-     * @param {function(object): void} options.setState Function which gets passed the new state based on the route
-     * @param {function(): object} options.getDefaultState Function which should return the default state
-     * @param {object} unioptions options passed to UniversalRouter
+     * @param {import('universal-router').Routes<RouterState>} routes The routes passed to UniversalRouter
+     * @param {RouterIntegrationOptions} options Options
+     * @param {import('universal-router').RouterOptions<RouterState>} unioptions Options passed to UniversalRouter
      */
     constructor(routes, options, unioptions) {
         this.getState = options.getState;

@@ -12,7 +12,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';
 import {Router} from './router.js';
 import {BuildInfo} from './build-info.js';
-import {appWelcomeMeta} from './dbp-app-shell-welcome.js';
+import {AppShellWelcome, appWelcomeMeta} from './dbp-app-shell-welcome.js';
 import {MatomoElement} from '@dbp-toolkit/matomo/src/matomo';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {FeatureFlagDropdown} from './feature-flag-dropdown.js';
@@ -45,6 +45,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     constructor() {
         super();
         this.activeView = '';
+        this.src = '';
         this.entryPointUrl = '';
         this.subtitle = '';
         this.description = '';
@@ -53,6 +54,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.metadata = {};
         this.topic = {};
         this.basePath = '/';
+        /** @type {Router | null} */
+        this._router = null;
         this.keycloakConfig = null;
         this.noWelcomePage = false;
         this.menuHeight = -1;
@@ -173,7 +176,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             metadata = Object.assign(metadata, {
                 welcome: appWelcomeMeta,
             });
-            customElements.get('dbp-app-shell-welcome').app = this;
+            AppShellWelcome.app = this;
         }
 
         // this also triggers a rebuilding of the menu
@@ -202,6 +205,13 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         void this.updateComplete.then(() => {
             this.initializeScrollToTopButton();
         });
+    }
+
+    get router() {
+        if (this._router === null) {
+            throw new Error('Router has not been initialized');
+        }
+        return this._router;
     }
 
     initRouter() {
@@ -246,7 +256,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             },
         ];
 
-        this.router = new Router(
+        this._router = new Router(
             routes,
             {
                 routeName: 'mainRoute',
@@ -364,11 +374,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
      * @param {string} lang
      */
     updateLangIfChanged(lang) {
+        const currentLang = /** @type {{lang: string}} */ (this).lang;
         // in case the language is unknown, fall back to the default
         if (!this._i18n.languages.includes(lang)) {
-            lang = this.lang;
+            lang = currentLang;
         }
-        if (this.lang !== lang) {
+        if (currentLang !== lang) {
             this.lang = lang;
             void this.router.update();
 
@@ -452,7 +463,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     isMenuFloating() {
-        const menu = this.shadowRoot.querySelector('ul.menu');
+        const menu = this.renderRoot.querySelector('ul.menu');
         if (!menu) return false;
         const computedStyle = window.getComputedStyle(menu);
         return computedStyle.position === 'fixed';
@@ -473,8 +484,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     updateMenuIcon() {
-        const menu = this.shadowRoot.querySelector('ul.menu');
-        const burger = this.shadowRoot.querySelector('#menu-burger-icon');
+        const menu = this.renderRoot.querySelector('ul.menu');
+        const burger = /** @type {Icon | null} */ (
+            this.renderRoot.querySelector('#menu-burger-icon')
+        );
         if (!menu || !burger) return;
 
         const isOpen = menu.classList.contains('is-open');
@@ -528,6 +541,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         const link = e.composedPath()[0];
         const location = link.getAttribute('href');
+        if (location === null) {
+            throw new Error('Menu item has no href');
+        }
         void this.router.updateFromUrl(location);
         this.hideMenu();
     }
@@ -617,10 +633,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     toggleMenu() {
-        const menu = this.shadowRoot.querySelector('ul.menu');
-        const menuButton = this.shadowRoot.querySelector('.hd1-left-menu');
-        const burger = this.shadowRoot.querySelector('#menu-burger-icon');
-        const mainGrid = this.shadowRoot.querySelector('#main');
+        const menu = this.renderRoot.querySelector('ul.menu');
+        const menuButton = this.renderRoot.querySelector('.hd1-left-menu');
+        const burger = this.renderRoot.querySelector('#menu-burger-icon');
+        const mainGrid = this.renderRoot.querySelector('#main');
 
         if (!menu) return;
 
@@ -633,7 +649,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         menuButton?.setAttribute('aria-expanded', String(isOpening));
 
         this.menuOpen = isOpening;
-        localStorage.setItem('dbp-app-shell-menu-open', isOpening);
+        localStorage.setItem('dbp-app-shell-menu-open', String(isOpening));
 
         // Outside click + initial click guard
         if (this._boundCloseMenuHandler) {
@@ -646,15 +662,16 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         }
 
         if (isOpening) {
-            this._boundCloseMenuHandler = (evt) => {
+            const closeMenuHandler = (evt) => {
                 const path = evt.composedPath?.() || [];
                 const clickedInside =
                     path.includes(menu) || path.includes(menuButton) || path.includes(burger);
                 if (!clickedInside) this.hideMenu();
             };
+            this._boundCloseMenuHandler = closeMenuHandler;
 
             setTimeout(() => {
-                document.addEventListener('click', this._boundCloseMenuHandler);
+                document.addEventListener('click', closeMenuHandler);
             }, 0);
 
             this._boundEscHandler = (e) => {
@@ -668,17 +685,17 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (!this.isMenuFloating()) {
             return;
         }
-        const menu = this.shadowRoot.querySelector('ul.menu');
+        const menu = this.renderRoot.querySelector('ul.menu');
         if (!menu?.classList.contains('is-open')) return;
         // Close without re-toggling
         menu.classList.remove('is-open');
-        this.shadowRoot.querySelector('#main')?.classList.remove('menu-open');
-        this.shadowRoot.querySelector('#menu-burger-icon')?.setAttribute('name', 'menu');
-        this.shadowRoot.querySelector('h2.subtitle')?.setAttribute('aria-expanded', 'false');
+        this.renderRoot.querySelector('#main')?.classList.remove('menu-open');
+        this.renderRoot.querySelector('#menu-burger-icon')?.setAttribute('name', 'menu');
+        this.renderRoot.querySelector('h2.subtitle')?.setAttribute('aria-expanded', 'false');
         this._updateBodyScrollLock(false);
 
         this.menuOpen = false;
-        localStorage.setItem('dbp-app-shell-menu-open', false);
+        localStorage.setItem('dbp-app-shell-menu-open', 'false');
 
         if (this._boundCloseMenuHandler) {
             document.removeEventListener('click', this._boundCloseMenuHandler);
@@ -692,8 +709,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     initializeScrollToTopButton() {
         const buttonDisplayOffset = 600;
-        const scrollTopBtn = this.shadowRoot.getElementById('scroll-top');
-        const scrollBottomBtn = this.shadowRoot.getElementById('scroll-bottom');
+        const scrollTopBtn = this.renderRoot.querySelector('#scroll-top');
+        const scrollBottomBtn = this.renderRoot.querySelector('#scroll-bottom');
         if (!scrollTopBtn || !scrollBottomBtn) return;
 
         const toggleScrollButton = () => {
@@ -1241,7 +1258,11 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         // After it is loaded and registered globally, we get it and register it locally
         void customElements.whenDefined(activity.element).then(() => {
-            this.defineScopedElement(activity.element, customElements.get(activity.element));
+            const elementClass = customElements.get(activity.element);
+            if (!elementClass) {
+                throw new Error(`Custom element "${activity.element}" is not defined`);
+            }
+            this.defineScopedElement(activity.element, elementClass);
         });
 
         let elm = this.createScopedElement(activity.element);
@@ -1373,7 +1394,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (!appHidden) {
             // if app is loaded correctly, remove spinner
             void this.updateComplete.then(() => {
-                const slot = this.shadowRoot.querySelector('slot:not([name])');
+                const slot = this.renderRoot.querySelector('slot:not([name])');
 
                 // remove for safari 12 support. safari 13+ supports display: none on slots.
                 if (slot) slot.remove();

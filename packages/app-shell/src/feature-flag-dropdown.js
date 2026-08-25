@@ -11,6 +11,7 @@ export class FeatureFlagDropdown extends AdapterLitElement {
 
     static get properties() {
         return {
+            ...super.properties,
             _isOpen: {type: Boolean, state: true},
         };
     }

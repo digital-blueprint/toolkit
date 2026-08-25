@@ -5,7 +5,7 @@ import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-class AppShellWelcome extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+export class AppShellWelcome extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
         this._onVisibilityChanged = this._onVisibilityChanged.bind(this);
