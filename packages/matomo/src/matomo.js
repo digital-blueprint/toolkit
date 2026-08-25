@@ -108,12 +108,14 @@ export class MatomoElement extends DBPLitElement {
                 g.async = true;
                 g.defer = true;
                 g.src = endpoint + 'matomo.js';
-                s.parentNode.insertBefore(g, s);
+                const parent = s?.parentNode ?? document.head;
+                parent.insertBefore(g, s ?? null);
             })(this.endpoint, this.siteId);
 
             // track changed locations
             window.addEventListener('locationchanged', (e) => {
-                this.pushEvent(['setReferrerUrl', e.detail.referrerUrl]);
+                const locationEvent = /** @type {CustomEvent<{referrerUrl: string}>} */ (e);
+                this.pushEvent(['setReferrerUrl', locationEvent.detail.referrerUrl]);
                 this.pushEvent(['setCustomUrl', location.href]);
                 // this.pushEvent(['setDocumentTitle', '']);
                 this.pushEvent(['trackPageView']);
@@ -139,7 +141,12 @@ export class MatomoElement extends DBPLitElement {
 
                 // TypeError objects have no toJSON() method, so we can't serialize them by themselves
                 if (e.reason instanceof TypeError) {
-                    const error = e.reason;
+                    const error =
+                        /** @type {TypeError & {
+                         * fileName?: string,
+                         * lineNumber?: number,
+                         * columnNumber?: number
+                         * }} */ (e.reason);
                     name = {
                         message: error.message,
                         name: error.name,
@@ -210,7 +217,8 @@ export class MatomoElement extends DBPLitElement {
      * @param event
      */
     pushEvent(event) {
-        window._paq = window._paq || [];
+        const matomoWindow = /** @type {Window & {_paq?: unknown[][]}} */ (window);
+        const queue = (matomoWindow._paq ??= []);
 
         // add some special checks for "trackEvent"
         if (event[0] === 'trackEvent') {
@@ -228,6 +236,6 @@ export class MatomoElement extends DBPLitElement {
             }
         }
 
-        window._paq.push(event);
+        queue.push(event);
     }
 }
