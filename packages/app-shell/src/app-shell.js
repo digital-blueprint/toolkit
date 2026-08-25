@@ -341,7 +341,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             void this.fetchMetadata(this.src);
         }
 
-        this._boundResizeHandler = () => this.updateMenuIcon();
+        this._boundResizeHandler = () => this.handleResize();
         window.addEventListener('resize', this._boundResizeHandler);
         this.addEventListener('dbp-app-shell-activity-enabled', this._boundHandleActivityEnabled);
     }
@@ -458,6 +458,20 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         return computedStyle.position === 'fixed';
     }
 
+    /**
+     * Handles viewport resizes: keeps the burger icon in sync and closes the
+     * floating menu once the layout switches to the mobile (floating) mode,
+     * so the page can never stay scroll-locked in an unreachable position.
+     */
+    handleResize() {
+        this.updateMenuIcon();
+
+        // Close the menu when the layout collapses to the floating (mobile) mode
+        if (this.isMenuFloating()) {
+            this.hideMenu();
+        }
+    }
+
     updateMenuIcon() {
         const menu = this.shadowRoot.querySelector('ul.menu');
         const burger = this.shadowRoot.querySelector('#menu-burger-icon');
@@ -469,6 +483,20 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         } else {
             burger.name = 'menu';
         }
+
+        this._updateBodyScrollLock(isOpen);
+    }
+
+    /**
+     * Locks/unlocks body scrolling while the menu is open. The lock only
+     * applies when the menu is floating (mobile mode), which is driven by the
+     * same CSS breakpoint that switches the menu to `position: fixed`.
+     *
+     * @param {boolean} isOpen
+     */
+    _updateBodyScrollLock(isOpen) {
+        const shouldLock = isOpen && this.isMenuFloating();
+        document.body.style.overflowY = shouldLock ? 'hidden' : '';
     }
 
     onMenuItemClick(e) {
@@ -599,6 +627,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         const isOpening = !menu.classList.contains('is-open');
         menu.classList.toggle('is-open', isOpening);
 
+        this._updateBodyScrollLock(isOpening);
         mainGrid?.classList.toggle('menu-open', isOpening);
         this.updateMenuIcon();
         menuButton?.setAttribute('aria-expanded', String(isOpening));
@@ -646,6 +675,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.shadowRoot.querySelector('#main')?.classList.remove('menu-open');
         this.shadowRoot.querySelector('#menu-burger-icon')?.setAttribute('name', 'menu');
         this.shadowRoot.querySelector('h2.subtitle')?.setAttribute('aria-expanded', 'false');
+        this._updateBodyScrollLock(false);
 
         this.menuOpen = false;
         localStorage.setItem('dbp-app-shell-menu-open', false);
