@@ -32,6 +32,7 @@ export const getFieldsetCSS = () => {
             border: var(--dbp-border);
             background-color: var(--dbp-background);
             color: var(--dbp-content);
+            min-height: 2rem;
         }
     `;
 };

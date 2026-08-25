@@ -380,6 +380,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 .select2-container--default .select2-selection--multiple {
                     border-radius: 0;
                     border-color: var(--dbp-override-content);
+                    padding: 0;
                 }
 
                 /*  .select2-container--default .select2-search--inline .select2-search__field {
