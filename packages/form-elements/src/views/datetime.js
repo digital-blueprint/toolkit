@@ -25,7 +25,7 @@ export class DbpDateTimeView extends ScopedElementsMixin(DbpBaseView) {
     }
 
     renderValue() {
-        const date = this.value ? new Date(this.value) : null;
+        const date = this.value ? new Date(String(this.value)) : null;
 
         // Format the date using toLocaleString with de-DE locale
         const dateTimeString =

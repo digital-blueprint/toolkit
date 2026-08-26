@@ -51,7 +51,11 @@ export class Router {
         if (isBasePath) {
             return this.getDefaultState();
         }
-        return this.router.resolve({pathname: pathname});
+        const state = await this.router.resolve({pathname: pathname});
+        if (state == null) {
+            throw new Error(`No route found for ${pathname}`);
+        }
+        return state;
     }
 
     /**

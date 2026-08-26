@@ -50,7 +50,7 @@ export class DbpNumberElement extends ScopedElementsMixin(DbpBaseElement) {
                     }
 
                     // Then, check min/max constraints
-                    const numValue = parseFloat(this.value);
+                    const numValue = parseFloat(String(this.value));
                     if (this.value && !isNaN(numValue)) {
                         if (this.min !== null && numValue < this.min) {
                             return this._i18n.t('render-form.number.min-exceeded', {

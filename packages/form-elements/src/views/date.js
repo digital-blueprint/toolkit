@@ -25,7 +25,7 @@ export class DbpDateView extends ScopedElementsMixin(DbpBaseView) {
     }
 
     renderValue() {
-        const date = this.value ? new Date(this.value) : null;
+        const date = this.value ? new Date(String(this.value)) : null;
 
         const dateString =
             date === null
