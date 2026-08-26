@@ -405,8 +405,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
          * Change cursor to pointer on hover if rows are selectable
          */
         if (this.selectRowsEnabled) {
-            this.tabulatorTable.on('rowMouseOver', function (e, row) {
-                this.rowManager.element.classList.add('pointer-mouse');
+            this.tabulatorTable.on('rowMouseOver', (event, row) => {
+                row.getElement().classList.add('pointer-mouse');
             });
         }
         // Handle pagination size changes
@@ -1176,7 +1176,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 cursor: default;
             }
 
-            .tabulator .tabulator-tableholder.pointer-mouse :hover {
+            .tabulator .tabulator-row.pointer-mouse:hover,
+            .tabulator .tabulator-row.pointer-mouse :hover {
                 cursor: pointer;
             }
 
