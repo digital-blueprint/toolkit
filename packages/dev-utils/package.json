@@ -29,7 +29,7 @@
         "check": "npm run oxlint && npm run prettier",
         "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write --cache",
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
-        "tsc": "tsc -p jsconfig.json",
+        "tsc": "tsc -p tsconfig.json",
         "oxlint": "oxlint",
         "oxlint:fix": "oxlint --fix"
     }

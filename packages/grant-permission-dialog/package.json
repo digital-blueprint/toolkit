@@ -56,7 +56,7 @@
         "watch-local": "rolldown -c rolldown.config.js --watch",
         "watch-dev": "rolldown -c rolldown.config.js --watch --environment BUILD:development",
         "test": "npm run build-test && web-test-runner",
-        "tsc": "tsc -p jsconfig.json",
+        "tsc": "tsc -p tsconfig.json",
         "oxlint": "oxlint",
         "oxlint:fix": "oxlint --fix"
     }

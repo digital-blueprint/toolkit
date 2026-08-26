@@ -68,7 +68,7 @@
         "watch-bs": "rolldown -c rolldown.config.js --watch --environment APP_ENV:bs",
         "build-test": "rolldown -c rolldown.config.js --environment APP_ENV:test",
         "test": "npm run build-test && web-test-runner",
-        "tsc": "tsc -p jsconfig.json",
+        "tsc": "tsc -p tsconfig.json",
         "oxlint": "oxlint",
         "oxlint:fix": "oxlint --fix"
     }

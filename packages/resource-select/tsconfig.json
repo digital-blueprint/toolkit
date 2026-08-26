@@ -1,9 +1,8 @@
 {
-    "extends": "../../../../jsconfig.json",
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "lib": ["ESNext", "WebWorker"],
         "maxNodeModuleJsDepth": 0
     },
-    "include": ["stream-sw.js"],
+    "include": ["src", "./*.js", "./*.mjs"],
     "exclude": ["node_modules", "dist", "vendor"]
 }

@@ -48,7 +48,7 @@
         "build-test": "rolldown -c rolldown.config.js --environment BUILD:test",
         "test": "npm run build-test && web-test-runner",
         "watch": "rolldown -c rolldown.config.js --watch",
-        "tsc": "tsc -p jsconfig.json",
+        "tsc": "tsc -p tsconfig.json",
         "oxlint": "oxlint",
         "oxlint:fix": "oxlint --fix"
     },
