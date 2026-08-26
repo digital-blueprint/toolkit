@@ -36,6 +36,7 @@
         "jsdoc/no-defaults": "warn",
         "jsdoc/require-param-name": "warn",
         "jsdoc/require-property": "warn",
+        "jsdoc/require-property-description": "off",
         "jsdoc/require-property-name": "warn",
         "jsdoc/require-property-type": "warn",
         "jsdoc/require-throws-type": "warn",
