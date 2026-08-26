@@ -7,6 +7,7 @@ export class FeatureFlagDropdown extends AdapterLitElement {
     constructor() {
         super();
         this._isOpen = false;
+        this._handleOutsideClick = this._handleOutsideClick.bind(this);
     }
 
     static get properties() {
@@ -60,12 +61,12 @@ export class FeatureFlagDropdown extends AdapterLitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        document.addEventListener('click', this._handleOutsideClick.bind(this));
+        document.addEventListener('click', this._handleOutsideClick);
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        document.removeEventListener('click', this._handleOutsideClick.bind(this));
+        document.removeEventListener('click', this._handleOutsideClick);
     }
 
     _handleOutsideClick(e) {

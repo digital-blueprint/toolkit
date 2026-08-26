@@ -307,8 +307,8 @@ export class DbpIconDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), c
                     </p>
                     <br />
 
-                    ${new Array(100).fill(0).map(
-                        (i) => html`
+                    ${Array.from({length: 100}).map(
+                        () => html`
                             <dbp-icon
                                 aria-label="A happy face icon"
                                 style="color:var(--dbp-success); width: 50px; height: 50px; border: #000 solid 1px"
