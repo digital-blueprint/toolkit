@@ -1,7 +1,7 @@
 import {dedupeMixin} from '@open-wc/dedupe-mixin';
 
 /**
- * @typedef {{token?: string, 'login-status'?: string, 'person-id'?: string} & Record<string, unknown>} AuthState
+ * @typedef {{token?: string, 'login-status'?: string, 'person-id'?: string, 'user-id'?: string} & Record<string, unknown>} AuthState
  * @typedef {{auth: AuthState | null, isAuthPending: () => boolean, isLoggedIn: () => boolean}} AuthMixinHost
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} LitElementConstructor
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<AuthMixinHost>} AuthMixinHostConstructor
