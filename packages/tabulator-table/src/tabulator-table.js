@@ -25,6 +25,8 @@ import {
     reconcileColumnConfiguration,
 } from './column-configuration.js';
 
+/** @typedef {import('lit').CSSResultGroup} CSSResultGroup */
+
 export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
@@ -1113,6 +1115,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         }
     }
 
+    /** @returns {CSSResultGroup} */
     static get styles() {
         // language=css
         return css`
