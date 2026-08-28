@@ -1022,9 +1022,11 @@ export class GrantPermissionDialog extends LangMixin(
         } else {
             await this.setAvailableActions();
             await this.setListOfUsersAndPermissions();
+            await this.updateComplete;
             this.#permissionModal.open();
 
             const modalContent = this._('.content-inner');
+            if (!modalContent) return;
 
             const resizeObserver = new ResizeObserver((entries) => {
                 const personSelect = this._('.person-select-container');
@@ -1036,13 +1038,21 @@ export class GrantPermissionDialog extends LangMixin(
                 const actionButtons = this._('.action-buttons');
 
                 const userRow = this._('.user-row:first-child');
-                if (!userRow) return;
+                const permissionGroup = this._('.user-row:first-child .permission-group');
+                if (
+                    !userRow ||
+                    !permissionGroup ||
+                    !personSelect ||
+                    !actionButtons ||
+                    permissionItems.length === 0
+                ) {
+                    return;
+                }
 
                 const userRowStyle = window.getComputedStyle(userRow);
                 const userRowPadding =
                     parseInt(userRowStyle.paddingLeft) + parseInt(userRowStyle.paddingRight);
 
-                const permissionGroup = this._('.user-row:first-child .permission-group');
                 const permissionGroupStyle = window.getComputedStyle(permissionGroup);
                 const permissionGroupGap = parseInt(permissionGroupStyle.gap);
 
