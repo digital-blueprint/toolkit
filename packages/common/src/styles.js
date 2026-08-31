@@ -1341,7 +1341,7 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--multiple .select2-selection__clear {
             top: 0;
             /* Same as the margin-top of the entries below */
-            margin-top: 5px;
+            margin-top: 4px;
             margin-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
             height: 1.5em;
             box-sizing: border-box;
