@@ -1560,7 +1560,6 @@ export function getSelect2CSS() {
                the single selection's content padding so both placeholders start at the same
                position, without shrinking the container (which would wrap the placeholder). */
             margin: 0;
-            display: flex;
             align-content: center;
             white-space: nowrap;
             overflow: hidden;
