@@ -1478,13 +1478,19 @@ export function getSelect2CSS() {
             overflow-wrap: break-word;
 
             margin: 0;
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+            /* Override select2 default: display:inline-block; padding-left:20px; position:relative */
+            padding: 0;
+            padding-left: 0;
         }
 
         /* Space between the remove button and the entry's label */
         .select2-container--default
             .select2-selection--multiple
             .select2-selection__choice__display {
-            padding-left: 5px;
+            padding: 0 5px;
             word-break: break-word;
             overflow-wrap: break-word;
         }
@@ -1499,10 +1505,21 @@ export function getSelect2CSS() {
             justify-content: center;
             height: 100%;
             color: var(--dbp-muted);
-            border-right: var(--dbp-border);
+            border-left: var(--dbp-border);
             border-color: var(--dbp-content);
-            border-top-left-radius: var(--dbp-border-radius);
-            border-bottom-left-radius: var(--dbp-border-radius);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-top-right-radius: var(--dbp-border-radius);
+            border-bottom-right-radius: var(--dbp-border-radius);
+            /* Override select2 default: position:absolute; left:0; top:0; border-right; padding:0 4px */
+            position: static;
+            left: auto;
+            top: auto;
+            right: auto;
+            border-right: none;
+            padding: 0 5px;
+            flex-shrink: 0;
+            align-self: stretch;
         }
 
         .select2-container--default
