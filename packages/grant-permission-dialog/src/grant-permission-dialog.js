@@ -25,7 +25,10 @@ import {repeat} from 'lit/directives/repeat.js';
  *   identifier: string|null,
  *   editable?: boolean,
  *   inherited?: boolean,
- *   toSave?: boolean
+ *   toSave?: boolean,
+ *   desiredGranted?: boolean|null,
+ *   mixed?: boolean,
+ *   grantsByResource?: Map<string, {identifier: string, inherited: boolean}>
  * }} UserPermission
  * @typedef {{
  *   userIdentifier: string,
@@ -53,6 +56,7 @@ export class GrantPermissionDialog extends LangMixin(
         /** @type {Map<string, UserEntry>} */
         this.usersToAdd = new Map();
         this.resourceIdentifier = '';
+        this.resourceIdentifiers = [];
         this.resourceClassIdentifier = '';
         /** @type {import('lit/directives/ref.js').Ref<Button>} */
         this.addPersonButtonRef = createRef();
@@ -63,6 +67,7 @@ export class GrantPermissionDialog extends LangMixin(
         this.lastManageCheckbox = null;
         /** @type {string|null} */
         this.lastSavedManagerId = null;
+        this.protectedManagerIds = new Set();
     }
 
     get #addPersonButton() {
@@ -124,12 +129,21 @@ export class GrantPermissionDialog extends LangMixin(
             hasUsersToAdd: {type: Boolean},
             permissionRows: {type: Array},
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
+            resourceIdentifiers: {type: Array, attribute: false},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             savePermissionButtonIsDisabled: {type: Boolean, attribute: false},
             lastManageCheckbox: {type: Object, attribute: false},
             lastSavedManagerId: {type: String, attribute: false},
         };
+    }
+
+    getResourceIdentifiers() {
+        const identifiers =
+            Array.isArray(this.resourceIdentifiers) && this.resourceIdentifiers.length > 0
+                ? this.resourceIdentifiers
+                : [this.resourceIdentifier];
+        return [...new Set(identifiers.map((identifier) => identifier?.trim()).filter(Boolean))];
     }
 
     static get scopedElements() {
@@ -189,23 +203,25 @@ export class GrantPermissionDialog extends LangMixin(
      * Set lastSavedManagerId to prevent deleting the last manager
      */
     checkSavedManagerCount() {
-        /** @type {string|null} */
-        let singleManagerId = null;
-        let multipleManagers = false;
-
-        for (const [userId, user] of this.userList) {
-            const hasManageGrant = user?.permissions?.get('manage')?.identifier;
-            if (!hasManageGrant) continue;
-
-            if (singleManagerId === null) {
-                singleManagerId = userId;
-            } else {
-                multipleManagers = true;
-                break;
+        const protectedManagerIds = new Set();
+        for (const resourceIdentifier of this.getResourceIdentifiers()) {
+            const managerIds = [];
+            for (const [userId, user] of this.userList) {
+                const permission = user?.permissions?.get('manage');
+                if (
+                    permission?.grantsByResource?.has(resourceIdentifier) ||
+                    (this.getResourceIdentifiers().length === 1 && permission?.identifier)
+                ) {
+                    managerIds.push(userId);
+                }
+            }
+            if (managerIds.length === 1) {
+                protectedManagerIds.add(managerIds[0]);
             }
         }
-
-        this.lastSavedManagerId = multipleManagers ? null : singleManagerId;
+        this.protectedManagerIds = protectedManagerIds;
+        this.lastSavedManagerId =
+            protectedManagerIds.size === 1 ? [...protectedManagerIds][0] : null;
     }
 
     /**
@@ -307,7 +323,7 @@ export class GrantPermissionDialog extends LangMixin(
      * Gets the list of Resource Action Grants
      * @returns {Promise<Response>} response
      */
-    async apiGetResourceActionGrants() {
+    async apiGetResourceActionGrants(resourceIdentifier = this.resourceIdentifier) {
         const options = {
             method: 'GET',
             headers: {
@@ -317,7 +333,9 @@ export class GrantPermissionDialog extends LangMixin(
         };
         return await fetch(
             this.entryPointUrl +
-                `/authorization/resource-action-grants?resourceClass=${this.resourceClassIdentifier}&resourceIdentifier=${this.resourceIdentifier}&page=1&perPage=9999`,
+                `/authorization/resource-action-grants?resourceClass=${encodeURIComponent(
+                    this.resourceClassIdentifier,
+                )}&resourceIdentifier=${encodeURIComponent(resourceIdentifier)}&page=1&perPage=9999`,
             options,
         );
     }
@@ -361,7 +379,11 @@ export class GrantPermissionDialog extends LangMixin(
      * @param {string} userIdentifier
      * @returns {Promise<Response>} response
      */
-    async apiPostResourceActionGrant(action, userIdentifier) {
+    async apiPostResourceActionGrant(
+        action,
+        userIdentifier,
+        resourceIdentifier = this.resourceIdentifier,
+    ) {
         /* {
             "resourceIdentifier": "184c7f86-73b4-4ee7-9f93-09af7d7ff4fd",
             "resourceClass": "DbpRelayFormalizeForm",
@@ -369,7 +391,7 @@ export class GrantPermissionDialog extends LangMixin(
             "userIdentifier": "811EC3ACC0ADCA70"
         } */
         const body = {
-            resourceIdentifier: this.resourceIdentifier,
+            resourceIdentifier,
             resourceClass: this.resourceClassIdentifier,
             action: action,
             userIdentifier: userIdentifier,
@@ -389,12 +411,22 @@ export class GrantPermissionDialog extends LangMixin(
     async deleteUsersAllGrants(userId) {
         const i18n = this._i18n;
 
+        if (this.protectedManagerIds.has(userId)) {
+            throw new Error('Cannot delete the last manager');
+        }
+
         const userToDelete = this.#getUser(userId);
         const grantsToDelete = [];
 
         // Collect grants to delete
         userToDelete.permissions.forEach((grant) => {
-            if (grant.identifier) {
+            if (grant.grantsByResource instanceof Map) {
+                grant.grantsByResource.forEach((resourceGrant) => {
+                    if (!resourceGrant.inherited) {
+                        grantsToDelete.push(resourceGrant);
+                    }
+                });
+            } else if (grant.identifier && !grant.inherited) {
                 grantsToDelete.push(grant);
             }
         });
@@ -417,6 +449,7 @@ export class GrantPermissionDialog extends LangMixin(
                 targetNotificationId: 'permission-modal-notification',
                 timeout: 0,
             });
+            throw e;
         }
     }
 
@@ -519,16 +552,18 @@ export class GrantPermissionDialog extends LangMixin(
         } catch (error) {
             console.log(error);
         } finally {
-            this.setButtonState(userId, 'edit');
-            this.checkSavedManagerCount();
+            if (this.userList.has(userId)) {
+                this.setButtonState(userId, 'edit');
+                this.checkSavedManagerCount();
 
-            // Remove edit styles & disable checkboxes
-            this._a(`[data-user-id="${userId}"]`).forEach((checkbox) => {
-                const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-                checkboxElem.classList.remove('changed');
-                checkboxElem.removeAttribute('data-changed');
-            });
-            this.disableUsersAllCheckboxes(userId);
+                // Remove edit styles & disable checkboxes
+                this._a(`[data-user-id="${userId}"]`).forEach((checkbox) => {
+                    const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
+                    checkboxElem.classList.remove('changed');
+                    checkboxElem.removeAttribute('data-changed');
+                });
+                this.disableUsersAllCheckboxes(userId);
+            }
         }
     }
 
@@ -556,16 +591,31 @@ export class GrantPermissionDialog extends LangMixin(
         const i18n = this._i18n;
 
         try {
-            let response = await this.apiGetResourceActionGrants();
-            let responseBody = await response.json();
-            if (
-                responseBody !== undefined &&
-                response.status !== 403 &&
-                responseBody['hydra:member'].length > 0
-            ) {
-                // Loop trough all grants
-                const newUserList = new Map(this.userList);
-                for (const grant of responseBody['hydra:member']) {
+            const resourceIdentifiers = this.getResourceIdentifiers();
+            if (resourceIdentifiers.length === 0) {
+                throw new Error('No resource identifier was provided');
+            }
+
+            this.userList = new Map();
+            const newUserList = new Map();
+            for (const resourceIdentifier of resourceIdentifiers) {
+                const response = await this.apiGetResourceActionGrants(resourceIdentifier);
+                if (response.status === 403) {
+                    sendNotification({
+                        summary: i18n.t('grant-permission-dialog.notifications.error-title'),
+                        body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
+                        targetNotificationId: 'permission-modal-notification',
+                        type: 'danger',
+                        timeout: 0,
+                    });
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error(`Failed to load grants for resource ${resourceIdentifier}`);
+                }
+
+                const responseBody = await response.json();
+                for (const grant of responseBody?.['hydra:member'] ?? []) {
                     if (grant.userIdentifier) {
                         // Don't add inherited item-actions that are not available actions
                         // We can't set such permissions
@@ -577,61 +627,43 @@ export class GrantPermissionDialog extends LangMixin(
                         }
 
                         const userId = grant.userIdentifier;
-                        const isInherited = grant.grantedActions.length === 0;
+                        const isInherited = grant.grantedActions?.length === 0;
 
-                        const existingUser = newUserList.get(userId);
+                        let existingUser = newUserList.get(userId);
                         if (!existingUser) {
                             const userFullName = await this.getUserFullName(userId);
-                            // Create user object
-                            const user = {
+                            existingUser = {
                                 userIdentifier: userId,
                                 userFullName: userFullName,
                                 permissions: this.createEmptyUserPermission(),
                             };
-                            // Set current grant
-                            user.permissions.set(grant.action, {
-                                action: grant.action,
-                                identifier: grant.identifier,
-                                inherited: isInherited,
-                            });
-                            // Add to user list
-                            newUserList.set(userId, user);
-                        } else {
-                            // We already have this user in userList
-                            // Set current grant
-                            existingUser.permissions.set(grant.action, {
-                                action: grant.action,
-                                identifier: grant.identifier,
-                                inherited: isInherited,
-                            });
-                            // Add to user list
                             newUserList.set(userId, existingUser);
                         }
+
+                        const permission = existingUser.permissions.get(grant.action);
+                        permission.grantsByResource.set(resourceIdentifier, {
+                            identifier: grant.identifier,
+                            inherited: isInherited,
+                        });
                     }
                 }
-                this.userList = newUserList;
-                this.setAllButtonState('edit');
-            } else {
-                if (responseBody.status === 500) {
-                    sendNotification({
-                        summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                        body: i18n.t(
-                            'grant-permission-dialog.notifications.could-not-fetch-resource-class-actions',
-                        ),
-                        type: 'danger',
-                        targetNotificationId: 'permission-modal-notification',
-                        timeout: 0,
-                    });
-                } else if (response.status === 403) {
-                    sendNotification({
-                        summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                        body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
-                        targetNotificationId: 'permission-modal-notification',
-                        type: 'danger',
-                        timeout: 0,
-                    });
+            }
+
+            for (const user of newUserList.values()) {
+                for (const permission of user.permissions.values()) {
+                    const grants = [...permission.grantsByResource.values()];
+                    permission.identifier =
+                        grants.length === resourceIdentifiers.length ? grants[0]?.identifier : null;
+                    permission.inherited =
+                        grants.length === resourceIdentifiers.length &&
+                        grants.every((grant) => grant.inherited);
+                    permission.mixed =
+                        grants.length > 0 && grants.length < resourceIdentifiers.length;
                 }
             }
+            this.userList = newUserList;
+            this.setAllButtonState('edit');
+            this.checkSavedManagerCount();
         } catch (e) {
             console.log('setListOfUsersAndPermissions', e);
             sendNotification({
@@ -747,7 +779,7 @@ export class GrantPermissionDialog extends LangMixin(
                                               type="is-secondary"
                                               id="user-delete-button-${userId}"
                                               no-spinner-on-click
-                                              ?disabled=${this.lastSavedManagerId === userId}
+                                              ?disabled=${this.protectedManagerIds.has(userId)}
                                               @click="${async () => {
                                                   const confirmed =
                                                       await getDeletionConfirmation(this);
@@ -809,9 +841,8 @@ export class GrantPermissionDialog extends LangMixin(
                     let checkboxTitle = `${actionName}`;
                     const userPermission = user.permissions.get(actionValue);
                     // The permission exists if it has an identifier
-                    if (userPermission?.identifier) {
-                        hasThisPermission = true;
-                    }
+                    hasThisPermission =
+                        userPermission?.desiredGranted ?? Boolean(userPermission?.identifier);
 
                     // Allow editing of newly added permissions
                     if (userPermission?.editable) {
@@ -847,6 +878,10 @@ export class GrantPermissionDialog extends LangMixin(
                                 type="checkbox"
                                 @input="${this.handleCheckbox}"
                                 ?disabled="${!editable}"
+                                .indeterminate="${
+                                    Boolean(userPermission?.mixed) &&
+                                    userPermission?.desiredGranted === null
+                                }"
                                 ?checked="${hasThisPermission}" />
                         </div>
                     `;
@@ -868,6 +903,8 @@ export class GrantPermissionDialog extends LangMixin(
                 action: actionValue,
                 identifier: null,
                 editable: editable,
+                desiredGranted: null,
+                grantsByResource: new Map(),
             };
             userPermissions.set(actionValue, emptyPermission);
         });
@@ -933,13 +970,8 @@ export class GrantPermissionDialog extends LangMixin(
 
     handleCheckbox(event) {
         const checkbox = event.target;
-        checkbox.classList.toggle('changed');
-
-        if (!checkbox.getAttribute('data-changed')) {
-            checkbox.setAttribute('data-changed', true);
-        } else {
-            checkbox.removeAttribute('data-changed');
-        }
+        checkbox.classList.add('changed');
+        checkbox.setAttribute('data-changed', true);
 
         // Prevent unchecking last manager
         this.disableLastManageCheckbox();
@@ -958,14 +990,17 @@ export class GrantPermissionDialog extends LangMixin(
             );
         }
         // Set permission to be saved
-        permission.toSave = checkbox.getAttribute('data-changed') ? true : false;
+        permission.desiredGranted = checkbox.checked;
+        permission.toSave = true;
     }
 
     enableUsersAllCheckboxes(userId) {
         const user = this.#getUser(userId);
         user.permissions.forEach((permission) => {
             if (
-                (permission.action === 'manage' && this.lastSavedManagerId === userId) ||
+                (permission.action === 'manage' &&
+                    permission.identifier &&
+                    this.protectedManagerIds.has(userId)) ||
                 permission.inherited
             ) {
                 permission.editable = false;
@@ -1196,137 +1231,96 @@ export class GrantPermissionDialog extends LangMixin(
         }
 
         try {
-            let usersToProcess;
             let errorCount = 0;
             let successCount = 0;
+            const usersToProcess = userId
+                ? new Map([[userId, this.#getQueuedUser(userId)]])
+                : this.usersToAdd;
+            const resourceIdentifiers = this.getResourceIdentifiers();
+            const grantsToPost = [];
+            const grantsToDelete = [];
+            let managerRemovalBlocked = false;
 
-            if (userId) {
-                // Process only the specified user
-                usersToProcess = new Map([[userId, this.#getQueuedUser(userId)]]);
-            } else {
-                // Process all users in the queue
-                usersToProcess = this.usersToAdd;
-            }
-
-            // Process user(s)
-            for (const userIdentifier of usersToProcess.keys()) {
-                const userToAdd = usersToProcess.get(userIdentifier);
-                if (!userToAdd) continue;
-
-                const grantsToPost = [];
-                const grantsToDelete = [];
-
-                // Collect grants to create and delete
+            for (const [userIdentifier, userToAdd] of usersToProcess) {
                 userToAdd.permissions.forEach((permission) => {
                     if (!permission.toSave) return;
 
-                    if (permission.identifier) {
-                        grantsToDelete.push({
-                            action: permission.action,
-                            identifier: permission.identifier,
+                    if (permission.desiredGranted) {
+                        for (const resourceIdentifier of resourceIdentifiers) {
+                            if (!permission.grantsByResource?.has(resourceIdentifier)) {
+                                grantsToPost.push({
+                                    action: permission.action,
+                                    userIdentifier,
+                                    resourceIdentifier,
+                                });
+                            }
+                        }
+                    } else if (
+                        permission.action === 'manage' &&
+                        this.protectedManagerIds.has(userIdentifier)
+                    ) {
+                        managerRemovalBlocked = true;
+                    } else if (permission.grantsByResource instanceof Map) {
+                        permission.grantsByResource.forEach((grant) => {
+                            if (!grant.inherited) {
+                                grantsToDelete.push({identifier: grant.identifier});
+                            }
                         });
-                        permission.identifier = null;
-                    } else {
-                        grantsToPost.push({
-                            action: permission.action,
-                            userIdentifier: userToAdd.userIdentifier,
-                        });
+                    } else if (permission.identifier && !permission.inherited) {
+                        grantsToDelete.push({identifier: permission.identifier});
                     }
-                    permission.toSave = false;
                 });
-
-                if (grantsToPost.length === 0 && grantsToDelete.length === 0) {
-                    sendNotification({
-                        summary: i18n.t('grant-permission-dialog.notifications.info-title'),
-                        body: i18n.t(
-                            'grant-permission-dialog.notifications.there-is-nothing-to-save',
-                            {userFullName: userToAdd.userFullName},
-                        ),
-                        type: 'info',
-                        targetNotificationId: 'permission-modal-notification',
-                        timeout: 5,
-                    });
-                    // Remove user form queue
-                    this.removeUserFromQueue(userIdentifier);
-                    continue;
-                }
-
-                // Add grants
-                if (grantsToPost.length > 0) {
-                    for (const grant of grantsToPost) {
-                        const postResponse = await this.apiPostResourceActionGrant(
-                            grant.action,
-                            grant.userIdentifier,
-                        );
-                        if (postResponse.status !== 201) {
-                            errorCount++;
-                            continue;
-                        } else {
-                            successCount++;
-
-                            const responseBody = await postResponse.json();
-                            // Set identifier in user permissions
-                            userToAdd.permissions.set(grant.action, {
-                                action: grant.action,
-                                identifier: responseBody.identifier,
-                            });
-                        }
-                    }
-                }
-
-                // Delete grants
-                if (grantsToDelete.length > 0) {
-                    for (const grant of grantsToDelete) {
-                        // Don't delete last manage grant
-                        if (grant.action === 'manage' && this.lastSavedManagerId) {
-                            sendNotification({
-                                summary: 'Warning',
-                                body: i18n.t(
-                                    'grant-permission-dialog.notifications.cant-remove-last-manager-warning',
-                                ),
-                                type: 'warning',
-                                targetNotificationId: 'permission-modal-notification',
-                                timeout: 5,
-                            });
-                            continue;
-                        }
-                        const deleteResponse = await this.apiDeleteResourceActionGrant(
-                            grant.identifier,
-                        );
-                        if (deleteResponse.status !== 204) {
-                            errorCount++;
-                            continue;
-                        } else {
-                            successCount++;
-                            // Remove identifier from user permissions
-                            userToAdd.permissions.set(grant.action, {
-                                action: grant.action,
-                                identifier: null,
-                            });
-                        }
-                    }
-                }
-
-                // Remove edit styles & disable checkboxes
-                this._a(`[data-user-id="${userToAdd.userIdentifier}"]`).forEach((checkbox) => {
-                    const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-                    checkboxElem.classList.remove('changed');
-                    checkboxElem.removeAttribute('data-changed');
-                });
-                this.disableUsersAllCheckboxes(userToAdd.userIdentifier);
-
-                // Update permissions in userList
-                this.addUserToList(userToAdd.userIdentifier, {
-                    userIdentifier: userToAdd.userIdentifier,
-                    userFullName: userToAdd.userFullName,
-                    permissions: userToAdd.permissions,
-                });
-
-                // Remove processed user from usersToAdd list
-                this.removeUserFromQueue(userIdentifier);
             }
 
-            this.requestUpdate('userList');
+            if (managerRemovalBlocked) {
+                sendNotification({
+                    summary: 'Warning',
+                    body: i18n.t(
+                        'grant-permission-dialog.notifications.cant-remove-last-manager-warning',
+                    ),
+                    type: 'warning',
+                    targetNotificationId: 'permission-modal-notification',
+                    timeout: 5,
+                });
+            }
+
+            // Create replacement grants before deleting existing grants.
+            for (const grant of grantsToPost) {
+                const response = await this.apiPostResourceActionGrant(
+                    grant.action,
+                    grant.userIdentifier,
+                    grant.resourceIdentifier,
+                );
+                if (response.status === 201) {
+                    successCount++;
+                } else {
+                    errorCount++;
+                }
+            }
+
+            for (const grant of grantsToDelete) {
+                const response = await this.apiDeleteResourceActionGrant(grant.identifier);
+                if (response.status === 204) {
+                    successCount++;
+                } else {
+                    errorCount++;
+                }
+            }
+
+            if (grantsToPost.length === 0 && grantsToDelete.length === 0) {
+                sendNotification({
+                    summary: i18n.t('grant-permission-dialog.notifications.info-title'),
+                    body: i18n.t('grant-permission-dialog.notifications.there-is-nothing-to-save', {
+                        userFullName: userId ? this.#getQueuedUser(userId).userFullName : '',
+                    }),
+                    type: 'info',
+                    targetNotificationId: 'permission-modal-notification',
+                    timeout: 5,
+                });
+            }
+
+            this.usersToAdd = new Map();
+            await this.setListOfUsersAndPermissions();
 
             // Stop the save button spinner and show success message
             this.#savePermissionButton.stop();
