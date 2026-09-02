@@ -2192,7 +2192,6 @@ export function getDropDownCss() {
 
             :host([responsive]) .trigger.button {
                 display: flex;
-                width: 100%;
                 min-width: 0;
                 align-items: center;
                 justify-content: space-between;
