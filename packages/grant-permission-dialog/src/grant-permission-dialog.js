@@ -78,14 +78,6 @@ export class GrantPermissionDialog extends LangMixin(
         return button;
     }
 
-    get #savePermissionButton() {
-        const button = this.savePermissionButtonRef.value;
-        if (!button) {
-            throw new Error('Save permission button is unavailable');
-        }
-        return button;
-    }
-
     get #permissionModal() {
         const modal = this.permissionModalRef.value;
         if (!modal) {
@@ -1321,9 +1313,6 @@ export class GrantPermissionDialog extends LangMixin(
 
             this.usersToAdd = new Map();
             await this.setListOfUsersAndPermissions();
-
-            // Stop the save button spinner and show success message
-            this.#savePermissionButton.stop();
 
             if (successCount > 0) {
                 sendNotification({
