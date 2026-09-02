@@ -18,6 +18,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.value = '';
         this.buttonType = 'is-secondary';
         this.wrapLabel = false;
+        this.responsive = false;
     }
 
     static properties = {
@@ -31,6 +32,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         value: {type: String, reflect: true},
         buttonType: {type: String, attribute: 'button-type'},
         wrapLabel: {type: Boolean, attribute: 'wrap-label', reflect: true},
+        responsive: {type: Boolean, reflect: true},
     };
 
     static get scopedElements() {

@@ -2175,6 +2175,68 @@ export function getDropDownCss() {
             text-wrap: wrap;
             white-space: normal;
         }
+
+        .trigger.wrap-label .trigger-label {
+            flex: 0 1 auto;
+            text-wrap: wrap;
+            white-space: normal;
+            overflow-wrap: normal;
+            word-break: normal;
+        }
+
+        :host([responsive]) {
+            container-type: inline-size;
+            max-width: 100%;
+        }
+
+        :host([responsive]) .trigger.button {
+            display: flex;
+            width: 100%;
+            min-width: 0;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        :host([responsive]) .trigger-label {
+            flex: 1 1 auto;
+            min-width: 0;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            text-align: left;
+        }
+
+        :host([responsive]) .icon-chevron {
+            flex: 0 0 auto;
+        }
+
+        :host([responsive]) .menu {
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Small-screen behavior */
+        @container (max-width: 600px) {
+            :host([responsive]) {
+                display: block;
+                width: 100%;
+            }
+
+            :host([responsive]) .trigger.button {
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            :host([responsive]) .menu {
+                left: 0;
+                right: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+        }
     `;
 }
 
