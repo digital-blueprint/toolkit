@@ -2127,6 +2127,11 @@ export function getDropDownCss() {
             justify-content: space-between;
         }
 
+        :host([value='']) .trigger-label {
+            color: var(--dbp-select-placeholder-color, var(--dbp-muted));
+            font-weight: 300;
+        }
+
         .item-button {
             display: flex;
             width: 100%;
@@ -2155,12 +2160,22 @@ export function getDropDownCss() {
         }
 
         .icon-chevron {
-            transition: transform 250ms ease-in;
-            margin-left: 0.5em;
+            flex: 0 0 auto;
+            margin-left: 0.5rem;
+            align-self: center;
+            color: var(--dbp-muted);
+            font-size: 0.75rem;
         }
 
         :host(.select-version) .item-button[aria-checked='true'] {
             background-color: var(--dbp-selected, #555555);
+        }
+
+        .trigger.button {
+            min-height: 32px;
+            border: 1px solid var(--dbp-muted, #aaa);
+            border-radius: var(--dbp-border-radius);
+            align-items: center;
         }
 
         .trigger-label {
