@@ -77,6 +77,7 @@ export class CountrySelectDemo extends LangMixin(
                             <div class="control">
                                 <dbp-country-select
                                     lang="${this.lang}"
+                                    id="country-select-demo"
                                     @change="${this.handleCountryChange}"></dbp-country-select>
                             </div>
                             <!-- prettier-ignore -->
@@ -90,6 +91,7 @@ export class CountrySelectDemo extends LangMixin(
                             <div class="control">
                                 <dbp-country-select
                                     lang="${this.lang}"
+                                    id="country-select-demo-preselected"
                                     value="AT"></dbp-country-select>
                             </div>
                         </div>
@@ -98,6 +100,7 @@ export class CountrySelectDemo extends LangMixin(
                             <div class="control">
                                 <dbp-country-select
                                     lang="${this.lang}"
+                                    id="country-select-demo-disabled"
                                     value="DE"
                                     disabled></dbp-country-select>
                             </div>
