@@ -144,7 +144,7 @@ export class CountrySelect extends LangMixin(
                     text: country.name,
                 })),
                 matcher: function (params, data) {
-                    if ($.trim(params.term) === '') {
+                    if (!params.term || params.term.trim() === '') {
                         return data;
                     }
 
