@@ -51,6 +51,7 @@ for more explanation.
     - for example if at the URL `https://server.com/en/activity-name` a `routing-url` of `path?query=1#hash` would
       result in a URL change to `https://server.com/en/activity-name/path?query=1#hash`, this would then in turn
       trigger a sending out of a `routing-url` attribute (see below)
+    - query parameters and fragments are preserved when only those parts change, so activities can use them for history-aware UI state without changing routes
 - `routing-base-url` (optional): the base URL for the activity. Should be an
   absolute URL which loads the currently active activity.
 

@@ -40,6 +40,12 @@ suite('router', () => {
         await router.update();
         await router.updateFromUrl('/bar?foo=bar#quux');
         assert.equal(myState.bar, true);
+        assert.equal(location.search, '?foo=bar');
+        assert.equal(location.hash, '#quux');
+
+        await router.updateFromUrl('/bar?foo=baz');
+        assert.equal(location.search, '?foo=baz');
+        assert.equal(location.hash, '');
         assert.equal(router.getPathname(), '/');
     });
 });

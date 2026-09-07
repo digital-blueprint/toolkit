@@ -108,8 +108,6 @@ export class Router {
      * @param {string} relUrl
      */
     async updateFromUrl(relUrl) {
-        // FIXME: we throw out the search and hash part of the URL since the router can't deal with
-        // them yet.
         let url = new URL(relUrl, location.href);
         let pathname = url.pathname;
 
@@ -124,10 +122,15 @@ export class Router {
 
         const oldState = this.getState();
 
-        if (!stateMatches(oldState, page)) {
+        const newUrl = pathname + url.search + url.hash;
+        const currentUrl = location.pathname + location.search + location.hash;
+
+        if (!stateMatches(oldState, page) || currentUrl !== newUrl) {
             const referrerUrl = location.href;
-            window.history.pushState({}, '', pathname);
-            this.setState(page);
+            window.history.pushState({}, '', newUrl);
+            if (!stateMatches(oldState, page)) {
+                this.setState(page);
+            }
             this._dispatchLocationChanged(referrerUrl);
         }
     }

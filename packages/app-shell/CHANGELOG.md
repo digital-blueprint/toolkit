@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased (0.3.19)
+
+- Preserve query parameters and URL fragments when an activity changes `routing-url`, including changes that do not alter the activity route
+
 ## 0.3.16
 
 - Fix lit-element not reacting, when sending an empty `routing-url`, when pressing the back button
