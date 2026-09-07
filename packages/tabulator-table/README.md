@@ -78,9 +78,24 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
 | `dbp-tabulator-table-row-selection-changed-event`  | Tabulator table `rowSelectionChanged` event (Column event) |
 | `dbp-tabulator-table-built`                        | Fired after table is built (Table event)                   |
 | `dbp-tabulator-table-page-loaded-event`            | Fired after pagination, when the page is loaded            |
+| `dbp-tabulator-table-page-size-changed-event`      | Fired when the user changes the pagination size            |
 | `dbp-tabulator-table-render-complete-event`        | Fire after the table has been rendered (Layout Event)      |
 | `dbp-tabulator-table-selection-count-changed`      | Fired when the selected row count changes                  |
 | `dbp-tabulator-table-column-configuration-changed` | Fired after a column configuration is applied              |
+
+### Pagination events
+
+`dbp-tabulator-table-page-loaded-event` contains the table identifier, current page, and current pagination size:
+
+```js
+function handlePageLoaded(event) {
+    const {tableId, page, paginationSize} = event.detail;
+}
+```
+
+For compatibility, `event.detail.pageSize` on `dbp-tabulator-table-page-loaded-event` still contains the current page number. New integrations should use `page` for the page number and `paginationSize` for the number of rows per page.
+
+`dbp-tabulator-table-page-size-changed-event` is emitted when the user changes the page-size selector. Its detail contains `tableId`, `page`, `pageSize`, and `paginationSize`; both size fields contain the newly selected number of rows per page.
 
 ### Selection count event
 

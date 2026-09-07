@@ -373,7 +373,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             const pageLoadedEvent = new CustomEvent('dbp-tabulator-table-page-loaded-event', {
                 detail: {
                     tableId: this.identifier,
+                    page: pageno,
+                    // Keep pageSize as the page number for existing consumers.
                     pageSize: pageno,
+                    paginationSize: this.tabulatorTable.getPageSize(),
                 },
                 bubbles: true,
                 composed: true,
@@ -425,9 +428,22 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
             paginationSizeDropdown.addEventListener('change', (event) => {
                 if (event.target.value) {
+                    this.paginationSize = Number(event.target.value);
                     localStorage.setItem(
                         `tabulator-${this.identifier}-pagination-size`,
                         event.target.value,
+                    );
+                    this.dispatchEvent(
+                        new CustomEvent('dbp-tabulator-table-page-size-changed-event', {
+                            detail: {
+                                tableId: this.identifier,
+                                page: this.tabulatorTable.getPage(),
+                                pageSize: this.paginationSize,
+                                paginationSize: this.paginationSize,
+                            },
+                            bubbles: true,
+                            composed: true,
+                        }),
                     );
                 }
             });
