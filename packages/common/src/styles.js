@@ -268,7 +268,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
 
         #headline h1 {
             font-size: 2em;
-            font-weight: normal;
+            font-weight: 300;
         }
 
         ${marginPaddingResetCss}.int-link-internal

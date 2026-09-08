@@ -770,12 +770,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
             h1.title {
                 margin-bottom: 0;
-                font-weight: bold;
+                font-weight: 300;
+                font-size: 2rem;
             }
 
             .title {
                 color: var(--dbp-content);
-                font-size: 1em;
                 line-height: 1.125;
             }
 
