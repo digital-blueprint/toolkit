@@ -16,9 +16,6 @@
         ]
     },
     "devDependencies": {
-        "@babel/core": "^8.0.0",
-        "@babel/preset-env": "^8.0.0",
-        "@rollup/plugin-babel": "^7.0.0",
         "@rollup/pluginutils": "^5.2.0",
         "chai": "^6.0.0",
         "i18next-cli": "^1.7.1",

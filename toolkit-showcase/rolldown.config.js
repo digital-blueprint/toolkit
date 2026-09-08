@@ -6,7 +6,6 @@ import license from 'rollup-plugin-license';
 import md from './rollup-plugin-md.js';
 import emitEJS from 'rollup-plugin-emit-ejs';
 import {replacePlugin} from 'rolldown/plugins';
-import {getBabelOutputPlugin} from '@rollup/plugin-babel';
 import appConfig from './app.config.js';
 import {
     getBuildInfo,
@@ -24,7 +23,7 @@ const appEnv = typeof process.env.APP_ENV !== 'undefined' ? process.env.APP_ENV 
 const watch = process.env.ROLLUP_WATCH === 'true';
 const buildFull = (!watch && appEnv !== 'test') || process.env.FORCE_FULL !== undefined;
 let doMinify = buildFull;
-let useBabel = buildFull;
+let transform = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
 let nodeEnv = buildFull ? 'production' : 'development';
@@ -75,6 +74,9 @@ img-src * blob: data:`;
 let privatePath = await getDistPath(pkg.name);
 
 export default {
+    transform: {
+        target: transform ? ['chrome106', 'firefox110', 'safari16'] : 'esnext',
+    },
     input: appEnv != 'test' ? globSync('src/dbp-*.js') : globSync('test/**/*.js'),
     output: {
         dir: 'dist',
@@ -199,23 +201,6 @@ Dependencies:
                 preventAssignment: true,
             },
         ),
-        useBabel &&
-            getBabelOutputPlugin({
-                compact: false,
-                targets: {
-                    esmodules: true,
-                    browsers: 'defaults and not dead, last 5 years',
-                },
-                presets: [
-                    [
-                        '@babel/preset-env',
-                        {
-                            shippedProposals: true,
-                            modules: false,
-                        },
-                    ],
-                ],
-            }),
         watch
             ? serve({
                   contentBase: '.',
