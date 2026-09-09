@@ -58,7 +58,7 @@ export class FileSource extends LangMixin(
         /** @type {number | null} */
         this.maxFileSize = null;
         this.multipleFiles = Number.MAX_VALUE;
-
+        this.notificationTargetId = '';
         this.initialFileHandlingState = {target: '', path: ''};
     }
 
@@ -94,6 +94,7 @@ export class FileSource extends LangMixin(
             isDialogOpen: {type: Boolean, attribute: 'dialog-open'},
             maxFileSize: {type: Number, attribute: 'max-file-size'},
             multipleFiles: {type: Number, attribute: 'number-of-files'},
+            notificationTargetId: {type: String, attribute: 'notification-target-id'},
 
             initialFileHandlingState: {type: Object, attribute: 'initial-file-handling-state'},
         };
@@ -410,6 +411,9 @@ export class FileSource extends LangMixin(
                 }),
                 type: 'danger',
                 timeout: 0,
+                ...(this.notificationTargetId
+                    ? {targetNotificationId: this.notificationTargetId}
+                    : {}),
             });
             return false;
         }
