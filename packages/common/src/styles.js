@@ -170,11 +170,13 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
     // language=css
     return css`
         h2 {
+            font-size: 1.5rem;
             font-weight: 300;
             /*text-align: center;*/
         }
 
         h3 {
+            font-size: 1.17rem;
             font-weight: 300;
             margin-top: 0px;
             margin-bottom: 0.75rem;
