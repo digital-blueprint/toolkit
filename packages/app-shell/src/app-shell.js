@@ -885,9 +885,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: flex;
                 justify-content: space-between;
                 -webkit-justify-content: space-between;
-                padding: 5px 10px 0 10px;
+                padding: 0 10px 0 10px;
                 min-width: 0;
-                gap: 10px;
+                gap: 15px;
                 align-items: center;
                 -webkit-align-items: center;
             }
@@ -905,7 +905,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 height: 100%;
                 overflow: hidden;
                 flex-grow: 1;
-                margin-top: 10px;
+                margin-top: 25px;
             }
 
             .default-logo {
@@ -1108,6 +1108,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     left: 0%;
                     right: 2rem;
                 }
+
+                header .hd1-right .logo {
+                    margin-top: 15px;
+                }
             }
 
             @media (max-width: 1100px) {
@@ -1217,7 +1221,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                 header .hd1-right .logo {
                     height: 100%;
-                    margin-top: 0;
+                    margin-top: 10px;
                 }
 
                 header .hd1-right .auth-button {
