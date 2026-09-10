@@ -855,6 +855,11 @@ export function getButtonCSS() {
             -webkit-box-shadow: none;
             box-shadow: 0px 0px 3px 1px var(--dbp-primary);
         }
+        @media (max-width: 560px) {
+            :is(button, dbp-button) .button-label {
+                display: none;
+            }
+        }
     `;
 }
 
