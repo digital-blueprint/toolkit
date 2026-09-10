@@ -45,7 +45,7 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 font-weight: 600;
                 line-height: 1.125;
                 margin-top: 1.5em;
-                font-size: 1.25em;
+                font-size: 1.17em;
                 margin-bottom: 0.5em;
             }
 

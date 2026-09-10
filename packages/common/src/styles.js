@@ -1768,8 +1768,8 @@ export function getNativeModalDialogCSS() {
         :host {
             font-size: var(--dbp-modal--font-size, 1rem);
             --dbp-modal-animation: mmFadeIn;
-            --dbp-modal-title-font-size: 1rem;
-            --dbp-modal-title-font-weight: 300;
+            --dbp-modal-title-font-size: 1.5em;
+            --dbp-modal-title-font-weight: 600;
             --dbp-modal-content-overflow-y: auto;
             --dbp-modal-overflow: hidden;
         }
