@@ -70,7 +70,7 @@
         "no-usable-files-in-zip": "ZIP file does not contain any usable files",
         "not-allowed-mime-type-file-error-text": "{{filename}} has not allowed MIME-Type",
         "not-allowed-mime-type-file-error-title": "Not allowed MIME-Type",
-        "too-big-file-body": "The file {{filename}} can have a maximum of {{size}}.",
+        "too-big-file-body": "The file can have a maximum of {{size}}.",
         "too-big-file-title": "The file is too big!"
     },
     "intro": "Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region.",
