@@ -905,6 +905,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 height: 100%;
                 overflow: hidden;
                 flex-grow: 1;
+                margin-top: 10px;
             }
 
             .default-logo {
@@ -1216,6 +1217,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
                 header .hd1-right .logo {
                     height: 100%;
+                    margin-top: 0;
                 }
 
                 header .hd1-right .auth-button {
