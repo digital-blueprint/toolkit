@@ -2135,7 +2135,7 @@ export function getDropDownCss() {
         }
 
         :host([value='']) .trigger-label {
-            color: var(--dbp-select-placeholder-color, var(--dbp-muted));
+            color: var(--dbp-select-placeholder-color, var(--dbp-content));
             font-weight: var(--dbp-select-placeholder-font-weight, 300);
         }
 
@@ -2170,7 +2170,7 @@ export function getDropDownCss() {
             flex: 0 0 auto;
             margin-left: 0.5rem;
             align-self: center;
-            color: var(--dbp-select-chevron-color, var(--dbp-muted));
+            color: var(--dbp-select-chevron-color, var(--dbp-content));
             font-size: 0.75rem;
         }
 
@@ -2180,7 +2180,7 @@ export function getDropDownCss() {
 
         .trigger.button {
             min-height: 32px;
-            border: 1px solid var(--dbp-select-border-color, var(--dbp-muted));
+            border: 1px solid var(--dbp-select-border-color, var(--dbp-content));
             border-radius: var(--dbp-border-radius);
             align-items: center;
         }
