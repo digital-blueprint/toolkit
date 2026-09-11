@@ -1890,7 +1890,7 @@ export function getNativeModalDialogCSS() {
         .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: start;
             padding: 0;
             margin-bottom: 25px;
             margin-right: 0.5em;
