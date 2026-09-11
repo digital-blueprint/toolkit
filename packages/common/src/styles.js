@@ -1333,10 +1333,10 @@ export function getSelect2CSS() {
 
         .select2-container--default .select2-selection--single .select2-selection__clear {
             /* Matches the line height of the rendered selection, so the icon
-               ends up vertically centered on the first line 
+               ends up vertically centered on the first line
             height: 28px;*/
             /* Leave room for the chevron, which we shifted left of select2's default
-               position, so the clear button stays to its left without overlapping 
+               position, so the clear button stays to its left without overlapping
             margin-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));*/
         }
 
@@ -2084,11 +2084,20 @@ export function getDropDownCss() {
     // language=css
     return css`
         :host {
+            /* Content-sized so the host is only as wide as its trigger button,
+               which keeps the menu anchored to the button. max-width caps it to
+               the parent so a long label wraps instead of overflowing. */
             display: inline-block;
+            max-width: 100%;
             position: relative;
             /* defaults can be overridden per usage */
             --dbp-select-menu-left: 0;
             --dbp-select-menu-right: auto;
+        }
+
+        .select-container {
+            position: relative;
+            max-width: 100%;
         }
 
         :host([disabled]) {
@@ -2134,11 +2143,6 @@ export function getDropDownCss() {
             justify-content: space-between;
         }
 
-        :host([value='']) .trigger-label {
-            color: var(--dbp-select-placeholder-color, var(--dbp-content));
-            font-weight: var(--dbp-select-placeholder-font-weight, 300);
-        }
-
         .item-button {
             display: flex;
             width: 100%;
@@ -2168,9 +2172,7 @@ export function getDropDownCss() {
 
         .icon-chevron {
             flex: 0 0 auto;
-            margin-left: 0.5rem;
             align-self: center;
-            color: var(--dbp-select-chevron-color, var(--dbp-content));
             font-size: 0.75rem;
         }
 
@@ -2180,65 +2182,40 @@ export function getDropDownCss() {
 
         .trigger.button {
             min-height: 32px;
+            max-width: 100%;
+            min-width: 0;
             border: 1px solid var(--dbp-select-border-color, var(--dbp-content));
             border-radius: var(--dbp-border-radius);
-            align-items: center;
-        }
-
-        .trigger-label {
-            white-space: nowrap;
-        }
-
-        .trigger.wrap-label {
             display: flex;
+            align-items: center;
+            /* Keep the chevron at the trailing edge, so a wrapped multi-line
+               label and the chevron stay visually separated */
+            justify-content: space-between;
+            gap: 0.5rem;
             text-align: -webkit-match-parent;
             text-align: match-parent;
-            justify-content: flex-start !important;
         }
 
-        .trigger.wrap-label .trigger-label {
+        /* Wrapping is the default: a trigger is a button whose label must stay
+           readable, so it wraps instead of clipping when space is insufficient */
+        .trigger-label {
+            flex: 0 1 auto;
+            min-width: 0;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            text-wrap: pretty;
+            text-align: left;
+        }
+
+        /* Opt-out for fixed-height contexts (e.g. toolbars, action menus with
+           short static labels) where a single line is preferred. If the label
+           is too long for the available width it is truncated with an ellipsis
+           rather than overflowing the button. */
+        .trigger.no-wrap .trigger-label {
             white-space: nowrap;
-        }
-
-        :host([responsive]) {
-            max-width: 100%;
-        }
-
-        /* Small-screen behavior */
-        @media (max-width: 480px) {
-            :host([responsive]) {
-                display: block;
-                width: 100%;
-                max-width: 100%;
-            }
-
-            :host([responsive]) .trigger.button {
-                display: flex;
-                min-width: 0;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            :host([responsive]) .trigger-label,
-            :host([responsive]) .trigger.wrap-label .trigger-label {
-                flex: 1 1 auto;
-                min-width: 0;
-                white-space: normal;
-                overflow-wrap: normal;
-                word-break: normal;
-                text-align: left;
-            }
-
-            :host([responsive]) .icon-chevron {
-                flex: 0 0 auto;
-            }
-
-            :host([responsive]) .menu {
-                left: 0;
-                right: 0;
-                width: 100%;
-                max-width: 100%;
-            }
+            overflow: hidden;
+            overflow-wrap: normal;
+            text-overflow: ellipsis;
         }
     `;
 }

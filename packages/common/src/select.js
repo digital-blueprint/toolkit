@@ -17,8 +17,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.options = [];
         this.value = '';
         this.buttonType = 'is-secondary';
-        this.wrapLabel = false;
-        this.responsive = false;
+        this.noWrap = false;
     }
 
     static properties = {
@@ -31,8 +30,7 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         options: {type: Array},
         value: {type: String, reflect: true},
         buttonType: {type: String, attribute: 'button-type'},
-        wrapLabel: {type: Boolean, attribute: 'wrap-label', reflect: true},
-        responsive: {type: Boolean, reflect: true},
+        noWrap: {type: Boolean, attribute: 'no-wrap', reflect: true},
     };
 
     static get scopedElements() {
@@ -166,58 +164,63 @@ export class DBPSelect extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
     render() {
         return html`
-            <button
-                id="action-trigger-button"
-                class="trigger button ${this.buttonType} ${this.wrapLabel ? 'wrap-label' : ''}"
-                part="trigger"
-                @click=${this.toggle}
-                @keydown=${this._onTriggerKeydown}
-                ?disabled=${this.disabled}
-                aria-haspopup="menu"
-                aria-expanded=${String(this.open)}
-                aria-controls="action-dropdown">
-                <span class="trigger-label">${this.label}</span>
-                <dbp-icon class="icon-chevron" name="chevron-down" aria-hidden="true"></dbp-icon>
-            </button>
+            <div class="select-container">
+                <button
+                    id="action-trigger-button"
+                    class="trigger button ${this.buttonType} ${this.noWrap ? 'no-wrap' : ''}"
+                    part="trigger"
+                    @click=${this.toggle}
+                    @keydown=${this._onTriggerKeydown}
+                    ?disabled=${this.disabled}
+                    aria-haspopup="menu"
+                    aria-expanded=${String(this.open)}
+                    aria-controls="action-dropdown">
+                    <span class="trigger-label">${this.label}</span>
+                    <dbp-icon
+                        class="icon-chevron"
+                        name="chevron-down"
+                        aria-hidden="true"></dbp-icon>
+                </button>
 
-            ${
-                this.open
-                    ? html`
-                          <ul
-                              id="action-dropdown"
-                              class="menu"
-                              part="menu"
-                              role="menu"
-                              aria-labelledby="action-trigger-button"
-                              @keydown=${this._onMenuKeydown}>
-                              ${this.options.map(
-                                  (o) => html`
-                                      <li role="none">
-                                          <button
-                                              class="item-button button"
-                                              role="menuitem"
-                                              data-value=${String(o.value)}
-                                              @click=${this._onItemClick}
-                                              ?disabled=${o.disabled ?? false}
-                                              aria-checked=${this.value === o.value ? 'true' : 'false'}>
-                                              ${
-                                                  o.iconName
-                                                      ? html`
-                                                            <dbp-icon
-                                                                name=${o.iconName}
-                                                                aria-hidden="true"></dbp-icon>
-                                                        `
-                                                      : null
-                                              }
-                                              <span>${o.label ?? o.name}</span>
-                                          </button>
-                                      </li>
-                                  `,
-                              )}
-                          </ul>
-                      `
-                    : null
-            }
+                ${
+                    this.open
+                        ? html`
+                              <ul
+                                  id="action-dropdown"
+                                  class="menu"
+                                  part="menu"
+                                  role="menu"
+                                  aria-labelledby="action-trigger-button"
+                                  @keydown=${this._onMenuKeydown}>
+                                  ${this.options.map(
+                                      (o) => html`
+                                          <li role="none">
+                                              <button
+                                                  class="item-button button"
+                                                  role="menuitem"
+                                                  data-value=${String(o.value)}
+                                                  @click=${this._onItemClick}
+                                                  ?disabled=${o.disabled ?? false}
+                                                  aria-checked=${this.value === o.value ? 'true' : 'false'}>
+                                                  ${
+                                                      o.iconName
+                                                          ? html`
+                                                                <dbp-icon
+                                                                    name=${o.iconName}
+                                                                    aria-hidden="true"></dbp-icon>
+                                                            `
+                                                          : null
+                                                  }
+                                                  <span>${o.label ?? o.name}</span>
+                                              </button>
+                                          </li>
+                                      `,
+                                  )}
+                              </ul>
+                          `
+                        : null
+                }
+            </div>
         `;
     }
 }
