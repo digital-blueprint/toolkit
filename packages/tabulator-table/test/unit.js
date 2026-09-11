@@ -27,6 +27,28 @@ suite('dbp-tabulator-table basics', () => {
         assert.isNotNull(node.shadowRoot);
     });
 
+    test('persists pagination size under an application-specific key', () => {
+        node.identifier = 'people-table';
+        node.paginationSizeStorageKey = 'people-table-user-1';
+        node.storePaginationSize(20);
+
+        assert.equal(
+            node.getPaginationSizeStorageKey(),
+            'tabulator-people-table-user-1-pagination-size',
+        );
+        assert.equal(node.loadPaginationSize(), 20);
+
+        localStorage.removeItem(node.getPaginationSizeStorageKey());
+    });
+
+    test('can disable pagination size persistence', () => {
+        node.identifier = 'people-table';
+        node.paginationSizeStorageKey = '';
+
+        assert.isNull(node.getPaginationSizeStorageKey());
+        assert.isNull(node.loadPaginationSize());
+    });
+
     test('optionally places column configuration in the rightmost header', async () => {
         const tableBuilt = new Promise((resolve) =>
             node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),

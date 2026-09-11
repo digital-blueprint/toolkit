@@ -43,6 +43,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.paginationNoLangsEnabled = false;
         this.paginationEnabled = false;
         this.paginationSize = 10;
+        this.paginationSizeStorageKey = null;
+        this.defaultPaginationSize = 10;
         this.stickyHeaderEnabled = false;
         this.selectRowsEnabled = false;
         this.rowSelected = false;
@@ -87,6 +89,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             paginationNoLangsEnabled: {type: Boolean, attribute: 'pagination-no-langs-enabled'},
             paginationEnabled: {type: Boolean, attribute: 'pagination-enabled'},
             paginationSize: {type: Number, attribute: 'pagination-size'},
+            paginationSizeStorageKey: {
+                type: String,
+                attribute: 'pagination-size-storage-key',
+            },
             stickyHeaderEnabled: {type: Boolean, attribute: 'sticky-header'},
             rowSelected: {type: Boolean},
             selectedRows: {type: Array},
@@ -174,6 +180,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     ),
                     {persist: false, dispatchEvent: false},
                 );
+            } else if (propName === 'paginationSizeStorageKey' && this.tableReady) {
+                const paginationSize = this.loadPaginationSize() ?? this.defaultPaginationSize;
+                this.paginationSize = paginationSize;
+                void this.tabulatorTable.setPageSize(paginationSize);
             }
         });
     }
@@ -212,6 +222,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
     }
 
     buildTable() {
+        this.defaultPaginationSize = this.paginationSize;
         if (this.collapseEnabled) {
             // this.options['layout'] = 'fitDataFill';
             this.options['responsiveLayout'] = 'collapse';
@@ -418,9 +429,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         if (this.paginationEnabled) {
             const paginationSizeDropdown = this._('#custom-pagination .tabulator-page-size');
 
-            const paginationSize = parseInt(
-                localStorage.getItem(`tabulator-${this.identifier}-pagination-size`) ?? '',
-            );
+            const paginationSize = this.loadPaginationSize();
             if (paginationSize) {
                 this.paginationSize = paginationSize;
                 this.tabulatorTable.setPageSize(this.paginationSize);
@@ -429,10 +438,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             paginationSizeDropdown.addEventListener('change', (event) => {
                 if (event.target.value) {
                     this.paginationSize = Number(event.target.value);
-                    localStorage.setItem(
-                        `tabulator-${this.identifier}-pagination-size`,
-                        event.target.value,
-                    );
+                    this.storePaginationSize(this.paginationSize);
                     this.dispatchEvent(
                         new CustomEvent('dbp-tabulator-table-page-size-changed-event', {
                             detail: {
@@ -504,6 +510,36 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         let allSelected = this.checkAllSelected();
         if (!allSelected) {
             this.tabulatorTable.getRows().forEach((row) => row.select());
+        }
+    }
+
+    getPaginationSizeStorageKey() {
+        if (this.paginationSizeStorageKey === '') return null;
+        const storageKey = this.paginationSizeStorageKey ?? this.identifier;
+        return storageKey ? `tabulator-${storageKey}-pagination-size` : null;
+    }
+
+    loadPaginationSize() {
+        const storageKey = this.getPaginationSizeStorageKey();
+        if (!storageKey) return null;
+
+        try {
+            const paginationSize = Number(localStorage.getItem(storageKey));
+            return paginationSize > 0 ? paginationSize : null;
+        } catch (error) {
+            console.warn('Unable to restore the Tabulator pagination size.', error);
+            return null;
+        }
+    }
+
+    storePaginationSize(paginationSize) {
+        const storageKey = this.getPaginationSizeStorageKey();
+        if (!storageKey) return;
+
+        try {
+            localStorage.setItem(storageKey, String(paginationSize));
+        } catch (error) {
+            console.warn('Unable to store the Tabulator pagination size.', error);
         }
     }
 

@@ -50,6 +50,8 @@ layout: "fitColumns", autoColumns: true, }`): set the options for the tabulator 
     - example `<dbp-tabulator-table pagination-enabled></dbp-tabulator-table>`
 - `pagination-size` (optional number, default: `10`): sets the pagination size, if pagination is enabled
     - example `<dbp-tabulator-table pagination-size="20"></dbp-tabulator-table>`
+- `pagination-size-storage-key` (optional string): persists the selected pagination size under the provided application-specific key. Set it to an empty string to disable persistence
+    - example `<dbp-tabulator-table pagination-enabled pagination-size-storage-key="people-table-user-id"></dbp-tabulator-table>`
 - `select-rows-enabled` (optional bool, default: `false`): allows the user to select rows by clicking on them
     - example `<dbp-tabulator-table select-rows-enabled></dbp-tabulator-table>`
 - `collapse-enabled` (optional bool, default: `false`): add columns that do not fit into the table into a hidden list of column titles and values
