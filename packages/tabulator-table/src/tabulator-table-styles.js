@@ -270,6 +270,7 @@ export function getTabulatorStyles() {
         }
 
         /* Frozen table header styles */
+        .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen,
         .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-left,
         .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right {
             border: none;
