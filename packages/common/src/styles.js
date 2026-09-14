@@ -1570,21 +1570,61 @@ export function getSelect2CSS() {
             color: var(--dbp-muted);
         }
 
+        .select2-container {
+            max-width: 100%;
+            min-width: 0;
+        }
+
         /* The inline search field of a multiple selection uses the browser's default input
            font otherwise, which doesn't match the rest of the control */
 
         .select2-container--default .select2-search--inline {
-            width: 100%;
-            flex: 1;
+            flex: 1 1 0;
+            min-width: 0;
+            width: auto;
+            max-width: 100%;
+            align-self: center;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container--default
+            .select2-selection--multiple:has(.select2-selection__choice)
+            .select2-search--inline {
+            flex: 0 1 auto;
+            width: auto;
         }
 
         .select2-container--default .select2-search--inline .select2-search__field {
             font: inherit;
-            /* Select2 offsets the field (and thus the placeholder) with a left margin. Match
-               the single selection's content padding so both placeholders start at the same
-               position, without shrinking the container (which would wrap the placeholder). */
             margin: 0;
+            padding: 0;
+            border: 0;
             align-content: center;
+            align-self: center;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            field-sizing: content;
+            height: auto;
+            min-height: 1.5em;
+            line-height: 1.5;
+            vertical-align: middle;
+            resize: none;
+            overflow: hidden;
+        }
+
+        .select2-container--default
+            .select2-selection--multiple:has(.select2-selection__choice)
+            .select2-search--inline
+            .select2-search__field {
+            height: 1.5em;
+            min-height: 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1593,6 +1633,19 @@ export function getSelect2CSS() {
         /* With a multiple selection the placeholder is rendered into the inline search field */
         .select2-container--default .select2-search--inline .select2-search__field::placeholder {
             color: var(--dbp-muted);
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            text-overflow: clip;
+        }
+
+        .select2-container--default
+            .select2-selection--multiple:has(.select2-selection__choice)
+            .select2-search--inline
+            .select2-search__field::placeholder {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .select2-container--default.select2-container--disabled .select2-selection__placeholder {
@@ -1601,17 +1654,41 @@ export function getSelect2CSS() {
 
         /* Work around single selections not wrapping and breaking responsivness */
         .select2-container--default .select2-selection--single {
-            height: 100% !important;
+            height: auto !important;
+            min-height: 32px;
             display: flex;
             flex-direction: row-reverse;
             justify-content: space-between;
             position: relative;
+            flex-wrap: wrap;
+            align-items: center;
         }
+
+        /* Make multiple selection also responsive and allow wrapping */
+        .select2-container--default .select2-selection--multiple {
+            height: auto !important;
+            min-height: 32px;
+            flex-wrap: wrap;
+            /* Center single-line placeholder vertically (empty state).
+               For wrapped tags the line stack should start at the top. */
+            align-content: center;
+            align-items: center;
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        /* When tags are present keep multi-line wrap anchored at the top */
+        .select2-container--default .select2-selection--multiple:has(.select2-selection__choice) {
+            align-content: flex-start;
+        }
+
         .select2-container--default .select2-selection__rendered {
             word-wrap: break-word !important;
             text-overflow: inherit !important;
             white-space: normal !important;
             margin: 0;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         .select2-dropdown {

@@ -277,20 +277,30 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     gap: var(--dbp-enum-label-gap, 1em);
                     margin: 0;
                     align-items: center;
+                    flex-wrap: wrap;
                 }
 
                 :host([layout-type='inline']) label {
                     white-space: nowrap;
                     margin-bottom: 0;
+                    flex: 0 0 auto;
                 }
 
                 /* allows .select2-container to fully expand */
                 :host([layout-type='inline']) #select-dropdown {
                     order: 1;
+                    flex: 0 0 auto;
+                    min-width: 0;
+                    min-height: 0;
+                    overflow: visible;
                 }
 
-                :host([layout-type='inline']) .select2 {
+                :host([layout-type='inline']) .select2,
+                :host([layout-type='inline']) .select2-container {
                     order: 2;
+                    flex: 1 1 200px;
+                    min-width: 0;
+                    max-width: 100%;
                 }
 
                 :host([layout-type='inline']) .checkboxItem:not(:last-of-type) {
