@@ -2251,6 +2251,7 @@ export function getDropDownCss() {
             flex: 0 0 auto;
             align-self: center;
             font-size: 0.75rem;
+            color: var(--dbp-select-chevron-color, var(--dbp-content));
         }
 
         :host(.select-version) .item-button[aria-checked='true'] {
@@ -2282,6 +2283,8 @@ export function getDropDownCss() {
             overflow-wrap: anywhere;
             text-wrap: pretty;
             text-align: left;
+            color: var(--dbp-select-placeholder-color, var(--dbp-content));
+            font-weight: var(--dbp-select-placeholder-font-weight, 300);
         }
 
         /* Opt-out for fixed-height contexts (e.g. toolbars, action menus with
