@@ -2284,7 +2284,6 @@ export function getDropDownCss() {
             text-wrap: pretty;
             text-align: left;
             color: var(--dbp-select-placeholder-color, var(--dbp-content));
-            font-weight: var(--dbp-select-placeholder-font-weight, 300);
         }
 
         /* Opt-out for fixed-height contexts (e.g. toolbars, action menus with
