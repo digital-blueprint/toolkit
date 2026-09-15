@@ -280,6 +280,15 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     flex-wrap: wrap;
                 }
 
+                @media (max-width: 380px) {
+                    :host([layout-type='inline']) fieldset {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 10px;
+                        margin-bottom: 20px;
+                    }
+                }
+
                 :host([layout-type='inline']) label {
                     white-space: nowrap;
                     margin-bottom: 0;
