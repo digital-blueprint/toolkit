@@ -85,6 +85,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.routingBaseUrl = null;
         this.isScrollTopButtonVisible = false;
         this.isScrollBottomButtonVisible = true;
+        this._titleClickCount = 0;
     }
 
     static get scopedElements() {
@@ -339,6 +340,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             routingBaseUrl: {type: String, attribute: 'routing-base-url'},
             isScrollTopButtonVisible: {type: Boolean, attribute: false},
             isScrollBottomButtonVisible: {type: Boolean, attribute: false},
+            _titleClickCount: {type: Number, attribute: false},
         };
     }
 
@@ -510,6 +512,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     _updateBodyScrollLock(isOpen) {
         const shouldLock = isOpen && this.isMenuFloating();
         document.body.style.overflowY = shouldLock ? 'hidden' : '';
+    }
+
+    _handleTitleClick() {
+        this._titleClickCount = Math.min(this._titleClickCount + 1, 7);
     }
 
     onMenuItemClick(e) {
@@ -1407,10 +1413,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             });
         }
 
-        const prodClassMap = classMap({
-            hidden: this.env === 'production' || this.env === 'staging' || this.env === '',
-        });
-
         this.updatePageTitle();
         this.updatePageMetaDescription();
 
@@ -2246,7 +2248,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                 }
                             </slot>
                         </p>
-                        <h1 title="${this.description}">
+                        <h1 title="${this.description}" @click="${this._handleTitleClick}">
                             ${
                                 !this._isRealActivityActive()
                                     ? this.topicMetaDataText('name')
@@ -2318,14 +2320,22 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     ${i18n.t('contact')}
                                 </a>
                             </slot>
-                            <dbp-build-info
-                                class="${prodClassMap}"
-                                git-info="${this.gitInfo}"
-                                env="${this.env}"
-                                build-url="${this.buildUrl}"
-                                build-time="${this.buildTime}"></dbp-build-info>
-                            <dbp-feature-flag-dropdown
-                                class="${prodClassMap}"></dbp-feature-flag-dropdown>
+                            ${
+                                this._titleClickCount >= 7
+                                    ? html`
+                                          <dbp-build-info
+                                              git-info="${this.gitInfo}"
+                                              env="${this.env}"
+                                              build-url="${this.buildUrl}"
+                                              build-time="${this.buildTime}"></dbp-build-info>
+                                          <dbp-feature-flag-dropdown></dbp-feature-flag-dropdown>
+                                      `
+                                    : this._titleClickCount >= 3
+                                      ? html`
+                                            <span>${7 - this._titleClickCount}</span>
+                                        `
+                                      : ''
+                            }
                         </slot>
                     </footer>
                 </div>
