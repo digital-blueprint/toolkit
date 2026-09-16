@@ -394,6 +394,9 @@ export class FileSource extends LangMixin(
                 body: i18n.t('file-source.mime-type-body', {filename: file.name}),
                 type: 'danger',
                 timeout: 0,
+                ...(this.notificationTargetId
+                    ? {targetNotificationId: this.notificationTargetId}
+                    : {}),
             });
             return false;
         }

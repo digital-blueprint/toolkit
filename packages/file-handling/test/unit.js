@@ -19,6 +19,21 @@ suite('dbp-file-source basics', () => {
     test('should render', () => {
         assert.isNotNull(node.shadowRoot);
     });
+
+    test('should send unsupported file type errors to the configured notification', () => {
+        let notification;
+        const handleNotification = (event) => {
+            event.preventDefault();
+            notification = event.detail;
+        };
+        window.addEventListener('dbp-notification-send', handleNotification, {once: true});
+
+        node.allowedMimeTypes = 'application/pdf';
+        node.notificationTargetId = 'dialog-notification';
+
+        assert.isFalse(node.checkFileType(new File(['content'], 'attachment.txt')));
+        assert.equal(notification.targetNotificationId, 'dialog-notification');
+    });
 });
 
 suite('dbp-file-source demo', () => {
