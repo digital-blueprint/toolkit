@@ -147,10 +147,37 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         // Set the value after initialization
         this.$select.val(this.value).trigger('change');
 
+        this.updateSelect2AriaLabels();
+
         return true;
     }
 
+    /**
+     * Select2 hides the native select and builds its own markup, so the association with the
+     * <label> element of the base element gets lost. Without it a screen reader would only
+     * announce the generic select2 search label instead of the field label.
+     * The label and the select2 markup live in the same shadow root, so aria-labelledby works.
+     */
+    updateSelect2AriaLabels() {
+        const labelId = `${this.formElementId}-label`;
+        if (!this.renderRoot.querySelector(`#${labelId}`)) return;
+
+        // The search field is the element the user focuses in tag mode
+        const searchField = this.renderRoot.querySelector('.select2-search__field');
+        if (searchField) {
+            searchField.setAttribute('aria-labelledby', labelId);
+        }
+
+        // The combobox itself only gets a name if select2 didn't set one already
+        const selection = this.renderRoot.querySelector('.select2-selection--multiple');
+        if (selection && !selection.hasAttribute('aria-labelledby')) {
+            selection.setAttribute('aria-labelledby', labelId);
+        }
+    }
+
     updateSelect2Buttons() {
+        this.updateSelect2AriaLabels();
+
         this._a('.select2-selection__choice').forEach((choice, index) => {
             const removeButton = choice.querySelector('.select2-selection__choice__remove');
             const display = choice.querySelector('.select2-selection__choice__display');

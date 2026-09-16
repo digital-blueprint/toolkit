@@ -197,7 +197,7 @@ export class DbpBaseElement extends LangMixin(
 
         return html`
             <fieldset>
-                <label for="${this.formElementId}">
+                <label id="${this.formElementId}-label" for="${this.formElementId}">
                     <slot name="label">${this.label}</slot>
                     ${
                         this.required && (hasLabelSlot || this.label)
