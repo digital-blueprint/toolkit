@@ -7,7 +7,7 @@
         },
         "enum": {
             "remove-all-items": "Alle Einträge entfernen",
-            "remove-item": "{{item}} entfernen",
+            "remove-item": "{{- item}} entfernen",
             "select-placeholder": "Bitte wählen Sie eine Option aus"
         },
         "number": {

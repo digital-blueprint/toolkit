@@ -7,7 +7,7 @@
         },
         "enum": {
             "remove-all-items": "Remove all items",
-            "remove-item": "Remove {{item}}",
+            "remove-item": "Remove {{- item}}",
             "select-placeholder": "Please select an option"
         },
         "number": {
