@@ -1306,26 +1306,17 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: inherit;
             padding-left: var(--dbp-select2-content-padding-left);
-            /* Clear the chevron, which we shifted left of select2's default position */
             padding-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
             display: flex;
             align-items: center;
             margin-right: auto;
         }
 
-        /*
-           Select2 renders the clear button as a "×" text character. Its shape,
-           size and vertical position depend on the font in use, so we hide it
-           and draw an icon instead, which we can center reliably.
-        */
-
         .select2-container--default .select2-selection--single .select2-selection__clear,
         .select2-container--default .select2-selection--multiple .select2-selection__clear {
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Slightly wider than the icon, to get a reasonable click target.
-               The browser default button padding varies, so reset it. */
             width: 1em;
             min-width: 24px;
             min-height: 24px;
@@ -1333,20 +1324,6 @@ export function getSelect2CSS() {
             color: var(--dbp-muted);
         }
 
-        .select2-container--default .select2-selection--single .select2-selection__clear {
-            /* Matches the line height of the rendered selection, so the icon
-               ends up vertically centered on the first line
-            height: 28px;*/
-            /* Leave room for the chevron, which we shifted left of select2's default
-               position, so the clear button stays to its left without overlapping
-            margin-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));*/
-        }
-
-        /* Like for a single selection the clear button is centered on the first line, so it
-           stays in place while entries are added and removed. It shares its height with the
-           entries, so both are centered on the same line regardless of the font metrics.
-           The right margin leaves room for the chevron drawn at the far right, so the clear
-           button sits to its left, matching the single-selection layout. */
         .select2-container--default .select2-selection--multiple .select2-selection__clear {
             top: 0;
             /* Same as the margin-top of the entries below */
@@ -1404,9 +1381,6 @@ export function getSelect2CSS() {
             position: relative;
         }
 
-        /* Select2 only draws a dropdown arrow for a single selection (a CSS-border triangle
-           inside a <b>), and none for a multiple selection. We hide the triangle and draw our
-           own chevron via ::after in both modes, so they look consistent. */
         .select2-container--default .select2-selection--single .select2-selection__arrow b {
             display: none;
         }
@@ -1614,8 +1588,8 @@ export function getSelect2CSS() {
             max-width: 100%;
             min-width: 0;
             box-sizing: border-box;
-            field-sizing: content;
-            height: auto;
+            /* Select2 renders this as a textarea, whose intrinsic height varies by browser. */
+            height: 1.5em;
             min-height: 1.5em;
             line-height: 1.5;
             vertical-align: middle;
@@ -1679,6 +1653,10 @@ export function getSelect2CSS() {
             align-items: center;
             max-width: 100%;
             min-width: 0;
+        }
+
+        .select2-container--default .select2-selection--multiple.dbp-select2-selection--empty {
+            height: 32px !important;
         }
 
         /* When tags are present keep multi-line wrap anchored at the top */
