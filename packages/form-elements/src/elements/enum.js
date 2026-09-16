@@ -29,6 +29,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         select2(window, $);
         this.tagPlaceholder = null;
         this.disabledItems = [];
+        // Index of the tag that was removed last, used to restore the focus afterwards
+        /** @type {number|null} */
+        this._focusIndexAfterRemove = null;
     }
 
     static get properties() {
@@ -148,7 +151,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
     }
 
     updateSelect2Buttons() {
-        this._a('.select2-selection__choice').forEach((choice) => {
+        this._a('.select2-selection__choice').forEach((choice, index) => {
             const removeButton = choice.querySelector('.select2-selection__choice__remove');
             const display = choice.querySelector('.select2-selection__choice__display');
             if (!removeButton || !display) return;
@@ -160,7 +163,13 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             removeButton.setAttribute('aria-label', label);
             removeButton.setAttribute('title', label);
             removeButton.setAttribute('tabindex', '0');
+            // Remember which tag was removed, so we can restore the focus afterwards
+            removeButton.onclick = () => {
+                this._focusIndexAfterRemove = index;
+            };
         });
+
+        this.restoreFocusAfterRemove();
 
         const clearButton = /** @type {HTMLButtonElement|null} */ (
             this.renderRoot.querySelector('.select2-selection__clear')
@@ -178,6 +187,47 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             event.stopPropagation();
             clearButton.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
         };
+        // After clearing all tags there is no tag left, so the focus goes to the search field
+        clearButton.onmousedown = () => {
+            this._focusIndexAfterRemove = 0;
+        };
+
+        this.moveClearButtonToEnd(clearButton);
+    }
+
+    /**
+     * Select2 prepends the "remove all items" button to the selection, which would make it the
+     * first tab stop. We move it to the end of the selection, so the focus order follows the
+     * logical order: remove first tag, remove second tag, ..., search field, remove all items.
+     * The button is positioned absolutely, so moving it doesn't change its appearance.
+     *
+     * @param {HTMLButtonElement} clearButton
+     */
+    moveClearButtonToEnd(clearButton) {
+        const selection = this.renderRoot.querySelector('.select2-selection--multiple');
+        if (!selection || selection.lastElementChild === clearButton) return;
+
+        selection.appendChild(clearButton);
+    }
+
+    /**
+     * Restores the focus after a tag was removed: it moves to the tag that took the place of the
+     * removed one (or to the last tag), and if no tag is left, to the select2 search field itself.
+     */
+    restoreFocusAfterRemove() {
+        const index = this._focusIndexAfterRemove;
+        if (index === null) return;
+
+        this._focusIndexAfterRemove = null;
+        const removeButtons = this._a('.select2-selection__choice__remove');
+        const target =
+            removeButtons[index] ||
+            removeButtons[removeButtons.length - 1] ||
+            this.renderRoot.querySelector('.select2-search__field');
+
+        if (target) {
+            target.focus();
+        }
     }
 
     renderInput() {
