@@ -131,6 +131,41 @@ suite('dbp-form-enum-element', () => {
     test('should render', () => {
         assert.isNotNull(node.shadowRoot);
     });
+
+    test('makes tag removal controls accessible and translatable', async () => {
+        node.remove();
+        node = document.createElement('dbp-form-enum-element');
+        node.displayMode = 'tags';
+        node.multiple = true;
+        node.items = {item1: 'Item 1'};
+        node.value = ['item1'];
+        document.body.appendChild(node);
+
+        const removeButton = await waitFor(() =>
+            node.shadowRoot.querySelector('.select2-selection__choice__remove'),
+        );
+
+        assert.isNotNull(removeButton);
+        assert.equal(removeButton.getAttribute('aria-label'), 'Item 1 entfernen');
+        assert.equal(removeButton.getAttribute('tabindex'), '0');
+
+        const descriptionId = removeButton.getAttribute('aria-describedby');
+        assert.isNotNull(node.shadowRoot.getElementById(descriptionId));
+
+        const clearButton = node.shadowRoot.querySelector('.select2-selection__clear');
+        assert.isNotNull(clearButton);
+        assert.equal(clearButton.getAttribute('aria-label'), 'Alle Einträge entfernen');
+        assert.equal(clearButton.getAttribute('tabindex'), '0');
+
+        node.lang = 'en';
+        await node.updateComplete;
+
+        assert.equal(removeButton.getAttribute('aria-label'), 'Remove Item 1');
+        assert.equal(clearButton.getAttribute('aria-label'), 'Remove all items');
+
+        clearButton.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
+        assert.deepEqual(node.value, []);
+    });
 });
 
 suite('dbp-form-string-element', () => {

@@ -6,6 +6,8 @@
             "required-field-validation-error": "Bitte füllen Sie das Pflichtfeld aus!"
         },
         "enum": {
+            "remove-all-items": "Alle Einträge entfernen",
+            "remove-item": "{{item}} entfernen",
             "select-placeholder": "Bitte wählen Sie eine Option aus"
         },
         "number": {

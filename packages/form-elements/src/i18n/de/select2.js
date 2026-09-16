@@ -44,7 +44,7 @@ export default function () {
             return 'Suche…';
         },
         removeAllItems: function () {
-            return 'Entferne alle Gegenstände';
+            return 'Alle Einträge entfernen';
         },
     };
 }

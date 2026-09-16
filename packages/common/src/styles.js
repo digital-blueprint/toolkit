@@ -1327,6 +1327,8 @@ export function getSelect2CSS() {
             /* Slightly wider than the icon, to get a reasonable click target.
                The browser default button padding varies, so reset it. */
             width: 1em;
+            min-width: 24px;
+            min-height: 24px;
             padding: 0;
             color: var(--dbp-muted);
         }
@@ -1511,6 +1513,8 @@ export function getSelect2CSS() {
             align-items: center;
             justify-content: center;
             height: 100%;
+            min-width: 24px;
+            min-height: 24px;
             color: var(--dbp-muted);
             border-left: var(--dbp-border);
             border-color: var(--dbp-content);

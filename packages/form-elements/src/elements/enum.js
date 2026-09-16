@@ -121,6 +121,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             this.$select.off('select2:closing');
         }
 
+        this.$select.off('change.dbp-enum');
+
         this.$select
             .select2({
                 width: '100%',
@@ -134,12 +136,48 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             })
             // https://select2.org/programmatic-control/events
             // select2:clear will trigger select2:unselect and change for each selected item
-            .on('change', this.handleInputValue.bind(this));
+            .on('change.dbp-enum', (event) => {
+                this.handleInputValue(event);
+                this.updateSelect2Buttons();
+            });
 
         // Set the value after initialization
         this.$select.val(this.value).trigger('change');
 
         return true;
+    }
+
+    updateSelect2Buttons() {
+        this._a('.select2-selection__choice').forEach((choice) => {
+            const removeButton = choice.querySelector('.select2-selection__choice__remove');
+            const display = choice.querySelector('.select2-selection__choice__display');
+            if (!removeButton || !display) return;
+
+            const label = this._i18n.t('render-form.enum.remove-item', {
+                item: display.textContent.trim(),
+                lng: this.lang,
+            });
+            removeButton.setAttribute('aria-label', label);
+            removeButton.setAttribute('title', label);
+            removeButton.setAttribute('tabindex', '0');
+        });
+
+        const clearButton = /** @type {HTMLButtonElement|null} */ (
+            this.renderRoot.querySelector('.select2-selection__clear')
+        );
+        if (!clearButton) return;
+
+        const label = this._i18n.t('render-form.enum.remove-all-items', {lng: this.lang});
+        clearButton.setAttribute('aria-label', label);
+        clearButton.setAttribute('title', label);
+        clearButton.setAttribute('tabindex', '0');
+        clearButton.onkeydown = (event) => {
+            if (!['Enter', ' '].includes(event.key)) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            clearButton.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+        };
     }
 
     renderInput() {
@@ -518,6 +556,9 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     }
                     break;
                 }
+                case 'lang':
+                    this.updateSelect2Buttons();
+                    break;
             }
         });
 

@@ -6,6 +6,8 @@
             "required-field-validation-error": "Please fill out the required field!"
         },
         "enum": {
+            "remove-all-items": "Remove all items",
+            "remove-item": "Remove {{item}}",
             "select-placeholder": "Please select an option"
         },
         "number": {
