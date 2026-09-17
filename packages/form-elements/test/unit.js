@@ -173,6 +173,7 @@ suite('dbp-form-string-element', () => {
 
     setup(async () => {
         node = document.createElement('dbp-form-string-element');
+        node.maxLength = 100;
         document.body.appendChild(node);
         await node.updateComplete;
     });
@@ -183,6 +184,37 @@ suite('dbp-form-string-element', () => {
 
     test('should render', () => {
         assert.isNotNull(node.shadowRoot);
+    });
+
+    test('should accept a value at the maximum length', () => {
+        const input = node.shadowRoot.querySelector('input');
+
+        input.value = 'a'.repeat(100);
+        input.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
+
+        assert.deepEqual(node.errorMessages, []);
+    });
+
+    test('should reject a value above the maximum length', () => {
+        const input = node.shadowRoot.querySelector('input');
+
+        input.value = 'a'.repeat(101);
+        input.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
+
+        assert.lengthOf(node.errorMessages, 1);
+    });
+
+    test('should validate a value normalized by a change listener', () => {
+        node.addEventListener('change', (event) => {
+            node.value = event.detail.value.slice(0, node.maxLength);
+        });
+        const input = node.shadowRoot.querySelector('input');
+
+        input.value = 'a'.repeat(101);
+        input.dispatchEvent(new Event('input', {bubbles: true, composed: true}));
+
+        assert.lengthOf(node.value, 100);
+        assert.deepEqual(node.errorMessages, []);
     });
 });
 

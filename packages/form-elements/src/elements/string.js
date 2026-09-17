@@ -65,7 +65,7 @@ export class DbpStringElement extends ScopedElementsMixin(DbpBaseElement) {
                         }
                     }
                     // Then, check word count limit
-                    if (formElement.value.length >= this.maxLength) {
+                    if (this.value.length > this.maxLength) {
                         return this._i18n.t('render-form.base-object.max-length', {
                             maxLength: this.maxLength,
                         });
