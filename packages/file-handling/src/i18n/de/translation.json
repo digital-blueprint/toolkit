@@ -47,7 +47,6 @@
     },
     "demo-title": "Datei Abgabe Demo",
     "file-sink": {
-        "clipboard": "Zwischenablage",
         "local-button_one": "Datei herunterladen",
         "local-button_other": "Dateien herunterladen",
         "local-intro_one": "{{count}} Datei herunterladen",
@@ -60,7 +59,6 @@
         "upload-success-title": "Erfolgreich hochgeladen"
     },
     "file-source": {
-        "clipboard": "Zwischenablage",
         "empty-file-error-text": "{{filename}} hat size=0 und wird abgelehnt!",
         "empty-file-error-title": "Leere Dateien sind nicht erlaubt",
         "mime-type-body": "Das Dateiformat wird von dieser Applikation nicht unterstützt.",
