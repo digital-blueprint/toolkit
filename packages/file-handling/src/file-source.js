@@ -828,6 +828,21 @@ export class FileSource extends LangMixin(
                                 <dbp-icon class="nav-icon" name="cloud"></dbp-icon>
                                 <p>${this.nextcloudName}</p>
                             </button>
+                            <button
+                                role="tab"
+                                aria-selected="${this.activeTarget === 'clipboard'}"
+                                aria-controls="select-clipboard"
+                                title="${i18n.t('file-source.clipboard')}"
+                                @click="${() => {
+                                    this.activeTarget = 'clipboard';
+                                }}"
+                                class="${classMap({
+                                    active: this.activeTarget === 'clipboard',
+                                    hidden: !this.hasEnabledSource('clipboard'),
+                                })}">
+                                <dbp-icon class="nav-icon" name="clipboard"></dbp-icon>
+                                <p>${i18n.t('file-source.clipboard')}</p>
+                            </button>
                         </nav>
 
                         <div class="paddles">

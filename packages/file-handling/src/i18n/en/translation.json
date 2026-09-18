@@ -47,6 +47,7 @@
     },
     "demo-title": "File Upload Demo",
     "file-sink": {
+        "clipboard": "Clipboard",
         "local-button_one": "Download file",
         "local-button_other": "Download files",
         "local-intro_one": "Download {{count}} file",
@@ -59,6 +60,7 @@
         "upload-success-title": "Successful uploaded"
     },
     "file-source": {
+        "clipboard": "Clipboard",
         "empty-file-error-text": "{{filename}} has size=0 and is denied!",
         "empty-file-error-title": "Empty files are not allowed",
         "mime-type-body": "The file format is not supported by this application. For file {{filename}}",
