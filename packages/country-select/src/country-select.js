@@ -96,6 +96,22 @@ export class CountrySelect extends LangMixin(
         }
     }
 
+    _updateClearButton() {
+        const clearButton = /** @type {HTMLButtonElement|null} */ (
+            this.renderRoot.querySelector('.select2-selection__clear')
+        );
+        if (!clearButton) return;
+
+        clearButton.setAttribute('tabindex', '0');
+        clearButton.onkeydown = (event) => {
+            if (!['Enter', ' '].includes(event.key)) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            clearButton.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+        };
+    }
+
     /**
      * Initializes the Select2 selector
      *
@@ -127,6 +143,7 @@ export class CountrySelect extends LangMixin(
             this.$select.select2('destroy');
             this.$select.off('select2:select select2:clear select2:closing');
         }
+        this.$select.off('change.dbp-country-select');
 
         // Reset existing options so Select2 picks up translated country names on lang changes.
         this.$select.empty();
@@ -168,6 +185,9 @@ export class CountrySelect extends LangMixin(
 
                     return search ? data : null;
                 },
+            })
+            .on('change.dbp-country-select', () => {
+                this._updateClearButton();
             })
             .on('select2:clear', () => {
                 this.clear();

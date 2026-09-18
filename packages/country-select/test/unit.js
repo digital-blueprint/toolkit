@@ -36,6 +36,31 @@ suite('dbp-country-select basics', () => {
         assert.equal(node.getAttribute('value'), '');
         assert.equal(select.value, '');
     });
+
+    test('should make the clear button keyboard accessible', async () => {
+        node.setAttribute('value', 'AT');
+        await node.updateComplete;
+        await nextFrame();
+
+        const clearButton = node.shadowRoot.querySelector('.select2-selection__clear');
+        assert.isNotNull(clearButton);
+        assert.equal(clearButton.getAttribute('tabindex'), '0');
+
+        clearButton.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Enter',
+                bubbles: true,
+                cancelable: true,
+            }),
+        );
+        await node.updateComplete;
+        await nextFrame();
+
+        const select = node.shadowRoot.querySelector('select');
+        assert.equal(node.value, '');
+        assert.equal(node.getAttribute('value'), '');
+        assert.equal(select.value, '');
+    });
 });
 
 suite('dbp-country-select-demo basics', () => {
