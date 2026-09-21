@@ -23,6 +23,7 @@
         "marked": "^18.0.0",
         "marked-highlight": "^2.2.3",
         "mocha": "^12.0.0",
+        "npm-run-all2": "^9.0.3",
         "playwright": "^1.34.0",
         "playwright-core": "^1.20.2",
         "prettier": "^3.0.0",
@@ -56,8 +57,8 @@
     },
     "scripts": {
         "build": "rolldown -c rolldown.config.js",
-        "fix": "npm run oxlint:fix && npm run prettier:fix && npm run i18next:fix",
-        "check": "npm run oxlint && npm run prettier && npm run i18next",
+        "fix": "run-s oxlint:fix prettier:fix i18next:fix",
+        "check": "run-p oxlint prettier i18next",
         "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write --cache",
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
         "i18next:fix": "i18next-cli extract",
@@ -67,7 +68,8 @@
         "watch-full": "rolldown -c rolldown.config.js --watch --environment FORCE_FULL",
         "watch-bs": "rolldown -c rolldown.config.js --watch --environment APP_ENV:bs",
         "build-test": "rolldown -c rolldown.config.js --environment APP_ENV:test",
-        "test": "npm run build-test && web-test-runner",
+        "test": "run-s build-test test:run",
+        "test:run": "web-test-runner",
         "tsc": "tsc -p tsconfig.json",
         "oxlint": "oxlint",
         "oxlint:fix": "oxlint --fix"

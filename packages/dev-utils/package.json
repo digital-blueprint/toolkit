@@ -15,6 +15,7 @@
         "access": "public"
     },
     "devDependencies": {
+        "npm-run-all2": "^9.0.3",
         "prettier": "^3.0.0"
     },
     "dependencies": {
@@ -25,8 +26,8 @@
         "selfsigned": "^5.0.0"
     },
     "scripts": {
-        "fix": "npm run oxlint:fix && npm run prettier:fix",
-        "check": "npm run oxlint && npm run prettier",
+        "fix": "run-s oxlint:fix prettier:fix",
+        "check": "run-p oxlint prettier",
         "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write --cache",
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
         "tsc": "tsc -p tsconfig.json",
