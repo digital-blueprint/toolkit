@@ -7,7 +7,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {NextcloudFilePicker} from './nextcloud-file-picker';
 import {classMap} from 'lit/directives/class-map.js';
 import * as fileHandlingStyles from './styles';
-import {Clipboard} from '@dbp-toolkit/file-handling/src/clipboard';
+import {Clipboard} from './clipboard.js';
 import DbpFileHandlingLitElement from './dbp-file-handling-lit-element';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
 

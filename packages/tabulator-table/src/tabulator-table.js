@@ -12,8 +12,8 @@ import {
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import * as commonUtils from '@dbp-toolkit/common/utils';
-import * as tabulatorStyles from '@dbp-toolkit/tabulator-table/src/tabulator-table-styles';
-import {name as pkgName} from '@dbp-toolkit/tabulator-table/package.json';
+import * as tabulatorStyles from './tabulator-table-styles.js';
+import {name as pkgName} from '../package.json';
 import {classMap} from 'lit/directives/class-map.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {downloadExcel, generatePDFDownload} from './utils.js';

@@ -8,9 +8,9 @@ import {NextcloudFilePicker} from './nextcloud-file-picker';
 import {classMap} from 'lit/directives/class-map.js';
 import FileSaver from 'file-saver';
 import * as fileHandlingStyles from './styles';
-import {Clipboard} from '@dbp-toolkit/file-handling/src/clipboard';
+import {Clipboard} from './clipboard.js';
 import DbpFileHandlingLitElement from './dbp-file-handling-lit-element';
-import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
+import {name as pkgName} from '../package.json';
 
 /**
  * FileSink web component

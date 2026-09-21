@@ -7,8 +7,8 @@ import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import select2LangDe from '@dbp-toolkit/resource-select/src/i18n/de/select2';
-import select2LangEn from '@dbp-toolkit/resource-select/src/i18n/en/select2';
+import select2LangDe from './i18n/de/select2.js';
+import select2LangEn from './i18n/en/select2.js';
 import {
     AdapterLitElement,
     AuthMixin,

@@ -1,11 +1,11 @@
 import {createInstance} from '../i18n.js';
 import {css, html} from 'lit';
-import {ScopedElementsMixin, LangMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, LangMixin} from '../index.js';
 import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
-import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as commonStyles from '../styles.js';
 import {Provider} from '../provider/provider.js';
 import {ProviderAdapter} from '../provider/adapter.js';
-import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import DBPLitElement from '../dbp-lit-element.js';
 
 class DemoConsumer extends LangMixin(DBPLitElement, createInstance) {
     constructor() {

@@ -4,11 +4,11 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as tabulatorStyles from '@dbp-toolkit/tabulator-table/src/tabulator-table-styles';
-import * as fileHandlingStyles from '@dbp-toolkit/file-handling/src/styles';
+import * as fileHandlingStyles from './styles.js';
 import {Icon} from '@dbp-toolkit/common';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import {humanFileSize} from '@dbp-toolkit/common/i18next';
-import {name as pkgName} from '@dbp-toolkit/file-handling/package.json';
+import {name as pkgName} from '../package.json';
 import {AdapterLitElement, LangMixin, sendNotification} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 
