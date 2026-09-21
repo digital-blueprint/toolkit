@@ -1,0 +1,8 @@
+packages:
+    - 'packages/*'
+    - 'toolkit-showcase'
+linkWorkspacePackages: true
+ignoreScripts: true
+engineStrict: true
+minimumReleaseAge: 7200
+shamefullyHoist: true
