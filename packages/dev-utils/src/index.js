@@ -393,6 +393,35 @@ export async function assetPlugin(packageName, bundleDest = 'dist', options = {}
     ];
 }
 
+function getPackageManager() {
+    const ua = process.env.npm_config_user_agent;
+    if (!ua) {
+        return null;
+    }
+    return ua.split(' ')[0].split('/')[0]; // "pnpm" | "npm" | "yarn" | "bun"
+}
+
+/**
+ * @returns {string|null} The root directory of the workspace, or null if not found.
+ */
+function findWorkspaceRoot() {
+    if (process.env.npm_config_local_prefix !== undefined) {
+        // npm prefix detection
+        // same as the output of "npm prefix" in an "npm run" context
+        return process.env.npm_config_local_prefix;
+    } else if (getPackageManager() === 'pnpm') {
+        // pnpm workspace root detection
+        let dir = process.cwd();
+        for (;;) {
+            if (fs.existsSync(path.join(dir, 'pnpm-workspace.yaml'))) return dir;
+            const parent = path.dirname(dir);
+            if (parent === dir) return null;
+            dir = parent;
+        }
+    }
+    return null;
+}
+
 /**
  * By default we install our packages in hoisted mode, and for our frontend
  * dependencies we don't allow duplicate versions, so everything we need is in
@@ -410,9 +439,9 @@ export async function assetPlugin(packageName, bundleDest = 'dist', options = {}
  * @returns {Array<string>} array to pass to rolldown's resolve.modules option
  */
 export function getResolveModules() {
-    // same as the output of "npm prefix" in an "npm run" context
-    if (process.env.npm_config_local_prefix !== undefined) {
-        return [process.env.npm_config_local_prefix + '/node_modules'];
+    let root = findWorkspaceRoot();
+    if (root !== null) {
+        return [path.join(root, 'node_modules')];
     } else {
         // not running with npm, return the default
         return ['node_modules'];
