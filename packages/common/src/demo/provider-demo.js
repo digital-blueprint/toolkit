@@ -1,7 +1,6 @@
 import {createInstance} from '../i18n.js';
 import {css, html} from 'lit';
 import {ScopedElementsMixin, LangMixin} from '../index.js';
-import {AuthKeycloak, LoginButton} from '@dbp-toolkit/auth';
 import * as commonStyles from '../styles.js';
 import {Provider} from '../provider/provider.js';
 import {ProviderAdapter} from '../provider/adapter.js';
@@ -132,8 +131,6 @@ export class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
 
     static get scopedElements() {
         return {
-            'dbp-auth-keycloak': AuthKeycloak,
-            'dbp-login-button': LoginButton,
             'dbp-provider': Provider,
             'dbp-provider-adapter': ProviderAdapter,
             'dbp-consumer': DemoConsumer,
@@ -194,14 +191,6 @@ export class ProviderDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 <pre>&lt;dbp-provider  id="root"  root="1" availability="global" >&lt;/dbp-provider&gt;</pre>
                 <div class="container">
                     <h1 class="title">${i18n.t('demo.provider')}-Demo</h1>
-                </div>
-                <div class="container">
-                    <dbp-auth-keycloak subscribe="requested-login-status" lang="${
-                        this.lang
-                    }" entry-point-url="${
-                        this.entryPointUrl
-                    }" url="https://auth-dev.tugraz.at/auth" realm="tugraz-vpu" client-id="auth-dev-mw-frontend-local" try-login></dbp-auth-keycloak>
-                    <dbp-login-button subscribe="auth" lang="${this.lang}"></dbp-login-button>
                 </div>
                 <dbp-provider id="demo"
                               bc="blue">
