@@ -107,7 +107,7 @@ export class DbpBaseElement extends LangMixin(
 
         // Loop through each error message
         return html`
-            <ul class="validation-errors">
+            <ul class="validation-errors" id="${this.formElementId}-errors">
                 ${this.errorMessages.map(
                     (error) => html`
                         <li>${error}</li>
@@ -115,6 +115,60 @@ export class DbpBaseElement extends LangMixin(
                 )}
             </ul>
         `;
+    }
+
+    /**
+     * Returns true if the element currently renders a description, either via the
+     * "description" attribute or via the "description" slot.
+     * @returns {boolean}
+     */
+    hasDescription() {
+        return this.querySelector('[slot="description"]') !== null || !!this.description;
+    }
+
+    /**
+     * Collects the ids of the elements that describe the input, in the order they should be
+     * announced by a screen reader. Validation errors come first, because they are the more
+     * urgent information, followed by the static description.
+     * @returns {string[]}
+     */
+    getDescribedByIds() {
+        const ids = [];
+
+        if (this.errorMessages.length) {
+            ids.push(`${this.formElementId}-errors`);
+        }
+
+        if (this.hasDescription()) {
+            ids.push(`${this.formElementId}-description`);
+        }
+
+        return ids;
+    }
+
+    /**
+     * The description and the validation errors are rendered as plain elements next to the input,
+     * so a screen reader would skip them while the user tabs through the form. Pointing the input
+     * at them via aria-describedby makes them part of the announcement of the field.
+     * This is done after rendering instead of inside renderInput(), so that every subclass gets
+     * the behaviour without having to implement it.
+     */
+    updateAriaDescribedBy() {
+        const describedBy = this.getDescribedByIds().join(' ');
+
+        // Select2 hides the native select and builds its own markup, so the elements the user
+        // actually focuses need the attribute as well
+        const targets = this.renderRoot.querySelectorAll(
+            'input, textarea, select, .select2-search__field, .select2-selection',
+        );
+
+        for (const target of targets) {
+            if (describedBy) {
+                target.setAttribute('aria-describedby', describedBy);
+            } else {
+                target.removeAttribute('aria-describedby');
+            }
+        }
     }
 
     connectedCallback() {
@@ -166,6 +220,12 @@ export class DbpBaseElement extends LangMixin(
         });
     }
 
+    updated(changedProperties) {
+        super.updated(changedProperties);
+
+        this.updateAriaDescribedBy();
+    }
+
     handleInputValue(e) {
         this.value = e.target.value;
 
@@ -192,8 +252,6 @@ export class DbpBaseElement extends LangMixin(
 
         // Check if the label slot has any assigned content
         const hasLabelSlot = this.querySelector('[slot="label"]') !== null;
-        // Check if the description slot has any assigned content
-        const hasDescriptionSlot = this.querySelector('[slot="description"]') !== null;
 
         return html`
             <fieldset>
@@ -210,9 +268,9 @@ export class DbpBaseElement extends LangMixin(
                     }
                 </label>
                 ${
-                    hasDescriptionSlot || this.description
+                    this.hasDescription()
                         ? html`
-                              <div class="description">
+                              <div class="description" id="${this.formElementId}-description">
                                   <slot name="description">${this.description}</slot>
                               </div>
                           `

@@ -295,6 +295,10 @@ export class DbpSubmissionSelectElement extends ScopedElementsMixin(DbpBaseEleme
             .on('change', this.handleInputValue.bind(this));
 
         this.syncSelect2Value();
+
+        // Select2 rebuilds its markup outside of the Lit update cycle, so the description
+        // association has to be re-applied to the newly created elements
+        this.updateAriaDescribedBy();
     }
 
     syncSelect2Value() {

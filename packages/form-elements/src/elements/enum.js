@@ -173,6 +173,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         if (selection && !selection.hasAttribute('aria-labelledby')) {
             selection.setAttribute('aria-labelledby', labelId);
         }
+
+        // Select2 rebuilds its markup outside of the Lit update cycle, so the description
+        // association has to be re-applied to the newly created elements
+        this.updateAriaDescribedBy();
     }
 
     updateSelect2Buttons() {

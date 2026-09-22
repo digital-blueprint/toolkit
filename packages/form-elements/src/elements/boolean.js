@@ -122,6 +122,13 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
         );
     }
 
+    /**
+     * @returns {boolean}
+     */
+    hasDescription() {
+        return false;
+    }
+
     render() {
         // Regenerate error messages in case the language has changed
         this.handleErrorsIfAny();
