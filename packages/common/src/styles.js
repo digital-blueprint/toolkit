@@ -1688,6 +1688,15 @@ export function getSelect2CSS() {
             border: var(--dbp-border);
             border-color: var(--dbp-muted);
         }
+
+        /* Select2 focus indicator  */
+        .select2-container--default.select2-container--focus .select2-selection--single,
+        .select2-container--default.select2-container--focus .select2-selection--multiple,
+        .select2-container--default.select2-container--open .select2-selection--single,
+        .select2-container--default.select2-container--open .select2-selection--multiple {
+            border-color: var(--dbp-content);
+            box-shadow: 0px 0px 3px 1px var(--dbp-primary);
+        }
     `;
 }
 
