@@ -3,7 +3,7 @@
         "available-permissions": "Available Permissions",
         "buttons": {
             "add-person-text": "Add new person",
-            "cancel-text": "Cancel",
+            "cancel-text": "Close",
             "delete-text": "Delete",
             "edit-text": "Edit",
             "save-all-text": "Save all",
