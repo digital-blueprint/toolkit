@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Modal: add a `focusCloseButton()` method so consumers can move focus to the modal's close button, which is otherwise unreachable behind the shadow root boundary; this lets long modal forms offer a skip link to the close action
+
 ## 0.3.16
 
 - Utils: add function createUUID

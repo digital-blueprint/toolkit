@@ -156,6 +156,25 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         modalDialog.showModal();
     }
 
+    /**
+     * Moves focus to the modal's close button. Consumers cannot reach the button
+     * themselves because it lives inside this component's shadow root, so skip
+     * links that want to offer a way out of a long modal form use this method.
+     *
+     * @returns {boolean} Whether the close button could be focused.
+     */
+    focusCloseButton() {
+        const closeButton = /** @type {HTMLElement|null} */ (
+            this.shadowRoot?.querySelector('.modal-close') ?? null
+        );
+        if (!closeButton) {
+            return false;
+        }
+
+        closeButton.focus();
+        return true;
+    }
+
     close() {
         const modalDialog = this.modalDialog;
         if (!modalDialog) {
