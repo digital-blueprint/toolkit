@@ -50,6 +50,12 @@
         "download-success-message": "Erfolgreich exportiert. Überprüfen Sie Ihren Download-Ordner auf die exportierten Dateien.",
         "error-title": "Fehler",
         "loading-table-data": "Tabellendaten werden geladen",
+        "sort": {
+            "action": "sortieren",
+            "ascending": "Nach {{column}} aufsteigend sortiert",
+            "descending": "Nach {{column}} absteigend sortiert",
+            "none": "Sortierung aufgehoben"
+        },
         "success-title": "Erfolg",
         "unsupported-type-error-message": "Nicht unterstützter Exporttyp"
     },

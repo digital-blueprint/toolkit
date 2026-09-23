@@ -66,6 +66,9 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.columnConfigurationApplying = false;
         this.columnConfigurationHeaderButton = null;
         this.columnConfigurationHeaderElement = null;
+        this.sortAnnouncement = '';
+        this.sortAnnouncementEnabled = false;
+        this.sortedColumnAnnounced = false;
     }
 
     static get scopedElements() {
@@ -118,6 +121,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             },
             columnConfigurationExcludedFields: {type: Array, attribute: false},
             currentColumnConfiguration: {type: Array, attribute: false},
+            sortAnnouncement: {type: String, attribute: false},
         };
     }
 
@@ -203,6 +207,7 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             this.tabulatorTable.off('columnVisibilityChanged');
             this.tabulatorTable.off('columnMoved');
             this.tabulatorTable.off('pageLoaded');
+            this.tabulatorTable.off('dataSorted');
         }
 
         super.disconnectedCallback();
@@ -221,8 +226,107 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         }
     }
 
+    /**
+     * Renders the title of a sortable column header as a button, so the header can be reached
+     * and activated with the keyboard. The click event of the button bubbles up to the header
+     * element, where Tabulator registers its sort listener, so no extra key handling is needed.
+     *
+     * The sort state stays on the header element, which carries Tabulator's aria-sort
+     * attribute. aria-sort is only valid on columnheader elements and must not be mirrored
+     * onto the button.
+     *
+     * @param {import('tabulator-tables').CellComponent} cell Header mock cell from Tabulator.
+     * @returns {HTMLElement|string} A button element, or the plain title for non-sortable columns.
+     */
+    buildAccessibleColumnTitle(cell) {
+        const column = cell.getColumn();
+        const definition = column.getDefinition();
+        const title = cell.getValue();
+
+        // Tabulator falls back to a non-breaking space for columns without a title, which
+        // would leave a button with no accessible name.
+        const hasTitle = !!title && title !== '&nbsp;';
+        // Column groups are rendered through the same code path but are never sortable.
+        const isColumnGroup = (column.getSubColumns?.() ?? []).length > 0;
+
+        if (!hasTitle || isColumnGroup || definition.headerSort === false) {
+            return title;
+        }
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.classList.add('tabulator-col-title-button');
+        button.textContent = title;
+
+        // The column title alone does not convey that the header triggers sorting, so a
+        // visually hidden suffix is appended. The accessible name therefore still starts with
+        // the visible text, as required by WCAG 2.5.3 "Label in Name".
+        const action = document.createElement('span');
+        action.classList.add('visually-hidden');
+        action.textContent = ' ' + this._i18n.t('tabulator-table.sort.action');
+        button.append(action);
+
+        // Tabulator appends formatter nodes without clearing the title element first, and it
+        // re-formats the title on every language change. Clearing prevents one button from
+        // stacking up per language switch.
+        cell.getElement().innerHTML = '';
+
+        return button;
+    }
+
+    /**
+     * Announces a sort change through the live region, so screen reader users notice the
+     * result without having to navigate back into the table.
+     *
+     * @param {import('tabulator-tables').SorterFromTable[]} sorters Active sorters.
+     */
+    announceSortChange(sorters) {
+        const sorter = sorters?.[0];
+
+        if (!sorter) {
+            // Tabulator also reports an empty sorter list whenever unsorted data is replaced,
+            // so the removal is only worth announcing if something was sorted before.
+            const wasSorted = this.sortedColumnAnnounced;
+            this.sortedColumnAnnounced = false;
+            this.setSortAnnouncement(wasSorted ? this._i18n.t('tabulator-table.sort.none') : '');
+            return;
+        }
+
+        this.sortedColumnAnnounced = true;
+        const definition = sorter.column?.getDefinition?.() ?? {};
+        // Mirror Tabulator's own title resolution so the announcement matches the header.
+        const columnTitle =
+            this.getLang()?.columns?.[sorter.field] || definition.title || sorter.field;
+        const key = sorter.dir === 'desc' ? 'descending' : 'ascending';
+
+        this.setSortAnnouncement(
+            this._i18n.t(`tabulator-table.sort.${key}`, {column: columnTitle}),
+        );
+    }
+
+    /**
+     * Writes a message into the live region. Screen readers ignore an update that does not
+     * change the text, so the region is cleared first to make repeated sorts audible.
+     *
+     * @param {string} message
+     */
+    setSortAnnouncement(message) {
+        this.sortAnnouncement = '';
+
+        if (!message) {
+            return;
+        }
+
+        requestAnimationFrame(() => {
+            this.sortAnnouncement = message;
+        });
+    }
+
     buildTable() {
         this.defaultPaginationSize = this.paginationSize;
+        // A rebuild sorts the data again without user interaction.
+        this.sortAnnouncementEnabled = false;
+        this.sortedColumnAnnounced = false;
         if (this.collapseEnabled) {
             // this.options['layout'] = 'fitDataFill';
             this.options['responsiveLayout'] = 'collapse';
@@ -292,6 +396,16 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         if (this.options.data) {
             this.data = this.options.data;
         }
+
+        // Sortable column headers are plain divs in Tabulator and therefore not reachable by
+        // keyboard. Injecting a real button into the column title makes them focusable and
+        // operable, because the button's click event bubbles up to the header element that
+        // carries Tabulator's sort listener.
+        this.options['columnDefaults'] = {
+            ...this.options['columnDefaults'],
+        };
+        this.options['columnDefaults']['titleFormatter'] ??= (cell) =>
+            this.buildAccessibleColumnTitle(cell);
 
         if (!this._(`#${this.identifier}`)) {
             console.warn('buildTable: container element not found for', this.identifier);
@@ -368,6 +482,14 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 this.syncCurrentColumnConfiguration();
             }
             this.placeColumnConfigurationButtonInHeader();
+        });
+        this.tabulatorTable.on('dataSorted', (sorters) => {
+            // The initial sort happens while the table is being built and is not the result of
+            // a user action, so it must not be announced.
+            if (!this.sortAnnouncementEnabled) {
+                return;
+            }
+            this.announceSortChange(sorters);
         });
         this.tabulatorTable.on('columnMoved', () => {
             if (this.columnConfigurationEnabled && !this.columnConfigurationApplying) {
@@ -482,6 +604,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
 
         this.tableReady = true;
         this.tableBuilding = false;
+        // From here on every sort is triggered by the user and should be announced.
+        this.sortAnnouncementEnabled = true;
     }
 
     rowClickFunction(e, row) {
@@ -1434,6 +1558,10 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         return html`
             <div class="wrapper">
                 <link rel="stylesheet" href="${tabulatorCss}" />
+
+                <div class="visually-hidden" role="status" aria-live="polite">
+                    ${this.sortAnnouncement}
+                </div>
 
                 ${
                     this.columnConfigurationEnabled

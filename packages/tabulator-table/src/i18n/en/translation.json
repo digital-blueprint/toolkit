@@ -50,6 +50,12 @@
         "download-success-message": "Successful export. Check your download folder for the exported files.",
         "error-title": "Error",
         "loading-table-data": "Loading table data",
+        "sort": {
+            "action": "sort",
+            "ascending": "Sorted by {{column}} ascending",
+            "descending": "Sorted by {{column}} descending",
+            "none": "Sorting removed"
+        },
         "success-title": "Success",
         "unsupported-type-error-message": "Unsupported export type"
     },

@@ -84,6 +84,110 @@ suite('dbp-tabulator-table basics', () => {
         assert.equal(getComputedStyle(sortArrow).borderTopColor, accentColor);
     });
 
+    test('renders sortable column titles as keyboard operable buttons', async () => {
+        const tableBuilt = new Promise((resolve) =>
+            node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),
+        );
+        node.options = {
+            columns: [
+                {
+                    title: 'Contact',
+                    columns: [
+                        {title: 'Name', field: 'name'},
+                        {title: 'Email', field: 'email'},
+                    ],
+                },
+                {title: 'Actions', field: 'actions', headerSort: false},
+            ],
+            data: [{name: 'Ada', email: 'ada@example.com', actions: ''}],
+        };
+        await node.updateComplete;
+        await tableBuilt;
+
+        const titleButton = (field) =>
+            node.tabulatorTable
+                .getColumn(field)
+                .getElement()
+                .querySelector('.tabulator-col-title > .tabulator-col-title-button');
+
+        const nameButton = titleButton('name');
+        assert.isNotNull(nameButton);
+        assert.equal(nameButton.type, 'button');
+        assert.include(nameButton.textContent, 'Name');
+
+        // Columns with sorting disabled must not pretend to be actionable.
+        assert.isNull(titleButton('actions'));
+
+        // Column groups are rendered through the same code path but are never sortable.
+        const groupHeader = node.tabulatorTable.getColumn('name').getElement()
+            .parentElement.parentElement;
+        assert.isNull(groupHeader.querySelector(':scope > .tabulator-col-content button'));
+
+        // The sort arrow lives outside the title element and must survive the formatter.
+        assert.isNotNull(
+            node.tabulatorTable.getColumn('name').getElement().querySelector('.tabulator-arrow'),
+        );
+
+        // The button takes over the vertical padding of the title, so the focus indicator
+        // covers the full height of the header cell instead of just the line of text.
+        const nameTitle = node.tabulatorTable
+            .getColumn('name')
+            .getElement()
+            .querySelector('.tabulator-col-title');
+        assert.equal(getComputedStyle(nameTitle).paddingTop, '0px');
+        assert.equal(getComputedStyle(nameTitle).overflow, 'visible');
+        assert.equal(
+            nameButton.getBoundingClientRect().height,
+            nameTitle.getBoundingClientRect().height,
+        );
+    });
+
+    test('does not duplicate header buttons on language change', async () => {
+        const tableBuilt = new Promise((resolve) =>
+            node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),
+        );
+        node.options = {
+            langs: {en: {}, de: {}},
+            columns: [{title: 'Name', field: 'name'}],
+            data: [{name: 'Ada'}],
+        };
+        await node.updateComplete;
+        await tableBuilt;
+
+        node.lang = 'de';
+        await node.updateComplete;
+        node.lang = 'en';
+        await node.updateComplete;
+
+        const buttons = node.tabulatorTable
+            .getColumn('name')
+            .getElement()
+            .querySelectorAll('.tabulator-col-title-button');
+        assert.equal(buttons.length, 1);
+    });
+
+    test('announces a sort change in the live region', async () => {
+        const tableBuilt = new Promise((resolve) =>
+            node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),
+        );
+        node.options = {
+            columns: [{title: 'Name', field: 'name'}],
+            data: [{name: 'Ada'}, {name: 'Grace'}],
+        };
+        await node.updateComplete;
+        await tableBuilt;
+
+        const liveRegion = node.shadowRoot.querySelector('[role="status"]');
+        assert.isNotNull(liveRegion);
+        assert.equal(liveRegion.getAttribute('aria-live'), 'polite');
+
+        node.tabulatorTable.setSort('name', 'desc');
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        await node.updateComplete;
+
+        assert.equal(liveRegion.textContent.trim(), 'Sorted by Name descending');
+    });
+
     test('optionally places column configuration in the rightmost header', async () => {
         const tableBuilt = new Promise((resolve) =>
             node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),

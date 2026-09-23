@@ -26,6 +26,52 @@ export function getTabulatorStyles() {
             font-size: 1rem;
         }
 
+        /* The button takes over the vertical padding of the title, so it can cover the full
+           height of the header cell. The title must not clip its overflow either, otherwise
+           the focus indicator of the button would be cut off. */
+        .tabulator
+            .tabulator-header
+            .tabulator-col.tabulator-sortable
+            .tabulator-col-content
+            .tabulator-col-title:has(> .tabulator-col-title-button) {
+            padding-top: 0;
+            padding-bottom: 0;
+            overflow: visible;
+        }
+
+        /* The title of a sortable column is rendered as a button so the header can be operated
+           with the keyboard. It has to look exactly like the plain title did before, and it
+           keeps the shared focus indicator of all buttons. The surrounding padding of the
+           header content leaves just enough room for that indicator. */
+        .tabulator .tabulator-header .tabulator-col-title > .tabulator-col-title-button {
+            display: block;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            padding-left: 0;
+            padding-right: 0;
+            border: none;
+            background: none;
+            font: inherit;
+            color: inherit;
+            text-align: inherit;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .visually-hidden {
+            position: absolute !important;
+            clip: rect(1px, 1px, 1px, 1px);
+            overflow: hidden;
+            height: 1px;
+            width: 1px;
+            word-wrap: normal;
+        }
+
         .tabulator,
         .tabulator .tabulator-header,
         .tabulator .tabulator-header .tabulator-col,

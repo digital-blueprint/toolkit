@@ -61,6 +61,9 @@ export async function generatePDFDownload(tabulatorTable, data, dataName) {
 }
 
 export async function downloadExcel(rows, dataName) {
+    // getLang() with no argument returns the fully-merged current-locale lang object,
+    // which is the same data Tabulator uses to render column headers.
+    const langObj = rows[0]?.getTable?.()?.getLang?.();
     let entries = [];
     for (let row of rows) {
         let cells = row.getCells();
@@ -76,18 +79,7 @@ export async function downloadExcel(rows, dataName) {
                 continue;
             }
             let field = cell.getField();
-            let title = null;
             if (field !== 'empty' && field !== 'undefined' && definition.formatter !== 'html') {
-                if (
-                    'titleFormatter' in definition &&
-                    typeof definition.titleFormatter === 'function'
-                ) {
-                    title = definition.titleFormatter(
-                        cell,
-                        definition['titleFormatterParams'] || {},
-                        null,
-                    );
-                }
                 let cellValue = cell.getValue();
                 if ('formatter' in definition && typeof definition.formatter === 'function') {
                     cellValue = definition.formatter(
@@ -96,7 +88,10 @@ export async function downloadExcel(rows, dataName) {
                         null,
                     );
                 }
-                const headerLabel = title || definition.title || field;
+                // Mirror Tabulator's own title resolution: langs.columns[field] → definition.title
+                // → field. The titleFormatter is deliberately not called here: it renders DOM for
+                // the table header and cannot produce a spreadsheet label.
+                const headerLabel = langObj?.columns?.[field] || definition.title || field;
 
                 // Skip empty cells without header labels
                 if (!headerLabel && !cellValue) continue;
