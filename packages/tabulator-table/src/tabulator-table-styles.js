@@ -179,7 +179,7 @@ export function getTabulatorStyles() {
         /* Define the style when the column is sorted in ascending order */
         .tabulator
             .tabulator-header
-            .tabulator-col.tabulator-sortable[aria-sort='asc']
+            .tabulator-col.tabulator-sortable[aria-sort='ascending']
             .tabulator-col-content
             .tabulator-col-sorter
             .tabulator-arrow {
@@ -190,7 +190,7 @@ export function getTabulatorStyles() {
         /* Define the style when the column is sorted in descending order */
         .tabulator
             .tabulator-header
-            .tabulator-col.tabulator-sortable[aria-sort='desc']
+            .tabulator-col.tabulator-sortable[aria-sort='descending']
             .tabulator-col-content
             .tabulator-col-sorter
             .tabulator-arrow {

@@ -4,3 +4,4 @@
 
 - Add `pagination-size-storage-key` for application-scoped pagination-size persistence
 - Add the current page and pagination size to pagination event details and emit an event when the page-size selector changes
+- Fix the active column sorting marker for ascending and descending sorting

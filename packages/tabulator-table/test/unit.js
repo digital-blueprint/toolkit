@@ -49,6 +49,41 @@ suite('dbp-tabulator-table basics', () => {
         assert.isNull(node.loadPaginationSize());
     });
 
+    test('marks the column and direction used for sorting', async () => {
+        const tableBuilt = new Promise((resolve) =>
+            node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),
+        );
+        node.options = {
+            columns: [
+                {title: 'Name', field: 'name'},
+                {title: 'Email', field: 'email'},
+            ],
+            data: [
+                {name: 'Ada', email: 'ada@example.com'},
+                {name: 'Grace', email: 'grace@example.com'},
+            ],
+        };
+        await node.updateComplete;
+        await tableBuilt;
+
+        node.tabulatorTable.setSort('name', 'asc');
+
+        const nameHeader = node.tabulatorTable.getColumn('name').getElement();
+        const emailHeader = node.tabulatorTable.getColumn('email').getElement();
+        const sortArrow = nameHeader.querySelector('.tabulator-arrow');
+        const accentColorProbe = document.createElement('span');
+        accentColorProbe.style.color = 'var(--dbp-accent)';
+        node.shadowRoot.append(accentColorProbe);
+        const accentColor = getComputedStyle(accentColorProbe).color;
+        assert.equal(nameHeader.getAttribute('aria-sort'), 'ascending');
+        assert.equal(emailHeader.getAttribute('aria-sort'), 'none');
+        assert.equal(getComputedStyle(sortArrow).borderBottomColor, accentColor);
+
+        node.tabulatorTable.setSort('name', 'desc');
+        assert.equal(nameHeader.getAttribute('aria-sort'), 'descending');
+        assert.equal(getComputedStyle(sortArrow).borderTopColor, accentColor);
+    });
+
     test('optionally places column configuration in the rightmost header', async () => {
         const tableBuilt = new Promise((resolve) =>
             node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),
