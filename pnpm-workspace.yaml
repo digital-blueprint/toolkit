@@ -1,6 +1,6 @@
 packages:
-    - 'packages/*'
-    - 'toolkit-showcase'
+  - "packages/*"
+  - "toolkit-showcase"
 linkWorkspacePackages: true
 ignoreScripts: true
 engineStrict: true
