@@ -132,6 +132,19 @@ suite('dbp-form-enum-element', () => {
         assert.isNotNull(node.shadowRoot);
     });
 
+    test('keeps the required mark beside a slotted label with block content', async () => {
+        const label = document.createElement('span');
+        label.slot = 'label';
+        label.innerHTML = '<div>A label containing a link</div>';
+        node.appendChild(label);
+        node.required = true;
+        await node.updateComplete;
+
+        const requiredMark = node.shadowRoot.querySelector('.required-mark');
+
+        assert.equal(requiredMark.getBoundingClientRect().top, label.getBoundingClientRect().top);
+    });
+
     test('makes tag removal controls accessible and translatable', async () => {
         node.remove();
         node = document.createElement('dbp-form-enum-element');

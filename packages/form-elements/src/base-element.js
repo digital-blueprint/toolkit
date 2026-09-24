@@ -204,6 +204,15 @@ export class DbpBaseElement extends LangMixin(
                 .required-mark {
                     color: var(--dbp-danger);
                 }
+
+                .slotted-label {
+                    display: flex;
+                    align-items: baseline;
+                }
+
+                .slotted-label .required-mark {
+                    flex-shrink: 0;
+                }
             `,
         ];
     }
@@ -255,7 +264,10 @@ export class DbpBaseElement extends LangMixin(
 
         return html`
             <fieldset>
-                <label id="${this.formElementId}-label" for="${this.formElementId}">
+                <label
+                    id="${this.formElementId}-label"
+                    for="${this.formElementId}"
+                    class="${hasLabelSlot ? 'slotted-label' : ''}">
                     <slot name="label">${this.label}</slot>
                     ${
                         this.required && (hasLabelSlot || this.label)
