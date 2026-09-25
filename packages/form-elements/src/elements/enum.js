@@ -28,6 +28,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         this.$select = null;
         select2(window, $);
         this.tagPlaceholder = null;
+        this.tagAriaLabel = null;
         this.disabledItems = [];
         // Index of the tag that was removed last, used to restore the focus afterwards
         /** @type {number|null} */
@@ -46,6 +47,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
             displayMode: {type: String, attribute: 'display-mode'},
             items: {type: Object},
             tagPlaceholder: {type: Object},
+            tagAriaLabel: {type: Object},
             disabledItems: {type: Array},
         };
     }
@@ -137,6 +139,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 dropdownParent: this.$('#select-dropdown'),
                 data: commonUtils.keyValueObjectToSelect2DataArray(this.items),
             })
+            .on('select2:select.dbp-enum', () => {
+                // Return focus to the search field after Select2 has rendered the new tag.
+                requestAnimationFrame(() => this.focusTagSearchField());
+            })
             // https://select2.org/programmatic-control/events
             // select2:clear will trigger select2:unselect and change for each selected item
             .on('change.dbp-enum', (event) => {
@@ -166,12 +172,27 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         const searchField = this.renderRoot.querySelector('.select2-search__field');
         if (searchField) {
             searchField.setAttribute('aria-labelledby', labelId);
+            const ariaLabel = this.tagAriaLabel?.[this.lang];
+            if (ariaLabel) {
+                searchField.setAttribute('aria-label', ariaLabel);
+            } else {
+                searchField.removeAttribute('aria-label');
+            }
         }
 
         // The combobox itself only gets a name if select2 didn't set one already
         const selection = this.renderRoot.querySelector('.select2-selection--multiple');
-        if (selection && !selection.hasAttribute('aria-labelledby')) {
-            selection.setAttribute('aria-labelledby', labelId);
+        if (selection) {
+            if (!selection.hasAttribute('aria-labelledby')) {
+                selection.setAttribute('aria-labelledby', labelId);
+            }
+
+            const ariaLabel = this.tagAriaLabel?.[this.lang];
+            if (ariaLabel) {
+                selection.setAttribute('aria-label', ariaLabel);
+            } else {
+                selection.removeAttribute('aria-label');
+            }
         }
 
         // Select2 rebuilds its markup outside of the Lit update cycle, so the description
@@ -224,6 +245,15 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         };
 
         this.moveClearButtonToEnd(clearButton);
+    }
+
+    focusTagSearchField() {
+        const searchField = /** @type {HTMLInputElement|null} */ (
+            this.renderRoot.querySelector('.select2-search__field')
+        );
+        if (searchField) {
+            searchField.focus();
+        }
     }
 
     /**

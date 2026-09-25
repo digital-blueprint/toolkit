@@ -179,6 +179,40 @@ suite('dbp-form-enum-element', () => {
         clearButton.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
         assert.deepEqual(node.value, []);
     });
+
+    test('labels the tag search field for adding another item', async () => {
+        node.remove();
+        node = document.createElement('dbp-form-enum-element');
+        node.displayMode = 'tags';
+        node.multiple = true;
+        node.label = 'Areas of interest';
+        node.tagAriaLabel = {
+            de: 'Weiteren Eintrag zu Interessensgebieten hinzufügen',
+            en: 'Add another area of interest',
+        };
+        node.items = {item1: 'Item 1'};
+        document.body.appendChild(node);
+
+        const searchField = await waitFor(() =>
+            node.shadowRoot.querySelector('.select2-search__field'),
+        );
+        const selection = node.shadowRoot.querySelector('.select2-selection--multiple');
+
+        assert.equal(
+            searchField.getAttribute('aria-label'),
+            'Weiteren Eintrag zu Interessensgebieten hinzufügen',
+        );
+        assert.equal(
+            selection.getAttribute('aria-label'),
+            'Weiteren Eintrag zu Interessensgebieten hinzufügen',
+        );
+
+        node.lang = 'en';
+        await node.updateComplete;
+
+        assert.equal(searchField.getAttribute('aria-label'), 'Add another area of interest');
+        assert.equal(selection.getAttribute('aria-label'), 'Add another area of interest');
+    });
 });
 
 suite('dbp-form-string-element', () => {
