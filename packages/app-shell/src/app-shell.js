@@ -749,21 +749,37 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
         window.addEventListener('scroll', debouncedToggleScrollButton, {passive: true});
 
-        scrollTopBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth',
-            });
-        });
-        scrollBottomBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            window.scrollTo({
-                top: document.documentElement.scrollHeight,
-                behavior: 'smooth',
-            });
-        });
         debouncedToggleScrollButton();
+    }
+
+    /**
+     * Scrolls to the top of the page and moves the keyboard focus to the main content,
+     * so keyboard users continue from the beginning of the page.
+     * @param {Event} event
+     */
+    _scrollToTop(event) {
+        event.preventDefault();
+        // Focus without scrolling, otherwise the browser would jump instantly
+        // and cancel the smooth scrolling below
+        this._('#main-content')?.focus({preventScroll: true});
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    }
+
+    /**
+     * Scrolls to the bottom of the page and moves the keyboard focus to the footer,
+     * so keyboard users continue from the end of the page.
+     * @param {Event} event
+     */
+    _scrollToBottom(event) {
+        event.preventDefault();
+        this._('#page-footer')?.focus({preventScroll: true});
+        window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth',
+        });
     }
 
     static get styles() {
@@ -793,6 +809,13 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 max-width: 1400px;
                 margin: auto;
                 min-height: 100vh;
+            }
+
+            /* These are only focusable programmatically (tabindex="-1"), so we don't
+               want a focus ring around the whole content area or footer */
+            #main-content:focus,
+            #page-footer:focus {
+                outline: none;
             }
 
             #main-logo {
@@ -1082,12 +1105,15 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             .scroll-button {
                 padding: 0.5em;
                 opacity: 0;
+                /* Hidden buttons must not be reachable by mouse or keyboard */
+                visibility: hidden;
                 pointer-events: none;
                 color: var(--dbp-background);
                 font-size: 1.25em;
                 transition:
                     opacity 0.3s ease,
-                    color 0.3s ease;
+                    color 0.3s ease,
+                    visibility 0.3s ease;
                 cursor: pointer;
                 background-color: var(--dbp-accent);
                 border: none;
@@ -1095,6 +1121,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
             .scroll-button.visible {
                 opacity: 1;
+                visibility: visible;
                 pointer-events: auto;
             }
 
@@ -2272,7 +2299,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                         </ul>
                     </aside>
 
-                    <main>
+                    <main id="main-content" tabindex="-1">
                         <div
                             style="display: ${
                                 this.activeView && !this.metadata[this.activeView]
@@ -2293,6 +2320,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     visible: this.isScrollTopButtonVisible,
                                 })}"
                                 title="${i18n.t('buttons.scroll-to-top-button-label')}"
+                                tabindex="${this.isScrollTopButtonVisible ? 0 : -1}"
+                                @click="${this._scrollToTop}"
                                 aria-label="${i18n.t('buttons.scroll-to-top-button-label')}">
                                 <dbp-icon name="chevron-up" aria-hidden="true"></dbp-icon>
                             </button>
@@ -2302,12 +2331,14 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     visible: this.isScrollBottomButtonVisible,
                                 })}"
                                 title="${i18n.t('buttons.scroll-to-bottom-button-label')}"
+                                tabindex="${this.isScrollBottomButtonVisible ? 0 : -1}"
+                                @click="${this._scrollToBottom}"
                                 aria-label="${i18n.t('buttons.scroll-to-bottom-button-label')}">
                                 <dbp-icon name="chevron-down" aria-hidden="true"></dbp-icon>
                             </button>
                         </div>
                     </main>
-                    <footer>
+                    <footer id="page-footer" tabindex="-1">
                         <slot name="footer">
                             <slot name="footer-links">
                                 <a rel="noopener" class="" href="#use-your-privacy-policy-link">
