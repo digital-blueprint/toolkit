@@ -1,0 +1,10 @@
+import '../src/index.js';
+import '../src/demo.js';
+import '../src/build/boolean.js';
+import '../src/build/date.js';
+import '../src/build/datetime.js';
+import '../src/build/enum.js';
+import '../src/build/number.js';
+import '../src/build/string.js';
+import '../src/build/submission-select.js';
+import '../src/build/time.js';

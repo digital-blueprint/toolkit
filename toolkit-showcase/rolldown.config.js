@@ -25,7 +25,7 @@ const buildFull = (!watch && appEnv !== 'test') || process.env.FORCE_FULL !== un
 let doMinify = buildFull;
 let transform = buildFull;
 let checkLicenses = buildFull;
-let treeshake = buildFull;
+const treeshake = appEnv !== 'test' && buildFull;
 let nodeEnv = buildFull ? 'production' : 'development';
 
 console.log('APP_ENV: ' + appEnv);
@@ -77,7 +77,10 @@ export default {
     transform: {
         target: transform ? ['chrome106', 'firefox110', 'safari16'] : 'esnext',
     },
-    input: appEnv != 'test' ? globSync('src/dbp-*.js') : globSync('test/**/*.js'),
+    input:
+        appEnv != 'test'
+            ? globSync('src/dbp-*.js')
+            : globSync('test/**/*.js').filter((file) => file !== 'test/runner.js'),
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',

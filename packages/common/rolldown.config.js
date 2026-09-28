@@ -11,7 +11,11 @@ const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
 console.log('build: ' + build);
 
 export default {
-    input: build != 'test' ? ['src/demo/demo.js', 'src/components.js'] : globSync('test/**/*.js'),
+    input:
+        build != 'test'
+            ? ['src/demo/demo.js', 'src/components.js']
+            : globSync('test/**/*.js').filter((file) => file !== 'test/runner.js'),
+    treeshake: build !== 'test',
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',

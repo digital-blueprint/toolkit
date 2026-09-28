@@ -14,7 +14,8 @@ export default {
     input:
         build != 'test'
             ? ['src/dbp-language-select.js', 'src/dbp-language-select-demo.js']
-            : globSync('test/**/*.js'),
+            : globSync('test/**/*.js').filter((file) => file !== 'test/runner.js'),
+    treeshake: build !== 'test',
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',

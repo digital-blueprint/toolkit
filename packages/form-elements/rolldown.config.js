@@ -30,7 +30,8 @@ export default {
                   'src/build/time.js',
                   'src/demo.js',
               ]
-            : globSync('test/**/*.js'),
+            : globSync('test/**/*.js').filter((file) => file !== 'test/runner.js'),
+    treeshake: build !== 'test',
     output: {
         dir: 'dist',
         entryFileNames: '[name].js',

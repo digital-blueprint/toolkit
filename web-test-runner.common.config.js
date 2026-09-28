@@ -1,7 +1,9 @@
 import process from 'node:process';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {globSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
+import {defaultReporter} from '@web/test-runner';
 import {playwrightLauncher} from '@web/test-runner-playwright';
 
 import {registry} from 'playwright-core/lib/coreBundle';
@@ -36,29 +38,63 @@ function getPortFromDirectory() {
 
 await setup();
 
-export default {
-    files: 'dist/*.js',
-    port: getPortFromDirectory(),
-    testFramework: {
-        config: {
-            ui: 'tdd',
-            timeout: 2000 * (process.env.CI === undefined ? 1 : 10),
+export function createWebTestRunnerConfig(includeDirs = ['src']) {
+    const sourceDirs = includeDirs.map((dir) => path.resolve(process.cwd(), dir) + path.sep);
+
+    return {
+        files: 'test/runner.js',
+        port: getPortFromDirectory(),
+        plugins: [
+            {
+                name: 'bundled-test-entries',
+                serve(context) {
+                    if (context.path !== '/test/runner.js') return;
+                    const entries = globSync('dist/*.js').sort();
+                    if (entries.length === 0)
+                        throw new Error('Build the tests before running them.');
+                    return entries
+                        .map((file) => `import ${JSON.stringify(`../${file}`)};`)
+                        .join('\n');
+                },
+            },
+        ],
+        reporters: [
+            {
+                onTestRunFinished({testCoverage}) {
+                    if (!testCoverage) return;
+                    // Filter after source-map remapping to exclude dependencies and test code.
+                    testCoverage.coverageMap.filter(
+                        (file) =>
+                            file.endsWith('.js') && sourceDirs.some((dir) => file.startsWith(dir)),
+                    );
+                    testCoverage.summary = testCoverage.coverageMap.getCoverageSummary().data;
+                },
+            },
+            defaultReporter(),
+        ],
+        testFramework: {
+            config: {
+                ui: 'tdd',
+                timeout: 2000 * (process.env.CI === undefined ? 1 : 10),
+            },
         },
-    },
-    browsers: [
-        playwrightLauncher({
-            product: 'firefox',
-            launchOptions: {
-                executablePath: process.env.FIREFOX_BIN,
-                headless: true,
-            },
-        }),
-        playwrightLauncher({
-            product: 'chromium',
-            launchOptions: {
-                executablePath: process.env.CHROMIUM_BIN,
-                headless: true,
-            },
-        }),
-    ],
-};
+        browsers: [
+            playwrightLauncher({
+                product: 'firefox',
+                launchOptions: {
+                    executablePath: process.env.FIREFOX_BIN,
+                    headless: true,
+                },
+            }),
+            playwrightLauncher({
+                product: 'chromium',
+                launchOptions: {
+                    executablePath: process.env.CHROMIUM_BIN,
+                    headless: true,
+                },
+            }),
+        ],
+    };
+}
+
+export default createWebTestRunnerConfig();

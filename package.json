@@ -14,6 +14,7 @@
     },
     "scripts": {
         "test": "lerna --no-sort run --no-bail test",
+        "test:coverage": "npm --workspaces --if-present run test:coverage",
         "check": "lerna --no-sort run --no-bail check",
         "fix": "lerna --no-sort run --no-bail fix",
         "build": "lerna --no-sort run --no-bail build",

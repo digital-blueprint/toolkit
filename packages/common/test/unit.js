@@ -1,4 +1,7 @@
 import {expect, assert} from 'chai';
+// Load modules outside the test import graph so they appear in bundled coverage.
+import '../src/error.js';
+import '../src/demo/demo.js';
 import * as utils from '../src/common-utils.js';
 import * as styles from '../src/styles.js';
 import {combineURLs} from '../src/index.js';
