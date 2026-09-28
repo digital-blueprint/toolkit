@@ -205,12 +205,19 @@ suite('dbp-resource-select basics', () => {
         );
         assert.isNotNull(clear);
 
+        // Select2 can create the clear button before its stylesheet and all choices are ready.
+        const choices = await waitFor(() => {
+            const stylesheet = node.shadowRoot.querySelector('link[rel="stylesheet"]');
+            const entries = node.shadowRoot.querySelectorAll('.select2-selection__choice');
+            return stylesheet?.sheet && entries.length === node.values.length ? entries : null;
+        });
+        assert.isNotNull(choices, 'the styled selection should contain all entries');
+        await document.fonts.ready;
+
         const box = node.shadowRoot
             .querySelector('.select2-selection--multiple')
             .getBoundingClientRect();
-        const entries = [...node.shadowRoot.querySelectorAll('.select2-selection__choice')].map(
-            (entry) => entry.getBoundingClientRect(),
-        );
+        const entries = [...choices].map((entry) => entry.getBoundingClientRect());
         const rect = clear.getBoundingClientRect();
 
         assert.isAbove(box.height, 40, 'the entries should wrap for this test to be meaningful');
