@@ -20,7 +20,55 @@
  * @param {string} [options.targetNotificationId] - ID of specific notification component to target (if the handler supports it)
  * @param {string} [options.replaceId] - Unique identifier to replace existing notifications with the same replaceId (if the handler supports it)
  */
+/** @type {HTMLDivElement | null} */
+let notificationLiveRegion = null;
+/** @type {ReturnType<typeof setTimeout> | null} */
+let notificationAnnouncementTimer = null;
+
+function getNotificationLiveRegion() {
+    if (notificationLiveRegion || typeof document === 'undefined' || !document.body) {
+        return notificationLiveRegion;
+    }
+
+    notificationLiveRegion = document.createElement('div');
+    notificationLiveRegion.id = 'dbp-notification-live-region';
+    notificationLiveRegion.setAttribute('aria-atomic', 'true');
+    notificationLiveRegion.style.position = 'absolute';
+    notificationLiveRegion.style.width = '1px';
+    notificationLiveRegion.style.height = '1px';
+    notificationLiveRegion.style.padding = '0';
+    notificationLiveRegion.style.margin = '-1px';
+    notificationLiveRegion.style.overflow = 'hidden';
+    notificationLiveRegion.style.clip = 'rect(0, 0, 0, 0)';
+    notificationLiveRegion.style.whiteSpace = 'nowrap';
+    notificationLiveRegion.style.border = '0';
+    document.body.appendChild(notificationLiveRegion);
+
+    return notificationLiveRegion;
+}
+
+function announceNotification(options) {
+    const liveRegion = getNotificationLiveRegion();
+    if (!liveRegion) {
+        return;
+    }
+
+    const isAlert = options.type === 'warning' || options.type === 'danger';
+    liveRegion.setAttribute('role', isAlert ? 'alert' : 'status');
+    liveRegion.setAttribute('aria-live', isAlert ? 'assertive' : 'polite');
+    liveRegion.textContent = '';
+    if (notificationAnnouncementTimer) {
+        clearTimeout(notificationAnnouncementTimer);
+    }
+    notificationAnnouncementTimer = setTimeout(() => {
+        liveRegion.textContent = [options.summary, options.body].filter(Boolean).join(': ');
+        notificationAnnouncementTimer = null;
+    }, 100);
+}
+
 function sendNotification(options) {
+    announceNotification(options);
+
     const event = new CustomEvent('dbp-notification-send', {
         bubbles: true,
         cancelable: true,
@@ -34,6 +82,10 @@ function sendNotification(options) {
         alert([options.summary, options.body].filter(Boolean).join(':\n\n'));
         console.log('Use the web component dbp-notification to show fancy notifications.');
     }
+}
+
+if (typeof document !== 'undefined' && document.body) {
+    getNotificationLiveRegion();
 }
 
 export {sendNotification};

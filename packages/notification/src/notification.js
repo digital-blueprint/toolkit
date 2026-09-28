@@ -1,9 +1,10 @@
 import {createUUID} from '@dbp-toolkit/common/utils';
 import {css, html} from 'lit';
 import {repeat} from 'lit/directives/repeat.js';
-import {ScopedElementsMixin, Icon} from '@dbp-toolkit/common';
+import {LangMixin, ScopedElementsMixin, Icon} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import {createInstance} from './i18n';
 
 /**
  * Safely renders text with newlines converted to <br> elements.
@@ -36,6 +37,7 @@ class NotificationItem extends ScopedElementsMixin(DBPLitElement) {
         this.timeout = 0;
         this.icon = '';
         this.replaceId = null;
+        this.closeLabel = 'Close notification';
 
         this.notificationId = null;
         this.targetNotificationId = null;
@@ -57,6 +59,7 @@ class NotificationItem extends ScopedElementsMixin(DBPLitElement) {
             timeout: {type: Number},
             icon: {type: String},
             replaceId: {type: String},
+            closeLabel: {type: String},
             notificationId: {type: String, reflect: true},
         };
     }
@@ -170,11 +173,14 @@ class NotificationItem extends ScopedElementsMixin(DBPLitElement) {
         const progressStyle = this.timeout > 0 ? `--dbp-progress-timeout: ${this.timeout}s;` : '';
 
         return html`
-            <div class="notification is-${this.type} ${progressClass} enter-animation">
+            <div
+                class="notification is-${this.type} ${progressClass} enter-animation"
+                role="${this.type === 'warning' || this.type === 'danger' ? 'alert' : 'status'}"
+                aria-atomic="true">
                 <button
                     class="delete"
                     @click=${this.handleDelete}
-                    aria-label="Close notification"></button>
+                    aria-label="${this.closeLabel}"></button>
                 ${
                     this.summary
                         ? html`
@@ -209,7 +215,7 @@ class NotificationItem extends ScopedElementsMixin(DBPLitElement) {
 /**
  * Notification web component
  */
-export class Notification extends ScopedElementsMixin(DBPLitElement) {
+export class Notification extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
         this.notifications = [];
@@ -337,6 +343,15 @@ export class Notification extends ScopedElementsMixin(DBPLitElement) {
                 padding: 0;
             }
 
+            .visually-hidden {
+                position: absolute !important;
+                clip: rect(1px, 1px, 1px, 1px);
+                overflow: hidden;
+                height: 1px;
+                width: 1px;
+                word-wrap: normal;
+            }
+
             :host([inline]) .notification-container {
                 top: 0;
                 right: 0;
@@ -374,6 +389,7 @@ export class Notification extends ScopedElementsMixin(DBPLitElement) {
                             .timeout=${notification.timeout}
                             .icon=${notification.icon}
                             .replaceId=${notification.replaceId}
+                            .closeLabel=${this._i18n.t('close-notification')}
                             .notificationId=${notification.id}
                             @dbp-notification-close=${(e) => {
                                 this._removeById(notification.id, e.detail.automatic);
