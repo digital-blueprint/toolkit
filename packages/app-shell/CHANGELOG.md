@@ -2,6 +2,7 @@
 
 ## Unreleased (0.3.19)
 
+- Improve the accessibility of the menu: use a `nav` landmark instead of an `aside`, toggle visibility via `hidden` so a closed menu is not removed from the accessibility tree
 - Preserve query parameters and URL fragments when an activity changes `routing-url`, including changes that do not alter the activity route
 
 ## 0.3.16

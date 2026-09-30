@@ -2403,7 +2403,7 @@ export function wideLayout() {
             display: inline;
         }
 
-        aside ul.menu,
+        .mobile-menu ul.menu,
         footer ul.menu {
             list-style: none;
         }
@@ -2469,32 +2469,13 @@ export function wideLayout() {
             padding-right: 0.3em;
         }
 
-        aside .subtitle {
-            display: none;
-            color: var(--dbp-content);
-            font-size: 1.25rem;
-            font-weight: 300;
-            line-height: 1.25;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        aside h2.subtitle {
-            display: block;
-            padding: 0.5em 0.5em;
-        }
-
-        aside .menu {
+        .mobile-menu .menu {
             grid-area: headline !important;
             border-top-width: 0px;
             background-color: var(--dbp-background);
             border-bottom: var(--dbp-border);
             z-index: 10;
             width: 100%;
-        }
-
-        ul.menu.hidden {
-            display: none !important;
         }
 
         a {
@@ -2508,7 +2489,7 @@ export function wideLayout() {
             margin-bottom: 1rem;
         }
 
-        aside {
+        .mobile-menu {
             grid-area: headline !important;
             margin: 65px auto !important;
             line-height: 1.125;

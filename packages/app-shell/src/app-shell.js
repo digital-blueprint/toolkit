@@ -77,6 +77,8 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         this.scrollRestoration = new ScrollRestoration();
 
         this.boundCloseMenuHandler = this.hideMenu.bind(this);
+        /** @type {number | undefined} */
+        this._menuHideTimeout = undefined;
 
         this.menuOpen = localStorage.getItem('dbp-app-shell-menu-open') !== 'false';
 
@@ -486,13 +488,15 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     updateMenuIcon() {
-        const menu = this.renderRoot.querySelector('ul.menu');
+        const navigation = /** @type {HTMLElement | null} */ (
+            this.renderRoot.querySelector('#mobileMenu')
+        );
         const burger = /** @type {Icon | null} */ (
             this.renderRoot.querySelector('#menu-burger-icon')
         );
-        if (!menu || !burger) return;
+        if (!navigation || !burger) return;
 
-        const isOpen = menu.classList.contains('is-open');
+        const isOpen = !navigation.hidden && !navigation.inert;
         if (isOpen) {
             burger.name = this.isMenuFloating() ? 'chevron-up' : 'chevron-left';
         } else {
@@ -512,6 +516,47 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     _updateBodyScrollLock(isOpen) {
         const shouldLock = isOpen && this.isMenuFloating();
         document.body.style.overflowY = shouldLock ? 'hidden' : '';
+    }
+
+    /**
+     * Shows or hides the navigation menu while keeping it accessible.
+     *
+     * When opening, the menu is made visible and interactive immediately. When
+     * closing, it is set to `inert` right away so it is removed from keyboard
+     * and accessibility navigation, and only then fully hidden. In the floating
+     * (mobile) mode the hiding is deferred until the closing animation has
+     * finished, unless the user prefers reduced motion, in which case it is
+     * hidden immediately.
+     *
+     * @param {HTMLElement} navigation The navigation menu element.
+     * @param {boolean} isOpen Whether the menu should be shown (`true`) or hidden (`false`).
+     */
+    _setMenuVisibility(navigation, isOpen) {
+        window.clearTimeout(this._menuHideTimeout);
+        this._menuHideTimeout = undefined;
+
+        if (isOpen) {
+            navigation.hidden = false;
+            navigation.inert = false;
+            return;
+        }
+
+        // Remove the closing menu from keyboard and accessibility navigation immediately.
+        navigation.inert = true;
+        const shouldAnimate =
+            this.isMenuFloating() && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!shouldAnimate) {
+            navigation.hidden = true;
+            navigation.inert = false;
+            return;
+        }
+
+        this._menuHideTimeout = window.setTimeout(() => {
+            if (!navigation.inert) return;
+            navigation.hidden = true;
+            navigation.inert = false;
+            this._menuHideTimeout = undefined;
+        }, 280);
     }
 
     _handleTitleClick() {
@@ -639,15 +684,20 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     toggleMenu() {
+        const navigation = /** @type {HTMLElement | null} */ (
+            this.renderRoot.querySelector('#mobileMenu')
+        );
         const menu = this.renderRoot.querySelector('ul.menu');
-        const menuButton = this.renderRoot.querySelector('.hd1-left-menu');
+        const menuButton = /** @type {HTMLButtonElement | null} */ (
+            this.renderRoot.querySelector('.hd1-left-menu')
+        );
         const burger = this.renderRoot.querySelector('#menu-burger-icon');
         const mainGrid = this.renderRoot.querySelector('#main');
 
-        if (!menu) return;
+        if (!navigation || !menu) return;
 
-        const isOpening = !menu.classList.contains('is-open');
-        menu.classList.toggle('is-open', isOpening);
+        const isOpening = Boolean(navigation.hidden || navigation.inert);
+        this._setMenuVisibility(navigation, isOpening);
 
         this._updateBodyScrollLock(isOpening);
         mainGrid?.classList.toggle('menu-open', isOpening);
@@ -681,7 +731,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             }, 0);
 
             this._boundEscHandler = (e) => {
-                if (e.key === 'Escape') this.hideMenu();
+                if (e.key === 'Escape' && this.isMenuFloating()) {
+                    menuButton?.focus();
+                    this.hideMenu();
+                }
             };
             document.addEventListener('keydown', this._boundEscHandler);
         }
@@ -691,13 +744,22 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         if (!this.isMenuFloating()) {
             return;
         }
+        const navigation = /** @type {HTMLElement | null} */ (
+            this.renderRoot.querySelector('#mobileMenu')
+        );
         const menu = this.renderRoot.querySelector('ul.menu');
-        if (!menu?.classList.contains('is-open')) return;
+        if (!navigation || !menu || navigation.hidden || navigation.inert) return;
+
+        const menuButton = /** @type {HTMLButtonElement | null} */ (
+            this.renderRoot.querySelector('.hd1-left-menu')
+        );
+        if (navigation.matches(':focus-within')) menuButton?.focus();
+
         // Close without re-toggling
-        menu.classList.remove('is-open');
+        this._setMenuVisibility(navigation, false);
         this.renderRoot.querySelector('#main')?.classList.remove('menu-open');
         this.renderRoot.querySelector('#menu-burger-icon')?.setAttribute('name', 'menu');
-        this.renderRoot.querySelector('h2.subtitle')?.setAttribute('aria-expanded', 'false');
+        menuButton?.setAttribute('aria-expanded', 'false');
         this._updateBodyScrollLock(false);
 
         this.menuOpen = false;
@@ -832,10 +894,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 margin: 0 auto;
             }
 
-            aside {
+            .mobile-menu {
                 grid-area: sidebar;
                 margin: 15px 15px;
-                display: contents;
             }
 
             #headline {
@@ -948,7 +1009,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 display: inline;
             }
 
-            aside ul.menu,
+            .mobile-menu ul.menu,
             footer ul.menu {
                 list-style: none;
                 max-height: calc(100vh - 30px);
@@ -956,7 +1017,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
             }
 
             /* to make the focus indicator visible*/
-            aside ul.menu {
+            .mobile-menu ul.menu {
                 padding: 3px;
             }
 
@@ -1023,31 +1084,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 padding-left: 0.3em;
             }
 
-            aside h2.subtitle {
-                grid-area: headline;
-                justify-self: center;
-                display: inline-block;
-                cursor: pointer;
-            }
-
-            aside .subtitle {
-                display: none;
-                color: var(--dbp-content);
-                font-size: 1.25rem;
-                font-weight: 300;
-                line-height: 1.25;
-                cursor: pointer;
-                text-align: center;
-            }
-
-            ul.menu {
-                display: none;
-            }
-
-            ul.menu.is-open {
-                display: block;
-            }
-
             a {
                 transition:
                     background-color 0.15s ease 0s,
@@ -1071,18 +1107,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     'headline headline'
                     'sidebar main'
                     'footer footer';
-            }
-
-            #main.menu-open aside {
-                display: block;
-            }
-
-            #main.menu-open aside h2.subtitle {
-                grid-area: auto;
-            }
-
-            ul.menu:not(.is-open) {
-                visibility: hidden;
             }
 
             /* scroll to top*/
@@ -1172,14 +1196,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     background-color: var(--dbp-background);
                 }
 
-                aside {
+                .mobile-menu {
                     margin: 0;
                 }
 
-                aside ul.menu {
-                    display: block;
+                .mobile-menu ul.menu {
                     position: fixed;
-                    visibility: hidden;
                     width: 25vw;
                     min-width: 250px;
                     left: 0;
@@ -1190,24 +1212,35 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     max-height: 100dvh;
                     margin: 0 0 0 0;
                     box-sizing: border-box;
-                    transform: translateY(-110%);
-                    transition:
-                        transform 0.28s ease,
-                        box-shadow 0.28s ease,
-                        visibility 0s linear 0.28s;
                     overflow-y: auto;
                     padding-block: 0.5rem 1rem;
                     padding-inline: 0;
                     z-index: 1500;
                     background-color: var(--dbp-background);
                     color: var(--dbp-content);
+                    transform: translateY(0);
+                    box-shadow: 0px 0px 0.4em rgba(0, 0, 0, 0.2);
+                    transition:
+                        transform 0.28s ease,
+                        box-shadow 0.28s ease;
                 }
 
-                aside ul.menu.is-open {
-                    transform: translateY(0);
-                    visibility: visible;
-                    box-shadow: 0px 0px 0.4em rgba(0, 0, 0, 0.2);
-                    transition-delay: 0s;
+                .mobile-menu[inert] ul.menu {
+                    transform: translateY(-110%);
+                    box-shadow: none;
+                }
+
+                @starting-style {
+                    .mobile-menu:not([hidden]) ul.menu {
+                        transform: translateY(-110%);
+                        box-shadow: none;
+                    }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .mobile-menu ul.menu {
+                        transition: none;
+                    }
                 }
 
                 #main.menu-open {
@@ -1235,7 +1268,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     grid-template-rows: 50px;
                 }
 
-                aside ul.menu {
+                .mobile-menu ul.menu {
                     width: 100vw;
                     z-index: 1000;
                     top: 3rem;
@@ -1273,7 +1306,15 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     display: block;
                 }
                 .menu-label {
-                    display: none;
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    padding: 0;
+                    margin: -1px;
+                    overflow: hidden;
+                    clip: rect(0, 0, 0, 0);
+                    white-space: nowrap;
+                    border: 0;
                 }
             }
         `;
@@ -1500,11 +1541,13 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                         this.visibleRoutes.length === 0 ? 'visibility: hidden' : ''
                                     }"
                                     @click="${this.toggleMenu}"
-                                    aria-expanded="false"
-                                    aria-label="${this._i18n.t('main-page.menu')}">
+                                    type="button"
+                                    aria-controls="mobileMenu"
+                                    aria-expanded="false">
                                     <dbp-icon
                                         class="burger-menu-icon"
                                         name="menu"
+                                        aria-hidden="true"
                                         id="menu-burger-icon"></dbp-icon>
                                     <span class="menu-label">
                                         ${this._i18n.t('main-page.menu')}
@@ -2283,8 +2326,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                             }
                         </h1>
                     </div>
-                    <aside id="mobileMenu">
-                        <ul class="menu hidden">
+                    <nav
+                        id="mobileMenu"
+                        class="mobile-menu"
+                        aria-label="${i18n.t('main-page.primary-navigation')}"
+                        hidden>
+                        <ul class="menu">
                             ${menuTemplates}
                             <li class="hd1-left-switches-aside">
                                 <dbp-theme-switcher
@@ -2297,7 +2344,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                     lang="${this.lang}"></dbp-language-select>
                             </li>
                         </ul>
-                    </aside>
+                    </nav>
 
                     <main id="main-content" tabindex="-1">
                         <div

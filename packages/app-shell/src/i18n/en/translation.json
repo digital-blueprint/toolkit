@@ -12,7 +12,8 @@
     "login": "Login",
     "logout": "Logout",
     "main-page": {
-        "menu": "Menu"
+        "menu": "Menu",
+        "primary-navigation": "Primary"
     },
     "page-not-found": "Requested Page Not Found",
     "page-updated-needs-reload": "The application has been updated. Please reload the page.",
