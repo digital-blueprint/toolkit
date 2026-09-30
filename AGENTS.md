@@ -16,3 +16,4 @@
   so that it can be used in the showcase.
     - Also make sure there is a proper `.gitignore` file in the new package that ignores the `dist/` folder and any other
       files that shouldn't be committed. Look at `packages/app-shell/.gitignore` for an example.
+- This repo uses npm and not pnpm. Ignore the pnpm config and lock files.
