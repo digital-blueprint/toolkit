@@ -15,6 +15,7 @@ import * as fileHandlingStyles from './styles';
 import {encrypt, decrypt, parseJwt} from './crypto.js';
 
 /** @typedef {import('lit').TemplateResult} TemplateResult */
+/** @typedef {import('webdav').DAVResultResponse} DAVResultResponse */
 
 /**
  * A wrapper for the webdav putFileContents method that also handles Blob/File
@@ -711,13 +712,17 @@ export class NextcloudFilePicker extends LangMixin(
 
     /**
      *
-     * @param {Array<{href: string, propstat: {prop: Record<string, any>}}>} response
+     * @param {Array<DAVResultResponse>} response
      * @returns {Array} list of file objects containing corresponding information
      */
     mapResponseToObject(response) {
         let results = [];
 
         response.forEach((item) => {
+            if (!item.propstat) {
+                throw new Error(`Missing WebDAV properties for ${item.href}: ${item.status}`);
+            }
+
             const [filePath, baseName] = this.parseFileAndBaseName(item.href);
 
             const prop = item.propstat.prop;
@@ -807,14 +812,13 @@ export class NextcloudFilePicker extends LangMixin(
             `;
             this.loading = false;
             this.statusText = reloadButton;
+            return;
         }
 
         //see https://github.com/perry-mitchell/webdav-client#customRequest
         this.webDavClient
             .customRequest('/', {
                 method: 'REPORT',
-                responseType: 'text/xml',
-                details: true,
                 data:
                     '<?xml version="1.0"?>' +
                     '   <oc:filter-files  xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">' +
@@ -831,8 +835,8 @@ export class NextcloudFilePicker extends LangMixin(
                     '        </d:prop>' +
                     '   </oc:filter-files>',
             })
-            .then((contents) => {
-                parseXML(contents.data).then((davResp) => {
+            .then(async (contents) => {
+                return parseXML(await contents.text()).then((davResp) => {
                     // console.log("-contents.data-----", davResp);
                     let dataObject = this.mapResponseToObject(davResp.multistatus.response);
 
@@ -942,15 +946,14 @@ export class NextcloudFilePicker extends LangMixin(
             `;
             this.loading = false;
             this.statusText = reloadButton;
+            return;
         }
 
         //see https://github.com/perry-mitchell/webdav-client#customRequest
         this.webDavClient
             .customRequest('../..', {
                 method: 'SEARCH',
-                responseType: 'text/xml',
                 headers: {'Content-Type': 'text/xml'},
-                details: true,
                 data:
                     '<?xml version="1.0" encoding=\'UTF-8\'?>' +
                     '   <d:searchrequest xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">' +
@@ -1005,8 +1008,8 @@ export class NextcloudFilePicker extends LangMixin(
                     '       </d:basicsearch>' +
                     '   </d:searchrequest>',
             })
-            .then((contents) => {
-                parseXML(contents.data).then((davResp) => {
+            .then(async (contents) => {
+                return parseXML(await contents.text()).then((davResp) => {
                     // console.log('davResp', davResp);
                     let dataObject = this.mapResponseToObject(davResp.multistatus.response);
                     // console.log("-contents.data-----", dataObject);
@@ -1174,15 +1177,14 @@ export class NextcloudFilePicker extends LangMixin(
             `;
             this.loading = false;
             this.statusText = reloadButton;
+            return;
         }
 
         //see https://github.com/perry-mitchell/webdav-client#customRequest
         this.webDavClient
             .customRequest('../..', {
                 method: 'SEARCH',
-                responseType: 'text/xml',
                 headers: {'Content-Type': 'text/xml'},
-                details: true,
                 data:
                     '<?xml version="1.0" encoding=\'UTF-8\'?>' +
                     '   <d:searchrequest xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">' +
@@ -1237,8 +1239,8 @@ export class NextcloudFilePicker extends LangMixin(
                     '       </d:basicsearch>' +
                     '   </d:searchrequest>',
             })
-            .then((contents) => {
-                parseXML(contents.data).then((davResp) => {
+            .then(async (contents) => {
+                return parseXML(await contents.text()).then((davResp) => {
                     // console.log('davResp', davResp);
                     let dataObject = this.mapResponseToObject(davResp.multistatus.response);
                     // console.log("-contents.data-----", dataObject);
@@ -1347,6 +1349,7 @@ export class NextcloudFilePicker extends LangMixin(
             `;
             this.loading = false;
             this.statusText = reloadButton;
+            return;
         }
         this.webDavClient
             .getDirectoryContents(path, {
@@ -1508,6 +1511,8 @@ export class NextcloudFilePicker extends LangMixin(
      * @param maxUpload
      */
     downloadFile(fileData, maxUpload) {
+        if (this.webDavClient === null) throw new Error('WebDAV client is not available');
+
         const i18n = this._i18n;
         this.loading = true;
         this.statusText = html`
@@ -1516,8 +1521,12 @@ export class NextcloudFilePicker extends LangMixin(
 
         // https://github.com/perry-mitchell/webdav-client#getfilecontents
         this.webDavClient
-            .getFileContents(fileData.filename)
+            .getFileContents(fileData.filename, {format: 'binary', details: false})
             .then((contents) => {
+                if (!(contents instanceof ArrayBuffer)) {
+                    throw new Error('Unexpected WebDAV file response');
+                }
+
                 // create file to send via event
                 const file = new File([contents], fileData.basename, {type: fileData.mime});
                 // send event
@@ -2156,6 +2165,8 @@ export class NextcloudFilePicker extends LangMixin(
     }
 
     addNewFolder() {
+        if (this.webDavClient === null) throw new Error('WebDAV client is not available');
+
         const i18n = this._i18n;
         if (this._('#tf-new-folder-dialog').value !== '') {
             let folderName = this._('#tf-new-folder-dialog').value;
@@ -2218,6 +2229,8 @@ export class NextcloudFilePicker extends LangMixin(
      *
      */
     addFolder() {
+        if (this.webDavClient === null) throw new Error('WebDAV client is not available');
+
         const i18n = this._i18n;
         if (this._('#new-folder').value !== '') {
             let folderName = this._('#new-folder').value;
