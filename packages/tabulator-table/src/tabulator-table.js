@@ -1244,6 +1244,12 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             : this.tabulatorTable.getData().map((row, index) => ({...row, rowIndex: index}));
         const downloadMode = hasSelection ? 'selected' : 'all';
 
+        // Remove any non alphanumeric characters from the data name and replace them with underscore
+        const cleanedDataName = dataName
+            .replace(/[^a-z0-9_-]/gi, '_')
+            .replace(/_+/g, '_')
+            .toLowerCase();
+
         let hasError = false;
 
         try {
@@ -1251,13 +1257,18 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
                 case 'csv':
                 case 'json':
                 case 'html':
-                    this.tabulatorTable.download(type, dataName + '.' + type, {}, downloadMode);
+                    this.tabulatorTable.download(
+                        type,
+                        cleanedDataName + '.' + type,
+                        {},
+                        downloadMode,
+                    );
                     break;
                 case 'xlsx':
-                    await downloadExcel(rows, dataName);
+                    await downloadExcel(rows, cleanedDataName);
                     break;
                 case 'pdf':
-                    await generatePDFDownload(this.tabulatorTable, data, dataName);
+                    await generatePDFDownload(this.tabulatorTable, data, cleanedDataName);
                     break;
                 default:
                     console.error('Unsupported export type:', type);
