@@ -53,7 +53,6 @@ export function getFileHandlingCss() {
         }
 
         .modal-nav {
-            cursor: pointer;
             overflow: hidden;
             background-color: var(--dbp-background);
             border-right: none;
@@ -62,6 +61,7 @@ export function getFileHandlingCss() {
 
         .modal-nav > button,
         .modal-nav > div {
+            cursor: pointer;
             padding: 5px;
             text-align: center;
             width: 100%;
