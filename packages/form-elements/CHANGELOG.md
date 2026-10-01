@@ -5,6 +5,7 @@
 - Add `dbp-form-submission-select-element` to select Formalize submissions by form `frontendKey` and display a configurable submission field as the option label.
 - Add `disabledItems` property to `DbpEnumElement` to selectively disable individual options in list mode (checkbox/radio). Disabled items are visually greyed out and cannot be interacted with.
 - Fix maximum-length validation in `dbp-form-string-element` for values at the limit and values normalized by change listeners.
+- Base form element: keep required markers immediately after inline slotted labels while preserving alignment for block-level slotted content.
 
 ## 0.2.16
 

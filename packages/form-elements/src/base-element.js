@@ -206,12 +206,25 @@ export class DbpBaseElement extends LangMixin(
                 }
 
                 .slotted-label {
+                    display: block;
+                }
+
+                .slotted-label--block {
                     display: flex;
                     align-items: baseline;
                 }
 
-                .slotted-label .required-mark {
+                .slotted-label--block .required-mark {
                     flex-shrink: 0;
+                }
+
+                .slotted-label:not(.slotted-label--block) .required-mark {
+                    display: none;
+                }
+
+                .slotted-label--required:not(.slotted-label--block)::after {
+                    content: '*';
+                    color: var(--dbp-danger);
                 }
             `,
         ];
@@ -260,14 +273,27 @@ export class DbpBaseElement extends LangMixin(
         this.handleErrorsIfAny();
 
         // Check if the label slot has any assigned content
-        const hasLabelSlot = this.querySelector('[slot="label"]') !== null;
+        const labelSlot = this.querySelector('[slot="label"]');
+        const hasLabelSlot = labelSlot !== null;
+        const hasBlockLabelContent =
+            labelSlot &&
+            Array.from(labelSlot.children).some(
+                (child) => getComputedStyle(child).display === 'block',
+            );
+        const labelClasses = [
+            hasLabelSlot ? 'slotted-label' : '',
+            hasBlockLabelContent ? 'slotted-label--block' : '',
+            hasLabelSlot && this.required ? 'slotted-label--required' : '',
+        ]
+            .filter(Boolean)
+            .join(' ');
 
         return html`
             <fieldset>
                 <label
                     id="${this.formElementId}-label"
                     for="${this.formElementId}"
-                    class="${hasLabelSlot ? 'slotted-label' : ''}">
+                    class="${labelClasses}">
                     <slot name="label">${this.label}</slot>
                     ${
                         this.required && (hasLabelSlot || this.label)

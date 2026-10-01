@@ -4,8 +4,14 @@ import '../src/error.js';
 import '../src/demo/demo.js';
 import * as utils from '../src/common-utils.js';
 import * as styles from '../src/styles.js';
+import {Translated} from '../src/translated.js';
 import {combineURLs} from '../src/index.js';
 import {_parseUrlComponents} from '../src/internal.js';
+
+const inlineTranslatedTag = 'test-inline-translated';
+if (!customElements.get(inlineTranslatedTag)) {
+    customElements.define(inlineTranslatedTag, class extends Translated {});
+}
 
 suite('utils', () => {
     test('base64EncodeUnicode', () => {
@@ -35,6 +41,23 @@ suite('utils', () => {
         assert.isTrue(res);
         res = utils.defineCustomElement('test-some-element-2', SomeElement2);
         assert.isTrue(res);
+    });
+
+    test('renders slotted content inline when requested', async () => {
+        const translated = document.createElement(inlineTranslatedTag);
+        translated.setAttribute('inline', '');
+        const labelText = document.createElement('div');
+        labelText.slot = 'de';
+        labelText.textContent = 'A translated label';
+        translated.appendChild(labelText);
+        document.body.appendChild(translated);
+        await translated.updateComplete;
+
+        const activeLanguageWrapper = translated.shadowRoot.querySelector('div:not(.hidden)');
+        assert.equal(getComputedStyle(activeLanguageWrapper).display, 'inline');
+        assert.equal(getComputedStyle(labelText).display, 'inline');
+
+        translated.remove();
     });
 
     test('getAssetURL', () => {

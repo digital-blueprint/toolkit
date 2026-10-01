@@ -6,12 +6,14 @@ export class Translated extends DBPLitElement {
     constructor() {
         super();
         this.lang = 'de';
+        this.inline = false;
     }
 
     static get properties() {
         return {
             ...super.properties,
             lang: {type: String},
+            inline: {type: Boolean},
         };
     }
 
@@ -20,6 +22,14 @@ export class Translated extends DBPLitElement {
         return css`
             .hidden {
                 display: none;
+            }
+
+            :host([inline]) div:not(.hidden) {
+                display: inline;
+            }
+
+            :host([inline]) ::slotted(*) {
+                display: inline;
             }
         `;
     }
