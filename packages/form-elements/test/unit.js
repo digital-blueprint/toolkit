@@ -132,6 +132,39 @@ suite('dbp-form-enum-element', () => {
         assert.isNotNull(node.shadowRoot);
     });
 
+    test('closes tag options on pointerdown outside Select2, but not inside it', async () => {
+        node.remove();
+        node = document.createElement('dbp-form-enum-element');
+        node.displayMode = 'tags';
+        node.multiple = true;
+        node.items = {item1: 'Item 1', item2: 'Item 2'};
+        document.body.appendChild(node);
+
+        const selection = await waitFor(() => node.shadowRoot.querySelector('.select2-selection'));
+        assert.isNotNull(selection);
+
+        const select = node.shadowRoot.querySelector('select');
+        $(select).select2('open');
+        assert.isTrue($(select).select2('isOpen'));
+
+        selection.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, composed: true}));
+        assert.isTrue($(select).select2('isOpen'));
+
+        const option = node.shadowRoot.querySelector('.select2-results__option');
+        assert.isNotNull(option);
+        option.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, composed: true}));
+        assert.isTrue($(select).select2('isOpen'));
+
+        node.shadowRoot
+            .querySelector('label')
+            .dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, composed: true}));
+        assert.isFalse($(select).select2('isOpen'));
+
+        $(select).select2('open');
+        document.body.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+        assert.isFalse($(select).select2('isOpen'));
+    });
+
     test('keeps the required mark beside a slotted label with block content', async () => {
         const label = document.createElement('span');
         label.slot = 'label';

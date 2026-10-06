@@ -33,6 +33,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         // Index of the tag that was removed last, used to restore the focus afterwards
         /** @type {number|null} */
         this._focusIndexAfterRemove = null;
+        this.handleDocumentPointerDown = this.handleDocumentPointerDown.bind(this);
     }
 
     static get properties() {
@@ -88,11 +89,29 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
 
     connectedCallback() {
         super.connectedCallback();
+        document.addEventListener('pointerdown', this.handleDocumentPointerDown, true);
 
         void this.updateComplete.then(() => {
             this.$select = this.$('#' + this.formElementId);
             this.initSelect2IfNeeded();
         });
+    }
+
+    disconnectedCallback() {
+        document.removeEventListener('pointerdown', this.handleDocumentPointerDown, true);
+        super.disconnectedCallback();
+    }
+
+    handleDocumentPointerDown(event) {
+        if (!this.select2IsInitialized() || !this.$select.select2('isOpen')) return;
+
+        // Use the composed path because events outside the shadow root are retargeted to the host.
+        const path = event.composedPath();
+        const selection = this.renderRoot.querySelector('.select2');
+        const dropdown = this.renderRoot.querySelector('#select-dropdown');
+        if (path.includes(selection) || path.includes(dropdown)) return;
+
+        this.closeSelect2();
     }
 
     isDisplayModeTags() {
