@@ -1306,7 +1306,7 @@ export function getSelect2CSS() {
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             color: inherit;
             padding-left: var(--dbp-select2-content-padding-left);
-            padding-right: calc(var(--dbp-select2-icon-size) + var(--dbp-select2-icon-gap));
+            padding-right: 0;
             display: flex;
             align-items: center;
             margin-right: auto;
