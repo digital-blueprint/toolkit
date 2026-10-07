@@ -22,7 +22,7 @@ export const getFieldsetCSS = () => {
         }
 
         fieldset label {
-            font-weight: bolder;
+            font-weight: var(--dbp-label-font-weight, bolder);
             margin-bottom: var(--dbp-label-margin-bottom, 0);
             display: block;
         }
