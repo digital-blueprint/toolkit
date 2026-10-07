@@ -293,10 +293,6 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             color: var(--dbp-content);
         }
 
-        .input[disabled] {
-            color: var(--dbp-muted);
-        }
-
         *,
         ::after,
         ::before {
@@ -315,6 +311,16 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
             border-radius: var(--dbp-border-radius);
             color: var(--dbp-content);
             padding: 0.14rem 1rem 0.14rem 0.14rem;
+        }
+
+        .input:disabled,
+        .textarea:disabled,
+        textarea:disabled,
+        select:disabled,
+        .select select:disabled {
+            color: var(--dbp-muted);
+            border-color: var(--dbp-muted);
+            cursor: not-allowed;
         }
 
         ::-moz-selection {
