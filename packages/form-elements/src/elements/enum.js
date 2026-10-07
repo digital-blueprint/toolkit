@@ -480,8 +480,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     max-width: 100%;
                 }
 
-                :host([layout-type='inline']) .checkboxItem:not(:last-of-type) {
-                    margin-bottom: 0;
+                :host([layout-type='inline']) .checkboxItem {
+                    margin-top: 0;
                 }
 
                 /* For some reasons the selector chevron was very large */
@@ -501,10 +501,11 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     line-height: 1;
                     cursor: pointer;
                     font-weight: normal;
+                    margin-top: 8px;
                 }
 
-                .checkboxItem:not(:last-of-type) {
-                    margin-bottom: 16px;
+                .checkboxItem ~ .checkboxItem {
+                    margin-top: 16px;
                 }
 
                 .checkboxItem.disabled {
