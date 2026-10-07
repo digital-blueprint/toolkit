@@ -578,6 +578,10 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     font-weight: 300;
                 }
 
+                .select-wrapper:has(select:disabled) {
+                    --select-wrapper-icon-color: var(--dbp-muted);
+                }
+
                 :host(:not([multiple])) .select-wrapper {
                     position: relative;
                     display: inline-block;
@@ -599,7 +603,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     width: 1em;
                     height: 1em;
                     pointer-events: none;
-                    background-color: currentColor;
+                    background-color: var(--select-wrapper-icon-color, currentColor);
                     mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center/contain
                         no-repeat;
                     -webkit-mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center/contain
