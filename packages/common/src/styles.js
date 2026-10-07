@@ -1271,6 +1271,11 @@ export function getSelect2CSS() {
     return css`
         .select2-container {
             border-color: var(--dbp-content);
+            --dbp-select2-icon-color: var(--dbp-content);
+        }
+
+        .select2-container--disabled {
+            --dbp-select2-icon-color: var(--dbp-muted);
         }
 
         .select2-container--default .select2-selection--single,
@@ -1327,7 +1332,7 @@ export function getSelect2CSS() {
             min-width: 24px;
             min-height: 24px;
             padding: 0;
-            color: var(--dbp-muted);
+            color: var(--dbp-select2-icon-color);
         }
 
         .select2-container--default .select2-selection--multiple .select2-selection__clear {
@@ -1397,7 +1402,7 @@ export function getSelect2CSS() {
             content: '';
             width: var(--dbp-select2-icon-size);
             height: var(--dbp-select2-icon-size);
-            background-color: var(--dbp-muted);
+            background-color: var(--dbp-select2-icon-color);
             mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center / contain no-repeat;
             -webkit-mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center / contain
                 no-repeat;
@@ -1495,7 +1500,7 @@ export function getSelect2CSS() {
             height: 100%;
             min-width: 24px;
             min-height: 24px;
-            color: var(--dbp-muted);
+            color: var(--dbp-select2-icon-color);
             border-left: var(--dbp-border);
             border-color: var(--dbp-content);
             border-top-left-radius: 0;
