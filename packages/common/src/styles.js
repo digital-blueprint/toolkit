@@ -216,6 +216,7 @@ export function getGeneralCSS(doMarginPaddingReset = true) {
         .select select {
             font-size: inherit;
             font-family: inherit;
+            font-weight: inherit;
         }
 
         input::-moz-focus-inner {

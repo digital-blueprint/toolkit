@@ -500,7 +500,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     width: fit-content;
                     line-height: 1;
                     cursor: pointer;
-                    font-weight: normal;
+                    font-weight: inherit;
                     margin-top: 8px;
                 }
 
@@ -576,7 +576,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                 .select-wrapper select {
                     background: none;
                     padding: 2px 5px;
-                    font-weight: 300;
+                    font-weight: inherit;
                 }
 
                 .select-wrapper:has(select:disabled) {

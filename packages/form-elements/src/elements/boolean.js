@@ -31,7 +31,7 @@ export class DbpBooleanElement extends ScopedElementsMixin(DbpBaseElement) {
                     width: fit-content;
                     line-height: 1;
                     cursor: pointer;
-                    font-weight: normal;
+                    font-weight: inherit;
                 }
 
                 .checkboxItem:not(:last-of-type) {

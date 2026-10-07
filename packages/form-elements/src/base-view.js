@@ -36,7 +36,7 @@ export class DbpBaseView extends LangMixin(
 
                 slot[name='label'],
                 fieldset label {
-                    font-weight: bold;
+                    font-weight: bolder;
                     display: block;
                 }
 
