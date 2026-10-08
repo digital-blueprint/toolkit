@@ -1065,6 +1065,10 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 word-break: break-word;
             }
 
+            .menu li {
+                padding: 3px 10px;
+            }
+
             .menu a:hover {
                 color: var(--dbp-hover-color, var(--dbp-content));
                 background-color: var(--dbp-hover-background-color);
@@ -1250,12 +1254,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     overflow-y: hidden;
                 }
 
-                .menu li {
-                    padding: 7px 10px;
-                }
-                .menu a {
-                    padding: 8px;
-                }
                 .menu a:active {
                     opacity: 0.8;
                 }
