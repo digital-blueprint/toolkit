@@ -601,8 +601,8 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
                     right: 0.5rem;
                     top: 50%;
                     transform: translateY(-50%);
-                    width: 1em;
-                    height: 1em;
+                    width: 0.75em;
+                    height: 0.75em;
                     pointer-events: none;
                     background-color: var(--select-wrapper-icon-color, currentColor);
                     mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center/contain
