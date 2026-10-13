@@ -32,6 +32,10 @@ export class ResourceSelect extends LangMixin(
         this._url = null;
         this._lang = null;
         this._isSearching = false;
+        // Share the running update operation between callers to prevent overlapping initialization.
+        this._updatePromise = null;
+        this._updateRequested = false;
+        this._forceResourceRefresh = false;
         // Remembers the resource objects of the current selection, so they survive a new
         // search overwriting this._resources in search mode.
         this._selectedObjects = new Map();
@@ -358,9 +362,31 @@ export class ResourceSelect extends LangMixin(
         return this.values;
     }
 
-    async _updateAll() {
+    _updateAll(forceRefresh = false) {
         this._setSelection(this._getRequestedValues());
+        this._updateRequested = true;
+        this._forceResourceRefresh = this._forceResourceRefresh || forceRefresh;
 
+        // Coalesce lifecycle updates and finish loading before exposing an interactive picker.
+        this._updatePromise ??= this._runUpdates().finally(() => {
+            this._updatePromise = null;
+        });
+        return this._updatePromise;
+    }
+
+    // Process pending updates sequentially, combining requests received before each pass.
+    async _runUpdates() {
+        while (this._updateRequested) {
+            await this.updateComplete;
+            this._updateRequested = false;
+            const forceRefresh = this._forceResourceRefresh;
+            this._forceResourceRefresh = false;
+            await this._updateAllOnce(forceRefresh);
+        }
+    }
+
+    // Load resources and initialize the picker unless a newer update is pending.
+    async _updateAllOnce(forceRefresh) {
         const $select = this._getSelect2();
         if (!this.isLoggedIn()) {
             await this._setSelect2Placeholder(this._getPlaceholder());
@@ -377,8 +403,10 @@ export class ResourceSelect extends LangMixin(
             return;
         }
 
-        await this._updateResources();
-        await this._updateSelect2();
+        await this._updateResources(forceRefresh);
+        if (!this._updateRequested && this.isLoggedIn()) {
+            await this._updateSelect2();
+        }
     }
 
     async _setSelect2Placeholder(placeholder) {
@@ -403,38 +431,26 @@ export class ResourceSelect extends LangMixin(
         await this._setSelect2Placeholder(this._i18n.t('select.loading'));
     }
 
-    async _updateResources() {
-        let url = this._getUrl();
-        if (url === null || (url === this._url && this.lang === this._lang)) {
+    async _updateResources(forceRefresh = false) {
+        const url = this._getUrl();
+        const lang = this.lang;
+        if (url === null || (!forceRefresh && url === this._url && lang === this._lang)) {
             return;
         }
 
-        this._resources = await hydra.getCollection(url, this.lang, () => this.auth.token);
+        const resources = await hydra.getCollection(url, lang, () => this.auth.token);
+        // Ignore a response for a configuration that changed while the request was pending.
+        if (url !== this._getUrl() || lang !== this.lang || !this.isLoggedIn()) {
+            return;
+        }
+        this._resources = resources;
         this._url = url;
-        this._lang = this.lang;
+        this._lang = lang;
         this._setSelection(this.values);
     }
 
     async updateResources() {
-        if (!this.isLoggedIn()) {
-            await this._setSelect2Placeholder(this._getPlaceholder());
-            return;
-        }
-
-        if (this.fetchMode === 'search') {
-            await this._updateSelect2Search();
-            return;
-        }
-
-        let url = this._getUrl();
-        if (url === null || this.lang === null) {
-            return;
-        }
-
-        this._resources = await hydra.getCollection(url, this.lang, () => this.auth.token);
-        this._url = url;
-        this._setSelection(this.values);
-        await this._updateSelect2();
+        await this._updateAll(true);
     }
 
     _getResourceUrl(value) {
@@ -530,6 +546,9 @@ export class ResourceSelect extends LangMixin(
 
     async _updateSelect2Search() {
         await this.updateComplete;
+        if (this._updateRequested) {
+            return;
+        }
         const url = this._getCollectionUrl();
 
         if (url === null) {
@@ -633,6 +652,9 @@ export class ResourceSelect extends LangMixin(
 
     async _updateSelect2() {
         await this.updateComplete;
+        if (this._updateRequested) {
+            return;
+        }
 
         const $select = this._getSelect2();
         console.assert($select.length, 'select2 missing');
