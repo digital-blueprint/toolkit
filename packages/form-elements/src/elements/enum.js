@@ -420,8 +420,7 @@ export class DbpEnumElement extends ScopedElementsMixin(DbpBaseElement) {
         // If the value for a single-select dropdown is empty, then show either the first item
         // or the item for the empty value
         if (this._displayMode === 'dropdown' && !this.multiple && this.value === '') {
-            const emptyItem = this.items[''];
-            this.value = emptyItem ? emptyItem : Object.keys(this.items)[0];
+            this.value = Object.hasOwn(this.items, '') ? '' : (Object.keys(this.items)[0] ?? '');
             this.generateDataValue();
         }
 
