@@ -84,10 +84,11 @@ export class GrantPermissionDialogDemo extends LangMixin(
     }
 
     /**
-     * Gets the actions for our resource class
+     * Gets a page of forms
+     * @param {number} page page number
      * @returns {Promise<Response>} response
      */
-    async apiGetForms() {
+    async apiGetForms(page = 1) {
         const options = {
             method: 'GET',
             headers: {
@@ -95,21 +96,38 @@ export class GrantPermissionDialogDemo extends LangMixin(
                 Authorization: 'Bearer ' + this.auth.token,
             },
         };
-        return await fetch(this.entryPointUrl + '/formalize/forms?perPage=9999', options);
+        return await fetch(
+            this.entryPointUrl + `/formalize/forms?perPage=1024&page=${page}`,
+            options,
+        );
     }
 
     async setForms() {
         const i18n = this._i18n;
         try {
-            let response = await this.apiGetForms();
-            let responseBody = await response.json();
-            if (
-                responseBody !== undefined &&
-                responseBody.status !== 403 &&
-                responseBody['hydra:member'] &&
-                responseBody['hydra:member'].length > 0
-            ) {
-                this.forms = responseBody['hydra:member'];
+            const forms = [];
+            let page = 1;
+            let pageForms = [];
+
+            // Make requests until we get an empty page of forms
+            do {
+                const response = await this.apiGetForms(page);
+                const responseBody = await response.json();
+                if (
+                    responseBody === undefined ||
+                    responseBody.status === 403 ||
+                    !responseBody['hydra:member']
+                ) {
+                    return;
+                }
+
+                pageForms = responseBody['hydra:member'];
+                forms.push(...pageForms);
+                page++;
+            } while (pageForms.length > 0);
+
+            if (forms.length > 0) {
+                this.forms = forms;
                 this.requestUpdate();
             }
         } catch (e) {
