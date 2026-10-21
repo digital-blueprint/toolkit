@@ -1,0 +1,11 @@
+{
+    "authorization-manage-grants-dialog": {
+        "buttons": {
+            "close": "Close",
+            "open": "Manage grants"
+        },
+        "demo-title": "Authorization manage grants dialog demo",
+        "modal-title": "Manage grants dialog",
+        "placeholder": "Grant management content will be added here."
+    }
+}

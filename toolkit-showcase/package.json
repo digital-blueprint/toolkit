@@ -35,6 +35,7 @@
     },
     "dependencies": {
         "@dbp-toolkit/app-shell": "^0.3.13",
+        "@dbp-toolkit/authorization-manage-grants-dialog": "^0.0.1",
         "@dbp-toolkit/auth": "^0.3.5",
         "@dbp-toolkit/common": "^0.3.11",
         "@dbp-toolkit/country-select": "^0.0.1",

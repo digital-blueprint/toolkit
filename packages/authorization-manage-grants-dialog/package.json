@@ -1,0 +1,66 @@
+{
+    "name": "@dbp-toolkit/authorization-manage-grants-dialog",
+    "homepage": "https://github.com/digital-blueprint/toolkit/tree/main/packages/authorization-manage-grants-dialog",
+    "version": "0.0.1",
+    "type": "module",
+    "description": "Dialog for managing authorization grants",
+    "main": "src/index.js",
+    "sideEffects": [
+        "src/dbp-authorization-manage-grants-dialog.js",
+        "src/demo.js"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/digital-blueprint/toolkit.git",
+        "directory": "packages/authorization-manage-grants-dialog"
+    },
+    "license": "LGPL-2.1-or-later",
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    },
+    "devDependencies": {
+        "@dbp-toolkit/dev-utils": "^0.1.3",
+        "@web/test-runner": "^1.0.0",
+        "@web/test-runner-playwright": "^1.0.0",
+        "chai": "^6.0.0",
+        "i18next-cli": "^1.7.1",
+        "mocha": "^12.0.0",
+        "npm-run-all2": "^9.0.3",
+        "playwright": "^1.34.0",
+        "playwright-core": "^1.20.2",
+        "prettier": "^3.0.0",
+        "rolldown": "^1.0.0-rc.5",
+        "rollup-plugin-serve": "^3.0.0",
+        "typescript": "^7.0.2"
+    },
+    "dependencies": {
+        "@dbp-toolkit/common": "^0.3.18",
+        "lit": "^3.0.0"
+    },
+    "scripts": {
+        "clean": "rm dist/*",
+        "fix": "run-s oxlint:fix prettier:fix i18next:fix",
+        "check": "run-p oxlint prettier i18next",
+        "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write --cache",
+        "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check --cache",
+        "build": "rolldown -c rolldown.config.js",
+        "build-local": "rolldown -c rolldown.config.js",
+        "build-dev": "rolldown -c rolldown.config.js --environment BUILD:development",
+        "build-prod": "rolldown -c rolldown.config.js --environment BUILD:production",
+        "build-demo": "rolldown -c rolldown.config.js --environment BUILD:demo",
+        "build-test": "rolldown -c rolldown.config.js --environment BUILD:test",
+        "i18next:fix": "i18next-cli extract",
+        "i18next": "i18next-cli extract --ci --dry-run",
+        "watch": "rolldown -c rolldown.config.js --watch",
+        "watch-local": "rolldown -c rolldown.config.js --watch",
+        "watch-dev": "rolldown -c rolldown.config.js --watch --environment BUILD:development",
+        "test": "run-s build-test test:run",
+        "test:coverage": "run-s build-test test:run:coverage",
+        "test:run": "web-test-runner",
+        "test:run:coverage": "web-test-runner --coverage",
+        "tsc": "tsc -p tsconfig.json",
+        "oxlint": "oxlint",
+        "oxlint:fix": "oxlint --fix"
+    }
+}

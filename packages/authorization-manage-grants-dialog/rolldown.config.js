@@ -1,0 +1,63 @@
+import {globSync} from 'node:fs';
+import serve from 'rollup-plugin-serve';
+import {
+    getPackagePath,
+    getDistPath,
+    assetPlugin,
+    getResolveModules,
+    getPort,
+} from '@dbp-toolkit/dev-utils';
+import {createRequire} from 'node:module';
+import process from 'node:process';
+
+const require = createRequire(import.meta.url);
+const pkg = require('./package.json');
+const build = typeof process.env.BUILD !== 'undefined' ? process.env.BUILD : 'local';
+console.log('build: ' + build);
+const buildFull = process.env.ROLLUP_WATCH !== 'true' && build !== 'test';
+
+export default {
+    input:
+        build !== 'test'
+            ? ['src/dbp-authorization-manage-grants-dialog.js', 'src/demo.js']
+            : globSync('test/**/*.js').filter((file) => file !== 'test/runner.js'),
+    treeshake: build !== 'test',
+    output: {
+        dir: 'dist',
+        entryFileNames: '[name].js',
+        chunkFileNames: 'shared/[name].[hash].js',
+        format: 'esm',
+        sourcemap: true,
+        minify: buildFull,
+        cleanDir: true,
+    },
+    resolve: {
+        modules: getResolveModules(),
+    },
+    moduleTypes: {
+        '.css': 'js',
+    },
+    plugins: [
+        await assetPlugin(pkg.name, 'dist', {
+            copyTargets: [
+                {src: 'assets/index.html', dest: 'dist'},
+                {src: 'assets/favicon.ico', dest: 'dist'},
+                {
+                    src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
+                    dest: 'dist/' + (await getDistPath(pkg.name)),
+                },
+                {
+                    src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
+                    dest: 'dist/' + (await getDistPath(pkg.name)),
+                },
+            ],
+        }),
+        process.env.ROLLUP_WATCH === 'true'
+            ? serve({
+                  contentBase: 'dist',
+                  host: '127.0.0.1',
+                  port: await getPort('127.0.0.1', [8002, 8004]),
+              })
+            : false,
+    ],
+};

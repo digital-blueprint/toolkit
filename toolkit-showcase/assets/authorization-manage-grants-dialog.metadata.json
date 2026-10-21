@@ -1,0 +1,18 @@
+{
+    "element": "dbp-authorization-manage-grants-dialog-demo-activity",
+    "module_src": "dbp-authorization-manage-grants-dialog-demo-activity.js",
+    "routing_name": "authorization-manage-grants-dialog",
+    "name": {
+        "de": "Dialog zur Verwaltung von Berechtigungen",
+        "en": "Authorization manage grants dialog"
+    },
+    "short_name": {
+        "de": "Berechtigungen verwalten",
+        "en": "Manage grants dialog"
+    },
+    "description": {
+        "de": "Webkomponente zur Verwaltung von Berechtigungen",
+        "en": "Web component for managing authorization grants"
+    },
+    "subscribe": "lang,entry-point-url"
+}

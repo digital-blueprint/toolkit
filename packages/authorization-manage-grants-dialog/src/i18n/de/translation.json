@@ -1,0 +1,11 @@
+{
+    "authorization-manage-grants-dialog": {
+        "buttons": {
+            "close": "Schließen",
+            "open": "Berechtigungen verwalten"
+        },
+        "demo-title": "Demo des Dialogs zur Verwaltung von Berechtigungen",
+        "modal-title": "Berechtigungen verwalten",
+        "placeholder": "Inhalte zur Verwaltung von Berechtigungen werden hier ergänzt."
+    }
+}

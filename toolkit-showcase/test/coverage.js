@@ -1,5 +1,6 @@
 import '../src/dbp-toolkit-showcase.js';
 import '../src/dbp-auth-demo-activity.js';
+import '../src/dbp-authorization-manage-grants-dialog-demo-activity.js';
 import '../src/dbp-common-icon-demo-activity.js';
 import '../src/dbp-common-input-demo-activity.js';
 import '../src/dbp-common-misc-demo-activity.js';
