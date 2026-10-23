@@ -500,7 +500,7 @@ export class ResourceSelect extends LangMixin(
             const result = results[index];
             if (result.status !== 'fulfilled') {
                 // Keep the selection, but we have no resource object to show for it
-                console.log(result.reason);
+                console.error(result.reason);
                 ids.push(value);
                 objects.push(null);
                 return;
@@ -638,7 +638,7 @@ export class ResourceSelect extends LangMixin(
             try {
                 await this._updateSearchValue();
             } catch (error) {
-                console.log(error);
+                console.error(error);
                 // Keep the selection, but without the resource objects we failed to fetch
                 this._setSelection(
                     this.values,
