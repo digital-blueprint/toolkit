@@ -544,6 +544,47 @@ export class ResourceSelect extends LangMixin(
         return entry;
     }
 
+    /**
+     * The select2 "ajax" options used in search mode. Subclasses can override this to change
+     * how the results are fetched, for example to search more than one collection. The
+     * returned options replace the defaults, except for the search delay.
+     *
+     * @returns {object} The select2 ajax options
+     */
+    _getSearchAjaxOptions() {
+        return {
+            url: (params) => this._getCollectionUrl(params.term ?? ''),
+            // remove the default query parameters (_type and term) that select2 adds to the request
+            data: (params) => {
+                return {};
+            },
+            contentType: 'application/ld+json',
+            beforeSend: (jqXHR) => {
+                jqXHR.setRequestHeader('Authorization', 'Bearer ' + this.auth.token);
+                jqXHR.setRequestHeader('Accept-Language', this.lang);
+                this._isSearching = true;
+            },
+            processResults: (data) => {
+                const members = data['hydra:member'] ?? [];
+                this._resources = members;
+
+                return {
+                    results: members.map((resource) => {
+                        return {
+                            id: resource['@id'],
+                            _resultId: `result-${resource['@id']}`,
+                            text: this._getText(resource),
+                            resource: resource,
+                        };
+                    }),
+                };
+            },
+            complete: () => {
+                this._isSearching = false;
+            },
+        };
+    }
+
     async _updateSelect2Search() {
         await this.updateComplete;
         if (this._updateRequested) {
@@ -573,35 +614,7 @@ export class ResourceSelect extends LangMixin(
                 templateResult: (result) => this._renderResult(result),
                 ajax: {
                     delay: SEARCH_DELAY,
-                    url: (params) => this._getCollectionUrl(params.term ?? ''),
-                    // remove the default query parameters (_type and term) that select2 adds to the request
-                    data: (params) => {
-                        return {};
-                    },
-                    contentType: 'application/ld+json',
-                    beforeSend: (jqXHR) => {
-                        jqXHR.setRequestHeader('Authorization', 'Bearer ' + this.auth.token);
-                        jqXHR.setRequestHeader('Accept-Language', this.lang);
-                        this._isSearching = true;
-                    },
-                    processResults: (data) => {
-                        const members = data['hydra:member'] ?? [];
-                        this._resources = members;
-
-                        return {
-                            results: members.map((resource) => {
-                                return {
-                                    id: resource['@id'],
-                                    _resultId: `result-${resource['@id']}`,
-                                    text: this._getText(resource),
-                                    resource: resource,
-                                };
-                            }),
-                        };
-                    },
-                    complete: () => {
-                        this._isSearching = false;
-                    },
+                    ...this._getSearchAjaxOptions(),
                 },
             })
             .on('select2:clear', () => {
