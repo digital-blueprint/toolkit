@@ -9,14 +9,26 @@ export function getAuthorizationManageGrantsDialogCSS() {
             --dbp-modal-min-width: 320px;
             --dbp-modal-max-width: min(90vw, 900px);
             --dbp-modal-width: auto;
+            --dbp-modal-min-height: 420px;
+            --dbp-modal-height: auto;
+            --dbp-modal-content-overflow-y: hidden;
         }
 
         .header h3 {
             margin: 0;
         }
 
-        .content-placeholder {
-            padding: 1em 0;
+        .add-resource-container {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            grid-gap: 1em;
+        }
+
+        .resource-select-component {
+            flex-grow: 1;
+        }
+
+        .add-person-button-container {
         }
 
         .footer-menu {

@@ -31,15 +31,15 @@ export class AuthorizationManageGrantsDialogDemo extends LangMixin(
     render() {
         const i18n = this._i18n;
         return html`
-            <h2>${i18n.t('authorization-manage-grants-dialog.demo-title')}</h2>
+            <h2>${i18n.t('auth-manage-dialog.demo-title')}</h2>
             <dbp-button
                 type="is-primary"
-                value="${i18n.t('authorization-manage-grants-dialog.buttons.open')}"
+                value="${i18n.t('auth-manage-dialog.buttons.open')}"
                 no-spinner-on-click
                 @click="${() => this._('#manage-grants-dialog').open()}"></dbp-button>
             <dbp-authorization-manage-grants-dialog
                 id="manage-grants-dialog"
-                title="${i18n.t('authorization-manage-grants-dialog.modal-title')}"
+                modal-title="${i18n.t('auth-manage-dialog.modal-title')}"
                 lang="${this.lang}"
                 subscribe="auth"
                 entry-point-url="${this.entryPointUrl}"></dbp-authorization-manage-grants-dialog>

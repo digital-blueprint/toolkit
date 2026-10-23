@@ -1,11 +1,17 @@
 {
-    "authorization-manage-grants-dialog": {
+    "auth-manage-dialog": {
         "buttons": {
-            "close": "Close",
+            "add-subject-button-label": "Add person or group",
+            "close-button-label": "Close",
             "open": "Manage grants"
         },
         "demo-title": "Authorization manage grants dialog demo",
         "modal-title": "Manage grants dialog",
-        "placeholder": "Grant management content will be added here."
+        "subject-select-placeholder": "Search for a person or group",
+        "subject-types": {
+            "dynamic-user-group": "Dynamic user group",
+            "person": "Person",
+            "user-group": "User group"
+        }
     }
 }

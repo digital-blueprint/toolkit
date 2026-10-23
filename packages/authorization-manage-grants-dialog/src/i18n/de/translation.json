@@ -1,11 +1,17 @@
 {
-    "authorization-manage-grants-dialog": {
+    "auth-manage-dialog": {
         "buttons": {
-            "close": "Schließen",
+            "add-subject-button-label": "Person oder Gruppe hinzufügen",
+            "close-button-label": "Schließen",
             "open": "Berechtigungen verwalten"
         },
         "demo-title": "Demo des Dialogs zur Verwaltung von Berechtigungen",
         "modal-title": "Berechtigungen verwalten",
-        "placeholder": "Inhalte zur Verwaltung von Berechtigungen werden hier ergänzt."
+        "subject-select-placeholder": "Nach einer Person oder Gruppe suchen",
+        "subject-types": {
+            "dynamic-user-group": "Dynamische Benutzergruppe",
+            "person": "Person",
+            "user-group": "Benutzergruppe"
+        }
     }
 }
