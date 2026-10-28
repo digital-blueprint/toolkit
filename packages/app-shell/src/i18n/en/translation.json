@@ -18,6 +18,12 @@
     "page-not-found": "Requested Page Not Found",
     "page-updated-needs-reload": "The application has been updated. Please reload the page.",
     "privacy-policy": "Privacy Policy",
+    "skip-links": {
+        "footer": "Skip to footer",
+        "label": "Skip links",
+        "main-content": "Skip to main content",
+        "navigation": "Skip to navigation"
+    },
     "welcome": {
         "headline": "Welcome!"
     }

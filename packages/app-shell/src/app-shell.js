@@ -844,6 +844,42 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         });
     }
 
+    /**
+     * Moves the keyboard focus to a landmark of the page when a skip link is used.
+     * We can't rely on the default fragment navigation, because the targets
+     * are inside the shadow DOM and the router would handle the URL change.
+     * @param {Event} event
+     * @param {string} targetId
+     */
+    _onSkipLinkClick(event, targetId) {
+        event.preventDefault();
+        const target = /** @type {HTMLElement | null} */ (this._('#' + targetId));
+        if (!target) return;
+        target.focus();
+        target.scrollIntoView({block: 'start'});
+    }
+
+    /**
+     * Opens the navigation menu if needed and moves the keyboard focus to the
+     * currently selected (or first) menu item.
+     * @param {Event} event
+     */
+    _onSkipToNavigationClick(event) {
+        event.preventDefault();
+        const navigation = /** @type {HTMLElement | null} */ (this._('#mobileMenu'));
+        if (!navigation) return;
+
+        if (navigation.hidden || navigation.inert) {
+            this.toggleMenu();
+        }
+
+        const menuItem = /** @type {HTMLElement | null} */ (
+            navigation.querySelector('a[data-nav].selected') ??
+                navigation.querySelector('a[data-nav]')
+        );
+        menuItem?.focus();
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -871,6 +907,43 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 max-width: 1400px;
                 margin: auto;
                 min-height: 100vh;
+            }
+
+            /* Skip links are visually hidden until one of them receives keyboard focus */
+            .skip-links {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 3000;
+                transform: translateY(-110%);
+            }
+
+            .skip-links:focus-within {
+                transform: translateY(0);
+            }
+
+            .skip-links ul {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5em;
+                margin: 0;
+                padding: 0.75em;
+                list-style: none;
+                background-color: var(--dbp-background);
+                border: var(--dbp-border);
+                box-shadow: 0px 0px 0.4em rgba(0, 0, 0, 0.2);
+            }
+
+            .skip-links a {
+                display: block;
+                padding: 0.25em 0.5em;
+                color: var(--dbp-content);
+                text-decoration: underline;
+            }
+
+            .skip-links a:focus-visible {
+                outline: 2px solid var(--dbp-accent);
+                outline-offset: 2px;
             }
 
             /* These are only focusable programmatically (tabindex="-1"), so we don't
@@ -1528,6 +1601,37 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 site-id="${this.matomoSiteId}"
                 git-info="${this.gitInfo}"></dbp-matomo>
             <div class="${mainClassMap}" id="root">
+                <nav class="skip-links" aria-label="${i18n.t('skip-links.label')}">
+                    <ul>
+                        <li>
+                            <a
+                                href="#main-content"
+                                @click="${(e) => this._onSkipLinkClick(e, 'main-content')}">
+                                ${i18n.t('skip-links.main-content')}
+                            </a>
+                        </li>
+                        ${
+                            this.visibleRoutes.length > 0
+                                ? html`
+                                      <li>
+                                          <a
+                                              href="#mobileMenu"
+                                              @click="${this._onSkipToNavigationClick}">
+                                              ${i18n.t('skip-links.navigation')}
+                                          </a>
+                                      </li>
+                                  `
+                                : ''
+                        }
+                        <li>
+                            <a
+                                href="#page-footer"
+                                @click="${(e) => this._onSkipLinkClick(e, 'page-footer')}">
+                                ${i18n.t('skip-links.footer')}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
                 <div id="main">
                     <dbp-notification id="dbp-notification" lang="${this.lang}"></dbp-notification>
                     <header>
