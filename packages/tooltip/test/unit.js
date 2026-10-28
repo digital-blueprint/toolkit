@@ -21,6 +21,44 @@ suite('dbp-tooltip', () => {
     });
 });
 
+suite('dbp-button-tooltip', () => {
+    let node;
+
+    setup(async () => {
+        node = document.createElement('dbp-button-tooltip');
+        node.setAttribute('text-content', 'More details');
+        node.setAttribute('button-text', ' ');
+        node.setAttribute('type', 'button');
+        document.body.appendChild(node);
+        await node.updateComplete;
+    });
+
+    teardown(() => {
+        node.remove();
+    });
+
+    test('should not set an aria-label without button-label', () => {
+        const button = node.shadowRoot.querySelector('button');
+        assert.isFalse(button.hasAttribute('aria-label'));
+    });
+
+    test('should use button-label as accessible name and hide the icon', async () => {
+        node.setAttribute('button-label', 'More information');
+        await node.updateComplete;
+        const button = node.shadowRoot.querySelector('button');
+        assert.equal(button.getAttribute('aria-label'), 'More information');
+        assert.equal(button.querySelector('svg').getAttribute('aria-hidden'), 'true');
+    });
+
+    test('should close the tooltip with Escape', async () => {
+        const button = node.shadowRoot.querySelector('button');
+        button._tippy.show();
+        assert.isTrue(button._tippy.state.isVisible);
+        button.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+        assert.isFalse(button._tippy.state.isVisible);
+    });
+});
+
 /**
  * Mimics a dbp-modal: the tooltip is slotted into a transformed dialog with a positioned
  * scroll container inside the shadow DOM of another component.
