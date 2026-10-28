@@ -42,6 +42,7 @@ export default {
             copyTargets: [
                 {src: 'assets/index.html', dest: 'dist'},
                 {src: 'assets/favicon.ico', dest: 'dist'},
+                {src: 'assets/silent-check-sso.html', dest: 'dist'},
                 {
                     src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
                     dest: 'dist/' + (await getDistPath(pkg.name)),

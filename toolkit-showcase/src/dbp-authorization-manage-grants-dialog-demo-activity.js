@@ -53,6 +53,7 @@ class DbpAuthorizationManageGrantsDialogDemoActivity extends ScopedElementsMixin
                 class="demo-container"
                 lang="${this.lang}"
                 subscribe="auth"
+                no-auth
                 entry-point-url="${this.entryPointUrl}"></dbp-authorization-manage-grants-dialog-demo>
         `;
     }

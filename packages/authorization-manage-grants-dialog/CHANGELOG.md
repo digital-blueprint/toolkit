@@ -11,4 +11,6 @@ The component is still in development, the notes below track what already works.
   `/authorization/resource-action-grants`
 - Added loading of available roles for the configured compound authorization resource identifier
 - Added a toggleable side panel listing the roles of the resource in the current language
+- Added working demo. User can select `Resource types` and `Resources`.
+- Added Roles side panel
 - TODO: the dialog only renders the subject search, adding and listing grants is missing
