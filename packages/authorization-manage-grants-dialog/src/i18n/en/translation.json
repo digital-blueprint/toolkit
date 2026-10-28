@@ -3,10 +3,22 @@
         "buttons": {
             "add-subject-button-label": "Add person or group",
             "close-button-label": "Close",
-            "open": "Manage grants"
+            "hide-roles-button-label": "Hide roles",
+            "open": "Manage grants",
+            "show-roles-button-label": "Show roles"
         },
         "demo-title": "Authorization manage grants dialog demo",
+        "grants-list-placeholder": "No roles assigned with this resource yet",
         "modal-title": "Manage grants dialog",
+        "notifications": {
+            "could-not-get-role-grants": "Could not load assigned roles and their holders.",
+            "could-not-get-roles": "Could not load available roles.",
+            "error-title": "Error"
+        },
+        "roles-panel": {
+            "empty-state-label": "No roles to display",
+            "title": "Roles"
+        },
         "subject-select-placeholder": "Search for a person or group",
         "subject-types": {
             "dynamic-user-group": "Dynamic user group",

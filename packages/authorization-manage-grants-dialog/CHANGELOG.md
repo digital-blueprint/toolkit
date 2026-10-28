@@ -9,4 +9,6 @@ The component is still in development, the notes below track what already works.
   dynamic user groups at once and merging the results into one dropdown
 - Added `getGrantHolder()`, which turns a selected subject into the grant holder fields of
   `/authorization/resource-action-grants`
+- Added loading of available roles for the configured compound authorization resource identifier
+- Added a toggleable side panel listing the roles of the resource in the current language
 - TODO: the dialog only renders the subject search, adding and listing grants is missing

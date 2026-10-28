@@ -17,6 +17,9 @@ npm i @dbp-toolkit/authorization-manage-grants-dialog
 <dbp-authorization-manage-grants-dialog
     lang="en"
     modal-title="Manage grants"
+    resource-class-identifier="DbpRelayFormalizeForm"
+    resource-identifier="<form UUID>"
+    resource-type="0"
     entry-point-url="https://api.example.com"></dbp-authorization-manage-grants-dialog>
 <script
     type="module"
@@ -49,11 +52,18 @@ Dynamic user groups have no item endpoint, so the API gives them a blank node ID
 stable `dynamic-user-group:<identifier>` value, which is also what a selection has to be set
 to from the outside.
 
+### Roles panel
+
+The show-roles button toggles a side panel listing available roles.
+
 ### Attributes
 
 - `lang` (optional, default: `de`): Language setting (`de` or `en`)
 - `modal-title` (optional): Custom dialog title
 - `entry-point-url` (optional): API entry point URL
+- `resource-class-identifier`: Authorization resource class
+- `resource-identifier`: Authorization resource identifier
+- `resource-type`: Authorization resource type (`0` for an item, `1` for a group)
 
 ### Methods
 

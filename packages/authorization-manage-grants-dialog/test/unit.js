@@ -79,6 +79,332 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         node.close();
         assert.isFalse(modal.isOpen());
     });
+
+    test('should load roles with the configured compound resource identifier', async () => {
+        const originalFetch = globalThis.fetch;
+        const requests = [];
+        node.lang = 'en';
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeSubmission';
+        node.resourceIdentifier = 'form-identifier';
+        node.resourceType = 1;
+        globalThis.fetch = async (url, options) => {
+            requests.push({url: new URL(url), options});
+            return new Response(
+                JSON.stringify({
+                    'hydra:member': [
+                        {
+                            '@id': '/authorization/roles/role-identifier',
+                            identifier: 'role-identifier',
+                            roleNames: [
+                                {languageTag: 'de', name: 'Rollenname'},
+                                {languageTag: 'en', name: 'Role name'},
+                            ],
+                        },
+                    ],
+                }),
+                {
+                    status: 200,
+                    headers: {'Content-Type': 'application/ld+json'},
+                },
+            );
+        };
+
+        try {
+            assert.isTrue(await node._loadRoles());
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+
+        assert.lengthOf(requests, 1);
+        assert.equal(requests[0].url.pathname, '/authorization/roles');
+        assert.equal(
+            requests[0].url.searchParams.get('resourceClass'),
+            'DbpRelayFormalizeSubmission',
+        );
+        assert.equal(requests[0].url.searchParams.get('resourceIdentifier'), 'form-identifier');
+        assert.equal(requests[0].url.searchParams.get('resourceType'), '1');
+        assert.equal(requests[0].options.headers.Authorization, 'Bearer token');
+        assert.equal(node.roles.size, 1);
+        assert.equal(
+            node.roles.get('/authorization/roles/role-identifier').identifier,
+            'role-identifier',
+        );
+    });
+
+    test('should stop loading resource data when the roles request fails', async () => {
+        const originalFetch = globalThis.fetch;
+        const requests = [];
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeForm';
+        node.resourceIdentifier = 'form-id';
+        globalThis.fetch = async (url) => {
+            requests.push(new URL(url).pathname);
+            return new Response('', {status: 403, statusText: 'Forbidden'});
+        };
+        try {
+            await node._loadResourceData();
+            assert.deepEqual(requests, ['/authorization/roles']);
+            assert.isFalse(node.grantHoldersLoading);
+            assert.isEmpty(node.grantHolders);
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+    });
+
+    test('should group role grants by holder and skip direct actions', async () => {
+        const originalFetch = globalThis.fetch;
+        const requests = [];
+        const editor = {
+            '@id': '/authorization/roles/editor',
+            '@type': 'AuthorizationRole',
+            identifier: 'editor',
+            roleNames: [
+                {'@type': 'AuthorizationRoleName', languageTag: 'de', name: 'Bearbeiter*in'},
+                {'@type': 'AuthorizationRoleName', languageTag: 'en', name: 'Editor'},
+            ],
+        };
+        const manager = {'@id': '/authorization/roles/manager', identifier: 'manager'};
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeSubmission';
+        node.resourceIdentifier = 'form-id';
+        node.resourceType = 1;
+        node.roles = new Map([editor, manager].map((role) => [role['@id'], role]));
+        const grants = [
+            {identifier: 'a', userIdentifier: 'person-id', role: editor['@id'], shareable: true},
+            {identifier: 'b', userIdentifier: 'person-id', role: manager['@id'], shareable: false},
+            {identifier: 'c', userIdentifier: 'ignored', role: null, action: 'read'},
+            {identifier: 'd', dynamicUserGroupIdentifier: 'developers', role: manager['@id']},
+            {identifier: 'e', userGroup: '/authorization/user-groups/team', role: editor['@id']},
+        ];
+        globalThis.fetch = async (url) => {
+            const parsed = new URL(url);
+            requests.push(parsed);
+            const body =
+                parsed.pathname === '/authorization/resource-action-grants'
+                    ? {'hydra:member': grants}
+                    : parsed.pathname === '/authorization/dynamic-user-groups'
+                      ? {'hydra:member': [{identifier: 'developers'}]}
+                      : {
+                            '@context': '/contexts/Person',
+                            identifier: parsed.pathname.split('/').pop(),
+                            givenName: 'Frank',
+                            name: 'Team',
+                            members: [{identifier: 'member-id'}],
+                            localData: {email: 'frank@example.com', unused: 'discard'},
+                        };
+            return new Response(JSON.stringify(body), {status: 200});
+        };
+        try {
+            await node._loadRoleGrantHolders();
+            assert.lengthOf(node.grantHolders, 3);
+            const person = node.grantHolders.find((holder) => holder.key === 'person:person-id');
+            assert.equal(person.subject.givenName, 'Frank');
+            assert.deepEqual(
+                person.grants.map((grant) => grant.identifier),
+                ['a', 'b'],
+            );
+            assert.deepEqual(person.grants[0], {
+                identifier: 'a',
+                shareable: true,
+                grantedActions: [],
+                roleDefinition: {
+                    identifier: 'editor',
+                    roleNames: [
+                        {languageTag: 'de', name: 'Bearbeiter*in'},
+                        {languageTag: 'en', name: 'Editor'},
+                    ],
+                },
+            });
+            assert.deepEqual(person.subject.localData, {email: 'frank@example.com'});
+            assert.notProperty(person.subject, '@context');
+            const group = node.grantHolders.find((holder) => holder.key.startsWith('user-group:'));
+            assert.equal(group.key, 'user-group:team');
+            assert.lengthOf(
+                requests.filter((url) => url.pathname === '/authorization/user-groups/team'),
+                1,
+            );
+            assert.equal(group.subject.name, 'Team');
+            assert.notProperty(group.subject, 'members');
+            assert.notProperty(group.subject, 'localData');
+            assert.isTrue(person.grants[0].shareable);
+            assert.equal(requests[0].searchParams.get('resourceType'), '1');
+            assert.lengthOf(
+                requests.filter((url) => url.pathname === '/base/people/person-id'),
+                1,
+            );
+            assert.equal(
+                requests
+                    .find((url) => url.pathname === '/base/people/person-id')
+                    .searchParams.get('includeLocal'),
+                'email',
+            );
+            assert.isFalse(node.grantHoldersLoading);
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+    });
+
+    test('should preserve role grants when one subject lookup fails', async () => {
+        const originalFetch = globalThis.fetch;
+        const role = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeForm';
+        node.resourceIdentifier = 'form-id';
+        node.roles = new Map([[role['@id'], role]]);
+        globalThis.fetch = async (url) => {
+            const path = new URL(url).pathname;
+            if (path === '/base/people/deleted') {
+                return new Response('', {status: 404, statusText: 'Not Found'});
+            }
+            const body =
+                path === '/authorization/resource-action-grants'
+                    ? {
+                          'hydra:member': [
+                              {
+                                  identifier: 'a',
+                                  userIdentifier: 'deleted',
+                                  role: role['@id'],
+                                  shareable: true,
+                              },
+                              {
+                                  identifier: 'b',
+                                  userIdentifier: 'existing',
+                                  role: '/authorization/roles/missing-role',
+                                  shareable: false,
+                              },
+                          ],
+                      }
+                    : {identifier: 'existing', givenName: 'Frank'};
+            return new Response(JSON.stringify(body), {status: 200});
+        };
+        try {
+            await node._loadRoleGrantHolders();
+            assert.lengthOf(node.grantHolders, 2);
+            assert.deepEqual(node.grantHolders[0].subject, {identifier: 'deleted'});
+            assert.equal(node.grantHolders[0].grants[0].identifier, 'a');
+            assert.equal(node.grantHolders[0].grants[0].roleDefinition.identifier, 'editor');
+            assert.isTrue(node.grantHolders[0].grants[0].shareable);
+            assert.equal(node.grantHolders[1].subject.givenName, 'Frank');
+            assert.deepEqual(node.grantHolders[1].grants[0].roleDefinition, {
+                identifier: 'missing-role',
+                roleNames: [],
+            });
+            assert.isFalse(node.grantHoldersLoading);
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+    });
+
+    test('should fall back to the role identifier when a localized name is unavailable', () => {
+        node.lang = 'en';
+        assert.equal(node._getRoleName({identifier: 'missing-role'}), 'missing-role');
+        assert.equal(
+            node._getRoleName({identifier: 'missing-role', roleNames: []}),
+            'missing-role',
+        );
+        node.lang = 'de';
+        assert.equal(
+            node._getRoleName({
+                identifier: 'missing-role',
+                roleNames: [{languageTag: 'en', name: 'Editor'}],
+            }),
+            'missing-role',
+        );
+    });
+
+    test('should keep holders ordered by type, name and key across reloads', async () => {
+        const originalFetch = globalThis.fetch;
+        const role = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeForm';
+        node.resourceIdentifier = 'form-id';
+        node.roles = new Map([[role['@id'], role]]);
+        const grants = [
+            {userGroup: '/authorization/user-groups/team'},
+            {userIdentifier: 'z'},
+            {dynamicUserGroupIdentifier: 'developers'},
+            {userIdentifier: 'b'},
+            {userIdentifier: 'a'},
+        ].map((holder, index) => ({...holder, identifier: String(index), role: role['@id']}));
+        globalThis.fetch = async (url) => {
+            const path = new URL(url).pathname;
+            const identifier = path.split('/').pop();
+            const body =
+                path === '/authorization/resource-action-grants'
+                    ? {'hydra:member': grants}
+                    : path === '/authorization/dynamic-user-groups'
+                      ? {'hydra:member': [{identifier: 'developers'}]}
+                      : {identifier, givenName: identifier === 'z' ? 'Zoe' : 'Alex', name: 'Team'};
+            return new Response(JSON.stringify(body), {status: 200});
+        };
+        try {
+            const expected = [
+                'person:a',
+                'person:b',
+                'person:z',
+                'user-group:team',
+                'dynamic-user-group:developers',
+            ];
+            await node._loadRoleGrantHolders();
+            assert.deepEqual(
+                node.grantHolders.map((holder) => holder.key),
+                expected,
+            );
+            grants.reverse();
+            await node._loadRoleGrantHolders();
+            assert.deepEqual(
+                node.grantHolders.map((holder) => holder.key),
+                expected,
+            );
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+    });
+
+    test('should name a role in the current language', async () => {
+        const role = {
+            identifier: 'role-identifier',
+            roleNames: [
+                {languageTag: 'de', name: 'Rollenname'},
+                {languageTag: 'en', name: 'Role name'},
+            ],
+        };
+
+        node.lang = 'en';
+        assert.equal(node._getRoleName(role), 'Role name');
+
+        // The loaded roles keep all their translations, so switching the language is enough
+        node.lang = 'de';
+        assert.equal(node._getRoleName(role), 'Rollenname');
+    });
+
+    test('should not request roles without a compound resource identifier', async () => {
+        const originalFetch = globalThis.fetch;
+        let requestCount = 0;
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeSubmission';
+        node.resourceIdentifier = '';
+        globalThis.fetch = async () => {
+            requestCount++;
+            return new Response('{}', {status: 200});
+        };
+
+        try {
+            await node._loadRoles();
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+
+        assert.equal(requestCount, 0);
+        assert.equal(node.roles.size, 0);
+    });
 });
 
 suite('authorization subject select', () => {

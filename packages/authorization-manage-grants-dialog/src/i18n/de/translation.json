@@ -3,10 +3,22 @@
         "buttons": {
             "add-subject-button-label": "Person oder Gruppe hinzufügen",
             "close-button-label": "Schließen",
-            "open": "Berechtigungen verwalten"
+            "hide-roles-button-label": "Rollen ausblenden",
+            "open": "Berechtigungen verwalten",
+            "show-roles-button-label": "Rollen anzeigen"
         },
         "demo-title": "Demo des Dialogs zur Verwaltung von Berechtigungen",
+        "grants-list-placeholder": "Dieser Ressource wurden noch keine Rollen zugewiesen",
         "modal-title": "Berechtigungen verwalten",
+        "notifications": {
+            "could-not-get-role-grants": "Zugewiesene Rollen und ihre Berechtigten konnten nicht geladen werden.",
+            "could-not-get-roles": "Verfügbare Rollen konnten nicht geladen werden.",
+            "error-title": "Fehler"
+        },
+        "roles-panel": {
+            "empty-state-label": "Es sind keine Rollen vorhanden",
+            "title": "Rollen"
+        },
         "subject-select-placeholder": "Nach einer Person oder Gruppe suchen",
         "subject-types": {
             "dynamic-user-group": "Dynamische Benutzergruppe",
