@@ -7,6 +7,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import tippy from 'tippy.js';
 import tippy2CSSPath from 'tippy.js/dist/tippy.css';
+import {getTippyPositioningProps, getTooltipPositioningCSS} from './positioning.js';
 
 export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -42,11 +43,13 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
                 button._tippy.setProps({
                     content: this.textContent,
                     appendTo,
+                    ...getTippyPositioningProps(this),
                 });
             } else {
                 tippy(button, {
                     content: this.textContent,
                     appendTo,
+                    ...getTippyPositioningProps(this),
                 });
             }
         }
@@ -74,6 +77,7 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
             ${commonStyles.getButtonCSS()}
+            ${getTooltipPositioningCSS()}
 
             .info-icon {
                 display: inline;
