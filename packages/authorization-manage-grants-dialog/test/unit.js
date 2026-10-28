@@ -2,6 +2,56 @@ import {assert} from 'chai';
 
 import '../src/dbp-authorization-manage-grants-dialog.js';
 import {AuthorizationSubjectSelect} from '../src/authorization-subject-select.js';
+import {getGrantHolderParts} from '../src/grant-holder.js';
+
+suite('grant holder', () => {
+    test('should identify every grant holder type', () => {
+        assert.deepEqual(getGrantHolderParts({userIdentifier: 'F957F2400C941B72'}), {
+            type: 'person',
+            identifier: 'F957F2400C941B72',
+            iri: null,
+            key: 'person:F957F2400C941B72',
+        });
+        // User groups are keyed by the identifier of their IRI, which stays available for the
+        // requests to their item endpoint
+        assert.deepEqual(
+            getGrantHolderParts({userGroup: '/authorization/user-groups/019a0ff1-597d'}),
+            {
+                type: 'user-group',
+                identifier: '019a0ff1-597d',
+                iri: '/authorization/user-groups/019a0ff1-597d',
+                key: 'user-group:019a0ff1-597d',
+            },
+        );
+        assert.deepEqual(getGrantHolderParts({dynamicUserGroupIdentifier: 'dbp_developers'}), {
+            type: 'dynamic-user-group',
+            identifier: 'dbp_developers',
+            iri: null,
+            key: 'dynamic-user-group:dbp_developers',
+        });
+    });
+
+    test('should key a user group the same way whatever its IRI looks like', () => {
+        const key = 'user-group:019a0ff1-597d';
+        assert.equal(
+            getGrantHolderParts({
+                userGroup: 'https://api.example.com/authorization/user-groups/019a0ff1-597d',
+            }).key,
+            key,
+        );
+        assert.equal(
+            getGrantHolderParts({userGroup: '/authorization/user-groups/019a0ff1-597d/'}).key,
+            key,
+        );
+    });
+
+    test('should have no parts without a grant holder', () => {
+        assert.isNull(getGrantHolderParts(null));
+        assert.isNull(getGrantHolderParts(undefined));
+        assert.isNull(getGrantHolderParts({}));
+        assert.isNull(getGrantHolderParts({identifier: 'grant-identifier', action: 'read'}));
+    });
+});
 
 suite('dbp-authorization-manage-grants-dialog', () => {
     let node;
@@ -78,6 +128,31 @@ suite('authorization subject select', () => {
             }),
             'everybody [Dynamic user group]',
         );
+    });
+
+    test('should render the subject type of a dropdown entry separately', () => {
+        const resource = {
+            '@id': '/base/people/1234567890ABCDEF',
+            '@type': 'https://schema.org/Person',
+            identifier: '1234567890ABCDEF',
+            givenName: 'Max',
+            familyName: 'Mustermann',
+        };
+
+        const entry = node._renderResult({text: node.formatResource(node, resource), resource});
+
+        assert.equal(entry.classList.contains('subject-entry'), true);
+        assert.deepEqual(
+            [...entry.children].map((child) => child.textContent),
+            ['Max Mustermann', '[Person]'],
+        );
+        assert.equal(entry.querySelector('.subject-entry-type').textContent, '[Person]');
+    });
+
+    test('should leave entries without a subject to the base class', () => {
+        // The "Searching…" entry select2 adds while a search request is running
+        assert.equal(typeof node._renderResult({loading: true, text: 'Searching…'}), 'object');
+        assert.equal(node._renderResult({text: 'Plain text'}), 'Plain text');
     });
 
     test('should translate the subject types for the current language', async () => {
@@ -411,6 +486,36 @@ suite('authorization subject select', () => {
                 identifier: 'everybody',
             }),
             {dynamicUserGroupIdentifier: 'everybody'},
+        );
+    });
+
+    test('should key a selected subject like the holder of its grants', () => {
+        // The dialog groups the grants of the API by the same key, so a selected subject can
+        // be matched against the holders that are already listed
+        const subjects = [
+            {
+                '@id': '/base/people/1234567890ABCDEF',
+                '@type': 'https://schema.org/Person',
+                identifier: '1234567890ABCDEF',
+                givenName: 'Max',
+                familyName: 'Mustermann',
+            },
+            {
+                '@id': '/authorization/user-groups/01900000-0000',
+                '@type': 'AuthorizationUserGroup',
+                identifier: '01900000-0000',
+                name: 'Example Group',
+            },
+            {
+                '@id': 'dynamic-user-group:everybody',
+                '@type': 'AuthorizationDynamicUserGroup',
+                identifier: 'everybody',
+            },
+        ];
+
+        assert.deepEqual(
+            subjects.map((subject) => getGrantHolderParts(node.getGrantHolder(subject)).key),
+            ['person:1234567890ABCDEF', 'user-group:01900000-0000', 'dynamic-user-group:everybody'],
         );
     });
 

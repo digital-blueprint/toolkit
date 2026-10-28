@@ -1,6 +1,12 @@
+import {css} from 'lit';
 import {LangMixin} from '@dbp-toolkit/common';
 import {ResourceSelect, hydra} from '@dbp-toolkit/resource-select';
 import {createInstance} from './i18n.js';
+import {
+    SUBJECT_TYPE_DYNAMIC_USER_GROUP,
+    SUBJECT_TYPE_PERSON,
+    SUBJECT_TYPE_USER_GROUP,
+} from './grant-holder.js';
 
 const DYNAMIC_USER_GROUP_PATH = '/authorization/dynamic-user-groups';
 const RESOURCE_PATHS = ['/base/people', '/authorization/user-groups', DYNAMIC_USER_GROUP_PATH];
@@ -8,10 +14,6 @@ const RESOURCE_PATHS = ['/base/people', '/authorization/user-groups', DYNAMIC_US
 // server-side, and there is only a handful of dynamic user groups. getCollection() warns if
 // a collection ever grows beyond that.
 const MAX_PAGES = 1;
-
-const SUBJECT_TYPE_PERSON = 'person';
-const SUBJECT_TYPE_USER_GROUP = 'user-group';
-const SUBJECT_TYPE_DYNAMIC_USER_GROUP = 'dynamic-user-group';
 
 // Dynamic user groups have no item endpoint, so the API cannot give them a real IRI and mints
 // a new blank node ID on every request. This prefix marks the stable replacement we build from
@@ -103,13 +105,17 @@ export class AuthorizationSubjectSelect extends LangMixin(
     }
 
     /**
-     * Formats a supported subject with its translated subject type.
+     * Splits a supported subject into the parts of its label.
      *
-     * @param {ResourceSelect} select - Resource select displaying the subject.
-     * @param {SubjectResource} resource - Subject resource to format.
-     * @returns {string} Human-readable subject label, or an empty string when unusable.
+     * @param {SubjectResource|null} resource - Subject resource to format.
+     * @returns {{text: string, type: string}|null} Name of the subject and its translated
+     *     subject type, or null when the subject is unusable.
      */
-    formatResource(select, resource) {
+    _getSubjectLabelParts(resource) {
+        if (!resource) {
+            return null;
+        }
+
         const i18n = this._subjectI18n;
         let text;
         let type;
@@ -128,18 +134,64 @@ export class AuthorizationSubjectSelect extends LangMixin(
                 type = i18n.t('auth-manage-dialog.subject-types.person');
                 break;
             default:
-                return '';
+                return null;
         }
 
-        return text ? `${text} [${type}]` : '';
+        return text ? {text, type} : null;
+    }
+
+    /**
+     * Formats a supported subject with its translated subject type.
+     *
+     * @param {ResourceSelect} select - Resource select displaying the subject.
+     * @param {SubjectResource} resource - Subject resource to format.
+     * @returns {string} Human-readable subject label, or an empty string when unusable.
+     */
+    formatResource(select, resource) {
+        const parts = this._getSubjectLabelParts(resource);
+
+        return parts === null ? '' : `${parts.text} [${parts.type}]`;
+    }
+
+    /**
+     * Renders one entry of the dropdown with the subject type aligned to the right, instead
+     * of the single line of text of the base class. The selected subject keeps that line,
+     * since there is no room for two columns next to the search input.
+     *
+     * @param {{loading?: boolean, text: string, resource?: SubjectResource}} result - The
+     *     select2 result object.
+     * @returns {HTMLElement|string} An element for a subject, whatever the base class renders
+     *     for the remaining entries.
+     */
+    _renderResult(result) {
+        const parts = result.loading ? null : this._getSubjectLabelParts(result.resource ?? null);
+        if (parts === null) {
+            return super._renderResult(result);
+        }
+
+        const entry = document.createElement('span');
+        entry.classList.add('subject-entry');
+
+        const name = document.createElement('span');
+        name.textContent = parts.text;
+
+        const type = document.createElement('span');
+        type.classList.add('subject-entry-type');
+        type.textContent = `[${parts.type}]`;
+
+        entry.append(name, type);
+
+        return entry;
     }
 
     /**
      * The grant holder fields of a subject, to be posted to
      * /authorization/resource-action-grants. Exactly one of them identifies the holder.
+     * getGrantHolderParts() turns them into the key a holder is grouped by.
      *
      * @param {SubjectResource} resource - Subject resource to grant something to.
-     * @returns {object|null} Grant holder fields, or null for an unsupported subject.
+     * @returns {import('./grant-holder.js').GrantHolderFields|null} Grant holder fields, or
+     *     null for an unsupported subject.
      */
     getGrantHolder(resource) {
         switch (this._getSubjectType(resource)) {
@@ -349,5 +401,30 @@ export class AuthorizationSubjectSelect extends LangMixin(
                 };
             },
         };
+    }
+
+    static get styles() {
+        return [
+            ...super.styles,
+            // language=css
+            css`
+                /* The subject entries of the dropdown, see _renderResult() */
+                .subject-entry {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 1em;
+                    width: 100%;
+                }
+
+                .subject-entry-type {
+                    white-space: nowrap;
+                    color: var(--dbp-content);
+                }
+
+                .select2-results__option--highlighted .subject-entry-type {
+                    color: var(--dbp-background);
+                }
+            `,
+        ];
     }
 }
