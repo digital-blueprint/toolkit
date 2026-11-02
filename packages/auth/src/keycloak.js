@@ -255,9 +255,8 @@ export class KeycloakWrapper extends EventTarget {
      * Logs the user out locally, but not with keycloak. Login will instantly log the user back in without
      * requiring a re-auth.
      */
-    // oxlint-disable-next-line typescript/require-await
     async localLogout() {
-        this._getKeycloak().clearToken();
+        await this._getKeycloak().clearToken();
     }
 
     /**
