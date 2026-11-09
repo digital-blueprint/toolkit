@@ -6,7 +6,8 @@ export default defineConfig({
         input: ['src/**/*.js', './*.js'],
         output: 'src/i18n/{{language}}/{{namespace}}.json',
         defaultNS: 'translation',
-        functions: ['t', '*.t'],
+        // The notification helpers take a translation key as their first argument.
+        functions: ['t', '*.t', '*._notifySuccess', '*._notifyError'],
         indentation: 4,
     },
 });

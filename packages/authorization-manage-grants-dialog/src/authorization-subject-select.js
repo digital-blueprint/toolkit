@@ -187,7 +187,7 @@ export class AuthorizationSubjectSelect extends LangMixin(
     /**
      * The grant holder fields of a subject, to be posted to
      * /authorization/resource-action-grants. Exactly one of them identifies the holder.
-     * getGrantHolderParts() turns them into the key a holder is grouped by.
+     * deriveGrantHolderIdentity() turns them into the key a holder is grouped by.
      *
      * @param {SubjectResource} resource - Subject resource to grant something to.
      * @returns {import('./grant-holder.js').GrantHolderFields|null} Grant holder fields, or

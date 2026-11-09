@@ -1,10 +1,19 @@
 {
     "auth-manage-dialog": {
         "buttons": {
+            "add-role": "Add role",
+            "add-role-no-more-roles-title": "No more roles available",
+            "add-role-select-role-title": "Please select a role before adding another",
             "add-subject-button-label": "Add person or group",
             "close-button-label": "Close",
+            "delete-draft-role": "Delete new role for {{holder}}",
+            "delete-role": "Delete role \"{{role}}\" for {{holder}}",
             "hide-roles-button-label": "Hide roles",
             "open": "Manage grants",
+            "save-holder-roles-button-disabled-title": "Nothing to save",
+            "save-holder-roles-button-label": "Save",
+            "save-holder-roles-button-select-role-title": "Please select a role before saving",
+            "save-roles-button-label": "Save",
             "show-roles-button-label": "Show roles"
         },
         "demo-error-get-forms": "Could not load forms.",
@@ -19,17 +28,37 @@
         "demo-submission-id-label": "Submission UUID",
         "demo-submission-id-placeholder": "Enter submission UUID",
         "demo-title": "Authorization manage grants dialog demo",
-        "grants-list-placeholder": "No roles assigned with this resource yet",
+        "demo-use-fixed-resource-label": "Use fixed demo form",
+        "draft-shareable-role-label": "Shareable new role for {{holder}}",
+        "grant-holder-aria-label": "Roles for {{name}}",
+        "grants-list-placeholder": "No roles assigned to this resource yet",
         "modal-title": "Manage grants dialog",
         "notifications": {
+            "could-not-change-role": "Could not change role \"{{oldRoleName}}\" to \"{{roleName}}\" for {{holderName}}",
+            "could-not-delete-replaced-role": "The new role was assigned, but the previous role \"{{oldRoleName}}\" for {{holderName}} could not be removed.",
+            "could-not-delete-role": "Could not delete role \"{{roleName}}\" for {{holderName}}",
             "could-not-get-role-grants": "Could not load assigned roles and their holders.",
             "could-not-get-roles": "Could not load available roles.",
-            "error-title": "Error"
+            "could-not-save-role": "Could not save role \"{{roleName}}\" for {{holderName}}",
+            "could-not-update-role": "Could not update role \"{{roleName}}\" for {{holderName}}",
+            "error-title": "Error",
+            "role-changed-successfully": "Role \"{{oldRoleName}}\" changed to \"{{roleName}}\" for {{holderName}}",
+            "role-deleted-successfully": "Role \"{{roleName}}\" deleted for {{holderName}}",
+            "role-saved-successfully": "Role \"{{roleName}}\" saved for {{holderName}}",
+            "role-updated-successfully": "Role \"{{roleName}}\" has been updated for {{holderName}}",
+            "success-title": "Success",
+            "unsupported-subject-type": "The selected subject type is not supported."
         },
+        "role-change-pending-title": "The change is applied when you save",
+        "role-select-disabled-title": "You are not allowed to change this role",
+        "role-select-label": "Role for {{holder}}",
+        "role-select-placeholder": "-- Select a role --",
         "roles-panel": {
             "empty-state-label": "No roles to display",
             "title": "Roles"
         },
+        "shareable-column-label": "Reshareable role",
+        "shareable-role-label": "Shareable role {{role}} for {{holder}}",
         "subject-select-placeholder": "Search for a person or group",
         "subject-types": {
             "dynamic-user-group": "Dynamic user group",

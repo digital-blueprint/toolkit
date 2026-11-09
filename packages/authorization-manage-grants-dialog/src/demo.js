@@ -16,6 +16,10 @@ import {Notification} from '@dbp-toolkit/notification';
 import {AuthorizationManageGrantsDialog} from './authorization-manage-grants-dialog.js';
 import {createInstance} from './i18n.js';
 
+const DEMO_RESOURCE_CLASS_IDENTIFIER = 'DbpRelayFormalizeForm';
+const DEMO_RESOURCE_IDENTIFIER = '32297d33-1352-4cf2-ba06-1577911c3537';
+const DEMO_RESOURCE_TYPE = 0;
+
 export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
     LangMixin(ScopedElementsMixin(DBPLitElement), createInstance),
 ) {
@@ -31,6 +35,7 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
         this.resourceType = '';
         /** @type {string} Encoded as "resourceClass:resourceType", e.g. "DbpRelayFormalizeForm:0" */
         this.selectedResourceType = '';
+        this.useFixedDemoResource = false;
     }
 
     static get properties() {
@@ -45,6 +50,7 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
             resourceIdentifier: {type: String},
             resourceType: {type: String},
             selectedResourceType: {type: String},
+            useFixedDemoResource: {type: Boolean},
         };
     }
 
@@ -110,6 +116,27 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
         this.resourceClassIdentifier = '';
         this.resourceIdentifier = '';
         this.resourceType = '';
+        this.useFixedDemoResource = false;
+    }
+
+    /**
+     * Uses a fixed form to avoid loading the slow forms collection in the demo.
+     * @param {Event & {target: HTMLInputElement}} event
+     * @returns {void}
+     */
+    handleUseFixedDemoResourceChange(event) {
+        this.useFixedDemoResource = event.target.checked;
+        this.selectedResourceType = '';
+
+        if (this.useFixedDemoResource) {
+            this.resourceClassIdentifier = DEMO_RESOURCE_CLASS_IDENTIFIER;
+            this.resourceIdentifier = DEMO_RESOURCE_IDENTIFIER;
+            this.resourceType = String(DEMO_RESOURCE_TYPE);
+        } else {
+            this.resourceClassIdentifier = '';
+            this.resourceIdentifier = '';
+            this.resourceType = '';
+        }
     }
 
     /**
@@ -176,12 +203,20 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
     static get styles() {
         // language=css
         return [
-            commonStyles.getThemeCSS(),
-            commonStyles.getGeneralCSS(),
             css`
-                select:not(.select) {
-                    background-size: 1em;
+                @layer theme, components;
+
+                @layer theme {
+                    ${commonStyles.getThemeCSS()}
+                    ${commonStyles.getGeneralCSS()}
                 }
+            `,
+            css`
+                @layer components {
+                    /* @TODO: fix dark theme select*/
+                    select:not(.select) {
+                        background-size: 1em;
+                    }
             `,
         ];
     }
@@ -198,10 +233,22 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
         const isSubmissionMode = this.selectedResourceType === 'DbpRelayFormalizeSubmission:0';
 
         return html`
+            <label>
+                <input
+                    type="checkbox"
+                    .checked="${this.useFixedDemoResource}"
+                    @change="${this.handleUseFixedDemoResourceChange}" />
+                ${i18n.t('auth-manage-dialog.demo-use-fixed-resource-label')}
+            </label>
+            <br />
             <label for="resource-type-select">
                 ${i18n.t('auth-manage-dialog.demo-select-resource-type-label')}
             </label>
-            <select id="resource-type-select" @change="${this.handleResourceTypeChange}">
+            <select
+                id="resource-type-select"
+                .value="${this.selectedResourceType}"
+                ?disabled="${this.useFixedDemoResource}"
+                @change="${this.handleResourceTypeChange}">
                 <option value="">
                     ${i18n.t('auth-manage-dialog.demo-select-resource-type-placeholder')}
                 </option>

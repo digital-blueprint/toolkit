@@ -1,10 +1,19 @@
 {
     "auth-manage-dialog": {
         "buttons": {
+            "add-role": "Rolle hinzufügen",
+            "add-role-no-more-roles-title": "Es sind keine Rollen mehr verfügbar",
+            "add-role-select-role-title": "Bitte wählen Sie eine Rolle aus, bevor Sie eine weitere hinzufügen",
             "add-subject-button-label": "Person oder Gruppe hinzufügen",
             "close-button-label": "Schließen",
+            "delete-draft-role": "Neue Rolle für {{holder}} löschen",
+            "delete-role": "Rolle {{role}} für {{holder}} löschen",
             "hide-roles-button-label": "Rollen ausblenden",
             "open": "Berechtigungen verwalten",
+            "save-holder-roles-button-disabled-title": "Nichts zu speichern",
+            "save-holder-roles-button-label": "Speichern",
+            "save-holder-roles-button-select-role-title": "Bitte wählen Sie eine Rolle aus, bevor Sie speichern",
+            "save-roles-button-label": "Speichern",
             "show-roles-button-label": "Rollen anzeigen"
         },
         "demo-error-get-forms": "Formulare konnten nicht geladen werden.",
@@ -19,17 +28,37 @@
         "demo-submission-id-label": "Einreichungs-UUID",
         "demo-submission-id-placeholder": "Einreichungs-UUID eingeben",
         "demo-title": "Demo des Dialogs zur Verwaltung von Berechtigungen",
+        "demo-use-fixed-resource-label": "Festes Demo-Formular verwenden",
+        "draft-shareable-role-label": "Weitergebbare neue Rolle für {{holder}}",
+        "grant-holder-aria-label": "Rollen für {{name}}",
         "grants-list-placeholder": "Dieser Ressource wurden noch keine Rollen zugewiesen",
         "modal-title": "Berechtigungen verwalten",
         "notifications": {
+            "could-not-change-role": "Rolle \"{{oldRoleName}}\" für {{holderName}} konnte nicht auf \"{{roleName}}\" geändert werden",
+            "could-not-delete-replaced-role": "Die neue Rolle wurde zugewiesen, die bisherige Rolle \"{{oldRoleName}}\" für {{holderName}} konnte aber nicht entfernt werden.",
+            "could-not-delete-role": "Rolle \"{{roleName}}\" für {{holderName}} konnte nicht gelöscht werden",
             "could-not-get-role-grants": "Zugewiesene Rollen und ihre Berechtigten konnten nicht geladen werden.",
             "could-not-get-roles": "Verfügbare Rollen konnten nicht geladen werden.",
-            "error-title": "Fehler"
+            "could-not-save-role": "Rolle \"{{roleName}}\" für {{holderName}} konnte nicht gespeichert werden",
+            "could-not-update-role": "Rolle \"{{roleName}}\" für {{holderName}} konnte nicht aktualisiert werden",
+            "error-title": "Fehler",
+            "role-changed-successfully": "Rolle \"{{oldRoleName}}\" für {{holderName}} auf \"{{roleName}}\" geändert",
+            "role-deleted-successfully": "Rolle \"{{roleName}}\" für {{holderName}} gelöscht",
+            "role-saved-successfully": "Rolle \"{{roleName}}\" für {{holderName}} gespeichert",
+            "role-updated-successfully": "Rolle \"{{roleName}}\" für {{holderName}} wurde aktualisiert",
+            "success-title": "Erfolg",
+            "unsupported-subject-type": "Der ausgewählte Subjekttyp wird nicht unterstützt."
         },
+        "role-change-pending-title": "Die Änderung wird beim Speichern übernommen",
+        "role-select-disabled-title": "Sie dürfen diese Rolle nicht ändern",
+        "role-select-label": "Rolle für {{holder}}",
+        "role-select-placeholder": "-- Rolle auswählen --",
         "roles-panel": {
             "empty-state-label": "Es sind keine Rollen vorhanden",
             "title": "Rollen"
         },
+        "shareable-column-label": "Weitergabbare Rolle",
+        "shareable-role-label": "Weitergebbare Rolle {{role}} für {{holder}}",
         "subject-select-placeholder": "Nach einer Person oder Gruppe suchen",
         "subject-types": {
             "dynamic-user-group": "Dynamische Benutzergruppe",

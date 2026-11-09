@@ -2,11 +2,11 @@ import {assert} from 'chai';
 
 import '../src/dbp-authorization-manage-grants-dialog.js';
 import {AuthorizationSubjectSelect} from '../src/authorization-subject-select.js';
-import {getGrantHolderParts} from '../src/grant-holder.js';
+import {deriveGrantHolderIdentity} from '../src/grant-holder.js';
 
 suite('grant holder', () => {
     test('should identify every grant holder type', () => {
-        assert.deepEqual(getGrantHolderParts({userIdentifier: 'F957F2400C941B72'}), {
+        assert.deepEqual(deriveGrantHolderIdentity({userIdentifier: 'F957F2400C941B72'}), {
             type: 'person',
             identifier: 'F957F2400C941B72',
             iri: null,
@@ -15,7 +15,7 @@ suite('grant holder', () => {
         // User groups are keyed by the identifier of their IRI, which stays available for the
         // requests to their item endpoint
         assert.deepEqual(
-            getGrantHolderParts({userGroup: '/authorization/user-groups/019a0ff1-597d'}),
+            deriveGrantHolderIdentity({userGroup: '/authorization/user-groups/019a0ff1-597d'}),
             {
                 type: 'user-group',
                 identifier: '019a0ff1-597d',
@@ -23,33 +23,36 @@ suite('grant holder', () => {
                 key: 'user-group:019a0ff1-597d',
             },
         );
-        assert.deepEqual(getGrantHolderParts({dynamicUserGroupIdentifier: 'dbp_developers'}), {
-            type: 'dynamic-user-group',
-            identifier: 'dbp_developers',
-            iri: null,
-            key: 'dynamic-user-group:dbp_developers',
-        });
+        assert.deepEqual(
+            deriveGrantHolderIdentity({dynamicUserGroupIdentifier: 'dbp_developers'}),
+            {
+                type: 'dynamic-user-group',
+                identifier: 'dbp_developers',
+                iri: null,
+                key: 'dynamic-user-group:dbp_developers',
+            },
+        );
     });
 
     test('should key a user group the same way whatever its IRI looks like', () => {
         const key = 'user-group:019a0ff1-597d';
         assert.equal(
-            getGrantHolderParts({
+            deriveGrantHolderIdentity({
                 userGroup: 'https://api.example.com/authorization/user-groups/019a0ff1-597d',
             }).key,
             key,
         );
         assert.equal(
-            getGrantHolderParts({userGroup: '/authorization/user-groups/019a0ff1-597d/'}).key,
+            deriveGrantHolderIdentity({userGroup: '/authorization/user-groups/019a0ff1-597d/'}).key,
             key,
         );
     });
 
-    test('should have no parts without a grant holder', () => {
-        assert.isNull(getGrantHolderParts(null));
-        assert.isNull(getGrantHolderParts(undefined));
-        assert.isNull(getGrantHolderParts({}));
-        assert.isNull(getGrantHolderParts({identifier: 'grant-identifier', action: 'read'}));
+    test('should have no identity without grant holder fields', () => {
+        assert.isNull(deriveGrantHolderIdentity(null));
+        assert.isNull(deriveGrantHolderIdentity(undefined));
+        assert.isNull(deriveGrantHolderIdentity({}));
+        assert.isNull(deriveGrantHolderIdentity({identifier: 'grant-identifier', action: 'read'}));
     });
 });
 
@@ -148,7 +151,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
             await node._loadResourceData();
             assert.deepEqual(requests, ['/authorization/roles']);
             assert.isFalse(node.grantHoldersLoading);
-            assert.isEmpty(node.grantHolders);
+            assert.equal(node.grantHolders.size, 0);
         } finally {
             globalThis.fetch = originalFetch;
         }
@@ -200,8 +203,8 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         };
         try {
             await node._loadRoleGrantHolders();
-            assert.lengthOf(node.grantHolders, 3);
-            const person = node.grantHolders.find((holder) => holder.key === 'person:person-id');
+            assert.equal(node.grantHolders.size, 3);
+            const person = node.grantHolders.get('person:person-id');
             assert.equal(person.subject.givenName, 'Frank');
             assert.deepEqual(
                 person.grants.map((grant) => grant.identifier),
@@ -212,6 +215,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
                 shareable: true,
                 grantedActions: [],
                 roleDefinition: {
+                    '@id': '/authorization/roles/editor',
                     identifier: 'editor',
                     roleNames: [
                         {languageTag: 'de', name: 'Bearbeiter*in'},
@@ -221,7 +225,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
             });
             assert.deepEqual(person.subject.localData, {email: 'frank@example.com'});
             assert.notProperty(person.subject, '@context');
-            const group = node.grantHolders.find((holder) => holder.key.startsWith('user-group:'));
+            const group = node.grantHolders.get('user-group:team');
             assert.equal(group.key, 'user-group:team');
             assert.lengthOf(
                 requests.filter((url) => url.pathname === '/authorization/user-groups/team'),
@@ -284,13 +288,16 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         };
         try {
             await node._loadRoleGrantHolders();
-            assert.lengthOf(node.grantHolders, 2);
-            assert.deepEqual(node.grantHolders[0].subject, {identifier: 'deleted'});
-            assert.equal(node.grantHolders[0].grants[0].identifier, 'a');
-            assert.equal(node.grantHolders[0].grants[0].roleDefinition.identifier, 'editor');
-            assert.isTrue(node.grantHolders[0].grants[0].shareable);
-            assert.equal(node.grantHolders[1].subject.givenName, 'Frank');
-            assert.deepEqual(node.grantHolders[1].grants[0].roleDefinition, {
+            assert.equal(node.grantHolders.size, 2);
+            const holders = [...node.grantHolders.values()];
+            assert.deepEqual(holders[0].subject, {identifier: 'deleted'});
+            assert.equal(holders[0].grants[0].identifier, 'a');
+            assert.equal(holders[0].grants[0].roleDefinition['@id'], '/authorization/roles/editor');
+            assert.equal(holders[0].grants[0].roleDefinition.identifier, 'editor');
+            assert.isTrue(holders[0].grants[0].shareable);
+            assert.equal(holders[1].subject.givenName, 'Frank');
+            assert.deepEqual(holders[1].grants[0].roleDefinition, {
+                '@id': '/authorization/roles/missing-role',
                 identifier: 'missing-role',
                 roleNames: [],
             });
@@ -352,19 +359,286 @@ suite('dbp-authorization-manage-grants-dialog', () => {
                 'dynamic-user-group:developers',
             ];
             await node._loadRoleGrantHolders();
-            assert.deepEqual(
-                node.grantHolders.map((holder) => holder.key),
-                expected,
-            );
+            assert.deepEqual([...node.grantHolders.keys()], expected);
             grants.reverse();
             await node._loadRoleGrantHolders();
-            assert.deepEqual(
-                node.grantHolders.map((holder) => holder.key),
-                expected,
-            );
+            assert.deepEqual([...node.grantHolders.keys()], expected);
         } finally {
             globalThis.fetch = originalFetch;
         }
+    });
+
+    test('should render holder sections with emails, localized roles and shareable state', async () => {
+        node.lang = 'en';
+        await node._i18n.changeLanguage('en');
+        const roleDefinition = {
+            '@id': '/authorization/roles/editor',
+            identifier: 'editor',
+            roleNames: [
+                {languageTag: 'en', name: 'Editor'},
+                {languageTag: 'de', name: 'Bearbeiter*in'},
+            ],
+        };
+        node.roles = new Map([
+            ['/authorization/roles/editor', roleDefinition],
+            [
+                '/authorization/roles/reader',
+                {
+                    '@id': '/authorization/roles/reader',
+                    identifier: 'reader',
+                    roleNames: [
+                        {languageTag: 'en', name: 'Reader'},
+                        {languageTag: 'de', name: 'Leser'},
+                    ],
+                },
+            ],
+        ]);
+        const holders = [
+            {
+                key: 'person:frank',
+                subject: {
+                    identifier: 'frank',
+                    givenName: 'Frank',
+                    familyName: 'Schwartz',
+                    localData: {email: 'frank@example.com'},
+                },
+                grants: [
+                    {identifier: 'a', shareable: true, roleDefinition, grantedActions: ['delete']},
+                    {
+                        identifier: 'b',
+                        shareable: false,
+                        roleDefinition: {
+                            '@id': '/authorization/roles/missing-role',
+                            identifier: 'missing-role',
+                            roleNames: [],
+                        },
+                    },
+                ],
+            },
+            {
+                key: 'user-group:team',
+                subject: {identifier: 'team', name: 'Example Team'},
+                grants: [],
+            },
+            {key: 'dynamic-user-group:developers', subject: {identifier: 'developers'}, grants: []},
+        ];
+        node.grantHolders = new Map(holders.map((holder) => [holder.key, holder]));
+        await node.updateComplete;
+        const sections = node.shadowRoot.querySelectorAll('.grant-holder-section');
+        assert.lengthOf(sections, 3);
+        const selectors = sections[0].querySelectorAll('select.role-grant-name-selector');
+        assert.equal(selectors[0].value, '/authorization/roles/editor');
+        assert.deepEqual(
+            [...selectors[0].options].map((option) => option.value),
+            ['/authorization/roles/editor', '/authorization/roles/reader'],
+        );
+        assert.equal(selectors[1].value, '/authorization/roles/missing-role');
+        // The editor role is assigned to the other row, so only the remaining roles and the
+        // role of the grant itself can be selected.
+        assert.deepEqual(
+            [...selectors[1].options].map((option) => option.value),
+            ['/authorization/roles/missing-role', '/authorization/roles/reader'],
+        );
+        assert.include(sections[0].textContent, 'Frank Schwartz');
+        assert.equal(
+            sections[0].querySelector('.grant-holder-email').textContent,
+            'frank@example.com',
+        );
+        assert.deepEqual(
+            [...sections[0].querySelectorAll('.role-grant-name-selector')].map((el) =>
+                el.selectedOptions[0].textContent.trim(),
+            ),
+            ['Editor', 'missing-role'],
+        );
+        assert.deepEqual(
+            [...sections[0].querySelectorAll('input[type="checkbox"]')].map((el) => el.checked),
+            [true, false],
+        );
+        assert.lengthOf(sections[0].querySelectorAll('dbp-icon-button[icon-name="trash"]'), 2);
+        assert.deepEqual(
+            [...sections[0].querySelectorAll('dbp-icon-button')].map((button) =>
+                button.hasAttribute('disabled'),
+            ),
+            [false, true],
+        );
+        assert.include(
+            sections[0].querySelector('dbp-icon-button').getAttribute('aria-label'),
+            'Editor',
+        );
+        assert.include(sections[0].querySelector('.add-role-button').textContent, 'Add role');
+        assert.equal(
+            sections[0].querySelector('.add-role-button dbp-icon').getAttribute('name'),
+            'plus',
+        );
+        assert.include(sections[1].textContent, 'Example Team');
+        assert.include(sections[2].textContent, 'developers');
+        assert.isNull(sections[1].querySelector('.grant-holder-email'));
+        node.lang = 'de';
+        await node._i18n.changeLanguage('de');
+        await node.updateComplete;
+        assert.equal(
+            node.shadowRoot
+                .querySelector('.role-grant-name-selector')
+                .selectedOptions[0].textContent.trim(),
+            'Bearbeiter*in',
+        );
+    });
+
+    test('should add empty draft roles from a holder add-role button', async () => {
+        node.lang = 'en';
+        await node._i18n.changeLanguage('en');
+        node.roles = new Map([
+            [
+                '/authorization/roles/editor',
+                {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []},
+            ],
+            [
+                '/authorization/roles/reader',
+                {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []},
+            ],
+        ]);
+        const holder = {
+            key: 'person:david',
+            subject: {identifier: 'david', givenName: 'David'},
+            grants: [],
+        };
+        node.grantHolders = new Map([[holder.key, holder]]);
+        await node.updateComplete;
+
+        const addRoleButton = node.shadowRoot.querySelector('.add-role-button');
+        const initialDraftRoleGrants = node.draftRoleGrants;
+        addRoleButton.click();
+
+        assert.notStrictEqual(node.draftRoleGrants, initialDraftRoleGrants);
+        assert.deepEqual(node.draftRoleGrants.get(holder.key), [
+            {
+                clientIdentifier: 'draft-role-1',
+                roleIdentifier: null,
+                shareable: false,
+            },
+        ]);
+        await node.updateComplete;
+        assert.isTrue(addRoleButton.hasAttribute('disabled'));
+
+        const firstDraftRow = node.shadowRoot.querySelector('.draft-role-grant-row');
+        const roleSelect = firstDraftRow.querySelector('.role-grant-name-selector');
+        assert.equal(roleSelect.value, '');
+        assert.deepEqual(
+            [...roleSelect.options].map((option) => option.textContent.trim()),
+            [node._i18n.t('auth-manage-dialog.role-select-placeholder'), 'editor', 'reader'],
+        );
+        roleSelect.value = '/authorization/roles/editor';
+        roleSelect.dispatchEvent(new Event('change'));
+        const shareableCheckbox = firstDraftRow.querySelector('input[type="checkbox"]');
+        shareableCheckbox.checked = true;
+        shareableCheckbox.dispatchEvent(new Event('change'));
+        assert.deepInclude(node.draftRoleGrants.get(holder.key)[0], {
+            roleIdentifier: '/authorization/roles/editor',
+            shareable: true,
+        });
+
+        addRoleButton.click();
+        assert.lengthOf(node.draftRoleGrants.get(holder.key), 1);
+        await node.updateComplete;
+        assert.lengthOf(node.shadowRoot.querySelectorAll('.draft-role-grant-row'), 1);
+
+        node.shadowRoot.querySelector('.draft-role-grant-row dbp-icon-button').click();
+        await node.updateComplete;
+        assert.lengthOf(node.shadowRoot.querySelectorAll('.draft-role-grant-row'), 0);
+        assert.isFalse(node.draftRoleGrants.has(holder.key));
+        assert.isFalse(addRoleButton.hasAttribute('disabled'));
+    });
+
+    test('should render draft holders above persisted holders', async () => {
+        const role = {
+            '@id': '/authorization/roles/editor',
+            identifier: 'editor',
+            roleNames: [],
+        };
+        const draftHolder = {
+            key: 'person:alice',
+            subject: {identifier: 'alice', givenName: 'Alice'},
+            holderFields: {userIdentifier: 'alice'},
+            grants: [],
+        };
+        const persistedHolder = {
+            key: 'person:bob',
+            subject: {identifier: 'bob', givenName: 'Bob'},
+            grants: [],
+        };
+        node.roles = new Map([[role['@id'], role]]);
+        node.draftGrantHolders = new Map([[draftHolder.key, draftHolder]]);
+        node.grantHolders = new Map([[persistedHolder.key, persistedHolder]]);
+        node.handleAddRoleButtonClick(draftHolder.key);
+        await node.updateComplete;
+
+        const sections = node.shadowRoot.querySelectorAll('.grant-holder-section');
+        assert.lengthOf(sections, 2);
+        assert.equal(sections[0].id, draftHolder.key);
+        assert.isNotNull(sections[0].querySelector('.draft-role-grant-row'));
+        assert.equal(sections[1].id, persistedHolder.key);
+    });
+
+    test('should sort role rows by language and preserve keyed DOM after deletion', async () => {
+        node.lang = 'en';
+        const makeGrant = (identifier, en, de) => ({
+            identifier,
+            shareable: true,
+            grantedActions: ['delete'],
+            roleDefinition: {
+                '@id': `/authorization/roles/${identifier}`,
+                identifier,
+                roleNames: [
+                    {languageTag: 'en', name: en},
+                    {languageTag: 'de', name: de},
+                ],
+            },
+        });
+        const holder = {
+            key: 'person:david',
+            subject: {identifier: 'david', givenName: 'David'},
+            grants: [
+                makeGrant('c', 'Reader', 'Leser'),
+                makeGrant('b', 'Manager', 'Manager'),
+                makeGrant('a', 'Editor', 'Bearbeiter'),
+            ],
+        };
+        node.grantHolders = new Map([[holder.key, holder]]);
+        await node.updateComplete;
+        const rows = [...node.shadowRoot.querySelectorAll('.role-grant-row')];
+        assert.deepEqual(
+            rows.map((row) =>
+                row
+                    .querySelector('.role-grant-name-selector')
+                    .selectedOptions[0].textContent.trim(),
+            ),
+            ['Editor', 'Manager', 'Reader'],
+        );
+        node.grantHolders = new Map([
+            [
+                holder.key,
+                {...holder, grants: holder.grants.filter((grant) => grant.identifier !== 'a')},
+            ],
+        ]);
+        await node.updateComplete;
+        const remaining = [...node.shadowRoot.querySelectorAll('.role-grant-row')];
+        assert.strictEqual(remaining[0], rows[1]);
+        assert.strictEqual(remaining[1], rows[2]);
+        node.lang = 'de';
+        await node.updateComplete;
+        assert.deepEqual(
+            [...node.shadowRoot.querySelectorAll('.role-grant-name-selector')].map((el) =>
+                el.selectedOptions[0].textContent.trim(),
+            ),
+            ['Leser', 'Manager'],
+        );
+    });
+
+    test('should show a spinner instead of holder rows while loading', async () => {
+        node.grantHoldersLoading = true;
+        await node.updateComplete;
+        assert.isNotNull(node.shadowRoot.querySelector('.grants-list-container dbp-mini-spinner'));
+        assert.isNull(node.shadowRoot.querySelector('.grant-holder'));
     });
 
     test('should name a role in the current language', async () => {
@@ -382,6 +656,245 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         // The loaded roles keep all their translations, so switching the language is enough
         node.lang = 'de';
         assert.equal(node._getRoleName(role), 'Rollenname');
+    });
+
+    test('should record and revert an unsaved role change of a saved grant', async () => {
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        const reader = {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []};
+        node.roles = new Map([editor, reader].map((role) => [role['@id'], role]));
+        node.grantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    subject: {identifier: 'frank', givenName: 'Frank'},
+                    grants: [
+                        {
+                            identifier: 'a',
+                            shareable: true,
+                            grantedActions: ['delete'],
+                            roleDefinition: editor,
+                        },
+                    ],
+                },
+            ],
+        ]);
+        await node.updateComplete;
+        assert.isTrue(node.isSaveDisabled('person:frank'));
+
+        const selector = node.shadowRoot.querySelector('select.role-grant-name-selector');
+        selector.value = reader['@id'];
+        selector.dispatchEvent(new Event('change'));
+        await node.updateComplete;
+
+        assert.deepEqual(node.pendingGrantChanges.get('person:frank'), [
+            {grantIdentifier: 'a', roleIdentifier: reader['@id'], shareable: true},
+        ]);
+        assert.isFalse(node.isSaveDisabled('person:frank'));
+        assert.isNotNull(node.shadowRoot.querySelector('.role-grant-row.unsaved-role-row'));
+
+        // Selecting the originally assigned role again drops the change
+        selector.value = editor['@id'];
+        selector.dispatchEvent(new Event('change'));
+        await node.updateComplete;
+
+        assert.isFalse(node.pendingGrantChanges.has('person:frank'));
+        assert.isTrue(node.isSaveDisabled('person:frank'));
+        assert.isNull(node.shadowRoot.querySelector('.role-grant-row.unsaved-role-row'));
+    });
+
+    test('should create the new grant before deleting the changed one', async () => {
+        const originalFetch = globalThis.fetch;
+        const requests = [];
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        const reader = {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []};
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeSubmission';
+        node.resourceIdentifier = 'submission-id';
+        node.roles = new Map([editor, reader].map((role) => [role['@id'], role]));
+        node.grantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    subject: {identifier: 'frank', givenName: 'Frank'},
+                    grants: [
+                        {
+                            identifier: 'a',
+                            shareable: false,
+                            grantedActions: ['delete'],
+                            roleDefinition: editor,
+                        },
+                    ],
+                },
+            ],
+        ]);
+        node.pendingGrantChanges = new Map([
+            [
+                'person:frank',
+                [{grantIdentifier: 'a', roleIdentifier: reader['@id'], shareable: true}],
+            ],
+        ]);
+        globalThis.fetch = async (url, options = {}) => {
+            const parsed = new URL(url);
+            const method = options.method ?? 'GET';
+            requests.push({method: method, path: parsed.pathname, body: options.body});
+            return new Response(method === 'GET' ? '{"hydra:member": []}' : '{}', {
+                status: method === 'POST' ? 201 : 200,
+            });
+        };
+
+        try {
+            await node.handleSaveHolderRolesButtonClick('person:frank');
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+
+        const changeRequests = requests.filter((request) => request.method !== 'GET');
+        assert.deepEqual(
+            changeRequests.map((request) => `${request.method} ${request.path}`),
+            [
+                'POST /authorization/resource-action-grants',
+                'DELETE /authorization/resource-action-grants/a',
+            ],
+        );
+        assert.deepEqual(JSON.parse(changeRequests[0].body), {
+            resourceClass: 'DbpRelayFormalizeSubmission',
+            resourceIdentifier: 'submission-id',
+            resourceType: 0,
+            role: reader['@id'],
+            shareable: true,
+            userIdentifier: 'frank',
+        });
+        assert.isFalse(node.pendingGrantChanges.has('person:frank'));
+        assert.isFalse(node._savingHolderKeys.has('person:frank'));
+    });
+
+    test('should report a change that only makes a role shareable as an update', async () => {
+        const originalFetch = globalThis.fetch;
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        node.lang = 'en';
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeSubmission';
+        node.resourceIdentifier = 'submission-id';
+        node.roles = new Map([[editor['@id'], editor]]);
+        node.grantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    subject: {identifier: 'frank', givenName: 'Frank', familyName: 'Schwartz'},
+                    grants: [
+                        {
+                            identifier: 'a',
+                            shareable: false,
+                            grantedActions: ['delete'],
+                            roleDefinition: editor,
+                        },
+                    ],
+                },
+            ],
+        ]);
+        // The role stays the same, only the shareable state changes
+        node.pendingGrantChanges = new Map([
+            [
+                'person:frank',
+                [{grantIdentifier: 'a', roleIdentifier: editor['@id'], shareable: true}],
+            ],
+        ]);
+        globalThis.fetch = async (url, options = {}) => {
+            const method = options.method ?? 'GET';
+            return new Response(method === 'GET' ? '{"hydra:member": []}' : '{}', {
+                status: method === 'POST' ? 201 : 200,
+            });
+        };
+
+        try {
+            await node.updateComplete;
+            await node.handleSaveHolderRolesButtonClick('person:frank');
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+
+        // The notifications of the dialog are shown by its own notification component
+        const notifications = node.shadowRoot.querySelector(
+            '#auth-manage-dialog-notification',
+        ).notifications;
+        assert.deepEqual(
+            notifications.map((notification) => notification.body),
+            ['Role "editor" has been updated for Frank Schwartz'],
+        );
+    });
+
+    test('should keep an unsaved change when its grant could not be created', async () => {
+        const originalFetch = globalThis.fetch;
+        const requests = [];
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        const reader = {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []};
+        const pendingChange = {
+            grantIdentifier: 'a',
+            roleIdentifier: reader['@id'],
+            shareable: false,
+        };
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeSubmission';
+        node.resourceIdentifier = 'submission-id';
+        node.roles = new Map([editor, reader].map((role) => [role['@id'], role]));
+        node.grantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    subject: {identifier: 'frank', givenName: 'Frank'},
+                    grants: [
+                        {
+                            identifier: 'a',
+                            shareable: false,
+                            grantedActions: ['delete'],
+                            roleDefinition: editor,
+                        },
+                    ],
+                },
+            ],
+        ]);
+        node.pendingGrantChanges = new Map([['person:frank', [pendingChange]]]);
+        globalThis.fetch = async (url, options = {}) => {
+            const method = options.method ?? 'GET';
+            requests.push(method);
+            if (method !== 'GET') {
+                return new Response('{}', {status: 403});
+            }
+            // The reload still returns the grant, so its unsaved change stays applicable
+            const parsed = new URL(url);
+            const body =
+                parsed.pathname === '/authorization/resource-action-grants'
+                    ? {
+                          'hydra:member': [
+                              {
+                                  identifier: 'a',
+                                  userIdentifier: 'frank',
+                                  role: editor['@id'],
+                                  shareable: false,
+                                  grantedActions: ['delete'],
+                              },
+                          ],
+                      }
+                    : {identifier: 'frank', givenName: 'Frank'};
+            return new Response(JSON.stringify(body), {status: 200});
+        };
+
+        try {
+            await node.handleSaveHolderRolesButtonClick('person:frank');
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+
+        // The grant it replaces must survive a failed creation
+        assert.notInclude(requests, 'DELETE');
+        assert.deepEqual(node.pendingGrantChanges.get('person:frank'), [pendingChange]);
     });
 
     test('should not request roles without a compound resource identifier', async () => {
@@ -840,7 +1353,7 @@ suite('authorization subject select', () => {
         ];
 
         assert.deepEqual(
-            subjects.map((subject) => getGrantHolderParts(node.getGrantHolder(subject)).key),
+            subjects.map((subject) => deriveGrantHolderIdentity(node.getGrantHolder(subject)).key),
             ['person:1234567890ABCDEF', 'user-group:01900000-0000', 'dynamic-user-group:everybody'],
         );
     });
