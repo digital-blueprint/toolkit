@@ -5,26 +5,14 @@
  * identifier and key from those fields here, so both sides cannot drift apart.
  */
 
+/**
+ * @typedef {import('./types.js').GrantHolderFields} GrantHolderFields
+ * @typedef {import('./types.js').GrantHolderIdentity} GrantHolderIdentity
+ */
+
 export const SUBJECT_TYPE_PERSON = 'person';
 export const SUBJECT_TYPE_USER_GROUP = 'user-group';
 export const SUBJECT_TYPE_DYNAMIC_USER_GROUP = 'dynamic-user-group';
-
-/**
- * @typedef {{
- *     userIdentifier?: string,
- *     userGroup?: string,
- *     dynamicUserGroupIdentifier?: string
- * }} GrantHolderFields
- */
-
-/**
- * @typedef {{
- *     type: string,
- *     identifier: string,
- *     iri: string|null,
- *     key: string
- * }} GrantHolderIdentity
- */
 
 /**
  * Takes the identifier out of an IRI, so a holder key stays short and independent of where

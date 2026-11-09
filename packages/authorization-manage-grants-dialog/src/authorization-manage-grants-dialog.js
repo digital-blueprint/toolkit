@@ -29,69 +29,20 @@ import {
 } from './grant-holder.js';
 import {updateInMap, deleteFromMap} from './utils.js';
 
+/**
+ * @typedef {import('./types.js').RoleGrant} RoleGrant
+ * @typedef {import('./types.js').GrantHolderSubject} GrantHolderSubject
+ * @typedef {import('./types.js').GrantHolder} GrantHolder
+ * @typedef {import('./types.js').RoleGrantSelection} RoleGrantSelection
+ * @typedef {import('./types.js').DraftRoleGrant} DraftRoleGrant
+ * @typedef {import('./types.js').PendingGrantChange} PendingGrantChange
+ * @typedef {import('./types.js').DraftGrantHolder} DraftGrantHolder
+ * @typedef {import('./types.js').RoleDefinition} RoleDefinition
+ * @typedef {import('./types.js').GrantHolderFields} GrantHolderFields
+ * @typedef {import('./types.js').GrantHolderIdentity} GrantHolderIdentity
+ */
+
 const RESOURCE_TYPE_ITEM = 0;
-
-/**
- * @typedef {{
- *     identifier: string,
- *     shareable: boolean,
- *     grantedActions: string[],
- *     roleDefinition: {
- *         '@id': string,
- *         identifier: string,
- *         roleNames?: Array<{languageTag: string, name: string}>
- *     }
- * }} RoleGrant
- */
-
-/**
- * @typedef {{
- *     identifier: string,
- *     givenName?: string,
- *     familyName?: string,
- *     name?: string,
- *     localData?: {email?: string|null}
- * }} GrantHolderSubject
- */
-
-/**
- * @typedef {{
- *     key: string,
- *     subject: GrantHolderSubject,
- *     grants: RoleGrant[]
- * }} GrantHolder
- */
-
-/**
- * The role and shareable state a grant is created from.
- * @typedef {{
- *     roleIdentifier: string|null,
- *     shareable: boolean
- * }} RoleGrantSelection
- */
-
-/**
- * An unsaved role row of a grant holder. The role stays null until one is selected.
- * @typedef {RoleGrantSelection & {
- *     clientIdentifier: string
- * }} DraftRoleGrant
- */
-
-/**
- * An unsaved change to a saved grant. It is applied by creating a grant with the new values
- * and deleting the grant it replaces.
- * @typedef {{
- *     grantIdentifier: string,
- *     roleIdentifier: string,
- *     shareable: boolean
- * }} PendingGrantChange
- */
-
-/**
- * @typedef {GrantHolder & {
- *     holderFields: import('./grant-holder.js').GrantHolderFields
- * }} DraftGrantHolder
- */
 
 export class AuthorizationManageGrantsDialog extends AuthMixin(
     LangMixin(ScopedElementsMixin(DBPLitElement), createInstance),
@@ -328,7 +279,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * Save subject roles to the API.
      * @param {{resourceClassIdentifier: string, resourceIdentifier: string, resourceType: number}} resource
      * @param {RoleGrantSelection} grantSelection
-     * @param {import('./grant-holder.js').GrantHolderFields} grantHolderIdentifier
+     * @param {GrantHolderFields} grantHolderIdentifier
      * @returns {Promise<Response>} response
      */
     async _apiPostRoles(resource, grantSelection, grantHolderIdentifier) {
@@ -414,6 +365,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 if (!grant['role']) {
                     continue;
                 }
+                /** @type {GrantHolderIdentity|null} */
                 const holderIdentity = deriveGrantHolderIdentity(grant);
                 if (holderIdentity === null) {
                     continue;
@@ -577,7 +529,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     /**
      * Returns the name a role has in the current language.
      *
-     * @param {{identifier: string, roleNames?: Array<{languageTag: string, name: string}>}} role - Role definition with its localized names.
+     * @param {RoleDefinition} role - Role definition with its localized names.
      * @returns {string} Name of the role in the current language.
      */
     _getRoleName(role) {
@@ -652,7 +604,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
 
     /**
      * Renders a holder's name, person email and assigned role rows.
-     * @param {GrantHolder} holder - Holder with its compact subject and role grants.
+     * @param {GrantHolder|DraftGrantHolder} holder - Holder with its compact subject and role grants.
      * @returns {import('lit').TemplateResult} Holder section.
      */
     renderGrantHolderSection(holder) {
@@ -794,7 +746,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @param {string|null} [currentDraftIdentifier] - Client identifier of the draft row being
      *     rendered, so its own selection is not filtered out.
      * @param {string|null} [currentGrantIdentifier] - Identifier of the grant being rendered, so its own selection is not filtered out.
-     * @returns {Array<{identifier: string, roleNames?: Array<{languageTag: string, name: string}>}>} Available role definitions.
+     * @returns {RoleDefinition[]} Available role definitions.
      */
     getAvailableRolesForHolder(
         holderKey,
@@ -1485,7 +1437,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     /**
      * Creates one grant for a holder.
      * @param {RoleGrantSelection} grantSelection - Role and shareable state to create.
-     * @param {import('./grant-holder.js').GrantHolderFields} grantHolderIdentifier - Fields
+     * @param {GrantHolderFields} grantHolderIdentifier - Fields
      *     addressing the holder of the grant.
      * @returns {Promise<boolean>} Whether the grant was created.
      */
