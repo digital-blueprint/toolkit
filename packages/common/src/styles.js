@@ -1940,7 +1940,7 @@ export function getNativeModalDialogCSS() {
             box-sizing: border-box;
             flex: 0 0 var(--dbp-info-modal-base-width, 650px);
             width: var(--dbp-info-modal-base-width, 650px);
-            padding: var(--dbp-modal-padding-top, 15px) 20px 20px;
+            padding: 15px 20px 20px;
         }
 
         :host(.modal--info[info-panel]) #info-panel {
@@ -1975,7 +1975,7 @@ export function getNativeModalDialogCSS() {
             width: calc(var(--dbp-info-modal-panel-width, 350px) - 40px);
         }
 
-        @media (max-width: 1031px) {
+        @media (min-width: 1000px) and (max-width: 1031px) {
             :host(.modal--info[info-panel]) dialog {
                 width: min(var(--dbp-info-modal-base-width, 650px), calc(100vw - 32px));
                 overflow-y: auto;
@@ -2005,6 +2005,48 @@ export function getNativeModalDialogCSS() {
 
             :host(.modal--info[info-panel]) #info-panel slot {
                 width: calc(min(var(--dbp-info-modal-panel-width, 350px), 40vw) - 40px);
+            }
+        }
+
+        @media (max-width: 999px) {
+            :host(.modal--info[info-panel]) dialog,
+            :host(.modal--info[info-panel]) dialog.modal--info-expanded {
+                width: min(var(--dbp-info-modal-base-width, 650px), calc(100vw - 32px));
+                max-height: calc(100vh - 32px);
+                overflow-y: auto;
+            }
+
+            :host(.modal--info[info-panel]) .dialog-wrapper {
+                flex-direction: column;
+            }
+
+            :host(.modal--info[info-panel]) .modal-container {
+                flex: 0 0 auto;
+                width: 100%;
+                max-height: none;
+            }
+
+            :host(.modal--info[info-panel]) #info-panel {
+                flex: 0 0 auto;
+                width: 100%;
+                max-height: 0;
+                transition:
+                    max-height 0.35s ease,
+                    padding 0.35s ease,
+                    opacity 0.2s ease;
+            }
+
+            :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+                flex-basis: auto;
+                width: 100%;
+                max-height: 50vh;
+                overflow-y: auto;
+                border-left: 0;
+                border-top: var(--dbp-border);
+            }
+
+            :host(.modal--info[info-panel]) #info-panel slot {
+                width: auto;
             }
         }
 

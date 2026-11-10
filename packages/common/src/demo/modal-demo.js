@@ -10,6 +10,9 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
     constructor() {
         super();
         this.entryPointUrl = '';
+        this.infoExpanded = false;
+        /** @type {ResizeObserver | null} */
+        this.footerResizeObserver = null;
     }
 
     static get scopedElements() {
@@ -24,6 +27,7 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
         return {
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            infoExpanded: {state: true},
         };
     }
 
@@ -65,10 +69,42 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
             dbp-modal .footer-menu {
                 margin: 0;
                 padding: 0;
-                display: flex;
-                justify-content: flex-end;
                 gap: 1em;
                 padding-top: 1em;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .modal--info .footer-menu {
+                flex-wrap: wrap;
+            }
+
+            .modal--info .toggle-button {
+                flex: 1 0 auto;
+            }
+
+            .modal--info .footer-actions {
+                display: flex;
+                flex: 0 0 auto;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                gap: 1em;
+                max-width: 100%;
+                margin-left: auto;
+            }
+
+            .modal--info .footer-menu--wrapped .toggle-button {
+                --dbp-button-width: 100%;
+            }
+
+            .modal--info .footer-menu--wrapped .footer-actions {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .modal--info .footer-menu--wrapped .footer-actions dbp-button {
+                flex: 1 1 0;
+                --dbp-button-width: 100%;
             }
 
             .modal--basic {
@@ -131,11 +167,79 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 width: 1.5em;
             }
 
+            .modal--info .chevron--mobile {
+                display: none;
+            }
+
+            @media (max-width: 999px) {
+                .modal--info .chevron--desktop {
+                    display: none;
+                }
+
+                .modal--info .chevron--mobile {
+                    display: inline-block;
+                }
+            }
+
             .header {
                 display: flex;
                 align-items: center;
             }
         `;
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        const footer = this._('#modal-info-panel .footer-menu');
+        if (footer && this.footerResizeObserver) {
+            this.footerResizeObserver.observe(footer);
+        }
+    }
+
+    firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
+        const footer = this._('#modal-info-panel .footer-menu');
+        if (footer) {
+            this.footerResizeObserver = new ResizeObserver(() => this.updateInfoFooterLayout());
+            this.footerResizeObserver.observe(footer);
+        }
+    }
+
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('infoExpanded')) {
+            this.updateInfoFooterLayout();
+        }
+    }
+
+    disconnectedCallback() {
+        this.footerResizeObserver?.disconnect();
+        super.disconnectedCallback();
+    }
+
+    updateInfoFooterLayout() {
+        const footer = this._('#modal-info-panel .footer-menu');
+        if (!footer || !footer.clientWidth) {
+            return;
+        }
+
+        // Measure the natural layout so the wrapped class can be removed when space is available.
+        footer.classList.remove('footer-menu--wrapped');
+        const toggle = footer.querySelector('.toggle-button');
+        const actions = footer.querySelector('.footer-actions');
+        if (!toggle || !actions) {
+            return;
+        }
+        footer.classList.toggle(
+            'footer-menu--wrapped',
+            actions.getBoundingClientRect().top > toggle.getBoundingClientRect().top,
+        );
+    }
+
+    toggleInfoPanel() {
+        const modal = this._('#modal-info-panel');
+        modal.toggleInfoPanel();
+        this.infoExpanded = modal.infoExpanded;
     }
 
     render() {
@@ -438,24 +542,20 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         info-panel
                         modal-id="modal-info"
                         title="Modal with info panel"
-                        subscribe="lang">
+                        subscribe="lang"
+                        @dbp-modal-closed="${() => (this.infoExpanded = false)}">
                         <div slot="header" class="header">
-                            <h3>Click to expand the info panel</h3>
+                            <p>Click button in footer to expand the info panel</p>
                         </div>
-                        <div slot="content">
-                            <dbp-button
-                                no-spinner-on-click
-                                @click="${() => this._('#modal-info-panel').toggleInfoPanel()}">
-                                ${this._i18n.t('demo.toggle_info_panel')}
-                            </dbp-button>
-                        </div>
-
                         <div slot="info-panel">
                             <div class="info-panel-title">
                                 <button
                                     class="button panel-button"
-                                    @click="${() => this._('#modal-info-panel').toggleInfoPanel()}">
-                                    <dbp-icon name="chevron-left"></dbp-icon>
+                                    @click="${() => this.toggleInfoPanel()}">
+                                    <dbp-icon
+                                        class="chevron--desktop"
+                                        name="chevron-left"></dbp-icon>
+                                    <dbp-icon class="chevron--mobile" name="chevron-up"></dbp-icon>
                                     <h2>Panel Headline</h2>
                                 </button>
                             </div>
@@ -468,12 +568,26 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         </div>
                         <menu slot="footer" class="footer-menu">
                             <dbp-button
-                                @click="${() => {
-                                    this._('#modal-info-panel').close();
-                                }}">
-                                Cancel
+                                class="toggle-button"
+                                no-spinner-on-click
+                                @click="${() => this.toggleInfoPanel()}">
+                                ${this.infoExpanded ? 'Collapse info panel' : 'Expand info panel'}
+                                <dbp-icon
+                                    class="chevron--desktop"
+                                    name="${this.infoExpanded ? 'chevron-left' : 'chevron-right'}"></dbp-icon>
+                                <dbp-icon
+                                    class="chevron--mobile"
+                                    name="${this.infoExpanded ? 'chevron-up' : 'chevron-down'}"></dbp-icon>
                             </dbp-button>
-                            <dbp-button type="is-primary">Submit</dbp-button>
+                            <div class="footer-actions">
+                                <dbp-button
+                                    @click="${() => {
+                                        this._('#modal-info-panel').close();
+                                    }}">
+                                    Cancel
+                                </dbp-button>
+                                <dbp-button type="is-primary">Submit</dbp-button>
+                            </div>
                         </menu>
                     </dbp-modal>
                 </div>

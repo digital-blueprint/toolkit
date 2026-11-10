@@ -93,6 +93,11 @@ export class Button extends DbpButton {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getButtonCSS()}
 
+            button.button {
+                box-sizing: border-box;
+                width: var(--dbp-button-width, auto);
+            }
+
             .spinner {
                 margin-left: 0.5em;
             }

@@ -11,8 +11,7 @@
         "consumer": "Consumer",
         "consumer_description": "Consumer \"{{id}}\" will only subscribe to {{subscriptions}}",
         "provider": "Provider",
-        "provider_description": "Provider \"{{id}}\" {{description}}",
-        "toggle_info_panel": "Toggle info panel"
+        "provider_description": "Provider \"{{id}}\" {{description}}"
     },
     "error": {
         "connection-to-server-refused": "Connection to server refused!",
