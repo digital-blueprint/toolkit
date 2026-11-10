@@ -66,6 +66,8 @@ export class Button extends DbpButton {
         super();
         this.spinner = false;
         this.noSpinnerOnClick = false;
+        /** @type {string | undefined} */
+        this.ariaExpandedState = undefined;
 
         // https://bugs.chromium.org/p/chromium/issues/detail?id=1061240#c12
         this.addEventListener('click', (e) => {
@@ -84,6 +86,7 @@ export class Button extends DbpButton {
             ...super.properties,
             spinner: {type: Boolean},
             noSpinnerOnClick: {type: Boolean, attribute: 'no-spinner-on-click'},
+            ariaExpandedState: {type: String, attribute: 'aria-expanded'},
         };
     }
 
@@ -116,7 +119,10 @@ export class Button extends DbpButton {
 
     render() {
         return html`
-            <button class="button ${this.type}" ?disabled="${this.disabled}">
+            <button
+                class="button ${this.type}"
+                ?disabled="${this.disabled}"
+                aria-expanded="${ifDefined(this.ariaExpandedState ?? undefined)}">
                 <slot>${this.value}</slot>
                 <dbp-mini-spinner
                     class="spinner"

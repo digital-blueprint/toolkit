@@ -1967,7 +1967,7 @@ export function getNativeModalDialogCSS() {
             opacity: 1;
             pointer-events: auto;
             border-left: var(--dbp-border);
-            padding: var(--dbp-modal-padding-top, 15px) 20px 20px;
+            padding: 15px 20px 20px;
         }
 
         :host(.modal--info[info-panel]) #info-panel slot {
@@ -2047,6 +2047,18 @@ export function getNativeModalDialogCSS() {
 
             :host(.modal--info[info-panel]) #info-panel slot {
                 width: auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            :host(.modal--info[info-panel]) dialog,
+            :host(.modal--info[info-panel]) .modal-container,
+            :host(.modal--info[info-panel]) #info-panel {
+                transition: none;
+            }
+
+            :host(.modal--info[info-panel]) dialog[open] {
+                animation: none;
             }
         }
 

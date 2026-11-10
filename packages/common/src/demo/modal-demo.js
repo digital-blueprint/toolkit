@@ -236,10 +236,17 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
         );
     }
 
-    toggleInfoPanel() {
+    async toggleInfoPanel(focusToggle = false) {
         const modal = this._('#modal-info-panel');
         modal.toggleInfoPanel();
         this.infoExpanded = modal.infoExpanded;
+
+        if (focusToggle && !this.infoExpanded) {
+            this._('#modal-info-panel .toggle-button').shadowRoot?.querySelector('button')?.focus();
+        } else if (this.infoExpanded) {
+            await Promise.all([modal.updateComplete, this.updateComplete]);
+            this._('#modal-info-panel .panel-button')?.focus();
+        }
     }
 
     render() {
@@ -547,15 +554,23 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         <div slot="header" class="header">
                             <p>Click button in footer to expand the info panel</p>
                         </div>
-                        <div slot="info-panel">
+                        <div
+                            slot="info-panel"
+                            role="region"
+                            aria-label="${this._i18n.t('demo.info_panel')}">
                             <div class="info-panel-title">
                                 <button
                                     class="button panel-button"
-                                    @click="${() => this.toggleInfoPanel()}">
+                                    aria-label="${this._i18n.t('demo.close_info_panel')}"
+                                    @click="${() => this.toggleInfoPanel(true)}">
                                     <dbp-icon
                                         class="chevron--desktop"
+                                        aria-hidden="true"
                                         name="chevron-left"></dbp-icon>
-                                    <dbp-icon class="chevron--mobile" name="chevron-up"></dbp-icon>
+                                    <dbp-icon
+                                        class="chevron--mobile"
+                                        aria-hidden="true"
+                                        name="chevron-up"></dbp-icon>
                                     <h2>Panel Headline</h2>
                                 </button>
                             </div>
@@ -570,13 +585,16 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                             <dbp-button
                                 class="toggle-button"
                                 no-spinner-on-click
+                                aria-expanded="${this.infoExpanded}"
                                 @click="${() => this.toggleInfoPanel()}">
                                 ${this.infoExpanded ? 'Collapse info panel' : 'Expand info panel'}
                                 <dbp-icon
                                     class="chevron--desktop"
+                                    aria-hidden="true"
                                     name="${this.infoExpanded ? 'chevron-left' : 'chevron-right'}"></dbp-icon>
                                 <dbp-icon
                                     class="chevron--mobile"
+                                    aria-hidden="true"
                                     name="${this.infoExpanded ? 'chevron-up' : 'chevron-down'}"></dbp-icon>
                             </dbp-button>
                             <div class="footer-actions">

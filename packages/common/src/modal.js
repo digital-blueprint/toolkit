@@ -1,4 +1,5 @@
 import {html, css} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {createInstance} from './i18n';
 import * as commonStyles from './styles.js';
 import {Icon} from './icon';
@@ -282,6 +283,7 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                             <dbp-icon
                                 title="${i18n.t('dbp-modal.close')}"
                                 name="close"
+                                aria-hidden="true"
                                 class="close-icon"></dbp-icon>
                         </button>
                     </div>
@@ -318,8 +320,8 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                 class="modal ${this.infoPanel && this.infoExpanded ? 'modal--info-expanded' : ''}"
                 id="${this.modalId}"
                 autofocus
-                role="alertdialog"
-                aria-describedby="modal-content"
+                role="${this.infoPanel ? 'dialog' : 'alertdialog'}"
+                aria-describedby="${ifDefined(this.infoPanel ? undefined : 'modal-content')}"
                 aria-labelledby="modal-title">
                 ${
                     this.infoPanel
@@ -328,7 +330,9 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                                   ${modalContainer}
                                   <div
                                       id="info-panel"
-                                      class="info-panel ${this.infoExpanded ? 'info-panel--expanded' : ''}">
+                                      class="info-panel ${this.infoExpanded ? 'info-panel--expanded' : ''}"
+                                      ?inert="${!this.infoExpanded}"
+                                      aria-hidden="${!this.infoExpanded}">
                                       <slot name="info-panel"></slot>
                                   </div>
                               </div>
