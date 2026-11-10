@@ -28,6 +28,10 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         this._pageHiddenForPrint = false;
         this._onBeforePrint = this._handleBeforePrint.bind(this);
         this._onAfterPrint = this._handleAfterPrint.bind(this);
+        /** @type {boolean} */
+        this.infoExpanded = false;
+        /** @type {boolean} */
+        this.infoPanel = false;
     }
 
     static get properties() {
@@ -36,8 +40,10 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             modalId: {type: String, attribute: 'modal-id'},
             title: {type: String},
             stickyFooter: {type: Boolean, attribute: 'sticky-footer'},
+            infoPanel: {type: Boolean, attribute: 'info-panel'},
             fullHeightLine: {type: Boolean, attribute: 'full-height-line'},
             printContentOnly: {type: Boolean, attribute: 'print-content-only'},
+            infoExpanded: {state: true},
         };
     }
 
@@ -95,6 +101,7 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         this.modalPaddingTopDefault = parseInt(window.getComputedStyle(modalDialog).paddingTop);
 
         modalDialog.addEventListener('close', () => {
+            this.infoExpanded = false;
             // Re allow scrolling the page when dialog is closed
             const htmlElement = modalDialog.ownerDocument.documentElement;
             htmlElement.style.removeProperty('overflow');
@@ -240,6 +247,13 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         modalDialog.style.removeProperty('--dbp-modal-translate-y');
     }
 
+    toggleInfoPanel() {
+        if (!this.infoPanel || !this.modalDialog || !this.querySelector('[slot="info-panel"]')) {
+            return;
+        }
+        this.infoExpanded = !this.infoExpanded;
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -250,63 +264,77 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
 
     render() {
         const i18n = this._i18n;
-
-        return html`
-            <dialog
-                class="modal"
-                id="${this.modalId}"
-                autofocus
-                role="alertdialog"
-                aria-describedby="modal-content"
-                aria-labelledby="modal-title">
-                <div
-                    class="modal-container ${
-                        this.fullHeightLine ? 'modal-container--full-height-line' : ''
-                    }">
-                    <header class="modal-header">
-                        <div class="header-top">
-                            <slot name="title">
-                                <h2 class="modal-title" id="modal-title">${this.title}</h2>
-                            </slot>
-                            <button
+        const modalContainer = html`
+            <div
+                class="modal-container ${this.fullHeightLine ? 'modal-container--full-height-line' : ''}">
+                <header class="modal-header">
+                    <div class="header-top">
+                        <slot name="title">
+                            <h2 class="modal-title" id="modal-title">${this.title}</h2>
+                        </slot>
+                        <button
+                            title="${i18n.t('dbp-modal.close')}"
+                            class="modal-close"
+                            aria-label="${i18n.t('dbp-modal.close')}"
+                            @click="${() => {
+                                this.close();
+                            }}">
+                            <dbp-icon
                                 title="${i18n.t('dbp-modal.close')}"
-                                class="modal-close"
-                                aria-label="${i18n.t('dbp-modal.close')}"
-                                @click="${() => {
-                                    this.close();
-                                }}">
-                                <dbp-icon
-                                    title="${i18n.t('dbp-modal.close')}"
-                                    name="close"
-                                    class="close-icon"></dbp-icon>
-                            </button>
-                        </div>
-                        <div class="header-bottom">
-                            <slot name="header"></slot>
-                        </div>
-                    </header>
-                    <main class="modal-content" id="modal-content">
-                        <slot name="content"></slot>
-                        ${
-                            !this.stickyFooter
-                                ? html`
-                                      <footer class="modal-footer modal-footer--sticky">
-                                          <slot name="footer"></slot>
-                                      </footer>
-                                  `
-                                : ''
-                        }
-                    </main>
+                                name="close"
+                                class="close-icon"></dbp-icon>
+                        </button>
+                    </div>
+                    <div class="header-bottom">
+                        <slot name="header"></slot>
+                    </div>
+                </header>
+                <main class="modal-content" id="modal-content">
+                    <slot name="content"></slot>
                     ${
-                        this.stickyFooter
+                        !this.stickyFooter
                             ? html`
-                                  <footer class="modal-footer">
+                                  <footer class="modal-footer modal-footer--sticky">
                                       <slot name="footer"></slot>
                                   </footer>
                               `
                             : ''
                     }
-                </div>
+                </main>
+                ${
+                    this.stickyFooter
+                        ? html`
+                              <footer class="modal-footer">
+                                  <slot name="footer"></slot>
+                              </footer>
+                          `
+                        : ''
+                }
+            </div>
+        `;
+
+        return html`
+            <dialog
+                class="modal ${this.infoPanel && this.infoExpanded ? 'modal--info-expanded' : ''}"
+                id="${this.modalId}"
+                autofocus
+                role="alertdialog"
+                aria-describedby="modal-content"
+                aria-labelledby="modal-title">
+                ${
+                    this.infoPanel
+                        ? html`
+                              <div class="dialog-wrapper">
+                                  ${modalContainer}
+                                  <div
+                                      id="info-panel"
+                                      class="info-panel ${this.infoExpanded ? 'info-panel--expanded' : ''}">
+                                      <slot name="info-panel"></slot>
+                                  </div>
+                              </div>
+                          `
+                        : modalContainer
+                }
             </dialog>
         `;
     }

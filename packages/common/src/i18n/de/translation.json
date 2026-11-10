@@ -11,7 +11,8 @@
         "consumer": "Verbraucher",
         "consumer_description": "Verbraucher \"{{id}}\" abonniert nur {{subscriptions}}",
         "provider": "Anbieter",
-        "provider_description": "Anbieter \"{{id}}\" {{description}}"
+        "provider_description": "Anbieter \"{{id}}\" {{description}}",
+        "toggle_info_panel": "Infobereich ein-/ausblenden"
     },
     "error": {
         "connection-to-server-refused": "Verbindung zum Server verweigert!",

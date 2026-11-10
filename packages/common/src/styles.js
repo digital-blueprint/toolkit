@@ -1905,6 +1905,10 @@ export function getNativeModalDialogCSS() {
             transform: translateY(var(--dbp-modal-translate-y, 0));
         }
 
+        :host(.modal--info[info-panel]) .dialog-wrapper {
+            display: flex;
+        }
+
         .modal-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -1912,6 +1916,96 @@ export function getNativeModalDialogCSS() {
             align-items: start;
             min-height: var(--dbp-modal-min-height);
             max-height: var(--dbp-modal-max-height, 90vh);
+        }
+
+        :host(.modal--info[info-panel]) dialog {
+            box-sizing: border-box;
+            width: var(--dbp-info-modal-base-width, 650px);
+            max-width: none;
+            left: 50%;
+            right: auto;
+            margin-inline: 0;
+            padding: 0;
+            transform: translateX(-50%) translateY(var(--dbp-modal-translate-y, 0));
+            transition: width 0.35s ease;
+        }
+
+        :host(.modal--info[info-panel]) dialog.modal--info-expanded {
+            width: calc(
+                var(--dbp-info-modal-base-width, 650px) + var(--dbp-info-modal-panel-width, 350px)
+            );
+        }
+
+        :host(.modal--info[info-panel]) .modal-container {
+            box-sizing: border-box;
+            flex: 0 0 var(--dbp-info-modal-base-width, 650px);
+            width: var(--dbp-info-modal-base-width, 650px);
+            padding: var(--dbp-modal-padding-top, 15px) 20px 20px;
+        }
+
+        :host(.modal--info[info-panel]) #info-panel {
+            box-sizing: border-box;
+            display: block;
+            flex: 0 0 0;
+            width: 0;
+            min-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            border: 0;
+            padding: 0;
+            transition:
+                flex-basis 0.35s ease,
+                width 0.35s ease,
+                padding 0.35s ease,
+                opacity 0.2s ease;
+        }
+
+        :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+            flex-basis: var(--dbp-info-modal-panel-width, 350px);
+            width: var(--dbp-info-modal-panel-width, 350px);
+            opacity: 1;
+            pointer-events: auto;
+            border-left: var(--dbp-border);
+            padding: var(--dbp-modal-padding-top, 15px) 20px 20px;
+        }
+
+        :host(.modal--info[info-panel]) #info-panel slot {
+            display: block;
+            width: calc(var(--dbp-info-modal-panel-width, 350px) - 40px);
+        }
+
+        @media (max-width: 1031px) {
+            :host(.modal--info[info-panel]) dialog {
+                width: min(var(--dbp-info-modal-base-width, 650px), calc(100vw - 32px));
+                overflow-y: auto;
+            }
+
+            :host(.modal--info[info-panel]) dialog.modal--info-expanded {
+                width: calc(100vw - 32px);
+            }
+
+            :host(.modal--info[info-panel]) .modal-container {
+                flex: 0 0 100%;
+                width: 100%;
+                transition:
+                    flex-basis 0.35s ease,
+                    width 0.35s ease;
+            }
+
+            :host(.modal--info[info-panel]) dialog.modal--info-expanded .modal-container {
+                flex-basis: calc(100% - min(var(--dbp-info-modal-panel-width, 350px), 40vw));
+                width: calc(100% - min(var(--dbp-info-modal-panel-width, 350px), 40vw));
+            }
+
+            :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+                flex-basis: min(var(--dbp-info-modal-panel-width, 350px), 40vw);
+                width: min(var(--dbp-info-modal-panel-width, 350px), 40vw);
+            }
+
+            :host(.modal--info[info-panel]) #info-panel slot {
+                width: calc(min(var(--dbp-info-modal-panel-width, 350px), 40vw) - 40px);
+            }
         }
 
         :host([full-height-line]) .modal-container {
@@ -2006,7 +2100,6 @@ export function getNativeModalDialogCSS() {
 
         .modal-title {
             margin: 0;
-            padding: var(--dbp-modal-title-padding, 0.25em 0 0 0);
             font-weight: var(--dbp-modal-title-font-weight, 300);
             font-size: var(--dbp-modal-title-font-size, 1rem);
             background: var(--dbp-modal-title-background);

@@ -104,6 +104,33 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 margin: 0 1em 0 0;
             }
 
+            .modal--info {
+                --dbp-modal-content-min-height: 6em;
+                --dbp-info-modal-base-width: 650px;
+                --dbp-info-modal-panel-width: 350px;
+            }
+
+            .modal--info h2 {
+                margin: 0px;
+                padding: var(--dbp-modal-title-padding, 0.25em 0 0 0);
+                font-weight: 300;
+            }
+
+            .panel-button {
+                display: flex;
+                align-items: center;
+                background-color: var(--dbp-background);
+                border: none;
+                gap: 0.5em;
+                cursor: pointer;
+            }
+
+            .panel-button dbp-icon {
+                color: var(--dbp-accent);
+                height: 1.5em;
+                width: 1.5em;
+            }
+
             .header {
                 display: flex;
                 align-items: center;
@@ -392,6 +419,57 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                             <dbp-button
                                 @click="${() => {
                                     this._('#my-modal-sticky').close();
+                                }}">
+                                Cancel
+                            </dbp-button>
+                            <dbp-button type="is-primary">Submit</dbp-button>
+                        </menu>
+                    </dbp-modal>
+
+                    <h3>Modal with info panel</h3>
+                    <dbp-button
+                        type="is-primary"
+                        value="open modal"
+                        no-spinner-on-click
+                        @click="${() => this._('#modal-info-panel').open()}"></dbp-button>
+                    <dbp-modal
+                        id="modal-info-panel"
+                        class="modal modal--info"
+                        info-panel
+                        modal-id="modal-info"
+                        title="Modal with info panel"
+                        subscribe="lang">
+                        <div slot="header" class="header">
+                            <h3>Click to expand the info panel</h3>
+                        </div>
+                        <div slot="content">
+                            <dbp-button
+                                no-spinner-on-click
+                                @click="${() => this._('#modal-info-panel').toggleInfoPanel()}">
+                                ${this._i18n.t('demo.toggle_info_panel')}
+                            </dbp-button>
+                        </div>
+
+                        <div slot="info-panel">
+                            <div class="info-panel-title">
+                                <button
+                                    class="button panel-button"
+                                    @click="${() => this._('#modal-info-panel').toggleInfoPanel()}">
+                                    <dbp-icon name="chevron-left"></dbp-icon>
+                                    <h2>Panel Headline</h2>
+                                </button>
+                            </div>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+                                ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                aliquip ex ea commodo consequat.
+                            </p>
+                        </div>
+                        <menu slot="footer" class="footer-menu">
+                            <dbp-button
+                                @click="${() => {
+                                    this._('#modal-info-panel').close();
                                 }}">
                                 Cancel
                             </dbp-button>
