@@ -5,6 +5,7 @@
 - Improve the accessibility of the menu: use a `nav` landmark instead of an `aside`, toggle visibility via `hidden` so a closed menu is not removed from the accessibility tree
 - Preserve query parameters and URL fragments when an activity changes `routing-url`, including changes that do not alter the activity route
 - Add hidden skip links at the top of the page, which become visible on keyboard focus and jump to the main content, the navigation and the footer
+- Don't print the header, menu, footer, skip links, scroll buttons and notifications, so only the headline and the content of the activity end up on paper
 
 ## 0.3.16
 

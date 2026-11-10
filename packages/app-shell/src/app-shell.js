@@ -1388,6 +1388,27 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                     border: 0;
                 }
             }
+
+            /* Only print the headline and the content of the activity, the navigation
+               and other interactive parts of the page are of no use on paper */
+            @media print {
+                .skip-links,
+                header,
+                .mobile-menu,
+                footer,
+                .scroll-top-wrapper,
+                #dbp-notification {
+                    display: none;
+                }
+
+                #main,
+                #main.menu-open {
+                    grid-template-columns: minmax(0, 1fr);
+                    grid-template-areas: 'headline' 'main';
+                    min-height: auto;
+                    overflow: visible;
+                }
+            }
         `;
     }
 
