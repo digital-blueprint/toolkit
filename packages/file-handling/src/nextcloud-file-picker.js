@@ -179,11 +179,14 @@ export class NextcloudFilePicker extends LangMixin(
         window.removeEventListener('resize', this.boundRefreshOnWindowSizeChange);
 
         // deregister tabulator table callback events
-        this.tabulatorTable.off('tableBuilt');
-        this.tabulatorTable.off('rowSelectionChanged');
-        this.tabulatorTable.off('rowClick');
-        this.tabulatorTable.off('rowAdded');
-        this.tabulatorTable.off('dataLoaded');
+        // The table doesn't exist yet if the element is removed before its first render finished
+        if (this.tabulatorTable !== null) {
+            this.tabulatorTable.off('tableBuilt');
+            this.tabulatorTable.off('rowSelectionChanged');
+            this.tabulatorTable.off('rowClick');
+            this.tabulatorTable.off('rowAdded');
+            this.tabulatorTable.off('dataLoaded');
+        }
         super.disconnectedCallback();
     }
 
@@ -195,6 +198,12 @@ export class NextcloudFilePicker extends LangMixin(
         this._loginCalled = false;
 
         void this.updateComplete.then(() => {
+            // Don't register listeners or build the table if the element was removed in the meantime,
+            // connectedCallback() runs again when it's added back
+            if (!this.isConnected) {
+                return;
+            }
+
             // see: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
             window.addEventListener('message', this._onReceiveWindowMessage);
             // see: http://tabulator.info/docs/5.1
