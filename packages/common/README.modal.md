@@ -55,6 +55,8 @@ Slotted content can be styled from outside with css.
 - `sticky-footer` (optional, boolean): set the footer to stick to the bottom of the modal
 - `full-height-line` (optional, boolean): show an opt-in vertical line that spans from the top to the bottom of the modal
     - example `<dbp-modal full-height-line></dbp-modal>`
+- `print-content-only` (optional, boolean): only print the modal when it's open and the page is printed, the page behind the modal is hidden while printing
+    - example `<dbp-modal print-content-only></dbp-modal>`
 
 ### CSS variables
 

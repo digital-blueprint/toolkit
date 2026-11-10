@@ -4,6 +4,8 @@
 
 - Translated: add an `inline` attribute to render the active language wrapper and its slotted content inline.
 - Modal: add a `focusCloseButton()` method so consumers can move focus to the modal's close button, which is otherwise unreachable behind the shadow root boundary; this lets long modal forms offer a skip link to the close action
+- Modal: print the whole content of an open modal instead of only the first page, and don't print the close button
+- Modal: add a `print-content-only` attribute to hide the page behind an open modal while printing
 
 ## 0.3.16
 

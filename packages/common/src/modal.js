@@ -22,6 +22,12 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         this.fullHeightLine = false;
         /** @type {number} */
         this.modalPaddingTopDefault = 0;
+        /** @type {boolean} */
+        this.printContentOnly = false;
+        /** @type {boolean} Whether the page behind the modal is currently hidden for printing */
+        this._pageHiddenForPrint = false;
+        this._onBeforePrint = this._handleBeforePrint.bind(this);
+        this._onAfterPrint = this._handleAfterPrint.bind(this);
     }
 
     static get properties() {
@@ -31,11 +37,45 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             title: {type: String},
             stickyFooter: {type: Boolean, attribute: 'sticky-footer'},
             fullHeightLine: {type: Boolean, attribute: 'full-height-line'},
+            printContentOnly: {type: Boolean, attribute: 'print-content-only'},
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
+        window.addEventListener('beforeprint', this._onBeforePrint);
+        window.addEventListener('afterprint', this._onAfterPrint);
+    }
+
+    disconnectedCallback() {
+        window.removeEventListener('beforeprint', this._onBeforePrint);
+        window.removeEventListener('afterprint', this._onAfterPrint);
+        this._handleAfterPrint();
+        super.disconnectedCallback();
+    }
+
+    /**
+     * Hides the page behind the open modal while printing, so that only the modal content
+     * ends up on paper. The page is usually outside of the shadow root of the modal and
+     * can't be reached with its styles, but the inherited "visibility" crosses shadow
+     * boundaries and is switched back on for the dialog in the print styles.
+     */
+    _handleBeforePrint() {
+        if (!this.printContentOnly || !this.isOpen()) {
+            return;
+        }
+
+        this.ownerDocument.body.style.visibility = 'hidden';
+        this._pageHiddenForPrint = true;
+    }
+
+    _handleAfterPrint() {
+        if (!this._pageHiddenForPrint) {
+            return;
+        }
+
+        this.ownerDocument.body.style.removeProperty('visibility');
+        this._pageHiddenForPrint = false;
     }
 
     updated(changedProperties) {

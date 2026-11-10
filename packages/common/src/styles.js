@@ -1834,14 +1834,24 @@ export function getNativeModalDialogPrintCSS() {
                 border: none;
                 background: white;
                 filter: none;
+                /* Otherwise the content is clipped after the first page */
+                overflow: visible;
+                /* Needed for "print-content-only", which hides the page behind the modal */
+                visibility: visible;
             }
 
             .modal-container {
                 max-height: inherit;
+                /* Firefox moves grid content that doesn't fit on the first page to the next one */
+                display: block;
             }
 
             .modal-content {
                 overflow-y: visible;
+            }
+
+            .modal-close {
+                display: none;
             }
         }
     `;
