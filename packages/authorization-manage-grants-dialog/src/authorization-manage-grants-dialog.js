@@ -21,13 +21,26 @@ import {getAuthorizationManageGrantsDialogCSS} from './styles.js';
 import {Notification} from '@dbp-toolkit/notification';
 import {AuthorizationSubjectSelect} from './authorization-subject-select.js';
 import {
+    GRANT_HOLDER_ICONS,
+    GRANT_HOLDER_TYPE_ORDER,
     SUBJECT_TYPE_DYNAMIC_USER_GROUP,
     SUBJECT_TYPE_PERSON,
     SUBJECT_TYPE_USER_GROUP,
     deriveGrantHolderIdentity,
+    getGrantHolderDisplayName,
     getGrantHolderFields,
+    getIriIdentifier,
+    toCompactSubject,
 } from './grant-holder.js';
-import {updateInMap, deleteFromMap} from './utils.js';
+import {
+    compareIdentifiers,
+    createCollator,
+    deleteFromMap,
+    getRoleName,
+    getRoleNameByIri,
+    isGrantChangeable,
+    updateInMap,
+} from './utils.js';
 
 /**
  * @typedef {import('./types.js').RoleGrant} RoleGrant
@@ -40,9 +53,13 @@ import {updateInMap, deleteFromMap} from './utils.js';
  * @typedef {import('./types.js').RoleDefinition} RoleDefinition
  * @typedef {import('./types.js').GrantHolderFields} GrantHolderFields
  * @typedef {import('./types.js').GrantHolderIdentity} GrantHolderIdentity
+ * @typedef {import('./types.js').ResourceActionGrant} ResourceActionGrant
  */
 
-const RESOURCE_TYPE_ITEM = 0;
+/** Authorization resource type of a single item. */
+export const RESOURCE_TYPE_ITEM = 0;
+/** Authorization resource type of a group of items. */
+export const RESOURCE_TYPE_GROUP = 1;
 
 export class AuthorizationManageGrantsDialog extends AuthMixin(
     LangMixin(ScopedElementsMixin(DBPLitElement), createInstance),
@@ -55,10 +72,13 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.modalRef = createRef();
         /** @type {import('lit/directives/ref.js').Ref<AuthorizationSubjectSelect>} */
         this.subjectSelectorRef = createRef();
+        /** @type {import('./authorization-subject-select.js').SubjectResource|null} */
         this.selectedSubject = null;
         this.resourceClassIdentifier = '';
         this.resourceIdentifier = '';
         this.resourceType = RESOURCE_TYPE_ITEM;
+        /** @type {string|null} The compound resource identifier the loaded data belongs to. */
+        this._loadedResourceKey = null;
         this.roles = new Map();
         /** @type {Map<string, GrantHolder>} */
         this.grantHolders = new Map();
@@ -75,6 +95,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.showRolesPanel = false;
         /** @type {Set<string>} */
         this._savingHolderKeys = new Set();
+        /** @type {Intl.Collator|null} */
+        this._cachedCollator = null;
+        /** @type {string|null} Language the cached collator was created for. */
+        this._cachedCollatorLang = null;
     }
 
     static get properties() {
@@ -116,11 +140,15 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             this.modalTitle = this._i18n.t('auth-manage-dialog.modal-title');
         }
 
+        const resourceChanged =
+            changedProperties.has('resourceClassIdentifier') ||
+            changedProperties.has('resourceIdentifier') ||
+            changedProperties.has('resourceType');
+        // open() loads the resource itself, so a change applied in the same update is already covered.
         if (
-            (changedProperties.has('resourceClassIdentifier') ||
-                changedProperties.has('resourceIdentifier') ||
-                changedProperties.has('resourceType')) &&
-            this.modalRef.value?.isOpen()
+            resourceChanged &&
+            this.modalRef.value?.isOpen() &&
+            this._getResourceKey() !== this._loadedResourceKey
         ) {
             void this._loadResourceData();
         }
@@ -177,10 +205,194 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.draftGrantHolders = new Map();
         this.draftRoleGrants = new Map();
         this.pendingGrantChanges = new Map();
+        this._savingHolderKeys = new Set();
         this._nextDraftRoleIdentifier = 0;
         this.showRolesPanel = false;
         this.selectedSubject = null;
-        void this._('#resource-select')?.reset();
+        void this.subjectSelectorRef.value?.reset();
+        this._loadedResourceKey = null;
+    }
+
+    /**
+     * The collator of the current language. Sorting happens on every render, so it is kept
+     * until the language changes instead of being rebuilt for every list.
+     * @returns {Intl.Collator} Collator comparing names of the current language.
+     */
+    get _collator() {
+        if (this._cachedCollator === null || this._cachedCollatorLang !== this.lang) {
+            this._cachedCollator = createCollator(this.lang);
+            this._cachedCollatorLang = this.lang;
+        }
+        return this._cachedCollator;
+    }
+
+    /**
+     * Returns the access token of the current user.
+     * @returns {string} Access token, or an empty string while logged out.
+     */
+    _getAuthToken() {
+        return this.auth?.token ?? '';
+    }
+
+    /**
+     * Builds the headers shared by all API requests.
+     * @param {Record<string, string>} [additionalHeaders] - Headers to add or override.
+     * @returns {Record<string, string>} Request headers.
+     */
+    _getApiHeaders(additionalHeaders = {}) {
+        return {
+            'Accept-Language': this.lang,
+            Authorization: 'Bearer ' + this._getAuthToken(),
+            ...additionalHeaders,
+        };
+    }
+
+    /**
+     * Fetches an API collection in the current language.
+     * @param {string} url - Absolute collection URL.
+     * @param {AbortSignal} [signal] - Request cancellation signal.
+     * @returns {Promise<object[]>} Members of the collection.
+     */
+    async _getCollection(url, signal) {
+        return await hydra.getCollection(url, this.lang, () => this._getAuthToken(), {signal});
+    }
+
+    /**
+     * Builds the collection URL of a compound authorization resource identifier.
+     *
+     * @param {string} path - API collection path.
+     * @returns {string} Absolute collection URL.
+     */
+    _getResourceCollectionUrl(path) {
+        const url = new URL(path, this.entryPointUrl);
+        url.searchParams.set('resourceClass', this.resourceClassIdentifier);
+        url.searchParams.set('resourceIdentifier', this.resourceIdentifier);
+        url.searchParams.set('resourceType', String(this.resourceType));
+        return url.href;
+    }
+
+    /**
+     * Fetches an API item, preserving its translations.
+     * @param {string} path - API item IRI.
+     * @param {AbortSignal} [signal] - Request cancellation signal.
+     * @returns {Promise<object>} API resource.
+     */
+    async _apiGetItem(path, signal) {
+        const response = await fetch(new URL(path, this.entryPointUrl), {
+            signal,
+            headers: this._getApiHeaders({Accept: 'application/ld+json'}),
+        });
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return await response.json();
+    }
+
+    /**
+     * Fetches a person by identifier.
+     * @param {string} identifier - Person identifier.
+     * @param {AbortSignal} [signal] - Request cancellation signal.
+     * @returns {Promise<object>} API resource.
+     */
+    async _apiGetPerson(identifier, signal) {
+        return await this._apiGetItem(
+            `/base/people/${encodeURIComponent(identifier)}?includeLocal=email`,
+            signal,
+        );
+    }
+
+    /**
+     * Fetches a user group by IRI.
+     * @param {string} iri - User group IRI.
+     * @param {AbortSignal} [signal] - Request cancellation signal.
+     * @returns {Promise<object>} API resource.
+     */
+    async _apiGetUserGroup(iri, signal) {
+        return await this._apiGetItem(iri, signal);
+    }
+
+    /**
+     * Fetches role definitions for the current resource.
+     * @param {AbortSignal} [signal] - Request cancellation signal.
+     * @returns {Promise<RoleDefinition[]>} Role definitions.
+     */
+    async _apiGetRoles(signal) {
+        const roles = await this._getCollection(
+            this._getResourceCollectionUrl('/authorization/roles'),
+            signal,
+        );
+        return /** @type {RoleDefinition[]} */ (roles);
+    }
+
+    /**
+     * Fetches resource action grants for the current resource.
+     * @param {AbortSignal} [signal] - Request cancellation signal.
+     * @returns {Promise<ResourceActionGrant[]>} Raw resource action grants.
+     */
+    async _apiGetResourceActionGrants(signal) {
+        const grants = await this._getCollection(
+            this._getResourceCollectionUrl('/authorization/resource-action-grants'),
+            signal,
+        );
+        return /** @type {ResourceActionGrant[]} */ (grants);
+    }
+
+    /**
+     * Fetches dynamic user groups.
+     * @param {AbortSignal} [signal] - Request cancellation signal.
+     * @returns {Promise<GrantHolderSubject[]>} Dynamic user groups.
+     */
+    async _apiGetDynamicUserGroups(signal) {
+        const groups = await this._getCollection(
+            new URL('/authorization/dynamic-user-groups', this.entryPointUrl).href,
+            signal,
+        );
+        return /** @type {GrantHolderSubject[]} */ (groups);
+    }
+
+    /**
+     * Save subject roles to the API.
+     * @param {RoleGrantSelection} grantSelection
+     * @param {GrantHolderFields} holderFields
+     * @returns {Promise<Response>} response
+     */
+    async _apiPostResourceActionGrant(grantSelection, holderFields) {
+        const roleIdentifier = grantSelection.roleIdentifier;
+        const shareable = grantSelection.shareable ?? false;
+
+        const payload = {
+            resourceClass: this.resourceClassIdentifier,
+            resourceIdentifier: this.resourceIdentifier,
+            resourceType: this.resourceType,
+            role: roleIdentifier,
+            shareable: shareable,
+            ...holderFields,
+        };
+
+        const apiUrl = new URL('/authorization/resource-action-grants', this.entryPointUrl);
+        const options = {
+            method: 'POST',
+            headers: this._getApiHeaders({'Content-Type': 'application/ld+json'}),
+            body: JSON.stringify(payload),
+        };
+        return await fetch(apiUrl, options);
+    }
+
+    /**
+     * Deletes a resource action grant.
+     * @param {string} grantIdentifier
+     * @returns {Promise<Response>}
+     */
+    async _apiDeleteResourceActionGrant(grantIdentifier) {
+        const apiUrl = new URL(
+            `/authorization/resource-action-grants/${grantIdentifier}`,
+            this.entryPointUrl,
+        );
+        const options = {
+            method: 'DELETE',
+            headers: this._getApiHeaders({'Content-Type': 'application/ld+json'}),
+        };
+        return await fetch(apiUrl, options);
     }
 
     /**
@@ -198,16 +410,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             this.roles = new Map();
             // The roles keep all their translations, so a language change only needs a
             // re-render instead of a new request
-            const roles = await hydra.getCollection(
-                this._getRolesUrl(
-                    this.resourceClassIdentifier,
-                    this.resourceIdentifier,
-                    this.resourceType,
-                ),
-                this.lang,
-                () => this.auth?.token ?? '',
-                {signal},
-            );
+            const roles = await this._apiGetRoles(signal);
             if (!signal?.aborted) {
                 this.roles = new Map(roles.map((role) => [role['@id'], role]));
                 return true;
@@ -230,6 +433,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this._resourceDataController?.abort();
         const controller = new AbortController();
         this._resourceDataController = controller;
+        this._loadedResourceKey = this._getResourceKey();
 
         this.grantHolders = new Map();
         this.draftGrantHolders = new Map();
@@ -240,6 +444,14 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         if (!this.resourceClassIdentifier || !this.resourceIdentifier || !this.isLoggedIn()) {
             this.grantHoldersLoading = false;
             return;
+        }
+        // The resource type goes straight into the request URL and the grant payload, so a wrong
+        // value only shows up as a server-side error.
+        if (![RESOURCE_TYPE_ITEM, RESOURCE_TYPE_GROUP].includes(this.resourceType)) {
+            console.warn(
+                `Unsupported resource type "${this.resourceType}", expected ` +
+                    `${RESOURCE_TYPE_ITEM} (item) or ${RESOURCE_TYPE_GROUP} (group)`,
+            );
         }
         this.grantHoldersLoading = true;
 
@@ -255,74 +467,25 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
-     * Fetches an API item, preserving its translations.
-     * @param {string} path - API item IRI.
-     * @param {AbortSignal} [signal] - Request cancellation signal.
-     * @returns {Promise<object>} API resource.
+     * Identifies the resource the dialog currently shows, so the same one is not loaded twice.
+     * @returns {string} Compound authorization resource identifier.
      */
-    async _fetchGrantResource(path, signal) {
-        const response = await fetch(new URL(path, this.entryPointUrl), {
-            signal,
-            headers: {
-                Accept: 'application/ld+json',
-                'Accept-Language': this.lang,
-                Authorization: 'Bearer ' + (this.auth?.token ?? ''),
-            },
-        });
-        if (!response.ok) {
-            throw new Error(response.statusText);
-        }
-        return await response.json();
+    _getResourceKey() {
+        return `${this.resourceClassIdentifier}:${this.resourceIdentifier}:${this.resourceType}`;
     }
 
     /**
-     * Save subject roles to the API.
-     * @param {{resourceClassIdentifier: string, resourceIdentifier: string, resourceType: number}} resource
-     * @param {RoleGrantSelection} grantSelection
-     * @param {GrantHolderFields} grantHolderIdentifier
-     * @returns {Promise<Response>} response
+     * Reloads the grant holders after a change, so the list shows what the API stores.
+     * The reload belongs to the current resource, so closing the dialog or switching the
+     * resource discards a response that is still on its way.
+     * @returns {Promise<void>}
      */
-    async _apiPostRoles(resource, grantSelection, grantHolderIdentifier) {
-        const {resourceClassIdentifier, resourceIdentifier, resourceType} = resource;
-        const roleIdentifier = grantSelection.roleIdentifier;
-        const shareable = grantSelection.shareable ?? false;
-
-        const payload = {
-            resourceClass: resourceClassIdentifier,
-            resourceIdentifier: resourceIdentifier,
-            resourceType: resourceType,
-            role: roleIdentifier,
-            shareable: shareable,
-            ...grantHolderIdentifier,
-        };
-
-        const apiUrl = new URL('/authorization/resource-action-grants', this.entryPointUrl);
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                'Accept-Language': this.lang,
-                Authorization: 'Bearer ' + (this.auth?.token ?? ''),
-            },
-            body: JSON.stringify(payload),
-        };
-        return await fetch(apiUrl, options);
-    }
-
-    async _apiDeleteGrant(roleIdentifier) {
-        const apiUrl = new URL(
-            `/authorization/resource-action-grants/${roleIdentifier}`,
-            this.entryPointUrl,
-        );
-        const options = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                'Accept-Language': this.lang,
-                Authorization: 'Bearer ' + (this.auth?.token ?? ''),
-            },
-        };
-        return await fetch(apiUrl, options);
+    async _reloadGrantHolders() {
+        const signal = this._resourceDataController?.signal;
+        if (signal?.aborted) {
+            return;
+        }
+        await this._loadRoleGrantHolders(signal);
     }
 
     /**
@@ -337,16 +500,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         }
 
         try {
-            const url = new URL('/authorization/resource-action-grants', this.entryPointUrl);
-            url.searchParams.set('resourceClass', this.resourceClassIdentifier);
-            url.searchParams.set('resourceIdentifier', this.resourceIdentifier);
-            url.searchParams.set('resourceType', String(this.resourceType));
-            const grants = await hydra.getCollection(
-                url.href,
-                this.lang,
-                () => this.auth?.token ?? '',
-                {signal},
-            );
+            const grants = await this._apiGetResourceActionGrants(signal);
             const roleDefinitions = new Map(
                 [...this.roles].map(([iri, role]) => [
                     iri,
@@ -370,6 +524,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 if (holderIdentity === null) {
                     continue;
                 }
+                // Add new holders
                 if (!holders.has(holderIdentity.key)) {
                     holders.set(holderIdentity.key, {
                         ...holderIdentity,
@@ -377,30 +532,26 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                         grants: [],
                     });
                 }
+                // Add the grant to the holder's list of grants
                 holders.get(holderIdentity.key).grants.push(grant);
             }
+
             // Dynamic groups have no item endpoint, so fetch their collection only once.
             const dynamicGroups = [...holders.values()].some(
                 (holder) => holder.type === SUBJECT_TYPE_DYNAMIC_USER_GROUP,
             )
-                ? await hydra.getCollection(
-                      new URL('/authorization/dynamic-user-groups', this.entryPointUrl).href,
-                      this.lang,
-                      () => this.auth?.token ?? '',
-                      {signal},
-                  )
+                ? await this._apiGetDynamicUserGroups(signal)
                 : [];
+
             const holderList = [...holders.values()];
+            // Fill holders with their subject data and compact grants.
             const subjectResults = await Promise.allSettled(
                 holderList.map(async (holder) => {
                     return holder.type === SUBJECT_TYPE_DYNAMIC_USER_GROUP
                         ? dynamicGroups.find((group) => group['identifier'] === holder.identifier)
-                        : await this._fetchGrantResource(
-                              holder.type === SUBJECT_TYPE_PERSON
-                                  ? `/base/people/${encodeURIComponent(holder.identifier)}?includeLocal=email`
-                                  : holder.iri,
-                              signal,
-                          );
+                        : holder.type === SUBJECT_TYPE_PERSON
+                          ? this._apiGetPerson(holder.identifier, signal)
+                          : this._apiGetUserGroup(holder.iri, signal);
                 }),
             );
             if (!signal?.aborted) {
@@ -410,8 +561,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                     const subject = result.status === 'fulfilled' ? result.value : undefined;
                     return {
                         key: holder.key,
+                        type: holder.type,
                         subject: subject
-                            ? this._getCompactGrantSubject(subject, holder.type)
+                            ? toCompactSubject(subject, holder.type)
                             : {identifier: holder.identifier},
                         grants: holder.grants.map((grant) => ({
                             identifier: grant.identifier,
@@ -419,13 +571,13 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                             grantedActions: grant.grantedActions ?? [],
                             roleDefinition: roleDefinitions.get(grant['role']) ?? {
                                 '@id': grant['role'],
-                                identifier: grant['role'].split('/').pop(),
+                                identifier: getIriIdentifier(grant['role']),
                                 roleNames: [],
                             },
                         })),
                     };
                 });
-                this.grantHolders = this.sortGrantHolders(
+                this.grantHolders = this._sortGrantHolders(
                     new Map(resolvedHolders.map((holder) => [holder.key, holder])),
                 );
                 this._prunePendingGrantChanges();
@@ -440,588 +592,6 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 this.grantHoldersLoading = false;
             }
         }
-    }
-
-    /**
-     * Returns the holder's display name, falling back to its identifier.
-     * @param {GrantHolderSubject} subject - Compact person or group subject.
-     * @returns {string} Display name used for ordering holders.
-     */
-    _getGrantHolderDisplayName(subject) {
-        return (
-            [subject['givenName'], subject['familyName']].filter(Boolean).join(' ').trim() ||
-            subject['name'] ||
-            subject['identifier']
-        );
-    }
-
-    /**
-     * Sorts grant holders by type—people, user groups, then dynamic groups—and by display name
-     * within each type.
-     * @param {Map<string, GrantHolder>} grantHolders - Grant holders keyed by their holder key.
-     * @returns {Map<string, GrantHolder>} A new map in display order.
-     */
-    sortGrantHolders(grantHolders) {
-        const typeOrder = [
-            SUBJECT_TYPE_PERSON,
-            SUBJECT_TYPE_USER_GROUP,
-            SUBJECT_TYPE_DYNAMIC_USER_GROUP,
-        ];
-        const collator = new Intl.Collator(this.lang, {sensitivity: 'base', numeric: true});
-        const sortedEntries = [...grantHolders.entries()].sort(([, left], [, right]) => {
-            const typeDifference =
-                typeOrder.indexOf(left.key.split(':')[0]) -
-                typeOrder.indexOf(right.key.split(':')[0]);
-            return (
-                typeDifference ||
-                collator.compare(
-                    this._getGrantHolderDisplayName(left.subject),
-                    this._getGrantHolderDisplayName(right.subject),
-                ) ||
-                (left.key < right.key ? -1 : left.key > right.key ? 1 : 0)
-            );
-        });
-        return new Map(sortedEntries);
-    }
-
-    /**
-     * Keeps only the subject fields needed to display and identify a grant holder.
-     * @param {object} subject - Person or group API resource.
-     * @param {string} type - Grant holder type.
-     * @returns {GrantHolderSubject} Compact subject with optional person email.
-     */
-    _getCompactGrantSubject(subject, type) {
-        const identity = {
-            '@id': subject['@id'],
-            '@type': subject['@type'],
-            identifier: subject['identifier'],
-        };
-        if (type === SUBJECT_TYPE_PERSON) {
-            return {
-                ...identity,
-                givenName: subject['givenName'],
-                familyName: subject['familyName'],
-                localData: {email: subject['localData']?.email ?? null},
-            };
-        }
-        if (type === SUBJECT_TYPE_USER_GROUP) {
-            return {...identity, name: subject['name']};
-        }
-        return identity;
-    }
-
-    /**
-     * Builds the collection URL of the roles of a compound authorization resource identifier.
-     *
-     * @param {string} resourceClassIdentifier - Authorization resource class.
-     * @param {string} resourceIdentifier - Identifier of the authorization resource.
-     * @param {number} resourceType - Resource type: 0 for an item or 1 for a group.
-     * @returns {string} Absolute collection URL.
-     */
-    _getRolesUrl(resourceClassIdentifier, resourceIdentifier, resourceType) {
-        const url = new URL('/authorization/roles', this.entryPointUrl);
-        url.searchParams.set('resourceClass', resourceClassIdentifier);
-        url.searchParams.set('resourceIdentifier', resourceIdentifier);
-        url.searchParams.set('resourceType', String(resourceType));
-        return url.href;
-    }
-
-    /**
-     * Returns the name a role has in the current language.
-     *
-     * @param {RoleDefinition} role - Role definition with its localized names.
-     * @returns {string} Name of the role in the current language.
-     */
-    _getRoleName(role) {
-        return (
-            role.roleNames?.find((name) => name.languageTag === this.lang)?.name ?? role.identifier
-        );
-    }
-
-    /**
-     * Renders the side panel that displays the roles for the current resource.
-     * @returns {import('lit').TemplateResult}
-     */
-    renderRolesSidePanel() {
-        const i18n = this._i18n;
-        return html`
-            <div class="roles-container">
-                <h3 class="roles-panel-title">${i18n.t('auth-manage-dialog.roles-panel.title')}</h3>
-                ${
-                    this.roles.size
-                        ? html`
-                              <div class="role-list">
-                                  ${[...this.roles.values()].map((role) => {
-                                      return html`
-                                          <h4 class="roles-name">${this._getRoleName(role)}</h4>
-                                      `;
-                                  })}
-                              </div>
-                          `
-                        : html`
-                              <p class="roles-empty-state">
-                                  ${i18n.t('auth-manage-dialog.roles-panel.empty-state-label')}
-                              </p>
-                          `
-                }
-            </div>
-        `;
-    }
-
-    /**
-     * Renders the assigned role holders, loading indicator or empty state.
-     * @returns {import('lit').TemplateResult} Holder list content.
-     */
-    renderGrantHolders() {
-        if (this.grantHoldersLoading) {
-            return html`
-                <dbp-mini-spinner></dbp-mini-spinner>
-            `;
-        }
-        if (!this.grantHolders.size && !this.draftGrantHolders.size) {
-            return html`
-                <div class="grants-list-placeholder">
-                    <dbp-icon name="information-circle" aria-hidden="true"></dbp-icon>
-                    <p>${this._i18n.t('auth-manage-dialog.grants-list-placeholder')}</p>
-                </div>
-            `;
-        }
-        return html`
-            <div class="grant-holders-list">
-                ${repeat(
-                    this.draftGrantHolders.values(),
-                    (holder) => holder.key,
-                    (holder) => this.renderGrantHolderSection(holder),
-                )}
-                ${repeat(
-                    this.grantHolders.values(),
-                    (holder) => holder.key,
-                    (holder) => this.renderGrantHolderSection(holder),
-                )}
-            </div>
-        `;
-    }
-
-    /**
-     * Renders a holder's name, person email and assigned role rows.
-     * @param {GrantHolder|DraftGrantHolder} holder - Holder with its compact subject and role grants.
-     * @returns {import('lit').TemplateResult} Holder section.
-     */
-    renderGrantHolderSection(holder) {
-        const name = this._getGrantHolderDisplayName(holder['subject']);
-        const draftGrants = this.draftRoleGrants.get(holder.key) ?? [];
-        const collator = new Intl.Collator(this.lang, {sensitivity: 'base', numeric: true});
-        const grants = [...holder['grants']].sort((left, right) => {
-            return (
-                collator.compare(
-                    this._getRoleName(left.roleDefinition),
-                    this._getRoleName(right.roleDefinition),
-                ) ||
-                (left.identifier < right.identifier
-                    ? -1
-                    : left.identifier > right.identifier
-                      ? 1
-                      : 0)
-            );
-        });
-        const email = holder['key'].startsWith(`${SUBJECT_TYPE_PERSON}:`)
-            ? holder['subject'].localData?.email
-            : null;
-        const holderIconName = holder['key'].startsWith(`${SUBJECT_TYPE_PERSON}:`)
-            ? 'user'
-            : 'users';
-        return html`
-            <section
-                id="${holder.key}"
-                class="grant-holder-section"
-                aria-label="${this._i18n.t('auth-manage-dialog.grant-holder-aria-label', {name: name})}">
-                <div class="grant-holder-heading">
-                    <div class="grant-holder">
-                        <div>
-                            <dbp-icon
-                                name="${holderIconName}"
-                                class="holder-type-icon"
-                                aria-hidden="true"></dbp-icon>
-                            <h3 class="grant-holder-name">${name}:</h3>
-                        </div>
-                        ${
-                            email
-                                ? html`
-                                      <span class="grant-holder-email">${email}</span>
-                                  `
-                                : ''
-                        }
-                    </div>
-                    <div class="grant-shareable-column-label">
-                        ${this._i18n.t('auth-manage-dialog.shareable-column-label')}
-                    </div>
-                </div>
-                <ul class="grant-holder-roles">
-                    ${repeat(
-                        grants,
-                        (grant) => grant.identifier,
-                        (grant) => this.renderRoleRow(grant, holder),
-                    )}
-                    ${repeat(
-                        draftGrants,
-                        (grant) => grant.clientIdentifier,
-                        (grant) => this.renderDraftRoleRow(grant, holder.key, name),
-                    )}
-                </ul>
-                <div class="add-role-button-container">
-                    <dbp-button
-                        type="is-secondary"
-                        class="add-role-button"
-                        no-spinner-on-click
-                        ?disabled="${draftGrants.some((draft) => !draft.roleIdentifier) || !this.getAvailableRolesForHolder(holder.key).length}"
-                        title="${
-                            draftGrants.some((draft) => !draft.roleIdentifier)
-                                ? this._i18n.t(
-                                      'auth-manage-dialog.buttons.add-role-select-role-title',
-                                  )
-                                : !this.getAvailableRolesForHolder(holder.key).length
-                                  ? this._i18n.t(
-                                        'auth-manage-dialog.buttons.add-role-no-more-roles-title',
-                                    )
-                                  : ''
-                        }"
-                        @click="${() => this.handleAddRoleButtonClick(holder.key)}">
-                        <dbp-icon name="plus" aria-hidden="true"></dbp-icon>
-                        ${this._i18n.t('auth-manage-dialog.buttons.add-role')}
-                    </dbp-button>
-                    <dbp-button
-                        type="is-primary"
-                        class="save-holder-roles-button"
-                        no-spinner-on-click
-                        ?disabled="${this.isSaveDisabled(holder.key)}"
-                        title="${
-                            draftGrants.some((draft) => !draft.roleIdentifier)
-                                ? this._i18n.t(
-                                      'auth-manage-dialog.buttons.save-holder-roles-button-select-role-title',
-                                  )
-                                : this.isSaveDisabled(holder.key)
-                                  ? this._i18n.t(
-                                        'auth-manage-dialog.buttons.save-holder-roles-button-disabled-title',
-                                    )
-                                  : ''
-                        }"
-                        @click="${async () => await this.handleSaveHolderRolesButtonClick(holder.key)}">
-                        <dbp-icon name="save" aria-hidden="true"></dbp-icon>
-                        ${this._i18n.t('auth-manage-dialog.buttons.save-holder-roles-button-label')}
-                    </dbp-button>
-                </div>
-            </section>
-        `;
-    }
-
-    /**
-     * Adds an empty draft role row to a grant holder.
-     * @param {string} holderKey - Key of an existing or draft grant holder.
-     * @returns {void}
-     */
-    handleAddRoleButtonClick(holderKey) {
-        const holderDraftRoles = this.draftRoleGrants.get(holderKey) ?? [];
-        const hasIncompleteDraft = holderDraftRoles.some((draft) => !draft.roleIdentifier);
-
-        if (hasIncompleteDraft || !this.getAvailableRolesForHolder(holderKey).length) {
-            return;
-        }
-
-        this._nextDraftRoleIdentifier += 1;
-        const draftRole = {
-            clientIdentifier: `draft-role-${this._nextDraftRoleIdentifier}`,
-            roleIdentifier: null,
-            shareable: false,
-        };
-        this.draftRoleGrants = updateInMap(this.draftRoleGrants, holderKey, [
-            ...holderDraftRoles,
-            draftRole,
-        ]);
-    }
-
-    /**
-     * Returns the roles that can still be assigned to a holder, excluding roles already
-     * assigned and roles selected by other draft rows of the same holder.
-     * @param {string} holderKey - Key of an existing or draft grant holder.
-     * @param {string|null} [currentDraftIdentifier] - Client identifier of the draft row being
-     *     rendered, so its own selection is not filtered out.
-     * @param {string|null} [currentGrantIdentifier] - Identifier of the grant being rendered, so its own selection is not filtered out.
-     * @returns {RoleDefinition[]} Available role definitions.
-     */
-    getAvailableRolesForHolder(
-        holderKey,
-        currentDraftIdentifier = null,
-        currentGrantIdentifier = null,
-    ) {
-        const assignedRoleIds = new Set(
-            (this.grantHolders.get(holderKey)?.grants ?? [])
-                .filter((grant) => grant.identifier !== currentGrantIdentifier)
-                // An unsaved change frees the assigned role and takes the selected one instead.
-                .map(
-                    (grant) =>
-                        this.getPendingGrantChange(holderKey, grant.identifier)?.roleIdentifier ??
-                        grant.roleDefinition['@id'],
-                ),
-        );
-        const selectedDraftRoleIds = new Set(
-            (this.draftRoleGrants.get(holderKey) ?? [])
-                .filter(
-                    (draft) =>
-                        draft.clientIdentifier !== currentDraftIdentifier && draft.roleIdentifier,
-                )
-                .map((draft) => draft.roleIdentifier),
-        );
-        return [...this.roles.values()].filter(
-            (role) => !assignedRoleIds.has(role['@id']) && !selectedDraftRoleIds.has(role['@id']),
-        );
-    }
-
-    /**
-     * Returns the unsaved change of a saved grant, if there is one.
-     * @param {string} holderKey - Key of the grant's holder.
-     * @param {string} grantIdentifier - Identifier of the saved grant.
-     * @returns {PendingGrantChange|null} The pending change, or null when the grant is unchanged.
-     */
-    getPendingGrantChange(holderKey, grantIdentifier) {
-        return (
-            (this.pendingGrantChanges.get(holderKey) ?? []).find(
-                (change) => change.grantIdentifier === grantIdentifier,
-            ) ?? null
-        );
-    }
-
-    /**
-     * Removes the unsaved changes that no longer belong to a saved grant, so a reload cannot
-     * leave changes behind that can never be applied.
-     * @returns {void}
-     */
-    _prunePendingGrantChanges() {
-        /** @type {Map<string, PendingGrantChange[]>} */
-        const prunedChanges = new Map();
-        for (const [holderKey, changes] of this.pendingGrantChanges) {
-            const grants = this.grantHolders.get(holderKey)?.grants ?? [];
-            const remainingChanges = changes.filter((change) =>
-                grants.some((grant) => grant.identifier === change.grantIdentifier),
-            );
-            if (remainingChanges.length) {
-                prunedChanges.set(holderKey, remainingChanges);
-            }
-        }
-        this.pendingGrantChanges = prunedChanges;
-    }
-
-    /**
-     * Updates one draft role and assigns a new map so Lit rerenders it.
-     * @param {string} holderKey - Key of the draft role's holder.
-     * @param {string} clientIdentifier - Client-side draft role identifier.
-     * @param {Partial<DraftRoleGrant>} changes - Draft role properties to update.
-     * @returns {void}
-     */
-    updateDraftRole(holderKey, clientIdentifier, changes) {
-        const holderDraftRoles = this.draftRoleGrants.get(holderKey) ?? [];
-        this.draftRoleGrants = updateInMap(
-            this.draftRoleGrants,
-            holderKey,
-            holderDraftRoles.map((grant) =>
-                grant.clientIdentifier === clientIdentifier ? {...grant, ...changes} : grant,
-            ),
-        );
-    }
-
-    /**
-     * Removes one unsaved role row.
-     * @param {string} holderKey - Key of the draft role's holder.
-     * @param {string} clientIdentifier - Client-side draft role identifier.
-     * @returns {void}
-     */
-    handleDeleteDraftRoleButtonClick(holderKey, clientIdentifier) {
-        const remainingRoles = (this.draftRoleGrants.get(holderKey) ?? []).filter(
-            (grant) => grant.clientIdentifier !== clientIdentifier,
-        );
-        this.draftRoleGrants = remainingRoles.length
-            ? updateInMap(this.draftRoleGrants, holderKey, remainingRoles)
-            : deleteFromMap(this.draftRoleGrants, holderKey);
-
-        // If no more roles remain on a draft holder, remove the draft holder as well.
-        if (!remainingRoles.length && this.draftGrantHolders.has(holderKey)) {
-            this.draftGrantHolders = deleteFromMap(this.draftGrantHolders, holderKey);
-        }
-    }
-
-    /**
-     * Renders the roles a saved grant can be changed to, with its current role selected.
-     * @param {RoleGrant} grant - Compact role grant.
-     * @param {GrantHolder} holder - Holder of the grant.
-     * @param {PendingGrantChange|null} pendingChange - Unsaved change of the grant, if any.
-     * @returns {import('lit').TemplateResult} Role selector.
-     */
-    renderRoleSelect(grant, holder, pendingChange) {
-        const currentRole = grant['roleDefinition'];
-        const holderName = this._getGrantHolderDisplayName(holder.subject);
-        // A role assigned to another row of the same holder cannot be selected again.
-        const roles = this.getAvailableRolesForHolder(holder.key, null, grant.identifier);
-        // Keep the currently assigned role visible even if it is no longer available.
-        if (!roles.some((role) => role['@id'] === currentRole['@id'])) {
-            roles.push(currentRole);
-        }
-        const collator = new Intl.Collator(this.lang, {sensitivity: 'base', numeric: true});
-        roles.sort((left, right) =>
-            collator.compare(this._getRoleName(left), this._getRoleName(right)),
-        );
-        // Changing the role deletes the grant and creates a new one, so it needs the same
-        // permission as deleting it.
-        const isChangeable = (grant['grantedActions'] ?? []).includes('delete');
-        const selectedRoleIdentifier = pendingChange?.roleIdentifier ?? currentRole['@id'];
-        return html`
-            <select
-                class="role-grant-name-selector"
-                id="${grant.identifier}-role-select"
-                ?disabled="${!isChangeable}"
-                title="${
-                    !isChangeable
-                        ? this._i18n.t('auth-manage-dialog.role-select-disabled-title')
-                        : pendingChange
-                          ? this._i18n.t('auth-manage-dialog.role-change-pending-title')
-                          : ''
-                }"
-                @change="${(event) => {
-                    this.handleRoleSelectChange(
-                        holder.key,
-                        grant,
-                        /** @type {HTMLSelectElement} */ (event.target).value,
-                    );
-                }}"
-                aria-label="${this._i18n.t('auth-manage-dialog.role-select-label', {holder: holderName})}">
-                ${repeat(
-                    roles,
-                    (role) => role['@id'],
-                    (role) => html`
-                        <option
-                            value="${role['@id']}"
-                            ?selected="${role['@id'] === selectedRoleIdentifier}">
-                            ${this._getRoleName(role)}
-                        </option>
-                    `,
-                )}
-            </select>
-        `;
-    }
-
-    /**
-     * Renders one assigned role with its shareable state and deletion control.
-     * @param {RoleGrant} grant - Compact role grant.
-     * @param {GrantHolder} holder - The holder of the role.
-     * @returns {import('lit').TemplateResult} Assigned role row.
-     */
-    renderRoleRow(grant, holder) {
-        const roleName = this._getRoleName(grant['roleDefinition']);
-        const holderName = this._getGrantHolderDisplayName(holder.subject);
-        const deleteLabel = this._i18n.t('auth-manage-dialog.buttons.delete-role', {
-            role: roleName,
-            holder: holderName,
-        });
-        const pendingChange = this.getPendingGrantChange(holder.key, grant.identifier);
-        // Changing the shareable state replaces the grant, so it needs the delete permission.
-        const isChangeable = (grant['grantedActions'] ?? []).includes('delete');
-        return html`
-            <li class="role-grant-row ${classMap({'unsaved-role-row': pendingChange !== null})}">
-                ${this.renderRoleSelect(grant, holder, pendingChange)}
-                <label class="role-grant-shareable">
-                    <input
-                        type="checkbox"
-                        ?disabled="${!isChangeable}"
-                        .checked="${pendingChange?.shareable ?? Boolean(grant['shareable'])}"
-                        aria-label="${this._i18n.t('auth-manage-dialog.shareable-role-label', {
-                            role: roleName,
-                            holder: holderName,
-                        })}"
-                        @change="${(event) => {
-                            this.handleGrantShareableChange(
-                                holder.key,
-                                grant,
-                                /** @type {HTMLInputElement} */ (event.target).checked,
-                            );
-                        }}" />
-                </label>
-                <dbp-icon-button
-                    icon-name="trash"
-                    class="delete-role-button"
-                    ?disabled="${!isChangeable}"
-                    @click="${async () => await this.handleDeleteRoleButtonClick(grant.identifier, roleName, holderName)}"
-                    aria-label="${deleteLabel}"
-                    title="${deleteLabel}"></dbp-icon-button>
-            </li>
-        `;
-    }
-
-    /**
-     * Renders an unsaved role row with no role selected initially.
-     * @param {DraftRoleGrant} grant - Draft role state.
-     * @param {string} holderKey - Key of the role's holder.
-     * @param {string} holderName - Holder label for accessible control names.
-     * @returns {import('lit').TemplateResult} Draft role row.
-     */
-    renderDraftRoleRow(grant, holderKey, holderName) {
-        const availableRoles = this.getAvailableRolesForHolder(holderKey, grant.clientIdentifier);
-        const collator = new Intl.Collator(this.lang, {sensitivity: 'base', numeric: true});
-        availableRoles.sort((left, right) =>
-            collator.compare(this._getRoleName(left), this._getRoleName(right)),
-        );
-        const deleteLabel = this._i18n.t('auth-manage-dialog.buttons.delete-draft-role', {
-            holder: holderName,
-        });
-        return html`
-            <li class="role-grant-row draft-role-grant-row unsaved-role-row">
-                <select
-                    class="role-grant-name-selector"
-                    id="${grant.clientIdentifier}-role-select"
-                    aria-label="${this._i18n.t('auth-manage-dialog.role-select-label', {
-                        holder: holderName,
-                    })}"
-                    .value="${grant.roleIdentifier ?? ''}"
-                    @change="${(event) => {
-                        const roleIdentifier = /** @type {HTMLSelectElement} */ (event.target)
-                            .value;
-                        this.updateDraftRole(holderKey, grant.clientIdentifier, {
-                            roleIdentifier: roleIdentifier || null,
-                        });
-                    }}">
-                    <option value="">
-                        ${this._i18n.t('auth-manage-dialog.role-select-placeholder')}
-                    </option>
-                    ${repeat(
-                        availableRoles,
-                        (role) => role['@id'],
-                        (role) => html`
-                            <option value="${role['@id']}">${this._getRoleName(role)}</option>
-                        `,
-                    )}
-                </select>
-                <label class="role-grant-shareable">
-                    <input
-                        type="checkbox"
-                        .checked="${grant.shareable}"
-                        aria-label="${this._i18n.t(
-                            'auth-manage-dialog.draft-shareable-role-label',
-                            {holder: holderName},
-                        )}"
-                        @change="${(event) => {
-                            this.updateDraftRole(holderKey, grant.clientIdentifier, {
-                                shareable: /** @type {HTMLInputElement} */ (event.target).checked,
-                            });
-                        }}" />
-                </label>
-                <dbp-icon-button
-                    icon-name="trash"
-                    aria-label="${deleteLabel}"
-                    title="${deleteLabel}"
-                    @click="${() =>
-                        this.handleDeleteDraftRoleButtonClick(
-                            holderKey,
-                            grant.clientIdentifier,
-                        )}"></dbp-icon-button>
-            </li>
-        `;
     }
 
     /**
@@ -1058,23 +628,21 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             this.draftGrantHolders.has(selectedHolderIdentity.key)
         ) {
             // Scroll to the existing holder and highlight it.
-            console.log(selectedHolderIdentity.key, 'already exists in grantHolders');
             const existingHolderElement = this._(`#${CSS.escape(selectedHolderIdentity.key)}`);
             if (existingHolderElement) {
-                void this.scrollToAndHighlightExistingHolder(existingHolderElement);
+                void this._scrollToAndHighlightExistingHolder(existingHolderElement);
             }
         } else {
             // Add the new subject to the draft grant holders list.
+            let subject = toCompactSubject(selectedSubject, selectedHolderIdentity.type);
 
             // Get the email address of the person
             if (selectedHolderIdentity.type === SUBJECT_TYPE_PERSON) {
                 try {
-                    const personData = /** @type {{localData?: {email?: string}}} */ (
-                        await this._fetchGrantResource(
-                            `/base/people/${selectedSubject.identifier}?includeLocal=email`,
-                        )
+                    const person = /** @type {GrantHolderSubject} */ (
+                        await this._apiGetPerson(subject.identifier)
                     );
-                    selectedSubject.localData = {email: personData.localData?.email ?? null};
+                    subject = {...subject, localData: {email: person.localData?.email ?? null}};
                 } catch (error) {
                     console.warn('Could not fetch person data', error);
                 }
@@ -1082,7 +650,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
 
             const draftHolder = {
                 key: selectedHolderIdentity.key,
-                subject: this._getCompactGrantSubject(selectedSubject, selectedHolderIdentity.type),
+                type: selectedHolderIdentity.type,
+                subject,
                 holderFields,
                 grants: [],
             };
@@ -1099,11 +668,331 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
+     * Adds an empty draft role row to a grant holder.
+     * @param {string} holderKey - Key of an existing or draft grant holder.
+     * @returns {void}
+     */
+    handleAddRoleButtonClick(holderKey) {
+        const holderDraftRoles = this.draftRoleGrants.get(holderKey) ?? [];
+        const hasIncompleteDraft = this._hasIncompleteDraftRole(holderKey);
+
+        if (hasIncompleteDraft || !this._getAvailableRolesForHolder(holderKey).length) {
+            return;
+        }
+
+        this._nextDraftRoleIdentifier += 1;
+        const draftRole = {
+            clientIdentifier: `draft-role-${this._nextDraftRoleIdentifier}`,
+            roleIdentifier: null,
+            shareable: false,
+        };
+        this.draftRoleGrants = updateInMap(this.draftRoleGrants, holderKey, [
+            ...holderDraftRoles,
+            draftRole,
+        ]);
+    }
+
+    /**
+     * Removes one unsaved role row.
+     * @param {string} holderKey - Key of the draft role's holder.
+     * @param {string} clientIdentifier - Client-side draft role identifier.
+     * @returns {void}
+     */
+    handleDeleteDraftRoleButtonClick(holderKey, clientIdentifier) {
+        const remainingRoles = (this.draftRoleGrants.get(holderKey) ?? []).filter(
+            (grant) => grant.clientIdentifier !== clientIdentifier,
+        );
+        this.draftRoleGrants = remainingRoles.length
+            ? updateInMap(this.draftRoleGrants, holderKey, remainingRoles)
+            : deleteFromMap(this.draftRoleGrants, holderKey);
+
+        // If no more roles remain on a draft holder, remove the draft holder as well.
+        if (!remainingRoles.length && this.draftGrantHolders.has(holderKey)) {
+            this.draftGrantHolders = deleteFromMap(this.draftGrantHolders, holderKey);
+        }
+    }
+
+    /**
+     * Save all pending changes and draft roles of a specific holder.
+     * Refreshes the grant holders after saving, so the UI reflects the changes.
+     * @param {string} holderKey - The key of the holder.
+     * @returns {Promise<void>}
+     */
+    async handleSaveHolderRolesButtonClick(holderKey) {
+        const draftRoles = this.draftRoleGrants.get(holderKey) ?? [];
+        const pendingChanges = this.pendingGrantChanges.get(holderKey) ?? [];
+        // Nothing to save, or a previous click of the same button is still running.
+        if (
+            (draftRoles.length === 0 && pendingChanges.length === 0) ||
+            this._savingHolderKeys.has(holderKey)
+        ) {
+            return;
+        }
+
+        /** @type {GrantHolder|DraftGrantHolder|undefined} */
+        const holder = this.grantHolders.get(holderKey) ?? this.draftGrantHolders.get(holderKey);
+        if (!holder) {
+            console.warn('No holder found for key', holderKey);
+            return;
+        }
+
+        // Marks the holder as saving, so the save button is disabled until the requests finished.
+        this._savingHolderKeys = new Set(this._savingHolderKeys).add(holderKey);
+
+        try {
+            const failedChanges = await this._applyPendingGrantChanges(holder, pendingChanges);
+            const failedDrafts = await this._createDraftRoleGrants(holder, draftRoles);
+
+            // Rows that could not be saved stay in the list, so the user can retry them.
+            this.pendingGrantChanges = failedChanges.length
+                ? updateInMap(this.pendingGrantChanges, holderKey, failedChanges)
+                : deleteFromMap(this.pendingGrantChanges, holderKey);
+            this.draftRoleGrants = failedDrafts.length
+                ? updateInMap(this.draftRoleGrants, holderKey, failedDrafts)
+                : deleteFromMap(this.draftRoleGrants, holderKey);
+            if (!failedDrafts.length) {
+                this.draftGrantHolders = deleteFromMap(this.draftGrantHolders, holderKey);
+            }
+
+            // Reload the grant holders to reflect the changes in the UI.
+            await this._reloadGrantHolders();
+        } finally {
+            const savingHolderKeys = new Set(this._savingHolderKeys);
+            savingHolderKeys.delete(holderKey);
+            this._savingHolderKeys = savingHolderKeys;
+        }
+    }
+
+    /**
+     * Delete user role grant and reload the grant holders to update the UI accordingly.
+     * @param {string} grantIdentifier
+     * @param {string} roleName
+     * @param {string} holderName
+     * @returns {Promise<void>}
+     */
+    async handleDeleteRoleButtonClick(grantIdentifier, roleName, holderName) {
+        if (!grantIdentifier) {
+            console.warn('No role identifier found for grant', grantIdentifier);
+            return;
+        }
+
+        if (!(await this._deleteRoleGrant(grantIdentifier))) {
+            this._notifyError('auth-manage-dialog.notifications.could-not-delete-role', {
+                roleName: roleName,
+                holderName: holderName,
+            });
+            return;
+        }
+
+        await this._reloadGrantHolders();
+
+        this._notifySuccess('auth-manage-dialog.notifications.role-deleted-successfully', {
+            roleName: roleName,
+            holderName: holderName,
+        });
+    }
+
+    /**
+     * Handles the change event of the role selector of a saved grant.
+     * @param {Event} event - The change event.
+     * @param {string} holderKey - Key of the holder the grant belongs to.
+     * @param {RoleGrant} grant - Saved grant whose role selector changed.
+     * @returns {void}
+     */
+    handleRoleSelectChange(event, holderKey, grant) {
+        const roleIdentifier = /** @type {HTMLSelectElement} */ (event.target).value;
+        this._updatePendingGrantChange(holderKey, grant, {roleIdentifier: roleIdentifier});
+    }
+
+    /**
+     * Handles the change event of the shareable checkbox of a saved grant.
+     * @param {Event} event - The change event.
+     * @param {string} holderKey - Key of the holder the grant belongs to.
+     * @param {RoleGrant} grant - Saved grant whose shareable state changed.
+     * @returns {void}
+     */
+    handleGrantShareableChange(event, holderKey, grant) {
+        const shareable = /** @type {HTMLInputElement} */ (event.target).checked;
+        this._updatePendingGrantChange(holderKey, grant, {shareable: shareable});
+    }
+
+    /**
+     * Toggles the visibility of the roles panel.
+     * @returns {void}
+     */
+    handleShowRolesButtonClick() {
+        this.showRolesPanel = !this.showRolesPanel;
+    }
+
+    /**
+     * Store the selected subject.
+     * @param {CustomEvent<{object: import('./authorization-subject-select.js').SubjectResource|null}>} event - The ResourceSelect change event.
+     * @returns {void}
+     */
+    handleSubjectSelectChange(event) {
+        this.selectedSubject = event.detail.object;
+    }
+
+    /**
+     * Handles the change event of the role selector for a draft role.
+     * @param {Event} event - The change event.
+     * @param {DraftRoleGrant} grant - The draft grant.
+     * @param {string} holderKey - Key of the grant's holder.
+     * @returns {void}
+     */
+    handleDraftRoleSelectChange(event, grant, holderKey) {
+        const roleIdentifier = /** @type {HTMLSelectElement} */ (event.target).value;
+        this._updateDraftRole(holderKey, grant.clientIdentifier, {
+            roleIdentifier: roleIdentifier || null,
+        });
+    }
+
+    /**
+     * Handles the change event of the shareable checkbox for a draft role.
+     * @param {Event} event - The change event.
+     * @param {DraftRoleGrant} grant - The draft grant.
+     * @param {string} holderKey - Key of the grant's holder.
+     * @returns {void}
+     */
+    handleDraftShareableChange(event, grant, holderKey) {
+        this._updateDraftRole(holderKey, grant.clientIdentifier, {
+            shareable: /** @type {HTMLInputElement} */ (event.target).checked,
+        });
+    }
+
+    /**
+     * Save all pending roles and draft-roles for all holders.
+     * @returns {void}
+     */
+    handleSaveAllRolesButtonClick() {
+        // @TODO: Implement if needed.
+    }
+
+    /**
+     * Returns the roles that can still be assigned to a holder, excluding roles already
+     * assigned and roles selected by other draft rows of the same holder.
+     * @param {string} holderKey - Key of an existing or draft grant holder.
+     * @param {string|null} [currentDraftIdentifier] - Client identifier of the draft row being
+     *     rendered, so its own selection is not filtered out.
+     * @param {string|null} [currentGrantIdentifier] - Identifier of the grant being rendered, so its own selection is not filtered out.
+     * @returns {RoleDefinition[]} Available role definitions.
+     */
+    _getAvailableRolesForHolder(
+        holderKey,
+        currentDraftIdentifier = null,
+        currentGrantIdentifier = null,
+    ) {
+        const assignedRoleIds = new Set(
+            (this.grantHolders.get(holderKey)?.grants ?? [])
+                .filter((grant) => grant.identifier !== currentGrantIdentifier)
+                // An unsaved change frees the assigned role and takes the selected one instead.
+                .map(
+                    (grant) =>
+                        this._getPendingGrantChange(holderKey, grant.identifier)?.roleIdentifier ??
+                        grant.roleDefinition['@id'],
+                ),
+        );
+        const selectedDraftRoleIds = new Set(
+            (this.draftRoleGrants.get(holderKey) ?? [])
+                .filter(
+                    (draft) =>
+                        draft.clientIdentifier !== currentDraftIdentifier && draft.roleIdentifier,
+                )
+                .map((draft) => draft.roleIdentifier),
+        );
+        return [...this.roles.values()].filter(
+            (role) => !assignedRoleIds.has(role['@id']) && !selectedDraftRoleIds.has(role['@id']),
+        );
+    }
+
+    /**
+     * Returns the unsaved change of a saved grant, if there is one.
+     * @param {string} holderKey - Key of the grant's holder.
+     * @param {string} grantIdentifier - Identifier of the saved grant.
+     * @returns {PendingGrantChange|null} The pending change, or null when the grant is unchanged.
+     */
+    _getPendingGrantChange(holderKey, grantIdentifier) {
+        return (
+            (this.pendingGrantChanges.get(holderKey) ?? []).find(
+                (change) => change.grantIdentifier === grantIdentifier,
+            ) ?? null
+        );
+    }
+
+    /**
+     * Removes the unsaved changes that no longer belong to a saved grant, so a reload cannot
+     * leave changes behind that can never be applied.
+     * @returns {void}
+     */
+    _prunePendingGrantChanges() {
+        /** @type {Map<string, PendingGrantChange[]>} */
+        const prunedChanges = new Map();
+        for (const [holderKey, changes] of this.pendingGrantChanges) {
+            const grants = this.grantHolders.get(holderKey)?.grants ?? [];
+            const remainingChanges = changes.filter((change) =>
+                grants.some((grant) => grant.identifier === change.grantIdentifier),
+            );
+            if (remainingChanges.length) {
+                prunedChanges.set(holderKey, remainingChanges);
+            }
+        }
+        this.pendingGrantChanges = prunedChanges;
+    }
+
+    /**
+     * Updates one draft role and assigns a new map so Lit rerenders it.
+     * @param {string} holderKey - Key of the draft role's holder.
+     * @param {string} clientIdentifier - Client-side draft role identifier.
+     * @param {Partial<DraftRoleGrant>} changes - Draft role properties to update.
+     * @returns {void}
+     */
+    _updateDraftRole(holderKey, clientIdentifier, changes) {
+        const holderDraftRoles = this.draftRoleGrants.get(holderKey) ?? [];
+        this.draftRoleGrants = updateInMap(
+            this.draftRoleGrants,
+            holderKey,
+            holderDraftRoles.map((grant) =>
+                grant.clientIdentifier === clientIdentifier ? {...grant, ...changes} : grant,
+            ),
+        );
+    }
+
+    /**
+     * Records an unsaved change of a saved grant and assigns a new map so Lit rerenders it.
+     * The change is dropped again as soon as it matches the saved grant, so reverting a
+     * selection also disables the save button again.
+     * @param {string} holderKey - Key of the holder the grant belongs to.
+     * @param {RoleGrant} grant - Saved grant that was changed.
+     * @param {{roleIdentifier?: string, shareable?: boolean}} changes - Changed values.
+     * @returns {void}
+     */
+    _updatePendingGrantChange(holderKey, grant, changes) {
+        const currentChange = this._getPendingGrantChange(holderKey, grant.identifier);
+        const nextChange = {
+            grantIdentifier: grant.identifier,
+            roleIdentifier: currentChange?.roleIdentifier ?? grant.roleDefinition['@id'],
+            shareable: currentChange?.shareable ?? Boolean(grant.shareable),
+            ...changes,
+        };
+        const otherChanges = (this.pendingGrantChanges.get(holderKey) ?? []).filter(
+            (change) => change.grantIdentifier !== grant.identifier,
+        );
+        const isUnchanged =
+            nextChange.roleIdentifier === grant.roleDefinition['@id'] &&
+            nextChange.shareable === Boolean(grant.shareable);
+        const holderChanges = isUnchanged ? otherChanges : [...otherChanges, nextChange];
+
+        this.pendingGrantChanges = holderChanges.length
+            ? updateInMap(this.pendingGrantChanges, holderKey, holderChanges)
+            : deleteFromMap(this.pendingGrantChanges, holderKey);
+    }
+
+    /**
      * Scrolls to an existing grant holder and highlights it after scrolling finishes.
      * @param {HTMLElement} holderElement - Existing grant holder section.
      * @returns {Promise<void>}
      */
-    async scrollToAndHighlightExistingHolder(holderElement) {
+    async _scrollToAndHighlightExistingHolder(holderElement) {
         const scrollContainer = this._('.grants-list-container');
         if (!scrollContainer) {
             return;
@@ -1165,11 +1054,26 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
-     * Saves the all pending roles and draft roles for all holders.
-     * @returns {void}
+     * Sorts grant holders by type—people, user groups, then dynamic groups—and by display name
+     * within each type.
+     * @param {Map<string, GrantHolder>} grantHolders - Grant holders keyed by their holder key.
+     * @returns {Map<string, GrantHolder>} A new map in display order.
      */
-    saveAllRoles() {
-        // @TODO: Implement if needed.
+    _sortGrantHolders(grantHolders) {
+        const sortedEntries = [...grantHolders.entries()].sort(([, left], [, right]) => {
+            const typeDifference =
+                GRANT_HOLDER_TYPE_ORDER.indexOf(left.type) -
+                GRANT_HOLDER_TYPE_ORDER.indexOf(right.type);
+            return (
+                typeDifference ||
+                this._collator.compare(
+                    getGrantHolderDisplayName(left.subject),
+                    getGrantHolderDisplayName(right.subject),
+                ) ||
+                compareIdentifiers(left.key, right.key)
+            );
+        });
+        return new Map(sortedEntries);
     }
 
     /**
@@ -1177,152 +1081,34 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @param {string} holderKey - The key of the holder.
      * @returns {boolean} Returns true if the save button for the holder should be disabled, false otherwise.
      */
-    isSaveDisabled(holderKey) {
+    _isSaveDisabled(holderKey) {
         // Disable the save button if the holder is currently being saved
         if (this._savingHolderKeys.has(holderKey)) return true;
 
         const draftGrants = this.draftRoleGrants.get(holderKey) ?? [];
         const pendingChanges = this.pendingGrantChanges.get(holderKey) ?? [];
         // An incomplete draft row always blocks saving.
-        if (draftGrants.some((draft) => !draft.roleIdentifier)) return true;
+        if (this._hasIncompleteDraftRole(holderKey)) return true;
 
         // Enable if no pending changes and no draft grants exist for the holder.
         return draftGrants.length === 0 && pendingChanges.length === 0;
     }
 
-    /**
-     * Handles the change event of the role selector of a saved grant.
-     * @param {string} holderKey - Key of the holder the grant belongs to.
-     * @param {RoleGrant} grant - Saved grant whose role selector changed.
-     * @param {string} roleIdentifier - IRI of the newly selected role.
-     * @returns {void}
-     */
-    handleRoleSelectChange(holderKey, grant, roleIdentifier) {
-        this.updatePendingGrantChange(holderKey, grant, {roleIdentifier: roleIdentifier});
-    }
-
-    /**
-     * Handles the change event of the shareable checkbox of a saved grant.
-     * @param {string} holderKey - Key of the holder the grant belongs to.
-     * @param {RoleGrant} grant - Saved grant whose shareable state changed.
-     * @param {boolean} shareable - Whether the role should be reshareable.
-     * @returns {void}
-     */
-    handleGrantShareableChange(holderKey, grant, shareable) {
-        this.updatePendingGrantChange(holderKey, grant, {shareable: shareable});
-    }
-
-    /**
-     * Records an unsaved change of a saved grant and assigns a new map so Lit rerenders it.
-     * The change is dropped again as soon as it matches the saved grant, so reverting a
-     * selection also disables the save button again.
-     * @param {string} holderKey - Key of the holder the grant belongs to.
-     * @param {RoleGrant} grant - Saved grant that was changed.
-     * @param {{roleIdentifier?: string, shareable?: boolean}} changes - Changed values.
-     * @returns {void}
-     */
-    updatePendingGrantChange(holderKey, grant, changes) {
-        const currentChange = this.getPendingGrantChange(holderKey, grant.identifier);
-        const nextChange = {
-            grantIdentifier: grant.identifier,
-            roleIdentifier: currentChange?.roleIdentifier ?? grant.roleDefinition['@id'],
-            shareable: currentChange?.shareable ?? Boolean(grant.shareable),
-            ...changes,
-        };
-        const otherChanges = (this.pendingGrantChanges.get(holderKey) ?? []).filter(
-            (change) => change.grantIdentifier !== grant.identifier,
+    _isAddRoleDisabled(holderKey) {
+        return (
+            this._hasIncompleteDraftRole(holderKey) ||
+            !this._getAvailableRolesForHolder(holderKey).length
         );
-        const isUnchanged =
-            nextChange.roleIdentifier === grant.roleDefinition['@id'] &&
-            nextChange.shareable === Boolean(grant.shareable);
-        const holderChanges = isUnchanged ? otherChanges : [...otherChanges, nextChange];
-
-        this.pendingGrantChanges = holderChanges.length
-            ? updateInMap(this.pendingGrantChanges, holderKey, holderChanges)
-            : deleteFromMap(this.pendingGrantChanges, holderKey);
     }
 
     /**
-     * Handles the click event for the save button for a specific holder's roles.
-     * @param {string} holderKey - The key of the holder.
-     * @returns {Promise<void>}
+     * Whether a holder has a draft role row with no role selected yet. Such a row blocks adding
+     * another row and blocks saving the holder.
+     * @param {string} holderKey - Key of an existing or draft grant holder.
+     * @returns {boolean} Whether a draft row is still incomplete.
      */
-    async handleSaveHolderRolesButtonClick(holderKey) {
-        const draftRoles = this.draftRoleGrants.get(holderKey) ?? [];
-        const pendingChanges = this.pendingGrantChanges.get(holderKey) ?? [];
-        // Nothing to save, or a previous click of the same button is still running.
-        if (
-            (draftRoles.length === 0 && pendingChanges.length === 0) ||
-            this._savingHolderKeys.has(holderKey)
-        ) {
-            return;
-        }
-
-        /** @type {GrantHolder|DraftGrantHolder|undefined} */
-        const holder = this.grantHolders.get(holderKey) ?? this.draftGrantHolders.get(holderKey);
-        if (!holder) {
-            console.warn('No holder found for key', holderKey);
-            return;
-        }
-
-        // Marks the holder as saving, so the save button is disabled until the requests finished.
-        this._savingHolderKeys = new Set(this._savingHolderKeys).add(holderKey);
-
-        try {
-            const failedChanges = await this._applyPendingGrantChanges(holder, pendingChanges);
-            const failedDrafts = await this._createDraftRoleGrants(holder, draftRoles);
-
-            // Rows that could not be saved stay in the list, so the user can retry them.
-            this.pendingGrantChanges = failedChanges.length
-                ? updateInMap(this.pendingGrantChanges, holderKey, failedChanges)
-                : deleteFromMap(this.pendingGrantChanges, holderKey);
-            this.draftRoleGrants = failedDrafts.length
-                ? updateInMap(this.draftRoleGrants, holderKey, failedDrafts)
-                : deleteFromMap(this.draftRoleGrants, holderKey);
-            if (!failedDrafts.length) {
-                this.draftGrantHolders = deleteFromMap(this.draftGrantHolders, holderKey);
-            }
-
-            // Reload the grant holders to reflect the changes in the UI.
-            await this._loadRoleGrantHolders();
-        } finally {
-            const savingHolderKeys = new Set(this._savingHolderKeys);
-            savingHolderKeys.delete(holderKey);
-            this._savingHolderKeys = savingHolderKeys;
-        }
-    }
-
-    async handleDeleteRoleButtonClick(roleIdentifier, roleName, holderName) {
-        if (!roleIdentifier) {
-            console.warn('No role identifier found for grant', roleIdentifier);
-            return;
-        }
-
-        if (!(await this._deleteRoleGrant(roleIdentifier))) {
-            this._notifyError('auth-manage-dialog.notifications.could-not-delete-role', {
-                roleName: roleName,
-                holderName: holderName,
-            });
-            return;
-        }
-
-        // Remove the deleted role from the grant holders map to render the list without the
-        // deleted role. The reload also removes holders that have no grants left.
-        // Draft states on other subjects are not affected.
-        this.grantHolders = new Map(
-            [...this.grantHolders.entries()].map(([key, holder]) => {
-                const updatedGrants = holder.grants.filter(
-                    (grant) => grant.identifier !== roleIdentifier,
-                );
-                return [key, {...holder, grants: updatedGrants}];
-            }),
-        );
-        await this._loadRoleGrantHolders();
-
-        this._notifySuccess('auth-manage-dialog.notifications.role-deleted-successfully', {
-            roleName: roleName,
-            holderName: holderName,
-        });
+    _hasIncompleteDraftRole(holderKey) {
+        return (this.draftRoleGrants.get(holderKey) ?? []).some((draft) => !draft.roleIdentifier);
     }
 
     /**
@@ -1332,8 +1118,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {Promise<DraftRoleGrant[]>} The rows that could not be created.
      */
     async _createDraftRoleGrants(holder, draftRoles) {
-        const grantHolderIdentifier = getGrantHolderFields(holder);
-        const holderName = this._getGrantHolderDisplayName(holder.subject);
+        const holderFields = getGrantHolderFields(holder);
+        const holderName = getGrantHolderDisplayName(holder.subject);
         /** @type {DraftRoleGrant[]} */
         const failedDrafts = [];
 
@@ -1342,9 +1128,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 console.warn('Draft role has no roleIdentifier', draftRole);
                 continue;
             }
-            const roleName = this._getRoleNameByIri(draftRole.roleIdentifier);
+            const roleName = getRoleNameByIri(this.roles, draftRole.roleIdentifier, this.lang);
 
-            if (await this._createRoleGrant(draftRole, grantHolderIdentifier)) {
+            if (await this._createRoleGrant(draftRole, holderFields)) {
                 this._notifySuccess('auth-manage-dialog.notifications.role-saved-successfully', {
                     roleName: roleName,
                     holderName: holderName,
@@ -1369,8 +1155,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {Promise<PendingGrantChange[]>} The changes that could not be applied.
      */
     async _applyPendingGrantChanges(holder, pendingChanges) {
-        const grantHolderIdentifier = getGrantHolderFields(holder);
-        const holderName = this._getGrantHolderDisplayName(holder.subject);
+        const holderFields = getGrantHolderFields(holder);
+        const holderName = getGrantHolderDisplayName(holder.subject);
         /** @type {PendingGrantChange[]} */
         const failedChanges = [];
 
@@ -1383,8 +1169,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 console.warn('No grant found for pending change', pendingChange);
                 continue;
             }
-            const oldRoleName = this._getRoleName(replacedGrant.roleDefinition);
-            const roleName = this._getRoleNameByIri(pendingChange.roleIdentifier);
+            const oldRoleName = getRoleName(replacedGrant.roleDefinition, this.lang);
+            const roleName = getRoleNameByIri(this.roles, pendingChange.roleIdentifier, this.lang);
             // Only the shareable state changed, so the role is updated instead of replaced.
             const keepsRole = pendingChange.roleIdentifier === replacedGrant.roleDefinition['@id'];
             const messageValues = {
@@ -1393,7 +1179,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 holderName: holderName,
             };
 
-            if (!(await this._createRoleGrant(pendingChange, grantHolderIdentifier))) {
+            if (!(await this._createRoleGrant(pendingChange, holderFields))) {
                 failedChanges.push(pendingChange);
                 if (keepsRole) {
                     this._notifyError(
@@ -1437,21 +1223,13 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     /**
      * Creates one grant for a holder.
      * @param {RoleGrantSelection} grantSelection - Role and shareable state to create.
-     * @param {GrantHolderFields} grantHolderIdentifier - Fields
+     * @param {GrantHolderFields} holderFields - Fields
      *     addressing the holder of the grant.
      * @returns {Promise<boolean>} Whether the grant was created.
      */
-    async _createRoleGrant(grantSelection, grantHolderIdentifier) {
+    async _createRoleGrant(grantSelection, holderFields) {
         try {
-            const response = await this._apiPostRoles(
-                {
-                    resourceClassIdentifier: this.resourceClassIdentifier,
-                    resourceIdentifier: this.resourceIdentifier,
-                    resourceType: this.resourceType,
-                },
-                grantSelection,
-                grantHolderIdentifier,
-            );
+            const response = await this._apiPostResourceActionGrant(grantSelection, holderFields);
             return response.ok;
         } catch (error) {
             console.error('Could not create role grant', grantSelection, error);
@@ -1466,21 +1244,12 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      */
     async _deleteRoleGrant(grantIdentifier) {
         try {
-            const response = await this._apiDeleteGrant(grantIdentifier);
+            const response = await this._apiDeleteResourceActionGrant(grantIdentifier);
             return response.ok;
         } catch (error) {
             console.error('Could not delete role grant', grantIdentifier, error);
             return false;
         }
-    }
-
-    /**
-     * Returns the name a role has in the current language.
-     * @param {string} roleIri - IRI of the role.
-     * @returns {string} Name of the role, or its identifier when the role is unknown.
-     */
-    _getRoleNameByIri(roleIri) {
-        return this._getRoleName(this.roles.get(roleIri) ?? {identifier: roleIri});
     }
 
     /**
@@ -1514,6 +1283,367 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             targetNotificationId: 'auth-manage-dialog-notification',
             timeout: 0,
         });
+    }
+
+    /**
+     * Gets the title for the "Add Role" button based on the holder's state.
+     * @param {string} holderKey - Key of the holder.
+     * @returns {string} The title for the "Add Role" button.
+     */
+    _getAddRoleButtonTitle(holderKey) {
+        if (this._hasIncompleteDraftRole(holderKey)) {
+            return this._i18n.t('auth-manage-dialog.buttons.add-role-select-role-title');
+        }
+        if (!this._getAvailableRolesForHolder(holderKey).length) {
+            return this._i18n.t('auth-manage-dialog.buttons.add-role-no-more-roles-title');
+        }
+        return '';
+    }
+
+    /**
+     * Gets the title for the "Save Holder Roles" button based on the holder's state.
+     * @param {string} holderKey - Key of the holder.
+     * @returns {string} The title for the "Save Holder Roles" button.
+     */
+    _getSaveHolderRolesButtonTitle(holderKey) {
+        if (this._hasIncompleteDraftRole(holderKey)) {
+            return this._i18n.t(
+                'auth-manage-dialog.buttons.save-holder-roles-button-select-role-title',
+            );
+        }
+        if (this._isSaveDisabled(holderKey)) {
+            return this._i18n.t(
+                'auth-manage-dialog.buttons.save-holder-roles-button-disabled-title',
+            );
+        }
+        return '';
+    }
+
+    /**
+     * Renders the roles a saved grant can be changed to, with its current role selected.
+     * @param {RoleGrant} grant - Compact role grant.
+     * @param {GrantHolder} holder - Holder of the grant.
+     * @param {PendingGrantChange|null} pendingChange - Unsaved change of the grant, if any.
+     * @returns {import('lit').TemplateResult} Role selector.
+     */
+    renderRoleSelect(grant, holder, pendingChange) {
+        const currentRole = grant['roleDefinition'];
+        const holderName = getGrantHolderDisplayName(holder.subject);
+        // A role assigned to another row of the same holder cannot be selected again.
+        const roles = this._getAvailableRolesForHolder(holder.key, null, grant.identifier);
+        // Keep the currently assigned role visible even if it is no longer available.
+        if (!roles.some((role) => role['@id'] === currentRole['@id'])) {
+            roles.push(currentRole);
+        }
+        roles.sort((left, right) =>
+            this._collator.compare(getRoleName(left, this.lang), getRoleName(right, this.lang)),
+        );
+        // Changing the role deletes the grant and creates a new one, so it needs the same
+        // permission as deleting it.
+        const isChangeable = isGrantChangeable(grant);
+        const selectedRoleIdentifier = pendingChange?.roleIdentifier ?? currentRole['@id'];
+        return html`
+            <select
+                class="role-grant-name-selector"
+                id="${grant.identifier}-role-select"
+                ?disabled="${!isChangeable}"
+                title="${
+                    !isChangeable
+                        ? this._i18n.t('auth-manage-dialog.role-select-disabled-title')
+                        : pendingChange
+                          ? this._i18n.t('auth-manage-dialog.role-change-pending-title')
+                          : ''
+                }"
+                @change="${(event) => this.handleRoleSelectChange(event, holder.key, grant)}"
+                aria-label="${this._i18n.t('auth-manage-dialog.role-select-label', {holder: holderName})}">
+                ${repeat(
+                    roles,
+                    (role) => role['@id'],
+                    (role) => html`
+                        <option
+                            value="${role['@id']}"
+                            ?selected="${role['@id'] === selectedRoleIdentifier}">
+                            ${getRoleName(role, this.lang)}
+                        </option>
+                    `,
+                )}
+            </select>
+        `;
+    }
+
+    /**
+     * Renders one assigned role with its shareable state and deletion control.
+     * @param {RoleGrant} grant - Compact role grant.
+     * @param {GrantHolder} holder - The holder of the role.
+     * @returns {import('lit').TemplateResult} Assigned role row.
+     */
+    renderRoleRow(grant, holder) {
+        const roleName = getRoleName(grant['roleDefinition'], this.lang);
+        const holderName = getGrantHolderDisplayName(holder.subject);
+        const deleteLabel = this._i18n.t('auth-manage-dialog.buttons.delete-role', {
+            role: roleName,
+            holder: holderName,
+        });
+        const pendingChange = this._getPendingGrantChange(holder.key, grant.identifier);
+        // Changing the shareable state replaces the grant, so it needs the delete permission.
+        const isChangeable = isGrantChangeable(grant);
+        return html`
+            <li class="role-grant-row ${classMap({'unsaved-role-row': pendingChange !== null})}">
+                ${this.renderRoleSelect(grant, holder, pendingChange)}
+                <label class="role-grant-shareable">
+                    <input
+                        type="checkbox"
+                        ?disabled="${!isChangeable}"
+                        .checked="${pendingChange?.shareable ?? Boolean(grant['shareable'])}"
+                        aria-label="${this._i18n.t('auth-manage-dialog.shareable-role-label', {
+                            role: roleName,
+                            holder: holderName,
+                        })}"
+                        @change="${(event) => this.handleGrantShareableChange(event, holder.key, grant)}" />
+                </label>
+                <dbp-icon-button
+                    icon-name="trash"
+                    class="delete-role-button"
+                    ?disabled="${!isChangeable}"
+                    @click="${() => this.handleDeleteRoleButtonClick(grant.identifier, roleName, holderName)}"
+                    aria-label="${deleteLabel}"
+                    title="${deleteLabel}"></dbp-icon-button>
+            </li>
+        `;
+    }
+
+    /**
+     * Renders an unsaved role row with no role selected initially.
+     * @param {DraftRoleGrant} grant - Draft role state.
+     * @param {string} holderKey - Key of the role's holder.
+     * @param {string} holderName - Holder label for accessible control names.
+     * @returns {import('lit').TemplateResult} Draft role row.
+     */
+    renderDraftRoleRow(grant, holderKey, holderName) {
+        const availableRoles = this._getAvailableRolesForHolder(holderKey, grant.clientIdentifier);
+        availableRoles.sort((left, right) =>
+            this._collator.compare(getRoleName(left, this.lang), getRoleName(right, this.lang)),
+        );
+        const deleteLabel = this._i18n.t('auth-manage-dialog.buttons.delete-draft-role', {
+            holder: holderName,
+        });
+        return html`
+            <li class="role-grant-row draft-role-grant-row unsaved-role-row">
+                <select
+                    class="role-grant-name-selector"
+                    id="${grant.clientIdentifier}-role-select"
+                    aria-label="${this._i18n.t('auth-manage-dialog.role-select-label', {
+                        holder: holderName,
+                    })}"
+                    .value="${grant.roleIdentifier ?? ''}"
+                    @change="${(event) => this.handleDraftRoleSelectChange(event, grant, holderKey)}">
+                    <option value="">
+                        ${this._i18n.t('auth-manage-dialog.role-select-placeholder')}
+                    </option>
+                    ${repeat(
+                        availableRoles,
+                        (role) => role['@id'],
+                        (role) => html`
+                            <option value="${role['@id']}">${getRoleName(role, this.lang)}</option>
+                        `,
+                    )}
+                </select>
+                <label class="role-grant-shareable">
+                    <input
+                        type="checkbox"
+                        .checked="${grant.shareable}"
+                        aria-label="${this._i18n.t(
+                            'auth-manage-dialog.draft-shareable-role-label',
+                            {holder: holderName},
+                        )}"
+                        @change="${(event) => this.handleDraftShareableChange(event, grant, holderKey)}" />
+                </label>
+                <dbp-icon-button
+                    icon-name="trash"
+                    aria-label="${deleteLabel}"
+                    title="${deleteLabel}"
+                    @click="${() =>
+                        this.handleDeleteDraftRoleButtonClick(
+                            holderKey,
+                            grant.clientIdentifier,
+                        )}"></dbp-icon-button>
+            </li>
+        `;
+    }
+
+    /**
+     * Renders the assigned role holders, loading indicator or empty state.
+     * @returns {import('lit').TemplateResult} Holder list content or spinner or placeholder.
+     */
+    renderGrantHolders() {
+        if (this.grantHoldersLoading) {
+            return html`
+                <dbp-mini-spinner></dbp-mini-spinner>
+            `;
+        }
+        if (!this.grantHolders.size && !this.draftGrantHolders.size) {
+            return html`
+                <div class="grants-list-placeholder">
+                    <dbp-icon name="information-circle" aria-hidden="true"></dbp-icon>
+                    <p>${this._i18n.t('auth-manage-dialog.grants-list-placeholder')}</p>
+                </div>
+            `;
+        }
+        return html`
+            <div class="grant-holders-list">
+                ${repeat(
+                    this.draftGrantHolders.values(),
+                    (holder) => holder.key,
+                    (holder) => this.renderGrantHolderSection(holder),
+                )}
+                ${repeat(
+                    this.grantHolders.values(),
+                    (holder) => holder.key,
+                    (holder) => this.renderGrantHolderSection(holder),
+                )}
+            </div>
+        `;
+    }
+
+    renderGrantHolderHeading(holder) {
+        const name = getGrantHolderDisplayName(holder['subject']);
+        const email = holder['key'].startsWith(`${SUBJECT_TYPE_PERSON}:`)
+            ? holder['subject'].localData?.email
+            : null;
+        return html`
+            <div class="grant-holder-heading">
+                <div class="grant-holder">
+                    <div>
+                        <dbp-icon
+                            name="${GRANT_HOLDER_ICONS[holder.type]}"
+                            class="holder-type-icon"
+                            aria-hidden="true"></dbp-icon>
+                        <h3 class="grant-holder-name">${name}:</h3>
+                    </div>
+                    ${
+                        email
+                            ? html`
+                                  <span class="grant-holder-email">${email}</span>
+                              `
+                            : ''
+                    }
+                </div>
+                <div class="grant-shareable-column-label">
+                    ${this._i18n.t('auth-manage-dialog.shareable-column-label')}
+                </div>
+            </div>
+        `;
+    }
+
+    renderGrantHolderRoleList(holder) {
+        const grants = [...holder['grants']].sort((left, right) => {
+            return (
+                this._collator.compare(
+                    getRoleName(left.roleDefinition, this.lang),
+                    getRoleName(right.roleDefinition, this.lang),
+                ) || compareIdentifiers(left.identifier, right.identifier)
+            );
+        });
+        const draftGrants = this.draftRoleGrants.get(holder.key) ?? [];
+        const name = getGrantHolderDisplayName(holder['subject']);
+
+        return html`
+            <ul class="grant-holder-roles">
+                ${repeat(
+                    grants,
+                    (grant) => grant.identifier,
+                    (grant) => this.renderRoleRow(grant, holder),
+                )}
+                ${repeat(
+                    draftGrants,
+                    (grant) => grant.clientIdentifier,
+                    (grant) => this.renderDraftRoleRow(grant, holder.key, name),
+                )}
+            </ul>
+        `;
+    }
+
+    /**
+     * Renders the actions for a grant holder.
+     * @param {GrantHolder|DraftGrantHolder} holder - The grant holder.
+     * @returns {import('lit').TemplateResult} The actions for the grant holder.
+     */
+    renderGrantHolderActions(holder) {
+        return html`
+            <div class="add-role-button-container">
+                <dbp-button
+                    type="is-secondary"
+                    class="add-role-button"
+                    no-spinner-on-click
+                    ?disabled="${this._isAddRoleDisabled(holder.key)}"
+                    title="${this._getAddRoleButtonTitle(holder.key)}"
+                    @click="${() => this.handleAddRoleButtonClick(holder.key)}">
+                    <dbp-icon name="plus" aria-hidden="true"></dbp-icon>
+                    ${this._i18n.t('auth-manage-dialog.buttons.add-role')}
+                </dbp-button>
+                <dbp-button
+                    type="is-primary"
+                    class="save-holder-roles-button"
+                    no-spinner-on-click
+                    ?disabled="${this._isSaveDisabled(holder.key)}"
+                    title="${this._getSaveHolderRolesButtonTitle(holder.key)}"
+                    @click="${() => this.handleSaveHolderRolesButtonClick(holder.key)}">
+                    <dbp-icon name="save" aria-hidden="true"></dbp-icon>
+                    ${this._i18n.t('auth-manage-dialog.buttons.save-holder-roles-button-label')}
+                </dbp-button>
+            </div>
+        `;
+    }
+
+    /**
+     * Renders a holder's name, (person email), assigned and unsaved roles and the action buttons.
+     * @param {GrantHolder|DraftGrantHolder} holder - Holder with its compact subject and role grants.
+     * @returns {import('lit').TemplateResult} Holder section.
+     */
+    renderGrantHolderSection(holder) {
+        const name = getGrantHolderDisplayName(holder['subject']);
+
+        return html`
+            <section
+                id="grant-holder-${CSS.escape(holder.key)}"
+                class="grant-holder-section"
+                aria-label="${this._i18n.t('auth-manage-dialog.grant-holder-aria-label', {name: name})}">
+                ${this.renderGrantHolderHeading(holder)} ${this.renderGrantHolderRoleList(holder)}
+                ${this.renderGrantHolderActions(holder)}
+            </section>
+        `;
+    }
+
+    /**
+     * Renders the side panel that displays the roles for the current resource.
+     * @returns {import('lit').TemplateResult}
+     */
+    renderRolesSidePanel() {
+        const i18n = this._i18n;
+        return html`
+            <div class="roles-container">
+                <h3 class="roles-panel-title">${i18n.t('auth-manage-dialog.roles-panel.title')}</h3>
+                ${
+                    this.roles.size
+                        ? html`
+                              <div class="role-list">
+                                  ${[...this.roles.values()].map((role) => {
+                                      return html`
+                                          <h4 class="roles-name">
+                                              ${getRoleName(role, this.lang)}
+                                          </h4>
+                                      `;
+                                  })}
+                              </div>
+                          `
+                        : html`
+                              <p class="roles-empty-state">
+                                  ${i18n.t('auth-manage-dialog.roles-panel.empty-state-label')}
+                              </p>
+                          `
+                }
+            </div>
+        `;
     }
 
     static get styles() {
@@ -1559,9 +1689,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                                 subscribe="auth"
                                 placeholder="${i18n.t('auth-manage-dialog.subject-select-placeholder')}"
                                 entry-point-url="${this.entryPointUrl}"
-                                @change="${(event) => {
-                                    this.selectedSubject = event.detail.object;
-                                }}"></dbp-authorization-subject-select>
+                                @change="${this.handleSubjectSelectChange}"></dbp-authorization-subject-select>
                             <div class="add-person-button-container">
                                 <dbp-button
                                     type="is-secondary"
@@ -1576,9 +1704,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                                     id="show-roles-button"
                                     class="show-roles-button"
                                     no-spinner-on-click
-                                    @click="${() => {
-                                        this.showRolesPanel = !this.showRolesPanel;
-                                    }}">
+                                    @click="${this.handleShowRolesButtonClick}">
                                     ${
                                         this.showRolesPanel
                                             ? i18n.t(
@@ -1609,7 +1735,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                         type="is-primary"
                         class="save-all-roles-button"
                         no-spinner-on-click
-                        @click="${this.saveAllRoles}">
+                        @click="${this.handleSaveAllRolesButtonClick}">
                         <dbp-icon name="save" aria-hidden="true"></dbp-icon>
                         ${i18n.t('auth-manage-dialog.buttons.save-roles-button-label')}
                     </dbp-button>

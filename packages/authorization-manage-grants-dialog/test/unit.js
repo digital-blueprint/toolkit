@@ -2,7 +2,69 @@ import {assert} from 'chai';
 
 import '../src/dbp-authorization-manage-grants-dialog.js';
 import {AuthorizationSubjectSelect} from '../src/authorization-subject-select.js';
-import {deriveGrantHolderIdentity} from '../src/grant-holder.js';
+import {
+    deriveGrantHolderIdentity,
+    getGrantHolderDisplayName,
+    toCompactSubject,
+} from '../src/grant-holder.js';
+import {getRoleName, getRoleNameByIri, isGrantChangeable} from '../src/utils.js';
+
+suite('utils', () => {
+    test('should name a role in the given language', () => {
+        const role = {
+            identifier: 'role-identifier',
+            roleNames: [
+                {languageTag: 'de', name: 'Rollenname'},
+                {languageTag: 'en', name: 'Role name'},
+            ],
+        };
+
+        // The loaded roles keep all their translations, so switching the language is enough
+        assert.equal(getRoleName(role, 'en'), 'Role name');
+        assert.equal(getRoleName(role, 'de'), 'Rollenname');
+    });
+
+    test('should fall back to the role identifier when a localized name is unavailable', () => {
+        assert.equal(getRoleName({identifier: 'missing-role'}, 'en'), 'missing-role');
+        assert.equal(
+            getRoleName({identifier: 'missing-role', roleNames: []}, 'en'),
+            'missing-role',
+        );
+        assert.equal(
+            getRoleName(
+                {identifier: 'missing-role', roleNames: [{languageTag: 'en', name: 'Editor'}]},
+                'de',
+            ),
+            'missing-role',
+        );
+    });
+
+    test('should name a role addressed by its IRI', () => {
+        const roles = new Map([
+            [
+                '/authorization/roles/editor',
+                {
+                    identifier: 'editor',
+                    roleNames: [{languageTag: 'en', name: 'Editor'}],
+                },
+            ],
+        ]);
+
+        assert.equal(getRoleNameByIri(roles, '/authorization/roles/editor', 'en'), 'Editor');
+        // An unknown role has no name to show, so the IRI identifies it instead
+        assert.equal(
+            getRoleNameByIri(roles, '/authorization/roles/missing', 'en'),
+            '/authorization/roles/missing',
+        );
+    });
+
+    test('should only allow changing a grant that may be deleted', () => {
+        assert.isTrue(isGrantChangeable({grantedActions: ['read', 'delete']}));
+        assert.isFalse(isGrantChangeable({grantedActions: ['read']}));
+        assert.isFalse(isGrantChangeable({grantedActions: []}));
+        assert.isFalse(isGrantChangeable({}));
+    });
+});
 
 suite('grant holder', () => {
     test('should identify every grant holder type', () => {
@@ -53,6 +115,81 @@ suite('grant holder', () => {
         assert.isNull(deriveGrantHolderIdentity(undefined));
         assert.isNull(deriveGrantHolderIdentity({}));
         assert.isNull(deriveGrantHolderIdentity({identifier: 'grant-identifier', action: 'read'}));
+    });
+
+    test('should name a holder of every type', () => {
+        assert.equal(
+            getGrantHolderDisplayName({
+                identifier: 'frank',
+                givenName: 'Frank',
+                familyName: 'Schwartz',
+            }),
+            'Frank Schwartz',
+        );
+        assert.equal(getGrantHolderDisplayName({identifier: 'frank', givenName: 'Frank'}), 'Frank');
+        assert.equal(getGrantHolderDisplayName({identifier: 'team', name: 'Team'}), 'Team');
+        // A dynamic user group has no name, and an inaccessible subject has nothing but its
+        // identifier either
+        assert.equal(getGrantHolderDisplayName({identifier: 'developers'}), 'developers');
+    });
+
+    test('should keep only the subject fields a holder is displayed with', () => {
+        const person = toCompactSubject(
+            {
+                '@context': '/contexts/Person',
+                '@id': '/base/people/frank',
+                '@type': 'https://schema.org/Person',
+                identifier: 'frank',
+                givenName: 'Frank',
+                familyName: 'Schwartz',
+                localData: {email: 'frank@example.com', unused: 'discard'},
+            },
+            'person',
+        );
+        assert.deepEqual(person, {
+            '@id': '/base/people/frank',
+            '@type': 'https://schema.org/Person',
+            identifier: 'frank',
+            givenName: 'Frank',
+            familyName: 'Schwartz',
+            localData: {email: 'frank@example.com'},
+        });
+
+        assert.deepEqual(
+            toCompactSubject(
+                {
+                    '@id': '/authorization/user-groups/team',
+                    '@type': 'AuthorizationUserGroup',
+                    identifier: 'team',
+                    name: 'Team',
+                    members: [{identifier: 'member-id'}],
+                },
+                'user-group',
+            ),
+            {
+                '@id': '/authorization/user-groups/team',
+                '@type': 'AuthorizationUserGroup',
+                identifier: 'team',
+                name: 'Team',
+            },
+        );
+
+        // A dynamic user group has nothing to show beyond its identity
+        assert.deepEqual(
+            toCompactSubject(
+                {
+                    '@id': 'dynamic-user-group:developers',
+                    '@type': 'AuthorizationDynamicUserGroup',
+                    identifier: 'developers',
+                },
+                'dynamic-user-group',
+            ),
+            {
+                '@id': 'dynamic-user-group:developers',
+                '@type': 'AuthorizationDynamicUserGroup',
+                identifier: 'developers',
+            },
+        );
     });
 });
 
@@ -307,23 +444,6 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         }
     });
 
-    test('should fall back to the role identifier when a localized name is unavailable', () => {
-        node.lang = 'en';
-        assert.equal(node._getRoleName({identifier: 'missing-role'}), 'missing-role');
-        assert.equal(
-            node._getRoleName({identifier: 'missing-role', roleNames: []}),
-            'missing-role',
-        );
-        node.lang = 'de';
-        assert.equal(
-            node._getRoleName({
-                identifier: 'missing-role',
-                roleNames: [{languageTag: 'en', name: 'Editor'}],
-            }),
-            'missing-role',
-        );
-    });
-
     test('should keep holders ordered by type, name and key across reloads', async () => {
         const originalFetch = globalThis.fetch;
         const role = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
@@ -396,6 +516,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         const holders = [
             {
                 key: 'person:frank',
+                type: 'person',
                 subject: {
                     identifier: 'frank',
                     givenName: 'Frank',
@@ -417,10 +538,16 @@ suite('dbp-authorization-manage-grants-dialog', () => {
             },
             {
                 key: 'user-group:team',
+                type: 'user-group',
                 subject: {identifier: 'team', name: 'Example Team'},
                 grants: [],
             },
-            {key: 'dynamic-user-group:developers', subject: {identifier: 'developers'}, grants: []},
+            {
+                key: 'dynamic-user-group:developers',
+                type: 'dynamic-user-group',
+                subject: {identifier: 'developers'},
+                grants: [],
+            },
         ];
         node.grantHolders = new Map(holders.map((holder) => [holder.key, holder]));
         await node.updateComplete;
@@ -499,6 +626,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         ]);
         const holder = {
             key: 'person:david',
+            type: 'person',
             subject: {identifier: 'david', givenName: 'David'},
             grants: [],
         };
@@ -556,12 +684,14 @@ suite('dbp-authorization-manage-grants-dialog', () => {
             roleNames: [],
         };
         const draftHolder = {
+            type: 'person',
             key: 'person:alice',
             subject: {identifier: 'alice', givenName: 'Alice'},
             holderFields: {userIdentifier: 'alice'},
             grants: [],
         };
         const persistedHolder = {
+            type: 'person',
             key: 'person:bob',
             subject: {identifier: 'bob', givenName: 'Bob'},
             grants: [],
@@ -596,6 +726,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         });
         const holder = {
             key: 'person:david',
+            type: 'person',
             subject: {identifier: 'david', givenName: 'David'},
             grants: [
                 makeGrant('c', 'Reader', 'Leser'),
@@ -641,23 +772,6 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         assert.isNull(node.shadowRoot.querySelector('.grant-holder'));
     });
 
-    test('should name a role in the current language', async () => {
-        const role = {
-            identifier: 'role-identifier',
-            roleNames: [
-                {languageTag: 'de', name: 'Rollenname'},
-                {languageTag: 'en', name: 'Role name'},
-            ],
-        };
-
-        node.lang = 'en';
-        assert.equal(node._getRoleName(role), 'Role name');
-
-        // The loaded roles keep all their translations, so switching the language is enough
-        node.lang = 'de';
-        assert.equal(node._getRoleName(role), 'Rollenname');
-    });
-
     test('should record and revert an unsaved role change of a saved grant', async () => {
         const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
         const reader = {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []};
@@ -680,7 +794,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
             ],
         ]);
         await node.updateComplete;
-        assert.isTrue(node.isSaveDisabled('person:frank'));
+        assert.isTrue(node._isSaveDisabled('person:frank'));
 
         const selector = node.shadowRoot.querySelector('select.role-grant-name-selector');
         selector.value = reader['@id'];
@@ -690,7 +804,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         assert.deepEqual(node.pendingGrantChanges.get('person:frank'), [
             {grantIdentifier: 'a', roleIdentifier: reader['@id'], shareable: true},
         ]);
-        assert.isFalse(node.isSaveDisabled('person:frank'));
+        assert.isFalse(node._isSaveDisabled('person:frank'));
         assert.isNotNull(node.shadowRoot.querySelector('.role-grant-row.unsaved-role-row'));
 
         // Selecting the originally assigned role again drops the change
@@ -699,7 +813,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         await node.updateComplete;
 
         assert.isFalse(node.pendingGrantChanges.has('person:frank'));
-        assert.isTrue(node.isSaveDisabled('person:frank'));
+        assert.isTrue(node._isSaveDisabled('person:frank'));
         assert.isNull(node.shadowRoot.querySelector('.role-grant-row.unsaved-role-row'));
     });
 
@@ -718,6 +832,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
                 'person:frank',
                 {
                     key: 'person:frank',
+                    type: 'person',
                     subject: {identifier: 'frank', givenName: 'Frank'},
                     grants: [
                         {
@@ -785,6 +900,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
                 'person:frank',
                 {
                     key: 'person:frank',
+                    type: 'person',
                     subject: {identifier: 'frank', givenName: 'Frank', familyName: 'Schwartz'},
                     grants: [
                         {
@@ -848,6 +964,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
                 'person:frank',
                 {
                     key: 'person:frank',
+                    type: 'person',
                     subject: {identifier: 'frank', givenName: 'Frank'},
                     grants: [
                         {

@@ -13,12 +13,16 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {hydra} from '@dbp-toolkit/resource-select';
 import {Notification} from '@dbp-toolkit/notification';
-import {AuthorizationManageGrantsDialog} from './authorization-manage-grants-dialog.js';
+import {
+    AuthorizationManageGrantsDialog,
+    RESOURCE_TYPE_ITEM,
+    RESOURCE_TYPE_GROUP,
+} from './authorization-manage-grants-dialog.js';
 import {createInstance} from './i18n.js';
 
 const DEMO_RESOURCE_CLASS_IDENTIFIER = 'DbpRelayFormalizeForm';
 const DEMO_RESOURCE_IDENTIFIER = '32297d33-1352-4cf2-ba06-1577911c3537';
-const DEMO_RESOURCE_TYPE = 0;
+const DEMO_RESOURCE_TYPE = RESOURCE_TYPE_ITEM;
 
 export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
     LangMixin(ScopedElementsMixin(DBPLitElement), createInstance),
@@ -230,7 +234,8 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
     renderResourceSelection() {
         const i18n = this._i18n;
         // Submission mode: resource type is a single submission item.
-        const isSubmissionMode = this.selectedResourceType === 'DbpRelayFormalizeSubmission:0';
+        const isSubmissionMode =
+            this.selectedResourceType === 'DbpRelayFormalizeSubmission:${RESOURCE_TYPE_ITEM}';
 
         return html`
             <label>
@@ -252,13 +257,13 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
                 <option value="">
                     ${i18n.t('auth-manage-dialog.demo-select-resource-type-placeholder')}
                 </option>
-                <option value="DbpRelayFormalizeForm:0">
+                <option value="DbpRelayFormalizeForm:${RESOURCE_TYPE_ITEM}">
                     ${i18n.t('auth-manage-dialog.demo-resource-type-form')}
                 </option>
-                <option value="DbpRelayFormalizeSubmission:1">
+                <option value="DbpRelayFormalizeSubmission:${RESOURCE_TYPE_GROUP}">
                     ${i18n.t('auth-manage-dialog.demo-resource-type-form-submissions')}
                 </option>
-                <option value="DbpRelayFormalizeSubmission:0">
+                <option value="DbpRelayFormalizeSubmission:${RESOURCE_TYPE_ITEM}">
                     ${i18n.t('auth-manage-dialog.demo-resource-type-submission')}
                 </option>
             </select>
