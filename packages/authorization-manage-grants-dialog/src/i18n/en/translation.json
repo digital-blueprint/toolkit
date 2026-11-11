@@ -32,6 +32,9 @@
         "draft-shareable-role-label": "Shareable new role for {{holder}}",
         "grant-holder-aria-label": "Roles for {{name}}",
         "grants-list-placeholder": "No roles assigned to this resource yet",
+        "modal-subtitle-form": "{{formName}} form",
+        "modal-subtitle-submission": "Submission of {{formName}}",
+        "modal-subtitle-submissions": "All submissions of {{formName}}",
         "modal-title": "Manage grants dialog",
         "notifications": {
             "could-not-change-role": "Could not change role \"{{oldRoleName}}\" to \"{{roleName}}\" for {{holderName}}",

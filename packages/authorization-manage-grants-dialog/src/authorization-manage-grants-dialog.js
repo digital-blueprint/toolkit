@@ -40,6 +40,7 @@ import {
     getRoleNameByIri,
     isGrantChangeable,
     updateInMap,
+    getFormName,
 } from './utils.js';
 
 /**
@@ -54,6 +55,8 @@ import {
  * @typedef {import('./types.js').GrantHolderFields} GrantHolderFields
  * @typedef {import('./types.js').GrantHolderIdentity} GrantHolderIdentity
  * @typedef {import('./types.js').ResourceActionGrant} ResourceActionGrant
+ * @typedef {import('./types.js').FormalizeForm} FormalizeForm
+ * @typedef {import('./types.js').FormalizeFormSubmission} FormalizeFormSubmission
  */
 
 /** Authorization resource type of a single item. */
@@ -61,13 +64,24 @@ export const RESOURCE_TYPE_ITEM = 0;
 /** Authorization resource type of a group of items. */
 export const RESOURCE_TYPE_GROUP = 1;
 
+const RESOURCE_CLASS_FORM = 'DbpRelayFormalizeForm';
+const RESOURCE_CLASS_SUBMISSION = 'DbpRelayFormalizeSubmission';
+
+// The kinds of formalize resource the dialog can name in its subtitle. They combine the
+// resource class with the resource type, since submissions are managed one by one as well as
+// all at once.
+const RESOURCE_KIND_FORM = 'form';
+const RESOURCE_KIND_SUBMISSION = 'submission';
+const RESOURCE_KIND_SUBMISSIONS = 'submissions';
+
 export class AuthorizationManageGrantsDialog extends AuthMixin(
     LangMixin(ScopedElementsMixin(DBPLitElement), createInstance),
 ) {
     constructor() {
         super();
         this.entryPointUrl = '';
-        this.modalTitle = '';
+        this.modalTitle = this._i18n.t('auth-manage-dialog.modal-title');
+        this.modalSubTitle = '';
         /** @type {import('lit/directives/ref.js').Ref<Modal>} */
         this.modalRef = createRef();
         /** @type {import('lit/directives/ref.js').Ref<AuthorizationSubjectSelect>} */
@@ -79,6 +93,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.resourceType = RESOURCE_TYPE_ITEM;
         /** @type {string|null} The compound resource identifier the loaded data belongs to. */
         this._loadedResourceKey = null;
+        /** @type {FormalizeForm|null} Form the current resource belongs to. */
+        this._resourceForm = null;
         this.roles = new Map();
         /** @type {Map<string, GrantHolder>} */
         this.grantHolders = new Map();
@@ -106,10 +122,12 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             modalTitle: {type: String, attribute: 'modal-title'},
+            modalSubTitle: {state: true},
             selectedSubject: {state: true},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
             resourceType: {type: Number, attribute: 'resource-type'},
+            _resourceForm: {state: true},
             roles: {state: true},
             grantHolders: {state: true},
             grantHoldersLoading: {state: true},
@@ -201,6 +219,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     _resetDialogState() {
         this._resourceDataController?.abort();
         this._resourceDataController = null;
+        this.modalSubTitle = '';
+        this._resourceForm = null;
         this.grantHoldersLoading = false;
         this.draftGrantHolders = new Map();
         this.draftRoleGrants = new Map();
@@ -396,6 +416,52 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
+     * The kind of formalize resource the dialog manages. Both the form lookup and the
+     * subtitle depend on the combination of resource class and resource type.
+     * @returns {string|null} One of the RESOURCE_KIND_* values, or null for another resource.
+     */
+    _getResourceKind() {
+        if (this.resourceClassIdentifier === RESOURCE_CLASS_FORM) {
+            return RESOURCE_KIND_FORM;
+        }
+        if (this.resourceClassIdentifier === RESOURCE_CLASS_SUBMISSION) {
+            return this.resourceType === RESOURCE_TYPE_ITEM
+                ? RESOURCE_KIND_SUBMISSION
+                : RESOURCE_KIND_SUBMISSIONS;
+        }
+        return null;
+    }
+
+    /**
+     * Loads the form the current resource belongs to, so the dialog can name it.
+     * A submission only references its form, so it takes a second request.
+     * @param {AbortSignal} [signal] - Request cancellation signal.
+     * @returns {Promise<FormalizeForm|null>} The form, or null when there is none to show.
+     */
+    async _apiGetResourceForm(signal) {
+        const identifier = encodeURIComponent(this.resourceIdentifier);
+        switch (this._getResourceKind()) {
+            // A form and all submissions of a form are both addressed by the form identifier.
+            case RESOURCE_KIND_FORM:
+            case RESOURCE_KIND_SUBMISSIONS:
+                return /** @type {FormalizeForm} */ (
+                    await this._apiGetItem(`/formalize/forms/${identifier}`, signal)
+                );
+            case RESOURCE_KIND_SUBMISSION: {
+                // A single submission only carries the IRI of the form it belongs to.
+                const submission = /** @type {FormalizeFormSubmission} */ (
+                    await this._apiGetItem(`/formalize/submissions/${identifier}`, signal)
+                );
+                return submission.form
+                    ? /** @type {FormalizeForm} */ (await this._apiGetItem(submission.form, signal))
+                    : null;
+            }
+            default:
+                return null;
+        }
+    }
+
+    /**
      * Loads the roles for the current resource.
      *
      * @param {AbortSignal} [signal] - Cancels requests when the resource changes.
@@ -453,6 +519,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                     `${RESOURCE_TYPE_ITEM} (item) or ${RESOURCE_TYPE_GROUP} (group)`,
             );
         }
+
+        void this._loadResourceForm(controller.signal);
         this.grantHoldersLoading = true;
 
         const rolesLoaded = await this._loadRoles(controller.signal);
@@ -464,6 +532,26 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             return;
         }
         await this._loadRoleGrantHolders(controller.signal);
+    }
+
+    /**
+     * Loads the form the current resource belongs to and shows its name in the dialog header.
+     * The name is decorative, so a form that cannot be loaded only clears the subtitle.
+     * @param {AbortSignal} [signal] - Cancels the request when the resource changes.
+     * @returns {Promise<void>}
+     */
+    async _loadResourceForm(signal) {
+        this._resourceForm = null;
+        try {
+            const form = await this._apiGetResourceForm(signal);
+            if (!signal?.aborted) {
+                this._resourceForm = form;
+            }
+        } catch (error) {
+            if (!signal?.aborted) {
+                console.warn('Could not load the form of the resource', error);
+            }
+        }
     }
 
     /**
@@ -628,7 +716,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             this.draftGrantHolders.has(selectedHolderIdentity.key)
         ) {
             // Scroll to the existing holder and highlight it.
-            const existingHolderElement = this._(`#${CSS.escape(selectedHolderIdentity.key)}`);
+            // A holder key contains a colon, which has to be escaped in the selector only
+            const existingHolderElement = this._(
+                `#grant-holder-${CSS.escape(selectedHolderIdentity.key)}`,
+            );
             if (existingHolderElement) {
                 void this._scrollToAndHighlightExistingHolder(existingHolderElement);
             }
@@ -1605,12 +1696,47 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
 
         return html`
             <section
-                id="grant-holder-${CSS.escape(holder.key)}"
+                id="grant-holder-${holder.key}"
                 class="grant-holder-section"
                 aria-label="${this._i18n.t('auth-manage-dialog.grant-holder-aria-label', {name: name})}">
                 ${this.renderGrantHolderHeading(holder)} ${this.renderGrantHolderRoleList(holder)}
                 ${this.renderGrantHolderActions(holder)}
             </section>
+        `;
+    }
+
+    /**
+     * Renders the name of the form the managed resource belongs to. Every resource kind gets
+     * its own message, so each translation can word and order it on its own.
+     * @returns {import('lit').TemplateResult|string} Subtitle, or an empty string as long as
+     *     there is no form to name.
+     */
+    renderModalSubtitle() {
+        if (!this._resourceForm) {
+            return '';
+        }
+
+        const formName = getFormName(this._resourceForm, this.lang);
+        let subtitle;
+        switch (this._getResourceKind()) {
+            case RESOURCE_KIND_SUBMISSION:
+                subtitle = this._i18n.t('auth-manage-dialog.modal-subtitle-submission', {
+                    formName: formName,
+                });
+                break;
+            case RESOURCE_KIND_SUBMISSIONS:
+                subtitle = this._i18n.t('auth-manage-dialog.modal-subtitle-submissions', {
+                    formName: formName,
+                });
+                break;
+            default:
+                subtitle = this._i18n.t('auth-manage-dialog.modal-subtitle-form', {
+                    formName: formName,
+                });
+        }
+
+        return html`
+            <p class="modal-subtitle">${subtitle}</p>
         `;
     }
 
@@ -1672,6 +1798,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 @dbp-modal-closed="${this._handleModalClosed}"
                 class="modal--manage-grants ${classMap({'show-roles': this.showRolesPanel})}"
                 title="${this.modalTitle}">
+                <div slot="title">
+                    <h2 class="modal-title" id="modal-title">${this.modalTitle}</h2>
+                    ${this.renderModalSubtitle()}
+                </div>
                 <div slot="header">
                     <dbp-notification
                         id="auth-manage-dialog-notification"

@@ -286,7 +286,12 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         };
         try {
             await node._loadResourceData();
-            assert.deepEqual(requests, ['/authorization/roles']);
+            // The form of the subtitle is loaded next to the grants, so only the
+            // authorization requests tell whether the failed roles stopped the load
+            assert.deepEqual(
+                requests.filter((path) => path.startsWith('/authorization/')),
+                ['/authorization/roles'],
+            );
             assert.isFalse(node.grantHoldersLoading);
             assert.equal(node.grantHolders.size, 0);
         } finally {
@@ -704,9 +709,9 @@ suite('dbp-authorization-manage-grants-dialog', () => {
 
         const sections = node.shadowRoot.querySelectorAll('.grant-holder-section');
         assert.lengthOf(sections, 2);
-        assert.equal(sections[0].id, draftHolder.key);
+        assert.equal(sections[0].id, `grant-holder-${draftHolder.key}`);
         assert.isNotNull(sections[0].querySelector('.draft-role-grant-row'));
-        assert.equal(sections[1].id, persistedHolder.key);
+        assert.equal(sections[1].id, `grant-holder-${persistedHolder.key}`);
     });
 
     test('should sort role rows by language and preserve keyed DOM after deletion', async () => {

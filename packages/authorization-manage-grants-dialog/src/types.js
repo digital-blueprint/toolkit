@@ -126,4 +126,25 @@
  * }} PendingGrantChange
  */
 
+// API resources
+
+/**
+ * A form resource, reduced to the fields the dialog names it by.
+ * @typedef {{
+ *     '@id'?: string,
+ *     identifier?: string,
+ *     name: string,
+ *     localizedNames?: Array<{languageTag: string, name: string}>
+ * }} FormalizeForm
+ */
+
+/**
+ * A form submission resource. Its "form" field is the IRI of the form it belongs to.
+ * @typedef {{
+ *     '@id': string,
+ *     identifier: string,
+ *     form: string
+ * }} FormalizeFormSubmission
+ */
+
 export {};

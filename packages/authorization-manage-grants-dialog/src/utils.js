@@ -1,4 +1,9 @@
 /**
+ * @typedef {import('./types.js').FormalizeForm} FormalizeForm
+ * @typedef {import('./types.js').RoleDefinition} RoleDefinition
+ */
+
+/**
  * Returns a new Map with the given key set to the given value.
  * @template K
  * @template V
@@ -48,7 +53,7 @@ export function compareIdentifiers(left, right) {
 
 /**
  * Returns the name a role has in the given language.
- * @param {{identifier: string, roleNames?: Array<{languageTag: string, name: string}>}} role -
+ * @param {RoleDefinition} role -
  *     Role definition with its localized names.
  * @param {string} lang - Language tag of the current language.
  * @returns {string} Name of the role, or its identifier when it has no name in that language.
@@ -58,8 +63,20 @@ export function getRoleName(role, lang) {
 }
 
 /**
+ * Returns the name a form has in the given language.
+ * @param {FormalizeForm} form - Form with its localized names.
+ * @param {string} lang - Language tag of the current language.
+ * @returns {string} Localized name, the untranslated name, or an empty string.
+ */
+export function getFormName(form, lang) {
+    return (
+        form.localizedNames?.find((entry) => entry.languageTag === lang)?.name || form.name || ''
+    );
+}
+
+/**
  * Returns the name of a role addressed by its IRI.
- * @param {Map<string, {identifier: string, roleNames?: Array<{languageTag: string, name: string}>}>} roles -
+ * @param {Map<string, RoleDefinition>} roles -
  *     Known role definitions keyed by their IRI.
  * @param {string} roleIri - IRI of the role.
  * @param {string} lang - Language tag of the current language.

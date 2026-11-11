@@ -32,6 +32,9 @@
         "draft-shareable-role-label": "Weitergebbare neue Rolle für {{holder}}",
         "grant-holder-aria-label": "Rollen für {{name}}",
         "grants-list-placeholder": "Dieser Ressource wurden noch keine Rollen zugewiesen",
+        "modal-subtitle-form": "Formular {{formName}}",
+        "modal-subtitle-submission": "Einreichung für {{formName}}",
+        "modal-subtitle-submissions": "Alle Einreichungen für {{formName}}",
         "modal-title": "Berechtigungen verwalten",
         "notifications": {
             "could-not-change-role": "Rolle \"{{oldRoleName}}\" für {{holderName}} konnte nicht auf \"{{roleName}}\" geändert werden",

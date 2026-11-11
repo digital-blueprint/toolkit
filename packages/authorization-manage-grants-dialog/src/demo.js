@@ -235,7 +235,7 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
         const i18n = this._i18n;
         // Submission mode: resource type is a single submission item.
         const isSubmissionMode =
-            this.selectedResourceType === 'DbpRelayFormalizeSubmission:${RESOURCE_TYPE_ITEM}';
+            this.selectedResourceType === `DbpRelayFormalizeSubmission:${RESOURCE_TYPE_ITEM}`;
 
         return html`
             <label>
