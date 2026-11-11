@@ -83,6 +83,8 @@ You can customize the modal with the following css variables:
 
 `--dbp-modal-content-overflow-y` : set .modal-content overflow-y
 
+`--dbp-modal-container-height` : set the height of the header/content/footer grid, defaults to `auto`; independent of `full-height-line`
+
 `--dbp-modal-full-height-line-left` : set the horizontal position of the `full-height-line` separator
 `--dbp-modal-full-height-line-border` : set the border style of the `full-height-line` separator
 `--dbp-modal-full-height-line-display` : set the display value of the `full-height-line` separator, defaults to `block` when `full-height-line` is set

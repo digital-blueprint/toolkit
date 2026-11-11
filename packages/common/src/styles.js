@@ -1880,10 +1880,6 @@ export function getNativeModalDialogCSS() {
             animation-fill-mode: forwards;
         }
 
-        :host([full-height-line]) dialog[open] {
-            display: grid;
-        }
-
         dialog {
             min-width: var(--dbp-modal-min-width, 250px);
             max-width: var(--dbp-modal-max-width, 75vw);
@@ -1911,6 +1907,7 @@ export function getNativeModalDialogCSS() {
 
         .modal-container {
             display: grid;
+            height: var(--dbp-modal-container-height, auto);
             grid-template-columns: 1fr;
             grid-template-rows: auto 1fr auto;
             align-items: start;
@@ -2062,10 +2059,6 @@ export function getNativeModalDialogCSS() {
             }
         }
 
-        :host([full-height-line]) .modal-container {
-            height: var(--dbp-modal-container-height);
-        }
-
         .modal-container--full-height-line {
             position: relative;
         }
@@ -2091,34 +2084,24 @@ export function getNativeModalDialogCSS() {
             position: relative;
             overflow-y: var(--dbp-modal-content-overflow-y);
             max-height: 100%;
-            min-height: 100%;
+            min-height: var(--dbp-modal-content-min-height, 100%);
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        :host([full-height-line]) .modal-content {
-            min-height: var(--dbp-modal-content-min-height, 100%);
-        }
-
         slot[name='content'] {
             display: block;
             width: 100%;
-        }
-
-        :host([full-height-line]) slot[name='content'] {
-            height: var(--dbp-modal-content-slot-height);
-            min-height: var(--dbp-modal-content-slot-min-height);
+            height: var(--dbp-modal-content-slot-height, auto);
+            min-height: var(--dbp-modal-content-slot-min-height, 0);
         }
 
         ::slotted([slot='content']) {
             width: 100%;
-        }
-
-        :host([full-height-line]) ::slotted([slot='content']) {
-            height: var(--dbp-modal-slotted-content-height);
-            min-height: var(--dbp-modal-slotted-content-min-height);
+            height: var(--dbp-modal-slotted-content-height, auto);
+            min-height: var(--dbp-modal-slotted-content-min-height, 0);
         }
 
         .modal-footer {
