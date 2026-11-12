@@ -560,7 +560,9 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     _handleTitleClick() {
+        if (this._titleClickCount >= 7) return;
         this._titleClickCount = Math.min(this._titleClickCount + 1, 7);
+        if (this._titleClickCount === 7) this._updateVisibleRoutes();
     }
 
     onMenuItemClick(e) {
@@ -1512,7 +1514,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         for (let routingName of this.routes) {
             const data = this.metadata[routingName];
             const requiredRoles = data['required_roles'];
-            let visible = data['visible'];
+            let visible = this._titleClickCount >= 7 || data['visible'];
             let disabled = data['disabled'];
 
             // Hide them until the user is logged in and we know the roles of the user
