@@ -116,6 +116,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source1"
+                        context="${i18n.t('demo.select-files')}"
                         class="file-source"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         allowed-mime-types="*/*"
@@ -133,6 +134,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source2"
+                        context="${i18n.t('demo.select-images')}"
                         lang="${this.lang}"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
@@ -151,6 +153,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source3"
+                        context="${i18n.t('demo.select-pdfs')}"
                         lang="${this.lang}"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
@@ -170,6 +173,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source4"
+                        context="${i18n.t('demo.select-text-and-images')}"
                         lang="${this.lang}"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
                         url="${this.url}"
@@ -188,6 +192,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                     </button>
                     <dbp-file-source
                         id="file-source5"
+                        context="${i18n.t('demo.select-pdfs-in-zips')}"
                         lang="${this.lang}"
                         url="${this.url}"
                         @dbp-file-source-file-selected="${this.addLogEntry}"
@@ -204,7 +209,10 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
                         class="button is-primary">
                         Open download dialog
                     </button>
-                    <dbp-file-sink id="file-sink-standard" lang="${this.lang}"></dbp-file-sink>
+                    <dbp-file-sink
+                        id="file-sink-standard"
+                        context="${i18n.t('demo.download-files')}"
+                        lang="${this.lang}"></dbp-file-sink>
                 </div>
             </section>
         `;
@@ -295,6 +303,7 @@ export class FileSourceDemo extends LangMixin(ScopedElementsMixin(DBPLitElement)
             </button>
             <dbp-file-sink
                 id="file-sink-streamed"
+                context="${i18n.t('demo.download-zip')}"
                 lang="${this.lang}"
                 subscribe="auth"
                 streamed></dbp-file-sink>

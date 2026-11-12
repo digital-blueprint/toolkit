@@ -45,6 +45,15 @@
         "upload-button-label": "Dateien auswählen",
         "warning": "Vorsicht! Wenn Sie den Browser schließen oder die Seite neu laden wird die bestehende Zwischenablage automatisch verworfen!"
     },
+    "demo": {
+        "download-files": "Ausgewählte Dateien herunterladen",
+        "download-zip": "Dateien als ZIP-Archiv herunterladen",
+        "select-files": "Dateien auswählen",
+        "select-images": "Bilder auswählen",
+        "select-pdfs": "PDF-Dokumente auswählen",
+        "select-pdfs-in-zips": "PDF-Dokumente auswählen (auch in ZIP-Archiven)",
+        "select-text-and-images": "Textdateien und Bilder auswählen"
+    },
     "demo-title": "Datei Abgabe Demo",
     "file-sink": {
         "clipboard": "Zwischenablage",
