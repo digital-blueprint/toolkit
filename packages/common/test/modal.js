@@ -40,7 +40,7 @@ suite('modal layout', () => {
                     main.getBoundingClientRect().height,
                     1,
                 );
-                assert.equal(getComputedStyle(modal.modalDialog).display, 'block');
+                assert.equal(getComputedStyle(modal.modalDialog).display, 'grid');
             } finally {
                 modal.close();
                 modal.remove();

@@ -1875,6 +1875,7 @@ export function getNativeModalDialogCSS() {
         }
 
         dialog[open] {
+            display: grid;
             animation-name: var(--dbp-modal-animation);
             animation-duration: 0.5s;
             animation-fill-mode: forwards;
@@ -1901,7 +1902,14 @@ export function getNativeModalDialogCSS() {
             transform: translateY(var(--dbp-modal-translate-y, 0));
         }
 
-        :host(.modal--info[info-panel]) .dialog-wrapper {
+        /*
+         * The info panel modal is sized with --dbp-modal-width like every other modal and
+         * grows by --dbp-info-modal-panel-width while the panel is expanded. The width is
+         * always clamped to the viewport, so a large --dbp-modal-width can't push the
+         * expanded modal off screen. --dbp-modal-width has to be a length or a percentage
+         * here, keyword values like "auto" can't be combined with the panel width.
+         */
+        :host([info-panel]) .dialog-wrapper {
             display: flex;
         }
 
@@ -1915,10 +1923,10 @@ export function getNativeModalDialogCSS() {
             max-height: var(--dbp-modal-max-height, 90vh);
         }
 
-        :host(.modal--info[info-panel]) dialog {
+        :host([info-panel]) dialog {
             box-sizing: border-box;
-            width: var(--dbp-info-modal-base-width, 650px);
-            max-width: none;
+            width: min(var(--dbp-modal-width, min(50vw, 800px)), calc(100vw - 32px));
+            max-width: calc(100vw - 32px);
             left: 50%;
             right: auto;
             margin-inline: 0;
@@ -1927,20 +1935,25 @@ export function getNativeModalDialogCSS() {
             transition: width 0.35s ease;
         }
 
-        :host(.modal--info[info-panel]) dialog.modal--info-expanded {
-            width: calc(
-                var(--dbp-info-modal-base-width, 650px) + var(--dbp-info-modal-panel-width, 350px)
+        :host([info-panel]) dialog.modal--info-expanded {
+            width: min(
+                calc(
+                    var(--dbp-modal-width, min(50vw, 800px)) +
+                        var(--dbp-info-modal-panel-width, 350px)
+                ),
+                calc(100vw - 32px)
             );
         }
 
-        :host(.modal--info[info-panel]) .modal-container {
+        /* Shrinks below its base width when the clamped dialog can't fit content and panel. */
+        :host([info-panel]) .modal-container {
             box-sizing: border-box;
-            flex: 0 0 var(--dbp-info-modal-base-width, 650px);
-            width: var(--dbp-info-modal-base-width, 650px);
+            flex: 0 1 var(--dbp-modal-width, min(50vw, 800px));
+            width: var(--dbp-modal-width, min(50vw, 800px));
             padding: 15px 20px 20px;
         }
 
-        :host(.modal--info[info-panel]) #info-panel {
+        :host([info-panel]) .info-panel {
             box-sizing: border-box;
             display: block;
             flex: 0 0 0;
@@ -1958,7 +1971,7 @@ export function getNativeModalDialogCSS() {
                 opacity 0.2s ease;
         }
 
-        :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+        :host([info-panel]) .info-panel.info-panel--expanded {
             flex-basis: var(--dbp-info-modal-panel-width, 350px);
             width: var(--dbp-info-modal-panel-width, 350px);
             opacity: 1;
@@ -1967,22 +1980,22 @@ export function getNativeModalDialogCSS() {
             padding: 15px 20px 20px;
         }
 
-        :host(.modal--info[info-panel]) #info-panel slot {
+        :host([info-panel]) .info-panel slot {
             display: block;
             width: calc(var(--dbp-info-modal-panel-width, 350px) - 40px);
         }
 
         @media (min-width: 1000px) and (max-width: 1031px) {
-            :host(.modal--info[info-panel]) dialog {
-                width: min(var(--dbp-info-modal-base-width, 650px), calc(100vw - 32px));
+            :host([info-panel]) dialog {
+                width: min(var(--dbp-modal-width, min(50vw, 800px)), calc(100vw - 32px));
                 overflow-y: auto;
             }
 
-            :host(.modal--info[info-panel]) dialog.modal--info-expanded {
+            :host([info-panel]) dialog.modal--info-expanded {
                 width: calc(100vw - 32px);
             }
 
-            :host(.modal--info[info-panel]) .modal-container {
+            :host([info-panel]) .modal-container {
                 flex: 0 0 100%;
                 width: 100%;
                 transition:
@@ -1990,40 +2003,40 @@ export function getNativeModalDialogCSS() {
                     width 0.35s ease;
             }
 
-            :host(.modal--info[info-panel]) dialog.modal--info-expanded .modal-container {
+            :host([info-panel]) dialog.modal--info-expanded .modal-container {
                 flex-basis: calc(100% - min(var(--dbp-info-modal-panel-width, 350px), 40vw));
                 width: calc(100% - min(var(--dbp-info-modal-panel-width, 350px), 40vw));
             }
 
-            :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+            :host([info-panel]) .info-panel.info-panel--expanded {
                 flex-basis: min(var(--dbp-info-modal-panel-width, 350px), 40vw);
                 width: min(var(--dbp-info-modal-panel-width, 350px), 40vw);
             }
 
-            :host(.modal--info[info-panel]) #info-panel slot {
+            :host([info-panel]) .info-panel slot {
                 width: calc(min(var(--dbp-info-modal-panel-width, 350px), 40vw) - 40px);
             }
         }
 
         @media (max-width: 999px) {
-            :host(.modal--info[info-panel]) dialog,
-            :host(.modal--info[info-panel]) dialog.modal--info-expanded {
-                width: min(var(--dbp-info-modal-base-width, 650px), calc(100vw - 32px));
+            :host([info-panel]) dialog,
+            :host([info-panel]) dialog.modal--info-expanded {
+                width: min(var(--dbp-modal-width, min(50vw, 800px)), calc(100vw - 32px));
                 max-height: calc(100vh - 32px);
                 overflow-y: auto;
             }
 
-            :host(.modal--info[info-panel]) .dialog-wrapper {
+            :host([info-panel]) .dialog-wrapper {
                 flex-direction: column;
             }
 
-            :host(.modal--info[info-panel]) .modal-container {
+            :host([info-panel]) .modal-container {
                 flex: 0 0 auto;
                 width: 100%;
                 max-height: none;
             }
 
-            :host(.modal--info[info-panel]) #info-panel {
+            :host([info-panel]) .info-panel {
                 flex: 0 0 auto;
                 width: 100%;
                 max-height: 0;
@@ -2033,7 +2046,7 @@ export function getNativeModalDialogCSS() {
                     opacity 0.2s ease;
             }
 
-            :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+            :host([info-panel]) .info-panel.info-panel--expanded {
                 flex-basis: auto;
                 width: 100%;
                 max-height: 50vh;
@@ -2042,19 +2055,19 @@ export function getNativeModalDialogCSS() {
                 border-top: var(--dbp-border);
             }
 
-            :host(.modal--info[info-panel]) #info-panel slot {
+            :host([info-panel]) .info-panel slot {
                 width: auto;
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            :host(.modal--info[info-panel]) dialog,
-            :host(.modal--info[info-panel]) .modal-container,
-            :host(.modal--info[info-panel]) #info-panel {
+            :host([info-panel]) dialog,
+            :host([info-panel]) .modal-container,
+            :host([info-panel]) .info-panel {
                 transition: none;
             }
 
-            :host(.modal--info[info-panel]) dialog[open] {
+            :host([info-panel]) dialog[open] {
                 animation: none;
             }
         }
@@ -2136,6 +2149,7 @@ export function getNativeModalDialogCSS() {
 
         .modal-title {
             margin: 0;
+            padding: var(--dbp-modal-title-padding, 0);
             font-weight: var(--dbp-modal-title-font-weight, 300);
             font-size: var(--dbp-modal-title-font-size, 1rem);
             background: var(--dbp-modal-title-background);

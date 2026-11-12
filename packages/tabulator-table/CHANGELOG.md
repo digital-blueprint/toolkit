@@ -8,3 +8,5 @@
 - Add `pagination-size-storage-key` for application-scoped pagination-size persistence
 - Add the current page and pagination size to pagination event details and emit an event when the page-size selector changes
 - Fix the active column sorting marker for ascending and descending sorting
+- Fix elements used as cell values (e.g. buttons with `formatter: 'html'`) disappearing after their column was collapsed and shown again with `responsiveLayout: 'collapse'`
+- Document creating cell elements in a formatter function as the recommended way to show elements in cells

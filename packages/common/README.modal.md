@@ -45,7 +45,7 @@ Slotted content can be styled from outside with css.
 Info panel example:
 
 ```html
-<dbp-modal id="details" class="modal--info" modal-id="details" title="Details" info-panel>
+<dbp-modal id="details" modal-id="details" title="Details" info-panel>
     <div slot="content">Main content</div>
     <div slot="info-panel">Additional information</div>
 </dbp-modal>
@@ -66,7 +66,9 @@ Info panel example:
     - example `<dbp-modal full-height-line></dbp-modal>`
 - `print-content-only` (optional, boolean): only print the modal when it's open and the page is printed, the page behind the modal is hidden while printing
     - example `<dbp-modal print-content-only></dbp-modal>`
-- `info-panel` (optional, boolean): enables the `info-panel` slot; add `class="modal--info"` for the expandable layout
+- `info-panel` (optional, boolean): enables the `info-panel` slot
+- `info-expanded` (read only, boolean): reflects whether the info panel is currently expanded, use it to style slotted content
+    - example `dbp-modal[info-expanded] .my-toggle-button dbp-icon { transform: rotate(180deg); }`
 
 ### CSS variables
 
@@ -91,6 +93,16 @@ You can customize the modal with the following css variables:
 
 `--dbp-modal-animation:` - You can set animation on modal opening. - The value can be `mmFadeIn`, `mmFadeOut`, `mmSlideIn`, `mmSlideOut`
 
+#### Info panel
+
+`--dbp-info-modal-panel-width` : set the width of the expanded info panel, defaults to `350px`
+
+A modal with `info-panel` is sized with `--dbp-modal-width` like every other modal, defaulting to
+`min(50vw, 800px)`. While the panel is expanded the modal grows by `--dbp-info-modal-panel-width`.
+Both widths are clamped to the viewport, and `--dbp-modal-max-width` is not used in this mode.
+`--dbp-modal-width` has to be a length or a percentage here, keyword values like `auto` can't be
+combined with the panel width.
+
 ### Callable functions
 
 - `open()` opens a specific modal
@@ -108,4 +120,8 @@ You can customize the modal with the following css variables:
 this.doSomething(event);
 }}"></dbp-modal>`
 
-Toggling the info panel does not emit a separate event.
+- `dbp-modal-info-panel-toggled` a event which is triggered when the info panel is expanded or
+  collapsed, either by `toggleInfoPanel()` or because the modal was closed. The detail attribute
+  contains the modal-id and the new state. - `<dbp-modal @dbp-modal-info-panel-toggled="${(event) => {
+this.expanded = event.detail.expanded;
+}}"></dbp-modal>`

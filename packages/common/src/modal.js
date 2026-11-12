@@ -42,9 +42,9 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
             title: {type: String},
             stickyFooter: {type: Boolean, attribute: 'sticky-footer'},
             infoPanel: {type: Boolean, attribute: 'info-panel'},
+            infoExpanded: {type: Boolean, attribute: 'info-expanded', reflect: true},
             fullHeightLine: {type: Boolean, attribute: 'full-height-line'},
             printContentOnly: {type: Boolean, attribute: 'print-content-only'},
-            infoExpanded: {state: true},
         };
     }
 
@@ -102,7 +102,8 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         this.modalPaddingTopDefault = parseInt(window.getComputedStyle(modalDialog).paddingTop);
 
         modalDialog.addEventListener('close', () => {
-            this.infoExpanded = false;
+            // The info panel always starts collapsed again on the next open
+            this._setInfoExpanded(false);
             // Re allow scrolling the page when dialog is closed
             const htmlElement = modalDialog.ownerDocument.documentElement;
             htmlElement.style.removeProperty('overflow');
@@ -252,7 +253,27 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         if (!this.infoPanel || !this.modalDialog || !this.querySelector('[slot="info-panel"]')) {
             return;
         }
-        this.infoExpanded = !this.infoExpanded;
+        this._setInfoExpanded(!this.infoExpanded);
+    }
+
+    /**
+     * Updates the expanded state of the info panel and notifies consumers about the change,
+     * so they can keep their own toggle buttons (label, aria-expanded) in sync.
+     * @param {boolean} expanded
+     * @returns {void}
+     */
+    _setInfoExpanded(expanded) {
+        if (this.infoExpanded === expanded) {
+            return;
+        }
+        this.infoExpanded = expanded;
+
+        const customEvent = new CustomEvent('dbp-modal-info-panel-toggled', {
+            detail: {id: this.modalId, expanded: this.infoExpanded},
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(customEvent);
     }
 
     static get styles() {

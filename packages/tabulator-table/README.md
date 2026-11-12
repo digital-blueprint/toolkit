@@ -198,6 +198,43 @@ table.options = {
 
 The storage key must include any application, table, or user namespace needed to prevent settings from being shared unintentionally.
 
+### Elements in cells
+
+The recommended way to show buttons or other elements in a cell is a formatter function that creates the
+element every time the cell is rendered. Keep the state (e.g. "downloaded") in the row data, not in the element.
+
+```js
+table.options = {
+    responsiveLayout: 'collapse',
+    columns: [
+        {title: 'Name', field: 'name', sorter: 'string'},
+        {
+            title: 'Download',
+            field: 'download',
+            headerSort: false,
+            formatter: (cell) => {
+                const button = table.createScopedElement('dbp-icon-button');
+                button.setAttribute('icon-name', 'download');
+                button.addEventListener('click', (event) => {
+                    // Don't select the row when clicking the button
+                    event.stopPropagation();
+                    download(cell.getData());
+                });
+                return button;
+            },
+        },
+    ],
+};
+table.setData([{id: 1, name: 'document.pdf'}]);
+```
+
+This way Tabulator can render the cell as often as it needs to, e.g. in the collapsed details row of
+`responsiveLayout: 'collapse'` and in the cell itself, and sorting or filtering works on plain values.
+
+Passing elements directly as cell values (with `formatter: 'html'`) is still supported. In collapse mode
+the same element can only be shown in one place: it is moved into the collapsed details row while its
+column is hidden, and the component puts it back into the cell when the column is shown again.
+
 ### Note
 
 In best practice `options` is set if the dom is already rendered.

@@ -45,6 +45,15 @@
         "upload-button-label": "Load to clipboard",
         "warning": "Attention! If you close the browser or reload the page the existing clipboard is automatically discarded!"
     },
+    "demo": {
+        "download-files": "Download selected files",
+        "download-zip": "Download files as a ZIP archive",
+        "select-files": "Select files",
+        "select-images": "Select images",
+        "select-pdfs": "Select PDF documents",
+        "select-pdfs-in-zips": "Select PDF documents (including ZIP archives)",
+        "select-text-and-images": "Select text files and images"
+    },
     "demo-title": "File Upload Demo",
     "file-sink": {
         "clipboard": "Clipboard",

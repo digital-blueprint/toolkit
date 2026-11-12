@@ -75,15 +75,15 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 justify-content: flex-end;
             }
 
-            .modal--info .footer-menu {
+            [info-panel] .footer-menu {
                 flex-wrap: wrap;
             }
 
-            .modal--info .toggle-button {
+            [info-panel] .toggle-button {
                 flex: 1 0 auto;
             }
 
-            .modal--info .footer-actions {
+            [info-panel] .footer-actions {
                 display: flex;
                 flex: 0 0 auto;
                 flex-wrap: wrap;
@@ -93,16 +93,16 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 margin-left: auto;
             }
 
-            .modal--info .footer-menu--wrapped .toggle-button {
+            [info-panel] .footer-menu--wrapped .toggle-button {
                 --dbp-button-width: 100%;
             }
 
-            .modal--info .footer-menu--wrapped .footer-actions {
+            [info-panel] .footer-menu--wrapped .footer-actions {
                 width: 100%;
                 margin-left: 0;
             }
 
-            .modal--info .footer-menu--wrapped .footer-actions dbp-button {
+            [info-panel] .footer-menu--wrapped .footer-actions dbp-button {
                 flex: 1 1 0;
                 --dbp-button-width: 100%;
             }
@@ -140,13 +140,13 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 margin: 0 1em 0 0;
             }
 
-            .modal--info {
+            [info-panel] {
                 --dbp-modal-content-min-height: 6em;
-                --dbp-info-modal-base-width: 650px;
+                --dbp-modal-width: 650px;
                 --dbp-info-modal-panel-width: 350px;
             }
 
-            .modal--info h2 {
+            [info-panel] h2 {
                 margin: 0px;
                 padding: var(--dbp-modal-title-padding, 0.25em 0 0 0);
                 font-weight: 300;
@@ -167,16 +167,16 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 width: 1.5em;
             }
 
-            .modal--info .chevron--mobile {
+            [info-panel] .chevron--mobile {
                 display: none;
             }
 
             @media (max-width: 999px) {
-                .modal--info .chevron--desktop {
+                [info-panel] .chevron--desktop {
                     display: none;
                 }
 
-                .modal--info .chevron--mobile {
+                [info-panel] .chevron--mobile {
                     display: inline-block;
                 }
             }
@@ -238,8 +238,9 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
 
     async toggleInfoPanel(focusToggle = false) {
         const modal = this._('#modal-info-panel');
+        // The modal reports the new state with the dbp-modal-info-panel-toggled event,
+        // which also fires when the panel collapses because the modal was closed.
         modal.toggleInfoPanel();
-        this.infoExpanded = modal.infoExpanded;
 
         if (focusToggle && !this.infoExpanded) {
             this._('#modal-info-panel .toggle-button').shadowRoot?.querySelector('button')?.focus();
@@ -283,12 +284,13 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         </div>
                         <menu slot="footer" class="footer-menu">
                             <dbp-button
+                                no-spinner-on-click
                                 @click="${() => {
                                     this._('#my-modal-basic').close();
                                 }}">
                                 Cancel
                             </dbp-button>
-                            <dbp-button type="is-primary">Submit</dbp-button>
+                            <dbp-button type="is-primary" no-spinner-on-click>Submit</dbp-button>
                         </menu>
                     </dbp-modal>
                 </div>
@@ -405,12 +407,13 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         </div>
                         <menu slot="footer" class="footer-menu">
                             <dbp-button
+                                no-spinner-on-click
                                 @click="${() => {
                                     this._('#my-modal-long').close();
                                 }}">
                                 Cancel
                             </dbp-button>
-                            <dbp-button type="is-primary">Submit</dbp-button>
+                            <dbp-button type="is-primary" no-spinner-on-click>Submit</dbp-button>
                         </menu>
                     </dbp-modal>
                 </div>
@@ -528,12 +531,13 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         </div>
                         <menu slot="footer" class="footer-menu">
                             <dbp-button
+                                no-spinner-on-click
                                 @click="${() => {
                                     this._('#my-modal-sticky').close();
                                 }}">
                                 Cancel
                             </dbp-button>
-                            <dbp-button type="is-primary">Submit</dbp-button>
+                            <dbp-button type="is-primary" no-spinner-on-click>Submit</dbp-button>
                         </menu>
                     </dbp-modal>
 
@@ -545,14 +549,23 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         @click="${() => this._('#modal-info-panel').open()}"></dbp-button>
                     <dbp-modal
                         id="modal-info-panel"
-                        class="modal modal--info"
                         info-panel
                         modal-id="modal-info"
                         title="Modal with info panel"
                         subscribe="lang"
-                        @dbp-modal-closed="${() => (this.infoExpanded = false)}">
+                        @dbp-modal-info-panel-toggled="${(event) =>
+                            (this.infoExpanded = event.detail.expanded)}">
                         <div slot="header" class="header">
                             <p>Click button in footer to expand the info panel</p>
+                        </div>
+                        <div slot="content">
+                            <div class="main-content">
+                                Content of the modal. Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat.
+                            </div>
                         </div>
                         <div
                             slot="info-panel"
@@ -599,12 +612,15 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                             </dbp-button>
                             <div class="footer-actions">
                                 <dbp-button
+                                    no-spinner-on-click
                                     @click="${() => {
                                         this._('#modal-info-panel').close();
                                     }}">
                                     Cancel
                                 </dbp-button>
-                                <dbp-button type="is-primary">Submit</dbp-button>
+                                <dbp-button type="is-primary" no-spinner-on-click>
+                                    Submit
+                                </dbp-button>
                             </div>
                         </menu>
                     </dbp-modal>
