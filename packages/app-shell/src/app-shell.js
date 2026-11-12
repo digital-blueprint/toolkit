@@ -26,7 +26,7 @@ import {FeatureFlagDropdown} from './feature-flag-dropdown.js';
 import {ScrollRestoration} from './scroll-restoration.js';
 
 const DEVELOPER_MODE_FEATURE_FLAG = 'developer-mode';
-registerFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG);
+registerFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG, 'Developer mode');
 
 /**
  * In case the application gets updated future dynamic imports might fail.

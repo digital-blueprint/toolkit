@@ -35,8 +35,9 @@ export function setFeatureFlag(flagName, value) {
  * Registers a feature flag.
  *
  * @param {string} flagName - The name of the feature flag to register.
+ * @param {string} [displayLabel] - An optional, untranslated label for display.
  */
-export function registerFeatureFlag(flagName) {
+export function registerFeatureFlag(flagName, displayLabel) {
     if (!/^[a-zA-Z0-9-_]+$/.test(flagName)) {
         throw new Error(`Feature flag name "${flagName}" contains invalid characters.`);
     }
@@ -44,6 +45,23 @@ export function registerFeatureFlag(flagName) {
     if (!globalThis['dbp-feature-flags'].includes(flagName)) {
         globalThis['dbp-feature-flags'].push(flagName);
     }
+    if (displayLabel !== undefined) {
+        globalThis['dbp-feature-flag-labels'] = globalThis['dbp-feature-flag-labels'] || new Map();
+        globalThis['dbp-feature-flag-labels'].set(flagName, displayLabel);
+    }
+}
+
+/**
+ * Returns a feature flag's display label, falling back to its name.
+ *
+ * @param {string} flagName - The name of the registered feature flag.
+ * @returns {string} The untranslated display label or the flag name.
+ */
+export function getFeatureFlagLabel(flagName) {
+    if (!listFeatureFlags().includes(flagName)) {
+        throw new Error(`Feature flag "${flagName}" is not registered.`);
+    }
+    return globalThis['dbp-feature-flag-labels']?.get(flagName) || flagName;
 }
 
 /**
