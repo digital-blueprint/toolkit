@@ -1875,6 +1875,7 @@ export function getNativeModalDialogCSS() {
         }
 
         dialog[open] {
+            display: grid;
             animation-name: var(--dbp-modal-animation);
             animation-duration: 0.5s;
             animation-fill-mode: forwards;
