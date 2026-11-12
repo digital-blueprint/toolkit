@@ -284,12 +284,13 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         </div>
                         <menu slot="footer" class="footer-menu">
                             <dbp-button
+                                no-spinner-on-click
                                 @click="${() => {
                                     this._('#my-modal-basic').close();
                                 }}">
                                 Cancel
                             </dbp-button>
-                            <dbp-button type="is-primary">Submit</dbp-button>
+                            <dbp-button type="is-primary" no-spinner-on-click>Submit</dbp-button>
                         </menu>
                     </dbp-modal>
                 </div>
@@ -406,12 +407,13 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         </div>
                         <menu slot="footer" class="footer-menu">
                             <dbp-button
+                                no-spinner-on-click
                                 @click="${() => {
                                     this._('#my-modal-long').close();
                                 }}">
                                 Cancel
                             </dbp-button>
-                            <dbp-button type="is-primary">Submit</dbp-button>
+                            <dbp-button type="is-primary" no-spinner-on-click>Submit</dbp-button>
                         </menu>
                     </dbp-modal>
                 </div>
@@ -529,12 +531,13 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                         </div>
                         <menu slot="footer" class="footer-menu">
                             <dbp-button
+                                no-spinner-on-click
                                 @click="${() => {
                                     this._('#my-modal-sticky').close();
                                 }}">
                                 Cancel
                             </dbp-button>
-                            <dbp-button type="is-primary">Submit</dbp-button>
+                            <dbp-button type="is-primary" no-spinner-on-click>Submit</dbp-button>
                         </menu>
                     </dbp-modal>
 
@@ -609,12 +612,15 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                             </dbp-button>
                             <div class="footer-actions">
                                 <dbp-button
+                                    no-spinner-on-click
                                     @click="${() => {
                                         this._('#modal-info-panel').close();
                                     }}">
                                     Cancel
                                 </dbp-button>
-                                <dbp-button type="is-primary">Submit</dbp-button>
+                                <dbp-button type="is-primary" no-spinner-on-click>
+                                    Submit
+                                </dbp-button>
                             </div>
                         </menu>
                     </dbp-modal>
