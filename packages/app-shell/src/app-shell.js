@@ -175,7 +175,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 activity.disabled = disabled;
                 // Resolve module_src relative to the location of the json file
                 activity.module_src = new URL(activity.module_src, actURL).href;
-                activity.required_roles = activity.required_roles || [];
                 metadata[activity.routing_name] = activity;
                 routes.push(activity.routing_name);
             } catch (error) {
@@ -1523,22 +1522,22 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     _updateVisibleRoutes() {
         let visibleRoutes = [];
+        const roles = this._roles ?? [];
 
         for (let routingName of this.routes) {
             const data = this.metadata[routingName];
-            const requiredRoles = data['required_roles'];
-            let visible = getFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG) || data['visible'];
+            const requiredRoles = data['required_roles'] ?? [];
+            const requiredAnyRoles = data['required_any_roles'] ?? [];
+            const visible = getFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG) || data['visible'];
             let disabled = data['disabled'];
 
-            // Hide them until the user is logged in and we know the roles of the user
-            for (let role of requiredRoles) {
-                if (!this._roles.includes(role)) {
-                    visible = false;
-                    break;
-                }
-            }
+            // Role requirements apply even in developer mode and while roles are unknown.
+            const hasRequiredRoles = requiredRoles.every((role) => roles.includes(role));
+            const hasRequiredAnyRole =
+                requiredAnyRoles.length === 0 ||
+                requiredAnyRoles.some((role) => roles.includes(role));
 
-            if (visible === true) {
+            if (visible === true && hasRequiredRoles && hasRequiredAnyRole) {
                 visibleRoutes.push({
                     name: routingName,
                     disabled: disabled === true,
