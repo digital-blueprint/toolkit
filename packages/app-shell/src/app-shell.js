@@ -1,6 +1,13 @@
 import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
-import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
+import {
+    ScopedElementsMixin,
+    LangMixin,
+    sendNotification,
+    getFeatureFlag,
+    registerFeatureFlag,
+    setFeatureFlag,
+} from '@dbp-toolkit/common';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
@@ -17,6 +24,9 @@ import {MatomoElement} from '@dbp-toolkit/matomo/src/matomo';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {FeatureFlagDropdown} from './feature-flag-dropdown.js';
 import {ScrollRestoration} from './scroll-restoration.js';
+
+const DEVELOPER_MODE_FEATURE_FLAG = 'developer-mode';
+registerFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG);
 
 /**
  * In case the application gets updated future dynamic imports might fail.
@@ -560,9 +570,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     _handleTitleClick() {
-        if (this._titleClickCount >= 7) return;
+        if (getFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG)) return;
         this._titleClickCount = Math.min(this._titleClickCount + 1, 7);
-        if (this._titleClickCount === 7) this._updateVisibleRoutes();
+        if (this._titleClickCount === 7) {
+            setFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG, true);
+            this._updateVisibleRoutes();
+        }
     }
 
     onMenuItemClick(e) {
@@ -1514,7 +1527,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
         for (let routingName of this.routes) {
             const data = this.metadata[routingName];
             const requiredRoles = data['required_roles'];
-            let visible = this._titleClickCount >= 7 || data['visible'];
+            let visible = getFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG) || data['visible'];
             let disabled = data['disabled'];
 
             // Hide them until the user is logged in and we know the roles of the user
@@ -2524,7 +2537,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                 </a>
                             </slot>
                             ${
-                                this._titleClickCount >= 7
+                                getFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG)
                                     ? html`
                                           <dbp-build-info
                                               git-info="${this.gitInfo}"
