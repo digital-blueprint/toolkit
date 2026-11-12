@@ -7,8 +7,8 @@ export function getAuthorizationManageGrantsDialogCSS() {
     return css`
         .modal--manage-grants {
             --dbp-modal-min-width: 280px;
-            --dbp-modal-max-width: min(75vw, 700px + var(--dbp-auth-grants-roles-sidebar-width));
-            --dbp-modal-width: auto;
+            /* Info panel modals clamp their width to the viewport themselves. */
+            --dbp-modal-width: 650px;
 
             --dbp-modal-min-height: 420px;
             --dbp-modal-max-height: 90vh;
@@ -20,7 +20,6 @@ export function getAuthorizationManageGrantsDialogCSS() {
 
             --dbp-modal-content-overflow-y: hidden;
 
-            --dbp-auth-grants-roles-sidebar-width: 0px;
             /* Disable the decorative line enabled by full-height-line. */
             --dbp-modal-full-height-line-display: none;
 
@@ -30,10 +29,6 @@ export function getAuthorizationManageGrantsDialogCSS() {
         select:not(.select),
         .dropdown-menu {
             background-size: 1em;
-        }
-
-        .show-roles {
-            --dbp-auth-grants-roles-sidebar-width: 270px;
         }
 
         .header h3 {
@@ -68,12 +63,6 @@ export function getAuthorizationManageGrantsDialogCSS() {
             --dbp-border: 0 none;
         }
 
-        .show-roles [slot='content'] {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) var(--dbp-auth-grants-roles-sidebar-width);
-            grid-gap: 1em;
-        }
-
         .modal--manage-grants [slot='content'] {
             min-height: 0;
         }
@@ -95,14 +84,7 @@ export function getAuthorizationManageGrantsDialogCSS() {
             overflow-y: auto;
         }
 
-        .show-roles .roles-container {
-            width: calc(var(--dbp-auth-grants-roles-sidebar-width) - 1em - 1px);
-            height: 100%;
-            padding-left: 1em;
-            border-left: 1px solid var(--dbp-content);
-        }
-
-        .show-roles .show-roles-button dbp-icon {
+        dbp-modal[info-expanded] .show-roles-button dbp-icon {
             transform: rotate(180deg);
         }
 
@@ -167,7 +149,6 @@ export function getAuthorizationManageGrantsDialogCSS() {
                 align-items: flex-start;
             }
 
-            .show-roles-button,
             .grant-shareable-column-label {
                 display: none;
             }

@@ -108,7 +108,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.pendingGrantChanges = new Map();
         /** @type {AbortController|null} */
         this._resourceDataController = null;
-        this.showRolesPanel = false;
+        /** @type {boolean} Mirrors the expanded state of the modal info panel. */
+        this.rolesPanelExpanded = false;
         /** @type {Set<string>} */
         this._savingHolderKeys = new Set();
         /** @type {Intl.Collator|null} */
@@ -134,7 +135,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             draftGrantHolders: {state: true},
             draftRoleGrants: {state: true},
             pendingGrantChanges: {state: true},
-            showRolesPanel: {type: Boolean, state: true},
+            rolesPanelExpanded: {state: true},
             _savingHolderKeys: {state: true},
         };
     }
@@ -216,6 +217,16 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this._resetDialogState();
     }
 
+    /**
+     * Keeps the roles button label and its aria-expanded state in sync with the info panel.
+     * The modal also collapses the panel when it is closed, so no extra reset is needed.
+     * @param {CustomEvent<{id: string, expanded: boolean}>} event - The modal toggle event.
+     * @returns {void}
+     */
+    _handleInfoPanelToggled(event) {
+        this.rolesPanelExpanded = event.detail.expanded;
+    }
+
     _resetDialogState() {
         this._resourceDataController?.abort();
         this._resourceDataController = null;
@@ -227,7 +238,6 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.pendingGrantChanges = new Map();
         this._savingHolderKeys = new Set();
         this._nextDraftRoleIdentifier = 0;
-        this.showRolesPanel = false;
         this.selectedSubject = null;
         void this.subjectSelectorRef.value?.reset();
         this._loadedResourceKey = null;
@@ -912,7 +922,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleShowRolesButtonClick() {
-        this.showRolesPanel = !this.showRolesPanel;
+        this.modalRef.value?.toggleInfoPanel();
     }
 
     /**
@@ -1486,6 +1496,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                         type="checkbox"
                         ?disabled="${!isChangeable}"
                         .checked="${pendingChange?.shareable ?? Boolean(grant['shareable'])}"
+                        title="${this._i18n.t('auth-manage-dialog.shareable-role-checkbox-title', {
+                            role: roleName,
+                            holder: holderName,
+                        })}"
                         aria-label="${this._i18n.t('auth-manage-dialog.shareable-role-label', {
                             role: roleName,
                             holder: holderName,
@@ -1543,6 +1557,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                     <input
                         type="checkbox"
                         .checked="${grant.shareable}"
+                        title="${this._i18n.t('auth-manage-dialog.shareable-role-checkbox-title', {
+                            holder: holderName,
+                        })}"
                         aria-label="${this._i18n.t(
                             'auth-manage-dialog.draft-shareable-role-label',
                             {holder: holderName},
@@ -1747,27 +1764,36 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     renderRolesSidePanel() {
         const i18n = this._i18n;
         return html`
-            <div class="roles-container">
-                <h3 class="roles-panel-title">${i18n.t('auth-manage-dialog.roles-panel.title')}</h3>
-                ${
-                    this.roles.size
-                        ? html`
-                              <div class="role-list">
-                                  ${[...this.roles.values()].map((role) => {
-                                      return html`
-                                          <h4 class="roles-name">
-                                              ${getRoleName(role, this.lang)}
-                                          </h4>
-                                      `;
-                                  })}
-                              </div>
-                          `
-                        : html`
-                              <p class="roles-empty-state">
-                                  ${i18n.t('auth-manage-dialog.roles-panel.empty-state-label')}
-                              </p>
-                          `
-                }
+            <div
+                slot="info-panel"
+                role="region"
+                aria-label="${i18n.t('auth-manage-dialog.roles-panel.title')}">
+                <div class="info-panel-title">
+                    <h3 class="roles-panel-title">
+                        ${i18n.t('auth-manage-dialog.roles-panel.title')}
+                    </h3>
+                </div>
+                <div class="roles-container">
+                    ${
+                        this.roles.size
+                            ? html`
+                                  <div class="role-list">
+                                      ${[...this.roles.values()].map((role) => {
+                                          return html`
+                                              <h4 class="roles-name">
+                                                  ${getRoleName(role, this.lang)}
+                                              </h4>
+                                          `;
+                                      })}
+                                  </div>
+                              `
+                            : html`
+                                  <p class="roles-empty-state">
+                                      ${i18n.t('auth-manage-dialog.roles-panel.empty-state-label')}
+                                  </p>
+                              `
+                    }
+                </div>
             </div>
         `;
     }
@@ -1796,7 +1822,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 sticky-footer
                 full-height-line
                 @dbp-modal-closed="${this._handleModalClosed}"
-                class="modal--manage-grants ${classMap({'show-roles': this.showRolesPanel})}"
+                @dbp-modal-info-panel-toggled="${this._handleInfoPanelToggled}"
+                class="modal--manage-grants"
+                info-panel
                 title="${this.modalTitle}">
                 <div slot="title">
                     <h2 class="modal-title" id="modal-title">${this.modalTitle}</h2>
@@ -1834,9 +1862,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                                     id="show-roles-button"
                                     class="show-roles-button"
                                     no-spinner-on-click
+                                    aria-expanded="${this.rolesPanelExpanded}"
                                     @click="${this.handleShowRolesButtonClick}">
                                     ${
-                                        this.showRolesPanel
+                                        this.rolesPanelExpanded
                                             ? i18n.t(
                                                   'auth-manage-dialog.buttons.hide-roles-button-label',
                                               )
@@ -1850,8 +1879,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                         </div>
                         <div class="grants-list-container">${this.renderGrantHolders()}</div>
                     </div>
-                    ${this.showRolesPanel ? this.renderRolesSidePanel() : ''}
                 </div>
+                ${this.renderRolesSidePanel()}
                 <div slot="footer" class="footer-menu">
                     <dbp-button
                         type="is-secondary"

@@ -61,6 +61,7 @@
             "title": "Rollen"
         },
         "shareable-column-label": "Weitergabbare Rolle",
+        "shareable-role-checkbox-title": "Rolle {{role}} mit {{holder}} teilen",
         "shareable-role-label": "Weitergebbare Rolle {{role}} für {{holder}}",
         "subject-select-placeholder": "Nach einer Person oder Gruppe suchen",
         "subject-types": {

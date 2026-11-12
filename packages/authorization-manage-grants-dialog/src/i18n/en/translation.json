@@ -61,6 +61,7 @@
             "title": "Roles"
         },
         "shareable-column-label": "Reshareable role",
+        "shareable-role-checkbox-title": "Share role {{role}} for {{holder}}",
         "shareable-role-label": "Shareable role {{role}} for {{holder}}",
         "subject-select-placeholder": "Search for a person or group",
         "subject-types": {
