@@ -227,6 +227,230 @@ suite('dbp-tabulator-table basics', () => {
     });
 });
 
+suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
+    let node;
+
+    // Tabulator reacts to size changes with a ResizeObserver, so give it some frames
+    const waitForLayout = async () => {
+        for (let i = 0; i < 5; i++) {
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+        }
+    };
+
+    const createButton = (label) => {
+        const button = document.createElement('button');
+        button.textContent = label;
+        button.clicked = 0;
+        button.addEventListener('click', () => button.clicked++);
+        return button;
+    };
+
+    const createOptions = (rows, extraOptions = {}) => ({
+        layout: 'fitColumns',
+        responsiveLayout: 'collapse',
+        responsiveLayoutCollapseStartOpen: false,
+        index: 'id',
+        columns: [
+            {title: 'Toggle', field: 'toggle', formatter: 'responsiveCollapse', width: 50},
+            {title: 'Name', field: 'name', minWidth: 200, responsive: 0},
+            {title: 'Size', field: 'size', minWidth: 150, responsive: 2},
+            {
+                title: 'Action',
+                field: 'action',
+                formatter: 'html',
+                width: 150,
+                responsive: 1,
+                headerSort: false,
+            },
+        ],
+        data: rows,
+        ...extraOptions,
+    });
+
+    const createRows = () => [
+        {id: 1, name: 'First', size: '1 kB', action: createButton('First action')},
+        {id: 2, name: 'Second', size: '2 kB', action: createButton('Second action')},
+    ];
+
+    const buildTable = async (options) => {
+        const tableBuilt = new Promise((resolve) =>
+            node.addEventListener('dbp-tabulator-table-built', resolve, {once: true}),
+        );
+        node.options = options;
+        await node.updateComplete;
+        await tableBuilt;
+        await waitForLayout();
+    };
+
+    const getCell = (row, field) => node.tabulatorTable.getRow(row.id).getCell(field);
+
+    setup(async () => {
+        node = document.createElement('dbp-tabulator-table');
+        node.setAttribute('lang', 'en');
+        node.style.display = 'block';
+        node.style.width = '1000px';
+        document.body.appendChild(node);
+        await node.updateComplete;
+    });
+
+    teardown(() => {
+        node.remove();
+    });
+
+    test('keeps node values in their cells after a column was collapsed and shown again', async () => {
+        const rows = createRows();
+        await buildTable(createOptions(rows));
+
+        for (const row of rows) {
+            assert.isTrue(getCell(row, 'action').getElement().contains(row.action));
+        }
+
+        node.style.width = '300px';
+        await waitForLayout();
+
+        assert.isFalse(node.tabulatorTable.getColumn('action').isVisible());
+        for (const row of rows) {
+            const collapseElement = node.tabulatorTable
+                .getRow(row.id)
+                .getElement()
+                .querySelector('.tabulator-responsive-collapse');
+            assert.isTrue(collapseElement.contains(row.action));
+        }
+
+        node.style.width = '1000px';
+        await waitForLayout();
+
+        assert.isTrue(node.tabulatorTable.getColumn('action').isVisible());
+        for (const row of rows) {
+            assert.isTrue(row.action.isConnected);
+            assert.isTrue(getCell(row, 'action').getElement().contains(row.action));
+        }
+
+        rows[0].action.click();
+        assert.equal(rows[0].action.clicked, 1);
+    });
+
+    test('keeps node values when a hidden table is shown and filled at the same time', async () => {
+        await buildTable(createOptions([]));
+
+        node.style.display = 'none';
+        await waitForLayout();
+
+        const rows = createRows();
+        node.style.display = 'block';
+        node.setData(rows);
+        await waitForLayout();
+
+        assert.isTrue(node.tabulatorTable.getColumn('action').isVisible());
+        for (const row of rows) {
+            assert.isTrue(getCell(row, 'action').getElement().contains(row.action));
+        }
+    });
+
+    test('renders the collapsed details like the Tabulator default', async () => {
+        const rows = createRows();
+        await buildTable(createOptions(rows));
+
+        node.style.width = '300px';
+        await waitForLayout();
+
+        const collapseElement = node.tabulatorTable
+            .getRow(1)
+            .getElement()
+            .querySelector('.tabulator-responsive-collapse');
+        const titles = [...collapseElement.querySelectorAll('table tr td:first-child strong')].map(
+            (title) => title.textContent,
+        );
+        assert.deepEqual(titles, ['Action', 'Size']);
+        assert.isTrue(
+            collapseElement.querySelector('table tr td:last-child > div').contains(rows[0].action),
+        );
+    });
+
+    test('still uses a custom collapse formatter from the options', async () => {
+        const rows = createRows();
+        const options = createOptions(rows, {
+            responsiveLayoutCollapseFormatter: (data) => {
+                const list = document.createElement('ul');
+                list.className = 'custom-collapse';
+                for (const item of data) {
+                    const entry = document.createElement('li');
+                    entry.append(item.value instanceof Node ? item.value : String(item.value));
+                    list.append(entry);
+                }
+                return list;
+            },
+        });
+        const customFormatter = options.responsiveLayoutCollapseFormatter;
+        await buildTable(options);
+
+        node.style.width = '300px';
+        await waitForLayout();
+
+        const collapseElement = node.tabulatorTable
+            .getRow(1)
+            .getElement()
+            .querySelector('.tabulator-responsive-collapse');
+        assert.isTrue(collapseElement.querySelector('ul.custom-collapse').contains(rows[0].action));
+        assert.strictEqual(options.responsiveLayoutCollapseFormatter, customFormatter);
+
+        node.style.width = '1000px';
+        await waitForLayout();
+
+        assert.isTrue(getCell(rows[0], 'action').getElement().contains(rows[0].action));
+    });
+
+    test('keeps expandAll and collapseAll working with node values', async () => {
+        const rows = createRows();
+        await buildTable(createOptions(rows));
+
+        node.style.width = '300px';
+        await waitForLayout();
+
+        const collapseElement = node.tabulatorTable
+            .getRow(1)
+            .getElement()
+            .querySelector('.tabulator-responsive-collapse');
+
+        node.expandAll();
+        await waitForLayout();
+        assert.notEqual(collapseElement.style.display, 'none');
+        assert.isTrue(collapseElement.contains(rows[0].action));
+        rows[0].action.click();
+        assert.equal(rows[0].action.clicked, 1);
+
+        node.collapseAll();
+        await waitForLayout();
+        assert.equal(collapseElement.style.display, 'none');
+    });
+
+    test('does not change the options object of the consumer', async () => {
+        const options = createOptions(createRows());
+        await buildTable(options);
+
+        assert.notProperty(options, 'responsiveLayoutCollapseFormatter');
+    });
+
+    test('keeps formatters working that create new nodes on every render', async () => {
+        let renderCount = 0;
+        const options = createOptions([{id: 1, name: 'First', size: '1 kB'}]);
+        options.columns[3].formatter = () => {
+            renderCount++;
+            return createButton('Generated action');
+        };
+        await buildTable(options);
+
+        node.style.width = '300px';
+        await waitForLayout();
+        node.style.width = '1000px';
+        await waitForLayout();
+
+        const cellElement = node.tabulatorTable.getRow(1).getCell('action').getElement();
+        assert.equal(cellElement.querySelectorAll('button').length, 1);
+        assert.isAbove(renderCount, 0);
+    });
+});
+
 suite('column configuration', () => {
     test('creates configuration only for safe columns', () => {
         const definitions = [
