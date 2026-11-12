@@ -90,6 +90,7 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         this.isFirstRendering = true;
         this.autoResize = 'cover';
         this.textLayer = /** @type {PdfTextLayer | null} */ (null);
+        this._widthAdaptionTimeout = /** @type {ReturnType<typeof setTimeout> | null} */ (null);
 
         this._onWindowResize = this._onWindowResize.bind(this);
     }
@@ -134,6 +135,10 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
     }
 
     disconnectedCallback() {
+        if (this._widthAdaptionTimeout !== null) {
+            clearTimeout(this._widthAdaptionTimeout);
+            this._widthAdaptionTimeout = null;
+        }
         window.removeEventListener('resize', this._onWindowResize);
         super.disconnectedCallback();
     }
@@ -160,6 +165,10 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
      * @param fixWidthAdaption
      */
     async showPDF(file, placementData = {}, fixWidthAdaption = false) {
+        if (this._widthAdaptionTimeout !== null) {
+            clearTimeout(this._widthAdaptionTimeout);
+            this._widthAdaptionTimeout = null;
+        }
         this.isPageLoaded = false; // prevent redisplay of previous pdf
         this.showErrorMessage = false;
 
@@ -192,9 +201,10 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
         this.isPageLoaded = true;
 
-        if (fixWidthAdaption) {
+        if (fixWidthAdaption && this.isConnected) {
             // fix width adaption after "this.isPageLoaded = true"
-            setTimeout(() => {
+            this._widthAdaptionTimeout = setTimeout(() => {
+                this._widthAdaptionTimeout = null;
                 this._onWindowResize();
             }, 100);
         }
@@ -207,17 +217,20 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
      */
     async showPage(pageNumber) {
         // we need to wait until the last rendering is finished
-        if (this.isPageRenderingInProgress || this.pdfDoc === null) {
+        if (!this.isConnected || this.isPageRenderingInProgress || this.pdfDoc === null) {
             return;
         }
 
         this.isPageRenderingInProgress = true;
         this.currentPage = pageNumber;
 
-        let canvas = /** @type {HTMLCanvasElement} */ (this.canvasRef.value);
-
         try {
             let page = await this.pdfDoc.getPage(pageNumber);
+            const canvas = /** @type {HTMLCanvasElement | undefined} */ (this.canvasRef.value);
+            // The viewer may have been removed while the page was loading.
+            if (!this.isConnected || !canvas) {
+                return;
+            }
 
             if (this.isFirstRendering) {
                 this.isFirstRendering = false;
@@ -292,6 +305,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
 
             // render the page contents in the canvas
             await page.render(render_context).promise;
+            if (!this.isConnected) {
+                return;
+            }
             await this._renderTextLayer(page, viewport, canvasToPdfScale);
         } finally {
             this.isPageRenderingInProgress = false;
@@ -311,6 +327,9 @@ export class PdfViewer extends LangMixin(ScopedElementsMixin(DBPLitElement), cre
         textLayerDiv.style.setProperty('--user-unit', viewport.userUnit);
         const textContent = await page.getTextContent();
         const pdfjs = await importPdfJs();
+        if (!this.isConnected) {
+            return;
+        }
         this.textLayer = new pdfjs.TextLayer({
             textContentSource: textContent,
             container: textLayerDiv,

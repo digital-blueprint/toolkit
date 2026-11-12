@@ -1834,14 +1834,24 @@ export function getNativeModalDialogPrintCSS() {
                 border: none;
                 background: white;
                 filter: none;
+                /* Otherwise the content is clipped after the first page */
+                overflow: visible;
+                /* Needed for "print-content-only", which hides the page behind the modal */
+                visibility: visible;
             }
 
             .modal-container {
                 max-height: inherit;
+                /* Firefox moves grid content that doesn't fit on the first page to the next one */
+                display: block;
             }
 
             .modal-content {
                 overflow-y: visible;
+            }
+
+            .modal-close {
+                display: none;
             }
         }
     `;
@@ -1870,10 +1880,6 @@ export function getNativeModalDialogCSS() {
             animation-fill-mode: forwards;
         }
 
-        :host([full-height-line]) dialog[open] {
-            display: grid;
-        }
-
         dialog {
             min-width: var(--dbp-modal-min-width, 250px);
             max-width: var(--dbp-modal-max-width, 75vw);
@@ -1895,8 +1901,13 @@ export function getNativeModalDialogCSS() {
             transform: translateY(var(--dbp-modal-translate-y, 0));
         }
 
+        :host(.modal--info[info-panel]) .dialog-wrapper {
+            display: flex;
+        }
+
         .modal-container {
             display: grid;
+            height: var(--dbp-modal-container-height, auto);
             grid-template-columns: 1fr;
             grid-template-rows: auto 1fr auto;
             align-items: start;
@@ -1904,8 +1915,148 @@ export function getNativeModalDialogCSS() {
             max-height: var(--dbp-modal-max-height, 90vh);
         }
 
-        :host([full-height-line]) .modal-container {
-            height: var(--dbp-modal-container-height);
+        :host(.modal--info[info-panel]) dialog {
+            box-sizing: border-box;
+            width: var(--dbp-info-modal-base-width, 650px);
+            max-width: none;
+            left: 50%;
+            right: auto;
+            margin-inline: 0;
+            padding: 0;
+            transform: translateX(-50%) translateY(var(--dbp-modal-translate-y, 0));
+            transition: width 0.35s ease;
+        }
+
+        :host(.modal--info[info-panel]) dialog.modal--info-expanded {
+            width: calc(
+                var(--dbp-info-modal-base-width, 650px) + var(--dbp-info-modal-panel-width, 350px)
+            );
+        }
+
+        :host(.modal--info[info-panel]) .modal-container {
+            box-sizing: border-box;
+            flex: 0 0 var(--dbp-info-modal-base-width, 650px);
+            width: var(--dbp-info-modal-base-width, 650px);
+            padding: 15px 20px 20px;
+        }
+
+        :host(.modal--info[info-panel]) #info-panel {
+            box-sizing: border-box;
+            display: block;
+            flex: 0 0 0;
+            width: 0;
+            min-width: 0;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            border: 0;
+            padding: 0;
+            transition:
+                flex-basis 0.35s ease,
+                width 0.35s ease,
+                padding 0.35s ease,
+                opacity 0.2s ease;
+        }
+
+        :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+            flex-basis: var(--dbp-info-modal-panel-width, 350px);
+            width: var(--dbp-info-modal-panel-width, 350px);
+            opacity: 1;
+            pointer-events: auto;
+            border-left: var(--dbp-border);
+            padding: 15px 20px 20px;
+        }
+
+        :host(.modal--info[info-panel]) #info-panel slot {
+            display: block;
+            width: calc(var(--dbp-info-modal-panel-width, 350px) - 40px);
+        }
+
+        @media (min-width: 1000px) and (max-width: 1031px) {
+            :host(.modal--info[info-panel]) dialog {
+                width: min(var(--dbp-info-modal-base-width, 650px), calc(100vw - 32px));
+                overflow-y: auto;
+            }
+
+            :host(.modal--info[info-panel]) dialog.modal--info-expanded {
+                width: calc(100vw - 32px);
+            }
+
+            :host(.modal--info[info-panel]) .modal-container {
+                flex: 0 0 100%;
+                width: 100%;
+                transition:
+                    flex-basis 0.35s ease,
+                    width 0.35s ease;
+            }
+
+            :host(.modal--info[info-panel]) dialog.modal--info-expanded .modal-container {
+                flex-basis: calc(100% - min(var(--dbp-info-modal-panel-width, 350px), 40vw));
+                width: calc(100% - min(var(--dbp-info-modal-panel-width, 350px), 40vw));
+            }
+
+            :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+                flex-basis: min(var(--dbp-info-modal-panel-width, 350px), 40vw);
+                width: min(var(--dbp-info-modal-panel-width, 350px), 40vw);
+            }
+
+            :host(.modal--info[info-panel]) #info-panel slot {
+                width: calc(min(var(--dbp-info-modal-panel-width, 350px), 40vw) - 40px);
+            }
+        }
+
+        @media (max-width: 999px) {
+            :host(.modal--info[info-panel]) dialog,
+            :host(.modal--info[info-panel]) dialog.modal--info-expanded {
+                width: min(var(--dbp-info-modal-base-width, 650px), calc(100vw - 32px));
+                max-height: calc(100vh - 32px);
+                overflow-y: auto;
+            }
+
+            :host(.modal--info[info-panel]) .dialog-wrapper {
+                flex-direction: column;
+            }
+
+            :host(.modal--info[info-panel]) .modal-container {
+                flex: 0 0 auto;
+                width: 100%;
+                max-height: none;
+            }
+
+            :host(.modal--info[info-panel]) #info-panel {
+                flex: 0 0 auto;
+                width: 100%;
+                max-height: 0;
+                transition:
+                    max-height 0.35s ease,
+                    padding 0.35s ease,
+                    opacity 0.2s ease;
+            }
+
+            :host(.modal--info[info-panel]) #info-panel.info-panel--expanded {
+                flex-basis: auto;
+                width: 100%;
+                max-height: 50vh;
+                overflow-y: auto;
+                border-left: 0;
+                border-top: var(--dbp-border);
+            }
+
+            :host(.modal--info[info-panel]) #info-panel slot {
+                width: auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            :host(.modal--info[info-panel]) dialog,
+            :host(.modal--info[info-panel]) .modal-container,
+            :host(.modal--info[info-panel]) #info-panel {
+                transition: none;
+            }
+
+            :host(.modal--info[info-panel]) dialog[open] {
+                animation: none;
+            }
         }
 
         .modal-container--full-height-line {
@@ -1933,34 +2084,24 @@ export function getNativeModalDialogCSS() {
             position: relative;
             overflow-y: var(--dbp-modal-content-overflow-y);
             max-height: 100%;
-            min-height: 100%;
+            min-height: var(--dbp-modal-content-min-height, 100%);
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        :host([full-height-line]) .modal-content {
-            min-height: var(--dbp-modal-content-min-height, 100%);
-        }
-
         slot[name='content'] {
             display: block;
             width: 100%;
-        }
-
-        :host([full-height-line]) slot[name='content'] {
-            height: var(--dbp-modal-content-slot-height);
-            min-height: var(--dbp-modal-content-slot-min-height);
+            height: var(--dbp-modal-content-slot-height, auto);
+            min-height: var(--dbp-modal-content-slot-min-height, 0);
         }
 
         ::slotted([slot='content']) {
             width: 100%;
-        }
-
-        :host([full-height-line]) ::slotted([slot='content']) {
-            height: var(--dbp-modal-slotted-content-height);
-            min-height: var(--dbp-modal-slotted-content-min-height);
+            height: var(--dbp-modal-slotted-content-height, auto);
+            min-height: var(--dbp-modal-slotted-content-min-height, 0);
         }
 
         .modal-footer {
@@ -1972,8 +2113,7 @@ export function getNativeModalDialogCSS() {
             justify-content: space-between;
             align-items: start;
             padding: 0;
-            margin-bottom: 25px;
-            margin-right: 0.5em;
+            margin-bottom: 1em;
         }
 
         .modal-close {
@@ -1996,7 +2136,6 @@ export function getNativeModalDialogCSS() {
 
         .modal-title {
             margin: 0;
-            padding: var(--dbp-modal-title-padding, 0.25em 0 0 0);
             font-weight: var(--dbp-modal-title-font-weight, 300);
             font-size: var(--dbp-modal-title-font-size, 1rem);
             background: var(--dbp-modal-title-background);

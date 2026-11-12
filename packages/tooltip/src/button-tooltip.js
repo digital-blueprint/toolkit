@@ -1,12 +1,14 @@
 /// <reference path="./tippy-css.d.ts" />
 
 import {css, html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import tippy from 'tippy.js';
 import tippy2CSSPath from 'tippy.js/dist/tippy.css';
+import {getTippyPositioningProps, getTooltipPositioningCSS} from './positioning.js';
 
 export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
@@ -16,6 +18,7 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
         this.addEventListener('click', this._handleClick);
         this.type = 'submit';
         this.formId = '';
+        this.buttonLabel = '';
     }
 
     static get properties() {
@@ -23,9 +26,21 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             textContent: {type: String, attribute: 'text-content'},
             buttonText: {type: String, attribute: 'button-text'},
+            buttonLabel: {type: String, attribute: 'button-label'},
             type: {type: String},
             formId: {type: String, attribute: 'form-id'},
         };
+    }
+
+    /**
+     * Closes the tooltip with Escape, so it can be dismissed without moving the focus or the pointer.
+     * @param {KeyboardEvent} event
+     */
+    _handleKeyDown(event) {
+        if (event.key === 'Escape') {
+            const button = /** @type {any} */ (this._('#info-tooltip-button'));
+            button?._tippy?.hide();
+        }
     }
 
     firstUpdated() {
@@ -42,11 +57,13 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
                 button._tippy.setProps({
                     content: this.textContent,
                     appendTo,
+                    ...getTippyPositioningProps(this),
                 });
             } else {
                 tippy(button, {
                     content: this.textContent,
                     appendTo,
+                    ...getTippyPositioningProps(this),
                 });
             }
         }
@@ -74,6 +91,7 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
             ${commonStyles.getButtonCSS()}
+            ${getTooltipPositioningCSS()}
 
             .info-icon {
                 display: inline;
@@ -107,10 +125,16 @@ export class ButtonTooltip extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <link rel="stylesheet" href="${tippy2CSS}" />
-            <button id="info-tooltip-button" class="tooltip-button">
+            <button
+                id="info-tooltip-button"
+                class="tooltip-button"
+                aria-label="${ifDefined(this.buttonLabel || undefined)}"
+                @keydown="${this._handleKeyDown}">
                 <div class="info-icon">
                     <!-- https://icons.getbootstrap.com/icons/info-circle/ -->
                     <svg
+                        aria-hidden="true"
+                        focusable="false"
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"

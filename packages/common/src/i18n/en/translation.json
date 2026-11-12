@@ -8,8 +8,10 @@
         "close": "Close"
     },
     "demo": {
+        "close_info_panel": "Close info panel",
         "consumer": "Consumer",
         "consumer_description": "Consumer \"{{id}}\" will only subscribe to {{subscriptions}}",
+        "info_panel": "Info panel",
         "provider": "Provider",
         "provider_description": "Provider \"{{id}}\" {{description}}"
     },

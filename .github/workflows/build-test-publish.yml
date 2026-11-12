@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
           check-latest: true
           cache: "npm"
 
@@ -73,7 +73,7 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
 
@@ -87,7 +87,7 @@ jobs:
 
       - name: Deploy and wait for completion
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/demo'
-        uses: digital-blueprint/gitlab-pipeline-trigger-action@1bbd622ab7b529eb806a34fe36299d9b33da354a # v1.4.4
+        uses: digital-blueprint/gitlab-pipeline-trigger-action@4b9a6f546e3321481b63d46be58c5c7b2312eeb8 # v1.4.5
         with:
           host: "gitlab.tugraz.at"
           trigger_token: ${{ secrets.DEPLOY_TRIGGER_TOKEN }}

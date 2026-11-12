@@ -10,6 +10,9 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
     constructor() {
         super();
         this.entryPointUrl = '';
+        this.infoExpanded = false;
+        /** @type {ResizeObserver | null} */
+        this.footerResizeObserver = null;
     }
 
     static get scopedElements() {
@@ -24,6 +27,7 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
         return {
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            infoExpanded: {state: true},
         };
     }
 
@@ -65,10 +69,42 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
             dbp-modal .footer-menu {
                 margin: 0;
                 padding: 0;
-                display: flex;
-                justify-content: flex-end;
                 gap: 1em;
                 padding-top: 1em;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .modal--info .footer-menu {
+                flex-wrap: wrap;
+            }
+
+            .modal--info .toggle-button {
+                flex: 1 0 auto;
+            }
+
+            .modal--info .footer-actions {
+                display: flex;
+                flex: 0 0 auto;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                gap: 1em;
+                max-width: 100%;
+                margin-left: auto;
+            }
+
+            .modal--info .footer-menu--wrapped .toggle-button {
+                --dbp-button-width: 100%;
+            }
+
+            .modal--info .footer-menu--wrapped .footer-actions {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .modal--info .footer-menu--wrapped .footer-actions dbp-button {
+                flex: 1 1 0;
+                --dbp-button-width: 100%;
             }
 
             .modal--basic {
@@ -104,11 +140,113 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                 margin: 0 1em 0 0;
             }
 
+            .modal--info {
+                --dbp-modal-content-min-height: 6em;
+                --dbp-info-modal-base-width: 650px;
+                --dbp-info-modal-panel-width: 350px;
+            }
+
+            .modal--info h2 {
+                margin: 0px;
+                padding: var(--dbp-modal-title-padding, 0.25em 0 0 0);
+                font-weight: 300;
+            }
+
+            .panel-button {
+                display: flex;
+                align-items: center;
+                background-color: var(--dbp-background);
+                border: none;
+                gap: 0.5em;
+                cursor: pointer;
+            }
+
+            .panel-button dbp-icon {
+                color: var(--dbp-accent);
+                height: 1.5em;
+                width: 1.5em;
+            }
+
+            .modal--info .chevron--mobile {
+                display: none;
+            }
+
+            @media (max-width: 999px) {
+                .modal--info .chevron--desktop {
+                    display: none;
+                }
+
+                .modal--info .chevron--mobile {
+                    display: inline-block;
+                }
+            }
+
             .header {
                 display: flex;
                 align-items: center;
             }
         `;
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        const footer = this._('#modal-info-panel .footer-menu');
+        if (footer && this.footerResizeObserver) {
+            this.footerResizeObserver.observe(footer);
+        }
+    }
+
+    firstUpdated(changedProperties) {
+        super.firstUpdated(changedProperties);
+        const footer = this._('#modal-info-panel .footer-menu');
+        if (footer) {
+            this.footerResizeObserver = new ResizeObserver(() => this.updateInfoFooterLayout());
+            this.footerResizeObserver.observe(footer);
+        }
+    }
+
+    updated(changedProperties) {
+        super.updated(changedProperties);
+        if (changedProperties.has('infoExpanded')) {
+            this.updateInfoFooterLayout();
+        }
+    }
+
+    disconnectedCallback() {
+        this.footerResizeObserver?.disconnect();
+        super.disconnectedCallback();
+    }
+
+    updateInfoFooterLayout() {
+        const footer = this._('#modal-info-panel .footer-menu');
+        if (!footer || !footer.clientWidth) {
+            return;
+        }
+
+        // Measure the natural layout so the wrapped class can be removed when space is available.
+        footer.classList.remove('footer-menu--wrapped');
+        const toggle = footer.querySelector('.toggle-button');
+        const actions = footer.querySelector('.footer-actions');
+        if (!toggle || !actions) {
+            return;
+        }
+        footer.classList.toggle(
+            'footer-menu--wrapped',
+            actions.getBoundingClientRect().top > toggle.getBoundingClientRect().top,
+        );
+    }
+
+    async toggleInfoPanel(focusToggle = false) {
+        const modal = this._('#modal-info-panel');
+        modal.toggleInfoPanel();
+        this.infoExpanded = modal.infoExpanded;
+
+        if (focusToggle && !this.infoExpanded) {
+            this._('#modal-info-panel .toggle-button').shadowRoot?.querySelector('button')?.focus();
+        } else if (this.infoExpanded) {
+            await Promise.all([modal.updateComplete, this.updateComplete]);
+            this._('#modal-info-panel .panel-button')?.focus();
+        }
     }
 
     render() {
@@ -396,6 +534,78 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
                                 Cancel
                             </dbp-button>
                             <dbp-button type="is-primary">Submit</dbp-button>
+                        </menu>
+                    </dbp-modal>
+
+                    <h3>Modal with info panel</h3>
+                    <dbp-button
+                        type="is-primary"
+                        value="open modal"
+                        no-spinner-on-click
+                        @click="${() => this._('#modal-info-panel').open()}"></dbp-button>
+                    <dbp-modal
+                        id="modal-info-panel"
+                        class="modal modal--info"
+                        info-panel
+                        modal-id="modal-info"
+                        title="Modal with info panel"
+                        subscribe="lang"
+                        @dbp-modal-closed="${() => (this.infoExpanded = false)}">
+                        <div slot="header" class="header">
+                            <p>Click button in footer to expand the info panel</p>
+                        </div>
+                        <div
+                            slot="info-panel"
+                            role="region"
+                            aria-label="${this._i18n.t('demo.info_panel')}">
+                            <div class="info-panel-title">
+                                <button
+                                    class="button panel-button"
+                                    aria-label="${this._i18n.t('demo.close_info_panel')}"
+                                    @click="${() => this.toggleInfoPanel(true)}">
+                                    <dbp-icon
+                                        class="chevron--desktop"
+                                        aria-hidden="true"
+                                        name="chevron-left"></dbp-icon>
+                                    <dbp-icon
+                                        class="chevron--mobile"
+                                        aria-hidden="true"
+                                        name="chevron-up"></dbp-icon>
+                                    <h2>Panel Headline</h2>
+                                </button>
+                            </div>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+                                ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                                aliquip ex ea commodo consequat.
+                            </p>
+                        </div>
+                        <menu slot="footer" class="footer-menu">
+                            <dbp-button
+                                class="toggle-button"
+                                no-spinner-on-click
+                                aria-expanded="${this.infoExpanded}"
+                                @click="${() => this.toggleInfoPanel()}">
+                                ${this.infoExpanded ? 'Collapse info panel' : 'Expand info panel'}
+                                <dbp-icon
+                                    class="chevron--desktop"
+                                    aria-hidden="true"
+                                    name="${this.infoExpanded ? 'chevron-left' : 'chevron-right'}"></dbp-icon>
+                                <dbp-icon
+                                    class="chevron--mobile"
+                                    aria-hidden="true"
+                                    name="${this.infoExpanded ? 'chevron-up' : 'chevron-down'}"></dbp-icon>
+                            </dbp-button>
+                            <div class="footer-actions">
+                                <dbp-button
+                                    @click="${() => {
+                                        this._('#modal-info-panel').close();
+                                    }}">
+                                    Cancel
+                                </dbp-button>
+                                <dbp-button type="is-primary">Submit</dbp-button>
+                            </div>
                         </menu>
                     </dbp-modal>
                 </div>

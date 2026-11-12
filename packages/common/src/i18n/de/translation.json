@@ -8,8 +8,10 @@
         "close": "Schließen"
     },
     "demo": {
+        "close_info_panel": "Infobereich schließen",
         "consumer": "Verbraucher",
         "consumer_description": "Verbraucher \"{{id}}\" abonniert nur {{subscriptions}}",
+        "info_panel": "Infobereich",
         "provider": "Anbieter",
         "provider_description": "Anbieter \"{{id}}\" {{description}}"
     },

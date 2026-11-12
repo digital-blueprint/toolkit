@@ -1,8 +1,8 @@
 ## Modal Web Component
 
 You can use this web component to show content in a modal.
-This web component has two function which can be called from outside: `open()` - which opens the modal and `close()` - which closes the modal.
-You can add content to 3 slots: `header`, `content` and `footer`. The `header` and `footer` are optional.
+Use `open()` and `close()` to control the modal (see callable functions below).
+Slots: `title`, `header`, `content`, `footer`, and optional `info-panel` (with the `info-panel` attribute).
 Slotted content can be styled from outside with css.
 
 ```html
@@ -42,11 +42,20 @@ Slotted content can be styled from outside with css.
 </dbp-modal>
 ```
 
+Info panel example:
+
+```html
+<dbp-modal id="details" class="modal--info" modal-id="details" title="Details" info-panel>
+    <div slot="content">Main content</div>
+    <div slot="info-panel">Additional information</div>
+</dbp-modal>
+```
+
 ### Attributes
 
 - `lang` (optional, default: `de`): set to `de` or `en` for German or English
     - example `<dbp-modal lang="de"></dbp-modal>`
-- `modal-id`(default: `modal-id`, should unique): this is the modal css selector id
+- `modal-id`(default: `dbp-modal-id`, should be unique): this is the modal css selector id
     - example `<dbp-modal modal-id="my-modal-123"></dbp-modal>`
 - `title` (optional): sets the modal title
     - example `<dbp-modal title="This is my modal"></dbp-modal>`
@@ -55,6 +64,9 @@ Slotted content can be styled from outside with css.
 - `sticky-footer` (optional, boolean): set the footer to stick to the bottom of the modal
 - `full-height-line` (optional, boolean): show an opt-in vertical line that spans from the top to the bottom of the modal
     - example `<dbp-modal full-height-line></dbp-modal>`
+- `print-content-only` (optional, boolean): only print the modal when it's open and the page is printed, the page behind the modal is hidden while printing
+    - example `<dbp-modal print-content-only></dbp-modal>`
+- `info-panel` (optional, boolean): enables the `info-panel` slot; add `class="modal--info"` for the expandable layout
 
 ### CSS variables
 
@@ -71,6 +83,8 @@ You can customize the modal with the following css variables:
 
 `--dbp-modal-content-overflow-y` : set .modal-content overflow-y
 
+`--dbp-modal-container-height` : set the height of the header/content/footer grid, defaults to `auto`; independent of `full-height-line`
+
 `--dbp-modal-full-height-line-left` : set the horizontal position of the `full-height-line` separator
 `--dbp-modal-full-height-line-border` : set the border style of the `full-height-line` separator
 `--dbp-modal-full-height-line-display` : set the display value of the `full-height-line` separator, defaults to `block` when `full-height-line` is set
@@ -83,9 +97,15 @@ You can customize the modal with the following css variables:
     - `this._('#my-modal-webcomponent-id').open();`
 - `close()` closes a specific modal
     - `this._('#my-modal-webcomponent-id').close();`
+- `isOpen()` returns whether the modal is open
+- `focusCloseButton()` focuses the modal's close button
+- `toggleInfoPanel()` expands or collapses the info panel (requires attribute `info-panel` and slotted content)
+    - `this._('#details').toggleInfoPanel();`
 
 ### Events
 
 - `dbp-modal-closed` a event which is triggered if the modal is closed. in the detail attribute there is the modal-id of the closed modal. - `<dbp-modal @dbp-modal-closed="${(event) => {
 this.doSomething(event);
 }}"></dbp-modal>`
+
+Toggling the info panel does not emit a separate event.
