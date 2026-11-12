@@ -2137,6 +2137,7 @@ export function getNativeModalDialogCSS() {
 
         .modal-title {
             margin: 0;
+            padding: var(--dbp-modal-title-padding, 0);
             font-weight: var(--dbp-modal-title-font-weight, 300);
             font-size: var(--dbp-modal-title-font-size, 1rem);
             background: var(--dbp-modal-title-background);
