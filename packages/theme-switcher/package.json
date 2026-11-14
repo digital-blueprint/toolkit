@@ -35,7 +35,7 @@
     },
     "dependencies": {
         "@dbp-toolkit/common": "^0.3.18",
-        "i18next": "^26.0.0",
+        "i18next": "^27.0.0",
         "jszip": "^3.5.0",
         "lit": "^3.0.0",
         "material-design-icons-svg": "^3.0.0"
