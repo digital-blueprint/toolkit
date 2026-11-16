@@ -19,25 +19,93 @@ import {getDeletionConfirmation, handleDeletionConfirm, handleDeletionCancel} fr
 import {classMap} from 'lit/directives/class-map.js';
 import {repeat} from 'lit/directives/repeat.js';
 
+/** @type {HolderType} */
+export const HOLDER_TYPE_USER = 'user';
+/** @type {HolderType} */
+export const HOLDER_TYPE_GROUP = 'group';
+/** @type {HolderType} */
+export const HOLDER_TYPE_DYNAMIC_GROUP = 'dynamic-group';
+
+/** @type {HolderType[]} */
+const HOLDER_TYPES = [HOLDER_TYPE_USER, HOLDER_TYPE_GROUP, HOLDER_TYPE_DYNAMIC_GROUP];
+const MANAGE_ACTION = 'manage';
+const GROUP_PATH = '/authorization/groups/';
+// Dynamic groups with this prefix are created by the API for resource collection policies
+const SYSTEM_DYNAMIC_GROUP_PREFIX = '@';
+const INHERITED_GRANT_SUFFIX = '_inherited';
+
+const HOLDER_ICONS = {
+    [HOLDER_TYPE_USER]: 'user',
+    [HOLDER_TYPE_GROUP]: 'users',
+    [HOLDER_TYPE_DYNAMIC_GROUP]: 'network',
+};
+
 /**
+ * @typedef {'user'|'group'|'dynamic-group'} HolderType
+ * @typedef {{identifier: string, locked: boolean, inherited: boolean}} ResourceGrant
  * @typedef {{
  *   action: string,
  *   identifier: string|null,
- *   editable?: boolean,
+ *   locked?: boolean,
  *   inherited?: boolean,
  *   toSave?: boolean,
  *   desiredGranted?: boolean|null,
  *   mixed?: boolean,
- *   grantsByResource?: Map<string, {identifier: string, inherited: boolean}>
- * }} UserPermission
+ *   grantsByResource: Map<string, ResourceGrant>
+ * }} HolderPermission
  * @typedef {{
- *   userIdentifier: string,
- *   userFullName: string|undefined,
- *   permissions: Map<string, UserPermission>,
- *   buttonState?: string
- * }} UserEntry
+ *   key: string,
+ *   holderType: HolderType,
+ *   holderIdentifier: string,
+ *   displayName: string|undefined,
+ *   isSystem?: boolean,
+ *   permissions: Map<string, HolderPermission>
+ * }} HolderEntry
  * @typedef {Record<string, Record<string, string>>} AvailableAction
  */
+
+/**
+ * Builds the unique key of a grant holder
+ * @param {HolderType} holderType
+ * @param {string} holderIdentifier
+ * @returns {string}
+ */
+export function getHolderKey(holderType, holderIdentifier) {
+    return `${holderType}:${holderIdentifier}`;
+}
+
+/**
+ * Normalizes the group of a grant to its IRI, the API may return an IRI or an embedded object
+ * @param {string|{'@id'?: string, identifier?: string}|null|undefined} group
+ * @returns {string|null}
+ */
+export function getGroupIri(group) {
+    if (!group) {
+        return null;
+    }
+    if (typeof group === 'string') {
+        return group.startsWith('/') ? group : `${GROUP_PATH}${group}`;
+    }
+    if (group['@id']) {
+        return group['@id'];
+    }
+    return group.identifier ? `${GROUP_PATH}${group.identifier}` : null;
+}
+
+/**
+ * Turns an identifier like "registrars_office_staff" or "summerCourseCreators" into readable text
+ * @param {string} identifier
+ * @returns {string}
+ */
+export function humanizeIdentifier(identifier) {
+    const words = String(identifier ?? '')
+        .replace(/^@+/, '')
+        .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+        .replace(/[_\-.]+/g, ' ')
+        .trim()
+        .toLowerCase();
+    return words.charAt(0).toUpperCase() + words.slice(1);
+}
 
 export class GrantPermissionDialog extends LangMixin(
     ScopedElementsMixin(DBPLitElement),
@@ -50,64 +118,28 @@ export class GrantPermissionDialog extends LangMixin(
         this.modalTitle = '';
         /** @type {AvailableAction[]} */
         this.availableActions = [];
-        /** @type {Map<string, UserEntry>} */
-        this.userList = new Map();
-        this.permissionRows = [];
-        /** @type {Map<string, UserEntry>} */
-        this.usersToAdd = new Map();
+        /** @type {Map<string, HolderEntry>} */
+        this.holderList = new Map();
+        /** @type {Map<string, HolderEntry>} */
+        this.holdersInEdit = new Map();
+        /** @type {HolderType|null} */
+        this.pendingHolderType = null;
         this.resourceIdentifier = '';
         this.resourceIdentifiers = [];
         this.resourceClassIdentifier = '';
-        /** @type {import('lit/directives/ref.js').Ref<Button>} */
-        this.addPersonButtonRef = createRef();
-        /** @type {import('lit/directives/ref.js').Ref<Button>} */
-        this.savePermissionButtonRef = createRef();
+        /** @type {Record<string, string|Record<string, string>>} */
+        this.dynamicGroupLabels = {};
+        this.isLoading = false;
+        this.isStacked = false;
+        this.protectedHolderKeys = new Set();
+        this.deletionCandidateName = '';
+        /** @type {Map<string, string>} */
+        this.displayNameCache = new Map();
         /** @type {import('lit/directives/ref.js').Ref<Modal>} */
         this.permissionModalRef = createRef();
-        this.lastManageCheckbox = null;
-        /** @type {string|null} */
-        this.lastSavedManagerId = null;
-        this.protectedManagerIds = new Set();
-    }
-
-    get #addPersonButton() {
-        const button = this.addPersonButtonRef.value;
-        if (!button) {
-            throw new Error('Add person button is unavailable');
-        }
-        return button;
-    }
-
-    get #permissionModal() {
-        const modal = this.permissionModalRef.value;
-        if (!modal) {
-            throw new Error('Permission modal is unavailable');
-        }
-        return modal;
-    }
-
-    /**
-     * @param {string} userId
-     * @returns {UserEntry}
-     */
-    #getUser(userId) {
-        const user = this.userList.get(userId);
-        if (!user) {
-            throw new Error(`Unknown user "${userId}"`);
-        }
-        return user;
-    }
-
-    /**
-     * @param {string} userId
-     * @returns {UserEntry}
-     */
-    #getQueuedUser(userId) {
-        const user = this.usersToAdd.get(userId);
-        if (!user) {
-            throw new Error(`User "${userId}" is not queued for editing`);
-        }
-        return user;
+        /** @type {ResizeObserver|null} */
+        this.resizeObserver = null;
+        this.boundModalClosedHandler = this.modalClosedHandler.bind(this);
     }
 
     static get properties() {
@@ -115,27 +147,20 @@ export class GrantPermissionDialog extends LangMixin(
             ...super.properties,
             auth: {type: Object},
             modalTitle: {type: String, attribute: 'modal-title'},
-            availableActions: {type: Array},
-            userList: {type: Map},
-            usersToAdd: {type: Map},
-            hasUsersToAdd: {type: Boolean},
-            permissionRows: {type: Array},
+            availableActions: {type: Array, attribute: false},
+            holderList: {type: Object, attribute: false},
+            holdersInEdit: {type: Object, attribute: false},
+            pendingHolderType: {type: String, attribute: false},
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
             resourceIdentifiers: {type: Array, attribute: false},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
-            savePermissionButtonIsDisabled: {type: Boolean, attribute: false},
-            lastManageCheckbox: {type: Object, attribute: false},
-            lastSavedManagerId: {type: String, attribute: false},
+            dynamicGroupLabels: {type: Object, attribute: false},
+            isLoading: {type: Boolean, attribute: false},
+            isStacked: {type: Boolean, attribute: false},
+            protectedHolderKeys: {type: Object, attribute: false},
+            deletionCandidateName: {type: String, attribute: false},
         };
-    }
-
-    getResourceIdentifiers() {
-        const identifiers =
-            Array.isArray(this.resourceIdentifiers) && this.resourceIdentifiers.length > 0
-                ? this.resourceIdentifiers
-                : [this.resourceIdentifier];
-        return [...new Set(identifiers.map((identifier) => identifier?.trim()).filter(Boolean))];
     }
 
     static get scopedElements() {
@@ -151,95 +176,62 @@ export class GrantPermissionDialog extends LangMixin(
 
     connectedCallback() {
         super.connectedCallback();
+        this.addEventListener('dbp-modal-closed', this.boundModalClosedHandler);
+    }
 
-        this.addEventListener('dbp-modal-closed', this.modalClosedHandler.bind(this));
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this.removeEventListener('dbp-modal-closed', this.boundModalClosedHandler);
+        this.resizeObserver?.disconnect();
+        this.resizeObserver = null;
     }
 
     modalClosedHandler(event) {
         this.closeModal(event);
     }
 
-    disconnectedCallback() {
-        super.disconnectedCallback();
-
-        this.removeEventListener('dbp-modal-closed', this.modalClosedHandler);
-    }
-
     updated(changedProperties) {
         super.updated(changedProperties);
 
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang': {
-                    // Set default title if none provided via attribute
-                    if (!this.modalTitle || !this.hasAttribute('modal-title')) {
-                        this.modalTitle = this._i18n.t('grant-permission-dialog.modal-title');
-                    }
-                    break;
-                }
+        // Set default title if none provided via attribute
+        if (
+            changedProperties.has('lang') &&
+            (!this.modalTitle || !this.hasAttribute('modal-title'))
+        ) {
+            this.modalTitle = this._i18n.t('grant-permission-dialog.modal-title');
+        }
 
-                case 'userList': {
-                    console.log(`this.userList`, this.userList);
-                    this.checkSavedManagerCount();
-                    break;
-                }
-                case 'usersToAdd': {
-                    console.log(`this.usersToAdd`, this.usersToAdd);
-                    break;
-                }
-            }
-        });
+        if (changedProperties.has('holderList')) {
+            this.updateProtectedHolders();
+        }
+    }
+
+    get #permissionModal() {
+        const modal = this.permissionModalRef.value;
+        if (!modal) {
+            throw new Error('Permission modal is unavailable');
+        }
+        return modal;
     }
 
     /**
-     * Set lastSavedManagerId to prevent deleting the last manager
+     * @param {string} key
+     * @returns {HolderEntry}
      */
-    checkSavedManagerCount() {
-        const protectedManagerIds = new Set();
-        for (const resourceIdentifier of this.getResourceIdentifiers()) {
-            const managerIds = [];
-            for (const [userId, user] of this.userList) {
-                const permission = user?.permissions?.get('manage');
-                if (
-                    permission?.grantsByResource?.has(resourceIdentifier) ||
-                    (this.getResourceIdentifiers().length === 1 && permission?.identifier)
-                ) {
-                    managerIds.push(userId);
-                }
-            }
-            if (managerIds.length === 1) {
-                protectedManagerIds.add(managerIds[0]);
-            }
+    #getHolder(key) {
+        const holder = this.holderList.get(key);
+        if (!holder) {
+            throw new Error(`Unknown permission holder "${key}"`);
         }
-        this.protectedManagerIds = protectedManagerIds;
-        this.lastSavedManagerId =
-            protectedManagerIds.size === 1 ? [...protectedManagerIds][0] : null;
+        return holder;
     }
 
-    /**
-     * Disable the last checked "manage" checkbox to prevent unchecking it
-     */
-    disableLastManageCheckbox() {
-        const manageCheckboxes = this._a('.permission-checkbox[name="manage"]');
-        const checkedManageCheckboxes = [...manageCheckboxes].filter((checkbox) => {
-            return checkbox.checked === true;
-        });
-
-        if (checkedManageCheckboxes.length === 1) {
-            this.lastManageCheckbox = checkedManageCheckboxes[0];
-            this.lastManageCheckbox.disabled = true;
-        } else {
-            // Enable the previously disabled checkbox if it exists and is in edit-mode
-            if (
-                this.lastManageCheckbox &&
-                this.lastManageCheckbox instanceof HTMLInputElement &&
-                this.lastManageCheckbox.classList.contains('edit-mode')
-            ) {
-                this.lastManageCheckbox.disabled = false;
-            }
-            // Always clear the reference when there are multiple (or zero) checked
-            this.lastManageCheckbox = null;
-        }
+    getResourceIdentifiers() {
+        const identifiers =
+            Array.isArray(this.resourceIdentifiers) && this.resourceIdentifiers.length > 0
+                ? this.resourceIdentifiers
+                : [this.resourceIdentifier];
+        return [...new Set(identifiers.map((identifier) => identifier?.trim()).filter(Boolean))];
     }
 
     /**
@@ -247,7 +239,33 @@ export class GrantPermissionDialog extends LangMixin(
      * @returns {boolean} true or false
      */
     isLoggedIn() {
-        return this.auth && this.auth.token;
+        return Boolean(this.auth && this.auth.token);
+    }
+
+    /**
+     * @param {string} [method]
+     * @param {object} [body]
+     * @returns {RequestInit}
+     */
+    getRequestOptions(method = 'GET', body) {
+        return {
+            method,
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            ...(body === undefined ? {} : {body: JSON.stringify(body)}),
+        };
+    }
+
+    notify(type, summary, body, timeout = type === 'danger' ? 0 : 5) {
+        sendNotification({
+            summary,
+            body,
+            type,
+            targetNotificationId: 'permission-modal-notification',
+            timeout,
+        });
     }
 
     /**
@@ -255,59 +273,35 @@ export class GrantPermissionDialog extends LangMixin(
      * @returns {Promise<Response>} response
      */
     async apiGetAvailableActions() {
-        const options = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-        };
         return await fetch(
             this.entryPointUrl +
                 `/authorization/available-resource-class-actions/${this.resourceClassIdentifier}?perPage=9999`,
-            options,
+            this.getRequestOptions(),
         );
     }
 
     async setAvailableActions() {
         this.availableActions = [];
-        let showErrorNotification = false;
-        const i18n = this._i18n;
         try {
             const response = await this.apiGetAvailableActions();
-            if (response.status !== 200) {
-                showErrorNotification = true;
-            } else {
-                const responseBody = await response.json();
-                if (responseBody === undefined || responseBody === null) {
-                    showErrorNotification = true;
-                } else {
-                    this.availableActions = Object.keys(responseBody.itemActions).map(
-                        (actionKey) => {
-                            return {
-                                [actionKey]: {
-                                    [this.lang]:
-                                        responseBody.itemActions[actionKey][this.lang] ?? actionKey,
-                                },
-                            };
-                        },
-                    );
-                }
+            const responseBody = response.status === 200 ? await response.json() : null;
+            if (!responseBody?.itemActions) {
+                throw new Error('No item actions available');
             }
-        } catch {
-            showErrorNotification = true;
-        }
-
-        if (showErrorNotification) {
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t(
+            this.availableActions = Object.keys(responseBody.itemActions).map((actionKey) => ({
+                [actionKey]: {
+                    [this.lang]: responseBody.itemActions[actionKey][this.lang] ?? actionKey,
+                },
+            }));
+        } catch (error) {
+            console.error('setAvailableActions', error);
+            this.notify(
+                'danger',
+                this._i18n.t('grant-permission-dialog.notifications.error-title'),
+                this._i18n.t(
                     'grant-permission-dialog.notifications.set-available-actions-error-text',
                 ),
-                type: 'danger',
-                targetNotificationId: 'permission-modal-notification',
-                timeout: 5,
-            });
+            );
         }
     }
 
@@ -316,35 +310,28 @@ export class GrantPermissionDialog extends LangMixin(
      * @returns {Promise<Response>} response
      */
     async apiGetResourceActionGrants(resourceIdentifier = this.resourceIdentifier) {
-        const options = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-        };
         return await fetch(
             this.entryPointUrl +
                 `/authorization/resource-action-grants?resourceClass=${encodeURIComponent(
                     this.resourceClassIdentifier,
                 )}&resourceIdentifier=${encodeURIComponent(resourceIdentifier)}&page=1&perPage=9999`,
-            options,
+            this.getRequestOptions(),
         );
     }
 
     async apiGetUserDetails(userIdentifier) {
-        const options = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-        };
-        return await fetch(this.entryPointUrl + `/base/people/${userIdentifier}`, options);
+        return await fetch(
+            this.entryPointUrl + `/base/people/${encodeURIComponent(userIdentifier)}`,
+            this.getRequestOptions(),
+        );
+    }
+
+    async apiGetGroupDetails(groupIri) {
+        return await fetch(this.entryPointUrl + groupIri, this.getRequestOptions());
     }
 
     /**
-     * Delete user's Resource Action Grant
+     * Delete a Resource Action Grant
      * @param {string} grantIdentifier - Authorization Resource Action Grant identifier
      * @returns {Promise<Response>} response
      */
@@ -352,254 +339,215 @@ export class GrantPermissionDialog extends LangMixin(
         if (!grantIdentifier) {
             throw new Error('Grant identifier is required');
         }
-        const options = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-        };
         return await fetch(
-            this.entryPointUrl + `/authorization/resource-action-grants/${grantIdentifier}`,
-            options,
+            this.entryPointUrl +
+                `/authorization/resource-action-grants/${encodeURIComponent(grantIdentifier)}`,
+            this.getRequestOptions('DELETE'),
         );
     }
 
     /**
-     * Save user's Resource Action Grant
+     * Builds the grant holder part of a Resource Action Grant request body
+     * @param {{holderType: HolderType, holderIdentifier: string}} holder
+     * @returns {Record<string, string>}
+     */
+    getHolderPayload(holder) {
+        switch (holder.holderType) {
+            case HOLDER_TYPE_GROUP:
+                return {group: getGroupIri(holder.holderIdentifier) ?? holder.holderIdentifier};
+            case HOLDER_TYPE_DYNAMIC_GROUP:
+                return {dynamicGroupIdentifier: holder.holderIdentifier};
+            default:
+                return {userIdentifier: holder.holderIdentifier};
+        }
+    }
+
+    /**
+     * Save a Resource Action Grant for a person, group or dynamic group
      * @param {string} action
-     * @param {string} userIdentifier
+     * @param {{holderType: HolderType, holderIdentifier: string}} holder
+     * @param {string} resourceIdentifier
      * @returns {Promise<Response>} response
      */
-    async apiPostResourceActionGrant(
-        action,
-        userIdentifier,
-        resourceIdentifier = this.resourceIdentifier,
-    ) {
-        /* {
-            "resourceIdentifier": "184c7f86-73b4-4ee7-9f93-09af7d7ff4fd",
-            "resourceClass": "DbpRelayFormalizeForm",
-            "action": "manage",
-            "userIdentifier": "811EC3ACC0ADCA70"
-        } */
-        const body = {
-            resourceIdentifier,
-            resourceClass: this.resourceClassIdentifier,
-            action: action,
-            userIdentifier: userIdentifier,
-        };
-
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            body: JSON.stringify(body),
-        };
-        return await fetch(this.entryPointUrl + `/authorization/resource-action-grants`, options);
+    async apiPostResourceActionGrant(action, holder, resourceIdentifier = this.resourceIdentifier) {
+        return await fetch(
+            this.entryPointUrl + `/authorization/resource-action-grants`,
+            this.getRequestOptions('POST', {
+                resourceIdentifier,
+                resourceClass: this.resourceClassIdentifier,
+                action,
+                ...this.getHolderPayload(holder),
+            }),
+        );
     }
 
-    async deleteUsersAllGrants(userId) {
-        const i18n = this._i18n;
-
-        if (this.protectedManagerIds.has(userId)) {
-            throw new Error('Cannot delete the last manager');
+    /**
+     * Extracts the grant holder from a Resource Action Grant
+     * @param {any} grant
+     * @returns {{holderType: HolderType, holderIdentifier: string, displayName?: string}|null}
+     */
+    getHolderFromGrant(grant) {
+        if (grant.userIdentifier) {
+            return {holderType: HOLDER_TYPE_USER, holderIdentifier: grant.userIdentifier};
         }
-
-        const userToDelete = this.#getUser(userId);
-        const grantsToDelete = [];
-
-        // Collect grants to delete
-        userToDelete.permissions.forEach((grant) => {
-            if (grant.grantsByResource instanceof Map) {
-                grant.grantsByResource.forEach((resourceGrant) => {
-                    if (!resourceGrant.inherited) {
-                        grantsToDelete.push(resourceGrant);
-                    }
-                });
-            } else if (grant.identifier && !grant.inherited) {
-                grantsToDelete.push(grant);
-            }
-        });
-
-        try {
-            for (const grant of grantsToDelete) {
-                const deleteResponse = await this.apiDeleteResourceActionGrant(grant.identifier);
-                if (deleteResponse.status !== 204) {
-                    throw new Error('Failed to delete grant');
-                }
-            }
-            // @TODO handle multiple errors
-        } catch (e) {
-            console.log('Error deleting grant', e);
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                // Add username and grant name here
-                body: i18n.t('grant-permission-dialog.notifications.could-not-delete-grant'),
-                type: 'danger',
-                targetNotificationId: 'permission-modal-notification',
-                timeout: 0,
-            });
-            throw e;
+        const groupIri = getGroupIri(grant.group);
+        if (groupIri) {
+            return {
+                holderType: HOLDER_TYPE_GROUP,
+                holderIdentifier: groupIri,
+                displayName: typeof grant.group === 'object' ? grant.group.name : undefined,
+            };
         }
+        if (grant.dynamicGroupIdentifier) {
+            return {
+                holderType: HOLDER_TYPE_DYNAMIC_GROUP,
+                holderIdentifier: grant.dynamicGroupIdentifier,
+            };
+        }
+        return null;
     }
 
-    async deleteUser(userId) {
-        const i18n = this._i18n;
-        try {
-            await this.deleteUsersAllGrants(userId);
+    isSystemDynamicGroup(identifier) {
+        return String(identifier).startsWith(SYSTEM_DYNAMIC_GROUP_PREFIX);
+    }
 
-            // Set delete row animation
-            const rowToAnimate = this._(`.user-row[data-user-id="${userId}"]`);
-            rowToAnimate.classList.add('delete-animation');
-            // Wait for the animation to complete
-            // Create a promise that resolves when the animation ends
-            const animationComplete = new Promise((resolve) => {
-                rowToAnimate.addEventListener('transitionend', resolve, {once: true});
-            });
-            // Wait for animation to complete before updating the Map
-            await animationComplete;
-
-            this.removeUserFromQueue(userId);
-            const deleted = this.removeUserFromList(userId);
-
-            if (deleted) {
-                rowToAnimate.classList.remove('delete-animation');
-                this.requestUpdate();
-            }
-        } catch (e) {
-            console.log('delete user error', e);
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.notifications.could-not-delete-user'),
-                type: 'danger',
-                targetNotificationId: 'permission-modal-notification',
-                timeout: 0,
-            });
+    getDynamicGroupName(identifier) {
+        const label = this.dynamicGroupLabels?.[identifier];
+        if (typeof label === 'string') {
+            return label;
         }
+        if (label && typeof label === 'object') {
+            return label[this.lang] ?? Object.values(label)[0] ?? humanizeIdentifier(identifier);
+        }
+        if (this.isSystemDynamicGroup(identifier)) {
+            return this._i18n.t('grant-permission-dialog.holder.system-rule');
+        }
+        return humanizeIdentifier(identifier);
     }
 
     async getUserFullName(userIdentifier) {
-        const i18n = this._i18n;
         try {
             const response = await this.apiGetUserDetails(userIdentifier);
-            let userDetailsResponse = await response.json();
-            if (userDetailsResponse !== undefined && userDetailsResponse.status !== 403) {
-                return `${userDetailsResponse['givenName']} ${userDetailsResponse['familyName']}`;
-            } else {
-                if (userDetailsResponse.status === 500) {
-                    sendNotification({
-                        summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                        body: i18n.t(
-                            'grant-permission-dialog.notifications.could-not-fetch-user-details',
-                        ),
-                        type: 'danger',
-                        targetNotificationId: 'permission-modal-notification',
-                        timeout: 0,
-                    });
-                } else if (userDetailsResponse.status === 403) {
-                    sendNotification({
-                        summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                        body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
-                        targetNotificationId: 'permission-modal-notification',
-                        type: 'danger',
-                        timeout: 0,
-                    });
-                }
+            if (response.ok) {
+                const person = await response.json();
+                return [person.givenName, person.familyName].filter(Boolean).join(' ');
             }
         } catch (error) {
-            console.log('getUserFullName failed', error);
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.notifications.failed-get-user-details'),
-                type: 'danger',
-                targetNotificationId: 'permission-modal-notification',
-                timeout: 0,
-            });
+            console.error('getUserFullName failed', error);
         }
+        return undefined;
     }
 
-    /**
-     * Retrieves the full name of a user by their user ID
-     * @param {string} userId - The unique identifier of the user
-     * @returns {string|undefined} The user's full name or undefined if not found
-     */
-    lookupUserFullName(userId) {
-        if (!userId) return undefined;
-        return this.userList.get(userId)?.userFullName;
-    }
-
-    _handleUserEditButton(userId) {
-        this.setButtonState(userId, 'save');
-
-        this.addUserToQueue(userId);
-
-        this.enableUsersAllCheckboxes(userId);
-    }
-
-    async handleUserSaveButton(userId) {
+    async getGroupName(groupIri) {
         try {
-            await this.saveUserPermissions(userId);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            if (this.userList.has(userId)) {
-                this.setButtonState(userId, 'edit');
-                this.checkSavedManagerCount();
-
-                // Remove edit styles & disable checkboxes
-                this._a(`[data-user-id="${userId}"]`).forEach((checkbox) => {
-                    const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-                    checkboxElem.classList.remove('changed');
-                    checkboxElem.removeAttribute('data-changed');
-                });
-                this.disableUsersAllCheckboxes(userId);
+            const response = await this.apiGetGroupDetails(groupIri);
+            if (response.ok) {
+                const group = await response.json();
+                return group.name;
             }
+        } catch (error) {
+            console.error('getGroupName failed', error);
         }
-    }
-
-    async handleUserDeleteButton(userId) {
-        const i18n = this._i18n;
-        const userFullName = this.lookupUserFullName(userId);
-        await this.deleteUser(userId);
-
-        sendNotification({
-            summary: i18n.t('grant-permission-dialog.notifications.success-title'),
-            body: i18n.t('grant-permission-dialog.notifications.user-successfully-deleted', {
-                userFullName: userFullName,
-            }),
-            type: 'info',
-            targetNotificationId: 'permission-modal-notification',
-            timeout: 5,
-        });
+        return undefined;
     }
 
     /**
-     * Get a list of users and granted permissions
+     * Resolves a human readable name for a grant holder, falls back to a generic label
+     * @param {HolderEntry} holder
+     * @returns {Promise<string>}
+     */
+    async resolveDisplayName(holder) {
+        const i18n = this._i18n;
+        if (holder.holderType === HOLDER_TYPE_DYNAMIC_GROUP) {
+            return this.getDynamicGroupName(holder.holderIdentifier);
+        }
+
+        const cachedName = this.displayNameCache.get(holder.key);
+        if (cachedName) {
+            return cachedName;
+        }
+
+        const name =
+            holder.holderType === HOLDER_TYPE_GROUP
+                ? await this.getGroupName(holder.holderIdentifier)
+                : await this.getUserFullName(holder.holderIdentifier);
+        if (name) {
+            this.displayNameCache.set(holder.key, name);
+            return name;
+        }
+
+        return holder.holderType === HOLDER_TYPE_GROUP
+            ? i18n.t('grant-permission-dialog.holder.unknown-group')
+            : i18n.t('grant-permission-dialog.holder.unknown-person');
+    }
+
+    createEmptyPermissions() {
+        /** @type {Map<string, HolderPermission>} */
+        const permissions = new Map();
+        if (!Array.isArray(this.availableActions)) {
+            return permissions;
+        }
+
+        this.availableActions.forEach((action) => {
+            const actionValue = Object.keys(action)[0];
+            permissions.set(actionValue, {
+                action: actionValue,
+                identifier: null,
+                locked: false,
+                inherited: false,
+                mixed: false,
+                toSave: false,
+                desiredGranted: null,
+                grantsByResource: new Map(),
+            });
+        });
+        return permissions;
+    }
+
+    /**
+     * @param {HolderType} holderType
+     * @param {string} holderIdentifier
+     * @param {string} [displayName]
+     * @returns {HolderEntry}
+     */
+    createHolder(holderType, holderIdentifier, displayName) {
+        return {
+            key: getHolderKey(holderType, holderIdentifier),
+            holderType,
+            holderIdentifier,
+            displayName,
+            isSystem:
+                holderType === HOLDER_TYPE_DYNAMIC_GROUP &&
+                this.isSystemDynamicGroup(holderIdentifier),
+            permissions: this.createEmptyPermissions(),
+        };
+    }
+
+    /**
+     * Loads all grants of the selected resources and groups them by grant holder
      * @returns {Promise<void>}
      */
-    async setListOfUsersAndPermissions() {
-        const i18n = this._i18n;
-
+    async setListOfHoldersAndPermissions() {
         try {
             const resourceIdentifiers = this.getResourceIdentifiers();
             if (resourceIdentifiers.length === 0) {
                 throw new Error('No resource identifier was provided');
             }
 
-            this.userList = new Map();
-            const newUserList = new Map();
+            const availableActionKeys = new Set(
+                (this.availableActions ?? []).map((action) => Object.keys(action)[0]),
+            );
+            /** @type {Map<string, HolderEntry>} */
+            const newHolderList = new Map();
+
             for (const resourceIdentifier of resourceIdentifiers) {
                 const response = await this.apiGetResourceActionGrants(resourceIdentifier);
                 if (response.status === 403) {
-                    sendNotification({
-                        summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                        body: i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
-                        targetNotificationId: 'permission-modal-notification',
-                        type: 'danger',
-                        timeout: 0,
-                    });
+                    this.notify(
+                        'danger',
+                        this._i18n.t('grant-permission-dialog.notifications.error-title'),
+                        this._i18n.t('grant-permission-dialog.notifications.error-not-authorized'),
+                    );
                     return;
                 }
                 if (!response.ok) {
@@ -608,679 +556,461 @@ export class GrantPermissionDialog extends LangMixin(
 
                 const responseBody = await response.json();
                 for (const grant of responseBody?.['hydra:member'] ?? []) {
-                    if (grant.userIdentifier) {
-                        // Don't add inherited item-actions that are not available actions
-                        // We can't set such permissions
-                        const isAnAvailableAction = this.availableActions.find((action) => {
-                            return Object.keys(action)[0] === grant.action;
-                        });
-                        if (!isAnAvailableAction) {
-                            continue;
-                        }
-
-                        const userId = grant.userIdentifier;
-                        const isInherited = grant.grantedActions?.length === 0;
-
-                        let existingUser = newUserList.get(userId);
-                        if (!existingUser) {
-                            const userFullName = await this.getUserFullName(userId);
-                            existingUser = {
-                                userIdentifier: userId,
-                                userFullName: userFullName,
-                                permissions: this.createEmptyUserPermission(),
-                            };
-                            newUserList.set(userId, existingUser);
-                        }
-
-                        const permission = existingUser.permissions.get(grant.action);
-                        permission.grantsByResource.set(resourceIdentifier, {
-                            identifier: grant.identifier,
-                            inherited: isInherited,
-                        });
-                    }
-                }
-            }
-
-            for (const user of newUserList.values()) {
-                for (const permission of user.permissions.values()) {
-                    const grants = [...permission.grantsByResource.values()];
-                    permission.identifier =
-                        grants.length === resourceIdentifiers.length ? grants[0]?.identifier : null;
-                    permission.inherited =
-                        grants.length === resourceIdentifiers.length &&
-                        grants.every((grant) => grant.inherited);
-                    permission.mixed =
-                        grants.length > 0 && grants.length < resourceIdentifiers.length;
-                }
-            }
-            this.userList = newUserList;
-            this.setAllButtonState('edit');
-            this.checkSavedManagerCount();
-        } catch (e) {
-            console.log('setListOfUsersAndPermissions', e);
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.notifications.unknown-error'),
-                targetNotificationId: 'permission-modal-notification',
-                type: 'danger',
-                timeout: 0,
-            });
-        }
-    }
-
-    getPersonSearchQueryParameters(select, searchTerm) {
-        return {
-            search: searchTerm.trim(),
-            sort: 'familyName',
-        };
-    }
-
-    formatPerson(select, person) {
-        let text = person['givenName'] ?? '';
-        if (person['familyName']) {
-            text += ` ${person['familyName']}`;
-        }
-
-        return text;
-    }
-
-    renderUserPermissionRow() {
-        if (!this.userList) {
-            return;
-        }
-        const i18n = this._i18n;
-
-        return html`
-            ${repeat(
-                Array.from(this.userList),
-                ([userId]) => userId, // Key function - uses userId as unique identifier
-                ([userId, user]) => html`
-                    <div
-                        class="user-row ${classMap({'edit-mode': this.usersToAdd.has(userId)})}"
-                        data-user-id="${userId}">
-                        <div class="person-select-container">
-                            ${
-                                user.userFullName
-                                    ? html`
-                                          <span class="user-name">${user.userFullName}</span>
-                                      `
-                                    : html`
-                                          <dbp-resource-select
-                                              id="permission-person-select"
-                                              subscribe="auth"
-                                              lang="${this.lang}"
-                                              resource-path="/base/people"
-                                              fetch-mode="search"
-                                              .getSearchQueryParameters="${
-                                                  this.getPersonSearchQueryParameters
-                                              }"
-                                              .formatResource="${this.formatPerson}"
-                                              @change="${(event) => {
-                                                  void this.handlePersonSelected(event);
-                                              }}"
-                                              entry-point-url="${
-                                                  this.entryPointUrl
-                                              }"></dbp-resource-select>
-                                      `
-                            }
-                        </div>
-                        ${user.userFullName ? this.renderPermissionCheckboxes(user) : ''}
-                        ${
-                            user.userFullName
-                                ? html`
-                                      <div class="action-buttons">
-                                          ${
-                                              user.buttonState === 'edit'
-                                                  ? html`
-                                                        <dbp-button
-                                                            type="is-secondary"
-                                                            id="user-edit-button-${userId}"
-                                                            no-spinner-on-click
-                                                            @click="${() => {
-                                                                this._handleUserEditButton(userId);
-                                                            }}">
-                                                            <dbp-icon name="pencil"></dbp-icon>
-                                                            ${i18n.t(
-                                                                'grant-permission-dialog.buttons.edit-text',
-                                                            )}
-                                                        </dbp-button>
-                                                    `
-                                                  : ''
-                                          }
-                                          ${
-                                              user.buttonState === 'save'
-                                                  ? html`
-                                                        <dbp-button
-                                                            type="is-primary"
-                                                            id="user-save-button-${userId}"
-                                                            no-spinner-on-click
-                                                            @click="${() => {
-                                                                void this.handleUserSaveButton(
-                                                                    userId,
-                                                                );
-                                                            }}">
-                                                            <dbp-icon name="save"></dbp-icon>
-                                                            ${i18n.t(
-                                                                'grant-permission-dialog.buttons.save-text',
-                                                            )}
-                                                        </dbp-button>
-                                                    `
-                                                  : ''
-                                          }
-                                          <dbp-button
-                                              type="is-secondary"
-                                              id="user-delete-button-${userId}"
-                                              no-spinner-on-click
-                                              ?disabled=${this.protectedManagerIds.has(userId)}
-                                              @click="${async () => {
-                                                  const confirmed =
-                                                      await getDeletionConfirmation(this);
-                                                  if (!confirmed) return;
-
-                                                  const userFullName =
-                                                      this.lookupUserFullName(userId);
-                                                  await this.deleteUser(userId);
-
-                                                  sendNotification({
-                                                      summary: i18n.t(
-                                                          'grant-permission-dialog.notifications.success-title',
-                                                      ),
-                                                      body: i18n.t(
-                                                          'grant-permission-dialog.notifications.user-successfully-deleted',
-                                                          {
-                                                              userFullName: userFullName,
-                                                          },
-                                                      ),
-                                                      type: 'info',
-                                                      targetNotificationId:
-                                                          'permission-modal-notification',
-                                                      timeout: 5,
-                                                  });
-                                              }}">
-                                              <dbp-icon name="trash"></dbp-icon>
-                                              ${i18n.t('grant-permission-dialog.buttons.delete-text')}
-                                          </dbp-button>
-                                      </div>
-                                  `
-                                : ''
-                        }
-                    </div>
-                `,
-            )}
-        `;
-    }
-
-    /**
-     * @param {UserEntry} user
-     */
-    renderPermissionCheckboxes(user) {
-        const i18n = this._i18n;
-        if (!this.availableActions) {
-            return;
-        }
-        return html`
-            <div class="permission-group" role="group" aria-labelledby="permissions-group-label">
-                <h3 id="permissions-group-label" class="visually-hidden">
-                    ${i18n.t('grant-permission-dialog.available-permissions')}
-                </h3>
-
-                ${this.availableActions.map((action) => {
-                    const actionValue = Object.keys(action)[0];
-                    const actionName = action[actionValue][this.lang];
-
-                    let hasThisPermission = false;
-                    let editable = false;
-                    let checkboxTitle = `${actionName}`;
-                    const userPermission = user.permissions.get(actionValue);
-                    // The permission exists if it has an identifier
-                    hasThisPermission =
-                        userPermission?.desiredGranted ?? Boolean(userPermission?.identifier);
-
-                    // Allow editing of newly added permissions
-                    if (userPermission?.editable) {
-                        editable = true;
+                    // Grants for actions that aren't available can't be edited in the dialog
+                    if (!availableActionKeys.has(grant.action)) {
+                        continue;
                     }
 
-                    if (userPermission?.inherited) {
-                        editable = false;
-                        checkboxTitle = i18n.t(
-                            'grant-permission-dialog.permissions.inherited-permission-title',
+                    const grantHolder = this.getHolderFromGrant(grant);
+                    if (!grantHolder) {
+                        continue;
+                    }
+
+                    const key = getHolderKey(grantHolder.holderType, grantHolder.holderIdentifier);
+                    let holder = newHolderList.get(key);
+                    if (!holder) {
+                        holder = this.createHolder(
+                            grantHolder.holderType,
+                            grantHolder.holderIdentifier,
+                            grantHolder.displayName,
                         );
+                        newHolderList.set(key, holder);
                     }
 
-                    return html`
-                        <div
-                            class="checkbox-container ${classMap({
-                                'inherited-mode': Boolean(userPermission?.inherited),
-                            })}">
-                            <label
-                                for="${actionValue}-${user.userIdentifier}"
-                                class="visually-hidden">
-                                ${actionName}
-                            </label>
-                            <input
-                                id="${actionValue}-${user.userIdentifier}"
-                                name="${actionValue}"
-                                class="permission-checkbox ${classMap({
-                                    'edit-mode': this.usersToAdd.has(user.userIdentifier),
-                                    'inherited-mode': Boolean(userPermission?.inherited),
-                                })}"
-                                title="${checkboxTitle}"
-                                data-user-id="${user.userIdentifier}"
-                                type="checkbox"
-                                @input="${this.handleCheckbox}"
-                                ?disabled="${!editable}"
-                                .indeterminate="${
-                                    Boolean(userPermission?.mixed) &&
-                                    userPermission?.desiredGranted === null
-                                }"
-                                ?checked="${hasThisPermission}" />
-                        </div>
-                    `;
-                })}
-            </div>
-        `;
-    }
-
-    createEmptyUserPermission(editable = false) {
-        /** @type {Map<string, UserPermission>} */
-        const userPermissions = new Map();
-        if (!Array.isArray(this.availableActions) || this.availableActions.length < 1) {
-            return userPermissions;
-        }
-
-        this.availableActions.forEach((action) => {
-            const actionValue = Object.keys(action)[0];
-            const emptyPermission = {
-                action: actionValue,
-                identifier: null,
-                editable: editable,
-                desiredGranted: null,
-                grantsByResource: new Map(),
-            };
-            userPermissions.set(actionValue, emptyPermission);
-        });
-        return userPermissions;
-    }
-
-    async handlePersonSelected(event) {
-        const i18n = this._i18n;
-
-        try {
-            if (!event.detail?.value) {
-                return;
+                    const inherited = String(grant.identifier).endsWith(INHERITED_GRANT_SUFFIX);
+                    const deletable = (grant.grantedActions ?? []).includes('delete');
+                    holder.permissions.get(grant.action)?.grantsByResource.set(resourceIdentifier, {
+                        identifier: grant.identifier,
+                        inherited,
+                        locked: inherited || !deletable || Boolean(holder.isSystem),
+                    });
+                }
             }
 
-            const newUser = event.detail.object;
-
-            if (!newUser) {
-                throw new Error('No user object returned');
+            for (const holder of newHolderList.values()) {
+                for (const permission of holder.permissions.values()) {
+                    const grants = [...permission.grantsByResource.values()];
+                    const grantedOnAll = grants.length === resourceIdentifiers.length;
+                    permission.identifier = grantedOnAll ? grants[0]?.identifier : null;
+                    permission.locked = grantedOnAll && grants.every((grant) => grant.locked);
+                    permission.inherited = grantedOnAll && grants.every((grant) => grant.inherited);
+                    permission.mixed = grants.length > 0 && !grantedOnAll;
+                }
             }
 
-            // Check if user is already in the list
-            if (newUser && this.userList.has(newUser.identifier)) {
-                sendNotification({
-                    summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                    body: i18n.t('grant-permission-dialog.notifications.user-already-added'),
-                    targetNotificationId: 'permission-modal-notification',
-                    type: 'danger',
-                    timeout: 0,
-                });
-                return;
-            }
+            await Promise.all(
+                [...newHolderList.values()].map(async (holder) => {
+                    if (!holder.displayName) {
+                        holder.displayName = await this.resolveDisplayName(holder);
+                    } else {
+                        this.displayNameCache.set(holder.key, holder.displayName);
+                    }
+                }),
+            );
 
-            // Set new user data
-            const userToAdd = {
-                userIdentifier: newUser['identifier'],
-                userFullName: `${newUser['givenName']} ${newUser['familyName']}`,
-                permissions: this.createEmptyUserPermission(true),
-            };
-
-            this.addUserToQueue(userToAdd.userIdentifier, userToAdd);
-
-            // Remove person select
-            this.userList.delete('emptyPerson');
-            // Update person in this.userList
-            this.addUserToList(userToAdd.userIdentifier, userToAdd);
-            // Toggle edit button to save button
-            this.setButtonState(userToAdd.userIdentifier, 'edit');
-
-            await this.updateComplete;
-            this._handleUserEditButton(userToAdd.userIdentifier);
-            this.#addPersonButton.stop();
+            this.holderList = newHolderList;
         } catch (error) {
-            console.log('Failed to get user object', error);
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.notifications.failed-to-get-user-details'),
-                targetNotificationId: 'permission-modal-notification',
-                type: 'danger',
-                timeout: 0,
-            });
-        }
-    }
-
-    handleCheckbox(event) {
-        const checkbox = event.target;
-        checkbox.classList.add('changed');
-        checkbox.setAttribute('data-changed', true);
-
-        // Prevent unchecking last manager
-        this.disableLastManageCheckbox();
-        this.checkSavedManagerCount();
-
-        const userIdentifier = checkbox.getAttribute('data-user-id');
-        const permissionName = checkbox.getAttribute('name');
-
-        // Get users to add
-        const userToAdd = this.#getQueuedUser(userIdentifier);
-        // Get clicked permission
-        const permission = userToAdd.permissions.get(permissionName);
-        if (!permission) {
-            throw new Error(
-                `Permission "${permissionName}" does not exist for user "${userIdentifier}"`,
+            console.error('setListOfHoldersAndPermissions', error);
+            this.notify(
+                'danger',
+                this._i18n.t('grant-permission-dialog.notifications.error-title'),
+                this._i18n.t('grant-permission-dialog.notifications.unknown-error'),
             );
         }
-        // Set permission to be saved
+    }
+
+    /**
+     * Checks if a holder is granted an action on a resource, optionally including unsaved changes
+     * @param {HolderEntry} holder
+     * @param {string} action
+     * @param {string} resourceIdentifier
+     * @param {boolean} usePendingState
+     * @returns {boolean}
+     */
+    isGrantedOnResource(holder, action, resourceIdentifier, usePendingState = false) {
+        const permission = holder.permissions.get(action);
+        if (!permission) {
+            return false;
+        }
+        if (usePendingState && permission.toSave && permission.desiredGranted !== null) {
+            // Locked grants can't be removed, so they stay in place
+            const grant = permission.grantsByResource.get(resourceIdentifier);
+            return permission.desiredGranted || Boolean(grant?.locked);
+        }
+        return permission.grantsByResource.has(resourceIdentifier);
+    }
+
+    /**
+     * Checks if removing the manage permission of the given holders would leave a resource
+     * without a manager. As long as a resource is managed by a person, at least one person
+     * has to keep the manage permission, because groups can be empty.
+     * @param {Set<string>} removedKeys - Holders that lose their manage permission
+     * @param {Set<string>} pendingKeys - Holders whose unsaved changes are about to be saved
+     * @returns {boolean}
+     */
+    wouldRemoveLastManager(removedKeys, pendingKeys = new Set()) {
+        for (const resourceIdentifier of this.getResourceIdentifiers()) {
+            const managersBefore = [];
+            const managersAfter = [];
+            for (const [key, holder] of this.holderList) {
+                if (this.isGrantedOnResource(holder, MANAGE_ACTION, resourceIdentifier)) {
+                    managersBefore.push(holder);
+                }
+                const grant = holder.permissions
+                    .get(MANAGE_ACTION)
+                    ?.grantsByResource.get(resourceIdentifier);
+                const isRemoved = removedKeys.has(key) && !grant?.locked;
+                if (
+                    !isRemoved &&
+                    this.isGrantedOnResource(
+                        holder,
+                        MANAGE_ACTION,
+                        resourceIdentifier,
+                        pendingKeys.has(key),
+                    )
+                ) {
+                    managersAfter.push(holder);
+                }
+            }
+
+            const isPerson = (holder) => holder.holderType === HOLDER_TYPE_USER;
+            if (managersBefore.length > 0 && managersAfter.length === 0) {
+                return true;
+            }
+            if (managersBefore.some(isPerson) && !managersAfter.some(isPerson)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Protects holders whose removal would leave a resource without a manager
+     */
+    updateProtectedHolders() {
+        const protectedHolderKeys = new Set();
+        for (const [key, holder] of this.holderList) {
+            const managePermission = holder.permissions.get(MANAGE_ACTION);
+            if (
+                managePermission &&
+                managePermission.grantsByResource.size > 0 &&
+                this.wouldRemoveLastManager(new Set([key]))
+            ) {
+                protectedHolderKeys.add(key);
+            }
+        }
+        this.protectedHolderKeys = protectedHolderKeys;
+    }
+
+    isHolderNew(holder) {
+        return [...holder.permissions.values()].every(
+            (permission) => permission.grantsByResource.size === 0,
+        );
+    }
+
+    startEdit(key) {
+        this.holdersInEdit = new Map(this.holdersInEdit).set(key, this.#getHolder(key));
+    }
+
+    cancelEdit(key) {
+        const holder = this.holderList.get(key);
+        const newHoldersInEdit = new Map(this.holdersInEdit);
+        newHoldersInEdit.delete(key);
+        this.holdersInEdit = newHoldersInEdit;
+
+        if (!holder) {
+            return;
+        }
+        if (this.isHolderNew(holder)) {
+            this.removeHolderFromList(key);
+            return;
+        }
+        holder.permissions.forEach((permission) => {
+            permission.toSave = false;
+            permission.desiredGranted = null;
+        });
+        this.requestUpdate('holderList');
+    }
+
+    removeHolderFromList(key) {
+        const newHolderList = new Map(this.holderList);
+        const deleted = newHolderList.delete(key);
+        if (deleted) {
+            this.holderList = newHolderList;
+        }
+        return deleted;
+    }
+
+    handleCheckbox(event, holder, action) {
+        const checkbox = /** @type {HTMLInputElement} */ (event.target);
+        const permission = holder.permissions.get(action);
+        if (!permission) {
+            throw new Error(`Permission "${action}" does not exist for holder "${holder.key}"`);
+        }
         permission.desiredGranted = checkbox.checked;
         permission.toSave = true;
+        this.requestUpdate('holderList');
     }
 
-    enableUsersAllCheckboxes(userId) {
-        const user = this.#getUser(userId);
-        user.permissions.forEach((permission) => {
-            if (
-                (permission.action === 'manage' &&
-                    permission.identifier &&
-                    this.protectedManagerIds.has(userId)) ||
-                permission.inherited
-            ) {
-                permission.editable = false;
-            } else {
-                permission.editable = true;
+    /**
+     * Opens the selection for a new person, group or dynamic group
+     * @param {HolderType} holderType
+     */
+    async handleAddHolder(holderType) {
+        this.pendingHolderType = holderType;
+        await this.updateComplete;
+    }
+
+    cancelAddHolder() {
+        this.pendingHolderType = null;
+    }
+
+    /**
+     * Builds a holder from the object returned by the resource select
+     * @param {HolderType} holderType
+     * @param {any} resource
+     * @returns {HolderEntry}
+     */
+    createHolderFromResource(holderType, resource) {
+        switch (holderType) {
+            case HOLDER_TYPE_GROUP:
+                return this.createHolder(
+                    HOLDER_TYPE_GROUP,
+                    getGroupIri(resource) ?? resource['@id'],
+                    resource.name ?? this._i18n.t('grant-permission-dialog.holder.unknown-group'),
+                );
+            case HOLDER_TYPE_DYNAMIC_GROUP:
+                return this.createHolder(
+                    HOLDER_TYPE_DYNAMIC_GROUP,
+                    resource.identifier,
+                    this.getDynamicGroupName(resource.identifier),
+                );
+            default:
+                return this.createHolder(
+                    HOLDER_TYPE_USER,
+                    resource.identifier,
+                    [resource.givenName, resource.familyName].filter(Boolean).join(' '),
+                );
+        }
+    }
+
+    async handleHolderSelected(event, holderType) {
+        try {
+            const resource = event.detail?.object;
+            if (!event.detail?.value || !resource) {
+                return;
             }
-        });
+
+            const newHolder = this.createHolderFromResource(holderType, resource);
+            if (this.holderList.has(newHolder.key)) {
+                this.notify(
+                    'warning',
+                    this._i18n.t('grant-permission-dialog.notifications.warning-title'),
+                    this._i18n.t('grant-permission-dialog.notifications.holder-already-added', {
+                        name: newHolder.displayName,
+                    }),
+                );
+                return;
+            }
+
+            this.displayNameCache.set(newHolder.key, newHolder.displayName ?? '');
+            this.holderList = new Map(this.holderList).set(newHolder.key, newHolder);
+            this.holdersInEdit = new Map(this.holdersInEdit).set(newHolder.key, newHolder);
+            this.pendingHolderType = null;
+
+            await this.updateComplete;
+            this._(`.holder-row[data-holder-key="${CSS.escape(newHolder.key)}"] input`)?.focus();
+        } catch (error) {
+            console.error('Failed to add permission holder', error);
+            this.notify(
+                'danger',
+                this._i18n.t('grant-permission-dialog.notifications.error-title'),
+                this._i18n.t('grant-permission-dialog.notifications.failed-to-add-holder'),
+            );
+        }
     }
 
-    disableUsersAllCheckboxes(userId) {
-        const user = this.#getUser(userId);
-        user.permissions.forEach((permission) => {
-            permission.editable = false;
-        });
-    }
-
-    disableAllCheckboxes() {
-        this.userList.forEach((user) => {
-            user.permissions.forEach((permission) => {
-                permission.editable = false;
-            });
-        });
-    }
-
-    renderPermissionLabels() {
-        if (!this.availableActions || this.userList.size < 1) {
+    async deleteHolder(key) {
+        const holder = this.#getHolder(key);
+        if (this.wouldRemoveLastManager(new Set([key]))) {
+            this.notify(
+                'warning',
+                this._i18n.t('grant-permission-dialog.notifications.warning-title'),
+                this._i18n.t(
+                    'grant-permission-dialog.notifications.cant-remove-last-manager-warning',
+                ),
+            );
             return;
         }
 
-        return html`
-            ${this.availableActions.map((action) => {
-                const actionValue = Object.keys(action)[0];
-                const actionName = action[actionValue][this.lang] ?? actionValue;
-
-                return html`
-                    <div class="checkbox-label-container">
-                        <span>${actionName}</span>
-                    </div>
-                `;
-            })}
-        `;
-    }
-
-    async open() {
-        const i18n = this._i18n;
-
-        if (!this.isLoggedIn()) {
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t('grant-permission-dialog.need-login-warning-text'),
-                type: 'danger',
-                timeout: 0,
-            });
-        } else {
-            await this.setAvailableActions();
-            await this.setListOfUsersAndPermissions();
-            await this.updateComplete;
-            this.#permissionModal.open();
-
-            const modalContent = this._('.content-inner');
-            if (!modalContent) return;
-
-            const resizeObserver = new ResizeObserver((entries) => {
-                const personSelect = this._('.person-select-container');
-                const permissionItems = /** @type {HTMLElement[]} */ (
-                    Array.from(
-                        this._a('.user-row:first-child .permission-group .checkbox-container'),
-                    )
-                );
-                const actionButtons = this._('.action-buttons');
-
-                const userRow = this._('.user-row:first-child');
-                const permissionGroup = this._('.user-row:first-child .permission-group');
-                if (
-                    !userRow ||
-                    !permissionGroup ||
-                    !personSelect ||
-                    !actionButtons ||
-                    permissionItems.length === 0
-                ) {
-                    return;
-                }
-
-                const userRowStyle = window.getComputedStyle(userRow);
-                const userRowPadding =
-                    parseInt(userRowStyle.paddingLeft) + parseInt(userRowStyle.paddingRight);
-
-                const permissionGroupStyle = window.getComputedStyle(permissionGroup);
-                const permissionGroupGap = parseInt(permissionGroupStyle.gap);
-
-                const modalWidth = modalContent.clientWidth;
-                const permissionCount = permissionItems.length;
-                const permissionWidth =
-                    permissionItems[0].clientWidth * permissionCount +
-                    permissionGroupGap * permissionCount -
-                    1;
-                const rowWidth =
-                    personSelect.clientWidth +
-                    (permissionItems[0].clientWidth * permissionCount +
-                        permissionGroupGap * permissionCount -
-                        1) +
-                    actionButtons.clientWidth;
-
-                if (modalWidth < permissionWidth + userRowPadding) {
-                    modalContent.classList.add('mobile');
-                } else {
-                    modalContent.classList.remove('mobile');
-                }
-
-                if (modalWidth < rowWidth + userRowPadding) {
-                    modalContent.classList.add('collapsed');
-                } else {
-                    modalContent.classList.remove('collapsed');
+        const grantsToDelete = [];
+        holder.permissions.forEach((permission) => {
+            permission.grantsByResource.forEach((grant) => {
+                if (!grant.locked) {
+                    grantsToDelete.push(grant);
                 }
             });
-
-            resizeObserver.observe(modalContent);
-        }
-    }
-
-    closeModal(event) {
-        /* Reset state */
-        if (event && event.detail && event.detail.id === 'grant-permission-modal') {
-            // Remove person select
-            this.userList = new Map();
-
-            // Reset add person button state
-            this.#addPersonButton.stop();
-            this.#permissionModal.close();
-        }
-    }
-
-    handleAddNewPerson() {
-        this.#addPersonButton.start();
-        this.addUserToList('emptyPerson', {
-            userIdentifier: 'emptyPerson',
-            userFullName: undefined,
-            permissions: new Map(),
         });
-    }
 
-    /**
-     * Add user to the usersToAdd queue
-     * Triggers a re-render
-     * @param {string} userId
-     * @param {UserEntry|null} [userToAdd]
-     */
-    addUserToQueue(userId, userToAdd = null) {
-        const _userToAdd = userToAdd === null ? this.#getUser(userId) : userToAdd;
-        this.usersToAdd = new Map(this.usersToAdd).set(userId, _userToAdd);
-    }
+        try {
+            for (const grant of grantsToDelete) {
+                const response = await this.apiDeleteResourceActionGrant(grant.identifier);
+                if (response.status !== 204) {
+                    throw new Error('Failed to delete grant');
+                }
+            }
+        } catch (error) {
+            console.error('Error deleting grants', error);
+            this.notify(
+                'danger',
+                this._i18n.t('grant-permission-dialog.notifications.error-title'),
+                this._i18n.t('grant-permission-dialog.notifications.could-not-delete-holder', {
+                    name: holder.displayName,
+                }),
+            );
+            await this.setListOfHoldersAndPermissions();
+            return;
+        }
 
-    /**
-     * Remove user from the usersToAdd queue
-     * Triggers a re-render
-     * @param {string} userId
-     */
-    removeUserFromQueue(userId) {
-        const newUsersToAdd = new Map(this.usersToAdd);
-        newUsersToAdd.delete(userId);
-        this.usersToAdd = newUsersToAdd;
-    }
+        const row = this._(`.holder-row[data-holder-key="${CSS.escape(key)}"]`);
+        if (row) {
+            row.classList.add('delete-animation');
+            await Promise.race([
+                new Promise((resolve) =>
+                    row.addEventListener('transitionend', resolve, {once: true}),
+                ),
+                new Promise((resolve) => setTimeout(resolve, 400)),
+            ]);
+        }
 
-    /**
-     * Add user to the userList
-     * Triggers a re-render
-     * @param {string} userId
-     * @param {UserEntry} userToAdd
-     */
-    addUserToList(userId, userToAdd) {
-        this.userList = new Map(this.userList).set(userId, userToAdd);
-    }
+        const newHoldersInEdit = new Map(this.holdersInEdit);
+        newHoldersInEdit.delete(key);
+        this.holdersInEdit = newHoldersInEdit;
 
-    /**
-     * Remove user from the userList
-     * Triggers a re-render
-     * @param {string} userId
-     */
-    removeUserFromList(userId) {
-        const newUserList = new Map(this.userList);
-        const deleted = newUserList.delete(userId);
-        if (deleted) {
-            this.userList = newUserList;
-            return true;
+        // Holders that only have locked grants stay visible
+        if (grantsToDelete.length > 0) {
+            await this.setListOfHoldersAndPermissions();
         } else {
-            return false;
+            this.removeHolderFromList(key);
+        }
+
+        this.notify(
+            'success',
+            this._i18n.t('grant-permission-dialog.notifications.success-title'),
+            this._i18n.t('grant-permission-dialog.notifications.holder-successfully-deleted', {
+                name: holder.displayName,
+            }),
+        );
+    }
+
+    async handleDeleteButton(key) {
+        const holder = this.#getHolder(key);
+        if (this.isHolderNew(holder)) {
+            this.cancelEdit(key);
+            return;
+        }
+
+        this.deletionCandidateName = holder.displayName ?? '';
+        const confirmed = await getDeletionConfirmation(this);
+        if (confirmed) {
+            await this.deleteHolder(key);
         }
     }
 
     /**
-     *
-     * @param {string} userId - The user ID
-     * @param {string} state  - edit | save | prepare-delete | delete
-     */
-    setButtonState(userId, state) {
-        const user = this.#getUser(userId);
-        this.userList.set(userId, {
-            ...user,
-            buttonState: state,
-        });
-        this.requestUpdate('userList');
-    }
-
-    setAllButtonState(state) {
-        Array.from(this.userList).forEach(([userId, user]) => {
-            this.setButtonState(userId, state);
-        });
-    }
-
-    /**
-     * Saves user permissions for either a single user or all users in usersToAdd
-     * @param {string} [userId] - Optional user ID. If not provided, saves all pending users
+     * Saves the permissions of a single holder or of all holders in edit mode
+     * @param {string} [key] - Optional holder key. If not provided, saves all pending holders
      * @returns {Promise<void>}
      */
-    async saveUserPermissions(userId) {
-        const i18n = this._i18n;
-
-        // If no users to save, show message and return
-        if (this.usersToAdd.size === 0) {
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.info-title'),
-                body: i18n.t('grant-permission-dialog.notifications.there-is-no-user-to-save'),
-                type: 'info',
-                targetNotificationId: 'permission-modal-notification',
-                timeout: 5,
-            });
+    async saveHolderPermissions(key) {
+        if (this.holdersInEdit.size === 0) {
+            this.notify(
+                'info',
+                this._i18n.t('grant-permission-dialog.notifications.info-title'),
+                this._i18n.t('grant-permission-dialog.notifications.there-is-nothing-to-save'),
+            );
             return;
         }
 
         try {
-            let errorCount = 0;
-            let successCount = 0;
-            const usersToProcess = userId
-                ? new Map([[userId, this.#getQueuedUser(userId)]])
-                : this.usersToAdd;
+            const holdersToProcess = key
+                ? new Map([[key, this.holdersInEdit.get(key) ?? this.#getHolder(key)]])
+                : new Map(this.holdersInEdit);
             const resourceIdentifiers = this.getResourceIdentifiers();
             const grantsToPost = [];
             const grantsToDelete = [];
-            let managerRemovalBlocked = false;
 
-            for (const [userIdentifier, userToAdd] of usersToProcess) {
-                userToAdd.permissions.forEach((permission) => {
-                    if (!permission.toSave) return;
+            // Don't allow the pending changes to remove the last manager
+            const manageRemovalKeys = new Set();
+            for (const [holderKey, holder] of holdersToProcess) {
+                const managePermission = holder.permissions.get(MANAGE_ACTION);
+                if (managePermission?.toSave && managePermission.desiredGranted === false) {
+                    manageRemovalKeys.add(holderKey);
+                }
+            }
+            const manageRemovalBlocked =
+                manageRemovalKeys.size > 0 &&
+                this.wouldRemoveLastManager(manageRemovalKeys, new Set(holdersToProcess.keys()));
+
+            for (const holder of holdersToProcess.values()) {
+                holder.permissions.forEach((permission) => {
+                    if (!permission.toSave || permission.desiredGranted === null) {
+                        return;
+                    }
 
                     if (permission.desiredGranted) {
                         for (const resourceIdentifier of resourceIdentifiers) {
-                            if (!permission.grantsByResource?.has(resourceIdentifier)) {
+                            if (!permission.grantsByResource.has(resourceIdentifier)) {
                                 grantsToPost.push({
                                     action: permission.action,
-                                    userIdentifier,
+                                    holder,
                                     resourceIdentifier,
                                 });
                             }
                         }
-                    } else if (
-                        permission.action === 'manage' &&
-                        this.protectedManagerIds.has(userIdentifier)
-                    ) {
-                        managerRemovalBlocked = true;
-                    } else if (permission.grantsByResource instanceof Map) {
+                    } else if (!(permission.action === MANAGE_ACTION && manageRemovalBlocked)) {
                         permission.grantsByResource.forEach((grant) => {
-                            if (!grant.inherited) {
-                                grantsToDelete.push({identifier: grant.identifier});
+                            if (!grant.locked) {
+                                grantsToDelete.push(grant.identifier);
                             }
                         });
-                    } else if (permission.identifier && !permission.inherited) {
-                        grantsToDelete.push({identifier: permission.identifier});
                     }
                 });
             }
 
-            if (managerRemovalBlocked) {
-                sendNotification({
-                    summary: 'Warning',
-                    body: i18n.t(
+            if (manageRemovalBlocked) {
+                this.notify(
+                    'warning',
+                    this._i18n.t('grant-permission-dialog.notifications.warning-title'),
+                    this._i18n.t(
                         'grant-permission-dialog.notifications.cant-remove-last-manager-warning',
                     ),
-                    type: 'warning',
-                    targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
-                });
+                );
             }
 
-            // Create replacement grants before deleting existing grants.
+            if (grantsToPost.length === 0 && grantsToDelete.length === 0) {
+                if (!manageRemovalBlocked) {
+                    this.notify(
+                        'info',
+                        this._i18n.t('grant-permission-dialog.notifications.info-title'),
+                        this._i18n.t(
+                            'grant-permission-dialog.notifications.there-is-nothing-to-save',
+                        ),
+                    );
+                }
+                if (key && this.isHolderNew(this.#getHolder(key))) {
+                    return;
+                }
+            }
+
+            let successCount = 0;
+            let errorCount = 0;
+
+            // Create new grants before deleting existing ones, so no access is lost in between
             for (const grant of grantsToPost) {
                 const response = await this.apiPostResourceActionGrant(
                     grant.action,
-                    grant.userIdentifier,
+                    grant.holder,
                     grant.resourceIdentifier,
                 );
                 if (response.status === 201) {
@@ -1290,8 +1020,8 @@ export class GrantPermissionDialog extends LangMixin(
                 }
             }
 
-            for (const grant of grantsToDelete) {
-                const response = await this.apiDeleteResourceActionGrant(grant.identifier);
+            for (const grantIdentifier of grantsToDelete) {
+                const response = await this.apiDeleteResourceActionGrant(grantIdentifier);
                 if (response.status === 204) {
                     successCount++;
                 } else {
@@ -1299,65 +1029,659 @@ export class GrantPermissionDialog extends LangMixin(
                 }
             }
 
-            if (grantsToPost.length === 0 && grantsToDelete.length === 0) {
-                sendNotification({
-                    summary: i18n.t('grant-permission-dialog.notifications.info-title'),
-                    body: i18n.t('grant-permission-dialog.notifications.there-is-nothing-to-save', {
-                        userFullName: userId ? this.#getQueuedUser(userId).userFullName : '',
-                    }),
-                    type: 'info',
-                    targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
-                });
-            }
-
-            this.usersToAdd = new Map();
-            await this.setListOfUsersAndPermissions();
+            // Keep unsaved changes of the other holders when reloading the list
+            const remainingEdits = new Map(this.holdersInEdit);
+            holdersToProcess.forEach((_holder, holderKey) => remainingEdits.delete(holderKey));
+            this.holdersInEdit = new Map();
+            await this.setListOfHoldersAndPermissions();
+            this.restorePendingEdits(remainingEdits);
 
             if (successCount > 0) {
-                sendNotification({
-                    summary: i18n.t('grant-permission-dialog.notifications.success-title'),
-                    body: i18n.t(
+                this.notify(
+                    'success',
+                    this._i18n.t('grant-permission-dialog.notifications.success-title'),
+                    this._i18n.t(
                         'grant-permission-dialog.notifications.permissions-saved-successfully',
-                        {n: successCount},
+                        {count: successCount},
                     ),
-                    type: 'success',
-                    targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
-                });
+                );
             }
             if (errorCount > 0) {
-                sendNotification({
-                    summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                    body: i18n.t('grant-permission-dialog.notifications.save-permissions-error', {
-                        n: errorCount,
+                this.notify(
+                    'danger',
+                    this._i18n.t('grant-permission-dialog.notifications.error-title'),
+                    this._i18n.t('grant-permission-dialog.notifications.save-permissions-error', {
+                        count: errorCount,
                     }),
-                    type: 'danger',
-                    targetNotificationId: 'permission-modal-notification',
-                    timeout: 0,
-                });
+                );
             }
-        } catch (e) {
-            console.log('Save user permissions error:', e);
-            sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.error-title'),
-                body: i18n.t(
+        } catch (error) {
+            console.error('Save permissions error:', error);
+            this.notify(
+                'danger',
+                this._i18n.t('grant-permission-dialog.notifications.error-title'),
+                this._i18n.t(
                     'grant-permission-dialog.notifications.save-permissions-unexpected-error',
                 ),
+            );
+        }
+    }
+
+    /**
+     * Re-applies unsaved checkbox changes after the holder list was reloaded
+     * @param {Map<string, HolderEntry>} pendingEdits
+     */
+    restorePendingEdits(pendingEdits) {
+        if (pendingEdits.size === 0) {
+            return;
+        }
+
+        const newHolderList = new Map(this.holderList);
+        const newHoldersInEdit = new Map();
+        pendingEdits.forEach((oldHolder, key) => {
+            const holder = newHolderList.get(key) ?? oldHolder;
+            oldHolder.permissions.forEach((oldPermission, action) => {
+                const permission = holder.permissions.get(action);
+                if (permission && oldPermission.toSave) {
+                    permission.toSave = true;
+                    permission.desiredGranted = oldPermission.desiredGranted;
+                }
+            });
+            newHolderList.set(key, holder);
+            newHoldersInEdit.set(key, holder);
+        });
+        this.holderList = newHolderList;
+        this.holdersInEdit = newHoldersInEdit;
+    }
+
+    async open() {
+        if (!this.isLoggedIn()) {
+            sendNotification({
+                summary: this._i18n.t('grant-permission-dialog.notifications.error-title'),
+                body: this._i18n.t('grant-permission-dialog.need-login-warning-text'),
                 type: 'danger',
-                targetNotificationId: 'permission-modal-notification',
                 timeout: 0,
             });
             return;
         }
+
+        this.holderList = new Map();
+        this.holdersInEdit = new Map();
+        this.pendingHolderType = null;
+        this.isLoading = true;
+        await this.updateComplete;
+        this.#permissionModal.open();
+        this.observeLayout();
+
+        try {
+            await this.setAvailableActions();
+            await this.setListOfHoldersAndPermissions();
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    /**
+     * Switches to a stacked row layout if the permission columns don't fit into the modal
+     */
+    observeLayout() {
+        const content = this._('.content-inner');
+        if (!content || this.resizeObserver) {
+            return;
+        }
+
+        this.resizeObserver = new ResizeObserver(() => {
+            const actionCount = Math.max(this.availableActions?.length ?? 0, 1);
+            const requiredWidth = 240 + actionCount * 88 + 230 + 32;
+            const isStacked = content.clientWidth < requiredWidth;
+            if (isStacked !== this.isStacked) {
+                this.isStacked = isStacked;
+            }
+        });
+        this.resizeObserver.observe(content);
+    }
+
+    closeModal(event) {
+        if (event?.detail?.id === 'grant-permission-modal') {
+            this.holderList = new Map();
+            this.holdersInEdit = new Map();
+            this.pendingHolderType = null;
+            this.#permissionModal.close();
+        }
+    }
+
+    getActionName(action) {
+        const actionValue = Object.keys(action)[0];
+        return (
+            action[actionValue][this.lang] ?? Object.values(action[actionValue])[0] ?? actionValue
+        );
+    }
+
+    getSortedHolders(holderType) {
+        return [...this.holderList.values()]
+            .filter((holder) => holder.holderType === holderType)
+            .sort((a, b) => {
+                if (a.isSystem !== b.isSystem) {
+                    return a.isSystem ? 1 : -1;
+                }
+                return (a.displayName ?? '').localeCompare(b.displayName ?? '', this.lang);
+            });
+    }
+
+    getPersonSearchQueryParameters(select, searchTerm) {
+        return {
+            search: searchTerm.trim(),
+            sort: 'familyName',
+        };
+    }
+
+    getGroupSearchQueryParameters(select, searchTerm) {
+        return {
+            search: searchTerm.trim(),
+        };
+    }
+
+    formatPerson(select, person) {
+        return [person.givenName, person.familyName].filter(Boolean).join(' ');
+    }
+
+    formatGroup(select, group) {
+        return group.name ?? group.identifier;
+    }
+
+    /**
+     * Returns the translated texts for a holder type
+     * @param {HolderType} holderType
+     * @returns {{type: string, section: string, addButton: string, addTitle: string, addDescription: string}}
+     */
+    getHolderTypeTexts(holderType) {
+        const i18n = this._i18n;
+        switch (holderType) {
+            case HOLDER_TYPE_GROUP:
+                return {
+                    type: i18n.t('grant-permission-dialog.holder.type-group'),
+                    section: i18n.t('grant-permission-dialog.sections.group'),
+                    addButton: i18n.t('grant-permission-dialog.buttons.add-group'),
+                    addTitle: i18n.t('grant-permission-dialog.add.group-title'),
+                    addDescription: i18n.t('grant-permission-dialog.add.group-description'),
+                };
+            case HOLDER_TYPE_DYNAMIC_GROUP:
+                return {
+                    type: i18n.t('grant-permission-dialog.holder.type-dynamic-group'),
+                    section: i18n.t('grant-permission-dialog.sections.dynamic-group'),
+                    addButton: i18n.t('grant-permission-dialog.buttons.add-dynamic-group'),
+                    addTitle: i18n.t('grant-permission-dialog.add.dynamic-group-title'),
+                    addDescription: i18n.t('grant-permission-dialog.add.dynamic-group-description'),
+                };
+            default:
+                return {
+                    type: i18n.t('grant-permission-dialog.holder.type-user'),
+                    section: i18n.t('grant-permission-dialog.sections.user'),
+                    addButton: i18n.t('grant-permission-dialog.buttons.add-user'),
+                    addTitle: i18n.t('grant-permission-dialog.add.user-title'),
+                    addDescription: i18n.t('grant-permission-dialog.add.user-description'),
+                };
+        }
+    }
+
+    renderHolderAvatar(holder) {
+        return html`
+            <span class="holder-avatar holder-avatar--${holder.holderType}" aria-hidden="true">
+                <dbp-icon name="${HOLDER_ICONS[holder.holderType]}"></dbp-icon>
+            </span>
+        `;
+    }
+
+    renderHolderInfo(holder) {
+        const i18n = this._i18n;
+        const isNew = this.isHolderNew(holder);
+
+        let description = this.getHolderTypeTexts(holder.holderType).type;
+        if (holder.isSystem) {
+            description = i18n.t('grant-permission-dialog.holder.system-rule-description');
+        }
+
+        return html`
+            <div class="holder-info">
+                ${this.renderHolderAvatar(holder)}
+                <div class="holder-text">
+                    <span class="holder-name" title="${holder.displayName ?? ''}">
+                        ${holder.displayName}
+                    </span>
+                    <span class="holder-meta">
+                        ${description}
+                        ${
+                            isNew
+                                ? html`
+                                      <span class="badge badge--new">
+                                          ${i18n.t('grant-permission-dialog.holder.new-badge')}
+                                      </span>
+                                  `
+                                : ''
+                        }
+                    </span>
+                </div>
+            </div>
+        `;
+    }
+
+    renderPermissionCheckboxes(holder) {
+        const i18n = this._i18n;
+        if (!Array.isArray(this.availableActions)) {
+            return '';
+        }
+
+        const isEditing = this.holdersInEdit.has(holder.key);
+        const isProtected = this.protectedHolderKeys.has(holder.key);
+
+        return html`
+            <div
+                class="permission-group"
+                role="group"
+                aria-label="${i18n.t('grant-permission-dialog.permissions-for', {
+                    name: holder.displayName,
+                })}">
+                ${this.availableActions.map((action) => {
+                    const actionValue = Object.keys(action)[0];
+                    const actionName = this.getActionName(action);
+                    const permission = holder.permissions.get(actionValue);
+                    const isGranted = Boolean(permission?.identifier);
+                    const isChecked = permission?.desiredGranted ?? isGranted;
+                    const isChanged =
+                        Boolean(permission?.toSave) &&
+                        permission?.desiredGranted !== null &&
+                        (permission.desiredGranted !== isGranted || permission.mixed);
+                    const isLastManager = actionValue === MANAGE_ACTION && isProtected && isGranted;
+                    const isDisabled =
+                        !isEditing || !permission || permission.locked || isLastManager;
+                    const inputId = `permission-${actionValue}-${holder.key}`.replace(
+                        /[^a-zA-Z0-9_-]/g,
+                        '-',
+                    );
+
+                    let title = actionName;
+                    if (permission?.locked) {
+                        title = permission.inherited
+                            ? i18n.t(
+                                  'grant-permission-dialog.permissions.inherited-permission-title',
+                              )
+                            : i18n.t('grant-permission-dialog.permissions.locked-permission-title');
+                    } else if (isLastManager && isEditing) {
+                        title = i18n.t('grant-permission-dialog.permissions.last-manager-title');
+                    } else if (permission?.mixed && permission.desiredGranted === null) {
+                        title = i18n.t(
+                            'grant-permission-dialog.permissions.mixed-permission-title',
+                        );
+                    }
+
+                    const lockIcon = permission?.locked
+                        ? html`
+                              <dbp-icon class="lock-icon" name="lock" aria-hidden="true"></dbp-icon>
+                          `
+                        : '';
+
+                    // Show a compact state indicator instead of disabled checkboxes outside edit mode
+                    if (!isEditing) {
+                        const isMixed = !isGranted && Boolean(permission?.mixed);
+                        let stateText = i18n.t(
+                            'grant-permission-dialog.permissions.state-not-granted',
+                        );
+                        if (isGranted) {
+                            stateText = i18n.t('grant-permission-dialog.permissions.state-granted');
+                        } else if (isMixed) {
+                            stateText = i18n.t('grant-permission-dialog.permissions.state-mixed');
+                        }
+
+                        return html`
+                            <div
+                                class="checkbox-container ${classMap({
+                                    'is-locked': Boolean(permission?.locked),
+                                    'is-granted': isGranted,
+                                    'is-mixed': isMixed,
+                                })}">
+                                <span
+                                    class="permission-state"
+                                    role="img"
+                                    aria-label="${actionName}: ${stateText}"
+                                    title="${permission?.locked ? title : `${actionName}: ${stateText}`}">
+                                    ${
+                                        isGranted
+                                            ? html`
+                                                  <dbp-icon name="checkmark"></dbp-icon>
+                                              `
+                                            : ''
+                                    }
+                                </span>
+                                <span class="checkbox-label" aria-hidden="true">${actionName}</span>
+                                ${lockIcon}
+                            </div>
+                        `;
+                    }
+
+                    return html`
+                        <div
+                            class="checkbox-container ${classMap({
+                                'is-locked': Boolean(permission?.locked),
+                                'is-changed': isChanged,
+                            })}">
+                            <label for="${inputId}" class="checkbox-label">${actionName}</label>
+                            <input
+                                id="${inputId}"
+                                name="${actionValue}"
+                                class="permission-checkbox"
+                                title="${title}"
+                                type="checkbox"
+                                @change="${(event) =>
+                                    this.handleCheckbox(event, holder, actionValue)}"
+                                ?disabled="${isDisabled}"
+                                .indeterminate="${
+                                    Boolean(permission?.mixed) &&
+                                    (permission?.desiredGranted ?? null) === null
+                                }"
+                                .checked="${isChecked}" />
+                            ${lockIcon}
+                        </div>
+                    `;
+                })}
+            </div>
+        `;
+    }
+
+    renderHolderActions(holder) {
+        const i18n = this._i18n;
+        const isEditing = this.holdersInEdit.has(holder.key);
+        const isProtected = this.protectedHolderKeys.has(holder.key);
+        const hasRemovableGrants = [...holder.permissions.values()].some((permission) =>
+            [...permission.grantsByResource.values()].some((grant) => !grant.locked),
+        );
+        const isNew = this.isHolderNew(holder);
+
+        if (holder.isSystem || (!hasRemovableGrants && !isNew)) {
+            return html`
+                <div class="action-buttons">
+                    <span class="read-only-hint">
+                        <dbp-icon name="lock" aria-hidden="true"></dbp-icon>
+                        ${i18n.t('grant-permission-dialog.holder.read-only')}
+                    </span>
+                </div>
+            `;
+        }
+
+        return html`
+            <div class="action-buttons">
+                ${
+                    isEditing
+                        ? html`
+                              <dbp-button
+                                  type="is-primary"
+                                  no-spinner-on-click
+                                  @click="${() => this.saveHolderPermissions(holder.key)}">
+                                  <dbp-icon name="save" aria-hidden="true"></dbp-icon>
+                                  ${i18n.t('grant-permission-dialog.buttons.save-text')}
+                              </dbp-button>
+                              <dbp-icon-button
+                                  icon-name="close"
+                                  class="row-icon-button"
+                                  aria-label="${i18n.t(
+                                      'grant-permission-dialog.buttons.cancel-edit-text',
+                                      {name: holder.displayName},
+                                  )}"
+                                  title="${i18n.t(
+                                      'grant-permission-dialog.buttons.cancel-edit-text',
+                                      {name: holder.displayName},
+                                  )}"
+                                  @click="${() => this.cancelEdit(holder.key)}"></dbp-icon-button>
+                          `
+                        : html`
+                              <dbp-icon-button
+                                  icon-name="pencil"
+                                  class="row-icon-button"
+                                  aria-label="${i18n.t(
+                                      'grant-permission-dialog.buttons.edit-text',
+                                      {
+                                          name: holder.displayName,
+                                      },
+                                  )}"
+                                  title="${i18n.t('grant-permission-dialog.buttons.edit-text', {
+                                      name: holder.displayName,
+                                  })}"
+                                  @click="${() => this.startEdit(holder.key)}"></dbp-icon-button>
+                          `
+                }
+                ${
+                    isNew
+                        ? ''
+                        : html`
+                              <dbp-icon-button
+                                  icon-name="trash"
+                                  class="row-icon-button row-icon-button--danger"
+                                  aria-label="${i18n.t(
+                                      'grant-permission-dialog.buttons.delete-text',
+                                      {name: holder.displayName},
+                                  )}"
+                                  title="${
+                                      isProtected
+                                          ? i18n.t(
+                                                'grant-permission-dialog.permissions.last-manager-title',
+                                            )
+                                          : i18n.t('grant-permission-dialog.buttons.delete-text', {
+                                                name: holder.displayName,
+                                            })
+                                  }"
+                                  ?disabled="${isProtected}"
+                                  @click="${() =>
+                                      this.handleDeleteButton(holder.key)}"></dbp-icon-button>
+                          `
+                }
+            </div>
+        `;
+    }
+
+    renderHolderRow(holder) {
+        const isEditing = this.holdersInEdit.has(holder.key);
+        return html`
+            <div
+                class="holder-row ${classMap({
+                    'edit-mode': isEditing,
+                    'is-system': Boolean(holder.isSystem),
+                })}"
+                data-holder-key="${holder.key}">
+                ${this.renderHolderInfo(holder)} ${this.renderPermissionCheckboxes(holder)}
+                ${this.renderHolderActions(holder)}
+            </div>
+        `;
+    }
+
+    renderHolderSections() {
+        return HOLDER_TYPES.map((holderType) => {
+            const holders = this.getSortedHolders(holderType);
+            if (holders.length === 0) {
+                return '';
+            }
+            const headingId = `holder-section-${holderType}`;
+
+            return html`
+                <section class="holder-section" aria-labelledby="${headingId}">
+                    <h3 id="${headingId}" class="holder-section-title">
+                        ${this.getHolderTypeTexts(holderType).section}
+                        <span class="holder-section-count">${holders.length}</span>
+                    </h3>
+                    <div class="holder-rows">
+                        ${repeat(
+                            holders,
+                            (holder) => holder.key,
+                            (holder) => this.renderHolderRow(holder),
+                        )}
+                    </div>
+                </section>
+            `;
+        });
+    }
+
+    renderPendingHolder() {
+        if (!this.pendingHolderType) {
+            return '';
+        }
+
+        const i18n = this._i18n;
+        const holderType = this.pendingHolderType;
+        const texts = this.getHolderTypeTexts(holderType);
+
+        let select;
+        switch (holderType) {
+            case HOLDER_TYPE_GROUP:
+                select = html`
+                    <dbp-resource-select
+                        subscribe="auth"
+                        lang="${this.lang}"
+                        resource-path="/authorization/groups"
+                        fetch-mode="search"
+                        placeholder="${i18n.t('grant-permission-dialog.add.group-placeholder')}"
+                        .getSearchQueryParameters="${this.getGroupSearchQueryParameters}"
+                        .formatResource="${this.formatGroup}"
+                        @change="${(event) => this.handleHolderSelected(event, holderType)}"
+                        entry-point-url="${this.entryPointUrl}"></dbp-resource-select>
+                `;
+                break;
+            case HOLDER_TYPE_DYNAMIC_GROUP:
+                select = html`
+                    <dbp-resource-select
+                        subscribe="auth"
+                        lang="${this.lang}"
+                        resource-path="/authorization/dynamic-groups"
+                        no-default
+                        placeholder="${i18n.t(
+                            'grant-permission-dialog.add.dynamic-group-placeholder',
+                        )}"
+                        .formatResource="${(select, group) =>
+                            this.getDynamicGroupName(group.identifier)}"
+                        @change="${(event) => this.handleHolderSelected(event, holderType)}"
+                        entry-point-url="${this.entryPointUrl}"></dbp-resource-select>
+                `;
+                break;
+            default:
+                select = html`
+                    <dbp-resource-select
+                        subscribe="auth"
+                        lang="${this.lang}"
+                        resource-path="/base/people"
+                        fetch-mode="search"
+                        placeholder="${i18n.t('grant-permission-dialog.add.user-placeholder')}"
+                        .getSearchQueryParameters="${this.getPersonSearchQueryParameters}"
+                        .formatResource="${this.formatPerson}"
+                        @change="${(event) => this.handleHolderSelected(event, holderType)}"
+                        entry-point-url="${this.entryPointUrl}"></dbp-resource-select>
+                `;
+        }
+
+        return html`
+            <div class="pending-holder pending-holder--${holderType}">
+                <span class="holder-avatar holder-avatar--${holderType}" aria-hidden="true">
+                    <dbp-icon name="${HOLDER_ICONS[holderType]}"></dbp-icon>
+                </span>
+                <div class="pending-holder-body">
+                    <span class="pending-holder-title">${texts.addTitle}</span>
+                    <p class="pending-holder-description">${texts.addDescription}</p>
+                    <div class="pending-holder-select">${select}</div>
+                </div>
+                <dbp-icon-button
+                    icon-name="close"
+                    class="row-icon-button"
+                    aria-label="${i18n.t('grant-permission-dialog.buttons.cancel-add-text')}"
+                    title="${i18n.t('grant-permission-dialog.buttons.cancel-add-text')}"
+                    @click="${() => this.cancelAddHolder()}"></dbp-icon-button>
+            </div>
+        `;
+    }
+
+    renderAddToolbar() {
+        const i18n = this._i18n;
+
+        return html`
+            <div
+                class="add-toolbar"
+                role="group"
+                aria-label="${i18n.t('grant-permission-dialog.add.toolbar-label')}">
+                <span class="add-toolbar-label" aria-hidden="true">
+                    ${i18n.t('grant-permission-dialog.add.toolbar-label')}
+                </span>
+                <div class="add-toolbar-buttons">
+                    ${HOLDER_TYPES.map(
+                        (holderType) => html`
+                            <button
+                                type="button"
+                                class="add-holder-button ${classMap({
+                                    'is-active': this.pendingHolderType === holderType,
+                                })}"
+                                aria-pressed="${this.pendingHolderType === holderType}"
+                                ?disabled="${this.isLoading}"
+                                @click="${() => this.handleAddHolder(holderType)}">
+                                <dbp-icon
+                                    name="${HOLDER_ICONS[holderType]}"
+                                    aria-hidden="true"></dbp-icon>
+                                <span>${this.getHolderTypeTexts(holderType).addButton}</span>
+                            </button>
+                        `,
+                    )}
+                </div>
+            </div>
+        `;
+    }
+
+    renderHeaderRow() {
+        const i18n = this._i18n;
+        if (this.holderList.size === 0 || !Array.isArray(this.availableActions)) {
+            return '';
+        }
+
+        return html`
+            <div class="header-row" aria-hidden="true">
+                <div class="holder-header">${i18n.t('grant-permission-dialog.holder-column')}</div>
+                <div class="permissions-header">
+                    ${this.availableActions.map(
+                        (action) => html`
+                            <div class="permission-label">${this.getActionName(action)}</div>
+                        `,
+                    )}
+                </div>
+                <div></div>
+            </div>
+        `;
+    }
+
+    renderBody() {
+        const i18n = this._i18n;
+
+        if (this.isLoading) {
+            return html`
+                <div class="state-message" role="status">
+                    <dbp-icon name="hourglass" aria-hidden="true"></dbp-icon>
+                    <span>${i18n.t('grant-permission-dialog.loading')}</span>
+                </div>
+            `;
+        }
+
+        if (this.holderList.size === 0) {
+            return html`
+                <div class="state-message">
+                    <dbp-icon name="key" aria-hidden="true"></dbp-icon>
+                    <span>${i18n.t('grant-permission-dialog.empty-state')}</span>
+                </div>
+            `;
+        }
+
+        return html`
+            ${this.renderHeaderRow()}
+            <div class="holder-sections">${this.renderHolderSections()}</div>
+        `;
     }
 
     static get styles() {
         return [
+            commonStyles.getThemeCSS(),
             commonStyles.getGeneralCSS(),
             commonStyles.getButtonCSS(),
             commonStyles.getModalDialogCSS(),
-
             getGrantPermissionDialogCSS(),
             // language=css
             css``,
@@ -1366,8 +1690,8 @@ export class GrantPermissionDialog extends LangMixin(
 
     render() {
         const i18n = this._i18n;
-
-        console.log('*** MAIN RENDER ***');
+        const resourceCount = this.getResourceIdentifiers().length;
+        const pendingChangeCount = this.holdersInEdit.size;
 
         return html`
             <dbp-modal
@@ -1389,87 +1713,54 @@ export class GrantPermissionDialog extends LangMixin(
                     </div>
                 </div>
                 <div slot="content">
-                    <div class="content-container">
-                        <div class="content-inner">
-                            <div
-                                class="header-row ${classMap({
-                                    hidden: this.userList.size < 1,
-                                })}">
-                                <div class="person-select-header"></div>
-                                <div class="permissions-header">
-                                    ${this.renderPermissionLabels()}
-                                </div>
-                            </div>
-                            <!-- END .header-row -->
-
-                            <div class="body-container">
-                                <div class="button-container">
-                                    <dbp-button
-                                        type="is-secondary"
-                                        ${ref(this.addPersonButtonRef)}
-                                        id="add-new-person-button"
-                                        @click="${() => {
-                                            this.handleAddNewPerson();
-                                        }}">
-                                        <dbp-icon name="plus"></dbp-icon>
-                                        <span>
-                                            ${i18n.t(
-                                                'grant-permission-dialog.buttons.add-person-text',
-                                            )}
-                                        </span>
-                                    </dbp-button>
-                                </div>
-                                <div class="user-row-container">
-                                    ${this.renderUserPermissionRow()}
-                                </div>
-                            </div>
+                    <div
+                        class="content-inner ${classMap({stacked: this.isStacked})}"
+                        style="--dbp-action-count: ${this.availableActions?.length ?? 0}">
+                        <div class="intro">
+                            <p class="intro-text">
+                                ${i18n.t('grant-permission-dialog.intro', {count: resourceCount})}
+                            </p>
                         </div>
+                        ${this.renderAddToolbar()} ${this.renderPendingHolder()}
+                        ${this.renderBody()}
                     </div>
                 </div>
 
                 <menu slot="footer" class="footer-menu">
+                    <span class="footer-status" aria-live="polite">
+                        ${
+                            pendingChangeCount > 0
+                                ? i18n.t('grant-permission-dialog.pending-changes', {
+                                      count: pendingChangeCount,
+                                  })
+                                : ''
+                        }
+                    </span>
                     <dbp-button
                         no-spinner-on-click
                         type="is-secondary"
                         @click="${() => {
-                            const customEvent = new CustomEvent('dbp-modal-closed', {
-                                detail: {id: 'grant-permission-modal'},
-                                bubbles: true,
-                                composed: true,
-                            });
-                            this.dispatchEvent(customEvent);
+                            this.dispatchEvent(
+                                new CustomEvent('dbp-modal-closed', {
+                                    detail: {id: 'grant-permission-modal'},
+                                    bubbles: true,
+                                    composed: true,
+                                }),
+                            );
                         }}">
                         ${i18n.t('grant-permission-dialog.buttons.cancel-text')}
                     </dbp-button>
                     <dbp-button
                         no-spinner-on-click
-                        ${ref(this.savePermissionButtonRef)}
                         id="permission-save-button"
-                        ?disabled="${this.usersToAdd.size === 0}"
-                        @click="${async () => {
-                            try {
-                                await this.saveUserPermissions();
-                            } catch (error) {
-                                console.error('Error saving user permissions:', error);
-                            }
-
-                            // Revert buttons to edit button
-                            this.setAllButtonState('edit');
-                            // Remove edit styles & disable checkboxes
-                            this._a(`input[type="checkbox"][data-user-id]`).forEach((checkbox) => {
-                                const checkboxElem = /** @type {HTMLInputElement} */ (checkbox);
-                                checkboxElem.classList.remove('changed');
-                                checkboxElem.removeAttribute('data-changed');
-                            });
-                            this.disableAllCheckboxes();
-                        }}"
+                        ?disabled="${pendingChangeCount === 0}"
+                        @click="${() => this.saveHolderPermissions()}"
                         type="is-primary">
                         ${i18n.t('grant-permission-dialog.buttons.save-all-text')}
                     </dbp-button>
                 </menu>
             </dbp-modal>
 
-            <!-- Deletion Confirmation Modal -->
             <dbp-modal
                 id="deletion-confirmation-modal--grant-permission"
                 class="modal modal--confirmation"
@@ -1477,7 +1768,11 @@ export class GrantPermissionDialog extends LangMixin(
                 title="${i18n.t('grant-permission-dialog.delete-confirmation.title')}"
                 subscribe="lang">
                 <div slot="content">
-                    <p>${i18n.t('grant-permission-dialog.delete-confirmation.message')}</p>
+                    <p>
+                        ${i18n.t('grant-permission-dialog.delete-confirmation.message', {
+                            name: this.deletionCandidateName,
+                        })}
+                    </p>
                 </div>
                 <menu slot="footer" class="footer-menu">
                     <dbp-button

@@ -1,47 +1,90 @@
 {
     "grant-permission-dialog": {
-        "available-permissions": "Verfügbare Berechtigungen",
+        "add": {
+            "dynamic-group-description": "Die Mitglieder werden automatisch anhand ihrer Benutzermerkmale bestimmt, zum Beispiel ihrer Rolle. Die Mitgliedschaft kann sich mit der Zeit ändern.",
+            "dynamic-group-placeholder": "Dynamische Gruppe auswählen",
+            "dynamic-group-title": "Dynamische Gruppe hinzufügen",
+            "group-description": "Alle aktuellen und zukünftigen Mitglieder der Gruppe erhalten die ausgewählten Berechtigungen. Es werden nur Gruppen angezeigt, die Sie sehen dürfen.",
+            "group-placeholder": "Nach einer Gruppe suchen",
+            "group-title": "Gruppe hinzufügen",
+            "toolbar-label": "Zugriff gewähren für",
+            "user-description": "Suchen Sie eine Person nach ihrem Namen.",
+            "user-placeholder": "Nach einer Person suchen",
+            "user-title": "Person hinzufügen"
+        },
         "buttons": {
-            "add-person-text": "Neue Person hinzufügen",
+            "add-dynamic-group": "Dynamische Gruppe",
+            "add-group": "Gruppe",
+            "add-user": "Person",
+            "cancel-add-text": "Hinzufügen abbrechen",
+            "cancel-edit-text": "Änderungen für {{name}} verwerfen",
             "cancel-text": "Schließen",
-            "delete-text": "Löschen",
-            "edit-text": "Bearbeiten",
+            "delete-text": "Alle Berechtigungen von {{name}} entfernen",
+            "edit-text": "Berechtigungen von {{name}} bearbeiten",
             "save-all-text": "Alle speichern",
             "save-text": "Speichern"
         },
         "delete-confirmation": {
             "button-abort-text": "Abbrechen",
-            "button-delete-text": "Löschen",
-            "message": "Möchten Sie die ausgewählten Zuschüsse wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-            "title": "Löschen bestätigen"
+            "button-delete-text": "Entfernen",
+            "message": "Möchten Sie wirklich alle Berechtigungen von {{name}} entfernen? Diese Aktion kann nicht rückgängig gemacht werden.",
+            "title": "Berechtigungen entfernen"
         },
+        "empty-state": "Es wurden noch keine Berechtigungen vergeben. Verwenden Sie die Schaltflächen oben, um einer Person oder Gruppe Zugriff zu gewähren.",
+        "holder": {
+            "new-badge": "Neu",
+            "read-only": "Nur lesbar",
+            "system-rule": "Systemregel",
+            "system-rule-description": "Wird automatisch vom System verwaltet",
+            "type-dynamic-group": "Dynamische Gruppe · Mitgliedschaft wird automatisch bestimmt",
+            "type-group": "Gruppe · gilt für alle Mitglieder",
+            "type-user": "Person",
+            "unknown-group": "Gruppe ohne Leseberechtigung",
+            "unknown-person": "Unbekannte Person"
+        },
+        "holder-column": "Person oder Gruppe",
+        "intro_one": "Legen Sie fest, wer auf diesen Eintrag zugreifen darf und was erlaubt ist.",
+        "intro_other": "Legen Sie fest, wer auf die {{count}} ausgewählten Einträge zugreifen darf und was erlaubt ist. Änderungen gelten für alle.",
+        "loading": "Berechtigungen werden geladen…",
         "modal-title": "Berechtigungen verwalten",
         "need-login-warning-text": "Sie müssen angemeldet sein, um den Dialog zur Berechtigungserteilung zu nutzen",
         "notifications": {
-            "cant-remove-last-manager-warning": "[de] You cannot remove the last manage permission from the last manager user.",
-            "could-not-delete-grant": "Löschen von Berechtigungen fehlgeschlagen",
-            "could-not-delete-user": "Benutzer konnte nicht gelöscht werden",
-            "could-not-fetch-user-details": "Benutzerdetails konnten nicht abgerufen werden",
+            "cant-remove-last-manager-warning": "Mindestens eine Person muss die Verwaltungsberechtigung behalten.",
+            "could-not-delete-holder": "Die Berechtigungen von {{name}} konnten nicht entfernt werden",
             "could-not-get-forms": "Formulare konnten nicht von der API abgerufen werden",
             "error-not-authorized": "Nicht autorisiert",
             "error-title": "Fehler",
-            "failed-get-user-details": "Benutzerdetails konnten nicht abgerufen werden",
-            "failed-to-get-user-details": "Benutzerdetails konnten nicht abgerufen werden",
+            "failed-to-add-holder": "Der ausgewählte Eintrag konnte nicht hinzugefügt werden",
+            "holder-already-added": "{{name}} ist bereits in der Liste",
+            "holder-successfully-deleted": "Alle Berechtigungen von {{name}} wurden entfernt",
             "info-title": "Info",
-            "permissions-saved-successfully": "{{n}} Berechtigungen erfolgreich gespeichert",
-            "save-permissions-error": "Speichern der {{n}} Benutzerberechtigungen fehlgeschlagen",
-            "save-permissions-unexpected-error": "Beim Speichern von Benutzerberechtigungen ist ein unerwarteter Fehler aufgetreten.",
+            "permissions-saved-successfully_one": "{{count}} Berechtigung erfolgreich gespeichert",
+            "permissions-saved-successfully_other": "{{count}} Berechtigungen erfolgreich gespeichert",
+            "save-permissions-error_one": "{{count}} Berechtigung konnte nicht gespeichert werden",
+            "save-permissions-error_other": "{{count}} Berechtigungen konnten nicht gespeichert werden",
+            "save-permissions-unexpected-error": "Beim Speichern der Berechtigungen ist ein unerwarteter Fehler aufgetreten.",
             "set-available-actions-error-text": "Verfügbare Aktionen konnten nicht festgelegt werden",
             "success-title": "Erfolg",
-            "there-is-no-user-to-save": "[de] There is no user to save",
-            "there-is-nothing-to-save": "Es gibt keine Änderung der Berechtigungen zum Speichern für den Benutzer {{userFullName}}.",
-            "unknown-error": "Unbekannter Fehler beim Abrufen von Benutzerberechtigungen",
-            "user-already-added": "Benutzer bereits hinzugefügt",
-            "user-successfully-deleted": "Alle Berechtigungen von {{userFullName}} erfolgreich gelöscht",
+            "there-is-nothing-to-save": "Es gibt keine Änderungen zum Speichern",
+            "unknown-error": "Unbekannter Fehler beim Abrufen der Berechtigungen",
             "warning-title": "Warnung"
         },
+        "pending-changes_one": "{{count}} Eintrag mit ungespeicherten Änderungen",
+        "pending-changes_other": "{{count}} Einträge mit ungespeicherten Änderungen",
         "permissions": {
-            "inherited-permission-title": "[de] Inherited permission, can't be changed"
+            "inherited-permission-title": "Geerbte Berechtigung, kann nicht geändert werden",
+            "last-manager-title": "Mindestens eine Person muss die Verwaltungsberechtigung behalten",
+            "locked-permission-title": "Sie dürfen diese Berechtigung nicht ändern",
+            "mixed-permission-title": "Nur für einige der ausgewählten Einträge vergeben",
+            "state-granted": "erteilt",
+            "state-mixed": "für einige der ausgewählten Einträge erteilt",
+            "state-not-granted": "nicht erteilt"
+        },
+        "permissions-for": "Berechtigungen von {{name}}",
+        "sections": {
+            "dynamic-group": "Dynamische Gruppen",
+            "group": "Gruppen",
+            "user": "Personen"
         }
     }
 }

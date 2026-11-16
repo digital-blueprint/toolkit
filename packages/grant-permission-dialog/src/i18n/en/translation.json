@@ -1,47 +1,90 @@
 {
     "grant-permission-dialog": {
-        "available-permissions": "Available Permissions",
+        "add": {
+            "dynamic-group-description": "Members are determined automatically based on their user attributes, for example their role. Membership can change over time.",
+            "dynamic-group-placeholder": "Select a dynamic group",
+            "dynamic-group-title": "Add dynamic group",
+            "group-description": "All current and future members of the group receive the selected permissions. Only groups you are allowed to see are listed.",
+            "group-placeholder": "Search for a group",
+            "group-title": "Add group",
+            "toolbar-label": "Grant access to",
+            "user-description": "Search for a person by name.",
+            "user-placeholder": "Search for a person",
+            "user-title": "Add person"
+        },
         "buttons": {
-            "add-person-text": "Add new person",
+            "add-dynamic-group": "Dynamic group",
+            "add-group": "Group",
+            "add-user": "Person",
+            "cancel-add-text": "Cancel adding",
+            "cancel-edit-text": "Discard changes for {{name}}",
             "cancel-text": "Close",
-            "delete-text": "Delete",
-            "edit-text": "Edit",
+            "delete-text": "Remove all permissions of {{name}}",
+            "edit-text": "Edit permissions of {{name}}",
             "save-all-text": "Save all",
             "save-text": "Save"
         },
         "delete-confirmation": {
             "button-abort-text": "Cancel",
-            "button-delete-text": "Delete",
-            "message": "Are you sure you want to delete the selected grants? This action cannot be undone.",
-            "title": "Confirm deletion"
+            "button-delete-text": "Remove",
+            "message": "Do you really want to remove all permissions of {{name}}? This action cannot be undone.",
+            "title": "Remove permissions"
         },
+        "empty-state": "No permissions have been granted yet. Use the buttons above to grant access to a person or a group.",
+        "holder": {
+            "new-badge": "New",
+            "read-only": "Read only",
+            "system-rule": "System rule",
+            "system-rule-description": "Managed automatically by the system",
+            "type-dynamic-group": "Dynamic group · membership is determined automatically",
+            "type-group": "Group · applies to all members",
+            "type-user": "Person",
+            "unknown-group": "Group without read access",
+            "unknown-person": "Unknown person"
+        },
+        "holder-column": "Person or group",
+        "intro_one": "Choose who can access this item and what they are allowed to do.",
+        "intro_other": "Choose who can access the {{count}} selected items and what they are allowed to do. Changes apply to all of them.",
+        "loading": "Loading permissions…",
         "modal-title": "Manage permissions",
         "need-login-warning-text": "You need to be logged in to use the grant permission modal",
         "notifications": {
-            "cant-remove-last-manager-warning": "You cannot remove the last manage permission from the last manager user.",
-            "could-not-delete-grant": "Failed to delete permissions",
-            "could-not-delete-user": "Failed to delete user",
-            "could-not-fetch-user-details": "Failed to fetch user details",
+            "cant-remove-last-manager-warning": "At least one person has to keep the manage permission.",
+            "could-not-delete-holder": "Failed to remove the permissions of {{name}}",
             "could-not-get-forms": "Could not get forms from the API",
             "error-not-authorized": "Not authorized",
             "error-title": "Error",
-            "failed-get-user-details": "Failed to get user details",
-            "failed-to-get-user-details": "Failed to fetch user details",
+            "failed-to-add-holder": "Failed to add the selected entry",
+            "holder-already-added": "{{name}} is already in the list",
+            "holder-successfully-deleted": "All permissions of {{name}} were removed",
             "info-title": "Info",
-            "permissions-saved-successfully": "{{n}} permissions saved successfully",
-            "save-permissions-error": "Failed to save {{n}} user permissions",
+            "permissions-saved-successfully_one": "{{count}} permission saved successfully",
+            "permissions-saved-successfully_other": "{{count}} permissions saved successfully",
+            "save-permissions-error_one": "Failed to save {{count}} permission",
+            "save-permissions-error_other": "Failed to save {{count}} permissions",
             "save-permissions-unexpected-error": "Unexpected error happened during saving grants",
             "set-available-actions-error-text": "Failed to set available actions",
             "success-title": "Success",
-            "there-is-no-user-to-save": "There is no user to save",
-            "there-is-nothing-to-save": "There is no change in permissions to save for user {{userFullName}}",
-            "unknown-error": "Unknown error while getting user permissions",
-            "user-already-added": "User already added",
-            "user-successfully-deleted": "All permissions of {{userFullName}} successfully deleted",
+            "there-is-nothing-to-save": "There are no changes to save",
+            "unknown-error": "Unknown error while getting permissions",
             "warning-title": "Warning"
         },
+        "pending-changes_one": "{{count}} entry with unsaved changes",
+        "pending-changes_other": "{{count}} entries with unsaved changes",
         "permissions": {
-            "inherited-permission-title": "Inherited permission, can't be changed"
+            "inherited-permission-title": "Inherited permission, can't be changed",
+            "last-manager-title": "At least one person has to keep the manage permission",
+            "locked-permission-title": "You are not allowed to change this permission",
+            "mixed-permission-title": "Only granted on some of the selected items",
+            "state-granted": "granted",
+            "state-mixed": "granted on some of the selected items",
+            "state-not-granted": "not granted"
+        },
+        "permissions-for": "Permissions of {{name}}",
+        "sections": {
+            "dynamic-group": "Dynamic groups",
+            "group": "Groups",
+            "user": "People"
         }
     }
 }
