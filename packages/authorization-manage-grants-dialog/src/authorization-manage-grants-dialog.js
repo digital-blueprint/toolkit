@@ -33,6 +33,18 @@ import {
     toCompactSubject,
 } from './grant-holder.js';
 import {
+    addDraftRoleGrant,
+    canAddDraftRole,
+    getAvailableRoles,
+    getPendingGrantChange,
+    hasIncompleteDraftRole,
+    isHolderSaveable,
+    prunePendingGrantChanges,
+    removeDraftRoleGrant,
+    setPendingGrantChange,
+    updateDraftRoleGrant,
+} from './grant-drafts.js';
+import {
     compareIdentifiers,
     createCollator,
     deleteFromMap,
@@ -774,23 +786,17 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleAddRoleButtonClick(holderKey) {
-        const holderDraftRoles = this.draftRoleGrants.get(holderKey) ?? [];
-        const hasIncompleteDraft = this._hasIncompleteDraftRole(holderKey);
-
-        if (hasIncompleteDraft || !this._getAvailableRolesForHolder(holderKey).length) {
+        // Adding a subject adds its first role row without going through the button.
+        if (this._isAddRoleDisabled(holderKey)) {
             return;
         }
 
         this._nextDraftRoleIdentifier += 1;
-        const draftRole = {
-            clientIdentifier: `draft-role-${this._nextDraftRoleIdentifier}`,
-            roleIdentifier: null,
-            shareable: false,
-        };
-        this.draftRoleGrants = updateInMap(this.draftRoleGrants, holderKey, [
-            ...holderDraftRoles,
-            draftRole,
-        ]);
+        this.draftRoleGrants = addDraftRoleGrant(
+            this.draftRoleGrants,
+            holderKey,
+            `draft-role-${this._nextDraftRoleIdentifier}`,
+        );
     }
 
     /**
@@ -800,17 +806,14 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleDeleteDraftRoleButtonClick(holderKey, clientIdentifier) {
-        const remainingRoles = (this.draftRoleGrants.get(holderKey) ?? []).filter(
-            (grant) => grant.clientIdentifier !== clientIdentifier,
+        const remainingDrafts = removeDraftRoleGrant(
+            this.draftRoleGrants,
+            this.draftGrantHolders,
+            holderKey,
+            clientIdentifier,
         );
-        this.draftRoleGrants = remainingRoles.length
-            ? updateInMap(this.draftRoleGrants, holderKey, remainingRoles)
-            : deleteFromMap(this.draftRoleGrants, holderKey);
-
-        // If no more roles remain on a draft holder, remove the draft holder as well.
-        if (!remainingRoles.length && this.draftGrantHolders.has(holderKey)) {
-            this.draftGrantHolders = deleteFromMap(this.draftGrantHolders, holderKey);
-        }
+        this.draftRoleGrants = remainingDrafts.draftRoleGrants;
+        this.draftGrantHolders = remainingDrafts.draftGrantHolders;
     }
 
     /**
@@ -983,27 +986,15 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         currentDraftIdentifier = null,
         currentGrantIdentifier = null,
     ) {
-        const assignedRoleIds = new Set(
-            (this.grantHolders.get(holderKey)?.grants ?? [])
-                .filter((grant) => grant.identifier !== currentGrantIdentifier)
-                // An unsaved change frees the assigned role and takes the selected one instead.
-                .map(
-                    (grant) =>
-                        this._getPendingGrantChange(holderKey, grant.identifier)?.roleIdentifier ??
-                        grant.roleDefinition['@id'],
-                ),
-        );
-        const selectedDraftRoleIds = new Set(
-            (this.draftRoleGrants.get(holderKey) ?? [])
-                .filter(
-                    (draft) =>
-                        draft.clientIdentifier !== currentDraftIdentifier && draft.roleIdentifier,
-                )
-                .map((draft) => draft.roleIdentifier),
-        );
-        return [...this.roles.values()].filter(
-            (role) => !assignedRoleIds.has(role['@id']) && !selectedDraftRoleIds.has(role['@id']),
-        );
+        return getAvailableRoles({
+            roles: this.roles,
+            grantHolders: this.grantHolders,
+            draftRoleGrants: this.draftRoleGrants,
+            pendingGrantChanges: this.pendingGrantChanges,
+            holderKey: holderKey,
+            currentDraftIdentifier: currentDraftIdentifier,
+            currentGrantIdentifier: currentGrantIdentifier,
+        });
     }
 
     /**
@@ -1013,11 +1004,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {PendingGrantChange|null} The pending change, or null when the grant is unchanged.
      */
     _getPendingGrantChange(holderKey, grantIdentifier) {
-        return (
-            (this.pendingGrantChanges.get(holderKey) ?? []).find(
-                (change) => change.grantIdentifier === grantIdentifier,
-            ) ?? null
-        );
+        return getPendingGrantChange(this.pendingGrantChanges, holderKey, grantIdentifier);
     }
 
     /**
@@ -1026,18 +1013,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     _prunePendingGrantChanges() {
-        /** @type {Map<string, PendingGrantChange[]>} */
-        const prunedChanges = new Map();
-        for (const [holderKey, changes] of this.pendingGrantChanges) {
-            const grants = this.grantHolders.get(holderKey)?.grants ?? [];
-            const remainingChanges = changes.filter((change) =>
-                grants.some((grant) => grant.identifier === change.grantIdentifier),
-            );
-            if (remainingChanges.length) {
-                prunedChanges.set(holderKey, remainingChanges);
-            }
-        }
-        this.pendingGrantChanges = prunedChanges;
+        this.pendingGrantChanges = prunePendingGrantChanges(
+            this.pendingGrantChanges,
+            this.grantHolders,
+        );
     }
 
     /**
@@ -1048,13 +1027,11 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     _updateDraftRole(holderKey, clientIdentifier, changes) {
-        const holderDraftRoles = this.draftRoleGrants.get(holderKey) ?? [];
-        this.draftRoleGrants = updateInMap(
+        this.draftRoleGrants = updateDraftRoleGrant(
             this.draftRoleGrants,
             holderKey,
-            holderDraftRoles.map((grant) =>
-                grant.clientIdentifier === clientIdentifier ? {...grant, ...changes} : grant,
-            ),
+            clientIdentifier,
+            changes,
         );
     }
 
@@ -1068,24 +1045,12 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     _updatePendingGrantChange(holderKey, grant, changes) {
-        const currentChange = this._getPendingGrantChange(holderKey, grant.identifier);
-        const nextChange = {
-            grantIdentifier: grant.identifier,
-            roleIdentifier: currentChange?.roleIdentifier ?? grant.roleDefinition['@id'],
-            shareable: currentChange?.shareable ?? Boolean(grant.shareable),
-            ...changes,
-        };
-        const otherChanges = (this.pendingGrantChanges.get(holderKey) ?? []).filter(
-            (change) => change.grantIdentifier !== grant.identifier,
+        this.pendingGrantChanges = setPendingGrantChange(
+            this.pendingGrantChanges,
+            holderKey,
+            grant,
+            changes,
         );
-        const isUnchanged =
-            nextChange.roleIdentifier === grant.roleDefinition['@id'] &&
-            nextChange.shareable === Boolean(grant.shareable);
-        const holderChanges = isUnchanged ? otherChanges : [...otherChanges, nextChange];
-
-        this.pendingGrantChanges = holderChanges.length
-            ? updateInMap(this.pendingGrantChanges, holderKey, holderChanges)
-            : deleteFromMap(this.pendingGrantChanges, holderKey);
     }
 
     /**
@@ -1186,20 +1151,22 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         // Disable the save button if the holder is currently being saved
         if (this._savingHolderKeys.has(holderKey)) return true;
 
-        const draftGrants = this.draftRoleGrants.get(holderKey) ?? [];
-        const pendingChanges = this.pendingGrantChanges.get(holderKey) ?? [];
-        // An incomplete draft row always blocks saving.
-        if (this._hasIncompleteDraftRole(holderKey)) return true;
-
-        // Enable if no pending changes and no draft grants exist for the holder.
-        return draftGrants.length === 0 && pendingChanges.length === 0;
+        return !isHolderSaveable(this.draftRoleGrants, this.pendingGrantChanges, holderKey);
     }
 
+    /**
+     * Determines if the "Add Role" button for a specific holder should be disabled.
+     * @param {string} holderKey - Key of an existing or draft grant holder.
+     * @returns {boolean} Whether the "Add Role" button should be disabled.
+     */
     _isAddRoleDisabled(holderKey) {
-        return (
-            this._hasIncompleteDraftRole(holderKey) ||
-            !this._getAvailableRolesForHolder(holderKey).length
-        );
+        return !canAddDraftRole({
+            roles: this.roles,
+            grantHolders: this.grantHolders,
+            draftRoleGrants: this.draftRoleGrants,
+            pendingGrantChanges: this.pendingGrantChanges,
+            holderKey: holderKey,
+        });
     }
 
     /**
@@ -1209,7 +1176,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {boolean} Whether a draft row is still incomplete.
      */
     _hasIncompleteDraftRole(holderKey) {
-        return (this.draftRoleGrants.get(holderKey) ?? []).some((draft) => !draft.roleIdentifier);
+        return hasIncompleteDraftRole(this.draftRoleGrants, holderKey);
     }
 
     /**
