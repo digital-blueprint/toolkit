@@ -8,6 +8,18 @@ import {
     toCompactSubject,
 } from '../src/grant-holder.js';
 import {getRoleName, getRoleNameByIri, isGrantChangeable} from '../src/utils.js';
+import {
+    addDraftRoleGrant,
+    canAddDraftRole,
+    getAvailableRoles,
+    getPendingGrantChange,
+    hasIncompleteDraftRole,
+    isHolderSaveable,
+    prunePendingGrantChanges,
+    removeDraftRoleGrant,
+    setPendingGrantChange,
+    updateDraftRoleGrant,
+} from '../src/grant-drafts.js';
 
 suite('utils', () => {
     test('should name a role in the given language', () => {
@@ -190,6 +202,378 @@ suite('grant holder', () => {
                 identifier: 'developers',
             },
         );
+    });
+});
+
+suite('grant-drafts', () => {
+    const EDITOR = {'@id': '/authorization/roles/editor', identifier: 'editor'};
+    const READER = {'@id': '/authorization/roles/reader', identifier: 'reader'};
+    const AUTHOR = {'@id': '/authorization/roles/author', identifier: 'author'};
+    const HOLDER_KEY = 'person:frank';
+
+    const roles = new Map([EDITOR, READER, AUTHOR].map((role) => [role['@id'], role]));
+
+    /**
+     * Builds the saved grants of a holder, keyed the way the dialog keys them.
+     * @param {Array<{identifier: string, role: object, shareable?: boolean}>} grants - Grants to build.
+     * @returns {Map<string, object>} Grant holders holding the grants.
+     */
+    function createGrantHolders(grants) {
+        return new Map([
+            [
+                HOLDER_KEY,
+                {
+                    key: HOLDER_KEY,
+                    type: 'person',
+                    subject: {identifier: 'frank', givenName: 'Frank'},
+                    grants: grants.map((grant) => ({
+                        identifier: grant.identifier,
+                        shareable: grant.shareable ?? false,
+                        grantedActions: ['delete'],
+                        roleDefinition: grant.role,
+                    })),
+                },
+            ],
+        ]);
+    }
+
+    /**
+     * Returns the identifiers of role definitions, so expected roles stay readable.
+     * @param {Array<{identifier: string}>} roleDefinitions - Role definitions to name.
+     * @returns {string[]} Identifiers of the roles.
+     */
+    function roleIdentifiers(roleDefinitions) {
+        return roleDefinitions.map((role) => role.identifier);
+    }
+
+    test('should offer only the roles a holder has not taken yet', () => {
+        const grantHolders = createGrantHolders([{identifier: 'grant-a', role: EDITOR}]);
+        const draftRoleGrants = new Map([
+            [HOLDER_KEY, [{clientIdentifier: 'draft-role-1', roleIdentifier: READER['@id']}]],
+        ]);
+        const state = {
+            roles: roles,
+            grantHolders: grantHolders,
+            draftRoleGrants: draftRoleGrants,
+            pendingGrantChanges: new Map(),
+            holderKey: HOLDER_KEY,
+        };
+
+        assert.deepEqual(roleIdentifiers(getAvailableRoles(state)), ['author']);
+        // The row being rendered keeps its own selection, so it stays selectable
+        assert.deepEqual(
+            roleIdentifiers(getAvailableRoles({...state, currentDraftIdentifier: 'draft-role-1'})),
+            ['reader', 'author'],
+        );
+        assert.deepEqual(
+            roleIdentifiers(getAvailableRoles({...state, currentGrantIdentifier: 'grant-a'})),
+            ['editor', 'author'],
+        );
+        // A holder without any grants may take every role
+        assert.deepEqual(
+            roleIdentifiers(
+                getAvailableRoles({
+                    ...state,
+                    grantHolders: new Map(),
+                    draftRoleGrants: new Map(),
+                }),
+            ),
+            ['editor', 'reader', 'author'],
+        );
+    });
+
+    test('should free the role of a grant that has an unsaved change', () => {
+        const available = getAvailableRoles({
+            roles: roles,
+            grantHolders: createGrantHolders([{identifier: 'grant-a', role: EDITOR}]),
+            draftRoleGrants: new Map(),
+            pendingGrantChanges: new Map([
+                [
+                    HOLDER_KEY,
+                    [
+                        {
+                            grantIdentifier: 'grant-a',
+                            roleIdentifier: AUTHOR['@id'],
+                            shareable: false,
+                        },
+                    ],
+                ],
+            ]),
+            holderKey: HOLDER_KEY,
+        });
+
+        // The change gives up the editor role and takes the author role instead
+        assert.deepEqual(roleIdentifiers(available), ['editor', 'reader']);
+    });
+
+    test('should offer the available roles as a list of its own', () => {
+        const state = {
+            roles: roles,
+            grantHolders: new Map(),
+            draftRoleGrants: new Map(),
+            pendingGrantChanges: new Map(),
+            holderKey: HOLDER_KEY,
+        };
+
+        // Rendering a role selector appends the assigned role to the list it got
+        const available = getAvailableRoles(state);
+        available.push(EDITOR);
+        assert.lengthOf(getAvailableRoles(state), 3);
+    });
+
+    test('should find the unsaved change of a grant', () => {
+        const change = {
+            grantIdentifier: 'grant-a',
+            roleIdentifier: READER['@id'],
+            shareable: false,
+        };
+        const pendingGrantChanges = new Map([[HOLDER_KEY, [change]]]);
+
+        assert.deepEqual(getPendingGrantChange(pendingGrantChanges, HOLDER_KEY, 'grant-a'), change);
+        assert.isNull(getPendingGrantChange(pendingGrantChanges, HOLDER_KEY, 'grant-b'));
+        assert.isNull(getPendingGrantChange(pendingGrantChanges, 'person:bob', 'grant-a'));
+        assert.isNull(getPendingGrantChange(new Map(), HOLDER_KEY, 'grant-a'));
+    });
+
+    test('should record an unsaved change and drop it once it is reverted', () => {
+        const grant = {
+            identifier: 'grant-a',
+            shareable: true,
+            grantedActions: ['delete'],
+            roleDefinition: EDITOR,
+        };
+        const pendingGrantChanges = new Map();
+
+        const changedRole = setPendingGrantChange(pendingGrantChanges, HOLDER_KEY, grant, {
+            roleIdentifier: READER['@id'],
+        });
+        assert.deepEqual(changedRole.get(HOLDER_KEY), [
+            {grantIdentifier: 'grant-a', roleIdentifier: READER['@id'], shareable: true},
+        ]);
+        // The map the change was recorded in stays as it was, so Lit sees a new one
+        assert.equal(pendingGrantChanges.size, 0);
+
+        // A second change of the same grant is merged into the recorded one
+        const changedBoth = setPendingGrantChange(changedRole, HOLDER_KEY, grant, {
+            shareable: false,
+        });
+        assert.deepEqual(changedBoth.get(HOLDER_KEY), [
+            {grantIdentifier: 'grant-a', roleIdentifier: READER['@id'], shareable: false},
+        ]);
+
+        // Selecting the assigned role again leaves only the shareable state changed
+        const revertedRole = setPendingGrantChange(changedBoth, HOLDER_KEY, grant, {
+            roleIdentifier: EDITOR['@id'],
+        });
+        assert.deepEqual(revertedRole.get(HOLDER_KEY), [
+            {grantIdentifier: 'grant-a', roleIdentifier: EDITOR['@id'], shareable: false},
+        ]);
+
+        // Reverting the last changed value drops the holder from the map altogether
+        const reverted = setPendingGrantChange(revertedRole, HOLDER_KEY, grant, {
+            shareable: true,
+        });
+        assert.isFalse(reverted.has(HOLDER_KEY));
+    });
+
+    test('should keep the unsaved changes of the other grants of a holder', () => {
+        const editorGrant = {identifier: 'grant-a', shareable: false, roleDefinition: EDITOR};
+        const readerGrant = {identifier: 'grant-b', shareable: false, roleDefinition: READER};
+
+        let pendingGrantChanges = setPendingGrantChange(new Map(), HOLDER_KEY, editorGrant, {
+            shareable: true,
+        });
+        pendingGrantChanges = setPendingGrantChange(pendingGrantChanges, HOLDER_KEY, readerGrant, {
+            roleIdentifier: AUTHOR['@id'],
+        });
+        assert.lengthOf(pendingGrantChanges.get(HOLDER_KEY), 2);
+
+        pendingGrantChanges = setPendingGrantChange(pendingGrantChanges, HOLDER_KEY, editorGrant, {
+            shareable: false,
+        });
+        assert.deepEqual(pendingGrantChanges.get(HOLDER_KEY), [
+            {grantIdentifier: 'grant-b', roleIdentifier: AUTHOR['@id'], shareable: false},
+        ]);
+    });
+
+    test('should drop the unsaved changes of grants that are gone', () => {
+        const pendingGrantChanges = new Map([
+            [
+                HOLDER_KEY,
+                [
+                    {grantIdentifier: 'grant-a', roleIdentifier: READER['@id'], shareable: false},
+                    {
+                        grantIdentifier: 'grant-gone',
+                        roleIdentifier: AUTHOR['@id'],
+                        shareable: false,
+                    },
+                ],
+            ],
+            [
+                'person:bob',
+                [{grantIdentifier: 'grant-c', roleIdentifier: READER['@id'], shareable: false}],
+            ],
+        ]);
+
+        const pruned = prunePendingGrantChanges(
+            pendingGrantChanges,
+            createGrantHolders([{identifier: 'grant-a', role: EDITOR}]),
+        );
+
+        assert.deepEqual(pruned.get(HOLDER_KEY), [
+            {grantIdentifier: 'grant-a', roleIdentifier: READER['@id'], shareable: false},
+        ]);
+        // A holder that lost all of its grants is no longer part of the map
+        assert.isFalse(pruned.has('person:bob'));
+    });
+
+    test('should add a draft role row without a role', () => {
+        const draftRoleGrants = addDraftRoleGrant(new Map(), HOLDER_KEY, 'draft-role-1');
+        assert.deepEqual(draftRoleGrants.get(HOLDER_KEY), [
+            {clientIdentifier: 'draft-role-1', roleIdentifier: null, shareable: false},
+        ]);
+
+        const withSecondRow = addDraftRoleGrant(draftRoleGrants, HOLDER_KEY, 'draft-role-2');
+        assert.deepEqual(
+            withSecondRow.get(HOLDER_KEY).map((draft) => draft.clientIdentifier),
+            ['draft-role-1', 'draft-role-2'],
+        );
+        // Rows are added to a new map, so the rendered rows are not changed in place
+        assert.lengthOf(draftRoleGrants.get(HOLDER_KEY), 1);
+    });
+
+    test('should update only the addressed draft role row', () => {
+        let draftRoleGrants = addDraftRoleGrant(new Map(), HOLDER_KEY, 'draft-role-1');
+        draftRoleGrants = addDraftRoleGrant(draftRoleGrants, HOLDER_KEY, 'draft-role-2');
+
+        const updated = updateDraftRoleGrant(draftRoleGrants, HOLDER_KEY, 'draft-role-2', {
+            roleIdentifier: READER['@id'],
+        });
+
+        assert.deepEqual(updated.get(HOLDER_KEY), [
+            {clientIdentifier: 'draft-role-1', roleIdentifier: null, shareable: false},
+            {clientIdentifier: 'draft-role-2', roleIdentifier: READER['@id'], shareable: false},
+        ]);
+    });
+
+    test('should remove a draft role row and the draft holder it empties', () => {
+        const draftGrantHolders = new Map([
+            [
+                HOLDER_KEY,
+                {
+                    key: HOLDER_KEY,
+                    type: 'person',
+                    subject: {identifier: 'frank'},
+                    holderFields: {userIdentifier: 'frank'},
+                    grants: [],
+                },
+            ],
+        ]);
+        let draftRoleGrants = addDraftRoleGrant(new Map(), HOLDER_KEY, 'draft-role-1');
+        draftRoleGrants = addDraftRoleGrant(draftRoleGrants, HOLDER_KEY, 'draft-role-2');
+
+        const withoutFirstRow = removeDraftRoleGrant(
+            draftRoleGrants,
+            draftGrantHolders,
+            HOLDER_KEY,
+            'draft-role-1',
+        );
+        assert.deepEqual(
+            withoutFirstRow.draftRoleGrants.get(HOLDER_KEY).map((draft) => draft.clientIdentifier),
+            ['draft-role-2'],
+        );
+        // The holder still has a row, so it keeps the map it was rendered from
+        assert.strictEqual(withoutFirstRow.draftGrantHolders, draftGrantHolders);
+
+        const withoutAnyRow = removeDraftRoleGrant(
+            withoutFirstRow.draftRoleGrants,
+            withoutFirstRow.draftGrantHolders,
+            HOLDER_KEY,
+            'draft-role-2',
+        );
+        // A draft holder has no saved grants, so its last row takes it with it
+        assert.isFalse(withoutAnyRow.draftRoleGrants.has(HOLDER_KEY));
+        assert.isFalse(withoutAnyRow.draftGrantHolders.has(HOLDER_KEY));
+    });
+
+    test('should keep a saved holder that loses its last draft role row', () => {
+        const draftRoleGrants = addDraftRoleGrant(new Map(), HOLDER_KEY, 'draft-role-1');
+        const draftGrantHolders = new Map();
+
+        const removed = removeDraftRoleGrant(
+            draftRoleGrants,
+            draftGrantHolders,
+            HOLDER_KEY,
+            'draft-role-1',
+        );
+
+        assert.isFalse(removed.draftRoleGrants.has(HOLDER_KEY));
+        assert.strictEqual(removed.draftGrantHolders, draftGrantHolders);
+    });
+
+    test('should block adding and saving while a draft row has no role', () => {
+        const state = {
+            roles: roles,
+            grantHolders: createGrantHolders([{identifier: 'grant-a', role: EDITOR}]),
+            draftRoleGrants: addDraftRoleGrant(new Map(), HOLDER_KEY, 'draft-role-1'),
+            pendingGrantChanges: new Map(),
+            holderKey: HOLDER_KEY,
+        };
+
+        assert.isTrue(hasIncompleteDraftRole(state.draftRoleGrants, HOLDER_KEY));
+        assert.isFalse(canAddDraftRole(state));
+        assert.isFalse(
+            isHolderSaveable(state.draftRoleGrants, state.pendingGrantChanges, HOLDER_KEY),
+        );
+
+        // Selecting a role completes the row, which unblocks both buttons
+        const draftRoleGrants = updateDraftRoleGrant(
+            state.draftRoleGrants,
+            HOLDER_KEY,
+            'draft-role-1',
+            {roleIdentifier: READER['@id']},
+        );
+        assert.isFalse(hasIncompleteDraftRole(draftRoleGrants, HOLDER_KEY));
+        assert.isTrue(canAddDraftRole({...state, draftRoleGrants: draftRoleGrants}));
+        assert.isTrue(isHolderSaveable(draftRoleGrants, state.pendingGrantChanges, HOLDER_KEY));
+    });
+
+    test('should not offer another draft role row once every role is taken', () => {
+        const state = {
+            roles: roles,
+            grantHolders: createGrantHolders([
+                {identifier: 'grant-a', role: EDITOR},
+                {identifier: 'grant-b', role: READER},
+                {identifier: 'grant-c', role: AUTHOR},
+            ]),
+            draftRoleGrants: new Map(),
+            pendingGrantChanges: new Map(),
+            holderKey: HOLDER_KEY,
+        };
+
+        assert.isFalse(canAddDraftRole(state));
+        assert.isTrue(canAddDraftRole({...state, grantHolders: new Map()}));
+    });
+
+    test('should only allow saving a holder that has unsaved work', () => {
+        const draftRoleGrants = updateDraftRoleGrant(
+            addDraftRoleGrant(new Map(), HOLDER_KEY, 'draft-role-1'),
+            HOLDER_KEY,
+            'draft-role-1',
+            {roleIdentifier: READER['@id']},
+        );
+        const pendingGrantChanges = new Map([
+            [
+                HOLDER_KEY,
+                [{grantIdentifier: 'grant-a', roleIdentifier: READER['@id'], shareable: false}],
+            ],
+        ]);
+
+        assert.isFalse(isHolderSaveable(new Map(), new Map(), HOLDER_KEY));
+        assert.isTrue(isHolderSaveable(draftRoleGrants, new Map(), HOLDER_KEY));
+        assert.isTrue(isHolderSaveable(new Map(), pendingGrantChanges, HOLDER_KEY));
+        // Another holder has nothing to save of its own
+        assert.isFalse(isHolderSaveable(draftRoleGrants, pendingGrantChanges, 'person:bob'));
     });
 });
 
