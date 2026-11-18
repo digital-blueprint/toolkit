@@ -204,7 +204,7 @@ export function updateDraftRoleGrant(draftRoleGrants, holderKey, clientIdentifie
  * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
  * @returns {Map<string, PendingGrantChange[]>} New map holding the changes that still apply.
  */
-export function prunePendingGrantChanges(pendingGrantChanges, grantHolders) {
+export function dropOrphanedGrantChanges(pendingGrantChanges, grantHolders) {
     /** @type {Map<string, PendingGrantChange[]>} */
     const prunedChanges = new Map();
     for (const [holderKey, changes] of pendingGrantChanges) {

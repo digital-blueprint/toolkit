@@ -15,7 +15,7 @@ import {
     getPendingGrantChange,
     hasIncompleteDraftRole,
     isHolderSaveable,
-    prunePendingGrantChanges,
+    dropOrphanedGrantChanges,
     removeDraftRoleGrant,
     setPendingGrantChange,
     updateDraftRoleGrant,
@@ -415,7 +415,7 @@ suite('grant-drafts', () => {
             ],
         ]);
 
-        const pruned = prunePendingGrantChanges(
+        const pruned = dropOrphanedGrantChanges(
             pendingGrantChanges,
             createGrantHolders([{identifier: 'grant-a', role: EDITOR}]),
         );

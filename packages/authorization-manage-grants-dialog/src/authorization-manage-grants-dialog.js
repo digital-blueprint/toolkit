@@ -41,7 +41,7 @@ import {
     hasIncompleteDraftRole,
     isHolderSaveable,
     promoteSavedDraftHolders,
-    prunePendingGrantChanges,
+    dropOrphanedGrantChanges,
     removeDraftRoleGrant,
     removeGrantFromHolders,
     setPendingGrantChange,
@@ -693,7 +693,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 this.grantHolders = this._sortGrantHolders(
                     new Map(resolvedHolders.map((holder) => [holder.key, holder])),
                 );
-                this._prunePendingGrantChanges();
+                this._dropOrphanedGrantChanges();
 
                 // Remove any draft data that is no longer relevant. The rows are checked
                 // against the holders the reload found, so this runs before the holders the
@@ -913,7 +913,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             this.draftRoleGrants,
         );
         // An unsaved change of the deleted grant can no longer be applied.
-        this._prunePendingGrantChanges();
+        this._dropOrphanedGrantChanges();
 
         this._notifySuccess('auth-manage-dialog.notifications.role-deleted-successfully', {
             roleName: roleName,
@@ -1037,8 +1037,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * leave changes behind that can never be applied.
      * @returns {void}
      */
-    _prunePendingGrantChanges() {
-        this.pendingGrantChanges = prunePendingGrantChanges(
+    _dropOrphanedGrantChanges() {
+        this.pendingGrantChanges = dropOrphanedGrantChanges(
             this.pendingGrantChanges,
             this.grantHolders,
         );
