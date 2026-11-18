@@ -83,6 +83,7 @@ export function deriveGrantHolderIdentity(holderFields) {
 
 /**
  * Returns the fields that address a grant holder in the API.
+ *
  * @param {{type: GrantHolderType, subject: GrantHolderSubject}} holder
  * @returns {GrantHolderFields}
  */

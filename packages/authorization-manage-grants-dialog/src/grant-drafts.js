@@ -17,6 +17,7 @@ import {deleteFromMap, updateInMap} from './utils.js';
 /**
  * Returns the entries a holder has in one of the unsaved state maps. Holders without entries
  * are not kept in those maps, so a missing entry is the same as an empty list.
+ *
  * @template T
  * @param {Map<string, T[]>} map - Map keyed by holder key.
  * @param {string} holderKey - Key of an existing or draft grant holder.
@@ -28,6 +29,7 @@ function holderEntries(map, holderKey) {
 
 /**
  * Returns the unsaved change of a saved grant, if there is one.
+ *
  * @param {Map<string, PendingGrantChange[]>} pendingGrantChanges - Unsaved changes keyed by holder key.
  * @param {string} holderKey - Key of the grant's holder.
  * @param {string} grantIdentifier - Identifier of the saved grant.
@@ -44,6 +46,7 @@ export function getPendingGrantChange(pendingGrantChanges, holderKey, grantIdent
 /**
  * Whether another draft role row can be added to a holder. The holder needs a role that is
  * still free, and the row it already has must have a role selected.
+ *
  * @param {object} options - Current grant state of the holder.
  * @param {Map<string, RoleDefinition>} options.roles - Known role definitions keyed by their IRI.
  * @param {Map<string, GrantHolder>} options.grantHolders - Saved grant holders keyed by holder key.
@@ -76,6 +79,7 @@ export function canAddDraftRole({
 /**
  * Whether a holder has unsaved state that can be saved. A holder needs at least one draft
  * role row or one unsaved change, and no draft row may be left without a role.
+ *
  * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
  * @param {Map<string, PendingGrantChange[]>} pendingGrantChanges - Unsaved changes keyed by holder key.
  * @param {string} holderKey - Key of an existing or draft grant holder.
@@ -95,6 +99,7 @@ export function isHolderSaveable(draftRoleGrants, pendingGrantChanges, holderKey
 /**
  * Whether a holder has a draft role row with no role selected yet. Such a row blocks adding
  * another row and blocks saving the holder.
+ *
  * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
  * @param {string} holderKey - Key of an existing or draft grant holder.
  * @returns {boolean} Whether a draft row is still incomplete.
@@ -106,6 +111,7 @@ export function hasIncompleteDraftRole(draftRoleGrants, holderKey) {
 /**
  * Records an unsaved change of a saved grant. The change is dropped again as soon as it
  * matches the saved grant, so reverting a selection also makes the holder unsaveable again.
+ *
  * @param {Map<string, PendingGrantChange[]>} pendingGrantChanges - Unsaved changes keyed by holder key.
  * @param {string} holderKey - Key of the holder the grant belongs to.
  * @param {RoleGrant} grant - Saved grant that was changed.
@@ -136,6 +142,7 @@ export function setPendingGrantChange(pendingGrantChanges, holderKey, grant, cha
 /**
  * Adds an empty draft role row to a holder. The row keeps its client identifier until it is
  * saved, so the rendered rows stay stable while the user fills them in.
+ *
  * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
  * @param {string} holderKey - Key of an existing or draft grant holder.
  * @param {string} clientIdentifier - Client-side identifier of the new draft role.
@@ -151,6 +158,7 @@ export function addDraftRoleGrant(draftRoleGrants, holderKey, clientIdentifier) 
 /**
  * Removes one unsaved role row, and the draft holder it leaves without any role. A draft
  * holder has no saved grants, so it has nothing left to show once its last row is gone.
+ *
  * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
  * @param {Map<string, DraftGrantHolder>} draftGrantHolders - Unsaved grant holders keyed by holder key.
  * @param {string} holderKey - Key of the draft role's holder.
@@ -181,6 +189,7 @@ export function removeDraftRoleGrant(
 
 /**
  * Updates one draft role of a holder.
+ *
  * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
  * @param {string} holderKey - Key of the draft role's holder.
  * @param {string} clientIdentifier - Client-side draft role identifier.
@@ -199,7 +208,8 @@ export function updateDraftRoleGrant(draftRoleGrants, holderKey, clientIdentifie
 
 /**
  * Removes the unsaved changes that no longer belong to a saved grant, so a reload cannot
- * leave changes behind that can never be applied.
+ * leave changes behind that can never be applied, or a changed but then deleted grant.
+ *
  * @param {Map<string, PendingGrantChange[]>} pendingGrantChanges - Unsaved changes keyed by holder key.
  * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
  * @returns {Map<string, PendingGrantChange[]>} New map holding the changes that still apply.
@@ -223,6 +233,7 @@ export function dropOrphanedGrantChanges(pendingGrantChanges, grantHolders) {
  * Removes a deleted grant from the holder it belonged to. A holder exists through its grants
  * only, so it is removed together with its last one - unless it still holds unsaved role
  * rows, which would have nothing left to be rendered in.
+ *
  * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
  * @param {string} grantIdentifier - Identifier of the deleted grant.
  * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
@@ -250,6 +261,7 @@ export function removeGrantFromHolders(grantHolders, grantIdentifier, draftRoleG
 /**
  * Removes the unsaved holders a reload has turned into saved ones, so the same holder is not
  * rendered as a draft next to the grants it now has.
+ *
  * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
  * @param {Map<string, DraftGrantHolder>} draftGrantHolders - Unsaved grant holders keyed by holder key.
  * @returns {Map<string, DraftGrantHolder>} New map without the saved holders, or the given one
@@ -267,6 +279,7 @@ export function promoteSavedDraftHolders(grantHolders, draftGrantHolders) {
  * Removes the unsaved role rows of holders that are no longer rendered, since a row without
  * a holder section can neither be seen nor saved. This guards against a holder another session
  * removed, rather than against anything the user did.
+ *
  * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
  * @param {Map<string, DraftGrantHolder>} draftGrantHolders - Unsaved grant holders keyed by holder key.
  * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
@@ -286,6 +299,7 @@ export function dropUnreachableDraftRows(grantHolders, draftGrantHolders, draftR
 /**
  * Returns the roles that can still be assigned to a holder, excluding roles already
  * assigned and roles selected by other draft rows of the same holder.
+ *
  * @param {object} options - Current grant state and the row the roles are needed for.
  * @param {Map<string, RoleDefinition>} options.roles - Known role definitions keyed by their IRI.
  * @param {Map<string, GrantHolder>} options.grantHolders - Saved grant holders keyed by holder key.
