@@ -32,6 +32,7 @@
         "draft-shareable-role-label": "Shareable new role for {{holder}}",
         "grant-holder-aria-label": "Roles for {{name}}",
         "grants-list-placeholder": "No roles assigned to this resource yet",
+        "modal-description": "A short description of what grants can be managed in the modal",
         "modal-subtitle-form": "{{formName}} form",
         "modal-subtitle-submission": "Submission of {{formName}}",
         "modal-subtitle-submissions": "All submissions of {{formName}}",

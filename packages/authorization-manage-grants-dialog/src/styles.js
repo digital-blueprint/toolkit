@@ -35,6 +35,10 @@ export function getAuthorizationManageGrantsDialogCSS() {
             margin: 0;
         }
 
+        .modal-description {
+            margin-bottom: 1em;
+        }
+
         .add-resource-container {
             display: grid;
             grid-template-columns: 1fr auto;

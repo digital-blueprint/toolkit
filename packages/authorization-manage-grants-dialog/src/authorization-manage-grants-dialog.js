@@ -96,6 +96,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         super();
         this.entryPointUrl = '';
         this.modalTitle = this._i18n.t('auth-manage-dialog.modal-title');
+        this.modalDescription = '';
         this.modalSubTitle = '';
         /** @type {import('lit/directives/ref.js').Ref<Modal>} */
         this.modalRef = createRef();
@@ -138,6 +139,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             modalTitle: {type: String, attribute: 'modal-title'},
+            modalDescription: {type: String, attribute: 'modal-description'},
             modalSubTitle: {state: true},
             selectedSubject: {state: true},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
@@ -1827,6 +1829,13 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                         id="auth-manage-dialog-notification"
                         inline
                         lang="${this.lang}"></dbp-notification>
+                    ${
+                        this.modalDescription
+                            ? html`
+                                  <p class="modal-description">${this.modalDescription}</p>
+                              `
+                            : ''
+                    }
                 </div>
                 <div slot="content">
                     <div class="main-content">

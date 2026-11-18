@@ -32,6 +32,7 @@
         "draft-shareable-role-label": "Weitergebbare neue Rolle für {{holder}}",
         "grant-holder-aria-label": "Rollen für {{name}}",
         "grants-list-placeholder": "Dieser Ressource wurden noch keine Rollen zugewiesen",
+        "modal-description": "Eine kurze Beschreibung, welche Fördermittel im Modal verwaltet werden können",
         "modal-subtitle-form": "Formular {{formName}}",
         "modal-subtitle-submission": "Einreichung für {{formName}}",
         "modal-subtitle-submissions": "Alle Einreichungen für {{formName}}",

@@ -356,6 +356,7 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
             <dbp-authorization-manage-grants-dialog
                 id="manage-grants-dialog"
                 modal-title="${i18n.t('auth-manage-dialog.modal-title')}"
+                modal-description="${i18n.t('auth-manage-dialog.modal-description')}"
                 lang="${this.lang}"
                 subscribe="auth"
                 resource-class-identifier="${this.resourceClassIdentifier}"
