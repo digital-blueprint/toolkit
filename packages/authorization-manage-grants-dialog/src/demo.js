@@ -221,6 +221,19 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
                     select:not(.select) {
                         background-size: 1em;
                     }
+
+                    .preselect-fixed-resource {
+                        margin: 1em 0;
+                        display: block;
+                    }
+
+                    .selector-container {
+                        display: flex;
+                        gap: 1em;
+                        flex-wrap: wrap;
+                        align-items: center;
+                        margin-bottom: 5em;
+                    }
             `,
         ];
     }
@@ -238,96 +251,107 @@ export class AuthorizationManageGrantsDialogDemo extends AuthMixin(
             this.selectedResourceType === `DbpRelayFormalizeSubmission:${RESOURCE_TYPE_ITEM}`;
 
         return html`
-            <label>
+            <label class="preselect-fixed-resource">
                 <input
                     type="checkbox"
                     .checked="${this.useFixedDemoResource}"
                     @change="${this.handleUseFixedDemoResourceChange}" />
                 ${i18n.t('auth-manage-dialog.demo-use-fixed-resource-label')}
             </label>
-            <br />
-            <label for="resource-type-select">
-                ${i18n.t('auth-manage-dialog.demo-select-resource-type-label')}
-            </label>
-            <select
-                id="resource-type-select"
-                .value="${this.selectedResourceType}"
-                ?disabled="${this.useFixedDemoResource}"
-                @change="${this.handleResourceTypeChange}">
-                <option value="">
-                    ${i18n.t('auth-manage-dialog.demo-select-resource-type-placeholder')}
-                </option>
-                <option value="DbpRelayFormalizeForm:${RESOURCE_TYPE_ITEM}">
-                    ${i18n.t('auth-manage-dialog.demo-resource-type-form')}
-                </option>
-                <option value="DbpRelayFormalizeSubmission:${RESOURCE_TYPE_GROUP}">
-                    ${i18n.t('auth-manage-dialog.demo-resource-type-form-submissions')}
-                </option>
-                <option value="DbpRelayFormalizeSubmission:${RESOURCE_TYPE_ITEM}">
-                    ${i18n.t('auth-manage-dialog.demo-resource-type-submission')}
-                </option>
-            </select>
+            <div class="selector-container">
+                <div class="field-wrapper">
+                    <label for="resource-type-select">
+                        ${i18n.t('auth-manage-dialog.demo-select-resource-type-label')}
+                    </label>
+                    <select
+                        id="resource-type-select"
+                        .value="${this.selectedResourceType}"
+                        ?disabled="${this.useFixedDemoResource}"
+                        @change="${this.handleResourceTypeChange}">
+                        <option value="">
+                            ${i18n.t('auth-manage-dialog.demo-select-resource-type-placeholder')}
+                        </option>
+                        <option value="DbpRelayFormalizeForm:${RESOURCE_TYPE_ITEM}">
+                            ${i18n.t('auth-manage-dialog.demo-resource-type-form')}
+                        </option>
+                        <option value="DbpRelayFormalizeSubmission:${RESOURCE_TYPE_GROUP}">
+                            ${i18n.t('auth-manage-dialog.demo-resource-type-form-submissions')}
+                        </option>
+                        <option value="DbpRelayFormalizeSubmission:${RESOURCE_TYPE_ITEM}">
+                            ${i18n.t('auth-manage-dialog.demo-resource-type-submission')}
+                        </option>
+                    </select>
+                </div>
 
-            ${
-                this.selectedResourceType && !isSubmissionMode
-                    ? this.formsLoading
+                ${
+                    this.selectedResourceType && !isSubmissionMode
+                        ? this.formsLoading
+                            ? html`
+                                  <dbp-mini-spinner></dbp-mini-spinner>
+                              `
+                            : this.formsLoaded
+                              ? html`
+                                    <div class="field-wrapper">
+                                        <label for="form-select">
+                                            ${i18n.t('auth-manage-dialog.demo-select-form-label')}
+                                        </label>
+                                        <select
+                                            id="form-select"
+                                            @change="${(event) => {
+                                                this.resourceIdentifier =
+                                                    /** @type {HTMLSelectElement} */ (
+                                                        event.target
+                                                    ).value;
+                                            }}">
+                                            <option value="">
+                                                ${i18n.t('auth-manage-dialog.demo-select-form-placeholder')}
+                                            </option>
+                                            ${this.forms.map(
+                                                (form) => html`
+                                                    <option value="${form.identifier}">
+                                                        ${form.name}
+                                                    </option>
+                                                `,
+                                            )}
+                                        </select>
+                                    </div>
+                                `
+                              : ''
+                        : ''
+                }
+                ${
+                    isSubmissionMode
                         ? html`
-                              <dbp-mini-spinner></dbp-mini-spinner>
+                              <div class="field-wrapper">
+                                  <label for="submission-id-input">
+                                      ${i18n.t('auth-manage-dialog.demo-submission-id-label')}
+                                  </label>
+                                  <input
+                                      id="submission-id-input"
+                                      type="text"
+                                      placeholder="${i18n.t('auth-manage-dialog.demo-submission-id-placeholder')}"
+                                      @input="${(event) => {
+                                          this.resourceIdentifier =
+                                              /** @type {HTMLInputElement} */ (
+                                                  event.target
+                                              ).value.trim();
+                                      }}" />
+                              </div>
                           `
-                        : this.formsLoaded
-                          ? html`
-                                <label for="form-select">
-                                    ${i18n.t('auth-manage-dialog.demo-select-form-label')}
-                                </label>
-                                <select
-                                    id="form-select"
-                                    @change="${(event) => {
-                                        this.resourceIdentifier = /** @type {HTMLSelectElement} */ (
-                                            event.target
-                                        ).value;
-                                    }}">
-                                    <option value="">
-                                        ${i18n.t('auth-manage-dialog.demo-select-form-placeholder')}
-                                    </option>
-                                    ${this.forms.map(
-                                        (form) => html`
-                                            <option value="${form.identifier}">${form.name}</option>
-                                        `,
-                                    )}
-                                </select>
-                            `
-                          : ''
-                    : ''
-            }
-            ${
-                isSubmissionMode
-                    ? html`
-                          <label for="submission-id-input">
-                              ${i18n.t('auth-manage-dialog.demo-submission-id-label')}
-                          </label>
-                          <input
-                              id="submission-id-input"
-                              type="text"
-                              placeholder="${i18n.t('auth-manage-dialog.demo-submission-id-placeholder')}"
-                              @input="${(event) => {
-                                  this.resourceIdentifier = /** @type {HTMLInputElement} */ (
-                                      event.target
-                                  ).value.trim();
-                              }}" />
-                      `
-                    : ''
-            }
-            ${
-                this.canOpenDialog
-                    ? html`
-                          <dbp-button
-                              type="is-primary"
-                              value="${i18n.t('auth-manage-dialog.buttons.open')}"
-                              no-spinner-on-click
-                              @click="${() => this._('#manage-grants-dialog').open()}"></dbp-button>
-                      `
-                    : ''
-            }
+                        : ''
+                }
+                ${
+                    this.canOpenDialog
+                        ? html`
+                              <dbp-button
+                                  type="is-primary"
+                                  value="${i18n.t('auth-manage-dialog.buttons.open')}"
+                                  no-spinner-on-click
+                                  @click="${() => this._('#manage-grants-dialog').open()}"></dbp-button>
+                          `
+                        : ''
+                }
+            </div>
 
             <dbp-authorization-manage-grants-dialog
                 id="manage-grants-dialog"
