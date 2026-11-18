@@ -220,6 +220,70 @@ export function prunePendingGrantChanges(pendingGrantChanges, grantHolders) {
 }
 
 /**
+ * Removes a deleted grant from the holder it belonged to. A holder exists through its grants
+ * only, so it is removed together with its last one - unless it still holds unsaved role
+ * rows, which would have nothing left to be rendered in.
+ * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
+ * @param {string} grantIdentifier - Identifier of the deleted grant.
+ * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
+ * @returns {Map<string, GrantHolder>} New map without the grant, or the given one when the
+ *     grant was not part of it.
+ */
+export function removeGrantFromHolders(grantHolders, grantIdentifier, draftRoleGrants) {
+    const holderEntry = [...grantHolders].find(([, holder]) =>
+        holder.grants.some((grant) => grant.identifier === grantIdentifier),
+    );
+    // The grant is already missing from the list, so there is nothing left to remove.
+    if (!holderEntry) {
+        return grantHolders;
+    }
+
+    const [holderKey, holder] = holderEntry;
+    const remainingGrants = holder.grants.filter((grant) => grant.identifier !== grantIdentifier);
+    // Keeping the holder keeps its place in the list, so unsaved rows stay where they are.
+    if (remainingGrants.length || holderEntries(draftRoleGrants, holderKey).length) {
+        return updateInMap(grantHolders, holderKey, {...holder, grants: remainingGrants});
+    }
+    return deleteFromMap(grantHolders, holderKey);
+}
+
+/**
+ * Removes the unsaved holders a reload has turned into saved ones, so the same holder is not
+ * rendered as a draft next to the grants it now has.
+ * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
+ * @param {Map<string, DraftGrantHolder>} draftGrantHolders - Unsaved grant holders keyed by holder key.
+ * @returns {Map<string, DraftGrantHolder>} New map without the saved holders, or the given one
+ *     when none of them was saved.
+ */
+export function promoteSavedDraftHolders(grantHolders, draftGrantHolders) {
+    const remainingHolders = new Map(
+        [...draftGrantHolders].filter(([holderKey]) => !grantHolders.has(holderKey)),
+    );
+    // The map is rendered, so it is only replaced when a holder was removed from it.
+    return remainingHolders.size === draftGrantHolders.size ? draftGrantHolders : remainingHolders;
+}
+
+/**
+ * Removes the unsaved role rows of holders that are no longer rendered, since a row without
+ * a holder section can neither be seen nor saved. This guards against a holder another session
+ * removed, rather than against anything the user did.
+ * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
+ * @param {Map<string, DraftGrantHolder>} draftGrantHolders - Unsaved grant holders keyed by holder key.
+ * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
+ * @returns {Map<string, DraftRoleGrant[]>} New map without the unreachable rows, or the given
+ *     one when every row still has a holder.
+ */
+export function dropUnreachableDraftRows(grantHolders, draftGrantHolders, draftRoleGrants) {
+    const remainingRows = new Map(
+        [...draftRoleGrants].filter(
+            ([holderKey]) => grantHolders.has(holderKey) || draftGrantHolders.has(holderKey),
+        ),
+    );
+    // The map is rendered, so it is only replaced when rows were removed from it.
+    return remainingRows.size === draftRoleGrants.size ? draftRoleGrants : remainingRows;
+}
+
+/**
  * Returns the roles that can still be assigned to a holder, excluding roles already
  * assigned and roles selected by other draft rows of the same holder.
  * @param {object} options - Current grant state and the row the roles are needed for.

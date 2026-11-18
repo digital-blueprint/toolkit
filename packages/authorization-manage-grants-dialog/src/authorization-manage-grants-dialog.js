@@ -35,12 +35,15 @@ import {
 import {
     addDraftRoleGrant,
     canAddDraftRole,
+    dropUnreachableDraftRows,
     getAvailableRoles,
     getPendingGrantChange,
     hasIncompleteDraftRole,
     isHolderSaveable,
+    promoteSavedDraftHolders,
     prunePendingGrantChanges,
     removeDraftRoleGrant,
+    removeGrantFromHolders,
     setPendingGrantChange,
     updateDraftRoleGrant,
 } from './grant-drafts.js';
@@ -691,6 +694,19 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                     new Map(resolvedHolders.map((holder) => [holder.key, holder])),
                 );
                 this._prunePendingGrantChanges();
+
+                // Remove any draft data that is no longer relevant. The rows are checked
+                // against the holders the reload found, so this runs before the holders the
+                // reload has saved are removed.
+                this.draftRoleGrants = dropUnreachableDraftRows(
+                    this.grantHolders,
+                    this.draftGrantHolders,
+                    this.draftRoleGrants,
+                );
+                this.draftGrantHolders = promoteSavedDraftHolders(
+                    this.grantHolders,
+                    this.draftGrantHolders,
+                );
             }
         } catch (error) {
             if (!signal?.aborted) {
@@ -854,9 +870,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             this.draftRoleGrants = failedDrafts.length
                 ? updateInMap(this.draftRoleGrants, holderKey, failedDrafts)
                 : deleteFromMap(this.draftRoleGrants, holderKey);
-            if (!failedDrafts.length) {
-                this.draftGrantHolders = deleteFromMap(this.draftGrantHolders, holderKey);
-            }
+            // if (!failedDrafts.length) {
+            //     this.draftGrantHolders = deleteFromMap(this.draftGrantHolders, holderKey);
+            // }
 
             // Reload the grant holders to reflect the changes in the UI.
             await this._reloadGrantHolders();
@@ -888,7 +904,16 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             return;
         }
 
-        await this._reloadGrantHolders();
+        // The deleted grant is the only thing that changed, so the list is updated with what
+        // the request confirmed instead of being loaded again. Reloading would drop a holder
+        // whose last role was deleted, and with it the unsaved rows it still shows.
+        this.grantHolders = removeGrantFromHolders(
+            this.grantHolders,
+            grantIdentifier,
+            this.draftRoleGrants,
+        );
+        // An unsaved change of the deleted grant can no longer be applied.
+        this._prunePendingGrantChanges();
 
         this._notifySuccess('auth-manage-dialog.notifications.role-deleted-successfully', {
             roleName: roleName,
