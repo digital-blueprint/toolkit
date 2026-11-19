@@ -48,6 +48,7 @@ export class GrantPermissionDialog extends LangMixin(
         this.auth = {};
         this.entryPointUrl = '';
         this.modalTitle = '';
+        this.modalDescription = '';
         /** @type {AvailableAction[]} */
         this.availableActions = [];
         /** @type {Map<string, UserEntry>} */
@@ -115,6 +116,7 @@ export class GrantPermissionDialog extends LangMixin(
             ...super.properties,
             auth: {type: Object},
             modalTitle: {type: String, attribute: 'modal-title'},
+            modalDescription: {type: String, attribute: 'modal-description'},
             availableActions: {type: Array},
             userList: {type: Map},
             usersToAdd: {type: Map},
@@ -1389,6 +1391,13 @@ export class GrantPermissionDialog extends LangMixin(
                     </div>
                 </div>
                 <div slot="content">
+                    ${
+                        this.modalDescription
+                            ? html`
+                                  <p class="modal-description">${this.modalDescription}</p>
+                              `
+                            : ''
+                    }
                     <div class="content-container">
                         <div class="content-inner">
                             <div

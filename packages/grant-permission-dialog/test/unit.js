@@ -20,6 +20,22 @@ suite('dbp-grant-permission-dialog', () => {
         assert.isNotNull(node.shadowRoot);
     });
 
+    test('renders an optional description as plain text above the controls', async () => {
+        const findDescription = () => node.shadowRoot.querySelector('.modal-description');
+        assert.isNull(findDescription());
+
+        node.setAttribute('modal-description', 'Edit permissions for <Example> & partners');
+        await node.updateComplete;
+        const description = findDescription();
+        assert.equal(description.textContent, 'Edit permissions for <Example> & partners');
+        assert.equal(description.children.length, 0);
+        assert.isTrue(description.nextElementSibling.classList.contains('content-container'));
+
+        node.modalDescription = '';
+        await node.updateComplete;
+        assert.isNull(findDescription());
+    });
+
     test('opens safely while a permission row is incomplete', async () => {
         node.auth = {token: 'token'};
         node.setAvailableActions = () => {

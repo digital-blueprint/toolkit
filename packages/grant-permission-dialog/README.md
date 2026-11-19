@@ -41,6 +41,8 @@ Or directly via CDN:
     - example `<dbp-grant-permission-dialog resource-identifier="f0b3521b-c5b2-4e27-b6bc-bc3d085f1cf2"></dbp-grant-permission-dialog>`
 - `entry-point-url` (optional, default is the TU Graz entry point url): entry point url to access the api
     - example `<grant-permission-dialog entry-point-url="http://127.0.0.1:8000"></grant-permission-dialog>`
+- `modal-title` (optional): custom title. If omitted, the component uses its translated default title.
+- `modal-description` (optional): plain-text explanation displayed above the permission controls. No description is shown by default. The caller supplies localized text if needed. In JavaScript, set `dialog.modalDescription` to update it or set it to `''` to clear it.
 
 ##### Methods
 
