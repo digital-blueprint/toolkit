@@ -104,6 +104,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.subjectSelectorRef = createRef();
         /** @type {import('./authorization-subject-select.js').SubjectResource|null} */
         this.selectedSubject = null;
+        this._addingSubject = false;
+        /** @type {number} Invalidates subject additions when the dialog state is replaced. */
+        this._dialogGeneration = 0;
         this.resourceClassIdentifier = '';
         this.resourceIdentifier = '';
         this.resourceType = RESOURCE_TYPE_ITEM;
@@ -141,6 +144,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             modalTitle: {type: String, attribute: 'modal-title'},
             modalDescription: {type: String, attribute: 'modal-description'},
             selectedSubject: {state: true},
+            _addingSubject: {state: true},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
             resourceType: {type: Number, attribute: 'resource-type'},
@@ -244,6 +248,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     _resetDialogState() {
+        this._dialogGeneration += 1;
+        this._addingSubject = false;
         this._resourceDataController?.abort();
         this._resourceDataController = null;
         this._resourceForm = null;
@@ -521,6 +527,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {Promise<void>}
      */
     async _loadResourceData() {
+        this._dialogGeneration += 1;
+        this._addingSubject = false;
         this._resourceDataController?.abort();
         const controller = new AbortController();
         this._resourceDataController = controller;
@@ -729,6 +737,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {Promise<void>}
      */
     async handleAddPersonButtonClick() {
+        if (this._addingSubject) {
+            return;
+        }
+
         const subjectSelector = this.subjectSelectorRef.value;
         const selectedSubject = this.selectedSubject;
 
@@ -752,52 +764,66 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             return;
         }
 
-        // Subject already exists in the grant holders list.
-        if (
-            this.grantHolders.has(selectedHolderIdentity.key) ||
-            this.draftGrantHolders.has(selectedHolderIdentity.key)
-        ) {
-            // Scroll to the existing holder and highlight it.
-            // A holder key contains a colon, which has to be escaped in the selector only
-            const existingHolderElement = this._(
-                `#grant-holder-${CSS.escape(selectedHolderIdentity.key)}`,
-            );
-            if (existingHolderElement) {
-                void this._scrollToAndHighlightExistingHolder(existingHolderElement);
-            }
-        } else {
-            // Add the new subject to the draft grant holders list.
-            let subject = toCompactSubject(selectedSubject, selectedHolderIdentity.type);
-
-            // Get the email address of the person
-            if (selectedHolderIdentity.type === SUBJECT_TYPE_PERSON) {
-                try {
-                    const person = /** @type {GrantHolderSubject} */ (
-                        await this._apiGetPerson(subject.identifier)
-                    );
-                    subject = {...subject, localData: {email: person.localData?.email ?? null}};
-                } catch (error) {
-                    console.warn('Could not fetch person data', error);
+        const generation = this._dialogGeneration;
+        this._addingSubject = true;
+        try {
+            // Subject already exists in the grant holders list.
+            if (
+                this.grantHolders.has(selectedHolderIdentity.key) ||
+                this.draftGrantHolders.has(selectedHolderIdentity.key)
+            ) {
+                // Scroll to the existing holder and highlight it.
+                // A holder key contains a colon, which has to be escaped in the selector only
+                const existingHolderElement = this._(
+                    `#grant-holder-${CSS.escape(selectedHolderIdentity.key)}`,
+                );
+                if (existingHolderElement) {
+                    void this._scrollToAndHighlightExistingHolder(existingHolderElement);
                 }
+            } else {
+                // Add the new subject to the draft grant holders list.
+                let subject = toCompactSubject(selectedSubject, selectedHolderIdentity.type);
+
+                // Get the email address of the person
+                if (selectedHolderIdentity.type === SUBJECT_TYPE_PERSON) {
+                    try {
+                        const person = /** @type {GrantHolderSubject} */ (
+                            await this._apiGetPerson(subject.identifier)
+                        );
+                        subject = {...subject, localData: {email: person.localData?.email ?? null}};
+                    } catch (error) {
+                        console.warn('Could not fetch person data', error);
+                    }
+                }
+
+                // A closed or reloaded dialog must not receive an old lookup's draft.
+                if (generation !== this._dialogGeneration) {
+                    return;
+                }
+
+                const draftHolder = {
+                    key: selectedHolderIdentity.key,
+                    type: selectedHolderIdentity.type,
+                    subject,
+                    holderFields,
+                    grants: [],
+                };
+                this.draftGrantHolders = updateInMap(
+                    this.draftGrantHolders,
+                    selectedHolderIdentity.key,
+                    draftHolder,
+                );
+                this.handleAddRoleButtonClick(selectedHolderIdentity.key);
             }
 
-            const draftHolder = {
-                key: selectedHolderIdentity.key,
-                type: selectedHolderIdentity.type,
-                subject,
-                holderFields,
-                grants: [],
-            };
-            this.draftGrantHolders = updateInMap(
-                this.draftGrantHolders,
-                selectedHolderIdentity.key,
-                draftHolder,
-            );
-            this.handleAddRoleButtonClick(selectedHolderIdentity.key);
+            // Reset the resource selector before allowing another addition.
+            await subjectSelector.reset();
+        } finally {
+            // An old addition must not unlock the controls of a newer one.
+            if (generation === this._dialogGeneration) {
+                this._addingSubject = false;
+            }
         }
-
-        // Reset the resource selector after adding a subject.
-        void subjectSelector.reset();
     }
 
     /**
@@ -1859,6 +1885,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                                 ${ref(this.subjectSelectorRef)}
                                 id="resource-select"
                                 class="resource-select-component"
+                                ?disabled="${this._addingSubject}"
                                 lang="${this.lang}"
                                 subscribe="auth"
                                 placeholder="${i18n.t('auth-manage-dialog.subject-select-placeholder')}"
@@ -1869,7 +1896,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                                     type="is-secondary"
                                     id="add-person-button"
                                     no-spinner-on-click
-                                    ?disabled="${this.selectedSubject === null}"
+                                    ?disabled="${this._addingSubject || this.selectedSubject === null}"
                                     @click="${this.handleAddPersonButtonClick}">
                                     <dbp-icon name="plus"></dbp-icon>
                                     ${i18n.t('auth-manage-dialog.buttons.add-subject-button-label')}

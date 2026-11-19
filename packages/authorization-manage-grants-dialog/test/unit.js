@@ -595,6 +595,65 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         assert.isNotNull(node.shadowRoot);
     });
 
+    for (const lookupFails of [false, true]) {
+        test(`should disable subject controls during addition and restore them after a ${lookupFails ? 'failed' : 'successful'} lookup`, async () => {
+            const selector = node.subjectSelectorRef.value;
+            const addButton = node.shadowRoot.querySelector('#add-person-button');
+            const person = {
+                '@id': '/base/people/frank',
+                '@type': 'https://schema.org/Person',
+                identifier: 'frank',
+                givenName: 'Frank',
+            };
+            const role = {
+                '@id': '/authorization/roles/editor',
+                identifier: 'editor',
+                roleNames: [],
+            };
+            node.roles = new Map([[role['@id'], role]]);
+            node.selectedSubject = person;
+            let finishLookup;
+            let lookupCount = 0;
+            node._apiGetPerson = () => {
+                lookupCount += 1;
+                return new Promise((resolve, reject) => {
+                    finishLookup = () =>
+                        lookupFails
+                            ? reject(new Error('Person lookup failed'))
+                            : resolve({...person, localData: {email: 'frank@example.com'}});
+                });
+            };
+            let resetCount = 0;
+            selector.reset = async () => {
+                resetCount += 1;
+                node.selectedSubject = null;
+            };
+
+            const addition = node.handleAddPersonButtonClick();
+            await node.updateComplete;
+            assert.isTrue(selector.hasAttribute('disabled'));
+            assert.isTrue(addButton.hasAttribute('disabled'));
+            assert.equal(node.draftGrantHolders.size, 0);
+
+            await node.handleAddPersonButtonClick();
+            assert.equal(lookupCount, 1);
+
+            finishLookup();
+            await addition;
+            await node.updateComplete;
+            assert.isFalse(node._addingSubject);
+            assert.isFalse(selector.hasAttribute('disabled'));
+            assert.isTrue(addButton.hasAttribute('disabled'));
+            assert.equal(resetCount, 1);
+            assert.equal(node.draftGrantHolders.size, 1);
+            assert.lengthOf(node.draftRoleGrants.get('person:frank'), 1);
+
+            node.selectedSubject = person;
+            await node.updateComplete;
+            assert.isFalse(addButton.hasAttribute('disabled'));
+        });
+    }
+
     test('should open and close', () => {
         const modal = node.shadowRoot.querySelector('dbp-modal');
 
@@ -604,6 +663,73 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         node.close();
         assert.isFalse(modal.isOpen());
     });
+
+    for (const lookupFails of [false, true]) {
+        test(`should ignore a ${lookupFails ? 'failed' : 'successful'} old lookup after reopening without unlocking a newer addition`, async () => {
+            const selector = node.subjectSelectorRef.value;
+            const person = {
+                '@id': '/base/people/frank',
+                '@type': 'https://schema.org/Person',
+                identifier: 'frank',
+                givenName: 'Frank',
+            };
+            const nextPerson = {...person, '@id': '/base/people/alice', identifier: 'alice'};
+            const role = {
+                '@id': '/authorization/roles/editor',
+                identifier: 'editor',
+                roleNames: [],
+            };
+            const finishLookups = new Map();
+            node._apiGetPerson = (identifier) =>
+                new Promise((resolve, reject) => {
+                    finishLookups.set(identifier, () =>
+                        lookupFails && identifier === 'frank'
+                            ? reject(new Error('Person lookup failed'))
+                            : resolve({identifier}),
+                    );
+                });
+            let resetCount = 0;
+            selector.reset = async () => {
+                resetCount += 1;
+                node.selectedSubject = null;
+            };
+
+            node.open();
+            node.roles = new Map([[role['@id'], role]]);
+            node.selectedSubject = person;
+            const oldAddition = node.handleAddPersonButtonClick();
+            const closed = new Promise((resolve) =>
+                node.addEventListener('dbp-modal-closed', resolve, {once: true}),
+            );
+            node.close();
+            await closed;
+            node.open();
+            assert.isFalse(node._addingSubject);
+            node.selectedSubject = nextPerson;
+            const newAddition = node.handleAddPersonButtonClick();
+            const resetsBeforeOldCompletion = resetCount;
+
+            finishLookups.get('frank')();
+            await oldAddition;
+            await node.updateComplete;
+            assert.equal(node.draftGrantHolders.size, 0);
+            assert.equal(node.draftRoleGrants.size, 0);
+            assert.strictEqual(node.selectedSubject, nextPerson);
+            assert.equal(resetCount, resetsBeforeOldCompletion);
+            assert.isTrue(node._addingSubject);
+            assert.isTrue(selector.hasAttribute('disabled'));
+            assert.isTrue(
+                node.shadowRoot.querySelector('#add-person-button').hasAttribute('disabled'),
+            );
+
+            finishLookups.get('alice')();
+            await newAddition;
+            assert.isFalse(node._addingSubject);
+            assert.isFalse(node.draftGrantHolders.has('person:frank'));
+            assert.isTrue(node.draftGrantHolders.has('person:alice'));
+            assert.lengthOf(node.draftRoleGrants.get('person:alice'), 1);
+        });
+    }
 
     test('should load roles with the configured compound resource identifier', async () => {
         const originalFetch = globalThis.fetch;
