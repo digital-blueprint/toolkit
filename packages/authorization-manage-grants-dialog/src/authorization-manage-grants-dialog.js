@@ -98,7 +98,6 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.entryPointUrl = '';
         this.modalTitle = this._i18n.t('auth-manage-dialog.modal-title');
         this.modalDescription = '';
-        this.modalSubTitle = '';
         /** @type {import('lit/directives/ref.js').Ref<Modal>} */
         this.modalRef = createRef();
         /** @type {import('lit/directives/ref.js').Ref<AuthorizationSubjectSelect>} */
@@ -141,7 +140,6 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             modalTitle: {type: String, attribute: 'modal-title'},
             modalDescription: {type: String, attribute: 'modal-description'},
-            modalSubTitle: {state: true},
             selectedSubject: {state: true},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
@@ -248,7 +246,6 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     _resetDialogState() {
         this._resourceDataController?.abort();
         this._resourceDataController = null;
-        this.modalSubTitle = '';
         this._resourceForm = null;
         this.grantHoldersLoading = false;
         this.draftGrantHolders = new Map();
