@@ -259,6 +259,41 @@ export function removeGrantFromHolders(grantHolders, grantIdentifier, draftRoleG
 }
 
 /**
+ * Removes the unsaved role rows of a role the holder already holds. Saving such a row would
+ * grant the same role a second time, no matter whether the grant was created by a save that
+ * reported an error or by someone else in the meantime.
+ * @param {Map<string, GrantHolder>} grantHolders - Saved grant holders keyed by holder key.
+ * @param {Map<string, DraftRoleGrant[]>} draftRoleGrants - Unsaved role rows keyed by holder key.
+ * @returns {Map<string, DraftRoleGrant[]>} New map without the granted rows, or the given one
+ *     when no row asks for a role the holder has.
+ */
+export function dropGrantedDraftRows(grantHolders, draftRoleGrants) {
+    /** @type {Map<string, DraftRoleGrant[]>} */
+    const remainingRows = new Map();
+    let hasDroppedRow = false;
+
+    for (const [holderKey, rows] of draftRoleGrants) {
+        // Only the role decides. A row that differs in its shareable state alone would still
+        // be granted a second time, and the saved grant can be made shareable instead.
+        const grantedRoleIds = new Set(
+            (grantHolders.get(holderKey)?.grants ?? []).map((grant) => grant.roleDefinition['@id']),
+        );
+        // A row without a role is still being filled in and cannot be granted twice.
+        const remaining = rows.filter(
+            (row) => row.roleIdentifier === null || !grantedRoleIds.has(row.roleIdentifier),
+        );
+
+        hasDroppedRow = hasDroppedRow || remaining.length !== rows.length;
+        if (remaining.length) {
+            remainingRows.set(holderKey, remaining);
+        }
+    }
+
+    // The map is rendered, so it is only replaced when rows were removed from it.
+    return hasDroppedRow ? remainingRows : draftRoleGrants;
+}
+
+/**
  * Removes the unsaved holders a reload has turned into saved ones, so the same holder is not
  * rendered as a draft next to the grants it now has.
  *

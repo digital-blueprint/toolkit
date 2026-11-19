@@ -35,13 +35,14 @@ import {
 import {
     addDraftRoleGrant,
     canAddDraftRole,
+    dropGrantedDraftRows,
+    dropOrphanedGrantChanges,
     dropUnreachableDraftRows,
     getAvailableRoles,
     getPendingGrantChange,
     hasIncompleteDraftRole,
     isHolderSaveable,
     promoteSavedDraftHolders,
-    dropOrphanedGrantChanges,
     removeDraftRoleGrant,
     removeGrantFromHolders,
     setPendingGrantChange,
@@ -700,6 +701,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 // Remove any draft data that is no longer relevant. The rows are checked
                 // against the holders the reload found, so this runs before the holders the
                 // reload has saved are removed.
+                this.draftRoleGrants = dropGrantedDraftRows(
+                    this.grantHolders,
+                    this.draftRoleGrants,
+                );
                 this.draftRoleGrants = dropUnreachableDraftRows(
                     this.grantHolders,
                     this.draftGrantHolders,
