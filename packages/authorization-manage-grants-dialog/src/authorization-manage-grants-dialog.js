@@ -118,6 +118,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         /** @type {Map<string, GrantHolder>} */
         this.grantHolders = new Map();
         this.grantHoldersLoading = false;
+        this.grantHoldersLoadFailed = false;
         /** @type {Map<string, DraftGrantHolder>} */
         this.draftGrantHolders = new Map();
         /** @type {Map<string, DraftRoleGrant[]>} */
@@ -152,6 +153,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             roles: {state: true},
             grantHolders: {state: true},
             grantHoldersLoading: {state: true},
+            grantHoldersLoadFailed: {state: true},
             draftGrantHolders: {state: true},
             draftRoleGrants: {state: true},
             pendingGrantChanges: {state: true},
@@ -254,6 +256,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this._resourceDataController = null;
         this._resourceForm = null;
         this.grantHoldersLoading = false;
+        this.grantHoldersLoadFailed = false;
         this.draftGrantHolders = new Map();
         this.draftRoleGrants = new Map();
         this.pendingGrantChanges = new Map();
@@ -517,6 +520,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 return false;
             }
             console.error('Could not load roles', error);
+            this.grantHoldersLoadFailed = true;
             this._notifyError('auth-manage-dialog.notifications.could-not-get-roles');
         }
         return false;
@@ -533,6 +537,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         const controller = new AbortController();
         this._resourceDataController = controller;
         this._loadedResourceKey = this._getResourceKey();
+        this.grantHoldersLoadFailed = false;
 
         this.grantHolders = new Map();
         this.draftGrantHolders = new Map();
@@ -616,10 +621,16 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {Promise<void>}
      */
     async _loadRoleGrantHolders(signal) {
-        if (!this.resourceClassIdentifier || !this.resourceIdentifier || !this.isLoggedIn()) {
+        if (
+            signal?.aborted ||
+            !this.resourceClassIdentifier ||
+            !this.resourceIdentifier ||
+            !this.isLoggedIn()
+        ) {
             return;
         }
 
+        this.grantHoldersLoadFailed = false;
         try {
             const grants = await this._apiGetResourceActionGrants(signal);
             const roleDefinitions = new Map(
@@ -701,6 +712,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 this.grantHolders = this._sortGrantHolders(
                     new Map(resolvedHolders.map((holder) => [holder.key, holder])),
                 );
+                this.grantHoldersLoadFailed = false;
                 this._dropOrphanedGrantChanges();
 
                 // Remove any draft data that is no longer relevant. The rows are checked
@@ -723,6 +735,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         } catch (error) {
             if (!signal?.aborted) {
                 console.error('Could not load role grant holders', error);
+                this.grantHoldersLoadFailed = true;
                 this._notifyError('auth-manage-dialog.notifications.could-not-get-role-grants');
             }
         } finally {
@@ -1650,8 +1663,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
-     * Renders the assigned role holders, loading indicator or empty state.
-     * @returns {import('lit').TemplateResult} Holder list content or spinner or placeholder.
+     * Renders the assigned role holders, loading indicator, failure warning or empty state.
+     * @returns {import('lit').TemplateResult} Holder list content or a loading, error or empty state.
      */
     renderGrantHolders() {
         if (this.grantHoldersLoading) {
@@ -1659,7 +1672,22 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 <dbp-mini-spinner></dbp-mini-spinner>
             `;
         }
+        const loadFailure = this.grantHoldersLoadFailed
+            ? html`
+                  <p role="alert">
+                      <dbp-icon name="cross-circle" aria-hidden="true"></dbp-icon>
+                      ${
+                          this.grantHolders.size
+                              ? this._i18n.t('auth-manage-dialog.grants-refresh-failed')
+                              : this._i18n.t('auth-manage-dialog.grants-load-failed')
+                      }
+                  </p>
+              `
+            : html``;
         if (!this.grantHolders.size && !this.draftGrantHolders.size) {
+            if (this.grantHoldersLoadFailed) {
+                return loadFailure;
+            }
             return html`
                 <div class="grants-list-placeholder">
                     <dbp-icon name="information-circle" aria-hidden="true"></dbp-icon>
@@ -1668,6 +1696,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             `;
         }
         return html`
+            ${loadFailure}
             <div class="grant-holders-list">
                 ${repeat(
                     this.draftGrantHolders.values(),

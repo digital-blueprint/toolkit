@@ -903,6 +903,13 @@ suite('dbp-authorization-manage-grants-dialog', () => {
             );
             assert.isFalse(node.grantHoldersLoading);
             assert.equal(node.grantHolders.size, 0);
+            assert.isTrue(node.grantHoldersLoadFailed);
+            await node.updateComplete;
+            assert.isNull(node.shadowRoot.querySelector('.grants-list-placeholder'));
+            assert.include(
+                node.shadowRoot.querySelector('[role="alert"]').textContent,
+                node._i18n.t('auth-manage-dialog.grants-load-failed'),
+            );
         } finally {
             globalThis.fetch = originalFetch;
         }
@@ -998,9 +1005,120 @@ suite('dbp-authorization-manage-grants-dialog', () => {
                 'email',
             );
             assert.isFalse(node.grantHoldersLoading);
+            assert.isFalse(node.grantHoldersLoadFailed);
         } finally {
             globalThis.fetch = originalFetch;
         }
+    });
+
+    test('should distinguish failed grant loading from a successfully empty collection', async () => {
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'SomeResource';
+        node.resourceIdentifier = 'resource-id';
+        node._notifyError = () => {};
+        node._apiGetResourceActionGrants = async () => {
+            throw new Error('Grants request failed');
+        };
+
+        await node._loadRoleGrantHolders();
+        await node.updateComplete;
+        assert.isTrue(node.grantHoldersLoadFailed);
+        assert.isNull(node.shadowRoot.querySelector('.grants-list-placeholder'));
+        assert.include(
+            node.shadowRoot.querySelector('[role="alert"]').textContent,
+            node._i18n.t('auth-manage-dialog.grants-load-failed'),
+        );
+
+        node._apiGetResourceActionGrants = async () => [];
+        await node._loadRoleGrantHolders();
+        await node.updateComplete;
+        assert.isFalse(node.grantHoldersLoadFailed);
+        assert.isNull(node.shadowRoot.querySelector('[role="alert"]'));
+        assert.isNotNull(node.shadowRoot.querySelector('.grants-list-placeholder'));
+    });
+
+    test('should preserve holders and drafts with a warning when refreshing fails', async () => {
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'SomeResource';
+        node.resourceIdentifier = 'resource-id';
+        node._notifyError = () => {};
+        const role = {
+            '@id': '/authorization/roles/editor',
+            identifier: 'editor',
+            roleNames: [],
+        };
+        const holder = {
+            key: 'person:frank',
+            type: 'person',
+            subject: {identifier: 'frank', givenName: 'Frank'},
+            grants: [{identifier: 'grant-id', shareable: false, roleDefinition: role}],
+        };
+        const draftHolder = {
+            key: 'person:alice',
+            type: 'person',
+            subject: {identifier: 'alice', givenName: 'Alice'},
+            holderFields: {userIdentifier: 'alice'},
+            grants: [],
+        };
+        node.roles = new Map([[role['@id'], role]]);
+        node.grantHolders = new Map([[holder.key, holder]]);
+        node.draftGrantHolders = new Map([[draftHolder.key, draftHolder]]);
+        node.draftRoleGrants = new Map([
+            [
+                draftHolder.key,
+                [{clientIdentifier: 'draft-1', roleIdentifier: role['@id'], shareable: false}],
+            ],
+        ]);
+        const holders = node.grantHolders;
+        const draftHolders = node.draftGrantHolders;
+        const draftRoles = node.draftRoleGrants;
+        node._apiGetResourceActionGrants = async () => {
+            throw new Error('Refresh failed');
+        };
+
+        await node._loadRoleGrantHolders();
+        await node.updateComplete;
+        assert.isTrue(node.grantHoldersLoadFailed);
+        assert.strictEqual(node.grantHolders, holders);
+        assert.strictEqual(node.draftGrantHolders, draftHolders);
+        assert.strictEqual(node.draftRoleGrants, draftRoles);
+        assert.lengthOf(node.shadowRoot.querySelectorAll('.grant-holder-section'), 2);
+        assert.isNull(node.shadowRoot.querySelector('.grants-list-placeholder'));
+        assert.include(
+            node.shadowRoot.querySelector('[role="alert"]').textContent,
+            node._i18n.t('auth-manage-dialog.grants-refresh-failed'),
+        );
+    });
+
+    test('should ignore an aborted loading failure after resetting the dialog', async () => {
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'SomeResource';
+        node.resourceIdentifier = 'resource-id';
+        const controller = new AbortController();
+        node._resourceDataController = controller;
+        let failRequest;
+        node._apiGetResourceActionGrants = () =>
+            new Promise((resolve, reject) => {
+                failRequest = () => reject(new Error('Aborted request'));
+            });
+        node._notifyError = () => assert.fail('Aborted loads should not report an error');
+
+        const loading = node._loadRoleGrantHolders(controller.signal);
+        node._resetDialogState();
+        failRequest();
+        await loading;
+        assert.isTrue(controller.signal.aborted);
+        assert.isFalse(node.grantHoldersLoadFailed);
+    });
+
+    test('should clear loading failure when resetting or starting a new resource load', async () => {
+        node.grantHoldersLoadFailed = true;
+        node._resetDialogState();
+        assert.isFalse(node.grantHoldersLoadFailed);
+
+        node.grantHoldersLoadFailed = true;
+        await node._loadResourceData();
+        assert.isFalse(node.grantHoldersLoadFailed);
     });
 
     test('should preserve role grants when one subject lookup fails', async () => {

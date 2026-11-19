@@ -32,6 +32,8 @@
         "draft-shareable-role-label": "Weitergebbare neue Rolle für {{holder}}",
         "grant-holder-aria-label": "Rollen für {{name}}",
         "grants-list-placeholder": "Dieser Ressource wurden noch keine Rollen zugewiesen",
+        "grants-load-failed": "Berechtigungen konnten nicht geladen werden. Die aktuellen Berechtigungen sind unbekannt.",
+        "grants-refresh-failed": "Berechtigungen konnten nicht aktualisiert werden. Die angezeigten Daten sind möglicherweise veraltet.",
         "modal-description": "Eine kurze Beschreibung, welche Fördermittel im Modal verwaltet werden können",
         "modal-subtitle-form": "Formular {{formName}}",
         "modal-subtitle-submission": "Einreichung für {{formName}}",

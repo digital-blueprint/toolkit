@@ -32,6 +32,8 @@
         "draft-shareable-role-label": "Shareable new role for {{holder}}",
         "grant-holder-aria-label": "Roles for {{name}}",
         "grants-list-placeholder": "No roles assigned to this resource yet",
+        "grants-load-failed": "Grants could not be loaded. Current permissions are unknown.",
+        "grants-refresh-failed": "Permissions could not be refreshed. The displayed data may be outdated.",
         "modal-description": "A short description of what grants can be managed in the modal",
         "modal-subtitle-form": "{{formName}} form",
         "modal-subtitle-submission": "Submission of {{formName}}",
