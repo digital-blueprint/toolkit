@@ -1430,34 +1430,38 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         const currentRole = grant['roleDefinition'];
         const holderName = getGrantHolderDisplayName(holder.subject);
         // A role assigned to another row of the same holder cannot be selected again.
-        const roles = this._getAvailableRolesForHolder(holder.key, null, grant.identifier);
+        const availableRoles = this._getAvailableRolesForHolder(holder.key, null, grant.identifier);
         // Keep the currently assigned role visible even if it is no longer available.
-        if (!roles.some((role) => role['@id'] === currentRole['@id'])) {
-            roles.push(currentRole);
+        if (!availableRoles.some((role) => role['@id'] === currentRole['@id'])) {
+            availableRoles.push(currentRole);
         }
-        roles.sort((left, right) =>
+        availableRoles.sort((left, right) =>
             this._collator.compare(getRoleName(left, this.lang), getRoleName(right, this.lang)),
         );
         // Changing the role deletes the grant and creates a new one, so it needs the same
         // permission as deleting it.
         const isChangeable = isGrantChangeable(grant);
+        // With its own role left as the only entry there is nothing to switch to.
+        const hasNoRolesLeft = availableRoles.length <= 1;
         const selectedRoleIdentifier = pendingChange?.roleIdentifier ?? currentRole['@id'];
         return html`
             <select
                 class="role-grant-name-selector"
                 id="${grant.identifier}-role-select"
-                ?disabled="${!isChangeable}"
+                ?disabled="${!isChangeable || hasNoRolesLeft}"
                 title="${
                     !isChangeable
                         ? this._i18n.t('auth-manage-dialog.role-select-disabled-title')
-                        : pendingChange
-                          ? this._i18n.t('auth-manage-dialog.role-change-pending-title')
-                          : ''
+                        : hasNoRolesLeft
+                          ? this._i18n.t('auth-manage-dialog.role-select-no-roles-left-title')
+                          : pendingChange
+                            ? this._i18n.t('auth-manage-dialog.role-change-pending-title')
+                            : ''
                 }"
                 @change="${(event) => this.handleRoleSelectChange(event, holder.key, grant)}"
                 aria-label="${this._i18n.t('auth-manage-dialog.role-select-label', {holder: holderName})}">
                 ${repeat(
-                    roles,
+                    availableRoles,
                     (role) => role['@id'],
                     (role) => html`
                         <option
@@ -1531,11 +1535,20 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         const deleteLabel = this._i18n.t('auth-manage-dialog.buttons.delete-draft-role', {
             holder: holderName,
         });
+        // A row of a role the holder was given in the meantime is removed, so an empty list
+        // only happens while the row is still waiting for a role of its own.
+        const hasNoRolesLeft = availableRoles.length === 0;
         return html`
             <li class="role-grant-row draft-role-grant-row unsaved-role-row">
                 <select
                     class="role-grant-name-selector"
                     id="${grant.clientIdentifier}-role-select"
+                    ?disabled="${hasNoRolesLeft}"
+                    title="${
+                        hasNoRolesLeft
+                            ? this._i18n.t('auth-manage-dialog.role-select-no-roles-left-title')
+                            : ''
+                    }"
                     aria-label="${this._i18n.t('auth-manage-dialog.role-select-label', {
                         holder: holderName,
                     })}"

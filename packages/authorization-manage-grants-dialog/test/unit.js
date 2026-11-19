@@ -15,6 +15,7 @@ import {
     getPendingGrantChange,
     hasIncompleteDraftRole,
     isHolderSaveable,
+    dropGrantedDraftRows,
     dropOrphanedGrantChanges,
     removeDraftRoleGrant,
     setPendingGrantChange,
@@ -1563,6 +1564,233 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         // Nothing renders the rows any more, so keeping them would hide them from the user
         assert.isFalse(node.draftRoleGrants.has('person:frank'));
         assert.lengthOf(node.shadowRoot.querySelectorAll('.grant-holder-section'), 0);
+    });
+
+    test('should not let a role be switched when the holder has every role', async () => {
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        const reader = {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []};
+        const makeGrant = (identifier, role) => ({
+            identifier: identifier,
+            shareable: false,
+            grantedActions: ['delete'],
+            roleDefinition: role,
+        });
+        node.lang = 'en';
+        node.roles = new Map([editor, reader].map((role) => [role['@id'], role]));
+        node.grantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    type: 'person',
+                    subject: {identifier: 'frank', givenName: 'Frank'},
+                    grants: [makeGrant('a', editor)],
+                },
+            ],
+        ]);
+        await node.updateComplete;
+
+        // One role is still free, so the assigned one can be switched to it
+        const selector = node.shadowRoot.querySelector('select.role-grant-name-selector');
+        assert.isFalse(selector.disabled);
+        assert.lengthOf(selector.options, 2);
+
+        node.grantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    type: 'person',
+                    subject: {identifier: 'frank', givenName: 'Frank'},
+                    grants: [makeGrant('a', editor), makeGrant('b', reader)],
+                },
+            ],
+        ]);
+        await node.updateComplete;
+
+        // Both roles are taken, so each selector only holds the role of its own row
+        const selectors = node.shadowRoot.querySelectorAll('select.role-grant-name-selector');
+        assert.lengthOf(selectors, 2);
+        for (const roleSelector of selectors) {
+            assert.lengthOf(roleSelector.options, 1);
+            assert.isTrue(roleSelector.disabled);
+            assert.equal(
+                roleSelector.getAttribute('title'),
+                node._i18n.t('auth-manage-dialog.role-select-no-roles-left-title'),
+            );
+        }
+    });
+
+    test('should not let a draft row be filled in without a role to choose', async () => {
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        node.lang = 'en';
+        node.roles = new Map([[editor['@id'], editor]]);
+        node.grantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    type: 'person',
+                    subject: {identifier: 'frank', givenName: 'Frank'},
+                    grants: [
+                        {
+                            identifier: 'a',
+                            shareable: false,
+                            grantedActions: ['delete'],
+                            roleDefinition: editor,
+                        },
+                    ],
+                },
+            ],
+        ]);
+        // The only role was granted after the row had been started
+        node.draftRoleGrants = new Map([
+            [
+                'person:frank',
+                [{clientIdentifier: 'draft-role-1', roleIdentifier: null, shareable: false}],
+            ],
+        ]);
+        await node.updateComplete;
+
+        const draftSelector = node.shadowRoot.querySelector(
+            '.draft-role-grant-row select.role-grant-name-selector',
+        );
+        assert.isTrue(draftSelector.disabled);
+        assert.equal(
+            draftSelector.getAttribute('title'),
+            node._i18n.t('auth-manage-dialog.role-select-no-roles-left-title'),
+        );
+        // The row can still be removed, so the holder does not stay unsaveable
+        assert.isNotNull(node.shadowRoot.querySelector('.draft-role-grant-row dbp-icon-button'));
+    });
+
+    test('should drop a draft row the failed save created anyway', async () => {
+        const originalFetch = globalThis.fetch;
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        const reader = {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []};
+        node.lang = 'en';
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeSubmission';
+        node.resourceIdentifier = 'submission-id';
+        node.roles = new Map([editor, reader].map((role) => [role['@id'], role]));
+        node.draftGrantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    type: 'person',
+                    subject: {identifier: 'frank', givenName: 'Frank'},
+                    holderFields: {userIdentifier: 'frank'},
+                    grants: [],
+                },
+            ],
+        ]);
+        node.draftRoleGrants = new Map([
+            [
+                'person:frank',
+                [
+                    {
+                        clientIdentifier: 'draft-role-1',
+                        roleIdentifier: editor['@id'],
+                        shareable: false,
+                    },
+                ],
+            ],
+        ]);
+        // The grant is created, but a listener of the API fails afterwards, so the request
+        // reports an error for a role the holder has been given
+        globalThis.fetch = async (url, options = {}) => {
+            const parsed = new URL(url);
+            const method = options.method ?? 'GET';
+            if (method === 'POST') {
+                return new Response('{}', {status: 500});
+            }
+            const body =
+                parsed.pathname === '/authorization/resource-action-grants'
+                    ? {
+                          'hydra:member': [
+                              {
+                                  identifier: 'a',
+                                  userIdentifier: 'frank',
+                                  role: editor['@id'],
+                                  shareable: false,
+                                  grantedActions: ['delete'],
+                              },
+                          ],
+                      }
+                    : {identifier: 'frank', givenName: 'Frank'};
+            return new Response(JSON.stringify(body), {status: 200});
+        };
+
+        try {
+            await node.handleSaveHolderRolesButtonClick('person:frank');
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+        await node.updateComplete;
+
+        // Saving the row again would grant the role a second time
+        assert.isFalse(node.draftRoleGrants.has('person:frank'));
+        assert.lengthOf(node.shadowRoot.querySelectorAll('.draft-role-grant-row'), 0);
+        assert.isTrue(node._isSaveDisabled('person:frank'));
+        // The role the request reported as failed is shown as the saved role it became
+        assert.lengthOf(
+            node.shadowRoot.querySelectorAll('.role-grant-row:not(.draft-role-grant-row)'),
+            1,
+        );
+    });
+
+    test('should keep a draft row of a role the holder does not have', async () => {
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
+        const reader = {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []};
+        const grantHolders = new Map([
+            [
+                'person:frank',
+                {
+                    key: 'person:frank',
+                    type: 'person',
+                    subject: {identifier: 'frank'},
+                    grants: [
+                        {
+                            identifier: 'a',
+                            shareable: false,
+                            grantedActions: ['delete'],
+                            roleDefinition: editor,
+                        },
+                    ],
+                },
+            ],
+        ]);
+        const draftRoleGrants = new Map([
+            [
+                'person:frank',
+                [
+                    // Granted in the meantime, whatever its shareable state asks for
+                    {
+                        clientIdentifier: 'draft-role-1',
+                        roleIdentifier: editor['@id'],
+                        shareable: true,
+                    },
+                    {
+                        clientIdentifier: 'draft-role-2',
+                        roleIdentifier: reader['@id'],
+                        shareable: false,
+                    },
+                    // Still being filled in, so it cannot ask for a role twice
+                    {clientIdentifier: 'draft-role-3', roleIdentifier: null, shareable: false},
+                ],
+            ],
+        ]);
+
+        const remaining = dropGrantedDraftRows(grantHolders, draftRoleGrants);
+
+        assert.deepEqual(
+            remaining.get('person:frank').map((row) => row.clientIdentifier),
+            ['draft-role-2', 'draft-role-3'],
+        );
+        // Nothing to drop leaves the rendered map as it is
+        assert.strictEqual(dropGrantedDraftRows(new Map(), draftRoleGrants), draftRoleGrants);
     });
 
     test('should keep a partially saved draft holder from rendering twice', async () => {

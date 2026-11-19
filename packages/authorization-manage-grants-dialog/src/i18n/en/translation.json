@@ -56,6 +56,7 @@
         "role-change-pending-title": "The change is applied when you save",
         "role-select-disabled-title": "You are not allowed to change this role",
         "role-select-label": "Role for {{holder}}",
+        "role-select-no-roles-left-title": "No more roles available",
         "role-select-placeholder": "-- Select a role --",
         "roles-panel": {
             "empty-state-label": "No roles to display",
