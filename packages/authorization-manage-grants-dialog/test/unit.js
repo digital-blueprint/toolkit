@@ -595,6 +595,104 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         assert.isNotNull(node.shadowRoot);
     });
 
+    for (const scenario of [
+        {
+            name: 'the list when both containers overflow',
+            listOverflow: 'auto',
+            listHeight: 400,
+            dialogHeight: 400,
+            expected: 'list',
+        },
+        {
+            name: 'the dialog when only the dialog overflows',
+            listOverflow: 'auto',
+            listHeight: 200,
+            dialogHeight: 400,
+            expected: 'dialog',
+        },
+        {
+            name: 'the dialog when the overflowing list cannot scroll',
+            listOverflow: 'hidden',
+            listHeight: 400,
+            dialogHeight: 400,
+            expected: 'dialog',
+        },
+        {
+            name: 'no container when neither overflows',
+            listOverflow: 'auto',
+            listHeight: 200,
+            dialogHeight: 200,
+            expected: null,
+        },
+    ]) {
+        test(`should detect ${scenario.name}`, () => {
+            const list = node.shadowRoot.querySelector('.grants-list-container');
+            const dialog = node.modalRef.value.modalDialog;
+            list.style.overflowY = scenario.listOverflow;
+            dialog.style.overflowY = 'auto';
+            Object.defineProperties(list, {
+                scrollHeight: {value: scenario.listHeight, configurable: true},
+                clientHeight: {value: 200, configurable: true},
+            });
+            Object.defineProperties(dialog, {
+                scrollHeight: {value: scenario.dialogHeight, configurable: true},
+                clientHeight: {value: 200, configurable: true},
+            });
+
+            const expected =
+                scenario.expected === 'list'
+                    ? list
+                    : scenario.expected === 'dialog'
+                      ? dialog
+                      : null;
+            assert.strictEqual(node._getHolderScrollContainer(), expected);
+        });
+    }
+
+    test('should highlight a holder even when no container needs scrolling', async () => {
+        const list = node.shadowRoot.querySelector('.grants-list-container');
+        const holder = document.createElement('section');
+        list.appendChild(holder);
+        node._getHolderScrollContainer = () => null;
+        holder.scrollIntoView = () => assert.fail('No scrolling should be requested');
+
+        await node._scrollToAndHighlightExistingHolder(holder);
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        assert.isTrue(holder.classList.contains('highlighted'));
+    });
+
+    for (const containerType of ['list', 'dialog']) {
+        test(`should scroll the detected ${containerType} directly before highlighting`, async () => {
+            const list = node.shadowRoot.querySelector('.grants-list-container');
+            const dialog = node.modalRef.value.modalDialog;
+            const container = containerType === 'list' ? list : dialog;
+            for (const element of [list, dialog]) {
+                element.style.overflowY = 'auto';
+                Object.defineProperties(element, {
+                    scrollHeight: {value: element === container ? 1000 : 200, configurable: true},
+                    clientHeight: {value: 200, configurable: true},
+                    scrollTop: {value: 0, configurable: true},
+                });
+            }
+            container.getBoundingClientRect = () => ({top: 0, height: 200});
+            const holder = document.createElement('section');
+            holder.getBoundingClientRect = () => ({top: 300, height: 50});
+            holder.scrollIntoView = () =>
+                assert.fail('The detected container should scroll directly');
+            list.appendChild(holder);
+            let scrollOptions;
+            container.scrollTo = (options) => {
+                scrollOptions = options;
+                container.dispatchEvent(new Event('scrollend'));
+            };
+
+            await node._scrollToAndHighlightExistingHolder(holder);
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            assert.deepEqual(scrollOptions, {top: 225, behavior: 'smooth'});
+            assert.isTrue(holder.classList.contains('highlighted'));
+        });
+    }
+
     for (const lookupFails of [false, true]) {
         test(`should disable subject controls during addition and restore them after a ${lookupFails ? 'failed' : 'successful'} lookup`, async () => {
             const selector = node.subjectSelectorRef.value;

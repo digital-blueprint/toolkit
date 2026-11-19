@@ -1109,50 +1109,85 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
+     * Returns the active vertical scroll container, or null when neither overflows.
+     * The modal changes its scroll container with viewport width changes.
+     * @returns {HTMLElement|null}
+     */
+    _getHolderScrollContainer() {
+        const candidates = [this._('.grants-list-container'), this.modalRef.value?.modalDialog];
+
+        for (const element of candidates) {
+            if (!element) {
+                continue;
+            }
+
+            const {overflowY} = getComputedStyle(element);
+            const allowsScrolling = ['auto', 'scroll'].includes(overflowY);
+            const hasOverflow = element.scrollHeight > element.clientHeight;
+            if (allowsScrolling && hasOverflow) {
+                return element;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Scrolls to an existing grant holder and highlights it after scrolling finishes.
      * @param {HTMLElement} holderElement - Existing grant holder section.
      * @returns {Promise<void>}
      */
     async _scrollToAndHighlightExistingHolder(holderElement) {
-        const scrollContainer = this._('.grants-list-container');
-        if (!scrollContainer) {
-            return;
+        const scrollContainer = this._getHolderScrollContainer();
+        let targetScrollTop = 0;
+        let needsScrolling = false;
+        if (scrollContainer) {
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const holderRect = holderElement.getBoundingClientRect();
+            const centerOffset =
+                holderRect.top +
+                holderRect.height / 2 -
+                (containerRect.top + containerRect.height / 2);
+            const maximumScrollTop = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+            targetScrollTop = Math.max(
+                0,
+                Math.min(scrollContainer.scrollTop + centerOffset, maximumScrollTop),
+            );
+            needsScrolling = Math.abs(targetScrollTop - scrollContainer.scrollTop) > 1;
         }
 
-        const containerRect = scrollContainer.getBoundingClientRect();
-        const holderRect = holderElement.getBoundingClientRect();
-        const centerOffset =
-            holderRect.top + holderRect.height / 2 - (containerRect.top + containerRect.height / 2);
-        const maximumScrollTop = scrollContainer.scrollHeight - scrollContainer.clientHeight;
-        const targetScrollTop = Math.max(
-            0,
-            Math.min(scrollContainer.scrollTop + centerOffset, maximumScrollTop),
-        );
-        const needsScrolling = Math.abs(targetScrollTop - scrollContainer.scrollTop) > 1;
-
-        if (needsScrolling) {
+        if (scrollContainer && needsScrolling) {
             let resolveScrollEnd = () => {};
             const scrollEnd = new Promise((resolve) => {
                 resolveScrollEnd = () => resolve(undefined);
             });
             const handleScrollEnd = () => resolveScrollEnd();
             scrollContainer.addEventListener('scrollend', handleScrollEnd, {once: true});
+            // Bound the fallback wait when no scrollend event is emitted.
+            const scrollEndTimeout = setTimeout(handleScrollEnd, 1500);
 
-            const scrollResult = /** @type {Promise<{interrupted: boolean}>|undefined} */ (
-                /** @type {unknown} */ (
-                    holderElement.scrollIntoView({behavior: 'smooth', block: 'start'})
-                )
-            );
+            try {
+                const scrollResult = /** @type {Promise<{interrupted: boolean}>|undefined} */ (
+                    /** @type {unknown} */ (
+                        scrollContainer.scrollTo({
+                            top: targetScrollTop,
+                            behavior: 'smooth',
+                        })
+                    )
+                );
 
-            // Firefox does not support the scrollIntoView promise yet, so use scrollend there.
-            if (scrollResult instanceof Promise) {
-                scrollContainer.removeEventListener('scrollend', handleScrollEnd);
-                const {interrupted} = await scrollResult;
-                if (interrupted) {
-                    return;
+                // Use scrollend in browsers where scrollTo does not return a promise (Firefox, Safari).
+                if (scrollResult instanceof Promise) {
+                    const {interrupted} = await scrollResult;
+                    if (interrupted) {
+                        return;
+                    }
+                } else {
+                    await scrollEnd;
                 }
-            } else {
-                await scrollEnd;
+            } finally {
+                clearTimeout(scrollEndTimeout);
+                scrollContainer.removeEventListener('scrollend', handleScrollEnd);
             }
         }
 
