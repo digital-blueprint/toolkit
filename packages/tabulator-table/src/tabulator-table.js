@@ -69,10 +69,6 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
         this.sortAnnouncement = '';
         this.sortAnnouncementEnabled = false;
         this.sortedColumnAnnounced = false;
-        /** @type {WeakSet<Node>} */
-        this.collapsedNodes = new WeakSet();
-        this.collapsedNodesTracked = false;
-        this.collapsedNodesRestoreScheduled = false;
     }
 
     static get scopedElements() {
@@ -416,20 +412,8 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             return;
         }
 
-        // The options object can be shared between several tables, so the collapse formatter
-        // is only added to the copy that is handed over to this Tabulator instance.
-        let tabulatorOptions = this.options;
-        if (this.options.responsiveLayout === 'collapse') {
-            tabulatorOptions = {
-                ...this.options,
-                responsiveLayoutCollapseFormatter: this.createCollapseFormatter(
-                    this.options.responsiveLayoutCollapseFormatter,
-                ),
-            };
-        }
-
         /** @type {import('tabulator-tables').Tabulator} */
-        this.tabulatorTable = new Tabulator(this._('#' + this.identifier), tabulatorOptions);
+        this.tabulatorTable = new Tabulator(this._('#' + this.identifier), this.options);
 
         console.log('TABULATOR TABLE INITIALIZED', this.tabulatorTable);
         this.tableBuilding = true;
@@ -547,120 +531,6 @@ export class TabulatorTable extends LangMixin(ScopedElementsMixin(DBPLitElement)
             );
             this.dispatchEvent(renderCompleteEvent);
         });
-    }
-
-    /**
-     * Wraps the collapse formatter of Tabulator's responsive layout.
-     *
-     * Tabulator moves DOM nodes from the row data (e.g. buttons used with the "html" formatter)
-     * into the collapsed details row when a column gets hidden. When the column is shown again,
-     * Tabulator only clears the details row and does not render the cell again, so the node is
-     * lost. The wrapper remembers these nodes and puts them back into their visible cells after
-     * Tabulator has finished updating the layout.
-     *
-     * @param {Function} [customFormatter] Formatter set by the consumer via options
-     * @returns {(data: Array<{field: string, title: string, value: any}>) => any}
-     */
-    createCollapseFormatter(customFormatter) {
-        const component = this;
-
-        /**
-         * @this {import('tabulator-tables').Tabulator}
-         * @param {Array<{field: string, title: string, value: any}>} data
-         */
-        return function (data) {
-            // Tabulator binds the collapse formatter to the Tabulator instance
-            const table = this;
-
-            for (const item of data) {
-                if (item.value instanceof Node) {
-                    component.collapsedNodes.add(item.value);
-                    component.collapsedNodesTracked = true;
-                }
-            }
-
-            const formatter =
-                typeof customFormatter === 'function'
-                    ? customFormatter
-                    : table.modules.responsiveLayout.formatCollapsedData;
-            const result = formatter.call(table, data);
-
-            component.scheduleCollapsedNodesRestore(table);
-
-            return result;
-        };
-    }
-
-    /**
-     * @param {import('tabulator-tables').Tabulator} table
-     */
-    scheduleCollapsedNodesRestore(table) {
-        if (!this.collapsedNodesTracked || this.collapsedNodesRestoreScheduled) {
-            return;
-        }
-
-        this.collapsedNodesRestoreScheduled = true;
-
-        // Wait for the next frame, so the whole layout update of Tabulator is done. Changing the
-        // cells while Tabulator handles a resize would also cause a "ResizeObserver loop" error.
-        requestAnimationFrame(() => {
-            this.collapsedNodesRestoreScheduled = false;
-            this.restoreCollapsedNodes(table);
-        });
-    }
-
-    /**
-     * Renders cells again whose DOM node value was moved into the collapsed details row,
-     * but whose column is visible again.
-     *
-     * @param {import('tabulator-tables').Tabulator} table
-     */
-    restoreCollapsedNodes(table) {
-        if (!table || table !== this.tabulatorTable || !table.initialized) {
-            return;
-        }
-
-        for (const row of table.getRows('display')) {
-            // Rows that were never rendered get their cells rendered when they are shown
-            // @ts-ignore
-            if (!row._row?.initialized) {
-                continue;
-            }
-
-            let restored = false;
-
-            for (const cell of row.getCells()) {
-                const value = cell.getValue();
-
-                if (
-                    !(value instanceof Node) ||
-                    !this.collapsedNodes.has(value) ||
-                    !cell.getColumn().isVisible()
-                ) {
-                    continue;
-                }
-
-                const cellElement = cell.getElement();
-                if (cellElement.contains(value)) {
-                    continue;
-                }
-
-                // Run the column formatter again, like Tabulator does when it renders the cell
-                // @ts-ignore
-                const internalCell = cell._cell;
-                if (typeof internalCell?.layoutElement === 'function') {
-                    internalCell.layoutElement();
-                    internalCell.cellRendered?.();
-                } else {
-                    cellElement.replaceChildren(value);
-                }
-                restored = true;
-            }
-
-            if (restored) {
-                row.normalizeHeight();
-            }
-        }
     }
 
     async tableBuildFunctions() {

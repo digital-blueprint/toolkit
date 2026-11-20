@@ -1,7 +1,12 @@
 import {html, css} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {AdapterLitElement} from '@dbp-toolkit/common';
-import {getFeatureFlag, setFeatureFlag, listFeatureFlags} from '@dbp-toolkit/common';
+import {
+    getFeatureFlag,
+    getFeatureFlagLabel,
+    setFeatureFlag,
+    listFeatureFlags,
+} from '@dbp-toolkit/common';
 
 export class FeatureFlagDropdown extends AdapterLitElement {
     constructor() {
@@ -113,7 +118,7 @@ export class FeatureFlagDropdown extends AdapterLitElement {
                                         data-key="${flag}"
                                         .checked="${this._isChecked(flag)}"
                                         @change="${this._handleCheckboxChange}" />
-                                    ${flag}
+                                    ${getFeatureFlagLabel(flag)}
                                 </label>
                             </div>
                         `,

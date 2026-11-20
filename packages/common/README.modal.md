@@ -116,6 +116,10 @@ combined with the panel width.
 
 ### Events
 
+- `dbp-modal-before-close` is a cancellable event fired before `close()`, the header close
+  button, or Escape closes an open modal. Call `event.preventDefault()` to keep it open.
+  `event.detail` contains `{id}`.
+
 - `dbp-modal-closed` a event which is triggered if the modal is closed. in the detail attribute there is the modal-id of the closed modal. - `<dbp-modal @dbp-modal-closed="${(event) => {
 this.doSomething(event);
 }}"></dbp-modal>`

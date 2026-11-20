@@ -2,6 +2,7 @@ import {
     registerFeatureFlag,
     listFeatureFlags,
     getFeatureFlag,
+    getFeatureFlagLabel,
     setFeatureFlag,
 } from '../src/index.js';
 import {assert} from 'chai';
@@ -10,11 +11,13 @@ suite('Feature Flags', () => {
     setup(() => {
         localStorage.clear();
         delete globalThis['dbp-feature-flags'];
+        delete globalThis['dbp-feature-flag-labels'];
     });
 
     teardown(() => {
         localStorage.clear();
         delete globalThis['dbp-feature-flags'];
+        delete globalThis['dbp-feature-flag-labels'];
     });
 
     suite('registerFeatureFlag', () => {
@@ -40,6 +43,27 @@ suite('Feature Flags', () => {
 
         test('should accept flag names with valid characters', () => {
             assert.doesNotThrow(() => registerFeatureFlag('valid-flag_123'));
+        });
+    });
+
+    suite('getFeatureFlagLabel', () => {
+        test('should return the display label', () => {
+            registerFeatureFlag('test-flag', 'Test feature');
+
+            assert.equal(getFeatureFlagLabel('test-flag'), 'Test feature');
+            assert.deepEqual(listFeatureFlags(), ['test-flag']);
+        });
+
+        test('should fall back to the flag name for missing or empty labels', () => {
+            registerFeatureFlag('test-flag');
+            assert.equal(getFeatureFlagLabel('test-flag'), 'test-flag');
+
+            registerFeatureFlag('test-flag', '');
+            assert.equal(getFeatureFlagLabel('test-flag'), 'test-flag');
+        });
+
+        test('should throw when getting the label of an unregistered flag', () => {
+            assert.throws(() => getFeatureFlagLabel('unregistered'), /not registered/);
         });
     });
 

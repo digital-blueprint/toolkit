@@ -1,6 +1,13 @@
 import {createInstance} from './i18n.js';
 import {html, css} from 'lit';
-import {ScopedElementsMixin, LangMixin, sendNotification} from '@dbp-toolkit/common';
+import {
+    ScopedElementsMixin,
+    LangMixin,
+    sendNotification,
+    getFeatureFlag,
+    registerFeatureFlag,
+    setFeatureFlag,
+} from '@dbp-toolkit/common';
 import {LanguageSelect} from '@dbp-toolkit/language-select';
 import {Icon} from '@dbp-toolkit/common';
 import {AuthKeycloak} from '@dbp-toolkit/auth';
@@ -17,6 +24,9 @@ import {MatomoElement} from '@dbp-toolkit/matomo/src/matomo';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {FeatureFlagDropdown} from './feature-flag-dropdown.js';
 import {ScrollRestoration} from './scroll-restoration.js';
+
+const DEVELOPER_MODE_FEATURE_FLAG = 'developer-mode';
+registerFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG, 'Developer mode');
 
 /**
  * In case the application gets updated future dynamic imports might fail.
@@ -165,7 +175,6 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                 activity.disabled = disabled;
                 // Resolve module_src relative to the location of the json file
                 activity.module_src = new URL(activity.module_src, actURL).href;
-                activity.required_roles = activity.required_roles || [];
                 metadata[activity.routing_name] = activity;
                 routes.push(activity.routing_name);
             } catch (error) {
@@ -560,7 +569,12 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
     }
 
     _handleTitleClick() {
+        if (getFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG)) return;
         this._titleClickCount = Math.min(this._titleClickCount + 1, 7);
+        if (this._titleClickCount === 7) {
+            setFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG, true);
+            this._updateVisibleRoutes();
+        }
     }
 
     onMenuItemClick(e) {
@@ -1508,22 +1522,22 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
 
     _updateVisibleRoutes() {
         let visibleRoutes = [];
+        const roles = this._roles ?? [];
 
         for (let routingName of this.routes) {
             const data = this.metadata[routingName];
-            const requiredRoles = data['required_roles'];
-            let visible = data['visible'];
+            const requiredRoles = data['required_roles'] ?? [];
+            const requiredAnyRoles = data['required_any_roles'] ?? [];
+            const visible = getFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG) || data['visible'];
             let disabled = data['disabled'];
 
-            // Hide them until the user is logged in and we know the roles of the user
-            for (let role of requiredRoles) {
-                if (!this._roles.includes(role)) {
-                    visible = false;
-                    break;
-                }
-            }
+            // Role requirements apply even in developer mode and while roles are unknown.
+            const hasRequiredRoles = requiredRoles.every((role) => roles.includes(role));
+            const hasRequiredAnyRole =
+                requiredAnyRoles.length === 0 ||
+                requiredAnyRoles.some((role) => roles.includes(role));
 
-            if (visible === true) {
+            if (visible === true && hasRequiredRoles && hasRequiredAnyRole) {
                 visibleRoutes.push({
                     name: routingName,
                     disabled: disabled === true,
@@ -2522,7 +2536,7 @@ export class AppShell extends LangMixin(ScopedElementsMixin(DBPLitElement), crea
                                 </a>
                             </slot>
                             ${
-                                this._titleClickCount >= 7
+                                getFeatureFlag(DEVELOPER_MODE_FEATURE_FLAG)
                                     ? html`
                                           <dbp-build-info
                                               git-info="${this.gitInfo}"

@@ -27,7 +27,6 @@
             "error-title": "Fehler",
             "failed-get-user-details": "Benutzerdetails konnten nicht abgerufen werden",
             "failed-to-get-user-details": "Benutzerdetails konnten nicht abgerufen werden",
-            "info-title": "Info",
             "permissions-saved-successfully": "{{n}} Berechtigungen erfolgreich gespeichert",
             "save-permissions-error": "Speichern der {{n}} Benutzerberechtigungen fehlgeschlagen",
             "save-permissions-unexpected-error": "Beim Speichern von Benutzerberechtigungen ist ein unerwarteter Fehler aufgetreten.",

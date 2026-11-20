@@ -27,7 +27,6 @@
             "error-title": "Error",
             "failed-get-user-details": "Failed to get user details",
             "failed-to-get-user-details": "Failed to fetch user details",
-            "info-title": "Info",
             "permissions-saved-successfully": "{{n}} permissions saved successfully",
             "save-permissions-error": "Failed to save {{n}} user permissions",
             "save-permissions-unexpected-error": "Unexpected error happened during saving grants",

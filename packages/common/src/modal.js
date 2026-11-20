@@ -98,6 +98,22 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         this.modalDialog = modalDialog;
         dialogPolyfill.registerDialog(modalDialog);
 
+        modalDialog.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape' || event.defaultPrevented) {
+                return;
+            }
+            // Repeated native close requests can emit a non-cancellable cancel event.
+            event.preventDefault();
+            event.stopPropagation();
+            this._requestClose();
+        });
+
+        modalDialog.addEventListener('cancel', (event) => {
+            // Handle native dismissal requests that do not come through our Escape key handler.
+            event.preventDefault();
+            this._requestClose();
+        });
+
         // Save default value of padding top changed when adding/removing notifications
         this.modalPaddingTopDefault = parseInt(window.getComputedStyle(modalDialog).paddingTop);
 
@@ -225,9 +241,30 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
     }
 
     close() {
+        this._requestClose();
+    }
+
+    /**
+     * Allows consumers to prevent closing before any state or notifications are cleared.
+     * @returns {void}
+     */
+    _requestClose() {
         const modalDialog = this.modalDialog;
         if (!modalDialog) {
             return;
+        }
+
+        if (modalDialog.open) {
+            const event = new CustomEvent('dbp-modal-before-close', {
+                detail: {id: this.modalId},
+                bubbles: true,
+                composed: true,
+                cancelable: true,
+            });
+            // A false return value means a listener called preventDefault() to keep the modal open.
+            if (!this.dispatchEvent(event)) {
+                return;
+            }
         }
 
         modalDialog.close();

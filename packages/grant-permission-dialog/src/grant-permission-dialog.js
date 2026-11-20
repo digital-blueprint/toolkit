@@ -48,6 +48,7 @@ export class GrantPermissionDialog extends LangMixin(
         this.auth = {};
         this.entryPointUrl = '';
         this.modalTitle = '';
+        this.modalDescription = '';
         /** @type {AvailableAction[]} */
         this.availableActions = [];
         /** @type {Map<string, UserEntry>} */
@@ -115,6 +116,7 @@ export class GrantPermissionDialog extends LangMixin(
             ...super.properties,
             auth: {type: Object},
             modalTitle: {type: String, attribute: 'modal-title'},
+            modalDescription: {type: String, attribute: 'modal-description'},
             availableActions: {type: Array},
             userList: {type: Map},
             usersToAdd: {type: Map},
@@ -1213,11 +1215,11 @@ export class GrantPermissionDialog extends LangMixin(
         // If no users to save, show message and return
         if (this.usersToAdd.size === 0) {
             sendNotification({
-                summary: i18n.t('grant-permission-dialog.notifications.info-title'),
+                summary: i18n.t('grant-permission-dialog.notifications.warning-title'),
                 body: i18n.t('grant-permission-dialog.notifications.there-is-no-user-to-save'),
-                type: 'info',
+                type: 'warning',
                 targetNotificationId: 'permission-modal-notification',
-                timeout: 5,
+                timeout: 15,
             });
             return;
         }
@@ -1266,13 +1268,13 @@ export class GrantPermissionDialog extends LangMixin(
 
             if (managerRemovalBlocked) {
                 sendNotification({
-                    summary: 'Warning',
+                    summary: i18n.t('grant-permission-dialog.notifications.warning-title'),
                     body: i18n.t(
                         'grant-permission-dialog.notifications.cant-remove-last-manager-warning',
                     ),
                     type: 'warning',
                     targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
+                    timeout: 15,
                 });
             }
 
@@ -1301,13 +1303,13 @@ export class GrantPermissionDialog extends LangMixin(
 
             if (grantsToPost.length === 0 && grantsToDelete.length === 0) {
                 sendNotification({
-                    summary: i18n.t('grant-permission-dialog.notifications.info-title'),
+                    summary: i18n.t('grant-permission-dialog.notifications.warning-title'),
                     body: i18n.t('grant-permission-dialog.notifications.there-is-nothing-to-save', {
                         userFullName: userId ? this.#getQueuedUser(userId).userFullName : '',
                     }),
-                    type: 'info',
+                    type: 'warning',
                     targetNotificationId: 'permission-modal-notification',
-                    timeout: 5,
+                    timeout: 15,
                 });
             }
 
@@ -1389,6 +1391,13 @@ export class GrantPermissionDialog extends LangMixin(
                     </div>
                 </div>
                 <div slot="content">
+                    ${
+                        this.modalDescription
+                            ? html`
+                                  <p class="modal-description">${this.modalDescription}</p>
+                              `
+                            : ''
+                    }
                     <div class="content-container">
                         <div class="content-inner">
                             <div

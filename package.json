@@ -18,9 +18,9 @@
         "check": "lerna --no-sort run --no-bail check",
         "fix": "lerna --no-sort run --no-bail fix",
         "build": "lerna --no-sort run --no-bail build",
-        "version-patch": "lerna version patch",
-        "version-minor": "lerna version minor",
-        "version": "lerna version",
+        "version-patch": "lerna version patch --no-private",
+        "version-minor": "lerna version minor --no-private",
+        "version": "lerna version --no-private",
         "rm-dist": "for d in ./packages/*/ ; do (cd \"$d\" && rm dist -Rf); done;",
         "publish": "lerna --no-sort publish from-package --yes",
         "tsc": "lerna --no-sort run --no-bail tsc"

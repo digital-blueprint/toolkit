@@ -231,9 +231,10 @@ table.setData([{id: 1, name: 'document.pdf'}]);
 This way Tabulator can render the cell as often as it needs to, e.g. in the collapsed details row of
 `responsiveLayout: 'collapse'` and in the cell itself, and sorting or filtering works on plain values.
 
-Passing elements directly as cell values (with `formatter: 'html'`) is still supported. In collapse mode
-the same element can only be shown in one place: it is moved into the collapsed details row while its
-column is hidden, and the component puts it back into the cell when the column is shown again.
+`formatter: 'html'` remains suitable for HTML strings. Avoid returning the same DOM element from
+multiple formatter calls in collapse mode, including passing elements as row values with
+`formatter: 'html'`. Tabulator moves the shared element into the collapsed details row and does not
+restore it when the column is shown again. Create a fresh element per formatter call instead.
 
 ### Note
 

@@ -227,7 +227,7 @@ suite('dbp-tabulator-table basics', () => {
     });
 });
 
-suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
+suite('dbp-tabulator-table responsive collapse with fresh formatter elements', () => {
     let node;
 
     // Tabulator reacts to size changes with a ResizeObserver, so give it some frames
@@ -237,11 +237,10 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
         }
     };
 
-    const createButton = (label) => {
+    const createButton = (label, onClick = () => {}) => {
         const button = document.createElement('button');
         button.textContent = label;
-        button.clicked = 0;
-        button.addEventListener('click', () => button.clicked++);
+        button.addEventListener('click', onClick);
         return button;
     };
 
@@ -257,7 +256,10 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
             {
                 title: 'Action',
                 field: 'action',
-                formatter: 'html',
+                formatter: (cell) => {
+                    const row = cell.getData();
+                    return createButton(row.action, () => row.clicked++);
+                },
                 width: 150,
                 responsive: 1,
                 headerSort: false,
@@ -268,8 +270,8 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
     });
 
     const createRows = () => [
-        {id: 1, name: 'First', size: '1 kB', action: createButton('First action')},
-        {id: 2, name: 'Second', size: '2 kB', action: createButton('Second action')},
+        {id: 1, name: 'First', size: '1 kB', action: 'First action', clicked: 0},
+        {id: 2, name: 'Second', size: '2 kB', action: 'Second action', clicked: 0},
     ];
 
     const buildTable = async (options) => {
@@ -297,12 +299,15 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
         node.remove();
     });
 
-    test('keeps node values in their cells after a column was collapsed and shown again', async () => {
+    test('keeps generated buttons after a column was collapsed and shown again', async () => {
         const rows = createRows();
         await buildTable(createOptions(rows));
 
         for (const row of rows) {
-            assert.isTrue(getCell(row, 'action').getElement().contains(row.action));
+            assert.equal(
+                getCell(row, 'action').getElement().querySelector('button').textContent,
+                row.action,
+            );
         }
 
         node.style.width = '300px';
@@ -314,7 +319,12 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
                 .getRow(row.id)
                 .getElement()
                 .querySelector('.tabulator-responsive-collapse');
-            assert.isTrue(collapseElement.contains(row.action));
+            const button = collapseElement.querySelector('button');
+            assert.equal(button.textContent, row.action);
+            assert.notStrictEqual(
+                button,
+                getCell(row, 'action').getElement().querySelector('button'),
+            );
         }
 
         node.style.width = '1000px';
@@ -322,15 +332,17 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
 
         assert.isTrue(node.tabulatorTable.getColumn('action').isVisible());
         for (const row of rows) {
-            assert.isTrue(row.action.isConnected);
-            assert.isTrue(getCell(row, 'action').getElement().contains(row.action));
+            assert.equal(
+                getCell(row, 'action').getElement().querySelector('button').textContent,
+                row.action,
+            );
         }
 
-        rows[0].action.click();
-        assert.equal(rows[0].action.clicked, 1);
+        getCell(rows[0], 'action').getElement().querySelector('button').click();
+        assert.equal(rows[0].clicked, 1);
     });
 
-    test('keeps node values when a hidden table is shown and filled at the same time', async () => {
+    test('keeps generated buttons when a hidden table is shown and filled at the same time', async () => {
         await buildTable(createOptions([]));
 
         node.style.display = 'none';
@@ -343,7 +355,10 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
 
         assert.isTrue(node.tabulatorTable.getColumn('action').isVisible());
         for (const row of rows) {
-            assert.isTrue(getCell(row, 'action').getElement().contains(row.action));
+            assert.equal(
+                getCell(row, 'action').getElement().querySelector('button').textContent,
+                row.action,
+            );
         }
     });
 
@@ -362,8 +377,9 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
             (title) => title.textContent,
         );
         assert.deepEqual(titles, ['Action', 'Size']);
-        assert.isTrue(
-            collapseElement.querySelector('table tr td:last-child > div').contains(rows[0].action),
+        assert.equal(
+            collapseElement.querySelector('table tr td:last-child > div button').textContent,
+            rows[0].action,
         );
     });
 
@@ -391,16 +407,22 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
             .getRow(1)
             .getElement()
             .querySelector('.tabulator-responsive-collapse');
-        assert.isTrue(collapseElement.querySelector('ul.custom-collapse').contains(rows[0].action));
+        assert.equal(
+            collapseElement.querySelector('ul.custom-collapse button').textContent,
+            rows[0].action,
+        );
         assert.strictEqual(options.responsiveLayoutCollapseFormatter, customFormatter);
 
         node.style.width = '1000px';
         await waitForLayout();
 
-        assert.isTrue(getCell(rows[0], 'action').getElement().contains(rows[0].action));
+        assert.equal(
+            getCell(rows[0], 'action').getElement().querySelector('button').textContent,
+            rows[0].action,
+        );
     });
 
-    test('keeps expandAll and collapseAll working with node values', async () => {
+    test('keeps expandAll and collapseAll working with generated buttons', async () => {
         const rows = createRows();
         await buildTable(createOptions(rows));
 
@@ -415,9 +437,10 @@ suite('dbp-tabulator-table responsive collapse with DOM node values', () => {
         node.expandAll();
         await waitForLayout();
         assert.notEqual(collapseElement.style.display, 'none');
-        assert.isTrue(collapseElement.contains(rows[0].action));
-        rows[0].action.click();
-        assert.equal(rows[0].action.clicked, 1);
+        const button = collapseElement.querySelector('button');
+        assert.equal(button.textContent, rows[0].action);
+        button.click();
+        assert.equal(rows[0].clicked, 1);
 
         node.collapseAll();
         await waitForLayout();

@@ -364,23 +364,13 @@ export class TabulatorTableDemo extends LangMixin(
         const dobs = ['', '14/05/1982', '22/05/1982', '01/08/1980', '31/01/1999'];
 
         for (let row = 1; row < 6; row++) {
-            //let btn_delete = this.createScopedElement('button');
-            let btn_delete = /** @type {IconButton} */ (
-                this.createScopedElement('dbp-icon-button')
-            );
-            btn_delete.iconName = 'trash';
-            btn_delete.addEventListener('click', (e) => {
-                this.deleteRow(e, row);
-            });
-            btn_delete.setAttribute('id', row.toString());
-
             let element = {
                 id: row,
                 name: names[row - 1],
                 age: ages[row - 1],
                 col: colors[row - 1],
                 dob: dobs[row - 1],
-                delete: btn_delete,
+                delete: row,
             };
             data_edit.push(element);
         }
@@ -569,7 +559,22 @@ export class TabulatorTableDemo extends LangMixin(
                         return aTimestamp - bTimestamp;
                     },
                 },
-                {title: 'delete', field: 'delete', formatter: 'html', download: false},
+                {
+                    title: 'delete',
+                    field: 'delete',
+                    download: false,
+                    formatter: (cell) => {
+                        const button = /** @type {IconButton} */ (
+                            this.createScopedElement('dbp-icon-button')
+                        );
+                        button.iconName = 'trash';
+                        button.setAttribute('id', String(cell.getValue()));
+                        button.addEventListener('click', (event) => {
+                            this.deleteRow(event, cell.getValue());
+                        });
+                        return button;
+                    },
+                },
             ],
         };
 
