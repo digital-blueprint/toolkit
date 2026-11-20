@@ -588,7 +588,281 @@ suite('dbp-authorization-manage-grants-dialog', () => {
     });
 
     teardown(() => {
+        node._resetDialogState();
+        node.close();
         node.remove();
+    });
+
+    function addUnsavedDraft() {
+        const holder = {
+            key: 'person:frank',
+            type: 'person',
+            subject: {identifier: 'frank', givenName: 'Frank'},
+            holderFields: {userIdentifier: 'frank'},
+            grants: [],
+        };
+        node.draftGrantHolders = new Map([[holder.key, holder]]);
+        node.draftRoleGrants = new Map([
+            [holder.key, [{clientIdentifier: 'draft-1', roleIdentifier: null, shareable: false}]],
+        ]);
+    }
+
+    for (const closePath of ['footer', 'header', 'escape', 'programmatic']) {
+        test(`should confirm unsaved changes when closing via ${closePath}`, async () => {
+            node.open();
+            addUnsavedDraft();
+            await node.updateComplete;
+            const drafts = node.draftGrantHolders;
+            const modal = node.modalRef.value;
+            if (closePath === 'footer') {
+                node.shadowRoot
+                    .querySelector('.close-dialog-footer-button')
+                    .shadowRoot.querySelector('button')
+                    .click();
+            } else if (closePath === 'header') {
+                modal.shadowRoot.querySelector('.modal-close').click();
+            } else if (closePath === 'escape') {
+                modal.modalDialog.dispatchEvent(new Event('cancel', {cancelable: true}));
+            } else {
+                node.close();
+            }
+            await node._focusKeepEditingButton();
+
+            assert.isTrue(modal.isOpen());
+            assert.isTrue(node._showCloseConfirmation);
+            assert.strictEqual(node.draftGrantHolders, drafts);
+            assert.isNotNull(node.shadowRoot.querySelector('.close-confirmation'));
+            assert.isTrue(node.shadowRoot.querySelector('.main-content').inert);
+            const keepEditing = node.keepEditingButtonRef.value;
+            assert.strictEqual(
+                keepEditing.shadowRoot.activeElement,
+                keepEditing.shadowRoot.querySelector('button'),
+            );
+        });
+    }
+
+    test('should preserve drafts and restore focus when keeping editing', async () => {
+        node.open();
+        addUnsavedDraft();
+        await node.updateComplete;
+        const closeButton = node.shadowRoot
+            .querySelector('.close-dialog-footer-button')
+            .shadowRoot.querySelector('button');
+        closeButton.focus();
+        closeButton.click();
+        await node._focusKeepEditingButton();
+        await node._keepEditing();
+
+        assert.isTrue(node.modalRef.value.isOpen());
+        assert.isFalse(node._showCloseConfirmation);
+        assert.equal(node.draftGrantHolders.size, 1);
+        assert.isFalse(node.shadowRoot.querySelector('.main-content').inert);
+        assert.strictEqual(closeButton.getRootNode().activeElement, closeButton);
+    });
+
+    test('should keep confirmation open on a second Escape', async () => {
+        node.open();
+        addUnsavedDraft();
+        const modal = node.modalRef.value;
+        modal.modalDialog.dispatchEvent(new Event('cancel', {cancelable: true}));
+        await node._focusKeepEditingButton();
+        modal.modalDialog.dispatchEvent(new Event('cancel', {cancelable: true}));
+        await node.updateComplete;
+
+        assert.isTrue(modal.isOpen());
+        assert.isTrue(node._showCloseConfirmation);
+        assert.equal(node.draftGrantHolders.size, 1);
+    });
+
+    test('should preserve unsaved changes through repeated Escape keydowns', async () => {
+        node.open();
+        addUnsavedDraft();
+        const drafts = node.draftGrantHolders;
+        const modal = node.modalRef.value;
+        for (let index = 0; index < 6; index += 1) {
+            modal.modalDialog.dispatchEvent(
+                new KeyboardEvent('keydown', {
+                    key: 'Escape',
+                    bubbles: true,
+                    cancelable: true,
+                }),
+            );
+            await node.updateComplete;
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            assert.isTrue(modal.isOpen());
+            assert.strictEqual(node.draftGrantHolders, drafts);
+            assert.isTrue(node._showCloseConfirmation);
+        }
+    });
+
+    test('should discard drafts and pending changes only after confirmation', async () => {
+        node.open();
+        addUnsavedDraft();
+        node.pendingGrantChanges = new Map([
+            [
+                'person:frank',
+                [{grantIdentifier: 'grant-1', roleIdentifier: '/roles/editor', shareable: false}],
+            ],
+        ]);
+        node.close();
+        await node._focusKeepEditingButton();
+        const closed = new Promise((resolve) =>
+            node.addEventListener('dbp-modal-closed', resolve, {once: true}),
+        );
+        node.shadowRoot
+            .querySelector('.discard-changes-button')
+            .shadowRoot.querySelector('button')
+            .click();
+        await closed;
+
+        assert.isFalse(node.modalRef.value.isOpen());
+        assert.isFalse(node._showCloseConfirmation);
+        assert.equal(node.draftGrantHolders.size, 0);
+        assert.equal(node.draftRoleGrants.size, 0);
+        assert.equal(node.pendingGrantChanges.size, 0);
+    });
+
+    test('should require an explicit decision after saving finishes', async () => {
+        node.open();
+        node._savingHolderKeys = new Set(['person:frank']);
+        node.close();
+        await node._focusKeepEditingButton();
+        assert.isTrue(node.modalRef.value.isOpen());
+        assert.isTrue(node.shadowRoot.querySelector('.discard-changes-button').disabled);
+        assert.include(
+            node.shadowRoot.querySelector('#close-confirmation-description').textContent,
+            node._i18n.t('auth-manage-dialog.close-confirmation.saving-description'),
+        );
+        node._discardChangesAndClose();
+        assert.isTrue(node.modalRef.value.isOpen());
+        assert.isTrue(node._savingHolderKeys.has('person:frank'));
+
+        node._savingHolderKeys = new Set();
+        node.close();
+        await node.updateComplete;
+        assert.isTrue(node.modalRef.value.isOpen());
+        assert.isTrue(node._showCloseConfirmation);
+        assert.include(
+            node.shadowRoot.querySelector('.discard-changes-button').textContent,
+            node._i18n.t('auth-manage-dialog.buttons.close-button-label'),
+        );
+        node._discardChangesAndClose();
+        assert.isFalse(node.modalRef.value.isOpen());
+    });
+
+    for (const lang of ['en', 'de']) {
+        test(`should update confirmation after partial and complete saves in ${lang}`, async () => {
+            node.lang = lang;
+            await node.updateComplete;
+            node.open();
+            addUnsavedDraft();
+            const role = {
+                '@id': '/authorization/roles/editor',
+                identifier: 'editor',
+                roleNames: [],
+            };
+            const alice = {
+                key: 'person:alice',
+                type: 'person',
+                subject: {identifier: 'alice', givenName: 'Alice'},
+                grants: [{identifier: 'alice-grant', shareable: false, roleDefinition: role}],
+            };
+            node.roles = new Map([[role['@id'], role]]);
+            node.grantHolders = new Map([[alice.key, alice]]);
+            node.pendingGrantChanges = new Map([
+                [
+                    alice.key,
+                    [
+                        {
+                            grantIdentifier: 'alice-grant',
+                            roleIdentifier: role['@id'],
+                            shareable: true,
+                        },
+                    ],
+                ],
+            ]);
+            node.close();
+            await node._focusKeepEditingButton();
+
+            const frank = {
+                ...node.draftGrantHolders.get('person:frank'),
+                grants: [{identifier: 'frank-grant', shareable: false, roleDefinition: role}],
+            };
+            node.grantHolders = new Map([...node.grantHolders, [frank.key, frank]]);
+            node.draftGrantHolders = new Map();
+            node.draftRoleGrants = new Map();
+            await node.updateComplete;
+            let button = node.shadowRoot.querySelector('.discard-changes-button');
+            assert.include(
+                button.textContent,
+                node._i18n.t('auth-manage-dialog.close-confirmation.discard-changes'),
+            );
+            assert.equal(button.type, 'is-danger');
+            assert.include(
+                node.shadowRoot.querySelector('#close-confirmation-title').textContent,
+                node._i18n.t('auth-manage-dialog.close-confirmation.title'),
+            );
+            assert.include(
+                node.shadowRoot.querySelector('#close-confirmation-description').textContent,
+                node._i18n.t('auth-manage-dialog.close-confirmation.description'),
+            );
+
+            node.grantHolders = new Map([
+                ...node.grantHolders,
+                [alice.key, {...alice, grants: [{...alice.grants[0], shareable: true}]}],
+            ]);
+            node.pendingGrantChanges = new Map();
+            await node.updateComplete;
+            button = node.shadowRoot.querySelector('.discard-changes-button');
+            assert.include(
+                button.textContent,
+                node._i18n.t('auth-manage-dialog.buttons.close-button-label'),
+            );
+            assert.notInclude(
+                button.textContent,
+                node._i18n.t('auth-manage-dialog.close-confirmation.discard-changes'),
+            );
+            assert.equal(button.type, 'is-secondary');
+            assert.isFalse(button.disabled);
+            assert.include(
+                node.shadowRoot.querySelector('#close-confirmation-title').textContent,
+                node._i18n.t('auth-manage-dialog.close-confirmation.saved-title'),
+            );
+            assert.include(
+                node.shadowRoot.querySelector('#close-confirmation-description').textContent,
+                node._i18n.t('auth-manage-dialog.close-confirmation.saved-description'),
+            );
+            assert.isNotNull(node.shadowRoot.querySelector('.keep-editing-button'));
+            const savedHolders = node.grantHolders;
+            button.shadowRoot.querySelector('button').click();
+            assert.isFalse(node.modalRef.value.isOpen());
+            assert.strictEqual(node.grantHolders, savedHolders);
+        });
+    }
+
+    test('should recognize each kind of unsaved change but ignore empty row lists', () => {
+        assert.isFalse(node._hasUnsavedChanges());
+        node.draftGrantHolders = new Map([['person:frank', {}]]);
+        assert.isTrue(node._hasUnsavedChanges());
+        node.draftGrantHolders = new Map();
+        node.draftRoleGrants = new Map([['person:frank', [{}]]]);
+        assert.isTrue(node._hasUnsavedChanges());
+        node.draftRoleGrants = new Map([['person:frank', []]]);
+        assert.isFalse(node._hasUnsavedChanges());
+        node.pendingGrantChanges = new Map([['person:frank', [{}]]]);
+        assert.isTrue(node._hasUnsavedChanges());
+        node.pendingGrantChanges = new Map([['person:frank', []]]);
+        assert.isFalse(node._hasUnsavedChanges());
+    });
+
+    test('should close without confirmation on logout even with unsaved changes', async () => {
+        node.open();
+        addUnsavedDraft();
+        node.logoutCallback();
+        await node.updateComplete;
+        assert.isFalse(node.modalRef.value.isOpen());
+        assert.isFalse(node._showCloseConfirmation);
+        assert.equal(node.draftGrantHolders.size, 0);
     });
 
     test('should render', () => {

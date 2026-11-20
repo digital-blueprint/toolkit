@@ -70,6 +70,9 @@ The show-roles button toggles a side panel listing available roles.
 - `open()`: Opens the dialog.
 - `close()`: Closes the dialog.
 
+Closing through the footer, header close button, Escape, or `close()` asks for confirmation
+when there are unsaved changes. The confirmation appears inside the existing dialog.
+
 The subject select (`dbp-authorization-subject-select`) additionally provides:
 
 - `getGrantHolder(resource)`: Returns the grant holder fields of a selected subject, or `null`

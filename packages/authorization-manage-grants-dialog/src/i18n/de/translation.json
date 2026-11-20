@@ -16,6 +16,16 @@
             "save-roles-button-label": "Speichern",
             "show-roles-button-label": "Rollen anzeigen"
         },
+        "close-confirmation": {
+            "description": "Sie haben ungespeicherte Änderungen.",
+            "discard-changes": "Änderungen verwerfen",
+            "keep-editing": "Weiter bearbeiten",
+            "saved-description": "Alle Änderungen wurden gespeichert.",
+            "saved-title": "Dialog schließen?",
+            "saving-description": "Bitte warten Sie, bis das Speichern abgeschlossen ist. Bereits an den Server gesendete Änderungen können durch Schließen nicht rückgängig gemacht werden.",
+            "saving-title": "Änderungen werden gespeichert",
+            "title": "Ungespeicherte Änderungen verwerfen?"
+        },
         "demo-error-get-forms": "Formulare konnten nicht geladen werden.",
         "demo-error-title": "Fehler",
         "demo-resource-type-form": "Formular",

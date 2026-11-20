@@ -107,6 +107,45 @@ export function getAuthorizationManageGrantsDialogCSS() {
             margin-top: 1em;
         }
 
+        .main-content.close-confirmation {
+            filter: blur(2px);
+        }
+
+        .main-content.close-confirmation:after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-actions,
+        .close-confirmation-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 1em;
+        }
+
+        .footer-actions[hidden] {
+            display: none;
+        }
+
+        .close-confirmation {
+            width: 100%;
+        }
+
+        .close-confirmation h3 {
+            margin: 0 0 0.5em;
+        }
+
+        .close-confirmation p {
+            margin: 0 0 1em;
+        }
+
         .main-content {
             display: flex;
             flex-direction: column;

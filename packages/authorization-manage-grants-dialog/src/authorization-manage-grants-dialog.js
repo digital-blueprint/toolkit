@@ -107,6 +107,11 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this._addingSubject = false;
         /** @type {number} Invalidates subject additions when the dialog state is replaced. */
         this._dialogGeneration = 0;
+        this._showCloseConfirmation = false;
+        /** @type {HTMLElement|null} Control to refocus when closing is cancelled. */
+        this._closeTriggerFocus = null;
+        /** @type {import('lit/directives/ref.js').Ref<Button>} */
+        this.keepEditingButtonRef = createRef();
         this.resourceClassIdentifier = '';
         this.resourceIdentifier = '';
         this.resourceType = RESOURCE_TYPE_ITEM;
@@ -146,6 +151,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             modalDescription: {type: String, attribute: 'modal-description'},
             selectedSubject: {state: true},
             _addingSubject: {state: true},
+            _showCloseConfirmation: {state: true},
             resourceClassIdentifier: {type: String, attribute: 'resource-class-identifier'},
             resourceIdentifier: {type: String, attribute: 'resource-identifier'},
             resourceType: {type: Number, attribute: 'resource-type'},
@@ -240,6 +246,73 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
+     * Intercepts every modal close request before unsaved state can be discarded.
+     * @param {CustomEvent<{id: string}>} event - Modal close request.
+     * @returns {void}
+     */
+    _handleBeforeModalClose(event) {
+        if (
+            !this._showCloseConfirmation &&
+            !this._hasUnsavedChanges() &&
+            this._savingHolderKeys.size === 0
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        if (!this._showCloseConfirmation) {
+            let focused = this.ownerDocument.activeElement;
+            while (focused?.shadowRoot?.activeElement) {
+                focused = focused.shadowRoot.activeElement;
+            }
+            this._closeTriggerFocus = focused instanceof HTMLElement ? focused : null;
+            this._showCloseConfirmation = true;
+        }
+        void this._focusKeepEditingButton();
+    }
+
+    _hasUnsavedChanges() {
+        return (
+            this.draftGrantHolders.size > 0 ||
+            [...this.draftRoleGrants.values()].some((rows) => rows.length > 0) ||
+            [...this.pendingGrantChanges.values()].some((changes) => changes.length > 0)
+        );
+    }
+
+    async _focusKeepEditingButton() {
+        await this.updateComplete;
+        const button = this.keepEditingButtonRef.value;
+        await button?.updateComplete;
+        if (this._showCloseConfirmation && this.modalRef.value?.isOpen()) {
+            button?.shadowRoot?.querySelector('button')?.focus();
+        }
+    }
+
+    async _keepEditing() {
+        const previousFocus = this._closeTriggerFocus;
+        this._showCloseConfirmation = false;
+        this._closeTriggerFocus = null;
+        await this.updateComplete;
+        if (!this.modalRef.value?.isOpen() || this._showCloseConfirmation) {
+            return;
+        }
+        if (previousFocus?.isConnected) {
+            previousFocus.focus();
+        } else {
+            this.modalRef.value.focusCloseButton();
+        }
+    }
+
+    _discardChangesAndClose() {
+        // Discarding drafts cannot undo a save that has already sent API requests.
+        if (!this._showCloseConfirmation || this._savingHolderKeys.size > 0) {
+            return;
+        }
+        this._resetDialogState();
+        this.close();
+    }
+
+    /**
      * Keeps the roles button label and its aria-expanded state in sync with the info panel.
      * The modal also collapses the panel when it is closed, so no extra reset is needed.
      * @param {CustomEvent<{id: string, expanded: boolean}>} event - The modal toggle event.
@@ -252,6 +325,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     _resetDialogState() {
         this._dialogGeneration += 1;
         this._addingSubject = false;
+        this._showCloseConfirmation = false;
+        this._closeTriggerFocus = null;
         this._resourceDataController?.abort();
         this._resourceDataController = null;
         this._resourceForm = null;
@@ -533,6 +608,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     async _loadResourceData() {
         this._dialogGeneration += 1;
         this._addingSubject = false;
+        this._showCloseConfirmation = false;
+        this._closeTriggerFocus = null;
         this._resourceDataController?.abort();
         const controller = new AbortController();
         this._resourceDataController = controller;
@@ -1865,6 +1942,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         return html`
             <div
                 slot="info-panel"
+                ?inert="${this._showCloseConfirmation}"
                 role="region"
                 aria-label="${i18n.t('auth-manage-dialog.roles-panel.title')}">
                 <div class="info-panel-title">
@@ -1912,6 +1990,85 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         `;
     }
 
+    renderFooter() {
+        const i18n = this._i18n;
+        const saving = this._savingHolderKeys.size > 0;
+        const hasUnsavedChanges = this._hasUnsavedChanges();
+        const confirmationTitle = saving
+            ? i18n.t('auth-manage-dialog.close-confirmation.saving-title')
+            : hasUnsavedChanges
+              ? i18n.t('auth-manage-dialog.close-confirmation.title')
+              : i18n.t('auth-manage-dialog.close-confirmation.saved-title');
+        const confirmationDescription = saving
+            ? i18n.t('auth-manage-dialog.close-confirmation.saving-description')
+            : hasUnsavedChanges
+              ? i18n.t('auth-manage-dialog.close-confirmation.description')
+              : i18n.t('auth-manage-dialog.close-confirmation.saved-description');
+        return html`
+            <div class="footer-actions" ?hidden="${this._showCloseConfirmation}">
+                <dbp-button
+                    type="is-secondary"
+                    class="close-dialog-footer-button"
+                    no-spinner-on-click
+                    @click="${this.close}">
+                    <dbp-icon name="close" aria-hidden="true"></dbp-icon>
+                    ${i18n.t('auth-manage-dialog.buttons.close-button-label')}
+                </dbp-button>
+                <dbp-button
+                    type="is-primary"
+                    class="save-all-roles-button"
+                    no-spinner-on-click
+                    @click="${this.handleSaveAllRolesButtonClick}">
+                    <dbp-icon name="save" aria-hidden="true"></dbp-icon>
+                    ${i18n.t('auth-manage-dialog.buttons.save-roles-button-label')}
+                </dbp-button>
+            </div>
+            ${
+                this._showCloseConfirmation
+                    ? html`
+                          <section
+                              class="close-confirmation"
+                              aria-labelledby="close-confirmation-title"
+                              aria-describedby="close-confirmation-description">
+                              <h3 id="close-confirmation-title">${confirmationTitle}</h3>
+                              <p id="close-confirmation-description">${confirmationDescription}</p>
+                              <div class="close-confirmation-actions">
+                                  <dbp-button
+                                      ${ref(this.keepEditingButtonRef)}
+                                      type="is-secondary"
+                                      class="keep-editing-button"
+                                      no-spinner-on-click
+                                      @click="${this._keepEditing}">
+                                      <dbp-icon name="pencil" aria-hidden="true"></dbp-icon>
+                                      ${i18n.t('auth-manage-dialog.close-confirmation.keep-editing')}
+                                  </dbp-button>
+                                  <dbp-button
+                                      type="${hasUnsavedChanges ? 'is-danger' : 'is-secondary'}"
+                                      class="discard-changes-button"
+                                      no-spinner-on-click
+                                      ?disabled="${saving}"
+                                      @click="${this._discardChangesAndClose}">
+                                      <dbp-icon
+                                          name="${hasUnsavedChanges ? 'trash' : 'close'}"
+                                          aria-hidden="true"></dbp-icon>
+                                      ${
+                                          hasUnsavedChanges
+                                              ? i18n.t(
+                                                    'auth-manage-dialog.close-confirmation.discard-changes',
+                                                )
+                                              : i18n.t(
+                                                    'auth-manage-dialog.buttons.close-button-label',
+                                                )
+                                      }
+                                  </dbp-button>
+                              </div>
+                          </section>
+                      `
+                    : ''
+            }
+        `;
+    }
+
     render() {
         const i18n = this._i18n;
 
@@ -1921,8 +2078,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 sticky-footer
                 full-height-line
                 @dbp-modal-closed="${this._handleModalClosed}"
+                @dbp-modal-before-close="${this._handleBeforeModalClose}"
                 @dbp-modal-info-panel-toggled="${this._handleInfoPanelToggled}"
-                class="modal--manage-grants"
+                class="modal--manage-grants ${classMap({'close-confirmation': this._showCloseConfirmation})}"
                 info-panel
                 title="${this.modalTitle}">
                 <div slot="title">
@@ -1943,7 +2101,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                     }
                 </div>
                 <div slot="content">
-                    <div class="main-content">
+                    <div
+                        class="main-content ${classMap({'close-confirmation': this._showCloseConfirmation})}"
+                        ?inert="${this._showCloseConfirmation}">
                         <div class="add-resource-container">
                             <dbp-authorization-subject-select
                                 ${ref(this.subjectSelectorRef)}
@@ -1988,24 +2148,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                     </div>
                 </div>
                 ${this.renderRolesSidePanel()}
-                <div slot="footer" class="footer-menu">
-                    <dbp-button
-                        type="is-secondary"
-                        class="close-dialog-footer-button"
-                        no-spinner-on-click
-                        @click="${this.close}">
-                        <dbp-icon name="close" aria-hidden="true"></dbp-icon>
-                        ${i18n.t('auth-manage-dialog.buttons.close-button-label')}
-                    </dbp-button>
-                    <dbp-button
-                        type="is-primary"
-                        class="save-all-roles-button"
-                        no-spinner-on-click
-                        @click="${this.handleSaveAllRolesButtonClick}">
-                        <dbp-icon name="save" aria-hidden="true"></dbp-icon>
-                        ${i18n.t('auth-manage-dialog.buttons.save-roles-button-label')}
-                    </dbp-button>
-                </div>
+                <div slot="footer" class="footer-menu">${this.renderFooter()}</div>
             </dbp-modal>
         `;
     }

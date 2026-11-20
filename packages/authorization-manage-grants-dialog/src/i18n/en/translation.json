@@ -16,6 +16,16 @@
             "save-roles-button-label": "Save",
             "show-roles-button-label": "Show roles"
         },
+        "close-confirmation": {
+            "description": "You have unsaved changes.",
+            "discard-changes": "Discard changes",
+            "keep-editing": "Keep editing",
+            "saved-description": "All changes have been saved.",
+            "saved-title": "Close dialog?",
+            "saving-description": "Please wait for saving to finish. Closing cannot undo changes already sent to the server.",
+            "saving-title": "Changes are being saved",
+            "title": "Discard unsaved changes?"
+        },
         "demo-error-get-forms": "Could not load forms.",
         "demo-error-title": "Error",
         "demo-resource-type-form": "Form",
