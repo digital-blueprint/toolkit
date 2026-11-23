@@ -48,6 +48,7 @@ export class GrantPermissionDialog extends LangMixin(
         this.auth = {};
         this.entryPointUrl = '';
         this.modalTitle = '';
+        /** @type {string | import('lit').TemplateResult} */
         this.modalDescription = '';
         /** @type {AvailableAction[]} */
         this.availableActions = [];
