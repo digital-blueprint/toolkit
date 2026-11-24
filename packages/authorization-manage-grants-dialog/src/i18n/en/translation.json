@@ -14,7 +14,8 @@
             "save-holder-roles-button-label": "Save",
             "save-holder-roles-button-select-role-title": "Please select a role before saving",
             "save-roles-button-label": "Save",
-            "show-roles-button-label": "Show roles"
+            "show-roles-button-label": "Show roles",
+            "undo-delete-role": "Undo deletion of role \"{{role}}\" for {{holder}}"
         },
         "close-confirmation": {
             "description": "You have unsaved changes.",

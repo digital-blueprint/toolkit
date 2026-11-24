@@ -397,6 +397,49 @@ suite('grant-drafts', () => {
         ]);
     });
 
+    test('should retain deletion-only changes and remove them on undo', () => {
+        const grant = {identifier: 'grant-a', shareable: false, roleDefinition: EDITOR};
+        const initial = new Map();
+        const marked = setPendingGrantChange(initial, HOLDER_KEY, grant, {markedToDelete: true});
+
+        assert.equal(initial.size, 0);
+        assert.isTrue(getPendingGrantChange(marked, HOLDER_KEY, grant.identifier).markedToDelete);
+        assert.isTrue(isHolderSaveable(new Map(), marked, HOLDER_KEY));
+        const undone = setPendingGrantChange(marked, HOLDER_KEY, grant, {markedToDelete: false});
+        assert.equal(undone.size, 0);
+    });
+
+    test('should preserve edits across marking and undo while reserving both roles', () => {
+        const grantHolders = createGrantHolders([{identifier: 'grant-a', role: EDITOR}]);
+        const grant = grantHolders.get(HOLDER_KEY).grants[0];
+        const edited = setPendingGrantChange(new Map(), HOLDER_KEY, grant, {
+            roleIdentifier: AUTHOR['@id'],
+            shareable: true,
+        });
+        const marked = setPendingGrantChange(edited, HOLDER_KEY, grant, {markedToDelete: true});
+        const available = getAvailableRoles({
+            roles: roles,
+            grantHolders: grantHolders,
+            draftRoleGrants: new Map(),
+            pendingGrantChanges: marked,
+            holderKey: HOLDER_KEY,
+        });
+        assert.deepEqual(roleIdentifiers(available), ['reader']);
+        const undone = setPendingGrantChange(marked, HOLDER_KEY, grant, {markedToDelete: false});
+        assert.deepEqual(getPendingGrantChange(undone, HOLDER_KEY, grant.identifier), {
+            ...getPendingGrantChange(edited, HOLDER_KEY, grant.identifier),
+            markedToDelete: false,
+        });
+    });
+
+    test('should prune orphaned deletions without dropping those still applicable', () => {
+        const grantHolders = createGrantHolders([{identifier: 'grant-a', role: EDITOR}]);
+        const grant = grantHolders.get(HOLDER_KEY).grants[0];
+        const marked = setPendingGrantChange(new Map(), HOLDER_KEY, grant, {markedToDelete: true});
+        assert.deepEqual(dropOrphanedGrantChanges(marked, grantHolders), marked);
+        assert.equal(dropOrphanedGrantChanges(marked, new Map()).size, 0);
+    });
+
     test('should drop the unsaved changes of grants that are gone', () => {
         const pendingGrantChanges = new Map([
             [
@@ -606,6 +649,217 @@ suite('dbp-authorization-manage-grants-dialog', () => {
             [holder.key, [{clientIdentifier: 'draft-1', roleIdentifier: null, shareable: false}]],
         ]);
     }
+
+    function addSavedHolder() {
+        const editor = {'@id': '/authorization/roles/editor', identifier: 'editor'};
+        const reader = {'@id': '/authorization/roles/reader', identifier: 'reader'};
+        const grant = {
+            identifier: 'grant-1',
+            shareable: false,
+            grantedActions: ['delete'],
+            roleDefinition: editor,
+        };
+        const holder = {
+            key: 'person:frank',
+            type: 'person',
+            subject: {identifier: 'frank', givenName: 'Frank'},
+            grants: [grant],
+        };
+        node.roles = new Map([editor, reader].map((role) => [role['@id'], role]));
+        node.grantHolders = new Map([[holder.key, holder]]);
+        return {holder, grant};
+    }
+
+    for (const lang of ['en', 'de']) {
+        test(`should mark and undo deletion without requests in ${lang}`, async () => {
+            node.lang = lang;
+            const {holder, grant} = addSavedHolder();
+            node._apiDeleteResourceActionGrant = async () =>
+                assert.fail('Deletion must wait for Save');
+            await node.updateComplete;
+            const row = node.shadowRoot.querySelector('.role-grant-row');
+            const button = row.querySelector('.delete-role-button');
+            button.click();
+            await node.updateComplete;
+
+            assert.strictEqual(node.shadowRoot.querySelector('.role-grant-row'), row);
+            assert.isTrue(row.classList.contains('marked-to-delete'));
+            assert.isTrue(row.querySelector('select').disabled);
+            assert.isTrue(row.querySelector('input').disabled);
+            assert.isFalse(button.disabled);
+            assert.equal(button.getAttribute('icon-name'), 'undo');
+            assert.equal(
+                button.getAttribute('aria-label'),
+                node._i18n.t('auth-manage-dialog.buttons.undo-delete-role', {
+                    role: 'editor',
+                    holder: 'Frank',
+                }),
+            );
+            assert.isFalse(node._isSaveDisabled(holder.key));
+            assert.deepEqual(
+                node._getAvailableRolesForHolder(holder.key).map((role) => role.identifier),
+                ['reader'],
+            );
+            assert.equal(getComputedStyle(row, '::after').pointerEvents, 'none');
+
+            button.click();
+            await node.updateComplete;
+            assert.isFalse(row.classList.contains('marked-to-delete'));
+            assert.isFalse(row.querySelector('select').disabled);
+            assert.isTrue(node._isSaveDisabled(holder.key));
+            assert.equal(node.pendingGrantChanges.size, 0);
+            assert.lengthOf(node.grantHolders.get(holder.key).grants, 1);
+            assert.equal(grant.identifier, 'grant-1');
+        });
+    }
+
+    test('should discard a pending deletion only after close confirmation', async () => {
+        node.open();
+        const {holder, grant} = addSavedHolder();
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        node.close();
+        await node._focusKeepEditingButton();
+        assert.isTrue(node._showCloseConfirmation);
+        assert.isTrue(node._getPendingGrantChange(holder.key, grant.identifier).markedToDelete);
+        node._discardChangesAndClose();
+        assert.equal(node.pendingGrantChanges.size, 0);
+        assert.lengthOf(node.grantHolders.get(holder.key).grants, 1);
+    });
+
+    test('should keep failed deletions marked and retry only DELETE on Save', async () => {
+        const {holder, grant} = addSavedHolder();
+        let attempts = 0;
+        node._apiPostResourceActionGrant = async () =>
+            assert.fail('Deletion must not create a grant');
+        node._apiDeleteResourceActionGrant = async () =>
+            new Response('{}', {status: ++attempts === 1 ? 403 : 200});
+        node._reloadGrantHolders = async () => node._dropOrphanedGrantChanges();
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+
+        await node.handleSaveHolderRolesButtonClick(holder.key);
+        await node.updateComplete;
+        assert.equal(attempts, 1);
+        assert.isTrue(node._getPendingGrantChange(holder.key, grant.identifier).markedToDelete);
+        assert.isNotNull(node.shadowRoot.querySelector('.marked-to-delete'));
+        assert.isFalse(node._isSaveDisabled(holder.key));
+
+        await node.handleSaveHolderRolesButtonClick(holder.key);
+        await node.updateComplete;
+        assert.equal(attempts, 2);
+        assert.equal(node.pendingGrantChanges.size, 0);
+        assert.isFalse(node.grantHolders.has(holder.key));
+        assert.isFalse(node._savingHolderKeys.has(holder.key));
+    });
+
+    test('should block edits and deletion toggles while the holder is saving', async () => {
+        const {holder, grant} = addSavedHolder();
+        node.handleAddRoleButtonClick(holder.key);
+        const draft = node.draftRoleGrants.get(holder.key)[0];
+        node.handleDraftRoleSelectChange(
+            {target: {value: '/authorization/roles/reader'}},
+            draft,
+            holder.key,
+        );
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        const pending = node.pendingGrantChanges;
+        const drafts = node.draftRoleGrants;
+        let finish;
+        node._apiDeleteResourceActionGrant = () =>
+            new Promise((resolve) => {
+                finish = resolve;
+            });
+        node._apiPostResourceActionGrant = async () => new Response('{}', {status: 201});
+        node._reloadGrantHolders = async () => {};
+        const save = node.handleSaveHolderRolesButtonClick(holder.key);
+        await node.updateComplete;
+        assert.isTrue(node._savingHolderKeys.has(holder.key));
+        for (const control of node.shadowRoot.querySelectorAll(
+            '.role-grant-row select, .role-grant-row input, .role-grant-row dbp-icon-button',
+        )) {
+            assert.isTrue(control.disabled);
+        }
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        node.handleRoleSelectChange(
+            {target: {value: '/authorization/roles/reader'}},
+            holder.key,
+            grant,
+        );
+        node.handleDeleteDraftRoleButtonClick(holder.key, draft.clientIdentifier);
+        node.handleDraftShareableChange({target: {checked: true}}, draft, holder.key);
+        node.handleAddRoleButtonClick(holder.key);
+        assert.strictEqual(node.pendingGrantChanges, pending);
+        assert.strictEqual(node.draftRoleGrants, drafts);
+        finish(new Response('{}', {status: 200}));
+        await save;
+        assert.isFalse(node._savingHolderKeys.has(holder.key));
+    });
+
+    test('should keep failed new roles reachable after deleting the last saved grant', async () => {
+        const {holder, grant} = addSavedHolder();
+        node.entryPointUrl = 'https://api.example.com';
+        node.auth = {'login-status': 'logged-in', token: 'token'};
+        node.resourceClassIdentifier = 'DbpRelayFormalizeSubmission';
+        node.resourceIdentifier = 'submission-id';
+        node.handleAddRoleButtonClick(holder.key);
+        const draft = node.draftRoleGrants.get(holder.key)[0];
+        node.handleDraftRoleSelectChange(
+            {target: {value: '/authorization/roles/reader'}},
+            draft,
+            holder.key,
+        );
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        node._apiDeleteResourceActionGrant = async () => new Response('{}', {status: 200});
+        node._apiPostResourceActionGrant = async () => new Response('{}', {status: 403});
+        node._apiGetResourceActionGrants = async () => [];
+
+        await node.handleSaveHolderRolesButtonClick(holder.key);
+        await node.updateComplete;
+        assert.isFalse(node.grantHolders.has(holder.key));
+        assert.isTrue(node.draftGrantHolders.has(holder.key));
+        assert.deepEqual(node.draftGrantHolders.get(holder.key).holderFields, {
+            userIdentifier: 'frank',
+        });
+        assert.lengthOf(node.draftRoleGrants.get(holder.key), 1);
+        assert.isNotNull(node.shadowRoot.querySelector('.draft-role-grant-row'));
+        assert.isFalse(node._isSaveDisabled(holder.key));
+        assert.equal(node.pendingGrantChanges.size, 0);
+    });
+
+    test('should preserve edits on Undo and prevent editing a marked grant', () => {
+        const {holder, grant} = addSavedHolder();
+        node.handleRoleSelectChange(
+            {target: {value: '/authorization/roles/reader'}},
+            holder.key,
+            grant,
+        );
+        node.handleGrantShareableChange({target: {checked: true}}, holder.key, grant);
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        const pending = node.pendingGrantChanges;
+        node.handleGrantShareableChange({target: {checked: false}}, holder.key, grant);
+        node.handleRoleSelectChange(
+            {target: {value: '/authorization/roles/editor'}},
+            holder.key,
+            grant,
+        );
+        assert.strictEqual(node.pendingGrantChanges, pending);
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        assert.deepEqual(node._getPendingGrantChange(holder.key, grant.identifier), {
+            grantIdentifier: grant.identifier,
+            roleIdentifier: '/authorization/roles/reader',
+            shareable: true,
+            markedToDelete: false,
+        });
+    });
+
+    test('should not mark grants without delete permission', async () => {
+        const {holder, grant} = addSavedHolder();
+        grant.grantedActions = ['read'];
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        await node.updateComplete;
+        assert.equal(node.pendingGrantChanges.size, 0);
+        assert.isTrue(node.shadowRoot.querySelector('.delete-role-button').disabled);
+        assert.isNull(node.shadowRoot.querySelector('.marked-to-delete'));
+    });
 
     for (const closePath of ['footer', 'header', 'escape', 'programmatic']) {
         test(`should confirm unsaved changes when closing via ${closePath}`, async () => {
@@ -2020,7 +2274,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         assert.deepEqual(node.pendingGrantChanges.get('person:frank'), [pendingChange]);
     });
 
-    test('should keep a holder with draft rows when its last role is deleted', async () => {
+    test('should keep a marked grant and incomplete draft until Save is possible', async () => {
         const originalFetch = globalThis.fetch;
         const editor = {'@id': '/authorization/roles/editor', identifier: 'editor', roleNames: []};
         const reader = {'@id': '/authorization/roles/reader', identifier: 'reader', roleNames: []};
@@ -2061,22 +2315,26 @@ suite('dbp-authorization-manage-grants-dialog', () => {
             return new Response('{}', {status: 200});
         };
         try {
-            await node.handleDeleteRoleButtonClick('a', 'editor', 'Frank');
+            node.handleDeleteRoleButtonClick(
+                'person:frank',
+                node.grantHolders.get('person:frank').grants[0],
+            );
+            await node.handleSaveHolderRolesButtonClick('person:frank');
         } finally {
             globalThis.fetch = originalFetch;
         }
         await node.updateComplete;
 
-        // The deleted grant is all that changed, so the list is not loaded again
-        assert.deepEqual(methods, ['DELETE']);
+        // An incomplete draft still blocks saving, so marking sends no requests.
+        assert.deepEqual(methods, []);
         // The holder keeps its place, so the row the user started stays where it was
         assert.lengthOf(node.shadowRoot.querySelectorAll('.grant-holder-section'), 1);
         assert.lengthOf(node.shadowRoot.querySelectorAll('.draft-role-grant-row'), 1);
-        assert.isEmpty(node.grantHolders.get('person:frank').grants);
-        // The deleted role is the only row that is gone
+        assert.lengthOf(node.grantHolders.get('person:frank').grants, 1);
+        assert.isNotNull(node.shadowRoot.querySelector('.marked-to-delete'));
         assert.lengthOf(
             node.shadowRoot.querySelectorAll('.role-grant-row:not(.draft-role-grant-row)'),
-            0,
+            1,
         );
         assert.isFalse(node.draftGrantHolders.has('person:frank'));
     });
@@ -2108,17 +2366,27 @@ suite('dbp-authorization-manage-grants-dialog', () => {
                 },
             ],
         ]);
-        // An unsaved change of the deleted grant can no longer be applied
+        // Deletion takes precedence over an earlier shareable edit.
         node.pendingGrantChanges = new Map([
             [
                 'person:frank',
                 [{grantIdentifier: 'a', roleIdentifier: editor['@id'], shareable: true}],
             ],
         ]);
-        globalThis.fetch = async () => new Response('{}', {status: 200});
+        const methods = [];
+        globalThis.fetch = async (url, options = {}) => {
+            methods.push(options.method ?? 'GET');
+            return new Response('{"hydra:member": []}', {status: 200});
+        };
 
         try {
-            await node.handleDeleteRoleButtonClick('a', 'editor', 'Frank');
+            node.handleDeleteRoleButtonClick(
+                'person:frank',
+                node.grantHolders.get('person:frank').grants[0],
+            );
+            assert.isTrue(node.grantHolders.has('person:frank'));
+            assert.deepEqual(methods, []);
+            await node.handleSaveHolderRolesButtonClick('person:frank');
         } finally {
             globalThis.fetch = originalFetch;
         }
@@ -2128,6 +2396,7 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         assert.isFalse(node.grantHolders.has('person:frank'));
         assert.lengthOf(node.shadowRoot.querySelectorAll('.grant-holder-section'), 0);
         assert.isFalse(node.pendingGrantChanges.has('person:frank'));
+        assert.deepEqual(methods, ['DELETE', 'GET']);
     });
 
     test('should drop draft rows of a holder another session removed', async () => {

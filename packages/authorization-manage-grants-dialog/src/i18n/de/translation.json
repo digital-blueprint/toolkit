@@ -14,7 +14,8 @@
             "save-holder-roles-button-label": "Speichern",
             "save-holder-roles-button-select-role-title": "Bitte wählen Sie eine Rolle aus, bevor Sie speichern",
             "save-roles-button-label": "Speichern",
-            "show-roles-button-label": "Rollen anzeigen"
+            "show-roles-button-label": "Rollen anzeigen",
+            "undo-delete-role": "Löschen der Rolle {{role}} für {{holder}} rückgängig machen"
         },
         "close-confirmation": {
             "description": "Sie haben ungespeicherte Änderungen.",

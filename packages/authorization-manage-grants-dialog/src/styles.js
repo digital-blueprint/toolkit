@@ -247,10 +247,22 @@ export function getAuthorizationManageGrantsDialogCSS() {
             grid-template-columns: minmax(0, 1fr) auto auto;
             align-items: center;
             gap: 1em;
+            position: relative;
         }
 
         .unsaved-role-row {
             background-color: var(--dbp-selected);
+        }
+
+        .role-grant-row.marked-to-delete:after {
+            content: '';
+            display: block;
+            height: 1px;
+            width: 100%;
+            background: var(--dbp-content);
+            position: absolute;
+            top: 50%;
+            pointer-events: none;
         }
 
         .role-grant-name-selector {

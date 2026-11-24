@@ -118,11 +118,12 @@
 
 /**
  * An unsaved change to a saved grant. It is applied by creating a grant with the new values
- * and deleting the grant it replaces.
+ * and deleting the grant it replaces, or by deleting it without a replacement when marked.
  * @typedef {{
  *     grantIdentifier: string,
  *     roleIdentifier: string,
- *     shareable: boolean
+ *     shareable: boolean,
+ *     markedToDelete?: boolean
  * }} PendingGrantChange
  */
 

@@ -942,6 +942,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleDeleteDraftRoleButtonClick(holderKey, clientIdentifier) {
+        if (this._savingHolderKeys.has(holderKey)) return;
         const remainingDrafts = removeDraftRoleGrant(
             this.draftRoleGrants,
             this.draftGrantHolders,
@@ -962,10 +963,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         const draftRoles = this.draftRoleGrants.get(holderKey) ?? [];
         const pendingChanges = this.pendingGrantChanges.get(holderKey) ?? [];
         // Nothing to save, or a previous click of the same button is still running.
-        if (
-            (draftRoles.length === 0 && pendingChanges.length === 0) ||
-            this._savingHolderKeys.has(holderKey)
-        ) {
+        if (this._isSaveDisabled(holderKey)) {
             return;
         }
 
@@ -990,9 +988,17 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             this.draftRoleGrants = failedDrafts.length
                 ? updateInMap(this.draftRoleGrants, holderKey, failedDrafts)
                 : deleteFromMap(this.draftRoleGrants, holderKey);
-            // if (!failedDrafts.length) {
-            //     this.draftGrantHolders = deleteFromMap(this.draftGrantHolders, holderKey);
-            // }
+            // Keep failed drafts reachable when this save deleted the holder's last grant.
+            if (this.grantHolders.get(holderKey)?.grants.length === 0) {
+                if (failedDrafts.length) {
+                    this.draftGrantHolders = updateInMap(this.draftGrantHolders, holderKey, {
+                        ...holder,
+                        grants: [],
+                        holderFields: getGrantHolderFields(holder),
+                    });
+                }
+                this.grantHolders = deleteFromMap(this.grantHolders, holderKey);
+            }
 
             // Reload the grant holders to reflect the changes in the UI.
             await this._reloadGrantHolders();
@@ -1004,40 +1010,18 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
-     * Delete user role grant and reload the grant holders to update the UI accordingly.
-     * @param {string} grantIdentifier
-     * @param {string} roleName
-     * @param {string} holderName
-     * @returns {Promise<void>}
+     * Toggles deletion of a saved grant without sending an API request.
+     * @param {string} holderKey - Key of the grant's holder.
+     * @param {RoleGrant} grant - Saved grant to mark or restore.
+     * @returns {void}
      */
-    async handleDeleteRoleButtonClick(grantIdentifier, roleName, holderName) {
-        if (!grantIdentifier) {
-            console.warn('No role identifier found for grant', grantIdentifier);
+    handleDeleteRoleButtonClick(holderKey, grant) {
+        if (!isGrantChangeable(grant) || this._savingHolderKeys.has(holderKey)) {
             return;
         }
-
-        if (!(await this._deleteRoleGrant(grantIdentifier))) {
-            this._notifyError('auth-manage-dialog.notifications.could-not-delete-role', {
-                roleName: roleName,
-                holderName: holderName,
-            });
-            return;
-        }
-
-        // The deleted grant is the only thing that changed, so the list is updated with what
-        // the request confirmed instead of being loaded again. Reloading would drop a holder
-        // whose last role was deleted, and with it the unsaved rows it still shows.
-        this.grantHolders = removeGrantFromHolders(
-            this.grantHolders,
-            grantIdentifier,
-            this.draftRoleGrants,
-        );
-        // An unsaved change of the deleted grant can no longer be applied.
-        this._dropOrphanedGrantChanges();
-
-        this._notifySuccess('auth-manage-dialog.notifications.role-deleted-successfully', {
-            roleName: roleName,
-            holderName: holderName,
+        this._updatePendingGrantChange(holderKey, grant, {
+            markedToDelete: !this._getPendingGrantChange(holderKey, grant.identifier)
+                ?.markedToDelete,
         });
     }
 
@@ -1090,6 +1074,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleDraftRoleSelectChange(event, grant, holderKey) {
+        if (this._savingHolderKeys.has(holderKey)) return;
         const roleIdentifier = /** @type {HTMLSelectElement} */ (event.target).value;
         this._updateDraftRole(holderKey, grant.clientIdentifier, {
             roleIdentifier: roleIdentifier || null,
@@ -1104,6 +1089,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleDraftShareableChange(event, grant, holderKey) {
+        if (this._savingHolderKeys.has(holderKey)) return;
         this._updateDraftRole(holderKey, grant.clientIdentifier, {
             shareable: /** @type {HTMLInputElement} */ (event.target).checked,
         });
@@ -1186,10 +1172,17 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * selection also disables the save button again.
      * @param {string} holderKey - Key of the holder the grant belongs to.
      * @param {RoleGrant} grant - Saved grant that was changed.
-     * @param {{roleIdentifier?: string, shareable?: boolean}} changes - Changed values.
+     * @param {{roleIdentifier?: string, shareable?: boolean, markedToDelete?: boolean}} changes - Changed values.
      * @returns {void}
      */
     _updatePendingGrantChange(holderKey, grant, changes) {
+        if (
+            this._savingHolderKeys.has(holderKey) ||
+            (!('markedToDelete' in changes) &&
+                this._getPendingGrantChange(holderKey, grant.identifier)?.markedToDelete)
+        ) {
+            return;
+        }
         this.pendingGrantChanges = setPendingGrantChange(
             this.pendingGrantChanges,
             holderKey,
@@ -1340,6 +1333,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {boolean} Whether the "Add Role" button should be disabled.
      */
     _isAddRoleDisabled(holderKey) {
+        if (this._savingHolderKeys.has(holderKey)) return true;
         return !canAddDraftRole({
             roles: this.roles,
             grantHolders: this.grantHolders,
@@ -1396,8 +1390,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
-     * Applies the unsaved changes of a holder's saved grants. A grant cannot be modified, so
-     * the new grant is created first and the grant it replaces is deleted afterwards.
+     * Applies pending deletions and edits of a holder's saved grants. For edits, the new grant
+     * is created first and the grant it replaces is deleted afterwards.
      * @param {GrantHolder|DraftGrantHolder} holder - Holder the grants belong to.
      * @param {PendingGrantChange[]} pendingChanges - Unsaved changes to apply.
      * @returns {Promise<PendingGrantChange[]>} The changes that could not be applied.
@@ -1418,6 +1412,28 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 continue;
             }
             const oldRoleName = getRoleName(replacedGrant.roleDefinition, this.lang);
+            if (pendingChange.markedToDelete) {
+                const messageValues = {roleName: oldRoleName, holderName: holderName};
+                if (await this._deleteRoleGrant(replacedGrant.identifier)) {
+                    // Reflect confirmed deletions even if the subsequent reload fails.
+                    this.grantHolders = removeGrantFromHolders(
+                        this.grantHolders,
+                        replacedGrant.identifier,
+                        this.draftRoleGrants,
+                    );
+                    this._notifySuccess(
+                        'auth-manage-dialog.notifications.role-deleted-successfully',
+                        messageValues,
+                    );
+                } else {
+                    failedChanges.push(pendingChange);
+                    this._notifyError(
+                        'auth-manage-dialog.notifications.could-not-delete-role',
+                        messageValues,
+                    );
+                }
+                continue;
+            }
             const roleName = getRoleNameByIri(this.roles, pendingChange.roleIdentifier, this.lang);
             // Only the shareable state changed, so the role is updated instead of replaced.
             const keepsRole = pendingChange.roleIdentifier === replacedGrant.roleDefinition['@id'];
@@ -1596,7 +1612,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             <select
                 class="role-grant-name-selector"
                 id="${grant.identifier}-role-select"
-                ?disabled="${!isChangeable || hasNoRolesLeft}"
+                ?disabled="${!isChangeable || hasNoRolesLeft || pendingChange?.markedToDelete || this._savingHolderKeys.has(holder.key)}"
                 title="${
                     !isChangeable
                         ? this._i18n.t('auth-manage-dialog.role-select-disabled-title')
@@ -1632,20 +1648,28 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     renderRoleRow(grant, holder) {
         const roleName = getRoleName(grant['roleDefinition'], this.lang);
         const holderName = getGrantHolderDisplayName(holder.subject);
-        const deleteLabel = this._i18n.t('auth-manage-dialog.buttons.delete-role', {
-            role: roleName,
-            holder: holderName,
-        });
         const pendingChange = this._getPendingGrantChange(holder.key, grant.identifier);
+        const markedToDelete = Boolean(pendingChange?.markedToDelete);
+        const deleteLabel = markedToDelete
+            ? this._i18n.t('auth-manage-dialog.buttons.undo-delete-role', {
+                  role: roleName,
+                  holder: holderName,
+              })
+            : this._i18n.t('auth-manage-dialog.buttons.delete-role', {
+                  role: roleName,
+                  holder: holderName,
+              });
+        const isSaving = this._savingHolderKeys.has(holder.key);
         // Changing the shareable state replaces the grant, so it needs the delete permission.
         const isChangeable = isGrantChangeable(grant);
         return html`
-            <li class="role-grant-row ${classMap({'unsaved-role-row': pendingChange !== null})}">
+            <li
+                class="role-grant-row ${classMap({'unsaved-role-row': pendingChange !== null, 'marked-to-delete': markedToDelete})}">
                 ${this.renderRoleSelect(grant, holder, pendingChange)}
                 <label class="role-grant-shareable">
                     <input
                         type="checkbox"
-                        ?disabled="${!isChangeable}"
+                        ?disabled="${!isChangeable || markedToDelete || isSaving}"
                         .checked="${pendingChange?.shareable ?? Boolean(grant['shareable'])}"
                         title="${this._i18n.t('auth-manage-dialog.shareable-role-checkbox-title', {
                             role: roleName,
@@ -1658,10 +1682,10 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                         @change="${(event) => this.handleGrantShareableChange(event, holder.key, grant)}" />
                 </label>
                 <dbp-icon-button
-                    icon-name="trash"
+                    icon-name="${markedToDelete ? 'undo' : 'trash'}"
                     class="delete-role-button"
-                    ?disabled="${!isChangeable}"
-                    @click="${() => this.handleDeleteRoleButtonClick(grant.identifier, roleName, holderName)}"
+                    ?disabled="${!isChangeable || isSaving}"
+                    @click="${() => this.handleDeleteRoleButtonClick(holder.key, grant)}"
                     aria-label="${deleteLabel}"
                     title="${deleteLabel}"></dbp-icon-button>
             </li>
@@ -1691,7 +1715,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 <select
                     class="role-grant-name-selector"
                     id="${grant.clientIdentifier}-role-select"
-                    ?disabled="${hasNoRolesLeft}"
+                    ?disabled="${hasNoRolesLeft || this._savingHolderKeys.has(holderKey)}"
                     title="${
                         hasNoRolesLeft
                             ? this._i18n.t('auth-manage-dialog.role-select-no-roles-left-title')
@@ -1716,6 +1740,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 <label class="role-grant-shareable">
                     <input
                         type="checkbox"
+                        ?disabled="${this._savingHolderKeys.has(holderKey)}"
                         .checked="${grant.shareable}"
                         title="${this._i18n.t('auth-manage-dialog.shareable-role-checkbox-title', {
                             holder: holderName,
@@ -1728,6 +1753,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 </label>
                 <dbp-icon-button
                     icon-name="trash"
+                    ?disabled="${this._savingHolderKeys.has(holderKey)}"
                     aria-label="${deleteLabel}"
                     title="${deleteLabel}"
                     @click="${() =>

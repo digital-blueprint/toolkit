@@ -115,7 +115,7 @@ export function hasIncompleteDraftRole(draftRoleGrants, holderKey) {
  * @param {Map<string, PendingGrantChange[]>} pendingGrantChanges - Unsaved changes keyed by holder key.
  * @param {string} holderKey - Key of the holder the grant belongs to.
  * @param {RoleGrant} grant - Saved grant that was changed.
- * @param {{roleIdentifier?: string, shareable?: boolean}} changes - Changed values.
+ * @param {{roleIdentifier?: string, shareable?: boolean, markedToDelete?: boolean}} changes - Changed values.
  * @returns {Map<string, PendingGrantChange[]>} New map holding the recorded change.
  */
 export function setPendingGrantChange(pendingGrantChanges, holderKey, grant, changes) {
@@ -124,12 +124,14 @@ export function setPendingGrantChange(pendingGrantChanges, holderKey, grant, cha
         grantIdentifier: grant.identifier,
         roleIdentifier: currentChange?.roleIdentifier ?? grant.roleDefinition['@id'],
         shareable: currentChange?.shareable ?? Boolean(grant.shareable),
+        ...currentChange,
         ...changes,
     };
     const otherChanges = holderEntries(pendingGrantChanges, holderKey).filter(
         (change) => change.grantIdentifier !== grant.identifier,
     );
     const isUnchanged =
+        !nextChange.markedToDelete &&
         nextChange.roleIdentifier === grant.roleDefinition['@id'] &&
         nextChange.shareable === Boolean(grant.shareable);
     const holderChanges = isUnchanged ? otherChanges : [...otherChanges, nextChange];
@@ -358,12 +360,17 @@ export function getAvailableRoles({
     const assignedRoleIds = new Set(
         (grantHolders.get(holderKey)?.grants ?? [])
             .filter((grant) => grant.identifier !== currentGrantIdentifier)
-            // An unsaved change frees the assigned role and takes the selected one instead.
-            .map(
-                (grant) =>
-                    getPendingGrantChange(pendingGrantChanges, holderKey, grant.identifier)
-                        ?.roleIdentifier ?? grant.roleDefinition['@id'],
-            ),
+            .flatMap((grant) => {
+                const change = getPendingGrantChange(
+                    pendingGrantChanges,
+                    holderKey,
+                    grant.identifier,
+                );
+                // Keep both roles reserved while deletion is pending, so undo preserves edits.
+                return change?.markedToDelete
+                    ? [grant.roleDefinition['@id'], change.roleIdentifier]
+                    : [change?.roleIdentifier ?? grant.roleDefinition['@id']];
+            }),
     );
     const selectedDraftRoleIds = new Set(
         holderEntries(draftRoleGrants, holderKey)
