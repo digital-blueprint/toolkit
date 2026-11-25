@@ -137,6 +137,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.rolesPanelExpanded = false;
         /** @type {Set<string>} */
         this._savingHolderKeys = new Set();
+        this._savingAllRoles = false;
         /** @type {Intl.Collator|null} */
         this._cachedCollator = null;
         /** @type {string|null} Language the cached collator was created for. */
@@ -165,6 +166,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             pendingGrantChanges: {state: true},
             rolesPanelExpanded: {state: true},
             _savingHolderKeys: {state: true},
+            _savingAllRoles: {state: true},
         };
     }
 
@@ -251,11 +253,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     _handleBeforeModalClose(event) {
-        if (
-            !this._showCloseConfirmation &&
-            !this._hasUnsavedChanges() &&
-            this._savingHolderKeys.size === 0
-        ) {
+        if (!this._showCloseConfirmation && !this._hasUnsavedChanges() && !this._isSaving()) {
             return;
         }
 
@@ -305,7 +303,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
 
     _discardChangesAndClose() {
         // Discarding drafts cannot undo a save that has already sent API requests.
-        if (!this._showCloseConfirmation || this._savingHolderKeys.size > 0) {
+        if (!this._showCloseConfirmation || this._isSaving()) {
             return;
         }
         this._resetDialogState();
@@ -336,6 +334,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this.draftRoleGrants = new Map();
         this.pendingGrantChanges = new Map();
         this._savingHolderKeys = new Set();
+        this._savingAllRoles = false;
         this._nextDraftRoleIdentifier = 0;
         this.selectedSubject = null;
         void this.subjectSelectorRef.value?.reset();
@@ -608,6 +607,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     async _loadResourceData() {
         this._dialogGeneration += 1;
         this._addingSubject = false;
+        this._savingAllRoles = false;
         this._showCloseConfirmation = false;
         this._closeTriggerFocus = null;
         this._resourceDataController?.abort();
@@ -827,7 +827,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {Promise<void>}
      */
     async handleAddPersonButtonClick() {
-        if (this._addingSubject) {
+        if (this._addingSubject || this._savingAllRoles) {
             return;
         }
 
@@ -942,7 +942,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleDeleteDraftRoleButtonClick(holderKey, clientIdentifier) {
-        if (this._savingHolderKeys.has(holderKey)) return;
+        if (this._isHolderEditingDisabled(holderKey)) return;
         const remainingDrafts = removeDraftRoleGrant(
             this.draftRoleGrants,
             this.draftGrantHolders,
@@ -978,28 +978,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
         this._savingHolderKeys = new Set(this._savingHolderKeys).add(holderKey);
 
         try {
-            const failedChanges = await this._applyPendingGrantChanges(holder, pendingChanges);
-            const failedDrafts = await this._createDraftRoleGrants(holder, draftRoles);
-
-            // Rows that could not be saved stay in the list, so the user can retry them.
-            this.pendingGrantChanges = failedChanges.length
-                ? updateInMap(this.pendingGrantChanges, holderKey, failedChanges)
-                : deleteFromMap(this.pendingGrantChanges, holderKey);
-            this.draftRoleGrants = failedDrafts.length
-                ? updateInMap(this.draftRoleGrants, holderKey, failedDrafts)
-                : deleteFromMap(this.draftRoleGrants, holderKey);
-            // Keep failed drafts reachable when this save deleted the holder's last grant.
-            if (this.grantHolders.get(holderKey)?.grants.length === 0) {
-                if (failedDrafts.length) {
-                    this.draftGrantHolders = updateInMap(this.draftGrantHolders, holderKey, {
-                        ...holder,
-                        grants: [],
-                        holderFields: getGrantHolderFields(holder),
-                    });
-                }
-                this.grantHolders = deleteFromMap(this.grantHolders, holderKey);
-            }
-
+            await this._saveHolderRoles(holder, pendingChanges, draftRoles);
             // Reload the grant holders to reflect the changes in the UI.
             await this._reloadGrantHolders();
         } finally {
@@ -1010,13 +989,48 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
+     * Saves captured pending work without managing locks or reloading.
+     * @param {GrantHolder|DraftGrantHolder} holder - Holder whose roles are being saved.
+     * @param {PendingGrantChange[]} pendingChanges - Pending edits and deletions.
+     * @param {DraftRoleGrant[]} draftRoles - New role rows.
+     * @returns {Promise<void>}
+     */
+    async _saveHolderRoles(holder, pendingChanges, draftRoles) {
+        const holderKey = holder.key;
+        const generation = this._dialogGeneration;
+        const failedChanges = await this._applyPendingGrantChanges(holder, pendingChanges);
+        if (generation !== this._dialogGeneration) return;
+        const failedDrafts = await this._createDraftRoleGrants(holder, draftRoles);
+        if (generation !== this._dialogGeneration) return;
+
+        // Rows that could not be saved stay in the list, so the user can retry them.
+        this.pendingGrantChanges = failedChanges.length
+            ? updateInMap(this.pendingGrantChanges, holderKey, failedChanges)
+            : deleteFromMap(this.pendingGrantChanges, holderKey);
+        this.draftRoleGrants = failedDrafts.length
+            ? updateInMap(this.draftRoleGrants, holderKey, failedDrafts)
+            : deleteFromMap(this.draftRoleGrants, holderKey);
+        // Keep failed drafts reachable when this save deleted the holder's last grant.
+        if (this.grantHolders.get(holderKey)?.grants.length === 0) {
+            if (failedDrafts.length) {
+                this.draftGrantHolders = updateInMap(this.draftGrantHolders, holderKey, {
+                    ...holder,
+                    grants: [],
+                    holderFields: getGrantHolderFields(holder),
+                });
+            }
+            this.grantHolders = deleteFromMap(this.grantHolders, holderKey);
+        }
+    }
+
+    /**
      * Toggles deletion of a saved grant without sending an API request.
      * @param {string} holderKey - Key of the grant's holder.
      * @param {RoleGrant} grant - Saved grant to mark or restore.
      * @returns {void}
      */
     handleDeleteRoleButtonClick(holderKey, grant) {
-        if (!isGrantChangeable(grant) || this._savingHolderKeys.has(holderKey)) {
+        if (!isGrantChangeable(grant) || this._isHolderEditingDisabled(holderKey)) {
             return;
         }
         this._updatePendingGrantChange(holderKey, grant, {
@@ -1063,6 +1077,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleSubjectSelectChange(event) {
+        if (this._savingAllRoles) return;
         this.selectedSubject = event.detail.object;
     }
 
@@ -1074,7 +1089,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleDraftRoleSelectChange(event, grant, holderKey) {
-        if (this._savingHolderKeys.has(holderKey)) return;
+        if (this._isHolderEditingDisabled(holderKey)) return;
         const roleIdentifier = /** @type {HTMLSelectElement} */ (event.target).value;
         this._updateDraftRole(holderKey, grant.clientIdentifier, {
             roleIdentifier: roleIdentifier || null,
@@ -1089,7 +1104,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {void}
      */
     handleDraftShareableChange(event, grant, holderKey) {
-        if (this._savingHolderKeys.has(holderKey)) return;
+        if (this._isHolderEditingDisabled(holderKey)) return;
         this._updateDraftRole(holderKey, grant.clientIdentifier, {
             shareable: /** @type {HTMLInputElement} */ (event.target).checked,
         });
@@ -1097,10 +1112,96 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
 
     /**
      * Save all pending roles and draft-roles for all holders.
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    handleSaveAllRolesButtonClick() {
-        // @TODO: Implement if needed.
+    async handleSaveAllRolesButtonClick() {
+        if (this._isSaveAllDisabled()) return;
+
+        const generation = this._dialogGeneration;
+        const batch = this._getPendingHolderKeys().map((holderKey) => ({
+            holder: this.grantHolders.get(holderKey) ?? this.draftGrantHolders.get(holderKey),
+            pendingChanges: [...(this.pendingGrantChanges.get(holderKey) ?? [])],
+            draftRoles: [...(this.draftRoleGrants.get(holderKey) ?? [])],
+        }));
+        this._savingAllRoles = true;
+        try {
+            for (const {holder, pendingChanges, draftRoles} of batch) {
+                if (generation !== this._dialogGeneration) return;
+                if (!holder) continue;
+                try {
+                    await this._saveHolderRoles(holder, pendingChanges, draftRoles);
+                } catch (error) {
+                    // An unexpected holder failure must not prevent saving the rest of the batch.
+                    console.error('Could not save holder roles', holder.key, error);
+                    this._notifyError('auth-manage-dialog.notifications.could-not-save-holder', {
+                        holderName: getGrantHolderDisplayName(holder.subject),
+                    });
+                }
+            }
+            if (generation === this._dialogGeneration) {
+                await this._reloadGrantHolders();
+            }
+        } finally {
+            // An old batch must not unlock a dialog that has since been reset.
+            if (generation === this._dialogGeneration) {
+                this._savingAllRoles = false;
+            }
+        }
+    }
+
+    /** @returns {boolean} Whether any individual or batch save is running. */
+    _isSaving() {
+        return this._savingAllRoles || this._savingHolderKeys.size > 0;
+    }
+
+    /**
+     * @param {string} holderKey - Key of the holder being edited.
+     * @returns {boolean} Whether editing this holder is blocked by a save.
+     */
+    _isHolderEditingDisabled(holderKey) {
+        return this._savingAllRoles || this._savingHolderKeys.has(holderKey);
+    }
+
+    /** @returns {string[]} Rendered holders with pending edits, deletions, or new roles. */
+    _getPendingHolderKeys() {
+        return [
+            ...new Set([...this.pendingGrantChanges.keys(), ...this.draftRoleGrants.keys()]),
+        ].filter(
+            (holderKey) =>
+                (this.grantHolders.has(holderKey) || this.draftGrantHolders.has(holderKey)) &&
+                ((this.pendingGrantChanges.get(holderKey)?.length ?? 0) > 0 ||
+                    (this.draftRoleGrants.get(holderKey)?.length ?? 0) > 0),
+        );
+    }
+
+    /** @returns {boolean} Whether Save All is blocked by pending work or running operations. */
+    _isSaveAllDisabled() {
+        return (
+            this._isSaving() ||
+            this._addingSubject ||
+            this._getPendingHolderKeys().length === 0 ||
+            [...this.draftRoleGrants.values()].some((rows) =>
+                rows.some((row) => !row.roleIdentifier),
+            )
+        );
+    }
+
+    /** @returns {string} Translated explanation of the Save All button's disabled state. */
+    _getSaveAllRolesButtonTitle() {
+        if (this._isSaving())
+            return this._i18n.t('auth-manage-dialog.buttons.save-all-saving-title');
+        if (this._addingSubject)
+            return this._i18n.t('auth-manage-dialog.buttons.save-all-adding-subject-title');
+        if (
+            [...this.draftRoleGrants.values()].some((rows) =>
+                rows.some((row) => !row.roleIdentifier),
+            )
+        ) {
+            return this._i18n.t('auth-manage-dialog.buttons.save-all-select-role-title');
+        }
+        return this._getPendingHolderKeys().length === 0
+            ? this._i18n.t('auth-manage-dialog.buttons.save-holder-roles-button-disabled-title')
+            : '';
     }
 
     /**
@@ -1177,7 +1278,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      */
     _updatePendingGrantChange(holderKey, grant, changes) {
         if (
-            this._savingHolderKeys.has(holderKey) ||
+            this._isHolderEditingDisabled(holderKey) ||
             (!('markedToDelete' in changes) &&
                 this._getPendingGrantChange(holderKey, grant.identifier)?.markedToDelete)
         ) {
@@ -1322,7 +1423,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      */
     _isSaveDisabled(holderKey) {
         // Disable the save button if the holder is currently being saved
-        if (this._savingHolderKeys.has(holderKey)) return true;
+        if (this._isHolderEditingDisabled(holderKey)) return true;
 
         return !isHolderSaveable(this.draftRoleGrants, this.pendingGrantChanges, holderKey);
     }
@@ -1333,7 +1434,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {boolean} Whether the "Add Role" button should be disabled.
      */
     _isAddRoleDisabled(holderKey) {
-        if (this._savingHolderKeys.has(holderKey)) return true;
+        if (this._isHolderEditingDisabled(holderKey)) return true;
         return !canAddDraftRole({
             roles: this.roles,
             grantHolders: this.grantHolders,
@@ -1360,6 +1461,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {Promise<DraftRoleGrant[]>} The rows that could not be created.
      */
     async _createDraftRoleGrants(holder, draftRoles) {
+        const generation = this._dialogGeneration;
         const holderFields = getGrantHolderFields(holder);
         const holderName = getGrantHolderDisplayName(holder.subject);
         /** @type {DraftRoleGrant[]} */
@@ -1372,7 +1474,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             }
             const roleName = getRoleNameByIri(this.roles, draftRole.roleIdentifier, this.lang);
 
-            if (await this._createRoleGrant(draftRole, holderFields)) {
+            const created = await this._createRoleGrant(draftRole, holderFields);
+            if (generation !== this._dialogGeneration) return failedDrafts;
+            if (created) {
                 this._notifySuccess('auth-manage-dialog.notifications.role-saved-successfully', {
                     roleName: roleName,
                     holderName: holderName,
@@ -1397,6 +1501,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
      * @returns {Promise<PendingGrantChange[]>} The changes that could not be applied.
      */
     async _applyPendingGrantChanges(holder, pendingChanges) {
+        const generation = this._dialogGeneration;
         const holderFields = getGrantHolderFields(holder);
         const holderName = getGrantHolderDisplayName(holder.subject);
         /** @type {PendingGrantChange[]} */
@@ -1414,7 +1519,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             const oldRoleName = getRoleName(replacedGrant.roleDefinition, this.lang);
             if (pendingChange.markedToDelete) {
                 const messageValues = {roleName: oldRoleName, holderName: holderName};
-                if (await this._deleteRoleGrant(replacedGrant.identifier)) {
+                const deleted = await this._deleteRoleGrant(replacedGrant.identifier);
+                if (generation !== this._dialogGeneration) return failedChanges;
+                if (deleted) {
                     // Reflect confirmed deletions even if the subsequent reload fails.
                     this.grantHolders = removeGrantFromHolders(
                         this.grantHolders,
@@ -1443,7 +1550,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 holderName: holderName,
             };
 
-            if (!(await this._createRoleGrant(pendingChange, holderFields))) {
+            const created = await this._createRoleGrant(pendingChange, holderFields);
+            if (generation !== this._dialogGeneration) return failedChanges;
+            if (!created) {
                 failedChanges.push(pendingChange);
                 if (keepsRole) {
                     this._notifyError(
@@ -1459,7 +1568,9 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 continue;
             }
 
-            if (await this._deleteRoleGrant(replacedGrant.identifier)) {
+            const deleted = await this._deleteRoleGrant(replacedGrant.identifier);
+            if (generation !== this._dialogGeneration) return failedChanges;
+            if (deleted) {
                 if (keepsRole) {
                     this._notifySuccess(
                         'auth-manage-dialog.notifications.role-updated-successfully',
@@ -1612,7 +1723,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
             <select
                 class="role-grant-name-selector"
                 id="${grant.identifier}-role-select"
-                ?disabled="${!isChangeable || hasNoRolesLeft || pendingChange?.markedToDelete || this._savingHolderKeys.has(holder.key)}"
+                ?disabled="${!isChangeable || hasNoRolesLeft || pendingChange?.markedToDelete || this._isHolderEditingDisabled(holder.key)}"
                 title="${
                     !isChangeable
                         ? this._i18n.t('auth-manage-dialog.role-select-disabled-title')
@@ -1659,7 +1770,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                   role: roleName,
                   holder: holderName,
               });
-        const isSaving = this._savingHolderKeys.has(holder.key);
+        const isSaving = this._isHolderEditingDisabled(holder.key);
         // Changing the shareable state replaces the grant, so it needs the delete permission.
         const isChangeable = isGrantChangeable(grant);
         return html`
@@ -1715,7 +1826,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 <select
                     class="role-grant-name-selector"
                     id="${grant.clientIdentifier}-role-select"
-                    ?disabled="${hasNoRolesLeft || this._savingHolderKeys.has(holderKey)}"
+                    ?disabled="${hasNoRolesLeft || this._isHolderEditingDisabled(holderKey)}"
                     title="${
                         hasNoRolesLeft
                             ? this._i18n.t('auth-manage-dialog.role-select-no-roles-left-title')
@@ -1740,7 +1851,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 <label class="role-grant-shareable">
                     <input
                         type="checkbox"
-                        ?disabled="${this._savingHolderKeys.has(holderKey)}"
+                        ?disabled="${this._isHolderEditingDisabled(holderKey)}"
                         .checked="${grant.shareable}"
                         title="${this._i18n.t('auth-manage-dialog.shareable-role-checkbox-title', {
                             holder: holderName,
@@ -1753,7 +1864,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 </label>
                 <dbp-icon-button
                     icon-name="trash"
-                    ?disabled="${this._savingHolderKeys.has(holderKey)}"
+                    ?disabled="${this._isHolderEditingDisabled(holderKey)}"
                     aria-label="${deleteLabel}"
                     title="${deleteLabel}"
                     @click="${() =>
@@ -2018,7 +2129,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
 
     renderFooter() {
         const i18n = this._i18n;
-        const saving = this._savingHolderKeys.size > 0;
+        const saving = this._isSaving();
         const hasUnsavedChanges = this._hasUnsavedChanges();
         const confirmationTitle = saving
             ? i18n.t('auth-manage-dialog.close-confirmation.saving-title')
@@ -2043,6 +2154,8 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 <dbp-button
                     type="is-primary"
                     class="save-all-roles-button"
+                    ?disabled="${this._isSaveAllDisabled()}"
+                    title="${this._getSaveAllRolesButtonTitle()}"
                     no-spinner-on-click
                     @click="${this.handleSaveAllRolesButtonClick}">
                     <dbp-icon name="save" aria-hidden="true"></dbp-icon>
@@ -2135,7 +2248,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                                 ${ref(this.subjectSelectorRef)}
                                 id="resource-select"
                                 class="resource-select-component"
-                                ?disabled="${this._addingSubject}"
+                                ?disabled="${this._addingSubject || this._savingAllRoles}"
                                 lang="${this.lang}"
                                 subscribe="auth"
                                 placeholder="${i18n.t('auth-manage-dialog.subject-select-placeholder')}"
@@ -2146,7 +2259,7 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                                     type="is-secondary"
                                     id="add-person-button"
                                     no-spinner-on-click
-                                    ?disabled="${this._addingSubject || this.selectedSubject === null}"
+                                    ?disabled="${this._addingSubject || this._savingAllRoles || this.selectedSubject === null}"
                                     @click="${this.handleAddPersonButtonClick}">
                                     <dbp-icon name="plus"></dbp-icon>
                                     ${i18n.t('auth-manage-dialog.buttons.add-subject-button-label')}

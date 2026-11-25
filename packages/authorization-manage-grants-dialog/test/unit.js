@@ -670,6 +670,271 @@ suite('dbp-authorization-manage-grants-dialog', () => {
         return {holder, grant};
     }
 
+    test('should save mixed work for existing and draft holders with one reload', async () => {
+        const {holder, grant} = addSavedHolder();
+        const alice = {
+            ...holder,
+            key: 'person:alice',
+            subject: {identifier: 'alice'},
+            grants: [{...grant, identifier: 'alice-grant'}],
+        };
+        const bob = {
+            ...holder,
+            key: 'person:bob',
+            subject: {identifier: 'bob'},
+            grants: [],
+            holderFields: {userIdentifier: 'bob'},
+        };
+        node.grantHolders = new Map([...node.grantHolders, [alice.key, alice]]);
+        node.draftGrantHolders = new Map([[bob.key, bob]]);
+        node.handleGrantShareableChange({target: {checked: true}}, holder.key, grant);
+        node.handleDeleteRoleButtonClick(alice.key, alice.grants[0]);
+        for (const key of [holder.key, bob.key]) {
+            node.handleAddRoleButtonClick(key);
+            const draft = node.draftRoleGrants.get(key)[0];
+            node.handleDraftRoleSelectChange(
+                {target: {value: '/authorization/roles/reader'}},
+                draft,
+                key,
+            );
+        }
+        const requests = [];
+        node._apiPostResourceActionGrant = async (selection, fields) => {
+            requests.push(`POST ${fields.userIdentifier} ${selection.roleIdentifier}`);
+            return new Response('{}', {status: 201});
+        };
+        node._apiDeleteResourceActionGrant = async (identifier) => {
+            requests.push(`DELETE ${identifier}`);
+            return new Response('{}', {status: 200});
+        };
+        node._reloadGrantHolders = async () => requests.push('RELOAD');
+
+        await node.updateComplete;
+        assert.isFalse(node.shadowRoot.querySelector('.save-all-roles-button').disabled);
+        await node.handleSaveAllRolesButtonClick();
+        assert.deepEqual(requests, [
+            'POST frank /authorization/roles/editor',
+            'DELETE grant-1',
+            'POST frank /authorization/roles/reader',
+            'DELETE alice-grant',
+            'POST bob /authorization/roles/reader',
+            'RELOAD',
+        ]);
+        assert.equal(node.pendingGrantChanges.size, 0);
+        assert.equal(node.draftRoleGrants.size, 0);
+        assert.isFalse(node._savingAllRoles);
+    });
+
+    test('should block Save All when any draft is incomplete but allow individual saves', async () => {
+        const {holder, grant} = addSavedHolder();
+        node.handleGrantShareableChange({target: {checked: true}}, holder.key, grant);
+        addUnsavedDraft();
+        // Keep the incomplete draft on another holder.
+        const draftHolder = node.draftGrantHolders.get(holder.key);
+        node.draftGrantHolders = new Map([['person:bob', {...draftHolder, key: 'person:bob'}]]);
+        node.draftRoleGrants = new Map([['person:bob', node.draftRoleGrants.get(holder.key)]]);
+        node._saveHolderRoles = async () => assert.fail('Incomplete drafts must block the batch');
+        await node.updateComplete;
+        const button = node.shadowRoot.querySelector('.save-all-roles-button');
+        assert.isTrue(button.disabled);
+        assert.equal(
+            button.title,
+            node._i18n.t('auth-manage-dialog.buttons.save-all-select-role-title'),
+        );
+        assert.isFalse(node._isSaveDisabled(holder.key));
+        await node.handleSaveAllRolesButtonClick();
+        assert.isFalse(node._savingAllRoles);
+    });
+
+    test('should disable Save All without work or while a save or subject addition is running', async () => {
+        assert.isTrue(node._isSaveAllDisabled());
+        const {holder, grant} = addSavedHolder();
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        node._savingHolderKeys = new Set([holder.key]);
+        node._saveHolderRoles = async () => assert.fail('Overlapping saves must be blocked');
+        assert.isTrue(node._isSaveAllDisabled());
+        await node.handleSaveAllRolesButtonClick();
+        node._savingHolderKeys = new Set();
+        node._addingSubject = true;
+        assert.isTrue(node._isSaveAllDisabled());
+        await node.handleSaveAllRolesButtonClick();
+        node._addingSubject = false;
+        assert.isFalse(node._isSaveAllDisabled());
+    });
+
+    test('should retain failed work and retry only pending holders', async () => {
+        const {holder, grant} = addSavedHolder();
+        const alice = {
+            ...holder,
+            key: 'person:alice',
+            subject: {identifier: 'alice'},
+            grants: [{...grant, identifier: 'alice-grant'}],
+        };
+        node.grantHolders = new Map([...node.grantHolders, [alice.key, alice]]);
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        node.handleDeleteRoleButtonClick(alice.key, alice.grants[0]);
+        const requests = [];
+        let fail = true;
+        let reloads = 0;
+        node._apiDeleteResourceActionGrant = async (identifier) => {
+            requests.push(identifier);
+            return new Response('{}', {
+                status: identifier === grant.identifier && fail ? 403 : 200,
+            });
+        };
+        node._reloadGrantHolders = async () => {
+            reloads += 1;
+        };
+
+        await node.handleSaveAllRolesButtonClick();
+        assert.deepEqual(requests, ['grant-1', 'alice-grant']);
+        assert.isTrue(node._getPendingGrantChange(holder.key, grant.identifier).markedToDelete);
+        assert.isFalse(node.pendingGrantChanges.has(alice.key));
+        assert.isFalse(node._savingAllRoles);
+        fail = false;
+        await node.handleSaveAllRolesButtonClick();
+        assert.deepEqual(requests, ['grant-1', 'alice-grant', 'grant-1']);
+        assert.equal(reloads, 2);
+        assert.equal(node.pendingGrantChanges.size, 0);
+    });
+
+    test('should freeze every holder and subject control until the final reload finishes', async () => {
+        node.open();
+        const {holder, grant} = addSavedHolder();
+        const alice = {
+            ...holder,
+            key: 'person:alice',
+            subject: {identifier: 'alice'},
+            grants: [{...grant, identifier: 'alice-grant'}],
+        };
+        node.grantHolders = new Map([...node.grantHolders, [alice.key, alice]]);
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        node.handleAddRoleButtonClick(holder.key);
+        const draft = node.draftRoleGrants.get(holder.key)[0];
+        node.handleDraftRoleSelectChange(
+            {target: {value: '/authorization/roles/reader'}},
+            draft,
+            holder.key,
+        );
+        node.selectedSubject = {identifier: 'bob'};
+        const pending = node.pendingGrantChanges;
+        const drafts = node.draftRoleGrants;
+        const selected = node.selectedSubject;
+        let finishDelete;
+        let finishReload;
+        let reloadStarted;
+        const reloading = new Promise((resolve) => {
+            reloadStarted = resolve;
+        });
+        node._apiDeleteResourceActionGrant = () =>
+            new Promise((resolve) => {
+                finishDelete = resolve;
+            });
+        node._apiPostResourceActionGrant = async () => new Response('{}', {status: 201});
+        node._reloadGrantHolders = () => {
+            reloadStarted();
+            return new Promise((resolve) => {
+                finishReload = resolve;
+            });
+        };
+        const save = node.handleSaveAllRolesButtonClick();
+        await node.updateComplete;
+        const controls = node.shadowRoot.querySelectorAll(
+            '.role-grant-row select, .role-grant-row input, .role-grant-row dbp-icon-button, .add-role-button, .save-holder-roles-button, .save-all-roles-button, #add-person-button, #resource-select',
+        );
+        for (const control of controls) assert.isTrue(control.disabled);
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        node.handleDeleteRoleButtonClick(alice.key, alice.grants[0]);
+        node.handleGrantShareableChange({target: {checked: true}}, alice.key, alice.grants[0]);
+        node.handleRoleSelectChange(
+            {target: {value: '/authorization/roles/reader'}},
+            alice.key,
+            alice.grants[0],
+        );
+        node.handleAddRoleButtonClick(alice.key);
+        node.handleDeleteDraftRoleButtonClick(holder.key, draft.clientIdentifier);
+        node.handleDraftShareableChange({target: {checked: true}}, draft, holder.key);
+        node.handleDraftRoleSelectChange({target: {value: ''}}, draft, holder.key);
+        node.handleSubjectSelectChange({detail: {object: null}});
+        await node.handleAddPersonButtonClick();
+        await node.handleSaveHolderRolesButtonClick(alice.key);
+        await node.handleSaveAllRolesButtonClick();
+        assert.strictEqual(node.pendingGrantChanges, pending);
+        assert.strictEqual(node.draftRoleGrants, drafts);
+        assert.strictEqual(node.selectedSubject, selected);
+
+        finishDelete(new Response('{}', {status: 200}));
+        await reloading;
+        await node.updateComplete;
+        assert.isTrue(node._savingAllRoles);
+        assert.isTrue(node.shadowRoot.querySelector('#resource-select').disabled);
+        assert.isTrue(node._isSaveDisabled(alice.key));
+        node.close();
+        await node._focusKeepEditingButton();
+        assert.isTrue(node._showCloseConfirmation);
+        assert.isTrue(node.shadowRoot.querySelector('.discard-changes-button').disabled);
+        node._discardChangesAndClose();
+        assert.isTrue(node.modalRef.value.isOpen());
+        finishReload();
+        await save;
+        await node._keepEditing();
+        await node.updateComplete;
+        assert.isFalse(node._savingAllRoles);
+        assert.isFalse(node.shadowRoot.querySelector('#resource-select').disabled);
+        assert.isFalse(node._isAddRoleDisabled(alice.key));
+    });
+
+    test('should continue after unexpected holder failures and unlock after reload failure', async () => {
+        const {holder, grant} = addSavedHolder();
+        const alice = {
+            ...holder,
+            key: 'person:alice',
+            subject: {identifier: 'alice'},
+            grants: [{...grant, identifier: 'alice-grant'}],
+        };
+        node.grantHolders = new Map([...node.grantHolders, [alice.key, alice]]);
+        node.handleDeleteRoleButtonClick(holder.key, grant);
+        node.handleDeleteRoleButtonClick(alice.key, alice.grants[0]);
+        const attempts = [];
+        node._saveHolderRoles = async (currentHolder) => {
+            attempts.push(currentHolder.key);
+            if (currentHolder.key === holder.key) throw new Error('Unexpected holder failure');
+        };
+        node._reloadGrantHolders = async () => {
+            throw new Error('Unexpected reload failure');
+        };
+        try {
+            await node.handleSaveAllRolesButtonClick();
+            assert.fail('Expected reload failure');
+        } catch (error) {
+            assert.equal(error.message, 'Unexpected reload failure');
+        }
+        assert.deepEqual(attempts, [holder.key, alice.key]);
+        assert.isFalse(node._savingAllRoles);
+        assert.isFalse(node._isSaveAllDisabled());
+    });
+
+    test('should stop an old batch after reset without restoring its pending work', async () => {
+        const {holder, grant} = addSavedHolder();
+        node.handleGrantShareableChange({target: {checked: true}}, holder.key, grant);
+        let finish;
+        node._apiPostResourceActionGrant = () =>
+            new Promise((resolve) => {
+                finish = resolve;
+            });
+        node._apiDeleteResourceActionGrant = async () =>
+            assert.fail('Reset must stop replacement deletion');
+        node._reloadGrantHolders = async () =>
+            assert.fail('An old batch must not reload a reset dialog');
+        const save = node.handleSaveAllRolesButtonClick();
+        node._resetDialogState();
+        finish(new Response('{}', {status: 201}));
+        await save;
+        assert.isFalse(node._savingAllRoles);
+        assert.equal(node.pendingGrantChanges.size, 0);
+        assert.equal(node.draftRoleGrants.size, 0);
+    });
+
     for (const lang of ['en', 'de']) {
         test(`should mark and undo deletion without requests in ${lang}`, async () => {
             node.lang = lang;
