@@ -2049,7 +2049,7 @@ export function getNativeModalDialogCSS() {
             :host([info-panel]) .info-panel.info-panel--expanded {
                 flex-basis: auto;
                 width: 100%;
-                max-height: 50vh;
+                max-height: 100%;
                 overflow-y: auto;
                 border-left: 0;
                 border-top: var(--dbp-border);

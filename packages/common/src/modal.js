@@ -33,6 +33,8 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         this.infoExpanded = false;
         /** @type {boolean} */
         this.infoPanel = false;
+        /** @type {HTMLElement|null} */
+        this._infoPanelOpener = null;
     }
 
     static get properties() {
@@ -87,6 +89,72 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
 
     updated(changedProperties) {
         super.updated(changedProperties);
+        if (changedProperties.has('infoExpanded') && this.infoExpanded) {
+            void this._scrollInfoPanelIntoView();
+        }
+    }
+
+    /**
+     * Reveals an expanded panel when CSS places it below the main content.
+     * Only the dialog is scrolled, leaving page position and keyboard focus unchanged.
+     * @returns {Promise<void>}
+     */
+    async _scrollInfoPanelIntoView() {
+        await this.updateComplete;
+        const dialog = this.modalDialog;
+        const wrapper = this.shadowRoot?.querySelector('.dialog-wrapper');
+        const panel = this.shadowRoot?.querySelector('#info-panel');
+        const view = this.ownerDocument.defaultView;
+        if (
+            !dialog ||
+            !wrapper ||
+            !panel ||
+            !view ||
+            !this.isConnected ||
+            !this.isOpen() ||
+            !this.infoPanel ||
+            !this.infoExpanded ||
+            !this.querySelector('[slot="info-panel"]') ||
+            view.getComputedStyle(wrapper).flexDirection !== 'column'
+        ) {
+            return;
+        }
+
+        // A frame and a style flush expose CSS transitions without assuming their duration.
+        await new Promise((resolve) => view.requestAnimationFrame(resolve));
+        if (!view.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            // Ignore unrelated CSS animations, which may run indefinitely.
+            const transitions = panel
+                .getAnimations()
+                .filter((animation) => 'transitionProperty' in animation);
+            await Promise.allSettled(transitions.map((animation) => animation.finished));
+        }
+        if (
+            !this.isConnected ||
+            !this.isOpen() ||
+            !this.infoPanel ||
+            !this.infoExpanded ||
+            view.getComputedStyle(wrapper).flexDirection !== 'column'
+        ) {
+            return;
+        }
+
+        // The expanded panel is already visible when the dialog has no vertical overflow.
+        if (dialog.scrollHeight <= dialog.clientHeight) {
+            return;
+        }
+
+        const top =
+            dialog.scrollTop +
+            panel.getBoundingClientRect().top -
+            dialog.getBoundingClientRect().top -
+            dialog.clientTop;
+        dialog.scrollTo({
+            top: Math.max(0, top),
+            behavior: view.matchMedia('(prefers-reduced-motion: reduce)').matches
+                ? 'instant'
+                : 'smooth',
+        });
     }
 
     firstUpdated() {
@@ -294,6 +362,44 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
     }
 
     /**
+     * Manages the focus of the info panel.
+     * Gives back the focus to the element that opened the info panel when it is closed, if the focus is still inside the info panel.
+     * @param {boolean} expanded - Whether the info panel is expanded or not.
+     * @return {void}
+     */
+    _manageInfoPanelFocus(expanded) {
+        const panelContent = this.querySelector('[slot="info-panel"]');
+        let focusedElement = this.ownerDocument.activeElement;
+        let focusIsInsidePanel = false;
+
+        while (focusedElement) {
+            focusIsInsidePanel ||= panelContent?.contains(focusedElement) ?? false;
+
+            const innerFocusedElement = focusedElement.shadowRoot?.activeElement;
+            if (!innerFocusedElement) break;
+
+            focusedElement = innerFocusedElement;
+        }
+
+        if (expanded) {
+            this._infoPanelOpener =
+                !focusIsInsidePanel && focusedElement instanceof HTMLElement
+                    ? focusedElement
+                    : null;
+        } else {
+            if (focusIsInsidePanel && this.isOpen()) {
+                if (this._infoPanelOpener?.isConnected) {
+                    this._infoPanelOpener.focus({preventScroll: true});
+                } else {
+                    this.focusCloseButton();
+                }
+            }
+
+            this._infoPanelOpener = null;
+        }
+    }
+
+    /**
      * Updates the expanded state of the info panel and notifies consumers about the change,
      * so they can keep their own toggle buttons (label, aria-expanded) in sync.
      * @param {boolean} expanded
@@ -303,6 +409,9 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
         if (this.infoExpanded === expanded) {
             return;
         }
+
+        // Handle focus restoration when the info panel is closing.
+        this._manageInfoPanelFocus(expanded);
         this.infoExpanded = expanded;
 
         const customEvent = new CustomEvent('dbp-modal-info-panel-toggled', {
@@ -389,8 +498,7 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                                   <div
                                       id="info-panel"
                                       class="info-panel ${this.infoExpanded ? 'info-panel--expanded' : ''}"
-                                      ?inert="${!this.infoExpanded}"
-                                      aria-hidden="${!this.infoExpanded}">
+                                      ?inert="${!this.infoExpanded}">
                                       <slot name="info-panel"></slot>
                                   </div>
                               </div>
