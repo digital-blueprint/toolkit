@@ -77,6 +77,7 @@ export class DbpModalDemo extends LangMixin(ScopedElementsMixin(DBPLitElement), 
 
             [info-panel] .footer-menu {
                 flex-wrap: wrap;
+                padding-bottom: 2px;
             }
 
             [info-panel] .toggle-button {

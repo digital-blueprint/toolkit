@@ -495,12 +495,14 @@ export class Modal extends LangMixin(ScopedElementsMixin(DBPLitElement), createI
                         ? html`
                               <div class="dialog-wrapper">
                                   ${modalContainer}
-                                  <div
-                                      id="info-panel"
-                                      class="info-panel ${this.infoExpanded ? 'info-panel--expanded' : ''}"
-                                      ?inert="${!this.infoExpanded}">
-                                      <slot name="info-panel"></slot>
-                                  </div>
+                                      <div
+                                          id="info-panel"
+                                          class="info-panel ${this.infoExpanded ? 'info-panel--expanded' : ''}"
+                                          ?inert="${!this.infoExpanded}">
+                                          <div class="info-panel-content">
+                                            <slot name="info-panel"></slot>
+                                          </div>
+                                      </div>
                               </div>
                           `
                         : modalContainer

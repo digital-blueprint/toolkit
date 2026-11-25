@@ -1963,11 +1963,12 @@ export function getNativeModalDialogCSS() {
             opacity: 0;
             pointer-events: none;
             border: 0;
-            padding: 0;
+            padding: 20px 0;
             transition:
                 flex-basis 0.35s ease,
                 width 0.35s ease,
-                padding 0.35s ease,
+                padding-left 0.35s ease,
+                padding-right 0.35s ease,
                 opacity 0.2s ease;
         }
 
@@ -1977,7 +1978,7 @@ export function getNativeModalDialogCSS() {
             opacity: 1;
             pointer-events: auto;
             border-left: var(--dbp-border);
-            padding: 15px 20px 20px;
+            padding: 20px;
         }
 
         :host([info-panel]) .info-panel slot {
@@ -2037,22 +2038,34 @@ export function getNativeModalDialogCSS() {
             }
 
             :host([info-panel]) .info-panel {
+                display: grid;
+                grid-template-rows: 0fr;
                 flex: 0 0 auto;
                 width: 100%;
-                max-height: 0;
+                max-height: none;
+                overflow: hidden;
+                padding: 0 20px;
                 transition:
-                    max-height 0.35s ease,
-                    padding 0.35s ease,
+                    grid-template-rows 0.35s ease,
+                    padding-top 0.35s ease,
+                    padding-bottom 0.35s ease,
                     opacity 0.2s ease;
             }
 
             :host([info-panel]) .info-panel.info-panel--expanded {
+                grid-template-rows: 1fr;
                 flex-basis: auto;
                 width: 100%;
-                max-height: 100%;
-                overflow-y: auto;
+                max-height: none;
+                overflow: hidden;
+                padding: 20px;
                 border-left: 0;
                 border-top: var(--dbp-border);
+            }
+
+            :host([info-panel]) .info-panel-content {
+                min-height: 0;
+                overflow: hidden;
             }
 
             :host([info-panel]) .info-panel slot {
