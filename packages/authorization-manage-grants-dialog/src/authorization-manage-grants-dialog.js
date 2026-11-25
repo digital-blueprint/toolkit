@@ -52,6 +52,7 @@ import {
     compareIdentifiers,
     createCollator,
     deleteFromMap,
+    getRoleActions,
     getRoleName,
     getRoleNameByIri,
     isGrantChangeable,
@@ -2071,11 +2072,63 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
     }
 
     /**
+     * Renders the action object for a given role.
+     * @param {string} actionName
+     * @returns {string}
+     */
+    renderRoleActionDescription(actionName) {
+        if (!this._resourceForm) {
+            return '';
+        }
+
+        let roleDescription;
+        switch (this._getResourceKind()) {
+            case RESOURCE_KIND_SUBMISSION:
+                roleDescription = this._i18n.t(
+                    'auth-manage-dialog.roles-panel.role-action-object-submission',
+                    {action: actionName},
+                );
+                break;
+            case RESOURCE_KIND_SUBMISSIONS:
+                roleDescription = this._i18n.t(
+                    'auth-manage-dialog.roles-panel.role-action-object-submissions',
+                    {action: actionName},
+                );
+                break;
+            default:
+                roleDescription = this._i18n.t(
+                    'auth-manage-dialog.roles-panel.role-action-object-form',
+                    {action: actionName},
+                );
+        }
+
+        return roleDescription;
+    }
+
+    /**
      * Renders the side panel that displays the roles for the current resource.
      * @returns {import('lit').TemplateResult}
      */
     renderRolesSidePanel() {
         const i18n = this._i18n;
+
+        // Sort roles by increasing permission level.
+        const roleOrder = new Map([
+            ['reader', 0],
+            ['submitter', 1],
+            ['editor', 2],
+            ['manager', 3],
+            ['owner', 4],
+        ]);
+
+        const sortedRoles = [...this.roles.values()].sort((left, right) => {
+            const leftOrder =
+                roleOrder.get(getRoleName(left, this.lang).toLocaleLowerCase()) ?? roleOrder.size;
+            const rightOrder =
+                roleOrder.get(getRoleName(right, this.lang).toLocaleLowerCase()) ?? roleOrder.size;
+
+            return leftOrder - rightOrder;
+        });
         return html`
             <div
                 slot="info-panel"
@@ -2084,21 +2137,56 @@ export class AuthorizationManageGrantsDialog extends AuthMixin(
                 aria-label="${i18n.t('auth-manage-dialog.roles-panel.title')}">
                 <div class="info-panel-title">
                     <h3 class="roles-panel-title">
+                        <dbp-button
+                            id="hide-roles-button"
+                            class="hide-roles-button"
+                            no-spinner-on-click
+                            aria-expanded="${this.rolesPanelExpanded}"
+                            @click="${this.handleShowRolesButtonClick}">
+                            <dbp-icon name="chevron-left"></dbp-icon>
+                        </dbp-button>
                         ${i18n.t('auth-manage-dialog.roles-panel.title')}
                     </h3>
                 </div>
                 <div class="roles-container">
                     ${
-                        this.roles.size
+                        sortedRoles.length > 0
                             ? html`
                                   <div class="role-list">
-                                      ${[...this.roles.values()].map((role) => {
+                                      ${sortedRoles.map((role) => {
                                           return html`
-                                              <h4 class="roles-name">
-                                                  ${getRoleName(role, this.lang)}
-                                              </h4>
+                                              <div class="role-item">
+                                                  <h4 class="role-name">
+                                                      ${getRoleName(role, this.lang)}
+                                                      <span class="role-can">
+                                                          ${i18n.t('auth-manage-dialog.roles-panel.role-can')}
+                                                      </span>
+                                                  </h4>
+
+                                                  <ul class="role-description">
+                                                      ${
+                                                          getRoleActions(role, this.lang).length > 0
+                                                              ? getRoleActions(role, this.lang).map(
+                                                                    (actionName) => {
+                                                                        return html`
+                                                                            <li class="role-action">
+                                                                                ${this.renderRoleActionDescription(actionName)}
+                                                                            </li>
+                                                                        `;
+                                                                    },
+                                                                )
+                                                              : ''
+                                                      }
+                                                  </ul>
+                                              </div>
                                           `;
                                       })}
+                                      <h4 class="role-shareable">
+                                          ${i18n.t('auth-manage-dialog.roles-panel.reshareable-roles-title')}
+                                      </h4>
+                                      <p class="shareable-role-info">
+                                          ${i18n.t('auth-manage-dialog.roles-panel.reshareable-roles-description')}
+                                      </p>
                                   </div>
                               `
                             : html`

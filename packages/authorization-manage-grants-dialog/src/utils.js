@@ -63,6 +63,20 @@ export function getRoleName(role, lang) {
 }
 
 /**
+ * Returns the role actions a role has in the given language.
+ * @param {RoleDefinition} role - Role definition with its actions.
+ * @param {string} lang - Language tag of the current language.
+ * @returns {string[]} The role actions, or undefined if none are found.
+ */
+export function getRoleActions(role, lang) {
+    return (role.roleActions ?? []).flatMap((action) =>
+        (action?.availableResourceClassAction?.names ?? [])
+            .filter((actionName) => actionName.languageTag === lang)
+            .map((actionName) => actionName.name),
+    );
+}
+
+/**
  * Returns the name a form has in the given language.
  * @param {FormalizeForm} form - Form with its localized names.
  * @param {string} lang - Language tag of the current language.

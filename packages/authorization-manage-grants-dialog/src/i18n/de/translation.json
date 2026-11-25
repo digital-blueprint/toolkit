@@ -77,7 +77,13 @@
         "role-select-placeholder": "-- Rolle auswählen --",
         "roles-panel": {
             "empty-state-label": "Es sind keine Rollen vorhanden",
-            "title": "Rollen"
+            "reshareable-roles-description": "Wenn das Kontrollkästchen aktiviert ist, kann die Rolle weitergegeben werden. Benutzerinnen und Benutzer können dann dieselbe Rolle auch anderen Personen oder Gruppen zuweisen.",
+            "reshareable-roles-title": "Weitergebbare Rolle",
+            "role-action-object-form": "dieses Formular {{action}}",
+            "role-action-object-submission": "diese Einreichung {{action}}",
+            "role-action-object-submissions": "alle Einreichungen {{action}}",
+            "role-can": "kann",
+            "title": "Rollenbeschreibung"
         },
         "shareable-column-label": "Weitergabbare Rolle",
         "shareable-role-checkbox-title": "Rolle {{role}} mit {{holder}} teilen",

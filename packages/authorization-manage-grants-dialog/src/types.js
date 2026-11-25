@@ -9,7 +9,12 @@
  * @typedef {{
  *     '@id': string,
  *     identifier: string,
- *     roleNames?: Array<{languageTag: string, name: string}>
+ *     roleNames?: Array<{languageTag: string, name: string}>,
+ *     roleActions?: Array<{
+ *         availableResourceClassAction?: {
+ *             names?: Array<{languageTag: string, name: string}>
+ *         }
+ *     }>
  * }} RoleDefinition
  */
 

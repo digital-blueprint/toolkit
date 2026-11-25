@@ -77,7 +77,13 @@
         "role-select-placeholder": "-- Select a role --",
         "roles-panel": {
             "empty-state-label": "No roles to display",
-            "title": "Roles"
+            "reshareable-roles-description": "If the checkbox is checked, a role is reshareable. Users have then the opportunity to share this exact role with others too.",
+            "reshareable-roles-title": "Shareable Role",
+            "role-action-object-form": "{{action}} this form",
+            "role-action-object-submission": "{{action}} this submission",
+            "role-action-object-submissions": "{{action}} all submissions",
+            "role-can": "can",
+            "title": "Roles description"
         },
         "shareable-column-label": "Reshareable role",
         "shareable-role-checkbox-title": "Share role {{role}} for {{holder}}",

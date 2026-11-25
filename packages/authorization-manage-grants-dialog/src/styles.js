@@ -45,6 +45,8 @@ export function getAuthorizationManageGrantsDialogCSS() {
             grid-gap: 1em;
             /* prevent top border not visible on small screens glitches */
             padding-top: 3px;
+            /* prevent cut off of the focus-indicator on buttons */
+            padding-inline: 3px;
         }
 
         .resource-select-component {
@@ -64,7 +66,21 @@ export function getAuthorizationManageGrantsDialogCSS() {
             background: none;
             transition: transform 0.2s ease-in-out;
             font-weight: 300;
+            /*margin-right: -.75em;*/
             --dbp-border: 0 none;
+        }
+
+        .hide-roles-button {
+            appearance: none;
+            border: 0 none;
+            background: none;
+            transition: transform 0.2s ease-in-out;
+            font-weight: 300;
+            --dbp-border: 0 none;
+        }
+
+        .show-roles-button dbp-icon {
+            top: 0.2em;
         }
 
         .modal--manage-grants [slot='content'] {
@@ -96,8 +112,28 @@ export function getAuthorizationManageGrantsDialogCSS() {
             margin-bottom: 1em;
         }
 
+        .info-panel-title {
+            margin-left: -1.25em;
+        }
+
         .role-list {
-            padding-left: 1em;
+            padding-left: 2em;
+        }
+
+        .role-item {
+            margin-bottom: 1em;
+        }
+
+        .role-can {
+            font-weight: 400;
+        }
+
+        .role-description {
+            padding-left: 2em;
+        }
+
+        .role-shareable {
+            margin: 2em 0 0.75em;
         }
 
         .footer-menu {
@@ -159,6 +195,8 @@ export function getAuthorizationManageGrantsDialogCSS() {
             overflow-y: auto;
             min-height: 0;
             margin-top: 1.5em;
+            /* prevent cut off of the focus-indicator on buttons */
+            padding-inline: 3px;
         }
 
         .grant-holder-section {
@@ -258,7 +296,7 @@ export function getAuthorizationManageGrantsDialogCSS() {
             content: '';
             display: block;
             height: 1px;
-            width: 100%;
+            width: calc(100% - 40px);
             background: var(--dbp-content);
             position: absolute;
             top: 50%;
